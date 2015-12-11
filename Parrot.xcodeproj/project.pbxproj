@@ -19,6 +19,7 @@
 		48834E1C1C1B38B9009BC442 /* HangoutsProvider.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 48834E111C1B38B9009BC442 /* HangoutsProvider.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48834E221C1B399A009BC442 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E211C1B399A009BC442 /* main.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E251C1B3B9B009BC442 /* HangoutsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E241C1B3B9B009BC442 /* HangoutsProvider.swift */; settings = {ASSET_TAGS = (); }; };
+		48834E281C1B3E03009BC442 /* Hangouts.h in Headers */ = {isa = PBXBuildFile; fileRef = 48834E271C1B3D98009BC442 /* Hangouts.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,8 @@
 		48834E191C1B38B9009BC442 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48834E211C1B399A009BC442 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		48834E241C1B3B9B009BC442 /* HangoutsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HangoutsProvider.swift; sourceTree = "<group>"; };
+		48834E261C1B3D5B009BC442 /* HangoutsProvider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = HangoutsProvider.entitlements; sourceTree = "<group>"; };
+		48834E271C1B3D98009BC442 /* Hangouts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Hangouts.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +272,7 @@
 		48834E0A1C1B3739009BC442 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				48834E271C1B3D98009BC442 /* Hangouts.h */,
 				48834DF01C1B372E009BC442 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -296,6 +300,7 @@
 		48834E231C1B3B2C009BC442 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				48834E261C1B3D5B009BC442 /* HangoutsProvider.entitlements */,
 				48834E191C1B38B9009BC442 /* Info.plist */,
 				48834E211C1B399A009BC442 /* main.swift */,
 			);
@@ -309,6 +314,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48834E281C1B3E03009BC442 /* Hangouts.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,6 +469,14 @@
 					};
 					48834E101C1B38B9009BC442 = {
 						CreatedOnToolsVersion = 7.0;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -793,6 +807,7 @@
 		48834E041C1B372E009BC442 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -814,6 +829,7 @@
 		48834E051C1B372E009BC442 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -861,6 +877,7 @@
 		48834E1E1C1B38B9009BC442 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = HangoutsProvider/HangoutsProvider.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = HangoutsProvider/Info.plist;
@@ -874,6 +891,7 @@
 		48834E1F1C1B38B9009BC442 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = HangoutsProvider/HangoutsProvider.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = HangoutsProvider/Info.plist;
