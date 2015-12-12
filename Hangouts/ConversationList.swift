@@ -4,13 +4,12 @@ protocol ConversationListDelegate {
     func conversationList(list: ConversationList, didReceiveEvent event: ConversationEvent)
     func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType)
     func conversationList(list: ConversationList, didReceiveWatermarkNotification status: WatermarkNotification)
-
     func conversationListDidUpdate(list: ConversationList)
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation)
 }
 
+// Wrapper around Client that maintains a list of Conversations
 class ConversationList : ClientDelegate {
-    // Wrapper around Client that maintains a list of Conversations
     let client: Client
     private var conv_dict = [String : Conversation]()
     var sync_timestamp: NSDate
@@ -23,8 +22,7 @@ class ConversationList : ClientDelegate {
         self.sync_timestamp = sync_timestamp ?? NSDate(timeIntervalSince1970: 0)
         self.user_list = user_list
 
-        // Initialize the list of conversations from Client"s list of
-        // ClientConversationStates.
+        // Initialize the list of conversations from Client's list of ClientConversationStates.
         for conv_state in conv_states {
             self.add_conversation(conv_state.conversation, client_events: conv_state.event)
         }
@@ -44,9 +42,9 @@ class ConversationList : ClientDelegate {
             return conv_dict.values.sort { $0.last_modified > $1.last_modified }
         }
     }
-
+	
+	// Return a Conversation from its ID.
     func get(conv_id: String) -> Conversation? {
-        // Return a Conversation from its ID.
         return conv_dict[conv_id]
     }
 
@@ -55,14 +53,13 @@ class ConversationList : ClientDelegate {
             return conversations.flatMap { $0.unread_events }.count
         }
     }
-
+	
+	// Add new conversation from Conversation
     func add_conversation(
         client_conversation: CLIENT_CONVERSATION,
         client_events: [CLIENT_EVENT] = []
     ) -> Conversation {
-        // Add new conversation from Conversation
         let conv_id = client_conversation.conversation_id!.id
-        //print("Adding new conversation: \(conv_id)")
         let conv = Conversation(
             client: client,
             user_list: user_list,
@@ -73,31 +70,29 @@ class ConversationList : ClientDelegate {
         conv_dict[conv_id as String] = conv
         return conv
     }
-
+	
+	// Leave conversation and remove it from ConversationList
     func leave_conversation(conv_id: String) {
-        // Leave conversation and remove it from ConversationList
-        print("Leaving conversation: \(conv_id)")
         conv_dict[conv_id]!.leave {
             conv_dict.removeValueForKey(conv_id)
         }
     }
-
+	
+	// Receive a ClientEvent and fan out to Conversations
     func on_client_event(event: CLIENT_EVENT) {
-        // Receive a ClientEvent and fan out to Conversations
         sync_timestamp = event.timestamp
         if let conv = conv_dict[event.conversation_id.id as String] {
             let conv_event = conv.add_event(event)
 
             delegate?.conversationList(self, didReceiveEvent: conv_event)
             conv.handleConversationEvent(conv_event)
-            //  TODO: Bold this conversation in the list somehow
         } else {
             print("Received ClientEvent for unknown conversation \(event.conversation_id.id)")
         }
     }
-
+	
+	// Receive Conversation and create or update the conversation
     func handle_client_conversation(client_conversation: CLIENT_CONVERSATION) {
-        // Receive Conversation and create or update the conversation
         let conv_id = client_conversation.conversation_id!.id
         if let conv = conv_dict[conv_id as String] {
             conv.update_conversation(client_conversation)
@@ -107,9 +102,9 @@ class ConversationList : ClientDelegate {
         }
         delegate?.conversationListDidUpdate(self)
     }
-
+	
+	// Receive ClientSetTypingNotification and update the conversation
     func handle_set_typing_notification(set_typing_notification: CLIENT_SET_TYPING_NOTIFICATION) {
-        // Receive ClientSetTypingNotification and update the conversation
         let conv_id = set_typing_notification.conversation_id.id
         if let conv = conv_dict[conv_id as String] {
             let res = parse_typing_status_message(set_typing_notification)
@@ -123,9 +118,9 @@ class ConversationList : ClientDelegate {
             print("Received ClientSetTypingNotification for unknown conversation \(conv_id)")
         }
     }
-
+	
+	// Receive ClientWatermarkNotification and update the conversation
     func handle_watermark_notification(watermark_notification: CLIENT_WATERMARK_NOTIFICATION) {
-        // Receive ClientWatermarkNotification and update the conversation
         let conv_id = watermark_notification.conversation_id.id
         if let conv = conv_dict[conv_id as String] {
             let res = parse_watermark_notification(watermark_notification)
@@ -135,10 +130,9 @@ class ConversationList : ClientDelegate {
             print("Received WatermarkNotification for unknown conversation \(conv_id)")
         }
     }
-
+	
+	// Sync conversation state and events that could have been missed
     func sync(cb: (() -> Void)? = nil) {
-        // Sync conversation state and events that could have been missed
-        print("Syncing events since \(sync_timestamp)")
         client.syncAllNewEvents(sync_timestamp) { res in
             if let response = res {
                 for conv_state in response.conversation_state {
@@ -146,8 +140,8 @@ class ConversationList : ClientDelegate {
                         conv.update_conversation(conv_state.conversation)
                         for event in conv_state.event {
                             if event.timestamp > self.sync_timestamp {
-                                // This updates the sync_timestamp for us, as well
-                                // as triggering events.
+								
+                                // This updates the sync_timestamp for us, as well as triggering events.
                                 self.on_client_event(event)
                             }
                         }
@@ -160,6 +154,7 @@ class ConversationList : ClientDelegate {
     }
 
     // MARK: Calls from conversations
+	
     func conversationDidUpdate(conversation: Conversation) {
         delegate?.conversationList(self, didUpdateConversation: conversation)
     }
@@ -171,14 +166,15 @@ class ConversationList : ClientDelegate {
     }
 
     func clientDidDisconnect(client: Client) {
+		
     }
 
     func clientDidReconnect(client: Client) {
         sync()
     }
-
+	
+	// Receive a ClientStateUpdate and fan out to Conversations
     func clientDidUpdateState(client: Client, update: CLIENT_STATE_UPDATE) {
-        // Receive a ClientStateUpdate and fan out to Conversations
         if let client_conversation = update.client_conversation {
             handle_client_conversation(client_conversation)
         }

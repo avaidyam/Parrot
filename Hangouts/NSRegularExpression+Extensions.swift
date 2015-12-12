@@ -34,7 +34,7 @@ class Regex {
 }
 
 // from @matt http://stackoverflow.com/a/24318861/679081
-func delay(delay:Double, closure:()->()) {
+func delay(delay: Double, closure: ()->()) {
 	dispatch_after(
 		dispatch_time(
 			DISPATCH_TIME_NOW,

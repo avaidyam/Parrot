@@ -1,6 +1,3 @@
-//from hangups import (javascript, parsers, exceptions, http_utils, channel,
-//                     event, schemas)
-
 import Foundation
 import Alamofire
 import JavaScriptCore
@@ -9,11 +6,11 @@ let ORIGIN_URL = "https://talkgadget.google.com"
 let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
 let PVT_TOKEN_URL = "https://talkgadget.google.com/talkgadget/_/extension-start"
 let CHAT_INIT_URL = "https://talkgadget.google.com/u/0/talkgadget/_/chat"
-
 let CHAT_INIT_REGEX = "(?:<script>AF_initDataCallback\\((.*?)\\);</script>)"
 
 // Timeout to send for setactiveclient requests:
 let ACTIVE_TIMEOUT_SECS = 120
+
 // Minimum timeout between subsequent setactiveclient requests:
 let SETACTIVECLIENT_LIMIT_SECS = 60
 
@@ -59,36 +56,28 @@ class Client : ChannelDelegate {
     func connect() {
         self.initialize_chat { (id: InitialData?) in
             self.initial_data = id
-            //print("Chat initialized. Opening channel...")
-
             self.channel = Channel(manager: self.manager)
             self.channel?.delegate = self
             self.channel?.listen()
         }
     }
-
+	
+	// Request push channel creation and initial chat data.
+	// Returns instance of InitialData.
+	// The response body is a HTML document containing a series of script tags
+	// containing JavaScript objects. We need to parse the objects to get at
+	// the data.
+	// We first need to fetch the 'pvt' token, which is required for the
+	// initialization request (otherwise it will return 400).
     func initialize_chat(cb: (data: InitialData?) -> Void) {
-        //Request push channel creation and initial chat data.
-        //
-        //Returns instance of InitialData.
-        //
-        //The response body is a HTML document containing a series of script tags
-        //containing JavaScript objects. We need to parse the objects to get at
-        //the data.
-
-        // We first need to fetch the 'pvt' token, which is required for the
-        // initialization request (otherwise it will return 400).
-
         let prop = (CHAT_INIT_PARAMS["prop"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
         let fid = (CHAT_INIT_PARAMS["fid"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
         let ec = (CHAT_INIT_PARAMS["ec"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
         let url = "\(PVT_TOKEN_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)"
-        //print("Fetching pvt token: \(url)")
+		
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
         manager.request(request).responseData { response in
-
             let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
-
             let ctx = JSContext()
             let pvt: AnyObject = ctx.evaluateScript(body).toArray()[1] as! String
             self.CHAT_INIT_PARAMS["pvt"] = pvt
@@ -98,27 +87,20 @@ class Client : ChannelDelegate {
             let fid = (self.CHAT_INIT_PARAMS["fid"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
             let ec = (self.CHAT_INIT_PARAMS["ec"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
             let pvt_enc = (self.CHAT_INIT_PARAMS["pvt"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
-
             let url = "\(CHAT_INIT_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)&pvt=\(pvt_enc)"
-            //print("Initializing chat: \(url)")
+			
 			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
             self.manager.request(request).responseData { response in
-
                 let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
-//                print(error?.description)
-//                print(response?.description)
-//                print("Received chat init response: '\(body)'")
 
                 // Parse the response by using a regex to find all the JS objects, and
                 // parsing them. Not everything will be parsable, but we don't care if
                 // an object we don't need can't be parsed.
-
                 var data_dict = Dictionary<String, AnyObject?>()
                 let regex = Regex(CHAT_INIT_REGEX,
                     options: [NSRegularExpressionOptions.CaseInsensitive, NSRegularExpressionOptions.DotMatchesLineSeparators]
                 )
                 for data in regex.matches(body) {
-
                     if data.rangeOfString("data:function") == nil {
                         let dict = JSContext().evaluateScript("a = " + data).toDictionary()!
                         data_dict[dict["key"] as! String] = dict["data"]
@@ -141,7 +123,8 @@ class Client : ChannelDelegate {
                 self.header_version = ((data_dict["ds:2"] as! NSArray)[0] as! NSArray)[6] as? String
                 self.header_id = ((data_dict["ds:4"] as! NSArray)[0] as! NSArray)[7] as? String
 
-                let self_entity = PBLiteSerialization.parseArray(CLIENT_GET_SELF_INFO_RESPONSE.self, input: (data_dict["ds:20"] as! NSArray)[0] as? NSArray)!.self_entity
+                let self_entity = PBLiteSerialization.parseArray(CLIENT_GET_SELF_INFO_RESPONSE.self,
+					input: (data_dict["ds:20"] as! NSArray)[0] as? NSArray)!.self_entity
 
                 let initial_conv_states_raw = ((data_dict["ds:19"] as! NSArray)[0] as! NSArray)[3] as! NSArray
                 let initial_conv_states = (initial_conv_states_raw as! [NSArray]).map {
@@ -201,7 +184,6 @@ class Client : ChannelDelegate {
         let result = parse_submission(message as String)
 
         if let new_client_id = result.client_id {
-            //print("Setting client ID to \(new_client_id)")
             self.client_id = new_client_id
         }
 
@@ -226,17 +208,18 @@ class Client : ChannelDelegate {
     //        """
     //        self._listen_future.cancel()
     //        self._connector.close()
-    
+	
+	// Set this client as active.
+	// While a client is active, no other clients will raise notifications.
+	// Call this method whenever there is an indication the user is
+	// interacting with this client. This method may be called very
+	// frequently, and it will only make a request when necessary.
     func setActive() {
-        // Set this client as active.
-        //    While a client is active, no other clients will raise notifications.
-        //    Call this method whenever there is an indication the user is
-        //    interacting with this client. This method may be called very
-        //    frequently, and it will only make a request when necessary.
         let isActive = (active_client_state == ActiveClientState.IS_ACTIVE_CLIENT)
         let time_since_active = (NSDate().timeIntervalSince1970 - last_active_secs!.doubleValue)
         let timed_out = time_since_active > Double(SETACTIVECLIENT_LIMIT_SECS)
         if !isActive || timed_out {
+			
             // Update these immediately so if the function is called again
             // before the API request finishes, we don't start extra requests.
             active_client_state = ActiveClientState.IS_ACTIVE_CLIENT
@@ -244,11 +227,6 @@ class Client : ChannelDelegate {
             setActiveClient(true, timeout_secs: ACTIVE_TIMEOUT_SECS)
         }
     }
-    
-    //    ##########################################################################
-    //    # Private methods
-    //    ##########################################################################
-    
 
     private func request(
         endpoint: String,
@@ -274,14 +252,11 @@ class Client : ChannelDelegate {
         use_json: Bool = true,
         cb: (Response<NSData, NSError>) -> Void
     ) {
-        // In case this doesn't work, extract these cookies manually.
-        //  required_cookies = ['SAPISID', 'HSID', 'SSID', 'APISID', 'SID']
         let params = [
             "key": self.api_key!,
             "alt": use_json ? "json" : "protojson",
         ]
         let url = NSURL(string: (path + "?" + params.urlEncodedQueryStringWithEncoding(NSUTF8StringEncoding)))!
-
         let request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "POST"
         request.HTTPBody = data
@@ -290,7 +265,6 @@ class Client : ChannelDelegate {
             request.setValue(v, forHTTPHeaderField: k)
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")
-
         manager.request(request).responseData(cb)
     }
 
@@ -301,52 +275,40 @@ class Client : ChannelDelegate {
             print("Unexpected status response: \(parsedObject!)")
         }
     }
-
+	
+	// List all events occurring at or after timestamp.
+	// This method requests protojson rather than json so we have one chat
+	// message parser rather than two.
+	// timestamp: datetime.datetime instance specifying the time after
+	// which to return all events occurring in.
     func syncAllNewEvents(timestamp: NSDate, cb: (response: CLIENT_SYNC_ALL_NEW_EVENTS_RESPONSE?) -> Void) {
-        //    List all events occurring at or after timestamp.
-        //
-        //    This method requests protojson rather than json so we have one chat
-        //    message parser rather than two.
-        //
-        //    timestamp: datetime.datetime instance specifying the time after
-        //    which to return all events occurring in.
-
         let data: NSArray = [
             self.getRequestHeader(),
-
-            // last_sync_timestamp
-            to_timestamp(timestamp),
-
+			to_timestamp(timestamp),
             [], NSNull(), [], false, [],
-
-            // max_response_size_bytes
-            1048576
+            1048576 // max_response_size_bytes
         ]
         self.request("conversations/syncallnewevents", body: data, use_json: false) { r in
             cb(response: PBLiteSerialization.parseProtoJSON(r.result.value!))
         }
     }
-
+	
+	// Send a chat message to a conversation.
+	// conversation_id must be a valid conversation ID. segments must be a
+	// list of message segments to send, in pblite format.
+	// otr_status determines whether the message will be saved in the server's
+	// chat history. Note that the OTR status of the conversation is
+	// irrelevant, clients may send messages with whatever OTR status they
+	// like.
+	// image_id is an option ID of an image retrieved from
+	// Client.upload_image. If provided, the image will be attached to the
+	// message.
     func sendChatMessage(conversation_id: String,
         segments: [NSArray],
         image_id: String? = nil,
         otr_status: OffTheRecordStatus = .ON_THE_RECORD,
         cb: (() -> Void)? = nil
     ) {
-        //    Send a chat message to a conversation.
-        //
-        //    conversation_id must be a valid conversation ID. segments must be a
-        //    list of message segments to send, in pblite format.
-        //
-        //    otr_status determines whether the message will be saved in the server's
-        //    chat history. Note that the OTR status of the conversation is
-        //    irrelevant, clients may send messages with whatever OTR status they
-        //    like.
-        //
-        //    image_id is an option ID of an image retrieved from
-        //    Client.upload_image. If provided, the image will be attached to the
-        //    message.
-
         let client_generated_id = generateClientID()
         let body = [
             self.getRequestHeader(),
@@ -361,9 +323,10 @@ class Client : ChannelDelegate {
                 otr_status.representation,
             ],
             NSNull(), NSNull(), NSNull(), []
-        ]
+		]
+		
+		// sendchatmessage can return 200 but still contain an error
         self.request("conversations/sendchatmessage", body: body) {
-            // sendchatmessage can return 200 but still contain an error
             r in self.verifyResponseOK(r.result.value!); cb?()
         }
     }
@@ -414,15 +377,13 @@ class Client : ChannelDelegate {
     //                ['uploader_service.GoogleRupioAdditionalInfo']
     //                ['completionInfo']['customerSpecificInfo']['photoid'])
     //
+	
     func setActiveClient(is_active: Bool, timeout_secs: Int, cb: (() -> Void)? = nil) {
         let data: Array<AnyObject> = [
             self.getRequestHeader(),
-            // is_active: whether the client is active or not
-            is_active,
-            // full_jid: user@domain/resource
-            "\(email!)/" + (client_id ?? ""),
-            // timeout_secs: timeout in seconds for this client to be active
-            timeout_secs
+            is_active, // whether the client is active or not
+            "\(email!)/" + (client_id ?? ""), // full_jid: user@domain/resource
+            timeout_secs // timeout in seconds for this client to be active
         ]
 
         // Set the active client.
@@ -430,37 +391,33 @@ class Client : ChannelDelegate {
             r in self.verifyResponseOK(r.result.value!); cb?()
         }
     }
-    
-    //    ###########################################################################
-    //    # UNUSED raw API request methods (by hangups itself) for reference
-    //    ###########################################################################
-    //
+	
+	// Leave group conversation.
+	// conversation_id must be a valid conversation ID.
     func removeuser(conversation_id: String, cb: (() -> Void)? = nil) {
-        // Leave group conversation.
-        // conversation_id must be a valid conversation ID.
         self.request("conversations/removeuser", body: [
             self.getRequestHeader(),
             NSNull(), NSNull(), NSNull(),
             [[conversation_id], generateClientID(), 2],
         ]) { r in self.verifyResponseOK(r.result.value!); cb?() }
     }
-
+	
+	// Delete one-to-one conversation.
+	// conversation_id must be a valid conversation ID.
     func deleteConversation(conversation_id: String, cb: (() -> Void)? = nil) {
-        // Delete one-to-one conversation.
-        // conversation_id must be a valid conversation ID.
-
         self.request("conversations/deleteconversation", body: [
             self.getRequestHeader(),
             [conversation_id],
+			
             // Not sure what timestamp should be there, last time I have tried
             // it Hangouts client in GMail sent something like now() - 5 hours
             to_timestamp(NSDate()), // TODO: This should be in UTC
             NSNull(), []
         ]) { r in self.verifyResponseOK(r.result.value!); cb?() }
     }
-
+	
+	// Send typing notification.
     func setTyping(conversation_id: String, typing: TypingType = TypingType.STARTED, cb: (() -> Void)? = nil) {
-        // Send typing notification.
         let data = [
             self.getRequestHeader(),
             [conversation_id],
@@ -470,16 +427,13 @@ class Client : ChannelDelegate {
             r in self.verifyResponseOK(r.result.value!); cb?()
         }
     }
-
+	
+	// Update the watermark (read timestamp) for a conversation.
     func updateWatermark(conv_id: String, read_timestamp: NSDate, cb: (() -> Void)? = nil) {
-        // Update the watermark (read timestamp) for a conversation.
-
         self.request("conversations/updatewatermark", body: [
             self.getRequestHeader(),
-            // conversation_id
-            [conv_id],
-            // latest_read_timestamp
-            to_timestamp(read_timestamp),
+            [conv_id], // conversation_id
+            to_timestamp(read_timestamp), // latest_read_timestamp
         ]) { r in self.verifyResponseOK(r.result.value!); cb?() }
     }
 
@@ -494,10 +448,9 @@ class Client : ChannelDelegate {
     //            [], []
     //        ])
     //        return json.loads(res.body.decode())
-
+	
+	// Set focus (occurs whenever you give focus to a client).
     func setFocus(conversation_id: String, cb: (() -> Void)? = nil) {
-        // Set focus (occurs whenever you give focus to a client).
-
         self.request("conversations/setfocus", body: [
             self.getRequestHeader(),
             [conversation_id],
@@ -564,28 +517,26 @@ class Client : ChannelDelegate {
     //            [1, 2, 5, 7, 8]
     //        ])
     //        return json.loads(res.body.decode())
-
+	
+	// Return information about a list of contacts.
     func getEntitiesByID(chat_id_list: [String], cb: (CLIENT_GET_ENTITY_BY_ID_RESPONSE) -> Void) {
-        // Return information about a list of contacts.
-
         let data = [self.getRequestHeader(), NSNull(), chat_id_list.map { [$0] }]
         self.request("contacts/getentitybyid", body: data, use_json: false) { r in
 			let obj: CLIENT_GET_ENTITY_BY_ID_RESPONSE? = PBLiteSerialization.parseProtoJSON(r.result.value!)
 			cb(obj!)
         }
     }
-
+	
+	// Return conversation events.
+	// This is mainly used for retrieving conversation scrollback. Events
+	// occurring before event_timestamp are returned, in order from oldest to
+	// newest.
     func getConversation(
         conversation_id: String,
         event_timestamp: NSDate,
         max_events: Int = 50,
         cb: (CLIENT_GET_CONVERSATION_RESPONSE) -> Void
     ) {
-        //    Return conversation events.
-        //
-        //    This is mainly used for retrieving conversation scrollback. Events
-        //    occurring before event_timestamp are returned, in order from oldest to
-        //    newest.
 
         self.request("conversations/getconversation", body: [
             self.getRequestHeader(),
@@ -594,16 +545,16 @@ class Client : ChannelDelegate {
             true,  // includeEvents
             NSNull(),  // ???
             max_events,  // maxEventsPerConversation
+			
             // eventContinuationToken (specifying timestamp is sufficient)
             [
                 NSNull(),  // eventId
                 NSNull(),  // storageContinuationToken
                 to_timestamp(event_timestamp),  // eventTimestamp
             ]
-        ], use_json: false) {
-            r in
-            //  TODO: Undo the sins done here
-            let result = JSContext().evaluateScript("a = " + (NSString(data: r.result.value!, encoding: NSUTF8StringEncoding)! as String)).toArray()
+        ], use_json: false) { r in
+            let result = JSContext().evaluateScript("a = " + (NSString(data: r.result.value!,
+				encoding: NSUTF8StringEncoding)! as String)).toArray()
             cb(PBLiteSerialization.parseArray(CLIENT_GET_CONVERSATION_RESPONSE.self, input: result)!)
         }
     }
@@ -620,9 +571,9 @@ class Client : ChannelDelegate {
     //        self.request('conversations/syncrecentconversations',
     //                                       [self.getRequestHeader()])
     //        return json.loads(res.body.decode())
-
+	
+	// Set the name of a conversation.
     func setChatName(conversation_id: String, name: String, cb: (() -> Void)? = nil) {
-        // Set the name of a conversation.
         let client_generated_id = generateClientID()
         let data = [
             self.getRequestHeader(),

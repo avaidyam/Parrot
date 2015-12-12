@@ -57,37 +57,7 @@ class Message : NSObject {
 
 class PBLiteSerialization {
 	
-	class func ObjectWithData(data: NSData) throws -> AnyObject {
-		return ""
-	}
-	
-	class func dataWithObject(obj: AnyObject) throws -> NSData {
-		return NSData()
-	}
-	
-	class func ObjectWithString(data: NSString) throws -> AnyObject {
-		return ""
-	}
-	
-	class func stringWithObject(obj: AnyObject) throws -> NSString {
-		return ""
-	}
-	
-	/*class func ObjectWithStream(stream: NSInputStream) throws -> AnyObject {
-		return ""
-	}*/
-	
-	/*class func writeObject(obj: AnyObject, toStream stream: NSOutputStream) throws -> Int {
-		return 0
-	}*/
-	
-	class func isValidObject(obj: AnyObject) -> Bool {
-		return true
-	}
-	
-	// ----
-	
-	// AnyObject?
+	// FIXME: Use Swift reflection to unwrap AnyObject?.
 	class func _unwrapOptionalType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
 		if dynamicTypeName.contains("Optional<") {
@@ -98,7 +68,7 @@ class PBLiteSerialization {
 		return nil
 	}
 	
-	// [AnyObject]?
+	// FIXME: Use Swift reflection to unwrap [AnyObject]?.
 	class func _unwrapOptionalArrayType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
 		
@@ -116,11 +86,7 @@ class PBLiteSerialization {
 		return nil
 	}
 	
-	//  hackety hack, this is extremely brittle but Swift's introspection isn't perfect yet
-	// ... etc, one for each different kind of array we might have.
-	// This is horrible, but if we can find a function that'll take
-	// an Any (really a [Something]) and return Something,
-	// this function doesn't need to exist anymore.
+	// FIXME: Use Swift reflection to unwrap [AnyObject].
 	class func getArrayMessageType(arr: Any) -> Message.Type? {
 		if arr is [CONVERSATION_ID] { return CONVERSATION_ID.self }
 		if arr is [USER_ID] { return USER_ID.self }
@@ -133,12 +99,14 @@ class PBLiteSerialization {
 		if arr is [ENTITY_GROUP_ENTITY] { return ENTITY_GROUP_ENTITY.self }
 		return nil
 	}
+	
+	// FIXME: Use Swift reflection to unwrap [AnyObject].
 	class func getArrayEnumType(arr: Any) -> Enum.Type? {
 		if arr is [ConversationView] { return ConversationView.self }
 		return nil
 	}
 	
-	//  Hacky, but if we're doing this at runtime, we don't get Swift's nice implicit Convertables.
+	// FIXME: Use Swift reflection to unwrap.
 	class func valueWithTypeCoercion(property: Any, value: AnyObject?) -> AnyObject? {
 		if property is NSDate || _unwrapOptionalType(property) is NSDate.Type {
 			if let number = value as? NSNumber {
@@ -167,7 +135,6 @@ class PBLiteSerialization {
 	
 	// Parsing
 	
-	//  Due to peculiarities in Swift's type system, we need to pass in "type" here.
 	class func parseArray<T: Message>(type: T.Type, input: NSArray?) -> T? {
 		guard let arr = input else {
 			return nil // expected array

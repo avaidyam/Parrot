@@ -4,7 +4,6 @@ protocol ConversationDelegate {
     func conversation(conversation: Conversation, didChangeTypingStatusForUser: User, toStatus: TypingType)
     func conversation(conversation: Conversation, didReceiveEvent: ConversationEvent)
     func conversation(conversation: Conversation, didReceiveWatermarkNotification: WatermarkNotification)
-
     func conversationDidUpdateEvents(conversation: Conversation)
 
     //  The conversation did receive an update to its internal state - 
@@ -12,9 +11,8 @@ protocol ConversationDelegate {
     func conversationDidUpdate(conversation: Conversation)
 }
 
+// Wrapper around Client for working with a single chat conversation.
 class Conversation {
-    // Wrapper around Client for working with a single chat conversation.
-
     typealias EventID = String
 
     var client: Client
@@ -45,21 +43,19 @@ class Conversation {
             add_event(event)
         }
     }
-
+	
+	// Update the conversations latest_read_timestamp.
     func on_watermark_notification(notif: WatermarkNotification) {
-        // Update the conversations latest_read_timestamp.
         if self.get_user(notif.user_id).isSelf {
-            print("latest_read_timestamp for \(self.id) updated to \(notif.read_timestamp)")
             self.conversation.self_conversation_state.self_read_state.latest_read_timestamp = notif.read_timestamp
         }
     }
-
+	
+	// Update the internal Conversation.
+	// When latest_read_timestamp is 0, this seems to indicate no change
+	// from the previous value. Word around this by saving and restoring the
+	// previous value.
     func update_conversation(client_conversation: CLIENT_CONVERSATION) {
-        // Update the internal Conversation.
-        // When latest_read_timestamp is 0, this seems to indicate no change
-        // from the previous value. Word around this by saving and restoring the
-        // previous value.
-
         let old_timestamp = self.latest_read_timestamp
         self.conversation = client_conversation
         
@@ -69,9 +65,9 @@ class Conversation {
 
         delegate?.conversationDidUpdate(self)
     }
-
+	
+	// Wrap ClientEvent in ConversationEvent subclass.
     private class func wrap_event(event: CLIENT_EVENT) -> ConversationEvent {
-        // Wrap ClientEvent in ConversationEvent subclass.
         if event.chat_message != nil {
             return ChatMessageEvent(client_event: event)
         } else if event.conversation_rename != nil {
@@ -92,17 +88,17 @@ class Conversation {
             return _cachedEvents!
         }
     }
-
+	
+	// Add a ClientEvent to the Conversation.
+	// Returns an instance of ConversationEvent or subclass.
     func add_event(event: CLIENT_EVENT) -> ConversationEvent {
-        // Add a ClientEvent to the Conversation.
-        // Returns an instance of ConversationEvent or subclass.
         let conv_event = Conversation.wrap_event(event)
         self.events_dict[conv_event.id] = conv_event
         return conv_event
     }
-
+	
+	// Return the User instance with the given UserID.
     func get_user(user_id: UserID) -> User {
-        // Return the User instance with the given UserID.
         return self.user_list.get_user(user_id)
     }
 
@@ -119,35 +115,27 @@ class Conversation {
     func setFocus() {
         self.client.setFocus(id)
     }
-
+	
+	// Send a message to this conversation.
+	// A per-conversation lock is acquired to ensure that messages are sent in
+	// the correct order when this method is called multiple times
+	// asynchronously.
+	// segments is a list of ChatMessageSegments to include in the message.
+	// image_file is an optional file-like object containing an image to be
+	// attached to the message.
+	// image_id is an optional ID of an image to be attached to the message
+	// (if you specify both image_file and image_id together, image_file
+	// takes precedence and supplied image_id will be ignored)
+	// Send messages with OTR status matching the conversation's status.
     func sendMessage(segments: [ChatMessageSegment],
         image_file: String? = nil,
         image_id: String? = nil,
         cb: (() -> Void)? = nil
     ) {
-        // Send a message to this conversation.
-
-        // A per-conversation lock is acquired to ensure that messages are sent in
-        // the correct order when this method is called multiple times
-        // asynchronously.
-
-        // segments is a list of ChatMessageSegments to include in the message.
-
-        // image_file is an optional file-like object containing an image to be
-        // attached to the message.
-
-        // image_id is an optional ID of an image to be attached to the message
-        // (if you specify both image_file and image_id together, image_file
-        // takes precedence and supplied image_id will be ignored)
-
-        //with (yield from self._send_message_lock) {
-        // Send messages with OTR status matching the conversation's status.
         let otr_status = (is_off_the_record ? OffTheRecordStatus.OFF_THE_RECORD : OffTheRecordStatus.ON_THE_RECORD)
 
         if let _ = image_file {
-            //client.upload_image(image_file) { image_id in
-                self.sendMessage(segments, image_file: nil, image_id: image_id, cb: cb)
-            //}
+			self.sendMessage(segments, image_file: nil, image_id: image_id, cb: cb)
             return
         }
 
@@ -157,13 +145,12 @@ class Conversation {
             otr_status: otr_status,
             cb: cb
         )
-        //}
     }
 
     func leave(cb: (() -> Void)? = nil) {
         switch (self.conversation.type) {
         case ConversationType.GROUP:
-            print("Remove")
+            print("Remove Not Implemented!")
             //client.removeUser(id, cb)
         case ConversationType.ONE_TO_ONE:
             client.deleteConversation(id, cb: cb)
@@ -172,13 +159,12 @@ class Conversation {
         }
     }
     
-
+	
+	// Rename the conversation.
+	// Hangouts only officially supports renaming group conversations, so
+	// custom names for one-to-one conversations may or may not appear in all
+	// first party clients.
     func rename(name: String, cb: (() -> Void)?) {
-        // Rename the conversation.
-
-        // Hangouts only officially supports renaming group conversations, so
-        // custom names for one-to-one conversations may or may not appear in all
-        // first party clients.
         self.client.setChatName(self.id, name: name, cb: cb)
     }
 
@@ -188,32 +174,27 @@ class Conversation {
 //        // or ClientNotificationLevel.RING to enable them.
 //        self.client.setconversationnotificationlevel(self.id_, level, cb)
 //    }
-
+	
+	// Set typing status.
+	// TODO: Add rate-limiting to avoid unnecessary requests.
     func setTyping(typing: TypingType = TypingType.STARTED, cb: (() -> Void)? = nil) {
-        // Set typing status.
-        // TODO: Add rate-limiting to avoid unnecessary requests.
-        print("Calling setTyping with \(id) \(typing)")
         client.setTyping(id, typing: typing, cb: cb)
     }
-
+	
+	// Update the timestamp of the latest event which has been read.
+	// By default, the timestamp of the newest event is used.
+	// This method will avoid making an API request if it will have no effect.
     func updateReadTimestamp(var read_timestamp: NSDate? = nil, cb: (() -> Void)? = nil) {
-        // Update the timestamp of the latest event which has been read.
-        // By default, the timestamp of the newest event is used.
-        // This method will avoid making an API request if it will have no effect.
-
         if read_timestamp == nil {
             read_timestamp = self.events.last!.timestamp
         }
         if let new_read_timestamp = read_timestamp {
             if new_read_timestamp > self.latest_read_timestamp {
-                print("Setting \(id) latest_read_timestamp from \(latest_read_timestamp) to \(read_timestamp)")
 
                 // Prevent duplicate requests by updating the conversation now.
                 latest_read_timestamp = new_read_timestamp
-
                 delegate?.conversationDidUpdate(self)
                 conversationList?.conversationDidUpdate(self)
-
                 client.updateWatermark(id, read_timestamp: new_read_timestamp, cb: cb)
             }
         }
@@ -225,6 +206,7 @@ class Conversation {
         } else {
             let user = user_list.get_user(event.user_id)
             if !user.isSelf {
+				print("");
                 //NotificationManager.sharedInstance.sendNotificationFor(event, fromUser: user)
             }
         }
@@ -247,14 +229,13 @@ class Conversation {
             return events.flatMap { $0 as? ChatMessageEvent }
         }
     }
-
+	
+	// Return list of ConversationEvents ordered newest-first.
+	// If event_id is specified, return events preceeding this event.
+	// This method will make an API request to load historical events if
+	// necessary. If the beginning of the conversation is reached, an empty
+	// list will be returned.
     func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([ConversationEvent]) -> Void)? = nil) {
-        // Return list of ConversationEvents ordered newest-first.
-        // If event_id is specified, return events preceeding this event.
-        // This method will make an API request to load historical events if
-        // necessary. If the beginning of the conversation is reached, an empty
-        // list will be returned.
-
         guard let event_id = event_id else {
             cb?(events)
             return
@@ -270,10 +251,9 @@ class Conversation {
                     return
                 }
             }
-            //print("Loading events for conversation \(id) before \(conv_event.timestamp)")
+			
             client.getConversation(id, event_timestamp: conv_event.timestamp, max_events: max_events) { res in
                 let conv_events = res.conversation_state.event.map { Conversation.wrap_event($0) }
-                //print("Loaded \(conv_events.count) events for conversation \(self.id)")
 
                 for conv_event in conv_events {
                     self.events_dict[conv_event.id] = conv_event
@@ -282,7 +262,6 @@ class Conversation {
                 self.delegate?.conversationDidUpdateEvents(self)
             }
         } else {
-            //  TODO: Handle this error somehow.
             print("Event not found.")
         }
     }
@@ -307,10 +286,10 @@ class Conversation {
     func get_event(event_id: EventID) -> ConversationEvent? {
         return events_dict[event_id]
     }
-
+	
+	// The conversation's ID.
     var id: String {
         get {
-            // The conversation's ID.
             return self.conversation.conversation_id!.id as String
         }
     }
@@ -341,28 +320,26 @@ class Conversation {
             return conversation.self_conversation_state.sort_timestamp!
         }
     }
-
+	
+	// datetime timestamp of the last read ConversationEvent.
     var latest_read_timestamp: NSDate {
         get {
-            // datetime timestamp of the last read ConversationEvent.
             return conversation.self_conversation_state.self_read_state.latest_read_timestamp
         }
         set(newLatestReadTimestamp) {
             conversation.self_conversation_state.self_read_state.latest_read_timestamp = newLatestReadTimestamp
         }
     }
-
+	
+	// List of ConversationEvents that are unread.
+	// Events are sorted oldest to newest.
+	// Note that some Hangouts clients don't update the read timestamp for
+	// certain event types, such as membership changes, so this method may
+	// return more unread events than these clients will show. There's also a
+	// delay between sending a message and the user's own message being
+	// considered read.
     var unread_events: [ConversationEvent] {
         get {
-            // List of ConversationEvents that are unread.
-
-            // Events are sorted oldest to newest.
-
-            // Note that some Hangouts clients don't update the read timestamp for
-            // certain event types, such as membership changes, so this method may
-            // return more unread events than these clients will show. There's also a
-            // delay between sending a message and the user's own message being
-            // considered read.
             return events.filter { $0.timestamp > self.latest_read_timestamp }
         }
     }
@@ -375,10 +352,10 @@ class Conversation {
             return unread_events.first != nil
         }
     }
-
+	
+	// True if this conversation has been archived.
     var is_archived: Bool {
         get {
-            // True if this conversation has been archived.
             return self.conversation.self_conversation_state.view.contains(ConversationView.ARCHIVED)
         }
     }
@@ -391,9 +368,10 @@ class Conversation {
 //            }
 //        }
 //        
+	
+	// True if conversation is off the record (history is disabled).
     var is_off_the_record: Bool {
         get {
-            // True if conversation is off the record (history is disabled).
             return self.conversation.otr_status == OffTheRecordStatus.OFF_THE_RECORD
         }
     }

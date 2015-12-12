@@ -1,11 +1,10 @@
 import Cocoa
 
+// A chat user.
+// Handles full_name or first_name being nil by creating an approximate
+// first_name from the full_name, or setting both to DEFAULT_NAME.
 class User {
     static let DEFAULT_NAME = "Unknown"
-
-    // A chat user.
-    // Handles full_name or first_name being nil by creating an approximate
-    // first_name from the full_name, or setting both to DEFAULT_NAME.
 
     let id: UserID
     let full_name: String
@@ -13,9 +12,9 @@ class User {
     let photo_url: String?
     let emails: [String]
     let isSelf: Bool
-
+	
+	// Initialize a User.
     init(user_id: UserID, full_name: String?=nil, first_name: String?=nil, photo_url: String?, emails: [String], is_self: Bool) {
-        // Initialize a User.
         self.id = user_id
         self.full_name = full_name == nil ? User.DEFAULT_NAME : full_name!
         self.first_name = first_name == nil ? self.full_name.componentsSeparatedByString(" ").first! : first_name!
@@ -27,10 +26,10 @@ class User {
         self.emails = emails
         self.isSelf = is_self
     }
-
+	
+	// Initialize from a ClientEntity.
+	// If self_user_id is nil, assume this is the self user.
     convenience init(entity: CLIENT_ENTITY, self_user_id: UserID?) {
-        // Initialize from a ClientEntity.
-        // If self_user_id is nil, assume this is the self user.
         let user_id = UserID(chat_id: entity.id.chat_id as String, gaia_id: entity.id.gaia_id as String)
         var is_self = false
         if let sui = self_user_id {
@@ -47,10 +46,10 @@ class User {
         )
 
     }
-
+	
+	// Initialize from ClientConversationParticipantData.
+	// If self_user_id is nil, assume this is the self user.
     convenience init(conv_part_data: CLIENT_CONVERSATION_PARTICIPANT_DATA, self_user_id: UserID?) {
-        // Initialize from ClientConversationParticipantData.
-        // If self_user_id is nil, assume this is the self user.
         let user_id = UserID(chat_id: conv_part_data.id.chat_id as String, gaia_id: conv_part_data.id.gaia_id as String)
         var is_self = false
         if let sui = self_user_id {
@@ -66,29 +65,23 @@ class User {
             is_self: is_self
         )
     }
-
-    /*var image: NSImage? {
-        get {
-            return ImageCache.sharedInstance.getImage(forUser: self)
-        }
-    }*/
 }
 
 let ClientStateUpdatedNotification = "ClientStateUpdated"
 let ClientStateUpdatedNewStateKey = "ClientStateNewState"
 
+// Collection of User instances.
 class UserList : NSObject {
-    // Collection of User instances.
 
     private let client: Client
     private let self_user: User
     private var user_dict: [UserID : User]
-
+	
+	// Initialize the list of Users.
+	// Creates users from the given ClientEntity and
+	// ClientConversationParticipantData instances. The latter is used only as
+	// a fallback, because it doesn't include a real first_name.
     init(client: Client, self_entity: CLIENT_ENTITY, entities: [CLIENT_ENTITY], conv_parts: [CLIENT_CONVERSATION_PARTICIPANT_DATA]) {
-        // Initialize the list of Users.
-        // Creates users from the given ClientEntity and
-        // ClientConversationParticipantData instances. The latter is used only as
-        // a fallback, because it doesn't include a real first_name.
 
         self.client = client
         self.self_user = User(entity: self_entity, self_user_id: nil)
@@ -102,12 +95,11 @@ class UserList : NSObject {
             self.user_dict[user.id] = user
         }
 		
-        // Add each conversation participant as a new User if we didn't already
-        // add them from an entity.
+        // Add each conversation participant as a new User if we didn't already add them from an entity.
         for participant in conv_parts {
             self.add_user_from_conv_part(participant)
         }
-        //print("UserList initialized with \(user_dict.count) users.")
+		
         NSNotificationCenter.defaultCenter().addObserver(
             self,
             selector: Selector("on_state_update_notification:"),
@@ -119,10 +111,10 @@ class UserList : NSObject {
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
-
+	
+	// Return a User by their UserID.
+	// Raises KeyError if the User is not available.
     func get_user(user_id: UserID) -> User {
-        // Return a User by their UserID.
-        // Raises KeyError if the User is not available.
         if let elem = self.user_dict[user_id] {
             return elem
         } else {
@@ -136,14 +128,14 @@ class UserList : NSObject {
             )
         }
     }
-
+	
+	// Returns all the users known
     func get_all() -> [User] {
-        // Returns all the users known
         return Array(self.user_dict.values)
     }
-
+	
+	// Add new User from ClientConversationParticipantData
     func add_user_from_conv_part(conv_part: CLIENT_CONVERSATION_PARTICIPANT_DATA) -> User {
-        // Add new User from ClientConversationParticipantData
         let user = User(conv_part_data: conv_part, self_user_id: self.self_user.id)
         if self.user_dict[user.id] == nil {
             print("Adding fallback User: \(user)")
@@ -157,29 +149,27 @@ class UserList : NSObject {
             on_state_update(state_update as! CLIENT_STATE_UPDATE)
         }
     }
-
+	
+	// Receive a ClientStateUpdate
     private func on_state_update(state_update: CLIENT_STATE_UPDATE) {
-        // Receive a ClientStateUpdate
         if let conversation = state_update.client_conversation {
             self.handle_client_conversation(conversation)
         }
     }
-
+	
+	// Receive Conversation and update list of users
     private func handle_client_conversation(client_conversation: CLIENT_CONVERSATION) {
-        // Receive Conversation and update list of users
         for participant in client_conversation.participant_data {
             self.add_user_from_conv_part(participant)
         }
     }
 }
 
+// Return UserList from initial contact data and an additional request.
+// The initial data contains the user's contacts, but there may be conversions
+// containing users that are not in the contacts. This function takes care of
+// requesting data for those users and constructing the UserList.
 func buildUserList(client: Client, initial_data: InitialData, cb: (UserList) -> Void) {
-    // Return UserList from initial contact data and an additional request.
-
-    // The initial data contains the user's contacts, but there may be conversions
-    // containing users that are not in the contacts. This function takes care of
-    // requesting data for those users and constructing the UserList.
-
     let all_entities = initial_data.entities + [initial_data.self_entity]
     let present_user_ids = Set(all_entities.map {
         UserID(chat_id: $0.id.chat_id as String, gaia_id: $0.id.gaia_id as String)
@@ -193,11 +183,8 @@ func buildUserList(client: Client, initial_data: InitialData, cb: (UserList) -> 
     }
 
     let missing_user_ids = required_user_ids.subtract(present_user_ids)
-
     if missing_user_ids.count > 0 {
-        //print("Need to request additional users: \(missing_user_ids)")
         client.getEntitiesByID(missing_user_ids.map { $0.chat_id }) { missing_entities in
-            //print("Received additional users: \(missing_entities)")
             cb(UserList(
                 client: client,
                 self_entity: initial_data.self_entity,

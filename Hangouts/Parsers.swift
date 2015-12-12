@@ -1,20 +1,24 @@
 import Foundation
 import JavaScriptCore
 
+typealias TypingStatusMessage = (conv_id: String, user_id: UserID, timestamp: NSDate, status: TypingType)
+typealias WatermarkNotification = (conv_id: String, user_id: UserID, read_timestamp: NSDate)
+
+// Yield ClientStateUpdate instances from a channel submission.
+// For each submission payload, yield its messages
 func parse_submission(submission: String) -> (client_id: String?, updates: [CLIENT_STATE_UPDATE]) {
-    // Yield ClientStateUpdate instances from a channel submission.
-    // For each submission payload, yield its messages
     let result = _get_submission_payloads(submission)
-    let parsed_submissions = result.updates.flatMap { _parse_payload($0) }
+    let parsed_submissions = result.updates.flatMap {
+		_parse_payload($0)
+	}
     return (client_id: result.client_id, updates: parsed_submissions)
 }
 
-
+// Yield a submission's payloads.
+// Most submissions only contain one payload, but if the long-polling
+// connection was closed while something happened, there can be multiple
+// payloads.
 func _get_submission_payloads(submission: String) -> (client_id: String?, updates: [[AnyObject]]) {
-    // Yield a submission's payloads.
-    // Most submissions only contain one payload, but if the long-polling
-    // connection was closed while something happened, there can be multiple
-    // payloads.
     let result = JSContext().evaluateScript("a = " + submission)
     let nullResult: (client_id: String?, updates: [[AnyObject]]) = (nil, [])
     let r: [(client_id: String?, updates: [[AnyObject]])] = result.toArray().map { sub in
@@ -35,17 +39,20 @@ func _get_submission_payloads(submission: String) -> (client_id: String?, update
         }
         return (nil, [])
     }
-    return r.reduce(nullResult) { (($1.client_id != nil ? $1.client_id : $0.client_id), $0.updates + $1.updates)  }
+    return r.reduce(nullResult) {
+		(($1.client_id != nil ? $1.client_id : $0.client_id), $0.updates + $1.updates)
+	}
 }
 
 func flatMap<A,B>(x: [A], y: A -> B?) -> [B] {
     return x.map { y($0) }.filter { $0 != nil }.map { $0! }
 }
+// Yield a list of ClientStateUpdates.
 
 func _parse_payload(payload: [AnyObject]) -> [CLIENT_STATE_UPDATE] {
-    // Yield a list of ClientStateUpdates.
     if payload[0] as? String == "cbu" {
-        // payload[1] is a list of state updates.
+		
+		// payload[1] is a list of state updates.
         return flatMap(payload[1] as! [NSArray]) {
 			PBLiteSerialization.parseArray(CLIENT_STATE_UPDATE.self, input: $0)
 		}
@@ -54,11 +61,6 @@ func _parse_payload(payload: [AnyObject]) -> [CLIENT_STATE_UPDATE] {
         return []
     }
 }
-
-//##############################################################################
-//# Message parsing utils
-//##############################################################################
-
 
 let MicrosecondsPerSecond = 1000000.0
 func from_timestamp(microsecond_timestamp: NSNumber?) -> NSDate? {
@@ -69,29 +71,20 @@ func from_timestamp(microsecond_timestamp: NSNumber?) -> NSDate? {
     return date
 }
 
+// Convert a microsecond timestamp to an NSDate instance.
 func from_timestamp(microsecond_timestamp: NSNumber) -> NSDate {
-    // Convert a microsecond timestamp to an NSDate instance.
     return NSDate(timeIntervalSince1970: microsecond_timestamp.doubleValue / MicrosecondsPerSecond)
 }
 
+// Convert UTC datetime to microsecond timestamp used by Hangouts.
 func to_timestamp(date: NSDate) -> NSNumber {
-    // Convert UTC datetime to microsecond timestamp used by Hangouts.
     return date.timeIntervalSince1970 * MicrosecondsPerSecond
 }
-//
-//
-//##############################################################################
-//# Message types and parsers
-//##############################################################################
-//
-//
-typealias TypingStatusMessage = (conv_id: String, user_id: UserID, timestamp: NSDate, status: TypingType)
 
-
+// Return TypingStatusMessage from ClientSetTypingNotification.
+// The same status may be sent multiple times consecutively, and when a
+// message is sent the typing status will not change to stopped.
 func parse_typing_status_message(p: CLIENT_SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
-    //    Return TypingStatusMessage from ClientSetTypingNotification.
-    //    The same status may be sent multiple times consecutively, and when a
-    //    message is sent the typing status will not change to stopped.
     return TypingStatusMessage(
         conv_id: p.conversation_id.id as String,
         user_id: UserID(chat_id: p.user_id.chat_id as String, gaia_id: p.user_id.gaia_id as String),
@@ -100,12 +93,8 @@ func parse_typing_status_message(p: CLIENT_SET_TYPING_NOTIFICATION) -> TypingSta
     )
 }
 
-
-typealias WatermarkNotification = (conv_id: String, user_id: UserID, read_timestamp: NSDate)
-
-
+// Return WatermarkNotification from ClientWatermarkNotification.
 func parse_watermark_notification(client_watermark_notification: CLIENT_WATERMARK_NOTIFICATION) -> WatermarkNotification {
-    // Return WatermarkNotification from ClientWatermarkNotification.
     return WatermarkNotification(
         conv_id: client_watermark_notification.conversation_id.id as String,
         user_id: UserID(

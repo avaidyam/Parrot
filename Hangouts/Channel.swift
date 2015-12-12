@@ -9,7 +9,7 @@ protocol ChannelDelegate {
     func channel(channel: Channel, didReceiveMessage: NSString)
 }
 
-class Channel : NSObject, NSURLSessionDataDelegate {
+class Channel : NSObject {
     static let ORIGIN_URL = "https://talkgadget.google.com"
     let CHANNEL_URL_PREFIX = "https://0.client-channel.google.com/client-channel"
 
@@ -52,10 +52,9 @@ class Channel : NSObject, NSURLSessionDataDelegate {
         }
         return nil
     }
-
+	
+	// Listen for messages on the channel.
     func listen() {
-        // Listen for messages on the channel.
-
         if self.retries >= 0 {
             // After the first failed retry, back off exponentially longer after
             // each attempt.
@@ -80,41 +79,25 @@ class Channel : NSObject, NSURLSessionDataDelegate {
         } else {
             print("Listen failed due to no retries left.");
         }
-        // logger.error('Ran out of retries for long-polling request')
     }
 	
+	// Open a long-polling request and receive push data.
+	// This method uses keep-alive to make re-opening the request faster, but
+	// the remote server will set the "Connection: close" header once an hour.
     func makeLongPollingRequest() {
-        //  Open a long-polling request and receive push data.
-        //
-        //  This method uses keep-alive to make re-opening the request faster, but
-        //  the remote server will set the "Connection: close" header once an hour.
-
-        //print("Opening long polling request.")
-        //  Make the request!
         let queryString = "VER=8&RID=rpc&t=1&CI=0&ctype=hangouts&TYPE=xmlhttp&gsessionid=\(gSessionIDParam!.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!)&SID=\(sidParam!.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!)"
         let url = "\(CHANNEL_URL_PREFIX)/channel/bind?\(queryString)"
 
         //  TODO: Include timeout
-
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 
         let sapisid = getCookieValue("SAPISID")!
-        //print("SAPISID param: \(sapisid)")
         for (k, v) in getAuthorizationHeaders(sapisid) {
-            //print("Setting header \(k) to \(v)")
             request.setValue(v, forHTTPHeaderField: k)
         }
-        //print("Making request to URL: \(url)")
-
-//        let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
-//        cfg.HTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-//        let sessionCopy = NSURLSession(configuration: cfg, delegate: self, delegateQueue: nil)
-//        sessionCopy.dataTaskWithRequest(request).resume()
 
         request.timeoutInterval = 30
         manager.request(request).stream { (data: NSData) in self.onPushData(data) }.responseData { response in
-
-            //print("long poll completed with status code: \(response.response?.statusCode)")
             if response.response?.statusCode >= 400 {
                 print("Request failed with: \(NSString(data: response.result.value!, encoding: 4))")
                 self.need_new_sid = true
@@ -129,46 +112,13 @@ class Channel : NSObject, NSURLSessionDataDelegate {
 
         }
     }
-
-
-    func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
-        print("GOT DATA \(NSString(data: data, encoding: NSUTF8StringEncoding))")
-    }
-
-    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
-        print("Request failed: \(error)")
-        //            if let error = () {
-        //                print("Long-polling request failed: \(error)")
-        //                retries -= 1
-        //                if isConnected {
-        //                    isConnected = false
-        //                }
-
-        //self.on_disconnect.fire()
-
-        //                if isinstance(e, UnknownSIDError) {
-        //                    need_new_sid = true
-        //                }
-        //            } else {
-        // The connection closed successfully, so reset the number of
-        // retries.
-        //                retries = Channel.MAX_RETRIES
-        //            }
-
-        // If the request ended with an error, the client must account for
-        // messages being dropped during this time.
-    }
-
+	
+	// Creates a new channel for receiving push data.
+	// There's a separate API to get the gsessionid alone that Hangouts for
+	// Chrome uses, but if we don't send a gsessionid with this request, it
+	// will return a gsessionid as well as the SID.
     func fetchChannelSID() {
-        //  Creates a new channel for receiving push data.
-
-        //print("Requesting new gsessionid and SID...")
-        // There's a separate API to get the gsessionid alone that Hangouts for
-        // Chrome uses, but if we don't send a gsessionid with this request, it
-        // will return a gsessionid as well as the SID.
-
-        //var params
-		_ = ["VER": 8, "RID": 81187, "ctype": "hangouts"]
+		_ = ["VER": 8, "RID": 81187, "ctype": "hangouts"] // params
         let headers = getAuthorizationHeaders(getCookieValue("SAPISID")!)
         let url = "\(CHANNEL_URL_PREFIX)/channel/bind?VER=8&RID=81187&ctype=hangouts"
 
@@ -185,22 +135,19 @@ class Channel : NSObject, NSURLSessionDataDelegate {
                 print("Request failed: \(response.result.error!)")
             } else {
                 let responseValues = parseSIDResponse(response.result.value!)
-                //print("Got SID response back: \(NSString(data: response.result.value!, encoding: NSUTF8StringEncoding))")
                 self.sidParam = responseValues.sid
                 self.gSessionIDParam = responseValues.gSessionID
-                //print("New SID: \(self.sidParam)")
-                //print("New gsessionid: \(self.gSessionIDParam)")
                 self.need_new_sid = false
                 self.listen()
             }
         }
 
     }
-
+	
+	// Delay subscribing until first byte is received prevent "channel not
+	// ready" errors that appear to be caused by a race condition on the
+	// server.
     private func onPushData(data: NSData) {
-        // Delay subscribing until first byte is received prevent "channel not
-        // ready" errors that appear to be caused by a race condition on the
-        // server.
         if !isSubscribed {
             subscribe {
                 self.onPushData(data)
@@ -227,20 +174,17 @@ class Channel : NSObject, NSURLSessionDataDelegate {
     }
 
     private var isSubscribing = false
+	
+	// Subscribes the channel to receive relevant events.
+	// Only needs to be called when a new channel (SID/gsessionid) is opened.
     private func subscribe(cb: (() -> Void)?) {
-        // Subscribes the channel to receive relevant events.
-        // Only needs to be called when a new channel (SID/gsessionid) is opened.
-
         if isSubscribing { return }
-        //print("Subscribing channel...")
         isSubscribing = true
 
-        // Temporary workaround for #58
         delay(1) {
             let timestamp = Int(NSDate().timeIntervalSince1970 * 1000)
 
-            // Hangouts for Chrome splits this over 2 requests, but it's possible to
-            // do everything in one.
+            // Hangouts for Chrome splits this over 2 requests, but it's possible to do everything in one.
             let data: Dictionary<String, AnyObject> = [
                 "count": "3",
                 "ofs": "0",
@@ -259,9 +203,7 @@ class Channel : NSObject, NSURLSessionDataDelegate {
                 request.setValue(v, forHTTPHeaderField: k)
             }
 
-            //print("Making request to URL: \(url)")
             self.manager.request(request).responseData { response in
-                //print("Channel is now subscribed.")
                 self.isSubscribed = true
                 cb?()
             }
@@ -269,12 +211,11 @@ class Channel : NSObject, NSURLSessionDataDelegate {
     }
 }
 
+//  Parse response format for request for new channel SID.
+//  Example format (after parsing JS):
+//  [   [0,["c","SID_HERE","",8]],
+//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
 func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
-    //  Parse response format for request for new channel SID.
-    //
-    //  Example format (after parsing JS):
-    //  [   [0,["c","SID_HERE","",8]],
-    //      [1,[{"gsid":"GSESSIONID_HERE"}]]]
     if let firstSubmission = PushDataParser().getSubmissions(res).first {
         let ctx = JSContext()
         let val: JSValue = ctx.evaluateScript(firstSubmission)
@@ -285,12 +226,10 @@ func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
     return ("", "")
 }
 
+// Return authorization headers for API request.
+// It doesn't seem to matter what the url and time are as long as they are
+// consistent.
 func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
-    //  Return authorization headers for API request.
-    //
-    // It doesn't seem to matter what the url and time are as long as they are
-    // consistent.
-
     let time_msec = Int(NSDate().timeIntervalSince1970 * 1000)
 
     let auth_string = "\(time_msec) \(sapisid_cookie) \(Channel.ORIGIN_URL)"
@@ -303,11 +242,10 @@ func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, Strin
     ]
 }
 
+// Decode data_bytes into a string using UTF-8.
+// If data_bytes cannot be decoded, pop the last byte until it can be or
+// return an empty string.
 func bestEffortDecode(data: NSData) -> String? {
-    // Decode data_bytes into a string using UTF-8.
-    //
-    // If data_bytes cannot be decoded, pop the last byte until it can be or
-    // return an empty string.
     for var i = 0; i < data.length; i++ {
         if let s = NSString(data: data.subdataWithRange(NSMakeRange(0, data.length - i)), encoding: NSUTF8StringEncoding) {
             return s as String
@@ -316,29 +254,24 @@ func bestEffortDecode(data: NSData) -> String? {
     return nil
 }
 
+// Parse data from the long-polling endpoint.
 class PushDataParser {
-    // Parse data from the long-polling endpoint.
-
+	
     var buf = NSMutableData()
-
+	
+	// Yield submissions generated from received data.
+	// Responses from the push endpoint consist of a sequence of submissions.
+	// Each submission is prefixed with its length followed by a newline.
+	// The buffer may not be decodable as UTF-8 if there's a split multi-byte
+	// character at the end. To handle this, do a "best effort" decode of the
+	// buffer to decode as much of it as possible.
+	// The length is actually the length of the string as reported by
+	// JavaScript. JavaScript's string length function returns the number of
+	// code units in the string, represented in UTF-16. We can emulate this by
+	// encoding everything in UTF-16 and multipling the reported length by 2.
+	// Note that when encoding a string in UTF-16, Python will prepend a
+	// byte-order character, so we need to remove the first two bytes.
     func getSubmissions(newBytes: NSData) -> [String] {
-        //  Yield submissions generated from received data.
-        //
-        //  Responses from the push endpoint consist of a sequence of submissions.
-        //  Each submission is prefixed with its length followed by a newline.
-        //
-        //  The buffer may not be decodable as UTF-8 if there's a split multi-byte
-        //  character at the end. To handle this, do a "best effort" decode of the
-        //  buffer to decode as much of it as possible.
-        //
-        //  The length is actually the length of the string as reported by
-        //  JavaScript. JavaScript's string length function returns the number of
-        //  code units in the string, represented in UTF-16. We can emulate this by
-        //  encoding everything in UTF-16 and multipling the reported length by 2.
-        //
-        //  Note that when encoding a string in UTF-16, Python will prepend a
-        //  byte-order character, so we need to remove the first two bytes.
-
         buf.appendData(newBytes)
         var submissions = [String]()
 

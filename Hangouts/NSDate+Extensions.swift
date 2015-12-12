@@ -34,7 +34,6 @@ extension NSDate {
 	
 	var isYesterday: Bool {
 		get {
-			//  TODO: This could be done better.
 			return isSameDayAs(NSDate().dateByAddingTimeInterval(-1 * 60 * 60 * 24))
 		}
 	}
@@ -44,16 +43,20 @@ func <=(lhs: NSDate, rhs: NSDate) -> Bool {
 	let res = lhs.compare(rhs)
 	return res == .OrderedAscending || res == .OrderedSame
 }
+
 func >=(lhs: NSDate, rhs: NSDate) -> Bool {
 	let res = lhs.compare(rhs)
 	return res == .OrderedDescending || res == .OrderedSame
 }
+
 func >(lhs: NSDate, rhs: NSDate) -> Bool {
 	return lhs.compare(rhs) == .OrderedDescending
 }
+
 func <(lhs: NSDate, rhs: NSDate) -> Bool {
 	return lhs.compare(rhs) == .OrderedAscending
 }
+
 func ==(lhs: NSDate, rhs: NSDate) -> Bool {
 	return lhs.compare(rhs) == .OrderedSame
 }

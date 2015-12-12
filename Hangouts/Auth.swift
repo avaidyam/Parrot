@@ -120,38 +120,17 @@ func authenticate(manager: Alamofire.Manager, refresh_token: String,
     }
 }
 
-//func get_auth_cookies() -> Dictionary<String, String> {
-//    Login into Google and return cookies as a dict.
-//    get_code_f() is called if authorization code is required to log in, and
-//    should return the code as a string.
-//    A refresh token is saved/loaded from refresh_token_filename if possible, so
-//    subsequent logins may not require re-authenticating.
-//    Raises GoogleAuthError on failure.
-//
-//    try:
-//      logger.info('Authenticating with refresh token')
-//      access_token = _authenticate(refresh_token_filename)
-//    except GoogleAuthError as e:
-//      logger.info('Failed to authenticate using refresh token: %s', e)
-//      logger.info('Authenticating with authorization code')
-//      access_token = _authenticate(get_code_f, refresh_token_filename)
-//    logger.info('Authentication successful')
-//    return _get_session_cookies(access_token)
-//}
-
 func withAuthenticatedManager(cb: (manager: Alamofire.Manager) -> Void) {
 	let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
 	cfg.HTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
     withAuthenticatedManager(Alamofire.Manager(configuration: cfg), cb: cb)
 }
 
+// This method should *not* take an access_token, and pop up a window with web view
+// to authenticate the user with Google, if possible.
 func withAuthenticatedManager(manager: Alamofire.Manager, cb: (manager: Alamofire.Manager) -> Void) {
-    // This method should *not* take an access_token, and pop up a window with web view
-    // to authenticate the user with Google, if possible.
     if let codes = loadTokens() {
         authenticate(manager, refresh_token: codes.refresh_token) { (access_token: String, refresh_token: String) in
-            //print("Auth'd with refresh token. New access token: \(access_token)")
-
             let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"
             let request = NSMutableURLRequest(URL: NSURL(string: url)!)
             request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
@@ -176,30 +155,17 @@ func withAuthenticatedManager(manager: Alamofire.Manager, cb: (manager: Alamofir
         }
     } else {
         promptForGoogleLogin(manager) {
-            //print("Got callback, codes now \(loadTokens())")
             withAuthenticatedManager(manager, cb: cb)
         }
     }
 }
 
-//var loginWindowController: NSWindowController?
+// FIXME: Use a callback for this.
 func promptForGoogleLogin(manager: Alamofire.Manager, cb: () -> Void) {
-    //let storyboard = NSStoryboard(name: "Main", bundle: nil)
-
-    //loginWindowController = storyboard.instantiateControllerWithIdentifier("LoginWindowController") as? NSWindowController
-
-    //let loginViewController = loginWindowController?.contentViewController as? LoginViewController
-    //loginViewController?.manager = manager
-    //loginViewController?.cb = { (auth_code: String) in
-	
-	// FIXME: bad idea.
 	let auth_code = readLine(stripNewline: true)!
 	
-        authenticate(auth_code) { (access_token, refresh_token) -> Void in
-            saveTokens(access_token, refresh_token: refresh_token)
-            cb()
-        }
-    //}
-
-    //loginWindowController!.showWindow(nil)
+	authenticate(auth_code) { (access_token, refresh_token) -> Void in
+		saveTokens(access_token, refresh_token: refresh_token)
+		cb()
+	}
 }
