@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4835ECA31C1C61BB00193EBC /* ConversationListItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4835EC9F1C1C61BB00193EBC /* ConversationListItemView.xib */; settings = {ASSET_TAGS = (); }; };
 		4835ECA41C1C61BB00193EBC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4835ECA11C1C61BB00193EBC /* Main.storyboard */; settings = {ASSET_TAGS = (); }; };
 		4835ECA91C1C620000193EBC /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* ChatMessageView.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECAA1C1C620000193EBC /* ChatTypingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA71C1C620000193EBC /* ChatTypingView.swift */; settings = {ASSET_TAGS = (); }; };
@@ -52,6 +51,18 @@
 		48834E501C1B4377009BC442 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E4F1C1B4377009BC442 /* String+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E531C1B442B009BC442 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E521C1B442B009BC442 /* Dictionary+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E571C1B490B009BC442 /* CommonCrypto in Resources */ = {isa = PBXBuildFile; fileRef = 48834E561C1B490B009BC442 /* CommonCrypto */; settings = {ASSET_TAGS = (); }; };
+		48AAF4191C1CCD3F00561210 /* ParrotPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AAF4181C1CCD3F00561210 /* ParrotPanelController.swift */; settings = {ASSET_TAGS = (); }; };
+		48DE52CC1C1CC12900647C63 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52CB1C1CC12900647C63 /* icon.icns */; };
+		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
+		48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		48DE52DF1C1CC1D300647C63 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48DE52DE1C1CC1D300647C63 /* Cocoa.framework */; settings = {ASSET_TAGS = (); }; };
+		48DE52E41C1CC1D300647C63 /* RequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52E31C1CC1D300647C63 /* RequestHandler.swift */; };
+		48DE52E81C1CC1D300647C63 /* ParrotLink.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		48DE52F21C1CC28000647C63 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48DE52F11C1CC28000647C63 /* NotificationCenter.framework */; settings = {ASSET_TAGS = (); }; };
+		48DE52F71C1CC28000647C63 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52F61C1CC28000647C63 /* TodayViewController.swift */; };
+		48DE52FA1C1CC28000647C63 /* TodayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52F81C1CC28000647C63 /* TodayViewController.xib */; };
+		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
+		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +108,27 @@
 			remoteGlobalIDString = 48834E101C1B38B9009BC442;
 			remoteInfo = HangoutsProvider;
 		};
+		48DE52D11C1CC12900647C63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48DE52C71C1CC12900647C63;
+			remoteInfo = ParrotShare;
+		};
+		48DE52E61C1CC1D300647C63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48DE52DB1C1CC1D300647C63;
+			remoteInfo = ParrotLink;
+		};
+		48DE52FF1C1CC28000647C63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48DE52EF1C1CC28000647C63;
+			remoteInfo = ParrotToday;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -133,10 +165,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		48DE52D71C1CC12900647C63 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */,
+				48DE52E81C1CC1D300647C63 /* ParrotLink.appex in Embed App Extensions */,
+				48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4835ECA01C1C61BB00193EBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ConversationListItemView.xib; sourceTree = "<group>"; };
 		4835ECA21C1C61BB00193EBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4835ECA61C1C620000193EBC /* ChatMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageView.swift; sourceTree = "<group>"; };
 		4835ECA71C1C620000193EBC /* ChatTypingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatTypingView.swift; sourceTree = "<group>"; };
@@ -188,6 +232,24 @@
 		48834E4F1C1B4377009BC442 /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		48834E521C1B442B009BC442 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		48834E561C1B490B009BC442 /* CommonCrypto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CommonCrypto; path = External/CommonCrypto; sourceTree = SOURCE_ROOT; };
+		48AAF4181C1CCD3F00561210 /* ParrotPanelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotPanelController.swift; sourceTree = "<group>"; };
+		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		48DE52CB1C1CC12900647C63 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
+		48DE52CD1C1CC12900647C63 /* ParrotShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotShare.entitlements; sourceTree = "<group>"; };
+		48DE52CE1C1CC12900647C63 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		48DE52D01C1CC12900647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotLink.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		48DE52DE1C1CC1D300647C63 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		48DE52E21C1CC1D300647C63 /* ParrotLink.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotLink.entitlements; sourceTree = "<group>"; };
+		48DE52E31C1CC1D300647C63 /* RequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestHandler.swift; sourceTree = "<group>"; };
+		48DE52E51C1CC1D300647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48DE52F01C1CC28000647C63 /* ParrotToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		48DE52F11C1CC28000647C63 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		48DE52F51C1CC28000647C63 /* ParrotToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotToday.entitlements; sourceTree = "<group>"; };
+		48DE52F61C1CC28000647C63 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
+		48DE52F91C1CC28000647C63 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TodayViewController.xib; sourceTree = "<group>"; };
+		48DE52FB1C1CC28000647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48DE52FD1C1CC28000647C63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +300,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		48DE52C51C1CC12900647C63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48DE52D91C1CC1D300647C63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DE52DF1C1CC1D300647C63 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48DE52ED1C1CC28000647C63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DE52F21C1CC28000647C63 /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -254,6 +339,7 @@
 		4835ECB21C1C672300193EBC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				48AAF4181C1CCD3F00561210 /* ParrotPanelController.swift */,
 				4835ECBB1C1C67B700193EBC /* NSView+Extensions.swift */,
 				4835ECB31C1C672900193EBC /* NotificationManager.swift */,
 				4835ECB41C1C672900193EBC /* ImageCache.swift */,
@@ -269,8 +355,10 @@
 				48834D941C1B3602009BC442 /* Parrot */,
 				48834DED1C1B372E009BC442 /* Hangouts */,
 				48834E121C1B38B9009BC442 /* HangoutsProvider */,
+				48DE53051C1CC29500647C63 /* Extensions */,
 				48834E0C1C1B3756009BC442 /* Tests */,
 				48834E291C1B3F6E009BC442 /* External */,
+				48DE52DD1C1CC1D300647C63 /* Frameworks */,
 				48834D931C1B3602009BC442 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -284,6 +372,9 @@
 				48834DEC1C1B372D009BC442 /* Hangouts.framework */,
 				48834DF51C1B372E009BC442 /* HangoutsTests.xctest */,
 				48834E111C1B38B9009BC442 /* HangoutsProvider.xpc */,
+				48DE52C81C1CC12900647C63 /* ParrotShare.appex */,
+				48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */,
+				48DE52F01C1CC28000647C63 /* ParrotToday.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -323,7 +414,6 @@
 		48834DC11C1B36D1009BC442 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				48834D951C1B3602009BC442 /* AppDelegate.swift */,
 				48834DC01C1B3686009BC442 /* Parrot.entitlements */,
 				48834D991C1B3602009BC442 /* Assets.xcassets */,
 				48834D9E1C1B3602009BC442 /* Info.plist */,
@@ -446,10 +536,86 @@
 		48834E581C1B4994009BC442 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
+				48834D951C1B3602009BC442 /* AppDelegate.swift */,
 				4835ECA11C1C61BB00193EBC /* Main.storyboard */,
-				4835EC9F1C1C61BB00193EBC /* ConversationListItemView.xib */,
 			);
 			name = "User Interface";
+			sourceTree = "<group>";
+		};
+		48DE52C91C1CC12900647C63 /* ParrotShare */ = {
+			isa = PBXGroup;
+			children = (
+				48DE52CE1C1CC12900647C63 /* ShareViewController.swift */,
+				48DE52CA1C1CC12900647C63 /* Supporting Files */,
+			);
+			path = ParrotShare;
+			sourceTree = "<group>";
+		};
+		48DE52CA1C1CC12900647C63 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				48DE52D01C1CC12900647C63 /* Info.plist */,
+				48DE52CB1C1CC12900647C63 /* icon.icns */,
+				48DE52CD1C1CC12900647C63 /* ParrotShare.entitlements */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		48DE52DD1C1CC1D300647C63 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				48DE52DE1C1CC1D300647C63 /* Cocoa.framework */,
+				48DE52F11C1CC28000647C63 /* NotificationCenter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		48DE52E01C1CC1D300647C63 /* ParrotLink */ = {
+			isa = PBXGroup;
+			children = (
+				48DE52E31C1CC1D300647C63 /* RequestHandler.swift */,
+				48DE52E11C1CC1D300647C63 /* Supporting Files */,
+			);
+			path = ParrotLink;
+			sourceTree = "<group>";
+		};
+		48DE52E11C1CC1D300647C63 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				48DE52E51C1CC1D300647C63 /* Info.plist */,
+				48DE52E21C1CC1D300647C63 /* ParrotLink.entitlements */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		48DE52F31C1CC28000647C63 /* ParrotToday */ = {
+			isa = PBXGroup;
+			children = (
+				48DE52F61C1CC28000647C63 /* TodayViewController.swift */,
+				48DE52F81C1CC28000647C63 /* TodayViewController.xib */,
+				48DE52F41C1CC28000647C63 /* Supporting Files */,
+			);
+			path = ParrotToday;
+			sourceTree = "<group>";
+		};
+		48DE52F41C1CC28000647C63 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				48DE52FB1C1CC28000647C63 /* Info.plist */,
+				48DE52FC1C1CC28000647C63 /* InfoPlist.strings */,
+				48DE52F51C1CC28000647C63 /* ParrotToday.entitlements */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		48DE53051C1CC29500647C63 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				48DE52C91C1CC12900647C63 /* ParrotShare */,
+				48DE52E01C1CC1D300647C63 /* ParrotLink */,
+				48DE52F31C1CC28000647C63 /* ParrotToday */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -475,12 +641,16 @@
 				48834D901C1B3602009BC442 /* Resources */,
 				48834DE31C1B370D009BC442 /* Embed Frameworks */,
 				48834E201C1B38B9009BC442 /* Embed XPC Services */,
+				48DE52D71C1CC12900647C63 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				48834E001C1B372E009BC442 /* PBXTargetDependency */,
 				48834E1B1C1B38B9009BC442 /* PBXTargetDependency */,
+				48DE52D21C1CC12900647C63 /* PBXTargetDependency */,
+				48DE52E71C1CC1D300647C63 /* PBXTargetDependency */,
+				48DE53001C1CC28000647C63 /* PBXTargetDependency */,
 			);
 			name = Parrot;
 			productName = Parrot;
@@ -578,6 +748,57 @@
 			productReference = 48834E111C1B38B9009BC442 /* HangoutsProvider.xpc */;
 			productType = "com.apple.product-type.xpc-service";
 		};
+		48DE52C71C1CC12900647C63 /* ParrotShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48DE52D61C1CC12900647C63 /* Build configuration list for PBXNativeTarget "ParrotShare" */;
+			buildPhases = (
+				48DE52C41C1CC12900647C63 /* Sources */,
+				48DE52C51C1CC12900647C63 /* Frameworks */,
+				48DE52C61C1CC12900647C63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ParrotShare;
+			productName = ParrotShare;
+			productReference = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		48DE52DB1C1CC1D300647C63 /* ParrotLink */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48DE52E91C1CC1D300647C63 /* Build configuration list for PBXNativeTarget "ParrotLink" */;
+			buildPhases = (
+				48DE52D81C1CC1D300647C63 /* Sources */,
+				48DE52D91C1CC1D300647C63 /* Frameworks */,
+				48DE52DA1C1CC1D300647C63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ParrotLink;
+			productName = ParrotLink;
+			productReference = 48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		48DE52EF1C1CC28000647C63 /* ParrotToday */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48DE53021C1CC28000647C63 /* Build configuration list for PBXNativeTarget "ParrotToday" */;
+			buildPhases = (
+				48DE52EC1C1CC28000647C63 /* Sources */,
+				48DE52ED1C1CC28000647C63 /* Frameworks */,
+				48DE52EE1C1CC28000647C63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ParrotToday;
+			productName = ParrotToday;
+			productReference = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -625,6 +846,30 @@
 							};
 						};
 					};
+					48DE52C71C1CC12900647C63 = {
+						CreatedOnToolsVersion = 7.0;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
+						};
+					};
+					48DE52DB1C1CC1D300647C63 = {
+						CreatedOnToolsVersion = 7.0;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
+						};
+					};
+					48DE52EF1C1CC28000647C63 = {
+						CreatedOnToolsVersion = 7.0;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
+						};
+					};
 				};
 			};
 			buildConfigurationList = 48834D8D1C1B3602009BC442 /* Build configuration list for PBXProject "Parrot" */;
@@ -643,6 +888,9 @@
 				48834D911C1B3602009BC442 /* Parrot */,
 				48834DEB1C1B372D009BC442 /* Hangouts */,
 				48834E101C1B38B9009BC442 /* HangoutsProvider */,
+				48DE52C71C1CC12900647C63 /* ParrotShare */,
+				48DE52DB1C1CC1D300647C63 /* ParrotLink */,
+				48DE52EF1C1CC28000647C63 /* ParrotToday */,
 				48834DA21C1B3602009BC442 /* ParrotTests */,
 				48834DAD1C1B3602009BC442 /* ParrotUITests */,
 				48834DF41C1B372E009BC442 /* HangoutsTests */,
@@ -656,7 +904,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4835ECA41C1C61BB00193EBC /* Main.storyboard in Resources */,
-				4835ECA31C1C61BB00193EBC /* ConversationListItemView.xib in Resources */,
 				48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -697,6 +944,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		48DE52C61C1CC12900647C63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DE52CC1C1CC12900647C63 /* icon.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48DE52DA1C1CC1D300647C63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48DE52EE1C1CC28000647C63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DE52FA1C1CC28000647C63 /* TodayViewController.xib in Resources */,
+				48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -714,6 +985,7 @@
 				48834D961C1B3602009BC442 /* AppDelegate.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* ConversationListItemView.swift in Sources */,
 				4835ECBA1C1C672900193EBC /* TextMapper.swift in Sources */,
+				48AAF4191C1CCD3F00561210 /* ParrotPanelController.swift in Sources */,
 				4835ECB71C1C672900193EBC /* NotificationManager.swift in Sources */,
 				4835ECAA1C1C620000193EBC /* ChatTypingView.swift in Sources */,
 			);
@@ -773,6 +1045,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		48DE52C41C1CC12900647C63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48DE52D81C1CC1D300647C63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DE52E41C1CC1D300647C63 /* RequestHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48DE52EC1C1CC28000647C63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DE52F71C1CC28000647C63 /* TodayViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -806,23 +1102,46 @@
 			target = 48834E101C1B38B9009BC442 /* HangoutsProvider */;
 			targetProxy = 48834E1A1C1B38B9009BC442 /* PBXContainerItemProxy */;
 		};
+		48DE52D21C1CC12900647C63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48DE52C71C1CC12900647C63 /* ParrotShare */;
+			targetProxy = 48DE52D11C1CC12900647C63 /* PBXContainerItemProxy */;
+		};
+		48DE52E71C1CC1D300647C63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48DE52DB1C1CC1D300647C63 /* ParrotLink */;
+			targetProxy = 48DE52E61C1CC1D300647C63 /* PBXContainerItemProxy */;
+		};
+		48DE53001C1CC28000647C63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48DE52EF1C1CC28000647C63 /* ParrotToday */;
+			targetProxy = 48DE52FF1C1CC28000647C63 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		4835EC9F1C1C61BB00193EBC /* ConversationListItemView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4835ECA01C1C61BB00193EBC /* Base */,
-			);
-			name = ConversationListItemView.xib;
-			sourceTree = "<group>";
-		};
 		4835ECA11C1C61BB00193EBC /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				4835ECA21C1C61BB00193EBC /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		48DE52F81C1CC28000647C63 /* TodayViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				48DE52F91C1CC28000647C63 /* Base */,
+			);
+			name = TodayViewController.xib;
+			sourceTree = "<group>";
+		};
+		48DE52FC1C1CC28000647C63 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				48DE52FD1C1CC28000647C63 /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1131,6 +1450,90 @@
 			};
 			name = Release;
 		};
+		48DE52D41C1CC12900647C63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ParrotShare/ParrotShare.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ParrotShare/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		48DE52D51C1CC12900647C63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ParrotShare/ParrotShare.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ParrotShare/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		48DE52EA1C1CC1D300647C63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ParrotLink/ParrotLink.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ParrotLink/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotLink;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		48DE52EB1C1CC1D300647C63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ParrotLink/ParrotLink.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ParrotLink/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotLink;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		48DE53031C1CC28000647C63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ParrotToday/ParrotToday.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ParrotToday/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotToday;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		48DE53041C1CC28000647C63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ParrotToday/ParrotToday.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ParrotToday/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotToday;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1193,6 +1596,33 @@
 			buildConfigurations = (
 				48834E1E1C1B38B9009BC442 /* Debug */,
 				48834E1F1C1B38B9009BC442 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48DE52D61C1CC12900647C63 /* Build configuration list for PBXNativeTarget "ParrotShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48DE52D41C1CC12900647C63 /* Debug */,
+				48DE52D51C1CC12900647C63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48DE52E91C1CC1D300647C63 /* Build configuration list for PBXNativeTarget "ParrotLink" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48DE52EA1C1CC1D300647C63 /* Debug */,
+				48DE52EB1C1CC1D300647C63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48DE53021C1CC28000647C63 /* Build configuration list for PBXNativeTarget "ParrotToday" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48DE53031C1CC28000647C63 /* Debug */,
+				48DE53041C1CC28000647C63 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

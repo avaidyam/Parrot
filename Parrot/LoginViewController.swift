@@ -1,52 +1,74 @@
 import Cocoa
 import Hangouts
-
-import Alamofire
 import WebKit
 
-class LoginViewController : NSViewController, WebResourceLoadDelegate, WebFrameLoadDelegate, WebPolicyDelegate {
+let sb = NSStoryboard(name: "Main", bundle: nil)
+let login = sb.instantiateControllerWithIdentifier("Login") as? NSWindowController
+let vc = login?.contentViewController as? LoginViewController
+
+class LoginViewController : NSViewController, WebPolicyDelegate, WKNavigationDelegate {
 	
-	@IBOutlet weak var webView: WebView?
+	var webView: WebView!
 	
 	var url: NSURL? = nil
+	var valid: NSURL? = nil
 	var cb: ((NSURLRequest) -> Void)? = nil
 
 	override func loadView() {
-		//self.view = WebView()
-		//self.webView = self.view as? WebView
-		self.webView?.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
+		super.loadView()
+		self.webView = WebView(frame: self.view.bounds)
+		self.webView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
+		self.view.addSubview(self.webView)
     }
 	
-	func showLogin(url: NSURL, valid: NSURL, cb: (NSURLRequest) -> Void) {
-		self.cb = cb
-		webView?.resourceLoadDelegate = self
-		webView?.frameLoadDelegate = self
-		webView?.policyDelegate = self
-		cb(NSURLRequest())
+	class func login(url: NSURL, valid: NSURL, cb: (NSURLRequest) -> Void) -> LoginViewController? {
+		vc?.url = url
+		vc?.valid = valid
+		vc?.cb = cb
+		
+		vc?.webView.policyDelegate = vc
+		vc?.webView.mainFrame.loadRequest(NSMutableURLRequest(URL: url))
+		
+		// WKWebView request semantics for some reason does not yield the refresh_token.
+		//vc?.webView.navigationDelegate = vc
+		//vc?.webView.loadRequest(NSMutableURLRequest(URL: url))
+		return vc
 	}
 	
-	override func viewWillAppear() {
-		if let abc = self.url {
-			webView?.mainFrame.loadRequest(NSMutableURLRequest(URL:abc))
+	/*
+	// WKWebView request semantics for some reason does not yield the refresh_token.
+	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction,
+		decisionHandler: (WKNavigationActionPolicy) -> Void) {
+			
+		let url = navigationAction.request.URL!.absoluteString
+		let val = (self.valid?.absoluteString)!
+		if url.containsString(val) {
+			decisionHandler(.Cancel)
+			print(navigationAction.request)
+			self.cb?(navigationAction.request)
+			self.view.window?.close()
+		} else {
+			decisionHandler(.Allow)
 		}
 	}
-
-    func webView(sender: WebView!, didFinishLoadForFrame frame: WebFrame!) {
-
-    }
-
-    func webView(
-        webView: WebView!,
-        decidePolicyForNavigationAction actionInformation: [NSObject : AnyObject]!,
-        request: NSURLRequest!,
-        frame: WebFrame!,
-        decisionListener listener: WebPolicyDecisionListener!)
-    {
-        if request.URL!.absoluteString.rangeOfString("https://accounts.google.com/o/oauth2/approval") != nil {
-            listener.ignore()
-            self.cb?(request)
-        } else {
-            listener.use()
-        }
-    }
+	*/
+	
+	// WKWebView request semantics for some reason does not yield the refresh_token.
+	func webView(
+		webView: WebView!,
+		decidePolicyForNavigationAction actionInformation: [NSObject : AnyObject]!,
+		request: NSURLRequest!,
+		frame: WebFrame!,
+		decisionListener listener: WebPolicyDecisionListener!) {
+		
+		let url = request.URL!.absoluteString
+		let val = (self.valid?.absoluteString)!
+		if url.containsString(val) {
+			listener.ignore()
+			self.cb?(request)
+			self.view.window?.close()
+		} else {
+			listener.use()
+		}
+	}
 }

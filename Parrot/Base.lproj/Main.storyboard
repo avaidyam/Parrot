@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="8191"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -12,11 +11,11 @@
                 <application id="hnw-xV-0zn" sceneMemberID="viewController">
                     <menu key="mainMenu" title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
                         <items>
-                            <menuItem title="Hangover" id="1Xt-HY-uBw">
+                            <menuItem title="Parrot" id="1Xt-HY-uBw">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Hangover" systemMenu="apple" id="uQy-DD-JDr">
+                                <menu key="submenu" title="Parrot" systemMenu="apple" id="uQy-DD-JDr">
                                     <items>
-                                        <menuItem title="About Hangover" id="5kV-Vb-QxS">
+                                        <menuItem title="About Parrot" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="orderFrontStandardAboutPanel:" target="Ady-hI-5gd" id="Exp-CZ-Vem"/>
@@ -34,7 +33,7 @@
                                             <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
-                                        <menuItem title="Hide Hangover" keyEquivalent="h" id="Olw-nP-bQN">
+                                        <menuItem title="Hide Parrot" keyEquivalent="h" id="Olw-nP-bQN">
                                             <connections>
                                                 <action selector="hide:" target="Ady-hI-5gd" id="PnN-Uc-m68"/>
                                             </connections>
@@ -52,7 +51,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
-                                        <menuItem title="Quit Hangover" keyEquivalent="q" id="4sb-4s-VLi">
+                                        <menuItem title="Quit Parrot" keyEquivalent="q" id="4sb-4s-VLi">
                                             <connections>
                                                 <action selector="terminate:" target="Ady-hI-5gd" id="Te7-pn-YzF"/>
                                             </connections>
@@ -633,7 +632,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                                     <items>
-                                        <menuItem title="Hangover Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                                        <menuItem title="Parrot Help" keyEquivalent="?" id="FKE-Sm-Kum">
                                             <connections>
                                                 <action selector="showHelp:" target="Ady-hI-5gd" id="y7X-2Q-9no"/>
                                             </connections>
@@ -650,31 +649,49 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Parrot" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="0.0"/>
+            <point key="canvasLocation" x="731" y="-864"/>
         </scene>
         <!--Window Controller-->
-        <scene sceneID="pLB-U5-i3w">
+        <scene sceneID="doe-KA-CfA">
             <objects>
-                <windowController storyboardIdentifier="LoginWindowController" id="U0f-DH-7hZ" sceneMemberID="viewController">
-                    <window key="window" title="Login to Hangover" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="pZM-N1-lR6">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="400" height="480"/>
-                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+                <customObject id="rrj-V2-Sm2" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <windowController storyboardIdentifier="Login" showSeguePresentationStyle="single" id="HoM-6g-BXM" sceneMemberID="viewController">
+                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="5fg-b1-5DQ">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" fullSizeContentView="YES"/>
+                        <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES" transient="YES" ignoresCycle="YES" fullScreenAuxiliary="YES" fullScreenDisallowsTiling="YES"/>
+                        <rect key="contentRect" x="245" y="310" width="386" height="512"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="titlebarAppearsTransparent" value="YES"/>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="movableByWindowBackground" value="YES"/>
+                        </userDefinedRuntimeAttributes>
                     </window>
                     <connections>
-                        <segue destination="c7P-Lp-VWN" kind="relationship" relationship="window.shadowedContentViewController" id="9cg-IV-Pfu"/>
+                        <segue destination="riD-gF-N2n" kind="relationship" relationship="window.shadowedContentViewController" id="XP2-SM-ZaL"/>
                     </connections>
                 </windowController>
-                <customObject id="s7m-ZS-kXk" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="623" y="250"/>
+            <point key="canvasLocation" x="1500" y="-512"/>
+        </scene>
+        <!--Login-->
+        <scene sceneID="ifW-OW-ZNE">
+            <objects>
+                <viewController title="Login" id="riD-gF-N2n" customClass="LoginViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="wlY-Ac-gqM">
+                        <rect key="frame" x="0.0" y="0.0" width="386" height="512"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </view>
+                </viewController>
+                <customObject id="FNu-n2-bLZ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2005" y="-512"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="oN2-hz-lmd">
             <objects>
                 <windowController showSeguePresentationStyle="single" id="hOY-6e-51O" sceneMemberID="viewController">
-                    <window key="window" title="Hangover" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="hld-qI-SKY">
+                    <window key="window" title="Parrot" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="hld-qI-SKY">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="720" height="300"/>
@@ -687,14 +704,14 @@
                 </windowController>
                 <customObject id="TSP-aF-4jy" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1654" y="-64"/>
+            <point key="canvasLocation" x="1667" y="4"/>
         </scene>
-        <!--Hangover-->
+        <!--Parrot-->
         <scene sceneID="0uL-a7-P5q">
             <objects>
-                <splitViewController title="Hangover" id="l40-rh-qK0" sceneMemberID="viewController">
+                <splitViewController title="Parrot" id="l40-rh-qK0" sceneMemberID="viewController">
                     <splitViewItems>
-                        <splitViewItem holdingPriority="1000" id="WNt-pw-wh3"/>
+                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="WNt-pw-wh3"/>
                         <splitViewItem holdingPriority="1" id="ssI-9o-nMZ"/>
                     </splitViewItems>
                     <splitView key="splitView" dividerStyle="thin" vertical="YES" id="S5X-Xo-zDn">
@@ -719,13 +736,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="270" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pjR-3X-f4D">
+                            <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="66" horizontalPageScroll="10" verticalLineScroll="66" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pjR-3X-f4D">
                                 <rect key="frame" x="0.0" y="0.0" width="270" height="300"/>
                                 <clipView key="contentView" id="zOc-I5-M0u">
                                     <rect key="frame" x="0.0" y="0.0" width="270" height="300"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="aTO-NH-oNU">
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="64" rowSizeStyle="automatic" viewBased="YES" id="aTO-NH-oNU">
                                             <rect key="frame" x="0.0" y="0.0" width="270" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <animations/>
@@ -746,23 +763,71 @@
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView id="0qP-9Y-vxP">
-                                                            <rect key="frame" x="1" y="1" width="267" height="17"/>
+                                                        <tableCellView identifier="ConversationListItemView" id="0qP-9Y-vxP" customClass="ConversationListItemView" customModule="Parrot" customModuleProvider="target">
+                                                            <rect key="frame" x="1" y="1" width="267" height="64"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6qk-KM-j7D">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
+                                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="5l7-u7-qXJ">
+                                                                    <rect key="frame" x="57" y="44" width="137" height="17"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="133" id="ICZ-Da-kUO"/>
+                                                                    </constraints>
                                                                     <animations/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="tYV-sa-AN2">
-                                                                        <font key="font" metaFont="system"/>
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="John Smith" id="Gv2-SF-rYp">
+                                                                        <font key="font" metaFont="systemBold"/>
+                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                </textField>
+                                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="749" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BZa-OP-Iho">
+                                                                    <rect key="frame" x="57" y="3" width="209" height="36"/>
+                                                                    <animations/>
+                                                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="This is a two-line message sample from John Smith." id="REz-DS-E48">
+                                                                        <font key="font" metaFont="cellTitle"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                 </textField>
+                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qTb-0b-yRd">
+                                                                    <rect key="frame" x="-1" y="3" width="58" height="58"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="58" id="1GN-rQ-VhH"/>
+                                                                        <constraint firstAttribute="height" constant="58" id="d0G-LO-gHq"/>
+                                                                    </constraints>
+                                                                    <animations/>
+                                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSUserGuest" id="1ds-kV-h7B"/>
+                                                                </imageView>
+                                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="obX-VU-q31">
+                                                                    <rect key="frame" x="198" y="45" width="68" height="16"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="64" id="YVG-KQ-NxP"/>
+                                                                    </constraints>
+                                                                    <animations/>
+                                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="9:05 PM" id="Gbm-GU-hZk">
+                                                                        <font key="font" metaFont="cellTitle"/>
+                                                                        <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                </textField>
                                                             </subviews>
+                                                            <constraints>
+                                                                <constraint firstItem="5l7-u7-qXJ" firstAttribute="top" secondItem="0qP-9Y-vxP" secondAttribute="top" constant="3" id="388-O7-f0o"/>
+                                                                <constraint firstItem="BZa-OP-Iho" firstAttribute="leading" secondItem="qTb-0b-yRd" secondAttribute="trailing" constant="2" id="52f-Sn-o4L"/>
+                                                                <constraint firstItem="BZa-OP-Iho" firstAttribute="top" secondItem="obX-VU-q31" secondAttribute="bottom" constant="6" id="JFl-eb-Car"/>
+                                                                <constraint firstItem="BZa-OP-Iho" firstAttribute="trailing" secondItem="obX-VU-q31" secondAttribute="trailing" id="PZP-3G-Ld0"/>
+                                                                <constraint firstItem="obX-VU-q31" firstAttribute="leading" secondItem="5l7-u7-qXJ" secondAttribute="trailing" constant="8" id="VfY-km-Cxj"/>
+                                                                <constraint firstItem="5l7-u7-qXJ" firstAttribute="top" secondItem="obX-VU-q31" secondAttribute="top" id="dof-2A-7WV"/>
+                                                                <constraint firstItem="5l7-u7-qXJ" firstAttribute="top" secondItem="qTb-0b-yRd" secondAttribute="top" id="gXx-tc-eOO"/>
+                                                                <constraint firstItem="5l7-u7-qXJ" firstAttribute="leading" secondItem="qTb-0b-yRd" secondAttribute="trailing" constant="2" id="i39-2i-27r"/>
+                                                                <constraint firstItem="5l7-u7-qXJ" firstAttribute="leading" secondItem="0qP-9Y-vxP" secondAttribute="leading" constant="59" id="pHc-YU-c1Z"/>
+                                                                <constraint firstItem="BZa-OP-Iho" firstAttribute="bottom" secondItem="qTb-0b-yRd" secondAttribute="bottom" id="rPz-OW-lIc"/>
+                                                            </constraints>
                                                             <animations/>
                                                             <connections>
-                                                                <outlet property="textField" destination="6qk-KM-j7D" id="8Fq-go-8dY"/>
+                                                                <outlet property="avatarView" destination="qTb-0b-yRd" id="nVB-Ts-do1"/>
+                                                                <outlet property="lastMessageView" destination="BZa-OP-Iho" id="l0J-t2-acu"/>
+                                                                <outlet property="nameView" destination="5l7-u7-qXJ" id="NTM-OQ-RwX"/>
+                                                                <outlet property="timeView" destination="obX-VU-q31" id="DIH-sb-BLB"/>
                                                             </connections>
                                                         </tableCellView>
                                                     </prototypeCellViews>
@@ -800,7 +865,7 @@
                 </viewController>
                 <customObject id="k2e-ey-Wop" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2371" y="85"/>
+            <point key="canvasLocation" x="2279" y="41"/>
         </scene>
         <!--Conversation View Controller-->
         <scene sceneID="RZU-x9-0el">
@@ -817,14 +882,14 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="none" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" viewBased="YES" floatsGroupRows="NO" id="F84-Gi-Rrw">
-                                            <rect key="frame" x="0.0" y="0.0" width="450" height="0.0"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="450" height="255"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <animations/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn editable="NO" width="447" minWidth="40" maxWidth="5000" id="Ha6-Yp-qkV">
+                                                <tableColumn editable="NO" width="446.80379696634196" minWidth="40" maxWidth="5000" id="Ha6-Yp-qkV">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -838,7 +903,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="Zg7-0d-bkV" customClass="ChatMessageView" customModule="Parrot" customModuleProvider="target">
-                                                            <rect key="frame" x="1" y="1" width="447" height="17"/>
+                                                            <rect key="frame" x="1" y="1" width="447.0250836683885" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2zs-sM-c8x">
@@ -873,7 +938,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="EyY-Qf-GFZ">
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="3.0316490059097608e-14" horizontal="NO" id="EyY-Qf-GFZ">
                                     <rect key="frame" x="-15" y="1" width="16" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
@@ -923,39 +988,10 @@
                 </viewController>
                 <customObject id="xkI-ba-quA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2467" y="445"/>
-        </scene>
-        <!--Login-->
-        <scene sceneID="0Ep-Bx-7hf">
-            <objects>
-                <viewController title="Login" storyboardIdentifier="LoginViewController" id="c7P-Lp-VWN" customClass="LoginViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="Z5o-EF-eoM">
-                        <rect key="frame" x="0.0" y="0.0" width="400" height="480"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <webView translatesAutoresizingMaskIntoConstraints="NO" id="a40-xw-mcu">
-                                <rect key="frame" x="0.0" y="0.0" width="400" height="480"/>
-                                <animations/>
-                                <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
-                                    <nil key="identifier"/>
-                                </webPreferences>
-                            </webView>
-                        </subviews>
-                        <constraints>
-                            <constraint firstAttribute="bottom" secondItem="a40-xw-mcu" secondAttribute="bottom" id="GcO-0i-CWs"/>
-                            <constraint firstItem="a40-xw-mcu" firstAttribute="top" secondItem="Z5o-EF-eoM" secondAttribute="top" id="KEb-RA-HpQ"/>
-                            <constraint firstItem="a40-xw-mcu" firstAttribute="leading" secondItem="Z5o-EF-eoM" secondAttribute="leading" id="Okk-TA-umS"/>
-                            <constraint firstAttribute="trailing" secondItem="a40-xw-mcu" secondAttribute="trailing" id="tuV-Os-BfK"/>
-                        </constraints>
-                        <animations/>
-                    </view>
-                    <connections>
-                        <outlet property="webView" destination="a40-xw-mcu" id="bH9-M6-cpO"/>
-                    </connections>
-                </viewController>
-                <customObject id="bNC-ru-Tdl" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="623" y="867"/>
+            <point key="canvasLocation" x="2369" y="445"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSUserGuest" width="32" height="32"/>
+    </resources>
 </document>

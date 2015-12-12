@@ -73,6 +73,7 @@ public class ItemType : Enum {
 public class MediaType : Enum {
 	public static let UNKNOWN: MediaType = 0
 	public static let PHOTO: MediaType = 1
+	public static let ANIMATED_PHOTO: MediaType = 4
 }
 
 @objc(MembershipChangeType)

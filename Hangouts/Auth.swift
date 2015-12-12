@@ -114,7 +114,7 @@ public class OAuth2 {
 		if let codes = loadTokens() {
 			
 			// If we already have the tokens stored, authenticate.
-			withAuthenticatedManager(manager, refresh_token: codes.refresh_token, cb: { manager in
+			withAuthenticatedManager(manager, auth_code: codes.refresh_token, cb: { manager in
 				cb(client: Client(manager: manager))
 			})
 		} else {
@@ -123,18 +123,14 @@ public class OAuth2 {
 			let a = NSURL(string: OAUTH2_LOGIN_URL)!
 			let b = NSURL(string: "https://accounts.google.com/o/oauth2/approval")!
 			auth(a, b, { request in
-				let auth_code = "REMOVED"
-				withAuthenticatedManager(manager, refresh_token: auth_code, cb: { manager in
-					cb(client: Client(manager: manager))
-				})
-				/*manager.request(request).responseData { response in
+				manager.request(request).responseData { response in
 					let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)!
 					let auth_code = Hangouts.Regex("value=\"(.+?)\"").matches(body as String).first!
 					
-					withAuthenticatedManager(manager, refresh_token: auth_code, cb: { manager in
+					withAuthenticatedManager(manager, auth_code: auth_code, cb: { manager in
 						cb(client: Client(manager: manager))
 					})
-				}*/
+				}
 			})
 		}
 	}
@@ -142,9 +138,11 @@ public class OAuth2 {
 	// This method should *not* take an access_token, and pop up a window with web view
 	// to authenticate the user with Google, if possible.
 	private class func withAuthenticatedManager(manager: Alamofire.Manager,
-		refresh_token: String, cb: (manager: Alamofire.Manager) -> Void) {
+		auth_code: String, cb: (manager: Alamofire.Manager) -> Void) {
 			
-		authenticate(manager, refresh_token: refresh_token) { (access_token: String, refresh_token: String) in
+			authenticate(auth_code) { (access_token: String, refresh_token: String) in
+			saveTokens(access_token, refresh_token: refresh_token)
+			
 			let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"
 			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 			request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")

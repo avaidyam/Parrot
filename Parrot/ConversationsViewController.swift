@@ -1,49 +1,34 @@
 import Cocoa
 import Hangouts
 
-let storyboard = NSStoryboard(name: "Main", bundle: nil)
-let loginWindowController = storyboard.instantiateControllerWithIdentifier("LoginWindowController") as? NSWindowController
-let loginViewController = loginWindowController?.contentViewController as? LoginViewController
-
 class ConversationsViewController: NSViewController, ClientDelegate, NSTableViewDataSource, NSTableViewDelegate, NSSplitViewDelegate, ConversationListDelegate {
 
     @IBOutlet weak var conversationTableView: NSTableView!
-    override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		conversationTableView.setDataSource(self)
-		conversationTableView.setDelegate(self)
-
-        //  TODO: Don't do this here
-        //if let splitView = (self.parentViewController as? NSSplitViewController)?.splitView {
-        //    splitView.delegate = self
-        //}
-		
-		//  TODO: Move this out to AppDelegate
+	
+	override func loadView() {
+		super.loadView()
+	}
+	
+	override func viewWillAppear() {
 		OAuth2.authenticateClient({ client in
 			self.representedObject = client
-			self.client?.delegate = self
-			self.client?.connect()
-			}, auth: { launch, actual, cb in
-				loginViewController?.showLogin(launch, valid: actual, cb: cb)
-				print("view is load \(loginWindowController?.window?.visible)")
-				loginWindowController!.showWindow(nil)
+		}, auth: { launch, actual, cb in
+			let vc = LoginViewController.login(launch, valid: actual, cb: cb)
+			self.presentViewControllerAsSheet(vc!)
 		})
 	}
 	
-	override func viewDidAppear() {
-		print("view is here \(loginWindowController?.window?.visible)")
+    override func viewDidLoad() {
+		super.viewDidLoad()
+		conversationTableView.setDataSource(self)
+		conversationTableView.setDelegate(self)
 	}
 
     override var representedObject: AnyObject? {
         didSet {
-            
-        }
-    }
-
-    var client: Client? {
-        get {
-            return representedObject as? Client
+			let client = representedObject as! Client
+			client.delegate = self
+			client.connect()
         }
     }
 
@@ -113,13 +98,7 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
 
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
         if let conversation = conversationList?.conversations[row] {
-            var view = tableView.makeViewWithIdentifier("ConversationListItemView", owner: self) as? ConversationListItemView
-
-            if view == nil {
-                view = ConversationListItemView.instantiateFromNib(identifier: "ConversationListItemView", owner: self)
-                view!.identifier = "ConversationListItemView"
-            }
-
+            let view = tableView.makeViewWithIdentifier("ConversationListItemView", owner: self) as? ConversationListItemView
             view!.configureWithConversation(conversation)
             return view
         }
@@ -128,45 +107,6 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
 
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return 64
-    }
-
-    // MARK: NSSplitViewDelegate
-    func splitView(
-        splitView: NSSplitView,
-        constrainSplitPosition proposedPosition: CGFloat,
-        ofSubviewAt dividerIndex: Int
-    ) -> CGFloat {
-        switch (dividerIndex) {
-        case 0: return 270
-        default: return proposedPosition
-        }
-    }
-
-    func splitView(splitView: NSSplitView, shouldAdjustSizeOfSubview view: NSView) -> Bool {
-        return splitView.subviews.indexOf(view) != 0
-    }
-
-    func splitView(splitView: NSSplitView, resizeSubviewsWithOldSize oldSize: NSSize) {
-        let dividerThickness = CGFloat(1)
-
-        let leftViewSize = NSMakeSize(
-            270,
-            splitView.frame.size.height
-        )
-        let rightViewSize = NSMakeSize(
-            splitView.frame.size.width - leftViewSize.width - dividerThickness,
-            splitView.frame.size.height
-        )
-
-        // Resizing and placing the left view
-        splitView.subviews[0].setFrameOrigin(NSMakePoint(0, 0))
-        splitView.subviews[0].setFrameSize(leftViewSize)
-
-        print("Right view size: \(rightViewSize)")
-
-        // Resizing and placing the right view
-        splitView.subviews[1].setFrameOrigin(NSMakePoint(leftViewSize.width + dividerThickness, 0))
-        splitView.subviews[1].setFrameSize(rightViewSize)
     }
     
     // MARK: ConversationListDelegate
