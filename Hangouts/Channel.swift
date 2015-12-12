@@ -2,46 +2,44 @@ import Foundation
 import Alamofire
 import JavaScriptCore
 
-protocol ChannelDelegate {
+public protocol ChannelDelegate {
     func channelDidConnect(channel: Channel)
     func channelDidDisconnect(channel: Channel)
     func channelDidReconnect(channel: Channel)
     func channel(channel: Channel, didReceiveMessage: NSString)
 }
 
-class Channel : NSObject {
-    static let ORIGIN_URL = "https://talkgadget.google.com"
-    let CHANNEL_URL_PREFIX = "https://0.client-channel.google.com/client-channel"
+public class Channel : NSObject {
+    public static let ORIGIN_URL = "https://talkgadget.google.com"
+    public let CHANNEL_URL_PREFIX = "https://0.client-channel.google.com/client-channel"
 
     // Long-polling requests send heartbeats every 15 seconds, so if we miss two in
     // a row, consider the connection dead.
-    let PUSH_TIMEOUT = 30
-    let MAX_READ_BYTES = 1024 * 1024
+    public let PUSH_TIMEOUT = 30
+    public let MAX_READ_BYTES = 1024 * 1024
+    public let CONNECT_TIMEOUT = 30
+    public static let LEN_REGEX = "([0-9]+)\n"
 
-    let CONNECT_TIMEOUT = 30
+    public var isConnected = false
+    public var isSubscribed = false
+    public var onConnectCalled = false
+    public var pushParser = PushDataParser()
 
-    static let LEN_REGEX = "([0-9]+)\n"
+    public var sidParam: String? = nil
+    public var gSessionIDParam: String? = nil
 
-    var isConnected = false
-    var isSubscribed = false
-    var onConnectCalled = false
-    var pushParser = PushDataParser()
+    public static let MAX_RETRIES = 5       // maximum number of times to retry after a failure
+    public var retries = MAX_RETRIES // number of remaining retries
+    public var need_new_sid = true   // whether a new SID is needed
 
-    var sidParam: String? = nil
-    var gSessionIDParam: String? = nil
+    public let manager: Alamofire.Manager
+    public var delegate: ChannelDelegate?
 
-    static let MAX_RETRIES = 5       // maximum number of times to retry after a failure
-    var retries = MAX_RETRIES // number of remaining retries
-    var need_new_sid = true   // whether a new SID is needed
-
-    let manager: Alamofire.Manager
-    var delegate: ChannelDelegate?
-
-    init(manager: Alamofire.Manager) {
+    public init(manager: Alamofire.Manager) {
         self.manager = manager
     }
 
-    func getCookieValue(key: String) -> String? {
+    public func getCookieValue(key: String) -> String? {
         if let c = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
             if let match = (c.filter {
                 ($0 as NSHTTPCookie).name == key &&
@@ -54,7 +52,7 @@ class Channel : NSObject {
     }
 	
 	// Listen for messages on the channel.
-    func listen() {
+    public func listen() {
         if self.retries >= 0 {
             // After the first failed retry, back off exponentially longer after
             // each attempt.
@@ -84,7 +82,7 @@ class Channel : NSObject {
 	// Open a long-polling request and receive push data.
 	// This method uses keep-alive to make re-opening the request faster, but
 	// the remote server will set the "Connection: close" header once an hour.
-    func makeLongPollingRequest() {
+    public func makeLongPollingRequest() {
         let queryString = "VER=8&RID=rpc&t=1&CI=0&ctype=hangouts&TYPE=xmlhttp&gsessionid=\(gSessionIDParam!.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!)&SID=\(sidParam!.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!)"
         let url = "\(CHANNEL_URL_PREFIX)/channel/bind?\(queryString)"
 
@@ -117,7 +115,7 @@ class Channel : NSObject {
 	// There's a separate API to get the gsessionid alone that Hangouts for
 	// Chrome uses, but if we don't send a gsessionid with this request, it
 	// will return a gsessionid as well as the SID.
-    func fetchChannelSID() {
+    public func fetchChannelSID() {
 		_ = ["VER": 8, "RID": 81187, "ctype": "hangouts"] // params
         let headers = getAuthorizationHeaders(getCookieValue("SAPISID")!)
         let url = "\(CHANNEL_URL_PREFIX)/channel/bind?VER=8&RID=81187&ctype=hangouts"
@@ -215,7 +213,7 @@ class Channel : NSObject {
 //  Example format (after parsing JS):
 //  [   [0,["c","SID_HERE","",8]],
 //      [1,[{"gsid":"GSESSIONID_HERE"}]]]
-func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
+public func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
     if let firstSubmission = PushDataParser().getSubmissions(res).first {
         let ctx = JSContext()
         let val: JSValue = ctx.evaluateScript(firstSubmission)
@@ -229,7 +227,7 @@ func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
 // Return authorization headers for API request.
 // It doesn't seem to matter what the url and time are as long as they are
 // consistent.
-func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
+public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
     let time_msec = Int(NSDate().timeIntervalSince1970 * 1000)
 
     let auth_string = "\(time_msec) \(sapisid_cookie) \(Channel.ORIGIN_URL)"
@@ -245,7 +243,7 @@ func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, Strin
 // Decode data_bytes into a string using UTF-8.
 // If data_bytes cannot be decoded, pop the last byte until it can be or
 // return an empty string.
-func bestEffortDecode(data: NSData) -> String? {
+public func bestEffortDecode(data: NSData) -> String? {
     for var i = 0; i < data.length; i++ {
         if let s = NSString(data: data.subdataWithRange(NSMakeRange(0, data.length - i)), encoding: NSUTF8StringEncoding) {
             return s as String
@@ -255,9 +253,9 @@ func bestEffortDecode(data: NSData) -> String? {
 }
 
 // Parse data from the long-polling endpoint.
-class PushDataParser {
+public class PushDataParser {
 	
-    var buf = NSMutableData()
+    public var buf = NSMutableData()
 	
 	// Yield submissions generated from received data.
 	// Responses from the push endpoint consist of a sequence of submissions.
@@ -271,7 +269,7 @@ class PushDataParser {
 	// encoding everything in UTF-16 and multipling the reported length by 2.
 	// Note that when encoding a string in UTF-16, Python will prepend a
 	// byte-order character, so we need to remove the first two bytes.
-    func getSubmissions(newBytes: NSData) -> [String] {
+    public func getSubmissions(newBytes: NSData) -> [String] {
         buf.appendData(newBytes)
         var submissions = [String]()
 
@@ -304,7 +302,6 @@ class PushDataParser {
                 }
             }
         }
-
         return submissions
     }
 }

@@ -2,58 +2,66 @@ import Foundation
 import Alamofire
 import JavaScriptCore
 
-let ORIGIN_URL = "https://talkgadget.google.com"
-let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
-let PVT_TOKEN_URL = "https://talkgadget.google.com/talkgadget/_/extension-start"
-let CHAT_INIT_URL = "https://talkgadget.google.com/u/0/talkgadget/_/chat"
-let CHAT_INIT_REGEX = "(?:<script>AF_initDataCallback\\((.*?)\\);</script>)"
+public let ORIGIN_URL = "https://talkgadget.google.com"
+public let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
+public let PVT_TOKEN_URL = "https://talkgadget.google.com/talkgadget/_/extension-start"
+public let CHAT_INIT_URL = "https://talkgadget.google.com/u/0/talkgadget/_/chat"
+public let CHAT_INIT_REGEX = "(?:<script>AF_initDataCallback\\((.*?)\\);</script>)"
 
 // Timeout to send for setactiveclient requests:
-let ACTIVE_TIMEOUT_SECS = 120
+public let ACTIVE_TIMEOUT_SECS = 120
 
 // Minimum timeout between subsequent setactiveclient requests:
-let SETACTIVECLIENT_LIMIT_SECS = 60
+public let SETACTIVECLIENT_LIMIT_SECS = 60
 
-protocol ClientDelegate {
+public typealias InitialData = (
+	conversation_states: [CLIENT_CONVERSATION_STATE],
+	self_entity: CLIENT_ENTITY,
+	entities: [CLIENT_ENTITY],
+	conversation_participants: [CLIENT_CONVERSATION_PARTICIPANT_DATA],
+	sync_timestamp: NSDate?
+)
+
+public protocol ClientDelegate {
     func clientDidConnect(client: Client, initialData: InitialData)
     func clientDidDisconnect(client: Client)
     func clientDidReconnect(client: Client)
     func clientDidUpdateState(client: Client, update: CLIENT_STATE_UPDATE)
 }
 
-func generateClientID() -> Int {
+public func generateClientID() -> Int {
     return Int(arc4random_uniform(4294967295))
 }
 
-class Client : ChannelDelegate {
-    let manager: Alamofire.Manager
-    var delegate: ClientDelegate?
+public class Client : ChannelDelegate {
+    public let manager: Alamofire.Manager
+    public var delegate: ClientDelegate?
 
-    var CHAT_INIT_PARAMS: Dictionary<String, AnyObject?> = [
+    public var CHAT_INIT_PARAMS: Dictionary<String, AnyObject?> = [
         "prop": "aChromeExtension",
         "fid": "gtn-roster-iframe-id",
         "ec": "[\"ci:ec\",true,true,false]",
         "pvt": nil, // Populated later
     ]
 
-    init(manager: Alamofire.Manager) {
+    public init(manager: Alamofire.Manager) {
         self.manager = manager
     }
 
-    var initial_data: InitialData?
-    var channel: Channel?
+    public var initial_data: InitialData?
+    public var channel: Channel?
 
-    var api_key: String?
-    var email: String?
-    var header_date: String?
-    var header_version: String?
-    var header_id: String?
-    var client_id: String?
+    public var api_key: String?
+    public var email: String?
+    public var header_date: String?
+    public var header_version: String?
+    public var header_id: String?
+    public var client_id: String?
 
-    var last_active_secs: NSNumber? = 0
-    var active_client_state: ActiveClientState?
+    public var last_active_secs: NSNumber? = 0
+    public var active_client_state: ActiveClientState?
 
-    func connect() {
+    public func connect() {
         self.initialize_chat { (id: InitialData?) in
             self.initial_data = id
             self.channel = Channel(manager: self.manager)
@@ -69,7 +77,7 @@ class Client : ChannelDelegate {
 	// the data.
 	// We first need to fetch the 'pvt' token, which is required for the
 	// initialization request (otherwise it will return 400).
-    func initialize_chat(cb: (data: InitialData?) -> Void) {
+    public func initialize_chat(cb: (data: InitialData?) -> Void) {
         let prop = (CHAT_INIT_PARAMS["prop"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
         let fid = (CHAT_INIT_PARAMS["fid"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
         let ec = (CHAT_INIT_PARAMS["ec"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
@@ -168,19 +176,19 @@ class Client : ChannelDelegate {
         ]
     }
 
-    func channelDidConnect(channel: Channel) {
+    public func channelDidConnect(channel: Channel) {
         delegate?.clientDidConnect(self, initialData: initial_data!)
     }
 
-    func channelDidDisconnect(channel: Channel) {
+    public func channelDidDisconnect(channel: Channel) {
         delegate?.clientDidDisconnect(self)
     }
 
-    func channelDidReconnect(channel: Channel) {
+    public func channelDidReconnect(channel: Channel) {
         delegate?.clientDidReconnect(self)
     }
 
-    func channel(channel: Channel, didReceiveMessage message: NSString) {
+    public func channel(channel: Channel, didReceiveMessage message: NSString) {
         let result = parse_submission(message as String)
 
         if let new_client_id = result.client_id {
@@ -214,7 +222,7 @@ class Client : ChannelDelegate {
 	// Call this method whenever there is an indication the user is
 	// interacting with this client. This method may be called very
 	// frequently, and it will only make a request when necessary.
-    func setActive() {
+    public func setActive() {
         let isActive = (active_client_state == ActiveClientState.IS_ACTIVE_CLIENT)
         let time_since_active = (NSDate().timeIntervalSince1970 - last_active_secs!.doubleValue)
         let timed_out = time_since_active > Double(SETACTIVECLIENT_LIMIT_SECS)
@@ -281,7 +289,7 @@ class Client : ChannelDelegate {
 	// message parser rather than two.
 	// timestamp: datetime.datetime instance specifying the time after
 	// which to return all events occurring in.
-    func syncAllNewEvents(timestamp: NSDate, cb: (response: CLIENT_SYNC_ALL_NEW_EVENTS_RESPONSE?) -> Void) {
+    public func syncAllNewEvents(timestamp: NSDate, cb: (response: CLIENT_SYNC_ALL_NEW_EVENTS_RESPONSE?) -> Void) {
         let data: NSArray = [
             self.getRequestHeader(),
 			to_timestamp(timestamp),
@@ -303,7 +311,7 @@ class Client : ChannelDelegate {
 	// image_id is an option ID of an image retrieved from
 	// Client.upload_image. If provided, the image will be attached to the
 	// message.
-    func sendChatMessage(conversation_id: String,
+    public func sendChatMessage(conversation_id: String,
         segments: [NSArray],
         image_id: String? = nil,
         otr_status: OffTheRecordStatus = .ON_THE_RECORD,
@@ -378,7 +386,7 @@ class Client : ChannelDelegate {
     //                ['completionInfo']['customerSpecificInfo']['photoid'])
     //
 	
-    func setActiveClient(is_active: Bool, timeout_secs: Int, cb: (() -> Void)? = nil) {
+    public func setActiveClient(is_active: Bool, timeout_secs: Int, cb: (() -> Void)? = nil) {
         let data: Array<AnyObject> = [
             self.getRequestHeader(),
             is_active, // whether the client is active or not
@@ -394,7 +402,7 @@ class Client : ChannelDelegate {
 	
 	// Leave group conversation.
 	// conversation_id must be a valid conversation ID.
-    func removeuser(conversation_id: String, cb: (() -> Void)? = nil) {
+    public func removeuser(conversation_id: String, cb: (() -> Void)? = nil) {
         self.request("conversations/removeuser", body: [
             self.getRequestHeader(),
             NSNull(), NSNull(), NSNull(),
@@ -404,7 +412,7 @@ class Client : ChannelDelegate {
 	
 	// Delete one-to-one conversation.
 	// conversation_id must be a valid conversation ID.
-    func deleteConversation(conversation_id: String, cb: (() -> Void)? = nil) {
+    public func deleteConversation(conversation_id: String, cb: (() -> Void)? = nil) {
         self.request("conversations/deleteconversation", body: [
             self.getRequestHeader(),
             [conversation_id],
@@ -417,7 +425,7 @@ class Client : ChannelDelegate {
     }
 	
 	// Send typing notification.
-    func setTyping(conversation_id: String, typing: TypingType = TypingType.STARTED, cb: (() -> Void)? = nil) {
+    public func setTyping(conversation_id: String, typing: TypingType = TypingType.STARTED, cb: (() -> Void)? = nil) {
         let data = [
             self.getRequestHeader(),
             [conversation_id],
@@ -429,7 +437,7 @@ class Client : ChannelDelegate {
     }
 	
 	// Update the watermark (read timestamp) for a conversation.
-    func updateWatermark(conv_id: String, read_timestamp: NSDate, cb: (() -> Void)? = nil) {
+    public func updateWatermark(conv_id: String, read_timestamp: NSDate, cb: (() -> Void)? = nil) {
         self.request("conversations/updatewatermark", body: [
             self.getRequestHeader(),
             [conv_id], // conversation_id
@@ -450,7 +458,7 @@ class Client : ChannelDelegate {
     //        return json.loads(res.body.decode())
 	
 	// Set focus (occurs whenever you give focus to a client).
-    func setFocus(conversation_id: String, cb: (() -> Void)? = nil) {
+    public func setFocus(conversation_id: String, cb: (() -> Void)? = nil) {
         self.request("conversations/setfocus", body: [
             self.getRequestHeader(),
             [conversation_id],
@@ -519,7 +527,7 @@ class Client : ChannelDelegate {
     //        return json.loads(res.body.decode())
 	
 	// Return information about a list of contacts.
-    func getEntitiesByID(chat_id_list: [String], cb: (CLIENT_GET_ENTITY_BY_ID_RESPONSE) -> Void) {
+    public func getEntitiesByID(chat_id_list: [String], cb: (CLIENT_GET_ENTITY_BY_ID_RESPONSE) -> Void) {
         let data = [self.getRequestHeader(), NSNull(), chat_id_list.map { [$0] }]
         self.request("contacts/getentitybyid", body: data, use_json: false) { r in
 			let obj: CLIENT_GET_ENTITY_BY_ID_RESPONSE? = PBLiteSerialization.parseProtoJSON(r.result.value!)
@@ -531,7 +539,7 @@ class Client : ChannelDelegate {
 	// This is mainly used for retrieving conversation scrollback. Events
 	// occurring before event_timestamp are returned, in order from oldest to
 	// newest.
-    func getConversation(
+    public func getConversation(
         conversation_id: String,
         event_timestamp: NSDate,
         max_events: Int = 50,
@@ -573,7 +581,7 @@ class Client : ChannelDelegate {
     //        return json.loads(res.body.decode())
 	
 	// Set the name of a conversation.
-    func setChatName(conversation_id: String, name: String, cb: (() -> Void)? = nil) {
+    public func setChatName(conversation_id: String, name: String, cb: (() -> Void)? = nil) {
         let client_generated_id = generateClientID()
         let data = [
             self.getRequestHeader(),
@@ -670,11 +678,3 @@ class Client : ChannelDelegate {
     //                                          .format(res_status))
     //        return res
 }
-
-typealias InitialData = (
-    conversation_states: [CLIENT_CONVERSATION_STATE],
-    self_entity: CLIENT_ENTITY,
-    entities: [CLIENT_ENTITY],
-    conversation_participants: [CLIENT_CONVERSATION_PARTICIPANT_DATA],
-    sync_timestamp: NSDate?
-)

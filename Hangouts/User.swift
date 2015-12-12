@@ -3,18 +3,18 @@ import Cocoa
 // A chat user.
 // Handles full_name or first_name being nil by creating an approximate
 // first_name from the full_name, or setting both to DEFAULT_NAME.
-class User {
-    static let DEFAULT_NAME = "Unknown"
+public class User {
+    public static let DEFAULT_NAME = "Unknown"
 
-    let id: UserID
-    let full_name: String
-    let first_name: String
-    let photo_url: String?
-    let emails: [String]
-    let isSelf: Bool
+    public let id: UserID
+    public let full_name: String
+    public let first_name: String
+    public let photo_url: String?
+    public let emails: [String]
+    public let isSelf: Bool
 	
 	// Initialize a User.
-    init(user_id: UserID, full_name: String?=nil, first_name: String?=nil, photo_url: String?, emails: [String], is_self: Bool) {
+    public init(user_id: UserID, full_name: String?=nil, first_name: String?=nil, photo_url: String?, emails: [String], is_self: Bool) {
         self.id = user_id
         self.full_name = full_name == nil ? User.DEFAULT_NAME : full_name!
         self.first_name = first_name == nil ? self.full_name.componentsSeparatedByString(" ").first! : first_name!
@@ -29,7 +29,7 @@ class User {
 	
 	// Initialize from a ClientEntity.
 	// If self_user_id is nil, assume this is the self user.
-    convenience init(entity: CLIENT_ENTITY, self_user_id: UserID?) {
+    public convenience init(entity: CLIENT_ENTITY, self_user_id: UserID?) {
         let user_id = UserID(chat_id: entity.id.chat_id as String, gaia_id: entity.id.gaia_id as String)
         var is_self = false
         if let sui = self_user_id {
@@ -49,7 +49,7 @@ class User {
 	
 	// Initialize from ClientConversationParticipantData.
 	// If self_user_id is nil, assume this is the self user.
-    convenience init(conv_part_data: CLIENT_CONVERSATION_PARTICIPANT_DATA, self_user_id: UserID?) {
+    public convenience init(conv_part_data: CLIENT_CONVERSATION_PARTICIPANT_DATA, self_user_id: UserID?) {
         let user_id = UserID(chat_id: conv_part_data.id.chat_id as String, gaia_id: conv_part_data.id.gaia_id as String)
         var is_self = false
         if let sui = self_user_id {
@@ -67,11 +67,11 @@ class User {
     }
 }
 
-let ClientStateUpdatedNotification = "ClientStateUpdated"
-let ClientStateUpdatedNewStateKey = "ClientStateNewState"
+public let ClientStateUpdatedNotification = "ClientStateUpdated"
+public let ClientStateUpdatedNewStateKey = "ClientStateNewState"
 
 // Collection of User instances.
-class UserList : NSObject {
+public class UserList : NSObject {
 
     private let client: Client
     private let self_user: User
@@ -81,7 +81,7 @@ class UserList : NSObject {
 	// Creates users from the given ClientEntity and
 	// ClientConversationParticipantData instances. The latter is used only as
 	// a fallback, because it doesn't include a real first_name.
-    init(client: Client, self_entity: CLIENT_ENTITY, entities: [CLIENT_ENTITY], conv_parts: [CLIENT_CONVERSATION_PARTICIPANT_DATA]) {
+    public init(client: Client, self_entity: CLIENT_ENTITY, entities: [CLIENT_ENTITY], conv_parts: [CLIENT_CONVERSATION_PARTICIPANT_DATA]) {
 
         self.client = client
         self.self_user = User(entity: self_entity, self_user_id: nil)
@@ -114,7 +114,7 @@ class UserList : NSObject {
 	
 	// Return a User by their UserID.
 	// Raises KeyError if the User is not available.
-    func get_user(user_id: UserID) -> User {
+    public func get_user(user_id: UserID) -> User {
         if let elem = self.user_dict[user_id] {
             return elem
         } else {
@@ -130,12 +130,12 @@ class UserList : NSObject {
     }
 	
 	// Returns all the users known
-    func get_all() -> [User] {
+    public func get_all() -> [User] {
         return Array(self.user_dict.values)
     }
 	
 	// Add new User from ClientConversationParticipantData
-    func add_user_from_conv_part(conv_part: CLIENT_CONVERSATION_PARTICIPANT_DATA) -> User {
+    public func add_user_from_conv_part(conv_part: CLIENT_CONVERSATION_PARTICIPANT_DATA) -> User {
         let user = User(conv_part_data: conv_part, self_user_id: self.self_user.id)
         if self.user_dict[user.id] == nil {
             print("Adding fallback User: \(user)")
@@ -144,7 +144,7 @@ class UserList : NSObject {
         return user
     }
 
-    func on_state_update_notification(notification: NSNotification) {
+    public func on_state_update_notification(notification: NSNotification) {
         if let userInfo = notification.userInfo, state_update = userInfo[ClientStateUpdatedNewStateKey as NSString] {
             on_state_update(state_update as! CLIENT_STATE_UPDATE)
         }
@@ -169,7 +169,7 @@ class UserList : NSObject {
 // The initial data contains the user's contacts, but there may be conversions
 // containing users that are not in the contacts. This function takes care of
 // requesting data for those users and constructing the UserList.
-func buildUserList(client: Client, initial_data: InitialData, cb: (UserList) -> Void) {
+public func buildUserList(client: Client, initial_data: InitialData, cb: (UserList) -> Void) {
     let all_entities = initial_data.entities + [initial_data.self_entity]
     let present_user_ids = Set(all_entities.map {
         UserID(chat_id: $0.id.chat_id as String, gaia_id: $0.id.gaia_id as String)

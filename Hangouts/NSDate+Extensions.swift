@@ -1,7 +1,7 @@
 import Foundation
 
-extension NSDate {
-	func shortFormat() -> String {
+public extension NSDate {
+	public func shortFormat() -> String {
 		let dateFmt = NSDateFormatter()
 		if self.isToday {
 			dateFmt.dateFormat = "h:mm a"
@@ -13,7 +13,7 @@ extension NSDate {
 		return dateFmt.stringFromDate(self)
 	}
 	
-	func isSameDayAs(other: NSDate) -> Bool {
+	public func isSameDayAs(other: NSDate) -> Bool {
 		let calendar = NSCalendar.currentCalendar()
 		let comparisonComponents: NSCalendarUnit = [
 			NSCalendarUnit.Day,
@@ -26,37 +26,37 @@ extension NSDate {
 		return otherComponents == selfComponents
 	}
 	
-	var isToday: Bool {
+	public var isToday: Bool {
 		get {
 			return self.isSameDayAs(NSDate())
 		}
 	}
 	
-	var isYesterday: Bool {
+	public var isYesterday: Bool {
 		get {
 			return isSameDayAs(NSDate().dateByAddingTimeInterval(-1 * 60 * 60 * 24))
 		}
 	}
 }
 
-func <=(lhs: NSDate, rhs: NSDate) -> Bool {
+public func <=(lhs: NSDate, rhs: NSDate) -> Bool {
 	let res = lhs.compare(rhs)
 	return res == .OrderedAscending || res == .OrderedSame
 }
 
-func >=(lhs: NSDate, rhs: NSDate) -> Bool {
+public func >=(lhs: NSDate, rhs: NSDate) -> Bool {
 	let res = lhs.compare(rhs)
 	return res == .OrderedDescending || res == .OrderedSame
 }
 
-func >(lhs: NSDate, rhs: NSDate) -> Bool {
+public func >(lhs: NSDate, rhs: NSDate) -> Bool {
 	return lhs.compare(rhs) == .OrderedDescending
 }
 
-func <(lhs: NSDate, rhs: NSDate) -> Bool {
+public func <(lhs: NSDate, rhs: NSDate) -> Bool {
 	return lhs.compare(rhs) == .OrderedAscending
 }
 
-func ==(lhs: NSDate, rhs: NSDate) -> Bool {
+public func ==(lhs: NSDate, rhs: NSDate) -> Bool {
 	return lhs.compare(rhs) == .OrderedSame
 }

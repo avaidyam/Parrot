@@ -1,6 +1,6 @@
 import Foundation
 
-protocol ConversationDelegate {
+public protocol ConversationDelegate {
     func conversation(conversation: Conversation, didChangeTypingStatusForUser: User, toStatus: TypingType)
     func conversation(conversation: Conversation, didReceiveEvent: ConversationEvent)
     func conversation(conversation: Conversation, didReceiveWatermarkNotification: WatermarkNotification)
@@ -12,23 +12,23 @@ protocol ConversationDelegate {
 }
 
 // Wrapper around Client for working with a single chat conversation.
-class Conversation {
-    typealias EventID = String
+public class Conversation {
+    public typealias EventID = String
 
-    var client: Client
-    var user_list: UserList
-    var conversation: CLIENT_CONVERSATION
-    var events_dict: Dictionary<EventID, ConversationEvent> = Dictionary<EventID, ConversationEvent>() {
+    public var client: Client
+    public var user_list: UserList
+    public var conversation: CLIENT_CONVERSATION
+    public var events_dict: Dictionary<EventID, ConversationEvent> = Dictionary<EventID, ConversationEvent>() {
         didSet {
             self._cachedEvents = nil
         }
     }
-    var typingStatuses = Dictionary<UserID, TypingType>()
+    public var typingStatuses = Dictionary<UserID, TypingType>()
 
-    var delegate: ConversationDelegate?
-    var conversationList: ConversationList?
+    public var delegate: ConversationDelegate?
+    public var conversationList: ConversationList?
 
-    init(client: Client,
+    public init(client: Client,
         user_list: UserList,
         client_conversation: CLIENT_CONVERSATION,
         client_events: [CLIENT_EVENT] = [],
@@ -45,7 +45,7 @@ class Conversation {
     }
 	
 	// Update the conversations latest_read_timestamp.
-    func on_watermark_notification(notif: WatermarkNotification) {
+    public func on_watermark_notification(notif: WatermarkNotification) {
         if self.get_user(notif.user_id).isSelf {
             self.conversation.self_conversation_state.self_read_state.latest_read_timestamp = notif.read_timestamp
         }
@@ -55,7 +55,7 @@ class Conversation {
 	// When latest_read_timestamp is 0, this seems to indicate no change
 	// from the previous value. Word around this by saving and restoring the
 	// previous value.
-    func update_conversation(client_conversation: CLIENT_CONVERSATION) {
+    public func update_conversation(client_conversation: CLIENT_CONVERSATION) {
         let old_timestamp = self.latest_read_timestamp
         self.conversation = client_conversation
         
@@ -80,7 +80,7 @@ class Conversation {
     }
 
     private var _cachedEvents = [ConversationEvent]?()
-    var events: [ConversationEvent] {
+    public var events: [ConversationEvent] {
         get {
             if _cachedEvents == nil {
                 _cachedEvents = events_dict.values.sort { $0.timestamp < $1.timestamp }
@@ -91,18 +91,18 @@ class Conversation {
 	
 	// Add a ClientEvent to the Conversation.
 	// Returns an instance of ConversationEvent or subclass.
-    func add_event(event: CLIENT_EVENT) -> ConversationEvent {
+    public func add_event(event: CLIENT_EVENT) -> ConversationEvent {
         let conv_event = Conversation.wrap_event(event)
         self.events_dict[conv_event.id] = conv_event
         return conv_event
     }
 	
 	// Return the User instance with the given UserID.
-    func get_user(user_id: UserID) -> User {
+    public func get_user(user_id: UserID) -> User {
         return self.user_list.get_user(user_id)
     }
 
-    var otherUserIsTyping: Bool {
+    public var otherUserIsTyping: Bool {
         get {
             return self.typingStatuses.filter {
                 (k, v) in !self.user_list.get_user(k).isSelf
@@ -112,7 +112,7 @@ class Conversation {
         }
     }
 
-    func setFocus() {
+    public func setFocus() {
         self.client.setFocus(id)
     }
 	
@@ -127,7 +127,7 @@ class Conversation {
 	// (if you specify both image_file and image_id together, image_file
 	// takes precedence and supplied image_id will be ignored)
 	// Send messages with OTR status matching the conversation's status.
-    func sendMessage(segments: [ChatMessageSegment],
+    public func sendMessage(segments: [ChatMessageSegment],
         image_file: String? = nil,
         image_id: String? = nil,
         cb: (() -> Void)? = nil
@@ -147,7 +147,7 @@ class Conversation {
         )
     }
 
-    func leave(cb: (() -> Void)? = nil) {
+    public func leave(cb: (() -> Void)? = nil) {
         switch (self.conversation.type) {
         case ConversationType.GROUP:
             print("Remove Not Implemented!")
@@ -164,7 +164,7 @@ class Conversation {
 	// Hangouts only officially supports renaming group conversations, so
 	// custom names for one-to-one conversations may or may not appear in all
 	// first party clients.
-    func rename(name: String, cb: (() -> Void)?) {
+    public func rename(name: String, cb: (() -> Void)?) {
         self.client.setChatName(self.id, name: name, cb: cb)
     }
 
@@ -177,14 +177,14 @@ class Conversation {
 	
 	// Set typing status.
 	// TODO: Add rate-limiting to avoid unnecessary requests.
-    func setTyping(typing: TypingType = TypingType.STARTED, cb: (() -> Void)? = nil) {
+    public func setTyping(typing: TypingType = TypingType.STARTED, cb: (() -> Void)? = nil) {
         client.setTyping(id, typing: typing, cb: cb)
     }
 	
 	// Update the timestamp of the latest event which has been read.
 	// By default, the timestamp of the newest event is used.
 	// This method will avoid making an API request if it will have no effect.
-    func updateReadTimestamp(var read_timestamp: NSDate? = nil, cb: (() -> Void)? = nil) {
+    public func updateReadTimestamp(var read_timestamp: NSDate? = nil, cb: (() -> Void)? = nil) {
         if read_timestamp == nil {
             read_timestamp = self.events.last!.timestamp
         }
@@ -200,7 +200,7 @@ class Conversation {
         }
     }
 
-    func handleConversationEvent(event: ConversationEvent) {
+    public func handleConversationEvent(event: ConversationEvent) {
         if let delegate = delegate {
             delegate.conversation(self, didReceiveEvent: event)
         } else {
@@ -212,7 +212,7 @@ class Conversation {
         }
     }
 
-    func handleTypingStatus(status: TypingType, forUser user: User) {
+    public func handleTypingStatus(status: TypingType, forUser user: User) {
         let existingTypingStatus = typingStatuses[user.id]
         if existingTypingStatus == nil || existingTypingStatus! != status {
             typingStatuses[user.id] = status
@@ -220,11 +220,11 @@ class Conversation {
         }
     }
 
-    func handleWatermarkNotification(status: WatermarkNotification) {
+    public func handleWatermarkNotification(status: WatermarkNotification) {
         delegate?.conversation(self, didReceiveWatermarkNotification: status)
     }
 
-    var messages: [ChatMessageEvent] {
+    public var messages: [ChatMessageEvent] {
         get {
             return events.flatMap { $0 as? ChatMessageEvent }
         }
@@ -235,7 +235,7 @@ class Conversation {
 	// This method will make an API request to load historical events if
 	// necessary. If the beginning of the conversation is reached, an empty
 	// list will be returned.
-    func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([ConversationEvent]) -> Void)? = nil) {
+    public func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([ConversationEvent]) -> Void)? = nil) {
         guard let event_id = event_id else {
             cb?(events)
             return
@@ -283,18 +283,18 @@ class Conversation {
 //        }
 //    }
 
-    func get_event(event_id: EventID) -> ConversationEvent? {
+    public func get_event(event_id: EventID) -> ConversationEvent? {
         return events_dict[event_id]
     }
 	
 	// The conversation's ID.
-    var id: String {
+    public var id: String {
         get {
             return self.conversation.conversation_id!.id as String
         }
     }
 
-    var users: [User] {
+    public var users: [User] {
         get {
             return conversation.participant_data.map {
                 self.user_list.get_user(UserID(
@@ -305,7 +305,7 @@ class Conversation {
         }
     }
 
-    var name: String {
+    public var name: String {
         get {
             if let name = self.conversation.name {
                 return name as String
@@ -315,14 +315,14 @@ class Conversation {
         }
     }
 
-    var last_modified: NSDate {
+    public var last_modified: NSDate {
         get {
             return conversation.self_conversation_state.sort_timestamp!
         }
     }
 	
 	// datetime timestamp of the last read ConversationEvent.
-    var latest_read_timestamp: NSDate {
+    public var latest_read_timestamp: NSDate {
         get {
             return conversation.self_conversation_state.self_read_state.latest_read_timestamp
         }
@@ -338,13 +338,13 @@ class Conversation {
 	// return more unread events than these clients will show. There's also a
 	// delay between sending a message and the user's own message being
 	// considered read.
-    var unread_events: [ConversationEvent] {
+    public var unread_events: [ConversationEvent] {
         get {
             return events.filter { $0.timestamp > self.latest_read_timestamp }
         }
     }
 
-    var hasUnreadEvents: Bool {
+    public var hasUnreadEvents: Bool {
         get {
             if unread_events.first != nil {
                 print("Conversation \(name) has unread events, latest read timestamp is \(self.latest_read_timestamp)")
@@ -354,7 +354,7 @@ class Conversation {
     }
 	
 	// True if this conversation has been archived.
-    var is_archived: Bool {
+    public var is_archived: Bool {
         get {
             return self.conversation.self_conversation_state.view.contains(ConversationView.ARCHIVED)
         }
@@ -370,7 +370,7 @@ class Conversation {
 //        
 	
 	// True if conversation is off the record (history is disabled).
-    var is_off_the_record: Bool {
+    public var is_off_the_record: Bool {
         get {
             return self.conversation.otr_status == OffTheRecordStatus.OFF_THE_RECORD
         }

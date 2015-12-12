@@ -1,8 +1,8 @@
 import Foundation
 
-extension Dictionary {
+public extension Dictionary {
 	
-	func filter(predicate: Element -> Bool) -> Dictionary {
+	public func filter(predicate: Element -> Bool) -> Dictionary {
 		var filteredDictionary = Dictionary()
 		for (key, value) in self {
 			if predicate(key, value) {
@@ -12,7 +12,7 @@ extension Dictionary {
 		return filteredDictionary
 	}
 	
-	func queryStringWithEncoding() -> String {
+	public func queryStringWithEncoding() -> String {
 		var parts = [String]()
 		for (key, value) in self {
 			let keyString: String = "\(key)"
@@ -23,7 +23,7 @@ extension Dictionary {
 		return parts.joinWithSeparator("&")
 	}
 	
-	func urlEncodedQueryStringWithEncoding(encoding: NSStringEncoding) -> String {
+	public func urlEncodedQueryStringWithEncoding(encoding: NSStringEncoding) -> String {
 		var parts = [String]()
 		for (key, value) in self {
 			let keyString: String = "\(key)".urlEncodedStringWithEncoding(encoding)
@@ -36,7 +36,7 @@ extension Dictionary {
 }
 
 infix operator +| {}
-func +| <K,V>(left: Dictionary<K,V>, right: Dictionary<K,V>) -> Dictionary<K,V> {
+public func +| <K,V>(left: Dictionary<K,V>, right: Dictionary<K,V>) -> Dictionary<K,V> {
 	var map = Dictionary<K,V>()
 	for (k, v) in left {
 		map[k] = v

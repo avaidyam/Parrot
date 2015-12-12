@@ -1,6 +1,6 @@
 import Foundation
 
-protocol ConversationListDelegate {
+public protocol ConversationListDelegate {
     func conversationList(list: ConversationList, didReceiveEvent event: ConversationEvent)
     func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType)
     func conversationList(list: ConversationList, didReceiveWatermarkNotification status: WatermarkNotification)
@@ -9,15 +9,15 @@ protocol ConversationListDelegate {
 }
 
 // Wrapper around Client that maintains a list of Conversations
-class ConversationList : ClientDelegate {
-    let client: Client
+public class ConversationList : ClientDelegate {
+    public let client: Client
     private var conv_dict = [String : Conversation]()
-    var sync_timestamp: NSDate
-    let user_list: UserList
+    public var sync_timestamp: NSDate
+    public let user_list: UserList
 
-    var delegate: ConversationListDelegate?
+    public var delegate: ConversationListDelegate?
 
-    init(client: Client, conv_states: [CLIENT_CONVERSATION_STATE], user_list: UserList, sync_timestamp: NSDate?) {
+    public init(client: Client, conv_states: [CLIENT_CONVERSATION_STATE], user_list: UserList, sync_timestamp: NSDate?) {
         self.client = client
         self.sync_timestamp = sync_timestamp ?? NSDate(timeIntervalSince1970: 0)
         self.user_list = user_list
@@ -30,32 +30,32 @@ class ConversationList : ClientDelegate {
         client.delegate = self
     }
 
-    var conversations: [Conversation] {
+    public var conversations: [Conversation] {
         get {
             let all = conv_dict.values.filter { !$0.is_archived }
             return all.sort { $0.last_modified > $1.last_modified }
         }
     }
 
-    var all_conversations: [Conversation] {
+    public var all_conversations: [Conversation] {
         get {
             return conv_dict.values.sort { $0.last_modified > $1.last_modified }
         }
     }
 	
 	// Return a Conversation from its ID.
-    func get(conv_id: String) -> Conversation? {
+    public func get(conv_id: String) -> Conversation? {
         return conv_dict[conv_id]
     }
 
-    var unreadEventCount: Int {
+    public var unreadEventCount: Int {
         get {
             return conversations.flatMap { $0.unread_events }.count
         }
     }
 	
 	// Add new conversation from Conversation
-    func add_conversation(
+    public func add_conversation(
         client_conversation: CLIENT_CONVERSATION,
         client_events: [CLIENT_EVENT] = []
     ) -> Conversation {
@@ -72,14 +72,14 @@ class ConversationList : ClientDelegate {
     }
 	
 	// Leave conversation and remove it from ConversationList
-    func leave_conversation(conv_id: String) {
+    public func leave_conversation(conv_id: String) {
         conv_dict[conv_id]!.leave {
             conv_dict.removeValueForKey(conv_id)
         }
     }
 	
 	// Receive a ClientEvent and fan out to Conversations
-    func on_client_event(event: CLIENT_EVENT) {
+    public func on_client_event(event: CLIENT_EVENT) {
         sync_timestamp = event.timestamp
         if let conv = conv_dict[event.conversation_id.id as String] {
             let conv_event = conv.add_event(event)
@@ -92,7 +92,7 @@ class ConversationList : ClientDelegate {
     }
 	
 	// Receive Conversation and create or update the conversation
-    func handle_client_conversation(client_conversation: CLIENT_CONVERSATION) {
+    public func handle_client_conversation(client_conversation: CLIENT_CONVERSATION) {
         let conv_id = client_conversation.conversation_id!.id
         if let conv = conv_dict[conv_id as String] {
             conv.update_conversation(client_conversation)
@@ -104,7 +104,7 @@ class ConversationList : ClientDelegate {
     }
 	
 	// Receive ClientSetTypingNotification and update the conversation
-    func handle_set_typing_notification(set_typing_notification: CLIENT_SET_TYPING_NOTIFICATION) {
+    public func handle_set_typing_notification(set_typing_notification: CLIENT_SET_TYPING_NOTIFICATION) {
         let conv_id = set_typing_notification.conversation_id.id
         if let conv = conv_dict[conv_id as String] {
             let res = parse_typing_status_message(set_typing_notification)
@@ -120,7 +120,7 @@ class ConversationList : ClientDelegate {
     }
 	
 	// Receive ClientWatermarkNotification and update the conversation
-    func handle_watermark_notification(watermark_notification: CLIENT_WATERMARK_NOTIFICATION) {
+    public func handle_watermark_notification(watermark_notification: CLIENT_WATERMARK_NOTIFICATION) {
         let conv_id = watermark_notification.conversation_id.id
         if let conv = conv_dict[conv_id as String] {
             let res = parse_watermark_notification(watermark_notification)
@@ -132,7 +132,7 @@ class ConversationList : ClientDelegate {
     }
 	
 	// Sync conversation state and events that could have been missed
-    func sync(cb: (() -> Void)? = nil) {
+    public func sync(cb: (() -> Void)? = nil) {
         client.syncAllNewEvents(sync_timestamp) { res in
             if let response = res {
                 for conv_state in response.conversation_state {
@@ -155,26 +155,26 @@ class ConversationList : ClientDelegate {
 
     // MARK: Calls from conversations
 	
-    func conversationDidUpdate(conversation: Conversation) {
+    public func conversationDidUpdate(conversation: Conversation) {
         delegate?.conversationList(self, didUpdateConversation: conversation)
     }
 
     //  MARK: ClientDelegate
 
-    func clientDidConnect(client: Client, initialData: InitialData) {
+    public func clientDidConnect(client: Client, initialData: InitialData) {
         sync()
     }
 
-    func clientDidDisconnect(client: Client) {
+    public func clientDidDisconnect(client: Client) {
 		
     }
 
-    func clientDidReconnect(client: Client) {
+    public func clientDidReconnect(client: Client) {
         sync()
     }
 	
 	// Receive a ClientStateUpdate and fan out to Conversations
-    func clientDidUpdateState(client: Client, update: CLIENT_STATE_UPDATE) {
+    public func clientDidUpdateState(client: Client, update: CLIENT_STATE_UPDATE) {
         if let client_conversation = update.client_conversation {
             handle_client_conversation(client_conversation)
         }

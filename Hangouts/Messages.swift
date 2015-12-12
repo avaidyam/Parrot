@@ -11,307 +11,307 @@ import Foundation
 ****************************************/
 
 @objc(ActiveClientState)
-class ActiveClientState : Enum {
-	static let NO_ACTIVE_CLIENT: ActiveClientState = 0
-	static let IS_ACTIVE_CLIENT: ActiveClientState = 1
-	static let OTHER_CLIENT_IS_ACTIVE: ActiveClientState = 2
+public class ActiveClientState : Enum {
+	public static let NO_ACTIVE_CLIENT: ActiveClientState = 0
+	public static let IS_ACTIVE_CLIENT: ActiveClientState = 1
+	public static let OTHER_CLIENT_IS_ACTIVE: ActiveClientState = 2
 }
 
 @objc(FocusType)
-class FocusType : Enum {
-	static let UNKNOWN: FocusType = 0
-	static let FOCUSED: FocusType = 1
-	static let UNFOCUSED: FocusType = 2
+public class FocusType : Enum {
+	public static let UNKNOWN: FocusType = 0
+	public static let FOCUSED: FocusType = 1
+	public static let UNFOCUSED: FocusType = 2
 }
 
 @objc(FocusDevice)
-class FocusDevice : Enum {
-	static let UNSPECIFIED: FocusDevice = 0
-	static let DESKTOP: FocusDevice = 20
-	static let MOBILE: FocusDevice = 300
+public class FocusDevice : Enum {
+	public static let UNSPECIFIED: FocusDevice = 0
+	public static let DESKTOP: FocusDevice = 20
+	public static let MOBILE: FocusDevice = 300
 }
 
 @objc(TypingType)
-class TypingType : Enum {
-	static let UNKNOWN: TypingType = 0
-	static let STARTED: TypingType = 1
-	static let PAUSED: TypingType = 2
-	static let STOPPED: TypingType = 3
+public class TypingType : Enum {
+	public static let UNKNOWN: TypingType = 0
+	public static let STARTED: TypingType = 1
+	public static let PAUSED: TypingType = 2
+	public static let STOPPED: TypingType = 3
 }
 
 @objc(ClientPresenceStateType)
-class ClientPresenceStateType : Enum {
-	static let UNKNOWN: ClientPresenceStateType = 0
-	static let NONE: ClientPresenceStateType = 1
-	static let DESKTOP_IDLE: ClientPresenceStateType = 30
-	static let DESKTOP_ACTIVE: ClientPresenceStateType = 40
+public class ClientPresenceStateType : Enum {
+	public static let UNKNOWN: ClientPresenceStateType = 0
+	public static let NONE: ClientPresenceStateType = 1
+	public static let DESKTOP_IDLE: ClientPresenceStateType = 30
+	public static let DESKTOP_ACTIVE: ClientPresenceStateType = 40
 }
 
 @objc(NotificationLevel)
-class NotificationLevel : Enum {
-	static let UNKNOWN: NotificationLevel = 0
-	static let QUIET: NotificationLevel = 10
-	static let RING: NotificationLevel = 30
+public class NotificationLevel : Enum {
+	public static let UNKNOWN: NotificationLevel = 0
+	public static let QUIET: NotificationLevel = 10
+	public static let RING: NotificationLevel = 30
 }
 
 @objc(SegmentType)
-class SegmentType : Enum {
-	static let TEXT: SegmentType = 0
-	static let LINE_BREAK: SegmentType = 1
-	static let LINK: SegmentType = 2
+public class SegmentType : Enum {
+	public static let TEXT: SegmentType = 0
+	public static let LINE_BREAK: SegmentType = 1
+	public static let LINK: SegmentType = 2
 }
 
 @objc(ItemType)
-class ItemType : Enum {
-	static let THING: SegmentType = 0
-	static let PLUS_PHOTO: SegmentType = 249
-	static let PLACE: SegmentType = 335
-	static let PLACE_V2: SegmentType = 340
+public class ItemType : Enum {
+	public static let THING: SegmentType = 0
+	public static let PLUS_PHOTO: SegmentType = 249
+	public static let PLACE: SegmentType = 335
+	public static let PLACE_V2: SegmentType = 340
 }
 
 @objc(MediaType)
-class MediaType : Enum {
-	static let UNKNOWN: MediaType = 0
-	static let PHOTO: MediaType = 1
+public class MediaType : Enum {
+	public static let UNKNOWN: MediaType = 0
+	public static let PHOTO: MediaType = 1
 }
 
 @objc(MembershipChangeType)
-class MembershipChangeType : Enum {
-	static let JOIN: MembershipChangeType = 1
-	static let LEAVE: MembershipChangeType = 2
+public class MembershipChangeType : Enum {
+	public static let JOIN: MembershipChangeType = 1
+	public static let LEAVE: MembershipChangeType = 2
 }
 
 @objc(HangoutEventType)
-class HangoutEventType : Enum {
-	static let UNKNOWN: HangoutEventType = 0
-	static let START: HangoutEventType = 1
-	static let END: HangoutEventType = 2
-	static let JOIN: HangoutEventType = 3
-	static let LEAVE: HangoutEventType = 4
-	static let COMING_SOON: HangoutEventType = 5
-	static let ONGOING: HangoutEventType = 6
+public class HangoutEventType : Enum {
+	public static let UNKNOWN: HangoutEventType = 0
+	public static let START: HangoutEventType = 1
+	public static let END: HangoutEventType = 2
+	public static let JOIN: HangoutEventType = 3
+	public static let LEAVE: HangoutEventType = 4
+	public static let COMING_SOON: HangoutEventType = 5
+	public static let ONGOING: HangoutEventType = 6
 }
 
 @objc(OffTheRecordToggle)
-class OffTheRecordToggle : Enum {
-	static let UNKNOWN: OffTheRecordToggle = 0
-	static let ENABLED: OffTheRecordToggle = 1
-	static let DISABLED: OffTheRecordToggle = 2
+public class OffTheRecordToggle : Enum {
+	public static let UNKNOWN: OffTheRecordToggle = 0
+	public static let ENABLED: OffTheRecordToggle = 1
+	public static let DISABLED: OffTheRecordToggle = 2
 }
 
 @objc(OffTheRecordStatus)
-class OffTheRecordStatus : Enum {
-	static let UNKNOWN: OffTheRecordStatus = 0
-	static let OFF_THE_RECORD: OffTheRecordStatus = 1
-	static let ON_THE_RECORD: OffTheRecordStatus = 2
+public class OffTheRecordStatus : Enum {
+	public static let UNKNOWN: OffTheRecordStatus = 0
+	public static let OFF_THE_RECORD: OffTheRecordStatus = 1
+	public static let ON_THE_RECORD: OffTheRecordStatus = 2
 }
 
 @objc(SourceType)
-class SourceType : Enum {
-	static let UNKNOWN: SourceType = 0
+public class SourceType : Enum {
+	public static let UNKNOWN: SourceType = 0
 }
 
 @objc(EventType)
-class EventType : Enum {
-	static let UNKNOWN: SourceType = 0
-	static let REGULAR_CHAT_MESSAGE: SourceType = 1
-	static let SMS: SourceType = 2
-	static let VOICEMAIL: SourceType = 3
-	static let ADD_USER: SourceType = 4
-	static let REMOVE_USER: SourceType = 5
-	static let CONVERSATION_RENAME: SourceType = 6
-	static let HANGOUT: SourceType = 7
-	static let PHONE_CALL: SourceType = 8
-	static let OTR_MODIFICATION: SourceType = 9
-	static let PLAN_MUTATION: SourceType = 10
-	static let MMS: SourceType = 11
-	static let DEPRECATED_12: SourceType = 12
+public class EventType : Enum {
+	public static let UNKNOWN: SourceType = 0
+	public static let REGULAR_CHAT_MESSAGE: SourceType = 1
+	public static let SMS: SourceType = 2
+	public static let VOICEMAIL: SourceType = 3
+	public static let ADD_USER: SourceType = 4
+	public static let REMOVE_USER: SourceType = 5
+	public static let CONVERSATION_RENAME: SourceType = 6
+	public static let HANGOUT: SourceType = 7
+	public static let PHONE_CALL: SourceType = 8
+	public static let OTR_MODIFICATION: SourceType = 9
+	public static let PLAN_MUTATION: SourceType = 10
+	public static let MMS: SourceType = 11
+	public static let DEPRECATED_12: SourceType = 12
 }
 
 @objc(ConversationType)
-class ConversationType : Enum {
-	static let UNKNOWN: ConversationType = 0
-	static let ONE_TO_ONE: ConversationType = 1
-	static let GROUP: ConversationType = 2
+public class ConversationType : Enum {
+	public static let UNKNOWN: ConversationType = 0
+	public static let ONE_TO_ONE: ConversationType = 1
+	public static let GROUP: ConversationType = 2
 }
 
 @objc(ConversationStatus)
-class ConversationStatus : Enum {
-	static let UNKNOWN: ConversationStatus = 0
-	static let INVITED: ConversationStatus = 1
-	static let ACTIVE: ConversationStatus = 2
-	static let LEFT: ConversationStatus = 3
+public class ConversationStatus : Enum {
+	public static let UNKNOWN: ConversationStatus = 0
+	public static let INVITED: ConversationStatus = 1
+	public static let ACTIVE: ConversationStatus = 2
+	public static let LEFT: ConversationStatus = 3
 }
 
 @objc(ConversationView)
-class ConversationView : Enum {
-	static let UNKNOWN: ConversationView = 0
-	static let INBOX: ConversationView = 1
-	static let ARCHIVED: ConversationView = 2
+public class ConversationView : Enum {
+	public static let UNKNOWN: ConversationView = 0
+	public static let INBOX: ConversationView = 1
+	public static let ARCHIVED: ConversationView = 2
 }
 
 @objc(DeliveryMediumType)
-class DeliveryMediumType : Enum {
-	static let UNKNOWN: DeliveryMediumType = 0
-	static let BABEL: DeliveryMediumType = 1
-	static let GOOGLE_VOICE: DeliveryMediumType = 2
-	static let LOCAL_SMS: DeliveryMediumType = 3
+public class DeliveryMediumType : Enum {
+	public static let UNKNOWN: DeliveryMediumType = 0
+	public static let BABEL: DeliveryMediumType = 1
+	public static let GOOGLE_VOICE: DeliveryMediumType = 2
+	public static let LOCAL_SMS: DeliveryMediumType = 3
 }
 
 @objc(ParticipantType)
-class ParticipantType : Enum {
-	static let UNKNOWN: ParticipantType = 0
-	static let GAIA: ParticipantType = 2
+public class ParticipantType : Enum {
+	public static let UNKNOWN: ParticipantType = 0
+	public static let GAIA: ParticipantType = 2
 }
 
 @objc(InvitationStatus)
-class InvitationStatus : Enum {
-	static let UNKNOWN: InvitationStatus = 0
-	static let PENDING: InvitationStatus = 1
-	static let ACCEPTED: InvitationStatus = 2
+public class InvitationStatus : Enum {
+	public static let UNKNOWN: InvitationStatus = 0
+	public static let PENDING: InvitationStatus = 1
+	public static let ACCEPTED: InvitationStatus = 2
 }
 
 @objc(ForceHistory)
-class ForceHistory : Enum {
-	static let UNKNOWN: ForceHistory = 0
-	static let NO: ForceHistory = 1
+public class ForceHistory : Enum {
+	public static let UNKNOWN: ForceHistory = 0
+	public static let NO_FORCE_HISTORY: ForceHistory = 1
 }
 
 @objc(NetworkType)
-class NetworkType : Enum {
-	static let UNKNOWN: NetworkType = 0
-	static let BABEL: NetworkType = 1
+public class NetworkType : Enum {
+	public static let UNKNOWN: NetworkType = 0
+	public static let BABEL: NetworkType = 1
 }
 
 @objc(BlockState)
-class BlockState : Enum {
-	static let UNKNOWN: BlockState = 0
-	static let BLOCK: BlockState = 1
-	static let UNBLOCK: BlockState = 1
+public class BlockState : Enum {
+	public static let UNKNOWN: BlockState = 0
+	public static let BLOCK: BlockState = 1
+	public static let UNBLOCK: BlockState = 1
 }
 
 @objc(ReplyToInviteType)
-class ReplyToInviteType : Enum {
-	static let UNKNOWN: ReplyToInviteType = 0
-	static let ACCEPT: ReplyToInviteType = 1
-	static let DECLINE: ReplyToInviteType = 1
+public class ReplyToInviteType : Enum {
+	public static let UNKNOWN: ReplyToInviteType = 0
+	public static let ACCEPT: ReplyToInviteType = 1
+	public static let DECLINE: ReplyToInviteType = 1
 }
 
 @objc(ClientID)
-class ClientID : Enum {
-	static let UNKNOWN: ClientID = 0
-	static let ANDROID: ClientID = 1
-	static let IOS: ClientID = 2
-	static let CHROME: ClientID = 3
-	static let WEB_GPLUS: ClientID = 5
-	static let WEB_GMAIL: ClientID = 6
-	static let ULTRAVIOLET: ClientID = 13
+public class ClientID : Enum {
+	public static let UNKNOWN: ClientID = 0
+	public static let ANDROID: ClientID = 1
+	public static let IOS: ClientID = 2
+	public static let CHROME: ClientID = 3
+	public static let WEB_GPLUS: ClientID = 5
+	public static let WEB_GMAIL: ClientID = 6
+	public static let ULTRAVIOLET: ClientID = 13
 }
 
 @objc(ClientBuildType)
-class ClientBuildType : Enum {
-	static let UNKNOWN: ClientBuildType = 0
-	static let PRODUCTION_WEB: ClientBuildType = 1
-	static let PRODUCTION_APP: ClientBuildType = 3
+public class ClientBuildType : Enum {
+	public static let UNKNOWN: ClientBuildType = 0
+	public static let PRODUCTION_WEB: ClientBuildType = 1
+	public static let PRODUCTION_APP: ClientBuildType = 3
 }
 
 @objc(ResponseStatus)
-class ResponseStatus : Enum {
-	static let UNKNOWN: ResponseStatus = 0
-	static let OK: ResponseStatus = 1
-	static let UNEXPECTED_ERROR: ResponseStatus = 3
-	static let INVALID_REQUEST: ResponseStatus = 4
+public class ResponseStatus : Enum {
+	public static let UNKNOWN: ResponseStatus = 0
+	public static let OK: ResponseStatus = 1
+	public static let UNEXPECTED_ERROR: ResponseStatus = 3
+	public static let INVALID_REQUEST: ResponseStatus = 4
 }
 
 @objc(PastHangoutState)
-class PastHangoutState : Enum {
-	static let UNKNOWN: PastHangoutState = 0
-	static let HAD_PAST_HANGOUT: PastHangoutState = 1
-	static let NO_PAST_HANGOUT: PastHangoutState = 2
+public class PastHangoutState : Enum {
+	public static let UNKNOWN: PastHangoutState = 0
+	public static let HAD_PAST_HANGOUT: PastHangoutState = 1
+	public static let NO_PAST_HANGOUT: PastHangoutState = 2
 }
 
 @objc(PhotoURLStatus)
-class PhotoURLStatus : Enum {
-	static let UNKNOWN: PhotoURLStatus = 0
-	static let PLACEHOLDER: PhotoURLStatus = 1
-	static let USER_PHOTO: PhotoURLStatus = 2
+public class PhotoURLStatus : Enum {
+	public static let UNKNOWN: PhotoURLStatus = 0
+	public static let PLACEHOLDER: PhotoURLStatus = 1
+	public static let USER_PHOTO: PhotoURLStatus = 2
 }
 
 @objc(Gender)
-class Gender : Enum {
-	static let UNKNOWN: Gender = 0
-	static let MALE: Gender = 1
-	static let FEMALE: Gender = 2
+public class Gender : Enum {
+	public static let UNKNOWN: Gender = 0
+	public static let MALE: Gender = 1
+	public static let FEMALE: Gender = 2
 }
 
 @objc(ProfileType)
-class ProfileType : Enum {
-	static let NONE: ProfileType = 0
-	static let ES_USER: ProfileType = 1
+public class ProfileType : Enum {
+	public static let NONE: ProfileType = 0
+	public static let ES_USER: ProfileType = 1
 }
 
 @objc(ConfigurationBitType)
-class ConfigurationBitType : Enum {
-	static let UNKNOWN: ConfigurationBitType = 0
+public class ConfigurationBitType : Enum {
+	public static let UNKNOWN: ConfigurationBitType = 0
 	// TODO
 }
 
 @objc(RichPresenceType)
-class RichPresenceType : Enum {
-	static let UNKNOWN: RichPresenceType = 0
-	static let IN_CALL_STATE: RichPresenceType = 1
-	static let DEVICE: RichPresenceType = 2
-	static let LAST_SEEN: RichPresenceType = 6
+public class RichPresenceType : Enum {
+	public static let UNKNOWN: RichPresenceType = 0
+	public static let IN_CALL_STATE: RichPresenceType = 1
+	public static let DEVICE: RichPresenceType = 2
+	public static let LAST_SEEN: RichPresenceType = 6
 }
 
 @objc(FieldMask)
-class FieldMask : Enum {
-	static let REACHABLE: FieldMask = 1
-	static let AVAILABLE: FieldMask = 2
-	static let DEVICE: FieldMask = 7
+public class FieldMask : Enum {
+	public static let REACHABLE: FieldMask = 1
+	public static let AVAILABLE: FieldMask = 2
+	public static let DEVICE: FieldMask = 7
 }
 
 @objc(DeleteType)
-class DeleteType : Enum {
-	static let UNKNOWN: DeleteType = 0
-	static let UPPER_BOUND: DeleteType = 1
+public class DeleteType : Enum {
+	public static let UNKNOWN: DeleteType = 0
+	public static let UPPER_BOUND: DeleteType = 1
 }
 
 @objc(SyncFilter)
-class SyncFilter : Enum  {
-	static let UNKNOWN: SyncFilter = 0;
-	static let INBOX: SyncFilter = 1;
-	static let ARCHIVED: SyncFilter = 2;
+public class SyncFilter : Enum  {
+	public static let UNKNOWN: SyncFilter = 0;
+	public static let INBOX: SyncFilter = 1;
+	public static let ARCHIVED: SyncFilter = 2;
 }
 
 @objc(SoundState)
-class SoundState : Enum  {
-	static let UNKNOWN: SoundState = 0;
-	static let ON: SoundState = 1;
-	static let OFF: SoundState = 2;
+public class SoundState : Enum  {
+	public static let UNKNOWN: SoundState = 0;
+	public static let ON: SoundState = 1;
+	public static let OFF: SoundState = 2;
 }
 
 @objc(CallerIDSettingsMask)
-class CallerIDSettingsMask : Enum  {
-	static let UNKNOWN: CallerIDSettingsMask = 0;
-	static let PROVIDED: CallerIDSettingsMask = 1;
+public class CallerIDSettingsMask : Enum  {
+	public static let UNKNOWN: CallerIDSettingsMask = 0;
+	public static let PROVIDED: CallerIDSettingsMask = 1;
 }
 
 @objc(PhoneVerificationStatus)
-class PhoneVerificationStatus : Enum  {
-	static let UNKNOWN: PhoneVerificationStatus = 0;
-	static let VERIFIED: PhoneVerificationStatus = 1;
+public class PhoneVerificationStatus : Enum  {
+	public static let UNKNOWN: PhoneVerificationStatus = 0;
+	public static let VERIFIED: PhoneVerificationStatus = 1;
 }
 
 @objc(PhoneDiscoverabilityStatus)
-class PhoneDiscoverabilityStatus : Enum  {
-	static let UNKNOWN: PhoneDiscoverabilityStatus = 0;
-	static let OPTED_IN_BUT_NOT_DISCOVERABLE: PhoneDiscoverabilityStatus = 2;
+public class PhoneDiscoverabilityStatus : Enum  {
+	public static let UNKNOWN: PhoneDiscoverabilityStatus = 0;
+	public static let OPTED_IN_BUT_NOT_DISCOVERABLE: PhoneDiscoverabilityStatus = 2;
 }
 
 @objc(PhoneValidationResult)
-class PhoneValidationResult : Enum  {
-	static let IS_POSSIBLE: PhoneValidationResult = 0;
+public class PhoneValidationResult : Enum  {
+	public static let IS_POSSIBLE: PhoneValidationResult = 0;
 }
 
 /****************************************
@@ -321,366 +321,366 @@ class PhoneValidationResult : Enum  {
  ****************************************/
 
 @objc(CONVERSATION_ID)
-class CONVERSATION_ID : Message {
-    var id: NSString = ""
+public class CONVERSATION_ID : Message {
+    public var id: NSString = ""
 }
 
 @objc(USER_ID)
-class USER_ID : Message {
-    var gaia_id: NSString = ""
-    var chat_id: NSString = ""
+public class USER_ID : Message {
+    public var gaia_id: NSString = ""
+    public var chat_id: NSString = ""
 }
 
 @objc(CLIENT_SET_TYPING_NOTIFICATION)
-class CLIENT_SET_TYPING_NOTIFICATION : Message {
-    var conversation_id = CONVERSATION_ID()
-    var user_id = USER_ID()
-    var timestamp: NSNumber = 0
-    var status: TypingType = 0
+public class CLIENT_SET_TYPING_NOTIFICATION : Message {
+    public var conversation_id = CONVERSATION_ID()
+    public var user_id = USER_ID()
+    public var timestamp: NSNumber = 0
+    public var status: TypingType = 0
 }
 
 @objc(CLIENT_SET_FOCUS_NOTIFICATION)
-class CLIENT_SET_FOCUS_NOTIFICATION : Message {
-    var conversation_id = CONVERSATION_ID()
-    var user_id = USER_ID()
-    var timestamp: NSString = ""
-    var status: FocusType = 0
-    var device: FocusDevice?
+public class CLIENT_SET_FOCUS_NOTIFICATION : Message {
+    public var conversation_id = CONVERSATION_ID()
+    public var user_id = USER_ID()
+    public var timestamp: NSString = ""
+    public var status: FocusType = 0
+    public var device: FocusDevice?
 }
 
 @objc(CLIENT_CONVERSATION_READ_STATE)
-class CLIENT_CONVERSATION_READ_STATE : Message {
-    var participant_id = USER_ID()
-    var latest_read_timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
+public class CLIENT_CONVERSATION_READ_STATE : Message {
+    public var participant_id = USER_ID()
+    public var latest_read_timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
 }
 
 @objc(CLIENT_CONVERSATION_INTERNAL_STATE)
-class CLIENT_CONVERSATION_INTERNAL_STATE : Message {
-    var field1: AnyObject? = nil
-    var field2: AnyObject? = nil
-    var field3: AnyObject? = nil
-    var field4: AnyObject? = nil
-    var field5: AnyObject? = nil
-    var field6: AnyObject? = nil
+public class CLIENT_CONVERSATION_INTERNAL_STATE : Message {
+    public var field1: AnyObject? = nil
+    public var field2: AnyObject? = nil
+    public var field3: AnyObject? = nil
+    public var field4: AnyObject? = nil
+    public var field5: AnyObject? = nil
+    public var field6: AnyObject? = nil
 
-    var self_read_state = CLIENT_CONVERSATION_READ_STATE()
+    public var self_read_state = CLIENT_CONVERSATION_READ_STATE()
 
-    var status: ConversationStatus = 0
-    var notification_level: NotificationLevel = 0
+    public var status: ConversationStatus = 0
+    public var notification_level: NotificationLevel = 0
 
-    var view = [ConversationView]()
+    public var view = [ConversationView]()
 
-    var inviter_id = USER_ID()
-    var invite_timestamp: NSString = ""
-    var sort_timestamp: NSDate?
-    var active_timestamp: NSDate?
+    public var inviter_id = USER_ID()
+    public var invite_timestamp: NSString = ""
+    public var sort_timestamp: NSDate?
+    public var active_timestamp: NSDate?
 
-    var field7: AnyObject? = nil
-    var field8: AnyObject? = nil
-    var field9: AnyObject? = nil
-    var field10: AnyObject? = nil
+    public var field7: AnyObject? = nil
+    public var field8: AnyObject? = nil
+    public var field9: AnyObject? = nil
+    public var field10: AnyObject? = nil
 }
 
 @objc(CLIENT_CONVERSATION_PARTICIPANT_DATA)
-class CLIENT_CONVERSATION_PARTICIPANT_DATA : Message {
-    var id = USER_ID()
-    var fallback_name: NSString?
-    var field: AnyObject? = nil
+public class CLIENT_CONVERSATION_PARTICIPANT_DATA : Message {
+    public var id = USER_ID()
+    public var fallback_name: NSString?
+    public var field: AnyObject? = nil
 }
 
 @objc(CLIENT_CONVERSATION)
-class CLIENT_CONVERSATION : Message {
-	var conversation_id: CONVERSATION_ID? = nil //FIXME
-    var type = ConversationType()
-    var name: NSString?
-    var self_conversation_state = CLIENT_CONVERSATION_INTERNAL_STATE()
-    var field5: AnyObject? = nil
-    var field6: AnyObject? = nil
-    var field7: AnyObject? = nil
-    var read_state = [CLIENT_CONVERSATION_READ_STATE]()
-    var has_active_hangout: NSNumber = 0
-    var otr_status: OffTheRecordStatus = 0
-    var otr_toggle: AnyObject? = nil
-    var conversation_history_supported: AnyObject? = nil
-    var current_participant = [USER_ID]()
-    var participant_data = [CLIENT_CONVERSATION_PARTICIPANT_DATA]()
-    var field15: AnyObject? = nil
-    var field16: AnyObject? = nil
-    var field17: AnyObject? = nil
-    var network_type: AnyObject? = nil
-    var force_history_state: AnyObject? = nil
+public class CLIENT_CONVERSATION : Message {
+	public var conversation_id: CONVERSATION_ID? = nil //FIXME
+    public var type = ConversationType()
+    public var name: NSString?
+    public var self_conversation_state = CLIENT_CONVERSATION_INTERNAL_STATE()
+    public var field5: AnyObject? = nil
+    public var field6: AnyObject? = nil
+    public var field7: AnyObject? = nil
+    public var read_state = [CLIENT_CONVERSATION_READ_STATE]()
+    public var has_active_hangout: NSNumber = 0
+    public var otr_status: OffTheRecordStatus = 0
+    public var otr_toggle: AnyObject? = nil
+    public var conversation_history_supported: AnyObject? = nil
+    public var current_participant = [USER_ID]()
+    public var participant_data = [CLIENT_CONVERSATION_PARTICIPANT_DATA]()
+    public var field15: AnyObject? = nil
+    public var field16: AnyObject? = nil
+    public var field17: AnyObject? = nil
+    public var network_type: AnyObject? = nil
+    public var force_history_state: AnyObject? = nil
 }
 
 //  Unfortunately, some of PBLite's introspection
-//  uses string-based class lookup, and nested
-//  classes have mangled names. So, we need to use
-//  only non-nested classes here.
+//  uses string-based public class lookup, and nested
+//  public classes have mangled names. So, we need to use
+//  only non-nested public classes here.
 @objc(MESSAGE_SEGMENT_FORMATTING)
-class MESSAGE_SEGMENT_FORMATTING : Message {
-    var bold: NSNumber?
-    var italic: NSNumber?
-    var strikethrough: NSNumber?
-    var underline: NSNumber?
+public class MESSAGE_SEGMENT_FORMATTING : Message {
+    public var bold: NSNumber?
+    public var italic: NSNumber?
+    public var strikethrough: NSNumber?
+    public var underline: NSNumber?
 }
 
 @objc(MESSAGE_SEGMENT_LINK_DATA)
-class MESSAGE_SEGMENT_LINK_DATA : Message {
-    var link_target: NSString?
+public class MESSAGE_SEGMENT_LINK_DATA : Message {
+    public var link_target: NSString?
 }
 
 @objc(MESSAGE_SEGMENT)
-class MESSAGE_SEGMENT : Message {
-    var type: SegmentType = 0
-    var text: NSString?
+public class MESSAGE_SEGMENT : Message {
+    public var type: SegmentType = 0
+    public var text: NSString?
 
-    var formatting: MESSAGE_SEGMENT_FORMATTING? = MESSAGE_SEGMENT_FORMATTING()
+    public var formatting: MESSAGE_SEGMENT_FORMATTING? = MESSAGE_SEGMENT_FORMATTING()
 
-    var link_data: MESSAGE_SEGMENT_LINK_DATA? = MESSAGE_SEGMENT_LINK_DATA()
+    public var link_data: MESSAGE_SEGMENT_LINK_DATA? = MESSAGE_SEGMENT_LINK_DATA()
 }
 
 @objc(MESSAGE_ATTACHMENT_EMBED_ITEM)
-class MESSAGE_ATTACHMENT_EMBED_ITEM : Message {
-    var type = NSArray()
-    var data = NSDictionary()
+public class MESSAGE_ATTACHMENT_EMBED_ITEM : Message {
+    public var type = NSArray()
+    public var data = NSDictionary()
 }
 
 @objc(MESSAGE_ATTACHMENT)
-class MESSAGE_ATTACHMENT : Message {
-    var embed_item = MESSAGE_ATTACHMENT_EMBED_ITEM()
+public class MESSAGE_ATTACHMENT : Message {
+    public var embed_item = MESSAGE_ATTACHMENT_EMBED_ITEM()
 }
 
 @objc(CLIENT_CHAT_MESSAGE_CONTENT)
-class CLIENT_CHAT_MESSAGE_CONTENT : Message {
-    var segment: [MESSAGE_SEGMENT]?
-    var attachment: [MESSAGE_ATTACHMENT]?
+public class CLIENT_CHAT_MESSAGE_CONTENT : Message {
+    public var segment: [MESSAGE_SEGMENT]?
+    public var attachment: [MESSAGE_ATTACHMENT]?
 }
 
 @objc(CLIENT_CHAT_MESSAGE)
-class CLIENT_CHAT_MESSAGE : Message {
-    var field1: AnyObject? = nil
-    var annotation: NSArray?
-    var message_content = CLIENT_CHAT_MESSAGE_CONTENT()
+public class CLIENT_CHAT_MESSAGE : Message {
+    public var field1: AnyObject? = nil
+    public var annotation: NSArray?
+    public var message_content = CLIENT_CHAT_MESSAGE_CONTENT()
 }
 
 @objc(CLIENT_CONVERSATION_RENAME)
-class CLIENT_CONVERSATION_RENAME : Message {
-    var new_name: NSString = ""
-    var old_name: NSString = ""
+public class CLIENT_CONVERSATION_RENAME : Message {
+    public var new_name: NSString = ""
+    public var old_name: NSString = ""
 }
 
 @objc(CLIENT_HANGOUT_EVENT)
-class CLIENT_HANGOUT_EVENT : Message {
-    var event_type: HangoutEventType = 0
-    var participant_id = [USER_ID]()
-    var hangout_duration_secs: NSNumber?
-    var transferred_conversation_id: NSString?
-    var refresh_timeout_secs: NSNumber?
-    var is_periodic_refresh: NSNumber?
-    var field1: AnyObject? = nil
+public class CLIENT_HANGOUT_EVENT : Message {
+    public var event_type: HangoutEventType = 0
+    public var participant_id = [USER_ID]()
+    public var hangout_duration_secs: NSNumber?
+    public var transferred_conversation_id: NSString?
+    public var refresh_timeout_secs: NSNumber?
+    public var is_periodic_refresh: NSNumber?
+    public var field1: AnyObject? = nil
 }
 
 @objc(CLIENT_OTR_MODIFICATION)
-class CLIENT_OTR_MODIFICATION : Message {
-    var old_otr_status: OffTheRecordStatus = 0
-    var new_otr_status: OffTheRecordStatus = 0
-    var old_otr_toggle: OffTheRecordToggle = 0
-    var new_otr_toggle: OffTheRecordToggle = 0
+public class CLIENT_OTR_MODIFICATION : Message {
+    public var old_otr_status: OffTheRecordStatus = 0
+    public var new_otr_status: OffTheRecordStatus = 0
+    public var old_otr_toggle: OffTheRecordToggle = 0
+    public var new_otr_toggle: OffTheRecordToggle = 0
 }
 
 @objc(CLIENT_MEMBERSHIP_CHANGE)
-class CLIENT_MEMBERSHIP_CHANGE : Message {
-    var type: MembershipChangeType = 0
-    var field1 = NSArray()
-    var participant_ids = [USER_ID]()
-    var field2: AnyObject? = nil
+public class CLIENT_MEMBERSHIP_CHANGE : Message {
+    public var type: MembershipChangeType = 0
+    public var field1 = NSArray()
+    public var participant_ids = [USER_ID]()
+    public var field2: AnyObject? = nil
 }
 
 @objc(CLIENT_EVENT_STATE)
-class CLIENT_EVENT_STATE : Message {
-    var user_id = USER_ID()
-    var client_generated_id: AnyObject? = nil
-    var notification_level: NotificationLevel = 0
+public class CLIENT_EVENT_STATE : Message {
+    public var user_id = USER_ID()
+    public var client_generated_id: AnyObject? = nil
+    public var notification_level: NotificationLevel = 0
 }
 
 @objc(CLIENT_EVENT)
-class CLIENT_EVENT : Message {
-    var conversation_id = CONVERSATION_ID()
-    var sender_id = USER_ID()
-    var timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
-	var self_event_state : CLIENT_EVENT_STATE?
-	var field5: AnyObject? = nil
-    var source_type: AnyObject? = nil
-	var chat_message: CLIENT_CHAT_MESSAGE? = nil
-    var field8: AnyObject? = nil
-    var membership_change: CLIENT_MEMBERSHIP_CHANGE?
-    var conversation_rename: CLIENT_CONVERSATION_RENAME?
-    var hangout_event: CLIENT_HANGOUT_EVENT?
-	var event_id: NSString?
-	var expiration_timestamp: AnyObject? = nil
-	var otr_modification: CLIENT_OTR_MODIFICATION?
-	var advances_sort_timestamp: NSDate?
-	var otr_status: OffTheRecordStatus = 0
-	var persisted: AnyObject? = nil
-	var field18: AnyObject? = nil
-	var field19: AnyObject? = nil
-    var medium_type: AnyObject? = nil
-	var field21: AnyObject? = nil
-	var field22: AnyObject? = nil
-	var event_type: AnyObject? = nil
-	var event_version: AnyObject? = nil
-	var field25: AnyObject? = nil
-	var hash_modifier: AnyObject? = nil
+public class CLIENT_EVENT : Message {
+    public var conversation_id = CONVERSATION_ID()
+    public var sender_id = USER_ID()
+    public var timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
+	public var self_event_state : CLIENT_EVENT_STATE?
+	public var field5: AnyObject? = nil
+    public var source_type: AnyObject? = nil
+	public var chat_message: CLIENT_CHAT_MESSAGE? = nil
+    public var field8: AnyObject? = nil
+    public var membership_change: CLIENT_MEMBERSHIP_CHANGE?
+    public var conversation_rename: CLIENT_CONVERSATION_RENAME?
+    public var hangout_event: CLIENT_HANGOUT_EVENT?
+	public var event_id: NSString?
+	public var expiration_timestamp: AnyObject? = nil
+	public var otr_modification: CLIENT_OTR_MODIFICATION?
+	public var advances_sort_timestamp: NSDate?
+	public var otr_status: OffTheRecordStatus = 0
+	public var persisted: AnyObject? = nil
+	public var field18: AnyObject? = nil
+	public var field19: AnyObject? = nil
+    public var medium_type: AnyObject? = nil
+	public var field21: AnyObject? = nil
+	public var field22: AnyObject? = nil
+	public var event_type: AnyObject? = nil
+	public var event_version: AnyObject? = nil
+	public var field25: AnyObject? = nil
+	public var hash_modifier: AnyObject? = nil
 }
 
 @objc(CLIENT_EVENT_NOTIFICATION)
-class CLIENT_EVENT_NOTIFICATION : Message {
-    var event = CLIENT_EVENT()
+public class CLIENT_EVENT_NOTIFICATION : Message {
+    public var event = CLIENT_EVENT()
 }
 
 @objc(CLIENT_WATERMARK_NOTIFICATION)
-class CLIENT_WATERMARK_NOTIFICATION : Message {
-    var participant_id = USER_ID()
-    var conversation_id = CONVERSATION_ID()
-    var latest_read_timestamp: NSNumber = 0
+public class CLIENT_WATERMARK_NOTIFICATION : Message {
+    public var participant_id = USER_ID()
+    public var conversation_id = CONVERSATION_ID()
+    public var latest_read_timestamp: NSNumber = 0
 }
 
 @objc(CLIENT_STATE_UPDATE_HEADER)
-class CLIENT_STATE_UPDATE_HEADER : Message {
-    var active_client_state: ActiveClientState = 0
-    var field1: AnyObject? = nil
-    var request_trace_id: NSString = ""
-    var field2: AnyObject? = nil
-    var current_server_time: NSString = ""
-    var field3: AnyObject? = nil
-    var field4: AnyObject? = nil
-    var updating_client_id: AnyObject? = nil
+public class CLIENT_STATE_UPDATE_HEADER : Message {
+    public var active_client_state: ActiveClientState = 0
+    public var field1: AnyObject? = nil
+    public var request_trace_id: NSString = ""
+    public var field2: AnyObject? = nil
+    public var current_server_time: NSString = ""
+    public var field3: AnyObject? = nil
+    public var field4: AnyObject? = nil
+    public var updating_client_id: AnyObject? = nil
 }
 
 @objc(CLIENT_STATE_UPDATE)
-class CLIENT_STATE_UPDATE : Message {
-    var state_update_header = CLIENT_STATE_UPDATE_HEADER()
-    var conversation_notification: AnyObject? = nil
-    var event_notification: CLIENT_EVENT_NOTIFICATION?
-    var focus_notification = CLIENT_SET_FOCUS_NOTIFICATION()
-    var typing_notification: CLIENT_SET_TYPING_NOTIFICATION?
-    var notification_level_notification: AnyObject? = nil
-    var reply_to_invite_notification: AnyObject? = nil
-    var watermark_notification: CLIENT_WATERMARK_NOTIFICATION?
-    var field1: AnyObject? = nil
-    var settings_notification: AnyObject? = nil
-    var view_modification: AnyObject? = nil
-    var easter_egg_notification: AnyObject? = nil
-    var client_conversation: CLIENT_CONVERSATION?
-    var self_presence_notification: AnyObject? = nil
-    var delete_notification: AnyObject? = nil
-    var presence_notification: AnyObject? = nil
-    var block_notification: AnyObject? = nil
-    var invitation_watermark_notification: AnyObject? = nil
+public class CLIENT_STATE_UPDATE : Message {
+    public var state_update_header = CLIENT_STATE_UPDATE_HEADER()
+    public var conversation_notification: AnyObject? = nil
+    public var event_notification: CLIENT_EVENT_NOTIFICATION?
+    public var focus_notification = CLIENT_SET_FOCUS_NOTIFICATION()
+    public var typing_notification: CLIENT_SET_TYPING_NOTIFICATION?
+    public var notification_level_notification: AnyObject? = nil
+    public var reply_to_invite_notification: AnyObject? = nil
+    public var watermark_notification: CLIENT_WATERMARK_NOTIFICATION?
+    public var field1: AnyObject? = nil
+    public var settings_notification: AnyObject? = nil
+    public var view_modification: AnyObject? = nil
+    public var easter_egg_notification: AnyObject? = nil
+    public var client_conversation: CLIENT_CONVERSATION?
+    public var self_presence_notification: AnyObject? = nil
+    public var delete_notification: AnyObject? = nil
+    public var presence_notification: AnyObject? = nil
+    public var block_notification: AnyObject? = nil
+    public var invitation_watermark_notification: AnyObject? = nil
 }
 
 @objc(CLIENT_EVENT_CONTINUATION_TOKEN)
-class CLIENT_EVENT_CONTINUATION_TOKEN : Message {
-    var event_id: NSString?
-    var storage_continuation_token: NSString = ""
-    var event_timestamp: NSString = ""
+public class CLIENT_EVENT_CONTINUATION_TOKEN : Message {
+    public var event_id: NSString?
+    public var storage_continuation_token: NSString = ""
+    public var event_timestamp: NSString = ""
 }
 
 @objc(CLIENT_CONVERSATION_STATE)
-class CLIENT_CONVERSATION_STATE : Message {
-    var conversation_id = CONVERSATION_ID()
-    var conversation = CLIENT_CONVERSATION()
-    var event = [CLIENT_EVENT]()
-    var field1: AnyObject? = nil
-    var event_continuation_token: CLIENT_EVENT_CONTINUATION_TOKEN?
-    //var field2: AnyObject? = nil
-    //var field3: AnyObject? = nil
+public class CLIENT_CONVERSATION_STATE : Message {
+    public var conversation_id = CONVERSATION_ID()
+    public var conversation = CLIENT_CONVERSATION()
+    public var event = [CLIENT_EVENT]()
+    public var field1: AnyObject? = nil
+    public var event_continuation_token: CLIENT_EVENT_CONTINUATION_TOKEN?
+    //public var field2: AnyObject? = nil
+    //public var field3: AnyObject? = nil
 }
 
 @objc(CLIENT_ENTITY_PROPERTIES)
-class CLIENT_ENTITY_PROPERTIES : Message {
-    var type: NSNumber?
-    var display_name: NSString?
-    var first_name: NSString?
-    var photo_url: NSString?
-    var emails = NSArray()
+public class CLIENT_ENTITY_PROPERTIES : Message {
+    public var type: NSNumber?
+    public var display_name: NSString?
+    public var first_name: NSString?
+    public var photo_url: NSString?
+    public var emails = NSArray()
 }
 
 @objc(CLIENT_ENTITY)
-class CLIENT_ENTITY : Message {
-    var field1: AnyObject? = nil
-    var field2: AnyObject? = nil
-    var field3: AnyObject? = nil
-    var field4: AnyObject? = nil
-    var field5: AnyObject? = nil
-    var field6: AnyObject? = nil
-    var field7: AnyObject? = nil
-    var field8: AnyObject? = nil
-    var id = USER_ID()
+public class CLIENT_ENTITY : Message {
+    public var field1: AnyObject? = nil
+    public var field2: AnyObject? = nil
+    public var field3: AnyObject? = nil
+    public var field4: AnyObject? = nil
+    public var field5: AnyObject? = nil
+    public var field6: AnyObject? = nil
+    public var field7: AnyObject? = nil
+    public var field8: AnyObject? = nil
+    public var id = USER_ID()
 
-    var properties = CLIENT_ENTITY_PROPERTIES()
+    public var properties = CLIENT_ENTITY_PROPERTIES()
 }
 
 @objc(ENTITY_GROUP_ENTITY)
-class ENTITY_GROUP_ENTITY : Message {
-    var entity = CLIENT_ENTITY()
-    var field1: AnyObject? = nil
+public class ENTITY_GROUP_ENTITY : Message {
+    public var entity = CLIENT_ENTITY()
+    public var field1: AnyObject? = nil
 }
 
 @objc(ENTITY_GROUP)
-class ENTITY_GROUP : Message {
-    var field1: AnyObject? = nil
-    var some_sort_of_id: AnyObject? = nil
+public class ENTITY_GROUP : Message {
+    public var field1: AnyObject? = nil
+    public var some_sort_of_id: AnyObject? = nil
 
-    var entity = [ENTITY_GROUP_ENTITY]()
+    public var entity = [ENTITY_GROUP_ENTITY]()
 }
 
 @objc(INITIAL_CLIENT_ENTITIES)
-class INITIAL_CLIENT_ENTITIES : Message {
-    var cgserp: NSString = ""
-    var header: AnyObject? = nil
-    var entities = [CLIENT_ENTITY]()
-    var field1: AnyObject? = nil
-    var group1 = ENTITY_GROUP()
-    var group2 = ENTITY_GROUP()
-    var group3 = ENTITY_GROUP()
-    var group4 = ENTITY_GROUP()
-    var group5 = ENTITY_GROUP()
+public class INITIAL_CLIENT_ENTITIES : Message {
+    public var cgserp: NSString = ""
+    public var header: AnyObject? = nil
+    public var entities = [CLIENT_ENTITY]()
+    public var field1: AnyObject? = nil
+    public var group1 = ENTITY_GROUP()
+    public var group2 = ENTITY_GROUP()
+    public var group3 = ENTITY_GROUP()
+    public var group4 = ENTITY_GROUP()
+    public var group5 = ENTITY_GROUP()
 }
 
 @objc(CLIENT_GET_SELF_INFO_RESPONSE)
-class CLIENT_GET_SELF_INFO_RESPONSE : Message {
-    var cgsirp: NSString = ""
-    var response_header: AnyObject? = nil
-    var self_entity = CLIENT_ENTITY()
+public class CLIENT_GET_SELF_INFO_RESPONSE : Message {
+    public var cgsirp: NSString = ""
+    public var response_header: AnyObject? = nil
+    public var self_entity = CLIENT_ENTITY()
 }
 
 @objc(CLIENT_RESPONSE_HEADER)
-class CLIENT_RESPONSE_HEADER : Message {
-    var status: NSString = ""
-    var field1: AnyObject? = nil
-    var field2: AnyObject? = nil
-    var request_trace_id: NSString = ""
-    var current_server_time: NSString = ""
+public class CLIENT_RESPONSE_HEADER : Message {
+    public var status: NSString = ""
+    public var field1: AnyObject? = nil
+    public var field2: AnyObject? = nil
+    public var request_trace_id: NSString = ""
+    public var current_server_time: NSString = ""
 }
 
 @objc(CLIENT_SYNC_ALL_NEW_EVENTS_RESPONSE)
-class CLIENT_SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
-    var csanerp: NSString = ""
-    var response_header = CLIENT_RESPONSE_HEADER()
-    var sync_timestamp: NSString = ""
-    var conversation_state = [CLIENT_CONVERSATION_STATE]()
+public class CLIENT_SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
+    public var csanerp: NSString = ""
+    public var response_header = CLIENT_RESPONSE_HEADER()
+    public var sync_timestamp: NSString = ""
+    public var conversation_state = [CLIENT_CONVERSATION_STATE]()
 }
 
 @objc(CLIENT_GET_CONVERSATION_RESPONSE)
-class CLIENT_GET_CONVERSATION_RESPONSE : Message {
-    var cgcrp: NSString = ""
-    var response_header = CLIENT_RESPONSE_HEADER()
-    var conversation_state = CLIENT_CONVERSATION_STATE()
+public class CLIENT_GET_CONVERSATION_RESPONSE : Message {
+    public var cgcrp: NSString = ""
+    public var response_header = CLIENT_RESPONSE_HEADER()
+    public var conversation_state = CLIENT_CONVERSATION_STATE()
 }
 
 @objc(CLIENT_GET_ENTITY_BY_ID_RESPONSE)
-class CLIENT_GET_ENTITY_BY_ID_RESPONSE : Message {
-    var cgebirp: NSString = ""
-    var response_header = CLIENT_RESPONSE_HEADER()
-    var entities = [CLIENT_ENTITY]()
+public class CLIENT_GET_ENTITY_BY_ID_RESPONSE : Message {
+    public var cgebirp: NSString = ""
+    public var response_header = CLIENT_RESPONSE_HEADER()
+    public var entities = [CLIENT_ENTITY]()
 }

@@ -2,9 +2,9 @@ import Foundation
 
 // PBLite Enum Type
 
-class Enum : NSObject, IntegerLiteralConvertible {
-	let representation: NSNumber
-	required init(value: NSNumber) {
+public class Enum : NSObject, IntegerLiteralConvertible {
+	public let representation: NSNumber
+	required public init(value: NSNumber) {
 		self.representation = value
 	}
 	
@@ -12,38 +12,38 @@ class Enum : NSObject, IntegerLiteralConvertible {
 		self.init(value: -1)
 	}
 	
-	required init(integerLiteral value: IntegerLiteralType) {
+	required public init(integerLiteral value: IntegerLiteralType) {
 		self.representation = value
 	}
 }
 
-func ==(lhs: Enum, rhs: Enum) -> Bool {
+public func ==(lhs: Enum, rhs: Enum) -> Bool {
 	return lhs.representation == rhs.representation
 }
 
-func !=(lhs: Enum, rhs: Enum) -> Bool {
+public func !=(lhs: Enum, rhs: Enum) -> Bool {
 	return !(lhs == rhs)
 }
 
-func ~=(pattern: Enum, predicate: Enum) -> Bool {
+public func ~=(pattern: Enum, predicate: Enum) -> Bool {
 	return pattern == predicate
 }
 
 // PBLite Message Type
 
-class Message : NSObject {
-	required override init() { }
-	class func isOptional() -> Bool { return false }
+public class Message : NSObject {
+	required override public init() { }
+	public class func isOptional() -> Bool { return false }
 	
 	func serialize(input: AnyObject?) -> AnyObject? {
 		return nil
 	}
 	
-	override var description: String {
+	override public var description: String {
 		return "message \(self.dynamicType.description())"
 	}
 	
-	override var debugDescription: String {
+	override public var debugDescription: String {
 		let mirror = Mirror(reflecting: self)
 		var string = "message \(self.dynamicType.description()) {\n"
 		for thing in mirror.children {
@@ -55,10 +55,10 @@ class Message : NSObject {
 
 // PBLiteSerialization wrapper
 
-class PBLiteSerialization {
+public class PBLiteSerialization {
 	
 	// FIXME: Use Swift reflection to unwrap AnyObject?.
-	class func _unwrapOptionalType(any: Any) -> Any.Type? {
+	public class func _unwrapOptionalType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
 		if dynamicTypeName.contains("Optional<") {
 			var containedTypeName = dynamicTypeName.stringByReplacingOccurrencesOfString("Optional<", withString: "")
@@ -69,7 +69,7 @@ class PBLiteSerialization {
 	}
 	
 	// FIXME: Use Swift reflection to unwrap [AnyObject]?.
-	class func _unwrapOptionalArrayType(any: Any) -> Any.Type? {
+	public class func _unwrapOptionalArrayType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
 		
 		if dynamicTypeName.contains("Swift.Array") {
@@ -87,7 +87,7 @@ class PBLiteSerialization {
 	}
 	
 	// FIXME: Use Swift reflection to unwrap [AnyObject].
-	class func getArrayMessageType(arr: Any) -> Message.Type? {
+	public class func getArrayMessageType(arr: Any) -> Message.Type? {
 		if arr is [CONVERSATION_ID] { return CONVERSATION_ID.self }
 		if arr is [USER_ID] { return USER_ID.self }
 		if arr is [CLIENT_EVENT] { return CLIENT_EVENT.self }
@@ -101,13 +101,13 @@ class PBLiteSerialization {
 	}
 	
 	// FIXME: Use Swift reflection to unwrap [AnyObject].
-	class func getArrayEnumType(arr: Any) -> Enum.Type? {
+	public class func getArrayEnumType(arr: Any) -> Enum.Type? {
 		if arr is [ConversationView] { return ConversationView.self }
 		return nil
 	}
 	
 	// FIXME: Use Swift reflection to unwrap.
-	class func valueWithTypeCoercion(property: Any, value: AnyObject?) -> AnyObject? {
+	public class func valueWithTypeCoercion(property: Any, value: AnyObject?) -> AnyObject? {
 		if property is NSDate || _unwrapOptionalType(property) is NSDate.Type {
 			if let number = value as? NSNumber {
 				let timestampAsDate = from_timestamp(number)
@@ -117,7 +117,7 @@ class PBLiteSerialization {
 		return value
 	}
 	
-	class func parseProtoJSON<T: Message>(input: NSData) -> T? {
+	public class func parseProtoJSON<T: Message>(input: NSData) -> T? {
 		let script = "a = " + (NSString(data: input, encoding: 4)! as String)
 		if let parsedObject = JSContext().evaluateScript(script).toArray() {
 			return parseArray(T.self, input: parsedObject)
@@ -125,7 +125,7 @@ class PBLiteSerialization {
 		return nil
 	}
 	
-	class func parseJSON<T: Message>(input: NSData) -> T? {
+	public class func parseJSON<T: Message>(input: NSData) -> T? {
 		let script = "a = " + (NSString(data: input, encoding: 4)! as String)
 		if let parsedObject = JSContext().evaluateScript(script).toDictionary() {
 			return parseDictionary(T.self, obj: parsedObject)
@@ -135,7 +135,7 @@ class PBLiteSerialization {
 	
 	// Parsing
 	
-	class func parseArray<T: Message>(type: T.Type, input: NSArray?) -> T? {
+	public class func parseArray<T: Message>(type: T.Type, input: NSArray?) -> T? {
 		guard let arr = input else {
 			return nil // expected array
 		}
@@ -197,7 +197,7 @@ class PBLiteSerialization {
 		return instance
 	}
 	
-	class func parseDictionary<T: Message>(type: T.Type, obj: NSDictionary) -> T? {
+	public class func parseDictionary<T: Message>(type: T.Type, obj: NSDictionary) -> T? {
 		let instance = type.init()
 		let reflection = Mirror(reflecting: instance)
 		for child in reflection.children {

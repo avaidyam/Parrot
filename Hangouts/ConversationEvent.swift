@@ -1,37 +1,37 @@
 import Foundation
 
-struct UserID : Hashable {
-    let chat_id: String
-    let gaia_id: String
+public struct UserID : Hashable {
+    public let chat_id: String
+    public let gaia_id: String
 
-    var hashValue: Int {
+    public var hashValue: Int {
         get {
             return chat_id.hashValue &+ gaia_id.hashValue
         }
     }
 }
 
-func ==(lhs: UserID, rhs: UserID) -> Bool {
+public func ==(lhs: UserID, rhs: UserID) -> Bool {
     return lhs.hashValue == rhs.hashValue
 }
 
 // An event which becomes part of the permanent record of a conversation.
 // This corresponds to ClientEvent in the API.
 // This is the base class for such events.
-class ConversationEvent : Equatable {
-    let event: CLIENT_EVENT
+public class ConversationEvent : Equatable {
+    public let event: CLIENT_EVENT
 
-    init(client_event: CLIENT_EVENT) {
+    public init(client_event: CLIENT_EVENT) {
         event = client_event
     }
 	
 	// A timestamp of when the event occurred.
-    lazy var timestamp: NSDate = {
+    public lazy var timestamp: NSDate = {
         return self.event.timestamp
     }()
 	
 	// A UserID indicating who created the event.
-    lazy var user_id: UserID = {
+    public lazy var user_id: UserID = {
         return UserID(
             chat_id: self.event.sender_id.chat_id as String,
             gaia_id: self.event.sender_id.gaia_id as String
@@ -39,32 +39,32 @@ class ConversationEvent : Equatable {
     }()
 	
 	// The ID of the conversation the event belongs to.
-    lazy var conversation_id: NSString = {
+    public lazy var conversation_id: NSString = {
         return self.event.conversation_id.id
     }()
 	
 	// The ID of the ConversationEvent.
-    lazy var id: Conversation.EventID = {
+    public lazy var id: Conversation.EventID = {
         return self.event.event_id! as Conversation.EventID
     }()
 }
 
-func ==(lhs: ConversationEvent, rhs: ConversationEvent) -> Bool {
+public func ==(lhs: ConversationEvent, rhs: ConversationEvent) -> Bool {
     return lhs.event == rhs.event
 }
 
-class ChatMessageSegment {
-    let type: SegmentType
-    let text: String
-    let is_bold: Bool
-    let is_italic: Bool
-    let is_strikethrough: Bool
-    let is_underline: Bool
-    let link_target: String?
+public class ChatMessageSegment {
+    public let type: SegmentType
+    public let text: String
+    public let is_bold: Bool
+    public let is_italic: Bool
+    public let is_strikethrough: Bool
+    public let is_underline: Bool
+    public let link_target: String?
 
 	// A segment of a chat message.
 	// Create a new chat message segment.
-    init(text: String,
+    public init(text: String,
         segment_type: SegmentType?=nil,
         is_bold: Bool=false,
         is_italic: Bool=false,
@@ -90,7 +90,7 @@ class ChatMessageSegment {
 	
 	// Create a chat message segment from a parsed MESSAGE_SEGMENT.
 	// The formatting options are optional.
-    init(segment: MESSAGE_SEGMENT) {
+    public init(segment: MESSAGE_SEGMENT) {
         text = segment.text! as String
         type = segment.type
         is_bold = segment.formatting?.bold?.boolValue ?? false
@@ -101,7 +101,7 @@ class ChatMessageSegment {
     }
 	
 	// Serialize the segment to pblite.
-    func serialize() -> NSArray {
+    public func serialize() -> NSArray {
         return [self.type.representation, self.text, [
             self.is_bold ? 1 : 0,
             self.is_italic ? 1 : 0,
@@ -113,10 +113,10 @@ class ChatMessageSegment {
 
 // An event containing a chat message.
 // Corresponds to ClientChatMessage in the API.
-class ChatMessageEvent : ConversationEvent {
+public class ChatMessageEvent : ConversationEvent {
 	
 	// A textual representation of the message.
-    lazy var text: String = {
+    public lazy var text: String = {
         var lines = [""]
         for segment in self.segments {
             switch (segment.type) {
@@ -135,7 +135,7 @@ class ChatMessageEvent : ConversationEvent {
     }()
 	
 	// List of ChatMessageSegments in the message.
-    lazy var segments: [ChatMessageSegment] = {
+    public lazy var segments: [ChatMessageSegment] = {
         if let list = self.event.chat_message?.message_content.segment {
             return list.map { ChatMessageSegment(segment: $0) }
         } else {
@@ -144,7 +144,7 @@ class ChatMessageEvent : ConversationEvent {
     }()
 	
 	// Attachments in the message.
-    var attachments: [String] {
+    public var attachments: [String] {
         get {
             let raw_attachments = self.event.chat_message?.message_content.attachment ?? [MESSAGE_ATTACHMENT]()
             var attachments = [String]()
@@ -182,11 +182,11 @@ class ChatMessageEvent : ConversationEvent {
 
 // An event that renames a conversation.
 // Corresponds to ClientConversationRename in the API.
-class RenameEvent : ConversationEvent {
+public class RenameEvent : ConversationEvent {
 	
 	// The conversation's new name.
 	// An empty string if the conversation's name was cleared.
-    var new_name: String {
+    public var new_name: String {
         get {
             return self.event.conversation_rename!.new_name as String
         }
@@ -194,7 +194,7 @@ class RenameEvent : ConversationEvent {
 	
 	// The conversation's old name.
 	// An empty string if the conversation had no previous name.
-    var old_name: String {
+    public var old_name: String {
         get {
             return self.event.conversation_rename!.old_name as String
         }
@@ -203,10 +203,10 @@ class RenameEvent : ConversationEvent {
 
 // An event that adds or removes a conversation participant.
 // Corresponds to ClientMembershipChange in the API.
-class MembershipChangeEvent : ConversationEvent {
+public class MembershipChangeEvent : ConversationEvent {
 	
 	// The membership change type (MembershipChangeType).
-    var type: MembershipChangeType {
+    public var type: MembershipChangeType {
         get {
             return self.event.membership_change!.type
         }
@@ -214,7 +214,7 @@ class MembershipChangeEvent : ConversationEvent {
 	
 	// Return the UserIDs involved in the membership change.
 	// Multiple users may be added to a conversation at the same time.
-    var participant_ids: [UserID] {
+    public var participant_ids: [UserID] {
         get {
             return self.event.membership_change!.participant_ids.map {
                 UserID(chat_id: $0.chat_id as String, gaia_id: $0.gaia_id as String)

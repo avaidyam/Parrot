@@ -1,20 +1,20 @@
 import Foundation
 
-class Regex {
+public class Regex {
 	let internalExpression: NSRegularExpression
 	let pattern: String
 	
-	init(_ pattern: String, options: NSRegularExpressionOptions = .CaseInsensitive) {
+	public init(_ pattern: String, options: NSRegularExpressionOptions = .CaseInsensitive) {
 		self.pattern = pattern
 		self.internalExpression = try! NSRegularExpression(pattern: pattern, options: options)
 	}
 	
-	func test(input: String) -> Bool {
+	public func test(input: String) -> Bool {
 		let matches = self.internalExpression.matchesInString(input, options:[], range:NSMakeRange(0, input.characters.count))
 		return matches.count > 0
 	}
 	
-	func findall(input: String) -> [String] {
+	public func findall(input: String) -> [String] {
 		let results: [NSTextCheckingResult] = self.internalExpression.matchesInString(
 			input, options:[], range:NSMakeRange(0, input.characters.count)
 			) as [NSTextCheckingResult]
@@ -23,7 +23,7 @@ class Regex {
 		}
 	}
 	
-	func matches(input: String) -> [String] {
+	public func matches(input: String) -> [String] {
 		let results: [NSTextCheckingResult] = self.internalExpression.matchesInString(
 			input, options:[], range:NSMakeRange(0, input.characters.count)
 			) as [NSTextCheckingResult]
@@ -34,7 +34,7 @@ class Regex {
 }
 
 // from @matt http://stackoverflow.com/a/24318861/679081
-func delay(delay: Double, closure: ()->()) {
+public func delay(delay: Double, closure: ()->()) {
 	dispatch_after(
 		dispatch_time(
 			DISPATCH_TIME_NOW,

@@ -1,8 +1,7 @@
 import Foundation
-
 import CommonCrypto
 
-extension String {
+public extension String {
 	public func convertRangeFromNSRange(r: NSRange) -> Range<String.Index> {
 		let a  = (self as NSString).substringToIndex(r.location)
 		let b  = (self as NSString).substringWithRange(r)
@@ -13,11 +12,11 @@ extension String {
 		return  Range<String.Index>(start: i1, end: i2)
 	}
 	
-	func contains(find: String) -> Bool{
+	public func contains(find: String) -> Bool{
 		return self.rangeOfString(find) != nil
 	}
 	
-	func urlEncodedStringWithEncoding(encoding: NSStringEncoding) -> String {
+	public func urlEncodedStringWithEncoding(encoding: NSStringEncoding) -> String {
 		let charactersToBeEscaped = ":/?&=;+!@#$()',*" as CFStringRef
 		let charactersToLeaveUnescaped = "[]." as CFStringRef
 		let str = self as NSString
@@ -27,7 +26,7 @@ extension String {
 		return result as String
 	}
 	
-	func SHA1() -> String {
+	public func SHA1() -> String {
 		let data = self.dataUsingEncoding(NSUTF8StringEncoding)!
 		var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
 		CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
@@ -38,10 +37,10 @@ extension String {
 	}
 }
 
-func == <A:Equatable, B:Equatable> (tuple1:(A,B),tuple2:(A,B)) -> Bool {
+public func == <A:Equatable, B:Equatable> (tuple1:(A,B),tuple2:(A,B)) -> Bool {
 	return (tuple1.0 == tuple2.0) && (tuple1.1 == tuple2.1)
 }
 
-func == <A:Equatable, B:Equatable, C:Equatable, D:Equatable> (tuple1:(A,B,C,D),tuple2:(A,B,C,D)) -> Bool {
+public func == <A:Equatable, B:Equatable, C:Equatable, D:Equatable> (tuple1:(A,B,C,D),tuple2:(A,B,C,D)) -> Bool {
 	return (tuple1.0 == tuple2.0) && (tuple1.1 == tuple2.1) && (tuple1.2 == tuple2.2) && (tuple1.3 == tuple2.3)
 }
