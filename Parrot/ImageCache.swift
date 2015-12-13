@@ -23,13 +23,14 @@ class ImageCache {
 
         if let photo_url = user.photo_url, let url = NSURL(string: photo_url) {
             let request = NSURLRequest(URL: url)
-			NSURLSession.sharedSession().dataTaskWithRequest(request) { (data, response, error) in
+			let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { (data, response, error) in
 				if let data = data {
 					let image = NSImage(data: data)
 					self.cache[user.id] = image
 					cb?(image)
 				}
 			}
+			task.resume();
         } else {
             cb?(nil)
         }

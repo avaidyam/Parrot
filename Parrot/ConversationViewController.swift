@@ -130,7 +130,6 @@ class ConversationViewController:
         default:
             break
         }
-
         //conversationTableView.reloadData()
     }
 

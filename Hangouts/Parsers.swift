@@ -19,12 +19,12 @@ public func parse_submission(submission: String) -> (client_id: String?, updates
 // connection was closed while something happened, there can be multiple
 // payloads.
 public func _get_submission_payloads(submission: String) -> (client_id: String?, updates: [[AnyObject]]) {
-    let result = JSContext().evaluateScript("a = " + submission)
+    let result = JSContext().evaluateScript("a = " + submission) // FIXME: Don't use this.
     let nullResult: (client_id: String?, updates: [[AnyObject]]) = (nil, [])
     let r: [(client_id: String?, updates: [[AnyObject]])] = result.toArray().map { sub in
         if (((sub as! NSArray)[1] as! NSArray)[0] as? String) != "noop" {
             let script = ((sub[1] as! NSArray)[0] as! NSDictionary)["p"] as! String
-            let wrapper = JSContext().evaluateScript("a = " + script).toDictionary()
+            let wrapper = JSContext().evaluateScript("a = " + script).toDictionary() // FIXME: Don't use this.
             if let wrapper3 = wrapper["3"] as? NSDictionary {
                 if let wrapper32 = wrapper3["2"] as? String {
                     return (client_id: wrapper32, updates: [])
@@ -32,7 +32,7 @@ public func _get_submission_payloads(submission: String) -> (client_id: String?,
             }
             if let wrapper2 = wrapper["2"] as? NSDictionary {
                 if let wrapper22 = wrapper2["2"] as? String {
-                    let updates = JSContext().evaluateScript("a = " + wrapper22).toArray()
+                    let updates = JSContext().evaluateScript("a = " + wrapper22).toArray() // FIXME: Don't use this.
                     return (client_id: nil, updates: [updates as [AnyObject]])
                 }
             }

@@ -215,7 +215,7 @@ public class Channel : NSObject {
 //      [1,[{"gsid":"GSESSIONID_HERE"}]]]
 public func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
     if let firstSubmission = PushDataParser().getSubmissions(res).first {
-        let ctx = JSContext()
+        let ctx = JSContext() // FIXME: Don't use this.
         let val: JSValue = ctx.evaluateScript(firstSubmission)
         let sid = ((val.toArray()[0] as! NSArray)[1] as! NSArray)[1] as! String
         let gSessionID = (((val.toArray()[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String

@@ -5,11 +5,12 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
 
     @IBOutlet weak var conversationTableView: NSTableView!
 	
-	override func loadView() {
-		super.loadView()
-	}
-	
-	override func viewWillAppear() {
+    override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		conversationTableView.setDataSource(self)
+		conversationTableView.setDelegate(self)
+		
 		OAuth2.authenticateClient({ client in
 			self.representedObject = client
 		}, auth: { launch, actual, cb in
@@ -18,25 +19,28 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
 		})
 	}
 	
-    override func viewDidLoad() {
-		super.viewDidLoad()
-		conversationTableView.setDataSource(self)
-		conversationTableView.setDelegate(self)
+	override func viewWillAppear() {
+		super.viewWillAppear()
+		self.view.window?.styleMask = self.view.window!.styleMask | NSFullSizeContentViewWindowMask
+		self.view.window?.titleVisibility = .Hidden;
+		self.view.window?.titlebarAppearsTransparent = true;
+		//self.view.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
 	}
 
     override var representedObject: AnyObject? {
         didSet {
-			let client = representedObject as! Client
-			client.delegate = self
-			client.connect()
+			let client = representedObject as? Client
+			client?.delegate = self
+			client?.connect()
+			updateAppBadge()
         }
     }
 
     func updateAppBadge() {
         if let list = conversationList where list.unreadEventCount > 0 {
-            NSApplication.sharedApplication().dockTile.badgeLabel = "\(list.unreadEventCount)"
+            NSApp.dockTile.badgeLabel = "\(list.unreadEventCount)"
         } else {
-            NSApplication.sharedApplication().dockTile.badgeLabel = ""
+            NSApp.dockTile.badgeLabel = ""
         }
     }
 
@@ -45,9 +49,9 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
         didSet {
             conversationList?.delegate = self
 			
-			dispatch_async(dispatch_get_main_queue(), {
+			NSOperationQueue.mainQueue().addOperationWithBlock {
 				self.conversationTableView.reloadData()
-			})
+			}
         }
     }
 
@@ -61,11 +65,11 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
                 sync_timestamp: initialData.sync_timestamp
             )
 			
-			dispatch_async(dispatch_get_main_queue(), {
+			NSOperationQueue.mainQueue().addOperationWithBlock {
 				self.conversationTableView.reloadData()
 				self.conversationTableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
 				self.conversationTableView.scrollRowToVisible(0)
-			})
+			}
         }
     }
 
@@ -93,16 +97,41 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
             selectConversation(nil)
         }
     }
+	
+	func tableView(tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
+		var actions: [NSTableViewRowAction] = []
+		if edge == .Leading { // Swipe Right Actions
+			actions = [
+				NSTableViewRowAction(style: .Regular, title: "Mute", handler: { a, b in
+					print("\(a) \(b)")
+				}),
+				NSTableViewRowAction(style: .Regular, title: "Mute", handler: { a, b in
+					print("\(a) \(b)")
+				})
+			]
+			actions[1].backgroundColor = NSColor.darkGrayColor()
+		} else if edge == .Trailing { // Swipe Left Actions
+			actions = [
+				NSTableViewRowAction(style: .Destructive, title: "Archive", handler: { a, b in
+					print("\(a) \(b)")
+				}),
+				NSTableViewRowAction(style: .Destructive, title: "Delete", handler: { a, b in
+					print("\(a) \(b)")
+				})
+			]
+			actions[0].backgroundColor = NSColor.darkGrayColor()
+		}
+		return actions
+	}
+	
+	func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
+		return conversationList?.conversations[row]
+	}
 
     // MARK: NSTableViewDelegate
 
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        if let conversation = conversationList?.conversations[row] {
-            let view = tableView.makeViewWithIdentifier("ConversationListItemView", owner: self) as? ConversationListItemView
-            view!.configureWithConversation(conversation)
-            return view
-        }
-        return nil
+        return tableView.makeViewWithIdentifier("ConversationListItemView", owner: self) as? ConversationListItemView
     }
 
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
@@ -115,7 +144,7 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
     }
 
     func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType) {
-
+		print("changed something \(status)")
     }
 
     func conversationList(list: ConversationList, didReceiveWatermarkNotification status: WatermarkNotification) {
@@ -123,19 +152,19 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
     }
 
     func conversationListDidUpdate(list: ConversationList) {
-		dispatch_async(dispatch_get_main_queue(), {
+		NSOperationQueue.mainQueue().addOperationWithBlock {
 			self.conversationTableView.reloadData()
 			self.updateAppBadge()
-		})
+		}
     }
 
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation) {
         //  TODO: Just update the one row that needs updating
 		
-		dispatch_async(dispatch_get_main_queue(), {
+		NSOperationQueue.mainQueue().addOperationWithBlock {
 			self.conversationTableView.reloadData()
 			self.updateAppBadge()
-		})
+		}
     }
 
 

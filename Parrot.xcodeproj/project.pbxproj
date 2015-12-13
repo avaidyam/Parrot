@@ -19,7 +19,6 @@
 		4835ECB11C1C620E00193EBC /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* LoginViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECB71C1C672900193EBC /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB31C1C672900193EBC /* NotificationManager.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECB81C1C672900193EBC /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB41C1C672900193EBC /* ImageCache.swift */; settings = {ASSET_TAGS = (); }; };
-		4835ECB91C1C672900193EBC /* EmojiMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB51C1C672900193EBC /* EmojiMapper.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECBA1C1C672900193EBC /* TextMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB61C1C672900193EBC /* TextMapper.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECBC1C1C67B700193EBC /* NSView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECBB1C1C67B700193EBC /* NSView+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECBD1C1C67D300193EBC /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E2A1C1B3F7F009BC442 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -50,11 +49,12 @@
 		48834E461C1B40A4009BC442 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E441C1B40A4009BC442 /* Messages.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E481C1B40FA009BC442 /* NSRegularExpression+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E471C1B40FA009BC442 /* NSRegularExpression+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E4C1C1B4253009BC442 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */; };
-		48834E4E1C1B4361009BC442 /* NSDate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E4D1C1B4361009BC442 /* NSDate+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		48834E4E1C1B4361009BC442 /* Swift+Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E4D1C1B4361009BC442 /* Swift+Operators.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E501C1B4377009BC442 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E4F1C1B4377009BC442 /* String+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E531C1B442B009BC442 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E521C1B442B009BC442 /* Dictionary+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E571C1B490B009BC442 /* CommonCrypto in Resources */ = {isa = PBXBuildFile; fileRef = 48834E561C1B490B009BC442 /* CommonCrypto */; settings = {ASSET_TAGS = (); }; };
-		48AAF4191C1CCD3F00561210 /* ParrotPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AAF4181C1CCD3F00561210 /* ParrotPanelController.swift */; settings = {ASSET_TAGS = (); }; };
+		48BF49A31C1D23D000AC4DD5 /* NSDate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF49A21C1D23D000AC4DD5 /* NSDate+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		48BF49A51C1D315B00AC4DD5 /* NSNotificationCenter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF49A41C1D315B00AC4DD5 /* NSNotificationCenter+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		48DE52CC1C1CC12900647C63 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52CB1C1CC12900647C63 /* icon.icns */; };
 		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
 		48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -228,7 +228,6 @@
 		4835ECAE1C1C620E00193EBC /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		4835ECB31C1C672900193EBC /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		4835ECB41C1C672900193EBC /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
-		4835ECB51C1C672900193EBC /* EmojiMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmojiMapper.swift; sourceTree = "<group>"; };
 		4835ECB61C1C672900193EBC /* TextMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextMapper.swift; sourceTree = "<group>"; };
 		4835ECBB1C1C67B700193EBC /* NSView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSView+Extensions.swift"; sourceTree = "<group>"; };
 		48834D921C1B3602009BC442 /* Parrot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parrot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -266,11 +265,12 @@
 		48834E441C1B40A4009BC442 /* Messages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		48834E471C1B40FA009BC442 /* NSRegularExpression+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+Extensions.swift"; sourceTree = "<group>"; };
 		48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		48834E4D1C1B4361009BC442 /* NSDate+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Extensions.swift"; sourceTree = "<group>"; };
+		48834E4D1C1B4361009BC442 /* Swift+Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Swift+Operators.swift"; sourceTree = "<group>"; };
 		48834E4F1C1B4377009BC442 /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		48834E521C1B442B009BC442 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		48834E561C1B490B009BC442 /* CommonCrypto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CommonCrypto; path = External/CommonCrypto; sourceTree = SOURCE_ROOT; };
-		48AAF4181C1CCD3F00561210 /* ParrotPanelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotPanelController.swift; sourceTree = "<group>"; };
+		48BF49A21C1D23D000AC4DD5 /* NSDate+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Extensions.swift"; sourceTree = "<group>"; };
+		48BF49A41C1D315B00AC4DD5 /* NSNotificationCenter+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSNotificationCenter+Extensions.swift"; sourceTree = "<group>"; };
 		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52CB1C1CC12900647C63 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		48DE52CD1C1CC12900647C63 /* ParrotShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotShare.entitlements; sourceTree = "<group>"; };
@@ -393,14 +393,37 @@
 		4835ECB21C1C672300193EBC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				48AAF4181C1CCD3F00561210 /* ParrotPanelController.swift */,
 				4835ECBB1C1C67B700193EBC /* NSView+Extensions.swift */,
 				4835ECB31C1C672900193EBC /* NotificationManager.swift */,
 				4835ECB41C1C672900193EBC /* ImageCache.swift */,
-				4835ECB51C1C672900193EBC /* EmojiMapper.swift */,
 				4835ECB61C1C672900193EBC /* TextMapper.swift */,
+				48BF49A21C1D23D000AC4DD5 /* NSDate+Extensions.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		487A0E101C1E0F6C007A4696 /* PBLite */ = {
+			isa = PBXGroup;
+			children = (
+				48834E431C1B40A4009BC442 /* PBLite.swift */,
+				48834E441C1B40A4009BC442 /* Messages.swift */,
+				48834E331C1B4098009BC442 /* Auth.swift */,
+			);
+			name = PBLite;
+			sourceTree = "<group>";
+		};
+		487A0E111C1E0F71007A4696 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				48834E341C1B4098009BC442 /* Channel.swift */,
+				48834E351C1B4098009BC442 /* Client.swift */,
+				48834E361C1B4098009BC442 /* Conversation.swift */,
+				48834E371C1B4098009BC442 /* ConversationEvent.swift */,
+				48834E381C1B4098009BC442 /* ConversationList.swift */,
+				48834E391C1B4098009BC442 /* Parsers.swift */,
+				48834E3A1C1B4098009BC442 /* User.swift */,
+			);
+			name = API;
 			sourceTree = "<group>";
 		};
 		48834D891C1B3602009BC442 = {
@@ -441,8 +464,8 @@
 				4835ECAC1C1C620E00193EBC /* ConversationsViewController.swift */,
 				4835ECAD1C1C620E00193EBC /* ConversationViewController.swift */,
 				4835ECAE1C1C620E00193EBC /* LoginViewController.swift */,
+				4835ECA11C1C61BB00193EBC /* Main.storyboard */,
 				4835ECA51C1C61F300193EBC /* Custom Views */,
-				48834E581C1B4994009BC442 /* User Interface */,
 				4835ECB21C1C672300193EBC /* Extensions */,
 				48834DC11C1B36D1009BC442 /* Supporting Files */,
 			);
@@ -470,6 +493,7 @@
 		48834DC11C1B36D1009BC442 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				48834D951C1B3602009BC442 /* AppDelegate.swift */,
 				48834DC01C1B3686009BC442 /* Parrot.entitlements */,
 				48834D991C1B3602009BC442 /* Assets.xcassets */,
 				48834D9E1C1B3602009BC442 /* Info.plist */,
@@ -496,16 +520,8 @@
 		48834DED1C1B372E009BC442 /* Hangouts */ = {
 			isa = PBXGroup;
 			children = (
-				48834E431C1B40A4009BC442 /* PBLite.swift */,
-				48834E441C1B40A4009BC442 /* Messages.swift */,
-				48834E331C1B4098009BC442 /* Auth.swift */,
-				48834E341C1B4098009BC442 /* Channel.swift */,
-				48834E351C1B4098009BC442 /* Client.swift */,
-				48834E361C1B4098009BC442 /* Conversation.swift */,
-				48834E371C1B4098009BC442 /* ConversationEvent.swift */,
-				48834E381C1B4098009BC442 /* ConversationList.swift */,
-				48834E391C1B4098009BC442 /* Parsers.swift */,
-				48834E3A1C1B4098009BC442 /* User.swift */,
+				487A0E101C1E0F6C007A4696 /* PBLite */,
+				487A0E111C1E0F71007A4696 /* API */,
 				48834E511C1B4380009BC442 /* Extensions */,
 				48834E0A1C1B3739009BC442 /* Supporting Files */,
 			);
@@ -583,19 +599,11 @@
 			children = (
 				48834E4F1C1B4377009BC442 /* String+Extensions.swift */,
 				48834E521C1B442B009BC442 /* Dictionary+Extensions.swift */,
-				48834E4D1C1B4361009BC442 /* NSDate+Extensions.swift */,
+				48834E4D1C1B4361009BC442 /* Swift+Operators.swift */,
 				48834E471C1B40FA009BC442 /* NSRegularExpression+Extensions.swift */,
+				48BF49A41C1D315B00AC4DD5 /* NSNotificationCenter+Extensions.swift */,
 			);
 			name = Extensions;
-			sourceTree = "<group>";
-		};
-		48834E581C1B4994009BC442 /* User Interface */ = {
-			isa = PBXGroup;
-			children = (
-				48834D951C1B3602009BC442 /* AppDelegate.swift */,
-				4835ECA11C1C61BB00193EBC /* Main.storyboard */,
-			);
-			name = "User Interface";
 			sourceTree = "<group>";
 		};
 		48DE52C91C1CC12900647C63 /* ParrotShare */ = {
@@ -931,12 +939,18 @@
 							com.apple.ApplicationGroups.Mac = {
 								enabled = 1;
 							};
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
 						};
 					};
 					48DE52DB1C1CC1D300647C63 = {
 						CreatedOnToolsVersion = 7.0;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
+							com.apple.Sandbox = {
 								enabled = 1;
 							};
 						};
@@ -1063,17 +1077,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48BF49A31C1D23D000AC4DD5 /* NSDate+Extensions.swift in Sources */,
 				4835ECB11C1C620E00193EBC /* LoginViewController.swift in Sources */,
 				4835ECA91C1C620000193EBC /* ChatMessageView.swift in Sources */,
 				4835ECAF1C1C620E00193EBC /* ConversationsViewController.swift in Sources */,
 				4835ECB81C1C672900193EBC /* ImageCache.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* ConversationViewController.swift in Sources */,
 				4835ECBC1C1C67B700193EBC /* NSView+Extensions.swift in Sources */,
-				4835ECB91C1C672900193EBC /* EmojiMapper.swift in Sources */,
 				48834D961C1B3602009BC442 /* AppDelegate.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* ConversationListItemView.swift in Sources */,
 				4835ECBA1C1C672900193EBC /* TextMapper.swift in Sources */,
-				48AAF4191C1CCD3F00561210 /* ParrotPanelController.swift in Sources */,
 				4835ECB71C1C672900193EBC /* NotificationManager.swift in Sources */,
 				4835ECAA1C1C620000193EBC /* ChatTypingView.swift in Sources */,
 			);
@@ -1099,12 +1112,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48834E4E1C1B4361009BC442 /* NSDate+Extensions.swift in Sources */,
+				48834E4E1C1B4361009BC442 /* Swift+Operators.swift in Sources */,
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
 				48834E3B1C1B4098009BC442 /* Auth.swift in Sources */,
 				48834E531C1B442B009BC442 /* Dictionary+Extensions.swift in Sources */,
 				48834E411C1B4098009BC442 /* Parsers.swift in Sources */,
 				48834E3F1C1B4098009BC442 /* ConversationEvent.swift in Sources */,
+				48BF49A51C1D315B00AC4DD5 /* NSNotificationCenter+Extensions.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				48834E451C1B40A4009BC442 /* PBLite.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
@@ -1566,12 +1580,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ParrotShare/ParrotShare.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ParrotShare/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotShare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -1580,12 +1595,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ParrotShare/ParrotShare.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ParrotShare/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotShare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -1656,6 +1672,7 @@
 				4803639F1C1D08490008E9F5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		48834D8D1C1B3602009BC442 /* Build configuration list for PBXProject "Parrot" */ = {
 			isa = XCConfigurationList;

@@ -86,7 +86,7 @@ public class Client : ChannelDelegate {
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
         manager.request(request).responseData { response in
             let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
-            let ctx = JSContext()
+            let ctx = JSContext() // FIXME: Don't use this.
             let pvt: AnyObject = ctx.evaluateScript(body).toArray()[1] as! String
             self.CHAT_INIT_PARAMS["pvt"] = pvt
 
@@ -110,7 +110,7 @@ public class Client : ChannelDelegate {
                 )
                 for data in regex.matches(body) {
                     if data.rangeOfString("data:function") == nil {
-                        let dict = JSContext().evaluateScript("a = " + data).toDictionary()!
+                        let dict = JSContext().evaluateScript("a = " + data).toDictionary()! // FIXME: Don't use this.
                         data_dict[dict["key"] as! String] = dict["data"]
                     } else {
                         var cleanedData = data
@@ -118,7 +118,7 @@ public class Client : ChannelDelegate {
                             "data:function(){return", withString: "data:")
                         cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
                             "}}", withString: "}")
-                        if let dict = JSContext().evaluateScript("a = " + cleanedData).toDictionary() {
+                        if let dict = JSContext().evaluateScript("a = " + cleanedData).toDictionary() { // FIXME: Don't use this.
                             data_dict[dict["key"] as! String] = dict["data"]
                         } else {
                             print("Could not parse!")
@@ -562,7 +562,7 @@ public class Client : ChannelDelegate {
             ]
         ], use_json: false) { r in
             let result = JSContext().evaluateScript("a = " + (NSString(data: r.result.value!,
-				encoding: NSUTF8StringEncoding)! as String)).toArray()
+				encoding: NSUTF8StringEncoding)! as String)).toArray() // FIXME: Don't use this.
             cb(PBLiteSerialization.parseArray(CLIENT_GET_CONVERSATION_RESPONSE.self, input: result)!)
         }
     }

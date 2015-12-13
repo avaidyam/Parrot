@@ -2,37 +2,76 @@ import Cocoa
 import Hangouts
 
 class ConversationListItemView : NSTableCellView {
-    @IBOutlet weak var avatarView: NSImageView!
-    @IBOutlet weak var nameView: NSTextField!
-    @IBOutlet weak var lastMessageView: NSTextField!
-    @IBOutlet weak var timeView: NSTextField!
-
-    func configureWithConversation(conversation: Conversation) {
-        avatarView.wantsLayer = true
-
-        avatarView.layer?.borderWidth = 0.0
-        avatarView.layer?.cornerRadius = avatarView.frame.width / 2.0
-        avatarView.layer?.masksToBounds = true
-
-        let usersButNotMe = conversation.users.filter { !$0.isSelf }
-        if let user = usersButNotMe.first {
-            //  TODO: This is racey, fast scrolling can result in misplaced images
-            ImageCache.sharedInstance.fetchImage(forUser: user) {
-                self.avatarView.image = $0 ?? NSImage(named: "NSUserGuest")
-            }
-        } else {
-            avatarView.image = NSImage(named: "NSUserGuest")
-        }
-
-        nameView.stringValue = conversation.name
-
-        lastMessageView.stringValue = conversation.messages.last?.text ?? ""
-        if conversation.hasUnreadEvents {
-            lastMessageView.font = NSFont.boldSystemFontOfSize(lastMessageView.font!.pointSize)
-        } else {
-            lastMessageView.font = NSFont.systemFontOfSize(lastMessageView.font!.pointSize)
-        }
-
-        timeView.stringValue = conversation.messages.last?.timestamp.shortFormat() ?? "?"
-    }
+	
+	// Create and cache the default image template.
+	private static let defaultImage = NSImage(named: "NSUserGuest")
+	
+	@IBOutlet weak var photoView: NSImageView!
+	@IBOutlet weak var nameLabel: NSTextField!
+    @IBOutlet weak var textLabel: NSTextField!
+    @IBOutlet weak var timeLabel: NSTextField!
+	
+	override var objectValue: AnyObject? {
+		didSet {
+			guard let conversation = self.objectValue as? Conversation else {
+				return
+			}
+			
+			// Mask the photo layer as a circle to match Hangouts.
+			/*self.photoView?.wantsLayer = true
+			if let layer = self.photoView?.layer {
+				layer.borderWidth = 0.0
+				layer.cornerRadius = layer.bounds.width / 2.0
+				layer.masksToBounds = true
+			}*/
+			
+			// Get the first image for the users in the conversation to display.
+			// If we don't have an image, use a template image.
+			let otherUsers = conversation.users.filter { !$0.isSelf }
+			if let user = otherUsers.first {
+				ImageCache.sharedInstance.fetchImage(forUser: user) {
+					self.photoView?.image = $0 ?? ConversationListItemView.defaultImage
+				}
+			} else {
+				self.photoView?.image = ConversationListItemView.defaultImage
+			}
+			
+			self.nameLabel?.stringValue = conversation.name
+			
+			let a = conversation.messages.last?.user_id
+			let b = conversation.users.filter { $0.isSelf }.first?.id
+			if a != b {
+				self.textLabel.stringValue = conversation.messages.last?.text ?? ""
+				
+				if conversation.hasUnreadEvents {
+					self.textLabel.font = NSFont.boldSystemFontOfSize(self.textLabel.font!.pointSize)
+				} else {
+					self.textLabel.font = NSFont.systemFontOfSize(self.textLabel.font!.pointSize)
+				}
+			} else {
+				self.textLabel.stringValue = "You: " + (conversation.messages.last?.text ?? "")
+			}
+			
+			self.timeLabel.stringValue = conversation.messages.last?.timestamp.timeAgo() ?? ""
+		}
+	}
+	
+	override var backgroundStyle: NSBackgroundStyle {
+		didSet {
+			Swift.print("backgroundStyle \(self.backgroundStyle.rawValue)")
+		}
+	}
+	
+	override var rowSizeStyle: NSTableViewRowSizeStyle {
+		didSet {
+			Swift.print("rowSizeStyle \(self.rowSizeStyle.rawValue)")
+		}
+	}
+	
+	override var draggingImageComponents: [NSDraggingImageComponent] {
+		get {
+			Swift.print("dragging!")
+			return []
+		}
+	}
 }
