@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4803639D1C1D08490008E9F5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4803639C1C1D08490008E9F5 /* main.swift */; };
+		480363A51C1D08620008E9F5 /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
+		480363A71C1D08A20008E9F5 /* parrot-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4803639A1C1D08490008E9F5 /* parrot-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4835ECA41C1C61BB00193EBC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4835ECA11C1C61BB00193EBC /* Main.storyboard */; settings = {ASSET_TAGS = (); }; };
 		4835ECA91C1C620000193EBC /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* ChatMessageView.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECAA1C1C620000193EBC /* ChatTypingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA71C1C620000193EBC /* ChatTypingView.swift */; settings = {ASSET_TAGS = (); }; };
@@ -66,6 +69,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		480363A11C1D085A0008E9F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48834DEB1C1B372D009BC442;
+			remoteInfo = Hangouts;
+		};
+		480363A31C1D085C0008E9F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48834E101C1B38B9009BC442;
+			remoteInfo = HangoutsProvider;
+		};
 		48834DA41C1B3602009BC442 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
@@ -132,6 +149,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		480363981C1D08490008E9F5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		480363A61C1D08960008E9F5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				480363A71C1D08A20008E9F5 /* parrot-cli in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		48834DE31C1B370D009BC442 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -181,6 +217,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4803639A1C1D08490008E9F5 /* parrot-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "parrot-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4803639C1C1D08490008E9F5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4835ECA21C1C61BB00193EBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4835ECA61C1C620000193EBC /* ChatMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageView.swift; sourceTree = "<group>"; };
 		4835ECA71C1C620000193EBC /* ChatTypingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatTypingView.swift; sourceTree = "<group>"; };
@@ -253,6 +291,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		480363971C1D08490008E9F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				480363A51C1D08620008E9F5 /* Hangouts.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		48834D8F1C1B3602009BC442 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -326,6 +372,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4803639B1C1D08490008E9F5 /* parrot-cli */ = {
+			isa = PBXGroup;
+			children = (
+				4803639C1C1D08490008E9F5 /* main.swift */,
+			);
+			path = "parrot-cli";
+			sourceTree = "<group>";
+		};
 		4835ECA51C1C61F300193EBC /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -353,6 +407,7 @@
 			isa = PBXGroup;
 			children = (
 				48834D941C1B3602009BC442 /* Parrot */,
+				4803639B1C1D08490008E9F5 /* parrot-cli */,
 				48834DED1C1B372E009BC442 /* Hangouts */,
 				48834E121C1B38B9009BC442 /* HangoutsProvider */,
 				48DE53051C1CC29500647C63 /* Extensions */,
@@ -375,6 +430,7 @@
 				48DE52C81C1CC12900647C63 /* ParrotShare.appex */,
 				48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */,
 				48DE52F01C1CC28000647C63 /* ParrotToday.appex */,
+				4803639A1C1D08490008E9F5 /* parrot-cli */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -632,6 +688,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		480363991C1D08490008E9F5 /* parrot-cli */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 480363A01C1D08490008E9F5 /* Build configuration list for PBXNativeTarget "parrot-cli" */;
+			buildPhases = (
+				480363961C1D08490008E9F5 /* Sources */,
+				480363971C1D08490008E9F5 /* Frameworks */,
+				480363981C1D08490008E9F5 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				480363A21C1D085A0008E9F5 /* PBXTargetDependency */,
+				480363A41C1D085C0008E9F5 /* PBXTargetDependency */,
+			);
+			name = "parrot-cli";
+			productName = "parrot-cli";
+			productReference = 4803639A1C1D08490008E9F5 /* parrot-cli */;
+			productType = "com.apple.product-type.tool";
+		};
 		48834D911C1B3602009BC442 /* Parrot */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 48834DB71C1B3602009BC442 /* Build configuration list for PBXNativeTarget "Parrot" */;
@@ -642,6 +717,7 @@
 				48834DE31C1B370D009BC442 /* Embed Frameworks */,
 				48834E201C1B38B9009BC442 /* Embed XPC Services */,
 				48DE52D71C1CC12900647C63 /* Embed App Extensions */,
+				480363A61C1D08960008E9F5 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -809,6 +885,9 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Aditya Vaidyam";
 				TargetAttributes = {
+					480363991C1D08490008E9F5 = {
+						CreatedOnToolsVersion = 7.0;
+					};
 					48834D911C1B3602009BC442 = {
 						CreatedOnToolsVersion = 7.0;
 						SystemCapabilities = {
@@ -886,6 +965,7 @@
 			projectRoot = "";
 			targets = (
 				48834D911C1B3602009BC442 /* Parrot */,
+				480363991C1D08490008E9F5 /* parrot-cli */,
 				48834DEB1C1B372D009BC442 /* Hangouts */,
 				48834E101C1B38B9009BC442 /* HangoutsProvider */,
 				48DE52C71C1CC12900647C63 /* ParrotShare */,
@@ -971,6 +1051,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		480363961C1D08490008E9F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4803639D1C1D08490008E9F5 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		48834D8E1C1B3602009BC442 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1072,6 +1160,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		480363A21C1D085A0008E9F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48834DEB1C1B372D009BC442 /* Hangouts */;
+			targetProxy = 480363A11C1D085A0008E9F5 /* PBXContainerItemProxy */;
+		};
+		480363A41C1D085C0008E9F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48834E101C1B38B9009BC442 /* HangoutsProvider */;
+			targetProxy = 480363A31C1D085C0008E9F5 /* PBXContainerItemProxy */;
+		};
 		48834DA51C1B3602009BC442 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 48834D911C1B3602009BC442 /* Parrot */;
@@ -1147,6 +1245,20 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		4803639E1C1D08490008E9F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4803639F1C1D08490008E9F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		48834DB51C1B3602009BC442 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1537,6 +1649,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		480363A01C1D08490008E9F5 /* Build configuration list for PBXNativeTarget "parrot-cli" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4803639E1C1D08490008E9F5 /* Debug */,
+				4803639F1C1D08490008E9F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		48834D8D1C1B3602009BC442 /* Build configuration list for PBXProject "Parrot" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

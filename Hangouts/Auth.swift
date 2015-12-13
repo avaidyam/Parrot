@@ -112,9 +112,10 @@ public class OAuth2 {
 		let manager = Alamofire.Manager(configuration: cfg)
 		
 		if let codes = loadTokens() {
+			let temp = "1/70ltKVkuHWPZJMhQBYIEIxEeVQYMtRLKaSiCUC3JsjlCGTfw2w879ie8u08gMKME"
 			
 			// If we already have the tokens stored, authenticate.
-			withAuthenticatedManager(manager, auth_code: codes.refresh_token, cb: { manager in
+			withAuthenticatedManager(manager, auth_code: temp, cb: { manager in
 				cb(client: Client(manager: manager))
 			})
 		} else {
@@ -140,7 +141,9 @@ public class OAuth2 {
 	private class func withAuthenticatedManager(manager: Alamofire.Manager,
 		auth_code: String, cb: (manager: Alamofire.Manager) -> Void) {
 			
-			authenticate(auth_code) { (access_token: String, refresh_token: String) in
+			// first: authenticate(auth_code)
+			// second: authenticate(manager, refresh_token)
+			authenticate(manager, refresh_token: auth_code) { (access_token: String, refresh_token: String) in
 			saveTokens(access_token, refresh_token: refresh_token)
 			
 			let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"

@@ -34,9 +34,19 @@
 			<key>orderHint</key>
 			<integer>5</integer>
 		</dict>
+		<key>parrot-cli.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>6</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>480363991C1D08490008E9F5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>48834D911C1B3602009BC442</key>
 		<dict>
 			<key>primary</key>
