@@ -3,7 +3,7 @@ import Cocoa
 // A chat user.
 // Handles full_name or first_name being nil by creating an approximate
 // first_name from the full_name, or setting both to DEFAULT_NAME.
-public class User {
+public struct User {
     public static let DEFAULT_NAME = "Unknown"
 
     public let id: UserID
@@ -18,7 +18,7 @@ public class User {
 		self.id = user_id
 		let fname = full_name ?? User.DEFAULT_NAME
         self.full_name = fname
-        self.first_name = first_name ?? fname.componentsSeparatedByString(" ").first!
+        self.first_name = first_name ?? fname.characters.split{$0==" "}.map{String($0)}.first!
 		self.photo_url = photo_url != nil ? "https:" + photo_url! : nil
         self.emails = emails
         self.isSelf = is_self
@@ -26,7 +26,7 @@ public class User {
 	
 	// Initialize from a ClientEntity.
 	// If self_user_id is nil, assume this is the self user.
-    public convenience init(entity: CLIENT_ENTITY, self_user_id: UserID?) {
+    public init(entity: CLIENT_ENTITY, self_user_id: UserID?) {
         let user_id = UserID(chat_id: entity.id.chat_id as String, gaia_id: entity.id.gaia_id as String)
         var is_self = false
         if let sui = self_user_id {
@@ -46,7 +46,7 @@ public class User {
 	
 	// Initialize from ClientConversationParticipantData.
 	// If self_user_id is nil, assume this is the self user.
-    public convenience init(conv_part_data: CLIENT_CONVERSATION_PARTICIPANT_DATA, self_user_id: UserID?) {
+    public init(conv_part_data: CLIENT_CONVERSATION_PARTICIPANT_DATA, self_user_id: UserID?) {
         let user_id = UserID(chat_id: conv_part_data.id.chat_id as String, gaia_id: conv_part_data.id.gaia_id as String)
         var is_self = false
         if let sui = self_user_id {

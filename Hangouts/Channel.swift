@@ -224,3 +224,29 @@ public class Channel : NSObject {
 	}
 }
 
+extension Dictionary {
+	
+	public func queryStringWithEncoding() -> String {
+		var parts = [String]()
+		for (key, value) in self {
+			let keyString: String = "\(key)"
+			let valueString: String = "\(value)"
+			let query: String = "\(keyString)=\(valueString)"
+			parts.append(query)
+		}
+		return parts.joinWithSeparator("&")
+	}
+	
+	public func urlEncodedQueryStringWithEncoding(encoding: NSStringEncoding) -> String {
+		let set = NSCharacterSet(charactersInString: ":/?&=;+!@#$()',*")
+		
+		var parts = [String]()
+		for (key, value) in self {
+			let keyString: String = "\(key)".stringByAddingPercentEncodingWithAllowedCharacters(set)!
+			let valueString: String = "\(value)".stringByAddingPercentEncodingWithAllowedCharacters(set)!
+			let query: String = "\(keyString)=\(valueString)"
+			parts.append(query)
+		}
+		return parts.joinWithSeparator("&")
+	}
+}

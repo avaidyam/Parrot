@@ -91,7 +91,7 @@ public class ChatMessageSegment {
 	// Create a chat message segment from a parsed MESSAGE_SEGMENT.
 	// The formatting options are optional.
     public init(segment: MESSAGE_SEGMENT) {
-        text = segment.text! as String
+        text = segment.text as String? ?? "" // weird bug here?
         type = segment.type
         is_bold = segment.formatting?.bold?.boolValue ?? false
         is_italic = segment.formatting?.italic?.boolValue ?? false

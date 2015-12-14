@@ -1,7 +1,5 @@
 import Foundation
 
-/* NSDate Comparison */
-
 public func <=(lhs: NSDate, rhs: NSDate) -> Bool {
 	let res = lhs.compare(rhs)
 	return res == .OrderedAscending || res == .OrderedSame

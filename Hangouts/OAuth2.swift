@@ -112,7 +112,7 @@ public class OAuth2 {
 		cfg.HTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
 		let manager = Alamofire.Manager(configuration: cfg)
 		
-		if let codes = loadTokens() {
+		if let _ = loadTokens() {
 			let temp = "1/70ltKVkuHWPZJMhQBYIEIxEeVQYMtRLKaSiCUC3JsjlCGTfw2w879ie8u08gMKME"
 			
 			// If we already have the tokens stored, authenticate.
