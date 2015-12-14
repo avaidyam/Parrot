@@ -2,7 +2,7 @@ import Foundation
 
 /* TODO: Support `oneof` and nested `Message` types. */
 /* TODO: Step away from using NS* types with Swift reflection. */
-/* TODO: Convert to Swift `Enum` types. */
+/* TODO: Convert to Swift `enum` and `struct` types. */
 
 /****************************************
 *										*

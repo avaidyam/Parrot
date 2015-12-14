@@ -1,6 +1,7 @@
 import Foundation
 import Alamofire
 import Cocoa
+import CommonCrypto
 
 /* TODO: Replace with OAuth2 framework. */
 
@@ -126,7 +127,7 @@ public class OAuth2 {
 			auth(a, b, { request in
 				manager.request(request).responseData { response in
 					let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)!
-					let auth_code = Hangouts.Regex("value=\"(.+?)\"").matches(body as String).first!
+					let auth_code = Regex("value=\"(.+?)\"").matches(body as String).first!
 					
 					withAuthenticatedManager(manager, auth_code: auth_code, cb: { manager in
 						cb(client: Client(manager: manager))
@@ -183,5 +184,18 @@ public class OAuth2 {
 			"X-Origin": Channel.ORIGIN_URL,
 			"X-Goog-Authuser": "0",
 		]
+	}
+}
+
+/* String Crypto extensions */
+public extension String {
+	public func SHA1() -> String {
+		let data = self.dataUsingEncoding(NSUTF8StringEncoding)!
+		var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
+		CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
+		let hexBytes = digest.map {
+			String(format: "%02hhx", $0)
+		}
+		return hexBytes.joinWithSeparator("")
 	}
 }

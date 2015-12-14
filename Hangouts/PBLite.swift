@@ -61,7 +61,7 @@ public class PBLiteSerialization {
 	// FIXME: Use Swift reflection to unwrap AnyObject?.
 	public class func _unwrapOptionalType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
-		if dynamicTypeName.contains("Optional<") {
+		if dynamicTypeName.containsString("Optional<") {
 			var containedTypeName = dynamicTypeName.stringByReplacingOccurrencesOfString("Optional<", withString: "")
 			containedTypeName = containedTypeName.stringByReplacingOccurrencesOfString(">", withString: "")
 			return NSClassFromString(containedTypeName)
@@ -73,11 +73,11 @@ public class PBLiteSerialization {
 	public class func _unwrapOptionalArrayType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
 		
-		if dynamicTypeName.contains("Swift.Array") {
+		if dynamicTypeName.containsString("Swift.Array") {
 			print("Encountered Swift.Array -> \(dynamicTypeName)!")
 		}
 		
-		if dynamicTypeName.contains("Optional<Array") {
+		if dynamicTypeName.containsString("Optional<Array") {
 			var containedTypeName = dynamicTypeName.stringByReplacingOccurrencesOfString("Optional<", withString: "")
 			containedTypeName = containedTypeName.stringByReplacingOccurrencesOfString("Swift.Array<", withString: "")
 			containedTypeName = containedTypeName.stringByReplacingOccurrencesOfString("Array<", withString: "")

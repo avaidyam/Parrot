@@ -18,7 +18,6 @@ public class Channel : NSObject {
     public let PUSH_TIMEOUT = 30
     public let MAX_READ_BYTES = 1024 * 1024
     public let CONNECT_TIMEOUT = 30
-    public static let LEN_REGEX = "([0-9]+)\n"
 
     public var isConnected = false
     public var isSubscribed = false
@@ -179,33 +178,34 @@ public class Channel : NSObject {
         if isSubscribing { return }
         isSubscribing = true
 
-        delay(1) {
-            let timestamp = Int(NSDate().timeIntervalSince1970 * 1000)
-
-            // Hangouts for Chrome splits this over 2 requests, but it's possible to do everything in one.
-            let data: Dictionary<String, AnyObject> = [
-                "count": "3",
-                "ofs": "0",
-                "req0_p": "{\"1\":{\"1\":{\"1\":{\"1\":3,\"2\":2}},\"2\":{\"1\":{\"1\":3,\"2\":2},\"2\":\"\",\"3\":\"JS\",\"4\":\"lcsclient\"},\"3\":\(timestamp),\"4\":0,\"5\":\"c1\"},\"2\":{}}",
-                "req1_p": "{\"1\":{\"1\":{\"1\":{\"1\":3,\"2\":2}},\"2\":{\"1\":{\"1\":3,\"2\":2},\"2\":\"\",\"3\":\"JS\",\"4\":\"lcsclient\"},\"3\":\(timestamp),\"4\":\(timestamp),\"5\":\"c3\"},\"3\":{\"1\":{\"1\":\"babel\"}}}",
-                "req2_p": "{\"1\":{\"1\":{\"1\":{\"1\":3,\"2\":2}},\"2\":{\"1\":{\"1\":3,\"2\":2},\"2\":\"\",\"3\":\"JS\",\"4\":\"lcsclient\"},\"3\":\(timestamp),\"4\":\(timestamp),\"5\":\"c4\"},\"3\":{\"1\":{\"1\":\"hangout_invite\"}}}",
-            ]
-            let postBody = data.urlEncodedQueryStringWithEncoding(NSUTF8StringEncoding)
-            let queryString = (["VER": 8, "RID": 81188, "ctype": "hangouts", "gsessionid": self.gSessionIDParam!, "SID": self.sidParam!] as Dictionary<String, AnyObject>).urlEncodedQueryStringWithEncoding(NSUTF8StringEncoding)
-
-            let url = "\(self.CHANNEL_URL_PREFIX)/channel/bind?\(queryString)"
-            let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-            request.HTTPMethod = "POST"
-            request.HTTPBody = postBody.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-            for (k, v) in OAuth2.getAuthorizationHeaders(self.getCookieValue("SAPISID")!) {
-                request.setValue(v, forHTTPHeaderField: k)
-            }
-
-            self.manager.request(request).responseData { response in
-                self.isSubscribed = true
-                cb?()
-            }
-        }
+		let dt = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
+		dispatch_after(dt, dispatch_get_main_queue()) {
+			let timestamp = Int(NSDate().timeIntervalSince1970 * 1000)
+			
+			// Hangouts for Chrome splits this over 2 requests, but it's possible to do everything in one.
+			let data: Dictionary<String, AnyObject> = [
+				"count": "3",
+				"ofs": "0",
+				"req0_p": "{\"1\":{\"1\":{\"1\":{\"1\":3,\"2\":2}},\"2\":{\"1\":{\"1\":3,\"2\":2},\"2\":\"\",\"3\":\"JS\",\"4\":\"lcsclient\"},\"3\":\(timestamp),\"4\":0,\"5\":\"c1\"},\"2\":{}}",
+				"req1_p": "{\"1\":{\"1\":{\"1\":{\"1\":3,\"2\":2}},\"2\":{\"1\":{\"1\":3,\"2\":2},\"2\":\"\",\"3\":\"JS\",\"4\":\"lcsclient\"},\"3\":\(timestamp),\"4\":\(timestamp),\"5\":\"c3\"},\"3\":{\"1\":{\"1\":\"babel\"}}}",
+				"req2_p": "{\"1\":{\"1\":{\"1\":{\"1\":3,\"2\":2}},\"2\":{\"1\":{\"1\":3,\"2\":2},\"2\":\"\",\"3\":\"JS\",\"4\":\"lcsclient\"},\"3\":\(timestamp),\"4\":\(timestamp),\"5\":\"c4\"},\"3\":{\"1\":{\"1\":\"hangout_invite\"}}}",
+			]
+			let postBody = data.urlEncodedQueryStringWithEncoding(NSUTF8StringEncoding)
+			let queryString = (["VER": 8, "RID": 81188, "ctype": "hangouts", "gsessionid": self.gSessionIDParam!, "SID": self.sidParam!] as Dictionary<String, AnyObject>).urlEncodedQueryStringWithEncoding(NSUTF8StringEncoding)
+			
+			let url = "\(self.CHANNEL_URL_PREFIX)/channel/bind?\(queryString)"
+			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+			request.HTTPMethod = "POST"
+			request.HTTPBody = postBody.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+			for (k, v) in OAuth2.getAuthorizationHeaders(self.getCookieValue("SAPISID")!) {
+				request.setValue(v, forHTTPHeaderField: k)
+			}
+			
+			self.manager.request(request).responseData { response in
+				self.isSubscribed = true
+				cb?()
+			}
+		}
 	}
 	
 	//  Parse response format for request for new channel SID.

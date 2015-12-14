@@ -26,7 +26,7 @@ public class ChunkParser {
 				let bufUTF16 = decoded.dataUsingEncoding(NSUTF16BigEndianStringEncoding)!
 				let decodedUtf16LengthInChars = bufUTF16.length / 2
 				
-				let lengths = Regex(Channel.LEN_REGEX).findall(decoded)
+				let lengths = Regex("([0-9]+)\n").findall(decoded)
 				if let length_str = lengths.first {
 					let length_str_without_newline = length_str.substringToIndex(length_str.endIndex.advancedBy(-1))
 					if let length = Int(length_str_without_newline) {

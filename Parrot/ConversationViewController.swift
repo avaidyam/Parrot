@@ -216,7 +216,8 @@ class ConversationViewController:
         }
 
         //  Delay here to ensure that small context switches don't send focus messages.
-        delay(1) {
+		let dt = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
+		dispatch_after(dt, dispatch_get_main_queue()) {
             if let window = self.window where window.keyWindow {
                 self.conversation?.setFocus()
             }
@@ -247,7 +248,8 @@ class ConversationViewController:
         }
 
         lastTypingTimestamp = now
-        delay(typingTimeout) {
+		let dt = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
+		dispatch_after(dt, dispatch_get_main_queue()) {
             if let ts = self.lastTypingTimestamp where NSDate().timeIntervalSinceDate(ts) > typingTimeout {
                 self.conversation?.setTyping(TypingType.STOPPED)
             }
