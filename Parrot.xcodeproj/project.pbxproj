@@ -230,6 +230,8 @@
 		4835ECB31C1C672900193EBC /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		4835ECB41C1C672900193EBC /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		4835ECB61C1C672900193EBC /* TextMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextMapper.swift; sourceTree = "<group>"; };
+		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		487A0E121C1E4389007A4696 /* ChunkParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChunkParser.swift; sourceTree = "<group>"; };
 		487A0E141C1E6D61007A4696 /* NSNotificationCenter+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSNotificationCenter+Extensions.swift"; sourceTree = "<group>"; };
 		48834D921C1B3602009BC442 /* Parrot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parrot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -435,6 +437,8 @@
 		48834D891C1B3602009BC442 = {
 			isa = PBXGroup;
 			children = (
+				486A2B791C1F421500569457 /* README.md */,
+				486A2B7A1C1F422100569457 /* LICENSE.md */,
 				48834D941C1B3602009BC442 /* Parrot */,
 				4803639B1C1D08490008E9F5 /* parrot-cli */,
 				48834DED1C1B372E009BC442 /* Hangouts */,
