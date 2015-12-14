@@ -1,18 +1,30 @@
 import Cocoa
 import Hangouts
 
-class ConversationsViewController: NSViewController, ClientDelegate, NSTableViewDataSource, NSTableViewDelegate, NSSplitViewDelegate, ConversationListDelegate {
+/* TODO: Support drag/drop: dragging a user out will open a separate conversation view. */
+/* TODO: Support pasteboard: pasting a user will translate to: First Last <email@domain.com>. */
+/* TODO: Support group views: Favorites will be pinned to top. */
+/* TODO: Support tooltips: similar to pasteboard view. */
+/* TODO: Support menus (detail popover), force click, double click. */
+/* TODO: Support toggling sidebar (once closed) */
 
-    @IBOutlet weak var conversationTableView: NSTableView!
+/* TODO: Force touch and gestures */
+
+class ConversationsViewController:  NSViewController, ClientDelegate,
+									NSTableViewDataSource, NSTableViewDelegate,
+									NSSplitViewDelegate, ConversationListDelegate {
+
+    @IBOutlet weak var tableView: NSTableView!
 	
     override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		conversationTableView.setDataSource(self)
-		conversationTableView.setDelegate(self)
-		
+		/* TODO: Should be a singleton outer class! */
 		OAuth2.authenticateClient({ client in
 			self.representedObject = client
+			client.delegate = self
+			client.connect()
+			self.updateAppBadge()
 		}, auth: { launch, actual, cb in
 			let vc = LoginViewController.login(launch, valid: actual, cb: cb)
 			self.presentViewControllerAsSheet(vc!)
@@ -21,20 +33,13 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
 	
 	override func viewWillAppear() {
 		super.viewWillAppear()
+		
+		/* TODO: Should not be set here! Use a special window. */
 		self.view.window?.styleMask = self.view.window!.styleMask | NSFullSizeContentViewWindowMask
 		self.view.window?.titleVisibility = .Hidden;
 		self.view.window?.titlebarAppearsTransparent = true;
-		//self.view.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+		self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
 	}
-
-    override var representedObject: AnyObject? {
-        didSet {
-			let client = representedObject as? Client
-			client?.delegate = self
-			client?.connect()
-			updateAppBadge()
-        }
-    }
 
     func updateAppBadge() {
         if let list = conversationList where list.unreadEventCount > 0 {
@@ -50,7 +55,7 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
             conversationList?.delegate = self
 			
 			NSOperationQueue.mainQueue().addOperationWithBlock {
-				self.conversationTableView.reloadData()
+				self.tableView.reloadData()
 			}
         }
     }
@@ -66,9 +71,9 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
             )
 			
 			NSOperationQueue.mainQueue().addOperationWithBlock {
-				self.conversationTableView.reloadData()
-				self.conversationTableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
-				self.conversationTableView.scrollRowToVisible(0)
+				self.tableView.reloadData()
+				self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
+				self.tableView.scrollRowToVisible(0)
 			}
         }
     }
@@ -91,8 +96,8 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
     }
 
     func tableViewSelectionDidChange(notification: NSNotification) {
-        if conversationTableView.selectedRow >= 0 {
-            selectConversation(conversationList?.conversations[conversationTableView.selectedRow])
+        if tableView.selectedRow >= 0 {
+            selectConversation(conversationList?.conversations[tableView.selectedRow])
         } else {
             selectConversation(nil)
         }
@@ -105,21 +110,27 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
 				NSTableViewRowAction(style: .Regular, title: "Mute", handler: { a, b in
 					print("\(a) \(b)")
 				}),
-				NSTableViewRowAction(style: .Regular, title: "Mute", handler: { a, b in
+				NSTableViewRowAction(style: .Destructive, title: "Block", handler: { a, b in
 					print("\(a) \(b)")
 				})
 			]
-			actions[1].backgroundColor = NSColor.darkGrayColor()
+			
+			// Fix the colors set by the given styles.
+			actions[0].backgroundColor = NSColor.blueColor()
+			actions[1].backgroundColor = NSColor.clearColor()
 		} else if edge == .Trailing { // Swipe Left Actions
 			actions = [
-				NSTableViewRowAction(style: .Destructive, title: "Archive", handler: { a, b in
+				NSTableViewRowAction(style: .Destructive, title: "Delete", handler: { a, b in
 					print("\(a) \(b)")
 				}),
-				NSTableViewRowAction(style: .Destructive, title: "Delete", handler: { a, b in
+				NSTableViewRowAction(style: .Regular, title: "Archive", handler: { a, b in
 					print("\(a) \(b)")
 				})
 			]
-			actions[0].backgroundColor = NSColor.darkGrayColor()
+			
+			// Fix the colors set by the given styles.
+			actions[0].backgroundColor = NSColor.clearColor()
+			actions[1].backgroundColor = NSColor.redColor()
 		}
 		return actions
 	}
@@ -153,7 +164,7 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
 
     func conversationListDidUpdate(list: ConversationList) {
 		NSOperationQueue.mainQueue().addOperationWithBlock {
-			self.conversationTableView.reloadData()
+			self.tableView.reloadData()
 			self.updateAppBadge()
 		}
     }
@@ -162,7 +173,7 @@ class ConversationsViewController: NSViewController, ClientDelegate, NSTableView
         //  TODO: Just update the one row that needs updating
 		
 		NSOperationQueue.mainQueue().addOperationWithBlock {
-			self.conversationTableView.reloadData()
+			self.tableView.reloadData()
 			self.updateAppBadge()
 		}
     }

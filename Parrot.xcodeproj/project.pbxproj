@@ -22,6 +22,7 @@
 		4835ECBA1C1C672900193EBC /* TextMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB61C1C672900193EBC /* TextMapper.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECBC1C1C67B700193EBC /* NSView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECBB1C1C67B700193EBC /* NSView+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECBD1C1C67D300193EBC /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E2A1C1B3F7F009BC442 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		487A0E131C1E4389007A4696 /* ChunkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A0E121C1E4389007A4696 /* ChunkParser.swift */; settings = {ASSET_TAGS = (); }; };
 		48834D961C1B3602009BC442 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* AppDelegate.swift */; };
 		48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48834D991C1B3602009BC442 /* Assets.xcassets */; };
 		48834DA81C1B3602009BC442 /* ParrotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834DA71C1B3602009BC442 /* ParrotTests.swift */; };
@@ -37,7 +38,7 @@
 		48834E2B1C1B3F7F009BC442 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E2A1C1B3F7F009BC442 /* Alamofire.framework */; settings = {ASSET_TAGS = (); }; };
 		48834E2E1C1B3FE3009BC442 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E2A1C1B3F7F009BC442 /* Alamofire.framework */; };
 		48834E321C1B403A009BC442 /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 48834E2A1C1B3F7F009BC442 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		48834E3B1C1B4098009BC442 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E331C1B4098009BC442 /* Auth.swift */; settings = {ASSET_TAGS = (); }; };
+		48834E3B1C1B4098009BC442 /* OAuth2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E331C1B4098009BC442 /* OAuth2.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E3C1C1B4098009BC442 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E341C1B4098009BC442 /* Channel.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E3D1C1B4098009BC442 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E351C1B4098009BC442 /* Client.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E361C1B4098009BC442 /* Conversation.swift */; settings = {ASSET_TAGS = (); }; };
@@ -230,6 +231,7 @@
 		4835ECB41C1C672900193EBC /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		4835ECB61C1C672900193EBC /* TextMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextMapper.swift; sourceTree = "<group>"; };
 		4835ECBB1C1C67B700193EBC /* NSView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSView+Extensions.swift"; sourceTree = "<group>"; };
+		487A0E121C1E4389007A4696 /* ChunkParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChunkParser.swift; sourceTree = "<group>"; };
 		48834D921C1B3602009BC442 /* Parrot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parrot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48834D951C1B3602009BC442 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48834D991C1B3602009BC442 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -253,7 +255,7 @@
 		48834E261C1B3D5B009BC442 /* HangoutsProvider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = HangoutsProvider.entitlements; sourceTree = "<group>"; };
 		48834E271C1B3D98009BC442 /* Hangouts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Hangouts.h; sourceTree = "<group>"; };
 		48834E2A1C1B3F7F009BC442 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = External/Alamofire.framework; sourceTree = SOURCE_ROOT; };
-		48834E331C1B4098009BC442 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
+		48834E331C1B4098009BC442 /* OAuth2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2.swift; sourceTree = "<group>"; };
 		48834E341C1B4098009BC442 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		48834E351C1B4098009BC442 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		48834E361C1B4098009BC442 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
@@ -407,7 +409,7 @@
 			children = (
 				48834E431C1B40A4009BC442 /* PBLite.swift */,
 				48834E441C1B40A4009BC442 /* Messages.swift */,
-				48834E331C1B4098009BC442 /* Auth.swift */,
+				48834E331C1B4098009BC442 /* OAuth2.swift */,
 			);
 			name = PBLite;
 			sourceTree = "<group>";
@@ -416,6 +418,7 @@
 			isa = PBXGroup;
 			children = (
 				48834E341C1B4098009BC442 /* Channel.swift */,
+				487A0E121C1E4389007A4696 /* ChunkParser.swift */,
 				48834E351C1B4098009BC442 /* Client.swift */,
 				48834E361C1B4098009BC442 /* Conversation.swift */,
 				48834E371C1B4098009BC442 /* ConversationEvent.swift */,
@@ -1114,7 +1117,8 @@
 			files = (
 				48834E4E1C1B4361009BC442 /* Swift+Operators.swift in Sources */,
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
-				48834E3B1C1B4098009BC442 /* Auth.swift in Sources */,
+				487A0E131C1E4389007A4696 /* ChunkParser.swift in Sources */,
+				48834E3B1C1B4098009BC442 /* OAuth2.swift in Sources */,
 				48834E531C1B442B009BC442 /* Dictionary+Extensions.swift in Sources */,
 				48834E411C1B4098009BC442 /* Parsers.swift in Sources */,
 				48834E3F1C1B4098009BC442 /* ConversationEvent.swift in Sources */,

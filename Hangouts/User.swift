@@ -166,7 +166,7 @@ public class UserList : NSObject {
 }
 
 // Return UserList from initial contact data and an additional request.
-// The initial data contains the user's contacts, but there may be conversions
+// The initial data contains the user's contacts, but there may be conversations
 // containing users that are not in the contacts. This function takes care of
 // requesting data for those users and constructing the UserList.
 public func buildUserList(client: Client, initial_data: InitialData, cb: (UserList) -> Void) {

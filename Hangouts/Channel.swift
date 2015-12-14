@@ -23,7 +23,7 @@ public class Channel : NSObject {
     public var isConnected = false
     public var isSubscribed = false
     public var onConnectCalled = false
-    public var pushParser = PushDataParser()
+    public var pushParser = ChunkParser()
 
     public var sidParam: String? = nil
     public var gSessionIDParam: String? = nil
@@ -72,7 +72,7 @@ public class Channel : NSObject {
 
             // Clear any previous push data, since if there was an error it
             // could contain garbage.
-            self.pushParser = PushDataParser()
+            self.pushParser = ChunkParser()
             self.makeLongPollingRequest()
         } else {
             print("Listen failed due to no retries left.");
@@ -90,7 +90,7 @@ public class Channel : NSObject {
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 
         let sapisid = getCookieValue("SAPISID")!
-        for (k, v) in getAuthorizationHeaders(sapisid) {
+        for (k, v) in OAuth2.getAuthorizationHeaders(sapisid) {
             request.setValue(v, forHTTPHeaderField: k)
         }
 
@@ -117,7 +117,7 @@ public class Channel : NSObject {
 	// will return a gsessionid as well as the SID.
     public func fetchChannelSID() {
 		_ = ["VER": 8, "RID": 81187, "ctype": "hangouts"] // params
-        let headers = getAuthorizationHeaders(getCookieValue("SAPISID")!)
+        let headers = OAuth2.getAuthorizationHeaders(getCookieValue("SAPISID")!)
         let url = "\(CHANNEL_URL_PREFIX)/channel/bind?VER=8&RID=81187&ctype=hangouts"
 
         let URLRequest = NSMutableURLRequest(URL: NSURL(string: url)!)
@@ -132,7 +132,7 @@ public class Channel : NSObject {
             if response.result.isFailure {
                 print("Request failed: \(response.result.error!)")
             } else {
-                let responseValues = parseSIDResponse(response.result.value!)
+                let responseValues = Channel.parseSIDResponse(response.result.value!)
                 self.sidParam = responseValues.sid
                 self.gSessionIDParam = responseValues.gSessionID
                 self.need_new_sid = false
@@ -197,7 +197,7 @@ public class Channel : NSObject {
             let request = NSMutableURLRequest(URL: NSURL(string: url)!)
             request.HTTPMethod = "POST"
             request.HTTPBody = postBody.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-            for (k, v) in getAuthorizationHeaders(self.getCookieValue("SAPISID")!) {
+            for (k, v) in OAuth2.getAuthorizationHeaders(self.getCookieValue("SAPISID")!) {
                 request.setValue(v, forHTTPHeaderField: k)
             }
 
@@ -206,103 +206,21 @@ public class Channel : NSObject {
                 cb?()
             }
         }
-    }
-}
-
-//  Parse response format for request for new channel SID.
-//  Example format (after parsing JS):
-//  [   [0,["c","SID_HERE","",8]],
-//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
-public func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
-    if let firstSubmission = PushDataParser().getSubmissions(res).first {
-        let ctx = JSContext() // FIXME: Don't use this.
-        let val: JSValue = ctx.evaluateScript(firstSubmission)
-        let sid = ((val.toArray()[0] as! NSArray)[1] as! NSArray)[1] as! String
-        let gSessionID = (((val.toArray()[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String
-        return (sid, gSessionID)
-    }
-    return ("", "")
-}
-
-// Return authorization headers for API request.
-// It doesn't seem to matter what the url and time are as long as they are
-// consistent.
-public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
-    let time_msec = Int(NSDate().timeIntervalSince1970 * 1000)
-
-    let auth_string = "\(time_msec) \(sapisid_cookie) \(Channel.ORIGIN_URL)"
-    let auth_hash = auth_string.SHA1()
-    let sapisidhash = "SAPISIDHASH \(time_msec)_\(auth_hash)"
-    return [
-        "Authorization": sapisidhash,
-        "X-Origin": Channel.ORIGIN_URL,
-        "X-Goog-Authuser": "0",
-    ]
-}
-
-// Decode data_bytes into a string using UTF-8.
-// If data_bytes cannot be decoded, pop the last byte until it can be or
-// return an empty string.
-public func bestEffortDecode(data: NSData) -> String? {
-    for var i = 0; i < data.length; i++ {
-        if let s = NSString(data: data.subdataWithRange(NSMakeRange(0, data.length - i)), encoding: NSUTF8StringEncoding) {
-            return s as String
-        }
-    }
-    return nil
-}
-
-// Parse data from the long-polling endpoint.
-public class PushDataParser {
+	}
 	
-    public var buf = NSMutableData()
-	
-	// Yield submissions generated from received data.
-	// Responses from the push endpoint consist of a sequence of submissions.
-	// Each submission is prefixed with its length followed by a newline.
-	// The buffer may not be decodable as UTF-8 if there's a split multi-byte
-	// character at the end. To handle this, do a "best effort" decode of the
-	// buffer to decode as much of it as possible.
-	// The length is actually the length of the string as reported by
-	// JavaScript. JavaScript's string length function returns the number of
-	// code units in the string, represented in UTF-16. We can emulate this by
-	// encoding everything in UTF-16 and multipling the reported length by 2.
-	// Note that when encoding a string in UTF-16, Python will prepend a
-	// byte-order character, so we need to remove the first two bytes.
-    public func getSubmissions(newBytes: NSData) -> [String] {
-        buf.appendData(newBytes)
-        var submissions = [String]()
-
-        while buf.length > 0 {
-            if let decoded = bestEffortDecode(buf) {
-                let bufUTF16 = decoded.dataUsingEncoding(NSUTF16BigEndianStringEncoding)!
-                let decodedUtf16LengthInChars = bufUTF16.length / 2
-
-                let lengths = Regex(Channel.LEN_REGEX).findall(decoded)
-                if let length_str = lengths.first {
-                    let length_str_without_newline = length_str.substringToIndex(length_str.endIndex.advancedBy(-1))
-                    if let length = Int(length_str_without_newline) {
-                        if decodedUtf16LengthInChars - length_str.characters.count < length {
-                          break
-                        }
-
-                        let subData = bufUTF16.subdataWithRange(NSMakeRange(length_str.characters.count * 2, length * 2))
-                        let submission = NSString(data: subData, encoding: NSUTF16BigEndianStringEncoding)! as String
-                        submissions.append(submission)
-
-                        let submissionAsUTF8 = submission.dataUsingEncoding(NSUTF8StringEncoding)!
-
-                        let removeRange = NSMakeRange(0, length_str.characters.count + submissionAsUTF8.length)
-                        buf.replaceBytesInRange(removeRange, withBytes: nil, length: 0)
-                    } else {
-                      break
-                    }
-                } else {
-                    break
-                }
-            }
-        }
-        return submissions
-    }
+	//  Parse response format for request for new channel SID.
+	//  Example format (after parsing JS):
+	//  [   [0,["c","SID_HERE","",8]],
+	//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
+	private class func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
+		if let firstSubmission = ChunkParser().getSubmissions(res).first {
+			let ctx = JSContext() // FIXME: Don't use this.
+			let val: JSValue = ctx.evaluateScript(firstSubmission)
+			let sid = ((val.toArray()[0] as! NSArray)[1] as! NSArray)[1] as! String
+			let gSessionID = (((val.toArray()[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String
+			return (sid, gSessionID)
+		}
+		return ("", "")
+	}
 }
 

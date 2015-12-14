@@ -18,22 +18,22 @@ class ConversationListItemView : NSTableCellView {
 			}
 			
 			// Mask the photo layer as a circle to match Hangouts.
-			/*self.photoView?.wantsLayer = true
-			if let layer = self.photoView?.layer {
-				layer.borderWidth = 0.0
-				layer.cornerRadius = layer.bounds.width / 2.0
-				layer.masksToBounds = true
-			}*/
+			self.photoView?.wantsLayer = true
+			self.photoView?.layer?.borderWidth = 0.0
+			self.photoView?.layer?.masksToBounds = true
 			
 			// Get the first image for the users in the conversation to display.
 			// If we don't have an image, use a template image.
 			let otherUsers = conversation.users.filter { !$0.isSelf }
-			if let user = otherUsers.first {
-				ImageCache.sharedInstance.fetchImage(forUser: user) {
-					self.photoView?.image = $0 ?? ConversationListItemView.defaultImage
+			
+			NSOperationQueue.mainQueue().addOperationWithBlock { 
+				if let user = otherUsers.first {
+					ImageCache.sharedInstance.fetchImage(forUser: user) {
+						self.photoView?.image = $0 ?? ConversationListItemView.defaultImage
+					}
+				} else {
+					self.photoView?.image = ConversationListItemView.defaultImage
 				}
-			} else {
-				self.photoView?.image = ConversationListItemView.defaultImage
 			}
 			
 			self.nameLabel?.stringValue = conversation.name
@@ -72,6 +72,14 @@ class ConversationListItemView : NSTableCellView {
 		get {
 			Swift.print("dragging!")
 			return []
+		}
+	}
+	
+	// Allows the circle crop to dynamically change.
+	override func layout() {
+		super.layout()
+		if let layer = self.photoView?.layer {
+			layer.cornerRadius = self.photoView!.bounds.width / 2.0
 		}
 	}
 }

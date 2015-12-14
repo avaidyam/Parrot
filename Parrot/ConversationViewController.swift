@@ -227,9 +227,9 @@ class ConversationViewController:
     func frameDidChangeNotification(sender: AnyObject?) {
         //  TODO: This is a horrible, horrible way to do this, and super CPU-intensive.
         //  B U T   I T   W O R K S   F O R   N O W
-		dispatch_async(dispatch_get_main_queue(), {
-			self.conversationTableView.reloadData()
-		})
+		//dispatch_async(dispatch_get_main_queue(), {
+		//	self.conversationTableView.reloadData()
+		//})
     }
 
     // MARK: NSTextFieldDelegate

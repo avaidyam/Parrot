@@ -269,7 +269,7 @@ public class Client : ChannelDelegate {
         request.HTTPMethod = "POST"
         request.HTTPBody = data
 
-        for (k, v) in getAuthorizationHeaders(self.channel!.getCookieValue("SAPISID")!) {
+        for (k, v) in OAuth2.getAuthorizationHeaders(self.channel!.getCookieValue("SAPISID")!) {
             request.setValue(v, forHTTPHeaderField: k)
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")

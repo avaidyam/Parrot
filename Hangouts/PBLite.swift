@@ -165,7 +165,12 @@ public class PBLiteSerialization {
 				
 				//  Using a non-optional sub-struct
 			} else if let enumv = property as? Enum {
-				let val: (AnyObject?) = enumv.dynamicType.init(value: (arr[i] as! NSNumber))
+				var val: AnyObject?
+				if arr[i] as? NSNumber == nil { // TODO: NSNull literal conversion
+					val = enumv.dynamicType.init(value: 0)
+				} else {
+					val = enumv.dynamicType.init(value: (arr[i] as! NSNumber))
+				}
 				instance.setValue(val, forKey: propertyName)
 				
 				// Default
