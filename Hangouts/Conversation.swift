@@ -129,13 +129,23 @@ public class Conversation {
 	// Send messages with OTR status matching the conversation's status.
     public func sendMessage(segments: [ChatMessageSegment],
         image_file: String? = nil,
-        image_id: String? = nil,
+		image_id: String? = nil,
+		image_user_id: String? = nil,
         cb: (() -> Void)? = nil
     ) {
         let otr_status = (is_off_the_record ? OffTheRecordStatus.OFF_THE_RECORD : OffTheRecordStatus.ON_THE_RECORD)
 
+		// TODO: Fix the conditionality here.
         if let _ = image_file {
-			self.sendMessage(segments, image_file: nil, image_id: image_id, cb: cb)
+			client.uploadImage(image_file!, filename: nil) {
+				self.client.sendChatMessage(self.id,
+					segments: segments.map { $0.serialize() },
+					image_id: image_id,
+					image_user_id: nil,
+					otr_status: otr_status,
+					cb: cb
+				)
+			}
             return
         }
 

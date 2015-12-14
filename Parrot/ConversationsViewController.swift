@@ -5,10 +5,11 @@ import Hangouts
 /* TODO: Support pasteboard: pasting a user will translate to: First Last <email@domain.com>. */
 /* TODO: Support group views: Favorites will be pinned to top. */
 /* TODO: Support tooltips: similar to pasteboard view. */
+/* TODO: Support force touch and gestures for actions. */
 /* TODO: Support menus (detail popover), force click, double click. */
 /* TODO: Support toggling sidebar (once closed) */
-
-/* TODO: Force touch and gestures */
+/* TODO: Support pin to favorites and snooze for later. */
+/* TODO: Sending voice and video messages, along with photos and stickers. */
 
 class ConversationsViewController:  NSViewController, ClientDelegate,
 									NSTableViewDataSource, NSTableViewDelegate,
@@ -38,7 +39,18 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		self.view.window?.styleMask = self.view.window!.styleMask | NSFullSizeContentViewWindowMask
 		self.view.window?.titleVisibility = .Hidden;
 		self.view.window?.titlebarAppearsTransparent = true;
-		self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+		self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
+	}
+	
+	var dark = false
+	@IBAction func switchAppearance(sender: AnyObject?) {
+		if dark {
+			self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
+			dark = false
+		} else {
+			self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+			dark = true
+		}
 	}
 
     func updateAppBadge() {

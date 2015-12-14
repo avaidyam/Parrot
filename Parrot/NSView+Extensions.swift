@@ -16,18 +16,3 @@ extension NSView {
         return nil
     }
 }
-
-// A nifty wrapper around NSOperationQueue (which is itself, a wrapper
-// of dispatch_queue_t) to provide simple chaining and whatnot.
-typealias Dispatch = NSOperationQueue
-extension NSOperationQueue {
-	public func async(block: () -> Void) {
-		self.addOperations([NSBlockOperation(block: block)], waitUntilFinished: false)
-		//return self
-	}
-	
-	public func sync(block: () -> Void) -> NSOperationQueue {
-		self.addOperations([NSBlockOperation(block: block)], waitUntilFinished: true)
-		return self
-	}
-}

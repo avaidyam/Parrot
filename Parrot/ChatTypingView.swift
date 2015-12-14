@@ -17,6 +17,10 @@ class ChatTypingView : NSTableCellView {
         backgroundView = NSImageView(frame: NSZeroRect)
         backgroundView.imageScaling = .ScaleAxesIndependently
         backgroundView.image = NSImage(named: "gray_bubble_left")
+		backgroundView.wantsLayer = true
+		backgroundView.layer?.backgroundColor = NSColor.grayColor().CGColor
+		backgroundView.layer?.masksToBounds = true
+		backgroundView.layer?.cornerRadius = 4.0
         addSubview(backgroundView)
     }
 

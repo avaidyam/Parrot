@@ -207,15 +207,13 @@ public class Client : ChannelDelegate {
             delegate?.clientDidUpdateState(self, update: state_update)
         }
     }
-
-    //    @asyncio.coroutine
-    //    def disconnect(self):
-    //        """Gracefully disconnect from the server.
-    //
-    //        When disconnection is complete, Client.connect will return.
-    //        """
-    //        self._listen_future.cancel()
-    //        self._connector.close()
+	
+	// Gracefully disconnect.
+	// TODO: Fix this!
+	public func disconnect() {
+		//self.listen_future.cancel()
+		//self.connector.close()
+	}
 	
 	// Set this client as active.
 	// While a client is active, no other clients will raise notifications.
@@ -314,9 +312,23 @@ public class Client : ChannelDelegate {
     public func sendChatMessage(conversation_id: String,
         segments: [NSArray],
         image_id: String? = nil,
+		image_user_id: String? = nil,
         otr_status: OffTheRecordStatus = .ON_THE_RECORD,
         cb: (() -> Void)? = nil
     ) {
+		
+		// Support sending images from other user id's.
+		var a: NSObject
+		if image_id != nil {
+			if image_user_id != nil {
+				a = [[image_id!, false, image_user_id!, true]]
+			} else {
+				a = [[image_id!, false, NSNull(), false]]
+			}
+		} else {
+			a = NSNull()
+		}
+		
         let client_generated_id = generateClientID()
         let body = [
             self.getRequestHeader(),
@@ -324,7 +336,7 @@ public class Client : ChannelDelegate {
             [
                 segments, []
             ],
-            image_id != nil ? [[image_id!, false]] : NSNull(),
+            a, // it's too long for one line!
             [
                 [conversation_id],
                 client_generated_id,
@@ -338,53 +350,42 @@ public class Client : ChannelDelegate {
             r in self.verifyResponseOK(r.result.value!); cb?()
         }
     }
-
-    //    @asyncio.coroutine
-    //    def upload_image(self, image_file, filename=nil):
-    //        """Upload an image that can be later attached to a chat message.
-    //
-    //        image_file is a file-like object containing an image.
-    //
-    //        The name of the uploaded file may be changed by specifying the filename
-    //        argument.
-    //
-    //        Raises hangups.NetworkError if the request fails.
-    //
-    //        Returns ID of uploaded image.
-    //        """
-    //        image_filename = (filename if filename
-    //                          else os.path.basename(image_file.name))
-    //        image_data = image_file.read()
-    //
-    //        # Create image and request upload URL
-    //        res1 = yield from self._base_request(
-    //            IMAGE_UPLOAD_URL,
-    //            'application/x-www-form-urlencoded;charset=UTF-8',
-    //            json.dumps({
-    //                "protocolVersion": "0.8",
-    //                "createSessionRequest": {
-    //                    "fields": [{
-    //                        "external": {
-    //                            "name": "file",
-    //                            "filename": image_filename,
-    //                            "put": {},
-    //                            "size": len(image_data),
-    //                        }
-    //                    }]
-    //                }
-    //            }))
-    //        upload_url = (json.loads(res1.body.decode())['sessionStatus']
-    //                      ['externalFieldTransfers'][0]['putInfo']['url'])
-    //
-    //        # Upload image data and get image ID
-    //        res2 = yield from self._base_request(
-    //            upload_url, 'application/octet-stream', image_data
-    //        )
-    //        return (json.loads(res2.body.decode())['sessionStatus']
-    //                ['additionalInfo']
-    //                ['uploader_service.GoogleRupioAdditionalInfo']
-    //                ['completionInfo']['customerSpecificInfo']['photoid'])
-    //
+	
+	public func uploadImage(imageFile: String, filename: String? = nil, cb: (() -> Void)? = nil) {
+		let a = NSData(contentsOfFile: imageFile)
+		let json = "{\"protocolVersion\":\"0.8\",\"createSessionRequest\":{\"fields\":[{\"external\":{\"name\":\"file\",\"filename\":\"\(imageFile)\",\"put\":{},\"size\":\(a!.length)}}]}}"
+		
+		let _ = base_request(IMAGE_UPLOAD_URL,
+			content_type: "application/x-www-form-urlencoded;charset=UTF-8",
+			data: json.dataUsingEncoding(NSUTF8StringEncoding)!) { response in
+				
+				// got response
+				let data: NSDictionary = try! NSJSONSerialization.JSONObjectWithData(response.data!,
+					options: [.AllowFragments]) as! NSDictionary
+				
+				let _a = data["sessionStatus"] as! NSDictionary
+				let _b = _a["externalFieldTransfers"] as! NSArray
+				let _c = _b[0] as! NSDictionary
+				let _d = _c["putInfo"] as! NSDictionary
+				let upload = _d["url"] as! NSString
+				
+				let _ = self.base_request(upload as String, content_type: "application/octet-stream",
+					data: a!, cb: { resp in
+						// got stuff here
+						let data2: NSDictionary = try! NSJSONSerialization.JSONObjectWithData(response.data!,
+							options: [.AllowFragments]) as! NSDictionary
+						cb?()
+						print("RESPONSE: \(data2)")
+						// now get (json.loads(res1.body.decode())['sessionStatus']
+						//                      ['externalFieldTransfers'][0]['putInfo']['url'])
+						// and then get
+						//        return (json.loads(res2.body.decode())['sessionStatus']
+						//                ['additionalInfo']
+						//                ['uploader_service.GoogleRupioAdditionalInfo']
+						//                ['completionInfo']['customerSpecificInfo']['photoid'])
+				})
+		}
+	}
 	
     public func setActiveClient(is_active: Bool, timeout_secs: Int, cb: (() -> Void)? = nil) {
         let data: Array<AnyObject> = [

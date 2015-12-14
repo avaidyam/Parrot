@@ -752,7 +752,7 @@
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
                                                 <tableColumn editable="NO" width="268" minWidth="40" maxWidth="1000" id="iKH-Nd-CJq">
-                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Favorites">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -857,12 +857,25 @@
                                     <animations/>
                                 </tableHeaderView>
                             </scrollView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4yp-VI-Q6k">
+                                <rect key="frame" x="241" y="281" width="29" height="19"/>
+                                <animations/>
+                                <buttonCell key="cell" type="recessed" bezelStyle="recessed" image="NSQuickLookTemplate" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="FK7-SD-wbf">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                    <font key="font" metaFont="systemBold" size="12"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="switchAppearance:" target="AA2-4a-jNw" id="br0-Ss-pby"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="pjR-3X-f4D" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="HqV-WX-PRp"/>
                             <constraint firstItem="pjR-3X-f4D" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="JkR-ap-ftP"/>
                             <constraint firstAttribute="trailing" secondItem="pjR-3X-f4D" secondAttribute="trailing" id="Z0t-08-IYY"/>
+                            <constraint firstAttribute="trailing" secondItem="4yp-VI-Q6k" secondAttribute="trailing" id="hAU-eI-ebe"/>
                             <constraint firstAttribute="bottom" secondItem="pjR-3X-f4D" secondAttribute="bottom" id="rDK-42-wM7"/>
+                            <constraint firstItem="4yp-VI-Q6k" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="rxS-99-3zL"/>
                         </constraints>
                         <animations/>
                     </view>
@@ -960,7 +973,7 @@
                                 <textFieldCell key="cell" selectable="YES" editable="YES" state="on" borderStyle="bezel" focusRingType="none" alignment="left" placeholderString="Send a message..." bezelStyle="round" id="nRY-lf-Vew">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                 </textFieldCell>
                                 <connections>
                                     <action selector="messageTextFieldDidAction:" target="MHo-xn-Myi" id="TZC-Pq-sdP"/>
@@ -1051,6 +1064,7 @@
     </scenes>
     <resources>
         <image name="NSIconViewTemplate" width="10" height="10"/>
+        <image name="NSQuickLookTemplate" width="19" height="12"/>
         <image name="NSUserGuest" width="32" height="32"/>
     </resources>
 </document>

@@ -63,6 +63,9 @@ class ConversationViewController:
 
             self.conversation?.delegate = self
 			self.conversation?.getEvents(conversation?.events.first?.id, max_events: 50)
+			
+			//let a = self.conversation?.client.uploadImage("/Users/aditya/Desktop/test.png")
+			//Swift.print("a \(a)")
 			dispatch_async(dispatch_get_main_queue(), {
 				self.conversationTableView.reloadData()
 				self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
@@ -179,7 +182,9 @@ class ConversationViewController:
                 view!.identifier = ChatMessageView.className()
             }
 
-            view!.configureWithText(message.text, orientation: user.isSelf ? .Right : .Left)
+			let network = conversation.conversation.network_type![0] as! Int
+            view!.configureWithText(message.text, orientation: user.isSelf ? .Right : .Left,
+				bubble: user.isSelf ? 3 : network)
             return view
         }
 

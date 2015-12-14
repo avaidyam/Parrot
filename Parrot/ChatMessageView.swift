@@ -17,7 +17,10 @@ class ChatMessageView : NSView {
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
 
-        backgroundView = NSImageView(frame: NSZeroRect)
+		backgroundView = NSImageView(frame: NSZeroRect)
+		backgroundView.wantsLayer = true
+		backgroundView.layer?.cornerRadius = 4.0
+		backgroundView.layer?.masksToBounds = true
         backgroundView.imageScaling = .ScaleAxesIndependently
         backgroundView.image = NSImage(named: "gray_bubble_left")
         addSubview(backgroundView)
@@ -36,11 +39,21 @@ class ChatMessageView : NSView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configureWithText(string: String, orientation: Orientation) {
+	func configureWithText(string: String, orientation: Orientation, bubble: Int) {
         self.orientation = orientation
         self.string = TextMapper.attributedStringForText(string)
         textLabel.attributedStringValue = self.string!
         backgroundView.image = NSImage(named: orientation == .Right ? "gray_bubble_right" : "gray_bubble_left")
+		
+		// Properly color the text and background based on network type.
+		textLabel.textColor = NSColor.whiteColor()
+		if bubble == 2 { // Hangouts
+			backgroundView.layer?.backgroundColor = NSColor(red: 0.13, green: 0.59, blue: 0.95, alpha: 1.0).CGColor
+		} else if bubble == 1 { // GVoice
+			backgroundView.layer?.backgroundColor = NSColor(red: 0.31, green: 0.63, blue: 0.25, alpha: 1.0).CGColor
+		} else { // Self
+			backgroundView.layer?.backgroundColor = NSColor(red: 0.38, green: 0.49, blue: 0.54, alpha: 1.0).CGColor
+		}
     }
 
     static let WidthPercentage: CGFloat = 0.75

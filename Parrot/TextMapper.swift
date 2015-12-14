@@ -1,6 +1,9 @@
 import Cocoa
 import Hangouts
 
+/* TODO: Support Date/Time, Address, Transit detectors. */
+/* TODO: Fix proper bold, italics, underline. */
+
 public class TextMapper {
 	
 	// This will be the default set unless the user wants to modify the entires.
@@ -73,12 +76,12 @@ public class TextMapper {
 
         let style = NSMutableParagraphStyle()
         style.lineBreakMode = NSLineBreakMode.ByWordWrapping
-
+		
         let linkDetector = try! NSDataDetector(types: NSTextCheckingType.Link.rawValue)
         for match in linkDetector.matchesInString(text, options: [], range: NSMakeRange(0, text.characters.count)) {
             if let url = match.URL {
                 attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
-                attrString.addAttribute(NSForegroundColorAttributeName, value: NSColor.blueColor(), range: match.range)
+                attrString.addAttribute(NSForegroundColorAttributeName, value: NSColor.grayColor(), range: match.range)
                 attrString.addAttribute(
                     NSUnderlineStyleAttributeName,
                     value: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue),
