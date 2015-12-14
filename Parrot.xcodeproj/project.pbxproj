@@ -24,6 +24,7 @@
 		4835ECBD1C1C67D300193EBC /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E2A1C1B3F7F009BC442 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		487A0E131C1E4389007A4696 /* ChunkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A0E121C1E4389007A4696 /* ChunkParser.swift */; settings = {ASSET_TAGS = (); }; };
 		487A0E151C1E6D61007A4696 /* NSNotificationCenter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A0E141C1E6D61007A4696 /* NSNotificationCenter+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		487A0E191C1E7EB1007A4696 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A0E181C1E7EB1007A4696 /* Logger.swift */; settings = {ASSET_TAGS = (); }; };
 		48834D961C1B3602009BC442 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* AppDelegate.swift */; };
 		48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48834D991C1B3602009BC442 /* Assets.xcassets */; };
 		48834DA81C1B3602009BC442 /* ParrotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834DA71C1B3602009BC442 /* ParrotTests.swift */; };
@@ -232,6 +233,7 @@
 		4835ECBB1C1C67B700193EBC /* NSView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSView+Extensions.swift"; sourceTree = "<group>"; };
 		487A0E121C1E4389007A4696 /* ChunkParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChunkParser.swift; sourceTree = "<group>"; };
 		487A0E141C1E6D61007A4696 /* NSNotificationCenter+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSNotificationCenter+Extensions.swift"; sourceTree = "<group>"; };
+		487A0E181C1E7EB1007A4696 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		48834D921C1B3602009BC442 /* Parrot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parrot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48834D951C1B3602009BC442 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48834D991C1B3602009BC442 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -602,6 +604,7 @@
 				48834E4F1C1B4377009BC442 /* Swift+Operators.swift */,
 				48834E521C1B442B009BC442 /* Dictionary+Extensions.swift */,
 				48834E471C1B40FA009BC442 /* NSRegularExpression+Extensions.swift */,
+				487A0E181C1E7EB1007A4696 /* Logger.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1119,6 +1122,7 @@
 				48834E531C1B442B009BC442 /* Dictionary+Extensions.swift in Sources */,
 				48834E411C1B4098009BC442 /* Parsers.swift in Sources */,
 				48834E3F1C1B4098009BC442 /* ConversationEvent.swift in Sources */,
+				487A0E191C1E7EB1007A4696 /* Logger.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				48834E451C1B40A4009BC442 /* PBLite.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,

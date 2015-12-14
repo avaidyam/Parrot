@@ -19,8 +19,16 @@ class ConversationListItemView : NSTableCellView {
 			
 			// Mask the photo layer as a circle to match Hangouts.
 			self.photoView?.wantsLayer = true
-			self.photoView?.layer?.borderWidth = 0.0
 			self.photoView?.layer?.masksToBounds = true
+			self.photoView?.layer?.borderWidth = 2.0
+			
+			// Show different rings based on network (Hangouts vs. GVoice)
+			let layer = self.photoView?.layer
+			if conversation.conversation.network_type?[0] as? Int == 2 {
+				layer?.borderColor = NSColor(red: 0.13, green: 0.59, blue: 0.95, alpha: 1.0).CGColor
+			} else {
+				layer?.borderColor = NSColor(red: 0.31, green: 0.63, blue: 0.25, alpha: 1.0).CGColor
+			}
 			
 			// Get the first image for the users in the conversation to display.
 			// If we don't have an image, use a template image.
@@ -36,7 +44,14 @@ class ConversationListItemView : NSTableCellView {
 				}
 			}
 			
-			self.nameLabel?.stringValue = conversation.name
+			// Patch for Google Voice contacts to show their numbers.
+			var title = conversation.name
+			if title == "Unknown" {
+				if let a = conversation.conversation.participant_data[1].fallback_name {
+					title = a as String
+				}
+			}
+			self.nameLabel?.stringValue = title
 			
 			let a = conversation.messages.last?.user_id
 			let b = conversation.users.filter { $0.isSelf }.first?.id
@@ -58,19 +73,19 @@ class ConversationListItemView : NSTableCellView {
 	
 	override var backgroundStyle: NSBackgroundStyle {
 		didSet {
-			Swift.print("backgroundStyle \(self.backgroundStyle.rawValue)")
+			//Swift.print("backgroundStyle \(self.backgroundStyle.rawValue)")
 		}
 	}
 	
 	override var rowSizeStyle: NSTableViewRowSizeStyle {
 		didSet {
-			Swift.print("rowSizeStyle \(self.rowSizeStyle.rawValue)")
+			//Swift.print("rowSizeStyle \(self.rowSizeStyle.rawValue)")
 		}
 	}
 	
 	override var draggingImageComponents: [NSDraggingImageComponent] {
 		get {
-			Swift.print("dragging!")
+			//Swift.print("dragging!")
 			return []
 		}
 	}

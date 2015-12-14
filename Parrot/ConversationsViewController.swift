@@ -107,11 +107,11 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		var actions: [NSTableViewRowAction] = []
 		if edge == .Leading { // Swipe Right Actions
 			actions = [
-				NSTableViewRowAction(style: .Regular, title: "Mute", handler: { a, b in
-					print("\(a) \(b)")
+				NSTableViewRowAction(style: .Regular, title: "Mute", handler: { action, select in
+					print("Mute row:\(select)")
 				}),
-				NSTableViewRowAction(style: .Destructive, title: "Block", handler: { a, b in
-					print("\(a) \(b)")
+				NSTableViewRowAction(style: .Destructive, title: "Block", handler: { action, select in
+					print("Block row:\(select)")
 				})
 			]
 			
@@ -120,11 +120,11 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			actions[1].backgroundColor = NSColor.clearColor()
 		} else if edge == .Trailing { // Swipe Left Actions
 			actions = [
-				NSTableViewRowAction(style: .Destructive, title: "Delete", handler: { a, b in
-					print("\(a) \(b)")
+				NSTableViewRowAction(style: .Destructive, title: "Delete", handler: { action, select in
+					print("Delete row:\(select)")
 				}),
-				NSTableViewRowAction(style: .Regular, title: "Archive", handler: { a, b in
-					print("\(a) \(b)")
+				NSTableViewRowAction(style: .Regular, title: "Archive", handler: { action, select in
+					print("Archive row:\(select)")
 				})
 			]
 			

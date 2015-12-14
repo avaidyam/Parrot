@@ -16,6 +16,10 @@ public class Enum : NSObject, IntegerLiteralConvertible {
 	required public init(integerLiteral value: IntegerLiteralType) {
 		self.representation = value
 	}
+	
+	override public var description: String {
+		return "enum \(self.dynamicType.description()) --> \(self.representation)"
+	}
 }
 
 public func ==(lhs: Enum, rhs: Enum) -> Bool {
@@ -41,10 +45,6 @@ public class Message : NSObject {
 	}
 	
 	override public var description: String {
-		return "message \(self.dynamicType.description())"
-	}
-	
-	override public var debugDescription: String {
 		let mirror = Mirror(reflecting: self)
 		var string = "message \(self.dynamicType.description()) {\n"
 		for thing in mirror.children {
