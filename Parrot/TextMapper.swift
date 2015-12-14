@@ -1,9 +1,6 @@
 import Cocoa
 import Hangouts
 
-/* TODO: Support Date/Time, Address, Transit detectors. */
-/* TODO: Fix proper bold, italics, underline. */
-
 public class TextMapper {
 	
 	// This will be the default set unless the user wants to modify the entires.

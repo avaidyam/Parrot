@@ -25,3 +25,24 @@ The architecture is as follows:
 
 # Development
 	[todo]
+
+# Progress
+	[ ] Support multiple conversation views.
+	[ ] Support drag/drop: dragging images/text/links will add them.
+	[ ] Support pasteboard: pasting a user will translate to: First Last <email@domain.com>.
+	[ ] Support group views: Favorites will be pinned to top.
+	[ ] Support tooltips: similar to pasteboard view.
+	[ ] Support force touch and gestures for actions.
+	[ ] Support menus (detail popover), force click, double click.
+	[ ] Support toggling sidebar (once closed)
+	[ ] Support pin to favorites and snooze for later.
+	[ ] Sending voice and video messages, along with photos and stickers.
+	[ ] Support a user list view instead of only conversations.
+	[ ] Support keybindings ctrl+arrow to shift conversations.
+	[ ] Support custom conversation sort (time, alphabet, or manually).
+	[ ] Support showing images for users in chat view.
+	[ ] Support sounds and vibrations in NotificationManager.
+	[ ] Support auto-reply and hangouts mood + status.
+	[ ] Add Transcript viewer.
+	[ ] Support Date/Time, Address, Transit detectors.
+	[ ] Fix proper bold, italics, underline.

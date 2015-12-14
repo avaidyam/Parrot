@@ -1,16 +1,6 @@
 import Cocoa
 import Hangouts
 
-/* TODO: Support drag/drop: dragging a user out will open a separate conversation view. */
-/* TODO: Support pasteboard: pasting a user will translate to: First Last <email@domain.com>. */
-/* TODO: Support group views: Favorites will be pinned to top. */
-/* TODO: Support tooltips: similar to pasteboard view. */
-/* TODO: Support force touch and gestures for actions. */
-/* TODO: Support menus (detail popover), force click, double click. */
-/* TODO: Support toggling sidebar (once closed) */
-/* TODO: Support pin to favorites and snooze for later. */
-/* TODO: Sending voice and video messages, along with photos and stickers. */
-
 class ConversationsViewController:  NSViewController, ClientDelegate,
 									NSTableViewDataSource, NSTableViewDelegate,
 									NSSplitViewDelegate, ConversationListDelegate {
