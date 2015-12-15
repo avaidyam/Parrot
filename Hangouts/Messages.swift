@@ -340,16 +340,16 @@ public class PARTICIPANT_ID : Message {
     public var chat_id: NSString? = nil
 }
 
-@objc(CLIENT_SET_TYPING_NOTIFICATION)
-public class CLIENT_SET_TYPING_NOTIFICATION : Message {
+@objc(SET_TYPING_NOTIFICATION)
+public class SET_TYPING_NOTIFICATION : Message {
     public var conversation_id = CONVERSATION_ID()
     public var user_id = PARTICIPANT_ID()
     public var timestamp: NSNumber = 0
     public var status: TypingType = 0
 }
 
-@objc(CLIENT_SET_FOCUS_NOTIFICATION)
-public class CLIENT_SET_FOCUS_NOTIFICATION : Message {
+@objc(SET_FOCUS_NOTIFICATION)
+public class SET_FOCUS_NOTIFICATION : Message {
     public var conversation_id = CONVERSATION_ID()
     public var user_id = PARTICIPANT_ID()
     public var timestamp: NSString = ""
@@ -357,14 +357,14 @@ public class CLIENT_SET_FOCUS_NOTIFICATION : Message {
     public var device: FocusDevice?
 }
 
-@objc(CLIENT_CONVERSATION_READ_STATE)
-public class CLIENT_CONVERSATION_READ_STATE : Message {
+@objc(CONVERSATION_READ_STATE)
+public class CONVERSATION_READ_STATE : Message {
     public var participant_id = PARTICIPANT_ID()
     public var latest_read_timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
 }
 
-@objc(CLIENT_CONVERSATION_INTERNAL_STATE)
-public class CLIENT_CONVERSATION_INTERNAL_STATE : Message {
+@objc(CONVERSATION_INTERNAL_STATE)
+public class CONVERSATION_INTERNAL_STATE : Message {
     public var field1: AnyObject? = nil
     public var field2: AnyObject? = nil
     public var field3: AnyObject? = nil
@@ -372,7 +372,7 @@ public class CLIENT_CONVERSATION_INTERNAL_STATE : Message {
     public var field5: AnyObject? = nil
     public var field6: AnyObject? = nil
 
-    public var self_read_state = CLIENT_CONVERSATION_READ_STATE()
+    public var self_read_state = CONVERSATION_READ_STATE()
 
     public var status: ConversationStatus = 0
     public var notification_level: NotificationLevel = 0
@@ -390,29 +390,29 @@ public class CLIENT_CONVERSATION_INTERNAL_STATE : Message {
     public var field10: AnyObject? = nil
 }
 
-@objc(CLIENT_CONVERSATION_PARTICIPANT_DATA)
-public class CLIENT_CONVERSATION_PARTICIPANT_DATA : Message {
+@objc(CONVERSATION_PARTICIPANT_DATA)
+public class CONVERSATION_PARTICIPANT_DATA : Message {
     public var id = PARTICIPANT_ID()
     public var fallback_name: NSString?
     public var field: AnyObject? = nil
 }
 
-@objc(CLIENT_CONVERSATION)
-public class CLIENT_CONVERSATION : Message {
+@objc(CONVERSATION)
+public class CONVERSATION : Message {
 	public var conversation_id: CONVERSATION_ID? = nil //FIXME
     public var type = ConversationType()
     public var name: NSString?
-    public var self_conversation_state = CLIENT_CONVERSATION_INTERNAL_STATE()
+    public var self_conversation_state = CONVERSATION_INTERNAL_STATE()
     public var field5: AnyObject? = nil
     public var field6: AnyObject? = nil
     public var field7: AnyObject? = nil
-    public var read_state = [CLIENT_CONVERSATION_READ_STATE]()
+    public var read_state = [CONVERSATION_READ_STATE]()
     public var has_active_hangout: NSNumber = 0
     public var otr_status: OffTheRecordStatus = 0
     public var otr_toggle: AnyObject? = nil
     public var conversation_history_supported: AnyObject? = nil
     public var current_participant = [PARTICIPANT_ID]()
-    public var participant_data = [CLIENT_CONVERSATION_PARTICIPANT_DATA]()
+    public var participant_data = [CONVERSATION_PARTICIPANT_DATA]()
     public var field15: AnyObject? = nil
     public var field16: AnyObject? = nil
     public var field17: AnyObject? = nil
@@ -458,27 +458,27 @@ public class MESSAGE_ATTACHMENT : Message {
     public var embed_item = MESSAGE_ATTACHMENT_EMBED_ITEM()
 }
 
-@objc(CLIENT_CHAT_MESSAGE_CONTENT)
-public class CLIENT_CHAT_MESSAGE_CONTENT : Message {
+@objc(CHAT_MESSAGE_CONTENT)
+public class CHAT_MESSAGE_CONTENT : Message {
     public var segment: [MESSAGE_SEGMENT]?
     public var attachment: [MESSAGE_ATTACHMENT]?
 }
 
-@objc(CLIENT_CHAT_MESSAGE)
-public class CLIENT_CHAT_MESSAGE : Message {
+@objc(CHAT_MESSAGE)
+public class CHAT_MESSAGE : Message {
     public var field1: AnyObject? = nil
     public var annotation: NSArray?
-    public var message_content = CLIENT_CHAT_MESSAGE_CONTENT()
+    public var message_content = CHAT_MESSAGE_CONTENT()
 }
 
-@objc(CLIENT_CONVERSATION_RENAME)
-public class CLIENT_CONVERSATION_RENAME : Message {
+@objc(CONVERSATION_RENAME)
+public class CONVERSATION_RENAME : Message {
     public var new_name: NSString = ""
     public var old_name: NSString = ""
 }
 
-@objc(CLIENT_HANGOUT_EVENT)
-public class CLIENT_HANGOUT_EVENT : Message {
+@objc(HANGOUT_EVENT)
+public class HANGOUT_EVENT : Message {
     public var event_type: HangoutEventType = 0
     public var participant_id = [PARTICIPANT_ID]()
     public var hangout_duration_secs: NSNumber?
@@ -488,45 +488,45 @@ public class CLIENT_HANGOUT_EVENT : Message {
     public var field1: AnyObject? = nil
 }
 
-@objc(CLIENT_OTR_MODIFICATION)
-public class CLIENT_OTR_MODIFICATION : Message {
+@objc(OTR_MODIFICATION)
+public class OTR_MODIFICATION : Message {
     public var old_otr_status: OffTheRecordStatus = 0
     public var new_otr_status: OffTheRecordStatus = 0
     public var old_otr_toggle: OffTheRecordToggle = 0
     public var new_otr_toggle: OffTheRecordToggle = 0
 }
 
-@objc(CLIENT_MEMBERSHIP_CHANGE)
-public class CLIENT_MEMBERSHIP_CHANGE : Message {
+@objc(MEMBERSHIP_CHANGE)
+public class MEMBERSHIP_CHANGE : Message {
     public var type: MembershipChangeType = 0
     public var field1 = NSArray()
     public var participant_ids = [PARTICIPANT_ID]()
     public var field2: AnyObject? = nil
 }
 
-@objc(CLIENT_EVENT_STATE)
-public class CLIENT_EVENT_STATE : Message {
+@objc(EVENT_STATE)
+public class EVENT_STATE : Message {
     public var user_id = PARTICIPANT_ID()
     public var client_generated_id: AnyObject? = nil
     public var notification_level: NotificationLevel = 0
 }
 
-@objc(CLIENT_EVENT)
-public class CLIENT_EVENT : Message {
+@objc(EVENT)
+public class EVENT : Message {
     public var conversation_id = CONVERSATION_ID()
     public var sender_id = PARTICIPANT_ID()
     public var timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
-	public var self_event_state : CLIENT_EVENT_STATE?
+	public var self_event_state : EVENT_STATE?
 	public var field5: AnyObject? = nil
     public var source_type: AnyObject? = nil
-	public var chat_message: CLIENT_CHAT_MESSAGE? = nil
+	public var chat_message: CHAT_MESSAGE? = nil
     public var field8: AnyObject? = nil
-    public var membership_change: CLIENT_MEMBERSHIP_CHANGE?
-    public var conversation_rename: CLIENT_CONVERSATION_RENAME?
-    public var hangout_event: CLIENT_HANGOUT_EVENT?
+    public var membership_change: MEMBERSHIP_CHANGE?
+    public var conversation_rename: CONVERSATION_RENAME?
+    public var hangout_event: HANGOUT_EVENT?
 	public var event_id: NSString?
 	public var expiration_timestamp: AnyObject? = nil
-	public var otr_modification: CLIENT_OTR_MODIFICATION?
+	public var otr_modification: OTR_MODIFICATION?
 	public var advances_sort_timestamp: NSDate?
 	public var otr_status: OffTheRecordStatus = 0
 	public var persisted: AnyObject? = nil
@@ -541,20 +541,20 @@ public class CLIENT_EVENT : Message {
 	public var hash_modifier: AnyObject? = nil
 }
 
-@objc(CLIENT_EVENT_NOTIFICATION)
-public class CLIENT_EVENT_NOTIFICATION : Message {
-    public var event = CLIENT_EVENT()
+@objc(EVENT_NOTIFICATION)
+public class EVENT_NOTIFICATION : Message {
+    public var event = EVENT()
 }
 
-@objc(CLIENT_WATERMARK_NOTIFICATION)
-public class CLIENT_WATERMARK_NOTIFICATION : Message {
+@objc(WATERMARK_NOTIFICATION)
+public class WATERMARK_NOTIFICATION : Message {
     public var participant_id = PARTICIPANT_ID()
     public var conversation_id = CONVERSATION_ID()
     public var latest_read_timestamp: NSNumber = 0
 }
 
-@objc(CLIENT_STATE_UPDATE_HEADER)
-public class CLIENT_STATE_UPDATE_HEADER : Message {
+@objc(STATE_UPDATE_HEADER)
+public class STATE_UPDATE_HEADER : Message {
     public var active_client_state: ActiveClientState = 0
     public var field1: AnyObject? = nil
     public var request_trace_id: NSString = ""
@@ -565,21 +565,21 @@ public class CLIENT_STATE_UPDATE_HEADER : Message {
     public var updating_client_id: AnyObject? = nil
 }
 
-@objc(CLIENT_STATE_UPDATE)
-public class CLIENT_STATE_UPDATE : Message {
-    public var state_update_header = CLIENT_STATE_UPDATE_HEADER()
+@objc(STATE_UPDATE)
+public class STATE_UPDATE : Message {
+    public var state_update_header = STATE_UPDATE_HEADER()
     public var conversation_notification: AnyObject? = nil
-    public var event_notification: CLIENT_EVENT_NOTIFICATION?
-    public var focus_notification = CLIENT_SET_FOCUS_NOTIFICATION()
-    public var typing_notification: CLIENT_SET_TYPING_NOTIFICATION?
+    public var event_notification: EVENT_NOTIFICATION?
+    public var focus_notification = SET_FOCUS_NOTIFICATION()
+    public var typing_notification: SET_TYPING_NOTIFICATION?
     public var notification_level_notification: AnyObject? = nil
     public var reply_to_invite_notification: AnyObject? = nil
-    public var watermark_notification: CLIENT_WATERMARK_NOTIFICATION?
+    public var watermark_notification: WATERMARK_NOTIFICATION?
     public var field1: AnyObject? = nil
     public var settings_notification: AnyObject? = nil
     public var view_modification: AnyObject? = nil
     public var easter_egg_notification: AnyObject? = nil
-    public var client_conversation: CLIENT_CONVERSATION?
+    public var client_conversation: CONVERSATION?
     public var self_presence_notification: AnyObject? = nil
     public var delete_notification: AnyObject? = nil
     public var presence_notification: AnyObject? = nil
@@ -587,26 +587,26 @@ public class CLIENT_STATE_UPDATE : Message {
     public var invitation_watermark_notification: AnyObject? = nil
 }
 
-@objc(CLIENT_EVENT_CONTINUATION_TOKEN)
-public class CLIENT_EVENT_CONTINUATION_TOKEN : Message {
+@objc(EVENT_CONTINUATION_TOKEN)
+public class EVENT_CONTINUATION_TOKEN : Message {
     public var event_id: NSString?
     public var storage_continuation_token: NSString = ""
     public var event_timestamp: NSString = ""
 }
 
-@objc(CLIENT_CONVERSATION_STATE)
-public class CLIENT_CONVERSATION_STATE : Message {
+@objc(CONVERSATION_STATE)
+public class CONVERSATION_STATE : Message {
     public var conversation_id = CONVERSATION_ID()
-    public var conversation = CLIENT_CONVERSATION()
-    public var event = [CLIENT_EVENT]()
+    public var conversation = CONVERSATION()
+    public var event = [EVENT]()
     public var field1: AnyObject? = nil
-    public var event_continuation_token: CLIENT_EVENT_CONTINUATION_TOKEN?
+    public var event_continuation_token: EVENT_CONTINUATION_TOKEN?
     //public var field2: AnyObject? = nil
     //public var field3: AnyObject? = nil
 }
 
-@objc(CLIENT_ENTITY_PROPERTIES)
-public class CLIENT_ENTITY_PROPERTIES : Message {
+@objc(ENTITY_PROPERTIES)
+public class ENTITY_PROPERTIES : Message {
     public var type: NSNumber?
     public var display_name: NSString?
     public var first_name: NSString?
@@ -614,8 +614,8 @@ public class CLIENT_ENTITY_PROPERTIES : Message {
     public var emails = NSArray()
 }
 
-@objc(CLIENT_ENTITY)
-public class CLIENT_ENTITY : Message {
+@objc(ENTITY)
+public class ENTITY : Message {
     public var field1: AnyObject? = nil
     public var field2: AnyObject? = nil
     public var field3: AnyObject? = nil
@@ -626,12 +626,12 @@ public class CLIENT_ENTITY : Message {
     public var field8: AnyObject? = nil
     public var id = PARTICIPANT_ID()
 
-    public var properties = CLIENT_ENTITY_PROPERTIES()
+    public var properties = ENTITY_PROPERTIES()
 }
 
 @objc(ENTITY_GROUP_ENTITY)
 public class ENTITY_GROUP_ENTITY : Message {
-    public var entity = CLIENT_ENTITY()
+    public var entity = ENTITY()
     public var field1: AnyObject? = nil
 }
 
@@ -647,7 +647,7 @@ public class ENTITY_GROUP : Message {
 public class INITIAL_CLIENT_ENTITIES : Message {
     public var cgserp: NSString = ""
     public var header: AnyObject? = nil
-    public var entities = [CLIENT_ENTITY]()
+    public var entities = [ENTITY]()
     public var field1: AnyObject? = nil
     public var group1 = ENTITY_GROUP()
     public var group2 = ENTITY_GROUP()
@@ -656,15 +656,15 @@ public class INITIAL_CLIENT_ENTITIES : Message {
     public var group5 = ENTITY_GROUP()
 }
 
-@objc(CLIENT_GET_SELF_INFO_RESPONSE)
-public class CLIENT_GET_SELF_INFO_RESPONSE : Message {
+@objc(GET_SELF_INFO_RESPONSE)
+public class GET_SELF_INFO_RESPONSE : Message {
     public var cgsirp: NSString = ""
     public var response_header: AnyObject? = nil
-    public var self_entity = CLIENT_ENTITY()
+    public var self_entity = ENTITY()
 }
 
-@objc(CLIENT_RESPONSE_HEADER)
-public class CLIENT_RESPONSE_HEADER : Message {
+@objc(RESPONSE_HEADER)
+public class RESPONSE_HEADER : Message {
     public var status: NSString = ""
     public var field1: AnyObject? = nil
     public var field2: AnyObject? = nil
@@ -672,26 +672,26 @@ public class CLIENT_RESPONSE_HEADER : Message {
     public var current_server_time: NSString = ""
 }
 
-@objc(CLIENT_SYNC_ALL_NEW_EVENTS_RESPONSE)
-public class CLIENT_SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
+@objc(SYNC_ALL_NEW_EVENTS_RESPONSE)
+public class SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
     public var csanerp: NSString = ""
-    public var response_header = CLIENT_RESPONSE_HEADER()
+    public var response_header = RESPONSE_HEADER()
     public var sync_timestamp: NSString = ""
-    public var conversation_state = [CLIENT_CONVERSATION_STATE]()
+    public var conversation_state = [CONVERSATION_STATE]()
 }
 
-@objc(CLIENT_GET_CONVERSATION_RESPONSE)
-public class CLIENT_GET_CONVERSATION_RESPONSE : Message {
+@objc(GET_CONVERSATION_RESPONSE)
+public class GET_CONVERSATION_RESPONSE : Message {
     public var cgcrp: NSString = ""
-    public var response_header = CLIENT_RESPONSE_HEADER()
-    public var conversation_state = CLIENT_CONVERSATION_STATE()
+    public var response_header = RESPONSE_HEADER()
+    public var conversation_state = CONVERSATION_STATE()
 }
 
-@objc(CLIENT_GET_ENTITY_BY_ID_RESPONSE)
-public class CLIENT_GET_ENTITY_BY_ID_RESPONSE : Message {
+@objc(GET_ENTITY_BY_ID_RESPONSE)
+public class GET_ENTITY_BY_ID_RESPONSE : Message {
     public var cgebirp: NSString = ""
-    public var response_header = CLIENT_RESPONSE_HEADER()
-    public var entities = [CLIENT_ENTITY]()
+    public var response_header = RESPONSE_HEADER()
+    public var entities = [ENTITY]()
 }
 
 /*

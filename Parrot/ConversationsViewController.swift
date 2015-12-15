@@ -88,7 +88,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 
     }
 
-    func clientDidUpdateState(client: Client, update: CLIENT_STATE_UPDATE) {
+    func clientDidUpdateState(client: Client, update: STATE_UPDATE) {
         
     }
 

@@ -15,10 +15,10 @@ public let ACTIVE_TIMEOUT_SECS = 120
 public let SETACTIVECLIENT_LIMIT_SECS = 60
 
 public typealias InitialData = (
-	conversation_states: [CLIENT_CONVERSATION_STATE],
-	self_entity: CLIENT_ENTITY,
-	entities: [CLIENT_ENTITY],
-	conversation_participants: [CLIENT_CONVERSATION_PARTICIPANT_DATA],
+	conversation_states: [CONVERSATION_STATE],
+	self_entity: ENTITY,
+	entities: [ENTITY],
+	conversation_participants: [CONVERSATION_PARTICIPANT_DATA],
 	sync_timestamp: NSDate?
 )
 
@@ -26,7 +26,7 @@ public protocol ClientDelegate {
     func clientDidConnect(client: Client, initialData: InitialData)
     func clientDidDisconnect(client: Client)
     func clientDidReconnect(client: Client)
-    func clientDidUpdateState(client: Client, update: CLIENT_STATE_UPDATE)
+    func clientDidUpdateState(client: Client, update: STATE_UPDATE)
 }
 
 public func generateClientID() -> Int {
@@ -131,16 +131,16 @@ public class Client : ChannelDelegate {
                 self.header_version = ((data_dict["ds:2"] as! NSArray)[0] as! NSArray)[6] as? String
                 self.header_id = ((data_dict["ds:4"] as! NSArray)[0] as! NSArray)[7] as? String
 
-                let self_entity = PBLiteSerialization.parseArray(CLIENT_GET_SELF_INFO_RESPONSE.self,
+                let self_entity = PBLiteSerialization.parseArray(GET_SELF_INFO_RESPONSE.self,
 					input: (data_dict["ds:20"] as! NSArray)[0] as? NSArray)!.self_entity
 
                 let initial_conv_states_raw = ((data_dict["ds:19"] as! NSArray)[0] as! NSArray)[3] as! NSArray
                 let initial_conv_states = (initial_conv_states_raw as! [NSArray]).map {
-                    PBLiteSerialization.parseArray(CLIENT_CONVERSATION_STATE.self, input: $0)!
+                    PBLiteSerialization.parseArray(CONVERSATION_STATE.self, input: $0)!
                 }
                 let initial_conv_parts = initial_conv_states.flatMap { $0.conversation.participant_data }
 
-                var initial_entities = [CLIENT_ENTITY]()
+                var initial_entities = [ENTITY]()
                 var sync_timestamp: NSNumber? = nil
 
                 if let ds21 = data_dict["ds:21"] as? NSArray {
@@ -287,7 +287,7 @@ public class Client : ChannelDelegate {
 	// message parser rather than two.
 	// timestamp: datetime.datetime instance specifying the time after
 	// which to return all events occurring in.
-    public func syncAllNewEvents(timestamp: NSDate, cb: (response: CLIENT_SYNC_ALL_NEW_EVENTS_RESPONSE?) -> Void) {
+    public func syncAllNewEvents(timestamp: NSDate, cb: (response: SYNC_ALL_NEW_EVENTS_RESPONSE?) -> Void) {
         let data: NSArray = [
             self.getRequestHeader(),
 			to_timestamp(timestamp),
@@ -528,10 +528,10 @@ public class Client : ChannelDelegate {
     //        return json.loads(res.body.decode())
 	
 	// Return information about a list of contacts.
-    public func getEntitiesByID(chat_id_list: [String], cb: (CLIENT_GET_ENTITY_BY_ID_RESPONSE) -> Void) {
+    public func getEntitiesByID(chat_id_list: [String], cb: (GET_ENTITY_BY_ID_RESPONSE) -> Void) {
         let data = [self.getRequestHeader(), NSNull(), chat_id_list.map { [$0] }]
         self.request("contacts/getentitybyid", body: data, use_json: false) { r in
-			let obj: CLIENT_GET_ENTITY_BY_ID_RESPONSE? = PBLiteSerialization.parseProtoJSON(r.result.value!)
+			let obj: GET_ENTITY_BY_ID_RESPONSE? = PBLiteSerialization.parseProtoJSON(r.result.value!)
 			cb(obj!)
         }
     }
@@ -544,7 +544,7 @@ public class Client : ChannelDelegate {
         conversation_id: String,
         event_timestamp: NSDate,
         max_events: Int = 50,
-        cb: (CLIENT_GET_CONVERSATION_RESPONSE) -> Void
+        cb: (GET_CONVERSATION_RESPONSE) -> Void
     ) {
 
         self.request("conversations/getconversation", body: [
@@ -564,7 +564,7 @@ public class Client : ChannelDelegate {
         ], use_json: false) { r in
             let result = JSContext().evaluateScript("a = " + (NSString(data: r.result.value!,
 				encoding: NSUTF8StringEncoding)! as String)).toArray() // FIXME: Don't use this.
-            cb(PBLiteSerialization.parseArray(CLIENT_GET_CONVERSATION_RESPONSE.self, input: result)!)
+            cb(PBLiteSerialization.parseArray(GET_CONVERSATION_RESPONSE.self, input: result)!)
         }
     }
 

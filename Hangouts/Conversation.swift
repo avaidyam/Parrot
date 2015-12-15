@@ -17,7 +17,7 @@ public class Conversation {
 
     public var client: Client
     public var user_list: UserList
-    public var conversation: CLIENT_CONVERSATION
+    public var conversation: CONVERSATION
     public var events_dict: Dictionary<EventID, ConversationEvent> = Dictionary<EventID, ConversationEvent>() {
         didSet {
             self._cachedEvents = nil
@@ -30,8 +30,8 @@ public class Conversation {
 
     public init(client: Client,
         user_list: UserList,
-        client_conversation: CLIENT_CONVERSATION,
-        client_events: [CLIENT_EVENT] = [],
+        client_conversation: CONVERSATION,
+        client_events: [EVENT] = [],
         conversationList: ConversationList
     ) {
         self.client = client
@@ -55,7 +55,7 @@ public class Conversation {
 	// When latest_read_timestamp is 0, this seems to indicate no change
 	// from the previous value. Word around this by saving and restoring the
 	// previous value.
-    public func update_conversation(client_conversation: CLIENT_CONVERSATION) {
+    public func update_conversation(client_conversation: CONVERSATION) {
         let old_timestamp = self.latest_read_timestamp
         self.conversation = client_conversation
         
@@ -67,7 +67,7 @@ public class Conversation {
     }
 	
 	// Wrap ClientEvent in ConversationEvent subclass.
-    private class func wrap_event(event: CLIENT_EVENT) -> ConversationEvent {
+    private class func wrap_event(event: EVENT) -> ConversationEvent {
         if event.chat_message != nil {
             return ChatMessageEvent(client_event: event)
         } else if event.conversation_rename != nil {
@@ -91,7 +91,7 @@ public class Conversation {
 	
 	// Add a ClientEvent to the Conversation.
 	// Returns an instance of ConversationEvent or subclass.
-    public func add_event(event: CLIENT_EVENT) -> ConversationEvent {
+    public func add_event(event: EVENT) -> ConversationEvent {
         let conv_event = Conversation.wrap_event(event)
         self.events_dict[conv_event.id] = conv_event
         return conv_event

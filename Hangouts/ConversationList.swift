@@ -17,7 +17,7 @@ public class ConversationList : ClientDelegate {
 
     public var delegate: ConversationListDelegate?
 
-    public init(client: Client, conv_states: [CLIENT_CONVERSATION_STATE], user_list: UserList, sync_timestamp: NSDate?) {
+    public init(client: Client, conv_states: [CONVERSATION_STATE], user_list: UserList, sync_timestamp: NSDate?) {
         self.client = client
         self.sync_timestamp = sync_timestamp ?? NSDate(timeIntervalSince1970: 0)
         self.user_list = user_list
@@ -56,8 +56,8 @@ public class ConversationList : ClientDelegate {
 	
 	// Add new conversation from Conversation
     public func add_conversation(
-        client_conversation: CLIENT_CONVERSATION,
-        client_events: [CLIENT_EVENT] = []
+        client_conversation: CONVERSATION,
+        client_events: [EVENT] = []
     ) -> Conversation {
         let conv_id = client_conversation.conversation_id!.id
         let conv = Conversation(
@@ -79,7 +79,7 @@ public class ConversationList : ClientDelegate {
     }
 	
 	// Receive a ClientEvent and fan out to Conversations
-    public func on_client_event(event: CLIENT_EVENT) {
+    public func on_client_event(event: EVENT) {
         sync_timestamp = event.timestamp
         if let conv = conv_dict[event.conversation_id.id as! String] {
             let conv_event = conv.add_event(event)
@@ -92,7 +92,7 @@ public class ConversationList : ClientDelegate {
     }
 	
 	// Receive Conversation and create or update the conversation
-    public func handle_client_conversation(client_conversation: CLIENT_CONVERSATION) {
+    public func handle_client_conversation(client_conversation: CONVERSATION) {
         let conv_id = client_conversation.conversation_id!.id
         if let conv = conv_dict[conv_id as! String] {
             conv.update_conversation(client_conversation)
@@ -104,7 +104,7 @@ public class ConversationList : ClientDelegate {
     }
 	
 	// Receive ClientSetTypingNotification and update the conversation
-    public func handle_set_typing_notification(set_typing_notification: CLIENT_SET_TYPING_NOTIFICATION) {
+    public func handle_set_typing_notification(set_typing_notification: SET_TYPING_NOTIFICATION) {
         let conv_id = set_typing_notification.conversation_id.id
         if let conv = conv_dict[conv_id as! String] {
             let res = parse_typing_status_message(set_typing_notification)
@@ -120,7 +120,7 @@ public class ConversationList : ClientDelegate {
     }
 	
 	// Receive ClientWatermarkNotification and update the conversation
-    public func handle_watermark_notification(watermark_notification: CLIENT_WATERMARK_NOTIFICATION) {
+    public func handle_watermark_notification(watermark_notification: WATERMARK_NOTIFICATION) {
         let conv_id = watermark_notification.conversation_id.id
         if let conv = conv_dict[conv_id as! String] {
             let res = parse_watermark_notification(watermark_notification)
@@ -174,7 +174,7 @@ public class ConversationList : ClientDelegate {
     }
 	
 	// Receive a ClientStateUpdate and fan out to Conversations
-    public func clientDidUpdateState(client: Client, update: CLIENT_STATE_UPDATE) {
+    public func clientDidUpdateState(client: Client, update: STATE_UPDATE) {
         if let client_conversation = update.client_conversation {
             handle_client_conversation(client_conversation)
         }

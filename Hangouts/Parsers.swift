@@ -6,7 +6,7 @@ public typealias WatermarkNotification = (conv_id: String, user_id: UserID, read
 
 // Yield ClientStateUpdate instances from a channel submission.
 // For each submission payload, yield its messages
-public func parse_submission(submission: String) -> (client_id: String?, updates: [CLIENT_STATE_UPDATE]) {
+public func parse_submission(submission: String) -> (client_id: String?, updates: [STATE_UPDATE]) {
     let result = _get_submission_payloads(submission)
     let parsed_submissions = result.updates.flatMap {
 		_parse_payload($0)
@@ -49,12 +49,12 @@ public func flatMap<A,B>(x: [A], y: A -> B?) -> [B] {
 }
 // Yield a list of ClientStateUpdates.
 
-public func _parse_payload(payload: [AnyObject]) -> [CLIENT_STATE_UPDATE] {
+public func _parse_payload(payload: [AnyObject]) -> [STATE_UPDATE] {
     if payload[0] as? String == "cbu" {
 		
 		// payload[1] is a list of state updates.
         return flatMap(payload[1] as! [NSArray]) {
-			PBLiteSerialization.parseArray(CLIENT_STATE_UPDATE.self, input: $0)
+			PBLiteSerialization.parseArray(STATE_UPDATE.self, input: $0)
 		}
     } else {
         print("Ignoring payload with header: \(payload[0])")
@@ -84,7 +84,7 @@ public func to_timestamp(date: NSDate) -> NSNumber {
 // Return TypingStatusMessage from ClientSetTypingNotification.
 // The same status may be sent multiple times consecutively, and when a
 // message is sent the typing status will not change to stopped.
-public func parse_typing_status_message(p: CLIENT_SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
+public func parse_typing_status_message(p: SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
     return TypingStatusMessage(
         conv_id: p.conversation_id.id as! String,
         user_id: UserID(chat_id: p.user_id.chat_id as! String, gaia_id: p.user_id.gaia_id as! String),
@@ -94,7 +94,7 @@ public func parse_typing_status_message(p: CLIENT_SET_TYPING_NOTIFICATION) -> Ty
 }
 
 // Return WatermarkNotification from ClientWatermarkNotification.
-public func parse_watermark_notification(client_watermark_notification: CLIENT_WATERMARK_NOTIFICATION) -> WatermarkNotification {
+public func parse_watermark_notification(client_watermark_notification: WATERMARK_NOTIFICATION) -> WatermarkNotification {
     return WatermarkNotification(
         conv_id: client_watermark_notification.conversation_id.id as! String,
         user_id: UserID(

@@ -19,9 +19,9 @@ public func ==(lhs: UserID, rhs: UserID) -> Bool {
 // This corresponds to ClientEvent in the API.
 // This is the base class for such events.
 public class ConversationEvent : Equatable {
-    public let event: CLIENT_EVENT
+    public let event: EVENT
 
-    public init(client_event: CLIENT_EVENT) {
+    public init(client_event: EVENT) {
         event = client_event
     }
 	

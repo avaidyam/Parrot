@@ -14,7 +14,7 @@ public class UserList : NSObject {
 	// Creates users from the given ClientEntity and
 	// ClientConversationParticipantData instances. The latter is used only as
 	// a fallback, because it doesn't include a real first_name.
-	public init(client: Client, self_entity: CLIENT_ENTITY, entities: [CLIENT_ENTITY], conv_parts: [CLIENT_CONVERSATION_PARTICIPANT_DATA]) {
+	public init(client: Client, self_entity: ENTITY, entities: [ENTITY], conv_parts: [CONVERSATION_PARTICIPANT_DATA]) {
 		
 		self.client = client
 		self.self_user = User(entity: self_entity, self_user_id: nil)
@@ -68,7 +68,7 @@ public class UserList : NSObject {
 	}
 	
 	// Add new User from ClientConversationParticipantData
-	public func add_user_from_conv_part(conv_part: CLIENT_CONVERSATION_PARTICIPANT_DATA) -> User {
+	public func add_user_from_conv_part(conv_part: CONVERSATION_PARTICIPANT_DATA) -> User {
 		let user = User(conv_part_data: conv_part, self_user_id: self.self_user.id)
 		if self.user_dict[user.id] == nil {
 			print("Adding fallback User: \(user)")
@@ -79,19 +79,19 @@ public class UserList : NSObject {
 	
 	public func on_state_update_notification(notification: NSNotification) {
 		if let userInfo = notification.userInfo, state_update = userInfo[ClientStateUpdatedNewStateKey as NSString] {
-			on_state_update(state_update as! CLIENT_STATE_UPDATE)
+			on_state_update(state_update as! STATE_UPDATE)
 		}
 	}
 	
 	// Receive a ClientStateUpdate
-	private func on_state_update(state_update: CLIENT_STATE_UPDATE) {
+	private func on_state_update(state_update: STATE_UPDATE) {
 		if let conversation = state_update.client_conversation {
 			self.handle_client_conversation(conversation)
 		}
 	}
 	
 	// Receive Conversation and update list of users
-	private func handle_client_conversation(client_conversation: CLIENT_CONVERSATION) {
+	private func handle_client_conversation(client_conversation: CONVERSATION) {
 		for participant in client_conversation.participant_data {
 			self.add_user_from_conv_part(participant)
 		}
