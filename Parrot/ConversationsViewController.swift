@@ -56,14 +56,15 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
         didSet {
             conversationList?.delegate = self
 			
-			NSOperationQueue.mainQueue().addOperationWithBlock {
+			mainQueue().run {
 				self.tableView.reloadData()
 			}
         }
     }
 
     func clientDidConnect(client: Client, initialData: InitialData) {
-        buildUserList(client, initial_data: initialData) { user_list in
+		buildUserList(client, initial_data: initialData) { user_list in
+			//print("users: \(user_list.get_all())")
 			
             self.conversationList = ConversationList(
                 client: client,
@@ -72,7 +73,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
                 sync_timestamp: initialData.sync_timestamp
             )
 			
-			NSOperationQueue.mainQueue().addOperationWithBlock {
+			mainQueue().run {
 				self.tableView.reloadData()
 				self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
 				self.tableView.scrollRowToVisible(0)
@@ -152,7 +153,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     }
     
     // MARK: ConversationListDelegate
-    func conversationList(list: ConversationList, didReceiveEvent event: ConversationEvent) {
+    func conversationList(list: ConversationList, didReceiveEvent event: Event) {
 
     }
 
@@ -164,8 +165,8 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 
     }
 
-    func conversationListDidUpdate(list: ConversationList) {
-		NSOperationQueue.mainQueue().addOperationWithBlock {
+    func conversationList(didUpdate list: ConversationList) {
+		mainQueue().run {
 			self.tableView.reloadData()
 			self.updateAppBadge()
 		}
@@ -174,7 +175,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation) {
         //  TODO: Just update the one row that needs updating
 		
-		NSOperationQueue.mainQueue().addOperationWithBlock {
+		mainQueue().run {
 			self.tableView.reloadData()
 			self.updateAppBadge()
 		}
@@ -184,8 +185,9 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     // MARK: IBActions
 
     func selectConversation(conversation: Conversation?) {
-        if let conversationViewController = (self.parentViewController as? NSSplitViewController)?.splitViewItems[1].viewController as? ConversationViewController {
-            conversationViewController.representedObject = conversation
+		let item = (self.parentViewController as? NSSplitViewController)?.splitViewItems[1]
+        if let vc = item?.viewController as? ConversationViewController {
+            vc.representedObject = conversation
         }
     }
 }

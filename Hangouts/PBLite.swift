@@ -126,14 +126,6 @@ public class PBLiteSerialization {
 		return nil
 	}
 	
-	public class func parseJSON<T: Message>(input: NSData) -> T? {
-		let script = "a = " + (NSString(data: input, encoding: 4)! as String)
-		if let parsedObject = JSContext().evaluateScript(script).toDictionary() { // FIXME: Don't use this.
-			return parseDictionary(T.self, obj: parsedObject)
-		}
-		return nil
-	}
-	
 	// Parsing
 	
 	public class func parseArray<T: Message>(type: T.Type, input: NSArray?) -> T? {

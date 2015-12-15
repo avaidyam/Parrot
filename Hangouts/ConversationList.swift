@@ -1,10 +1,10 @@
 import Foundation
 
 public protocol ConversationListDelegate {
-    func conversationList(list: ConversationList, didReceiveEvent event: ConversationEvent)
+    func conversationList(list: ConversationList, didReceiveEvent event: Event)
     func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType)
     func conversationList(list: ConversationList, didReceiveWatermarkNotification status: WatermarkNotification)
-    func conversationListDidUpdate(list: ConversationList)
+    func conversationList(didUpdate list: ConversationList)
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation)
 }
 
@@ -85,7 +85,7 @@ public class ConversationList : ClientDelegate {
             let conv_event = conv.add_event(event)
 
             delegate?.conversationList(self, didReceiveEvent: conv_event)
-            conv.handleConversationEvent(conv_event)
+            conv.handleEvent(conv_event)
         } else {
             print("Received ClientEvent for unknown conversation \(event.conversation_id.id)")
         }
@@ -100,7 +100,7 @@ public class ConversationList : ClientDelegate {
         } else {
             self.add_conversation(client_conversation)
         }
-        delegate?.conversationListDidUpdate(self)
+		delegate?.conversationList(didUpdate: self)
     }
 	
 	// Receive ClientSetTypingNotification and update the conversation

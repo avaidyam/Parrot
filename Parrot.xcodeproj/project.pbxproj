@@ -42,7 +42,7 @@
 		48834E3C1C1B4098009BC442 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E341C1B4098009BC442 /* Channel.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E3D1C1B4098009BC442 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E351C1B4098009BC442 /* Client.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E361C1B4098009BC442 /* Conversation.swift */; settings = {ASSET_TAGS = (); }; };
-		48834E3F1C1B4098009BC442 /* ConversationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E371C1B4098009BC442 /* ConversationEvent.swift */; settings = {ASSET_TAGS = (); }; };
+		48834E3F1C1B4098009BC442 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E371C1B4098009BC442 /* Event.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E401C1B4098009BC442 /* ConversationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E381C1B4098009BC442 /* ConversationList.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E411C1B4098009BC442 /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E391C1B4098009BC442 /* Parsers.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; settings = {ASSET_TAGS = (); }; };
@@ -261,7 +261,7 @@
 		48834E341C1B4098009BC442 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		48834E351C1B4098009BC442 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		48834E361C1B4098009BC442 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
-		48834E371C1B4098009BC442 /* ConversationEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationEvent.swift; sourceTree = "<group>"; };
+		48834E371C1B4098009BC442 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		48834E381C1B4098009BC442 /* ConversationList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationList.swift; sourceTree = "<group>"; };
 		48834E391C1B4098009BC442 /* Parsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parsers.swift; sourceTree = "<group>"; };
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -421,13 +421,13 @@
 		487A0E111C1E0F71007A4696 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				48834E391C1B4098009BC442 /* Parsers.swift */,
 				48834E341C1B4098009BC442 /* Channel.swift */,
 				487A0E121C1E4389007A4696 /* ChunkParser.swift */,
 				48834E351C1B4098009BC442 /* Client.swift */,
 				48834E361C1B4098009BC442 /* Conversation.swift */,
-				48834E371C1B4098009BC442 /* ConversationEvent.swift */,
+				48834E371C1B4098009BC442 /* Event.swift */,
 				48834E381C1B4098009BC442 /* ConversationList.swift */,
-				48834E391C1B4098009BC442 /* Parsers.swift */,
 				48834E3A1C1B4098009BC442 /* User.swift */,
 				48E3C0811C1F363F008B2D1D /* UserList.swift */,
 			);
@@ -1126,7 +1126,7 @@
 				48834E3B1C1B4098009BC442 /* OAuth2.swift in Sources */,
 				48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */,
 				48834E411C1B4098009BC442 /* Parsers.swift in Sources */,
-				48834E3F1C1B4098009BC442 /* ConversationEvent.swift in Sources */,
+				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				48834E451C1B40A4009BC442 /* PBLite.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,

@@ -18,7 +18,7 @@ public func ==(lhs: UserID, rhs: UserID) -> Bool {
 // An event which becomes part of the permanent record of a conversation.
 // This corresponds to ClientEvent in the API.
 // This is the base class for such events.
-public class ConversationEvent : Equatable {
+public class Event : Equatable {
     public let event: EVENT
 
     public init(client_event: EVENT) {
@@ -43,13 +43,13 @@ public class ConversationEvent : Equatable {
         return self.event.conversation_id.id!
     }()
 	
-	// The ID of the ConversationEvent.
+	// The ID of the Event.
     public lazy var id: Conversation.EventID = {
         return self.event.event_id! as Conversation.EventID
     }()
 }
 
-public func ==(lhs: ConversationEvent, rhs: ConversationEvent) -> Bool {
+public func ==(lhs: Event, rhs: Event) -> Bool {
     return lhs.event == rhs.event
 }
 
@@ -113,7 +113,7 @@ public class ChatMessageSegment {
 
 // An event containing a chat message.
 // Corresponds to ClientChatMessage in the API.
-public class ChatMessageEvent : ConversationEvent {
+public class ChatMessageEvent : Event {
 	
 	// A textual representation of the message.
     public lazy var text: String = {
@@ -182,7 +182,7 @@ public class ChatMessageEvent : ConversationEvent {
 
 // An event that renames a conversation.
 // Corresponds to ClientConversationRename in the API.
-public class RenameEvent : ConversationEvent {
+public class RenameEvent : Event {
 	
 	// The conversation's new name.
 	// An empty string if the conversation's name was cleared.
@@ -203,7 +203,7 @@ public class RenameEvent : ConversationEvent {
 
 // An event that adds or removes a conversation participant.
 // Corresponds to ClientMembershipChange in the API.
-public class MembershipChangeEvent : ConversationEvent {
+public class MembershipChangeEvent : Event {
 	
 	// The membership change type (MembershipChangeType).
     public var type: MembershipChangeType {

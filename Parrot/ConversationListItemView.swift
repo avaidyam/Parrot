@@ -6,35 +6,43 @@ class ConversationListItemView : NSTableCellView {
 	// Create and cache the default image template.
 	private static let defaultImage = NSImage(named: "NSUserGuest")
 	
-	@IBOutlet weak var photoView: NSImageView!
+	// Default colors for both GVoice and Hangouts.
+	private static let GVoiceColor = NSColor(red: 0.13, green: 0.59, blue: 0.95, alpha: 1.0)
+	private static let HangoutsColor = NSColor(red: 0.31, green: 0.63, blue: 0.25, alpha: 1.0)
+	
+	// Mask the photo layer as a circle to match Hangouts.
+	@IBOutlet weak var photoView: NSImageView! {
+		didSet {
+			self.photoView.wantsLayer = true
+			self.photoView.layer?.masksToBounds = true
+			self.photoView.layer?.borderWidth = 2.0
+		}
+	}
+	
 	@IBOutlet weak var nameLabel: NSTextField!
     @IBOutlet weak var textLabel: NSTextField!
     @IBOutlet weak var timeLabel: NSTextField!
 	
+	// Upon assignment of the represented object, configure the subview contents.
 	override var objectValue: AnyObject? {
 		didSet {
 			guard let conversation = self.objectValue as? Conversation else {
 				return
 			}
 			
-			// Mask the photo layer as a circle to match Hangouts.
-			self.photoView?.wantsLayer = true
-			self.photoView?.layer?.masksToBounds = true
-			self.photoView?.layer?.borderWidth = 2.0
-			
 			// Show different rings based on network (Hangouts vs. GVoice)
 			let layer = self.photoView?.layer
 			if conversation.conversation.network_type?[0] as? Int == 2 {
-				layer?.borderColor = NSColor(red: 0.13, green: 0.59, blue: 0.95, alpha: 1.0).CGColor
+				layer?.borderColor = ConversationListItemView.GVoiceColor.CGColor
 			} else {
-				layer?.borderColor = NSColor(red: 0.31, green: 0.63, blue: 0.25, alpha: 1.0).CGColor
+				layer?.borderColor = ConversationListItemView.HangoutsColor.CGColor
 			}
 			
 			// Get the first image for the users in the conversation to display.
 			// If we don't have an image, use a template image.
 			let otherUsers = conversation.users.filter { !$0.isSelf }
 			
-			NSOperationQueue.mainQueue().addOperationWithBlock { 
+			mainQueue().run {
 				if let user = otherUsers.first {
 					ImageCache.sharedInstance.fetchImage(forUser: user) {
 						self.photoView?.image = $0 ?? ConversationListItemView.defaultImage
@@ -45,6 +53,7 @@ class ConversationListItemView : NSTableCellView {
 			}
 			
 			// Patch for Google Voice contacts to show their numbers.
+			// FIXME: Sometimes [1] is actually you, fix that.
 			var title = conversation.name
 			if title == "Unknown" {
 				if let a = conversation.conversation.participant_data[1].fallback_name {
@@ -71,22 +80,38 @@ class ConversationListItemView : NSTableCellView {
 		}
 	}
 	
+	// Upon selection, make all the text visible, and restore it when unselected.
 	override var backgroundStyle: NSBackgroundStyle {
 		didSet {
-			//Swift.print("backgroundStyle \(self.backgroundStyle.rawValue)")
+			if self.backgroundStyle == .Light {
+				self.nameLabel.textColor = NSColor.labelColor()
+				self.textLabel.textColor = NSColor.secondaryLabelColor()
+				self.timeLabel.textColor = NSColor.tertiaryLabelColor()
+			} else if self.backgroundStyle == .Dark {
+				self.nameLabel.textColor = NSColor.alternateSelectedControlTextColor()
+				self.textLabel.textColor = NSColor.alternateSelectedControlTextColor()
+				self.timeLabel.textColor = NSColor.alternateSelectedControlTextColor()
+			}
 		}
 	}
 	
+	// Dynamically adjust subviews based on the indicated row size.
+	// Technically should be unimplemented, as AutoLayout does this for free.
 	override var rowSizeStyle: NSTableViewRowSizeStyle {
 		didSet {
-			//Swift.print("rowSizeStyle \(self.rowSizeStyle.rawValue)")
+			// FIXME: What do we do here??
 		}
 	}
 	
+	// Return an array of all dragging components corresponding to our subviews.
 	override var draggingImageComponents: [NSDraggingImageComponent] {
 		get {
-			//Swift.print("dragging!")
-			return []
+			return [
+				_component(self.photoView, key: "Photo"),
+				_component(self.nameLabel, key: "Name"),
+				_component(self.textLabel, key: "Text"),
+				_component(self.timeLabel, key: "Time"),
+			]
 		}
 	}
 	
@@ -96,5 +121,19 @@ class ConversationListItemView : NSTableCellView {
 		if let layer = self.photoView?.layer {
 			layer.cornerRadius = self.photoView!.bounds.width / 2.0
 		}
+	}
+	
+	// Automatically translate a subview into a NSDraggingImageComponent
+	private func _component(view: NSView, key: String) -> NSDraggingImageComponent {
+		var viewBounds = view.bounds
+		let imageRep = view.bitmapImageRepForCachingDisplayInRect(viewBounds)
+		view.cacheDisplayInRect(viewBounds, toBitmapImageRep: imageRep!)
+		let draggedImage = NSImage(size: imageRep!.size)
+		draggedImage.addRepresentation(imageRep!)
+		viewBounds = self.convertRect(viewBounds, fromView: view)
+		let component = NSDraggingImageComponent(key: key)
+		component.contents = draggedImage
+		component.frame = viewBounds
+		return component
 	}
 }

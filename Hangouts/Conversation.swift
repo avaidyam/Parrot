@@ -2,7 +2,7 @@ import Foundation
 
 public protocol ConversationDelegate {
     func conversation(conversation: Conversation, didChangeTypingStatusForUser: User, toStatus: TypingType)
-    func conversation(conversation: Conversation, didReceiveEvent: ConversationEvent)
+    func conversation(conversation: Conversation, didReceiveEvent: Event)
     func conversation(conversation: Conversation, didReceiveWatermarkNotification: WatermarkNotification)
     func conversationDidUpdateEvents(conversation: Conversation)
 
@@ -18,7 +18,7 @@ public class Conversation {
     public var client: Client
     public var user_list: UserList
     public var conversation: CONVERSATION
-    public var events_dict: Dictionary<EventID, ConversationEvent> = Dictionary<EventID, ConversationEvent>() {
+    public var events_dict: Dictionary<EventID, Event> = Dictionary<EventID, Event>() {
         didSet {
             self._cachedEvents = nil
         }
@@ -66,8 +66,8 @@ public class Conversation {
         delegate?.conversationDidUpdate(self)
     }
 	
-	// Wrap ClientEvent in ConversationEvent subclass.
-    private class func wrap_event(event: EVENT) -> ConversationEvent {
+	// Wrap ClientEvent in Event subclass.
+    private class func wrap_event(event: EVENT) -> Event {
         if event.chat_message != nil {
             return ChatMessageEvent(client_event: event)
         } else if event.conversation_rename != nil {
@@ -75,12 +75,12 @@ public class Conversation {
         } else if event.membership_change != nil {
             return MembershipChangeEvent(client_event: event)
         } else {
-            return ConversationEvent(client_event: event)
+            return Event(client_event: event)
         }
     }
 
-    private var _cachedEvents = [ConversationEvent]?()
-    public var events: [ConversationEvent] {
+    private var _cachedEvents = [Event]?()
+    public var events: [Event] {
         get {
             if _cachedEvents == nil {
                 _cachedEvents = events_dict.values.sort { $0.timestamp < $1.timestamp }
@@ -90,8 +90,8 @@ public class Conversation {
     }
 	
 	// Add a ClientEvent to the Conversation.
-	// Returns an instance of ConversationEvent or subclass.
-    public func add_event(event: EVENT) -> ConversationEvent {
+	// Returns an instance of Event or subclass.
+    public func add_event(event: EVENT) -> Event {
         let conv_event = Conversation.wrap_event(event)
         self.events_dict[conv_event.id] = conv_event
         return conv_event
@@ -210,14 +210,13 @@ public class Conversation {
         }
     }
 
-    public func handleConversationEvent(event: ConversationEvent) {
+    public func handleEvent(event: Event) {
         if let delegate = delegate {
             delegate.conversation(self, didReceiveEvent: event)
         } else {
             let user = user_list.get_user(event.user_id)
             if !user.isSelf {
-				print("");
-                //NotificationManager.sharedInstance.sendNotificationFor(event, fromUser: user)
+				print("Notification \(event) from User \(user)!");
             }
         }
     }
@@ -240,12 +239,12 @@ public class Conversation {
         }
     }
 	
-	// Return list of ConversationEvents ordered newest-first.
+	// Return list of Events ordered newest-first.
 	// If event_id is specified, return events preceeding this event.
 	// This method will make an API request to load historical events if
 	// necessary. If the beginning of the conversation is reached, an empty
 	// list will be returned.
-    public func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([ConversationEvent]) -> Void)? = nil) {
+    public func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([Event]) -> Void)? = nil) {
         guard let event_id = event_id else {
             cb?(events)
             return
@@ -277,10 +276,10 @@ public class Conversation {
     }
 
 //    func next_event(event_id, prev=False) {
-//        // Return ConversationEvent following the event with given event_id.
+//        // Return Event following the event with given event_id.
 //        // If prev is True, return the previous event rather than the following
 //        // one.
-//        // Raises KeyError if no such ConversationEvent is known.
+//        // Raises KeyError if no such Event is known.
 //        // Return nil if there is no following event.
 //
 //        i = self.events.index(self._events_dict[event_id])
@@ -293,7 +292,7 @@ public class Conversation {
 //        }
 //    }
 
-    public func get_event(event_id: EventID) -> ConversationEvent? {
+    public func get_event(event_id: EventID) -> Event? {
         return events_dict[event_id]
     }
 	
@@ -331,7 +330,7 @@ public class Conversation {
         }
     }
 	
-	// datetime timestamp of the last read ConversationEvent.
+	// datetime timestamp of the last read Event.
     public var latest_read_timestamp: NSDate {
         get {
             return conversation.self_conversation_state.self_read_state.latest_read_timestamp
@@ -341,14 +340,14 @@ public class Conversation {
         }
     }
 	
-	// List of ConversationEvents that are unread.
+	// List of Events that are unread.
 	// Events are sorted oldest to newest.
 	// Note that some Hangouts clients don't update the read timestamp for
 	// certain event types, such as membership changes, so this method may
 	// return more unread events than these clients will show. There's also a
 	// delay between sending a message and the user's own message being
 	// considered read.
-    public var unread_events: [ConversationEvent] {
+    public var unread_events: [Event] {
         get {
             return events.filter { $0.timestamp > self.latest_read_timestamp }
         }

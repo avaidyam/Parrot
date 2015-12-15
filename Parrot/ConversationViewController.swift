@@ -136,7 +136,7 @@ class ConversationViewController:
         //conversationTableView.reloadData()
     }
 
-    func conversation(conversation: Conversation, didReceiveEvent event: ConversationEvent) {
+    func conversation(conversation: Conversation, didReceiveEvent event: Event) {
 		dispatch_async(dispatch_get_main_queue(), {
 			self.conversationTableView.reloadData()
 			self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
@@ -173,15 +173,15 @@ class ConversationViewController:
     // MARK: NSTableViewDelegate
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
         if let conversation = conversation where row < conversation.messages.count {
-            let message = conversation.messages[row]
-            let user = conversation.user_list.get_user(message.user_id)
             var view = tableView.makeViewWithIdentifier(ChatMessageView.className(), owner: self) as? ChatMessageView
 
             if view == nil {
                 view = ChatMessageView(frame: NSZeroRect)
                 view!.identifier = ChatMessageView.className()
             }
-
+			
+			let message = conversation.messages[row]
+			let user = conversation.user_list.get_user(message.user_id)
 			let network = conversation.conversation.network_type![0] as! Int
             view!.configureWithText(message.text, orientation: user.isSelf ? .Right : .Left,
 				bubble: user.isSelf ? 3 : network)

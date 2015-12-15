@@ -14,7 +14,9 @@ class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
         notificationCenter.delegate = self
     }
 
-    func sendNotificationFor(event: ConversationEvent, fromUser user: User) {
+    func sendNotificationFor(event: Event, fromUser user: User) {
+		
+		
         let conversationID = event.event.conversation_id.id as! ConversationID
         let notificationID = event.id as NotificationID
 

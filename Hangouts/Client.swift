@@ -33,8 +33,15 @@ public func generateClientID() -> Int {
     return Int(arc4random_uniform(4294967295))
 }
 
+// cleaner code pls.
+extension String {
+	func encodeURL() -> String {
+		return self.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
+	}
+}
+
 public class Client : ChannelDelegate {
-    public let manager: Alamofire.Manager
+	public let manager: Alamofire.Manager
     public var delegate: ClientDelegate?
 
     public var CHAT_INIT_PARAMS: Dictionary<String, AnyObject?> = [
@@ -78,9 +85,9 @@ public class Client : ChannelDelegate {
 	// We first need to fetch the 'pvt' token, which is required for the
 	// initialization request (otherwise it will return 400).
     public func initialize_chat(cb: (data: InitialData?) -> Void) {
-        let prop = (CHAT_INIT_PARAMS["prop"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
-        let fid = (CHAT_INIT_PARAMS["fid"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
-        let ec = (CHAT_INIT_PARAMS["ec"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
+        let prop = (CHAT_INIT_PARAMS["prop"] as! String).encodeURL()
+        let fid = (CHAT_INIT_PARAMS["fid"] as! String).encodeURL()
+        let ec = (CHAT_INIT_PARAMS["ec"] as! String).encodeURL()
         let url = "\(PVT_TOKEN_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)"
 		
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
@@ -91,10 +98,10 @@ public class Client : ChannelDelegate {
             self.CHAT_INIT_PARAMS["pvt"] = pvt
 
             // Now make the actual initialization request:
-            let prop = (self.CHAT_INIT_PARAMS["prop"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
-            let fid = (self.CHAT_INIT_PARAMS["fid"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
-            let ec = (self.CHAT_INIT_PARAMS["ec"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
-            let pvt_enc = (self.CHAT_INIT_PARAMS["pvt"] as! String).stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
+            let prop = (self.CHAT_INIT_PARAMS["prop"] as! String).encodeURL()
+            let fid = (self.CHAT_INIT_PARAMS["fid"] as! String).encodeURL()
+            let ec = (self.CHAT_INIT_PARAMS["ec"] as! String).encodeURL()
+            let pvt_enc = (self.CHAT_INIT_PARAMS["pvt"] as! String).encodeURL()
             let url = "\(CHAT_INIT_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)&pvt=\(pvt_enc)"
 			
 			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
@@ -131,8 +138,7 @@ public class Client : ChannelDelegate {
                 self.header_version = ((data_dict["ds:2"] as! NSArray)[0] as! NSArray)[6] as? String
                 self.header_id = ((data_dict["ds:4"] as! NSArray)[0] as! NSArray)[7] as? String
 
-                let self_entity = PBLiteSerialization.parseArray(GET_SELF_INFO_RESPONSE.self,
-					input: (data_dict["ds:20"] as! NSArray)[0] as? NSArray)!.self_entity
+                let self_entity = PBLiteSerialization.parseArray(GET_SELF_INFO_RESPONSE.self, input: (data_dict["ds:20"] as! NSArray)[0] as? NSArray)!.self_entity
 
                 let initial_conv_states_raw = ((data_dict["ds:19"] as! NSArray)[0] as! NSArray)[3] as! NSArray
                 let initial_conv_states = (initial_conv_states_raw as! [NSArray]).map {
@@ -262,7 +268,7 @@ public class Client : ChannelDelegate {
             "key": self.api_key!,
             "alt": use_json ? "json" : "protojson",
         ]
-        let url = NSURL(string: (path + "?" + params.urlEncodedQueryStringWithEncoding(NSUTF8StringEncoding)))!
+        let url = NSURL(string: (path + "?" + params.encodeURL()))!
         let request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "POST"
         request.HTTPBody = data
@@ -445,18 +451,14 @@ public class Client : ChannelDelegate {
             to_timestamp(read_timestamp), // latest_read_timestamp
         ]) { r in self.verifyResponseOK(r.result.value!); cb?() }
     }
-
-    //    @asyncio.coroutine
-    //    def getselfinfo(self):
-    //        """Return information about your account.
-    //
-    //        Raises hangups.NetworkError if the request fails.
-    //        """
-    //        self.request('contacts/getselfinfo', [
-    //            self.getRequestHeader(),
-    //            [], []
-    //        ])
-    //        return json.loads(res.body.decode())
+	
+	// FIXME: Doesn't return actual data, only calls cb.
+	public func getSelfInfo(cb: (() -> Void)? = nil) {
+		self.request("contacts/getselfinfo", body: [
+			self.getRequestHeader(),
+			[], []
+		]) { r in cb?()}
+	}
 	
 	// Set focus (occurs whenever you give focus to a client).
     public func setFocus(conversation_id: String, cb: (() -> Void)? = nil) {
@@ -481,51 +483,40 @@ public class Client : ChannelDelegate {
     //            max_results
     //        ])
     //        return json.loads(res.body.decode())
-    //
-    //    @asyncio.coroutine
-    //    def setpresence(self, online, mood=nil):
-    //        """Set the presence or mood of this client.
-    //
-    //        Raises hangups.NetworkError if the request fails.
-    //        """
-    //        self.request('presence/setpresence', [
-    //            self.getRequestHeader(),
-    //            [
-    //                # timeout_secs timeout in seconds for this presence
-    //                720,
-    //                # client_presence_state:
-    //                # 40 => DESKTOP_ACTIVE
-    //                # 30 => DESKTOP_IDLE
-    //                # 1 => nil
-    //                1 if online else 40,
-    //            ],
-    //            nil,
-    //            nil,
-    //            # True if going offline, False if coming online
-    //            [not online],
-    //            # UTF-8 smiley like 0x1f603
-    //            [mood],
-    //        ])
-    //        res = json.loads(res.body.decode())
-    //        res_status = res['response_header']['status']
-    //        if res_status != 'OK':
-    //            raise exceptions.NetworkError('Unexpected status: {}'
-    //                                          .format(res_status))
-    //
-    //    @asyncio.coroutine
-    //    def querypresence(self, chat_id):
-    //        """Check someone's presence status.
-    //
-    //        Raises hangups.NetworkError if the request fails.
-    //        """
-    //        self.request('presence/querypresence', [
-    //            self.getRequestHeader(),
-    //            [
-    //                [chat_id]
-    //            ],
-    //            [1, 2, 5, 7, 8]
-    //        ])
-    //        return json.loads(res.body.decode())
+	
+	
+	// FIXME: Doesn't return actual data, only calls cb.
+	/*public func setPresence(online: Bool, mood: String?, cb: (() -> Void)? = nil) {
+		self.request("contacts/getselfinfo", body: [
+			self.getRequestHeader(),
+			[
+				// timeout_secs timeout in seconds for this presence
+				720,
+				//client_presence_state:
+				// 40 => DESKTOP_ACTIVE
+				// 30 => DESKTOP_IDLE
+				// 1 => nil
+				(online ? 1 : 40),
+			],
+			nil,
+			nil,
+			// True if going offline, False if coming online
+			[!online],
+			// UTF-8 smiley like 0x1f603
+			[(mood ?? NSNull())]
+		]) { r in cb?()} // result['response_header']['status']
+	}*/
+	
+	// FIXME: Doesn't return actual data, only calls cb.
+	public func queryPresence(chat_id: String, cb: (() -> Void)? = nil) {
+		self.request("contacts/getselfinfo", body: [
+			self.getRequestHeader(),
+			[
+				[chat_id]
+			],
+			[1, 2, 5, 7, 8]
+		]) { r in cb?()}
+	}
 	
 	// Return information about a list of contacts.
     public func getEntitiesByID(chat_id_list: [String], cb: (GET_ENTITY_BY_ID_RESPONSE) -> Void) {
@@ -616,7 +607,9 @@ public class Client : ChannelDelegate {
     //            logger.warning('easteregg returned status {}'
     //                           .format(res_status))
     //            raise exceptions.NetworkError()
-    //
+	
+	
+	
     //    @asyncio.coroutine
     //    def createconversation(self, chat_id_list, force_group=False):
     //        """Create new conversation.
@@ -648,7 +641,9 @@ public class Client : ChannelDelegate {
     //            raise exceptions.NetworkError('Unexpected status: {}'
     //                                          .format(res_status))
     //        return res
-    //
+	
+	
+	
     //    @asyncio.coroutine
     //    def adduser(self, conversation_id, chat_id_list):
     //        """Add user to existing conversation.

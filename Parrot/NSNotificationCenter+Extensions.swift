@@ -7,8 +7,8 @@ Also has the benefit of not dealing with NSNotification.
 */
 
 @nonobjc public let Notifications = NSNotificationCenter.defaultCenter()
-public typealias Event = NSNotification
-public typealias NotificationToken = NSObjectProtocol
+public typealias Notification = NSNotification
+public typealias TokenObserver = NSObjectProtocol
 public extension NSNotificationCenter {
 	
 	/* POST */
@@ -27,14 +27,14 @@ public extension NSNotificationCenter {
 	
 	/* SUBSCRIBE */
 	
-	public func subscribe(name: String, block: (Event -> Void)) -> NotificationToken {
+	public func subscribe(name: String, block: (Notification -> Void)) -> TokenObserver {
 		return addObserverForName(name, object: nil, queue: nil) { notification in
 			block(notification)
 		}
 	}
 	
-	public func subscribe(notifications: [String: (Event -> Void)]) -> [NotificationToken] {
-		var tokens: [NotificationToken] = []
+	public func subscribe(notifications: [String: (Notification -> Void)]) -> [TokenObserver] {
+		var tokens: [TokenObserver] = []
 		for (name, block) in notifications {
 			tokens.append(addObserverForName(name, object: nil, queue: nil) { notification in
 				block(notification)

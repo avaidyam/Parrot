@@ -10,7 +10,7 @@ extension NSOperationQueue {
 	}
 	
 	public class func current() -> NSOperationQueue {
-		return NSOperationQueue.currentQueue()!
+		return NSOperationQueue.currentQueue() ?? NSOperationQueue.mainQueue()
 	}
 	
 	public func pause() -> NSOperationQueue {
@@ -43,3 +43,12 @@ extension NSOperationQueue {
 		return self
 	}
 }
+
+public func mainQueue() -> NSOperationQueue {
+	return NSOperationQueue.mainQueue()
+}
+
+public func currentQueue() -> NSOperationQueue {
+	return NSOperationQueue.currentQueue() ?? NSOperationQueue.mainQueue()
+}
+

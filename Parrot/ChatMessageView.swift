@@ -1,7 +1,7 @@
 import Cocoa
 import Hangouts
 
-class ChatMessageView : NSView {
+class ChatMessageView : NSTableCellView {
     enum Orientation {
         case Left
         case Right

@@ -82,7 +82,7 @@ public class Channel : NSObject {
 	// This method uses keep-alive to make re-opening the request faster, but
 	// the remote server will set the "Connection: close" header once an hour.
     public func makeLongPollingRequest() {
-        let queryString = "VER=8&RID=rpc&t=1&CI=0&ctype=hangouts&TYPE=xmlhttp&gsessionid=\(gSessionIDParam!.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!)&SID=\(sidParam!.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!)"
+        let queryString = "VER=8&RID=rpc&t=1&CI=0&ctype=hangouts&TYPE=xmlhttp&gsessionid=\(gSessionIDParam!.encodeURL())&SID=\(sidParam!.encodeURL())"
         let url = "\(CHANNEL_URL_PREFIX)/channel/bind?\(queryString)"
 
         //  TODO: Include timeout
@@ -190,8 +190,8 @@ public class Channel : NSObject {
 				"req1_p": "{\"1\":{\"1\":{\"1\":{\"1\":3,\"2\":2}},\"2\":{\"1\":{\"1\":3,\"2\":2},\"2\":\"\",\"3\":\"JS\",\"4\":\"lcsclient\"},\"3\":\(timestamp),\"4\":\(timestamp),\"5\":\"c3\"},\"3\":{\"1\":{\"1\":\"babel\"}}}",
 				"req2_p": "{\"1\":{\"1\":{\"1\":{\"1\":3,\"2\":2}},\"2\":{\"1\":{\"1\":3,\"2\":2},\"2\":\"\",\"3\":\"JS\",\"4\":\"lcsclient\"},\"3\":\(timestamp),\"4\":\(timestamp),\"5\":\"c4\"},\"3\":{\"1\":{\"1\":\"hangout_invite\"}}}",
 			]
-			let postBody = data.urlEncodedQueryStringWithEncoding(NSUTF8StringEncoding)
-			let queryString = (["VER": 8, "RID": 81188, "ctype": "hangouts", "gsessionid": self.gSessionIDParam!, "SID": self.sidParam!] as Dictionary<String, AnyObject>).urlEncodedQueryStringWithEncoding(NSUTF8StringEncoding)
+			let postBody = data.encodeURL()
+			let queryString = (["VER": 8, "RID": 81188, "ctype": "hangouts", "gsessionid": self.gSessionIDParam!, "SID": self.sidParam!] as Dictionary<String, AnyObject>).encodeURL()
 			
 			let url = "\(self.CHANNEL_URL_PREFIX)/channel/bind?\(queryString)"
 			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
@@ -226,18 +226,7 @@ public class Channel : NSObject {
 
 extension Dictionary {
 	
-	public func queryStringWithEncoding() -> String {
-		var parts = [String]()
-		for (key, value) in self {
-			let keyString: String = "\(key)"
-			let valueString: String = "\(value)"
-			let query: String = "\(keyString)=\(valueString)"
-			parts.append(query)
-		}
-		return parts.joinWithSeparator("&")
-	}
-	
-	public func urlEncodedQueryStringWithEncoding(encoding: NSStringEncoding) -> String {
+	public func encodeURL() -> String {
 		let set = NSCharacterSet(charactersInString: ":/?&=;+!@#$()',*")
 		
 		var parts = [String]()

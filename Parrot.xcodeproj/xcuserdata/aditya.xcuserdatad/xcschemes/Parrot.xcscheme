@@ -103,9 +103,9 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "CA_DEBUG_TRANSACTIONS"
-            value = "1"
-            isEnabled = "NO">
+            key = "_code"
+            value = "1/70ltKVkuHWPZJMhQBYIEIxEeVQYMtRLKaSiCUC3JsjlCGTfw2w879ie8u08gMKME"
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>

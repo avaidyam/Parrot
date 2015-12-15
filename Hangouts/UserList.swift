@@ -106,13 +106,13 @@ public func buildUserList(client: Client, initial_data: InitialData, cb: (UserLi
 	let all_entities = initial_data.entities + [initial_data.self_entity]
 	let present_user_ids = Set(all_entities.map {
 		UserID(chat_id: $0.id.chat_id as! String, gaia_id: $0.id.gaia_id as! String)
-		})
+	})
 	
 	var required_user_ids = Set<UserID>()
 	for conv_state in initial_data.conversation_states {
 		required_user_ids = required_user_ids.union(Set(conv_state.conversation.participant_data.map {
 			UserID(chat_id: $0.id.chat_id as! String, gaia_id: $0.id.gaia_id as! String)
-			}))
+		}))
 	}
 	
 	let missing_user_ids = required_user_ids.subtract(present_user_ids)
@@ -123,7 +123,7 @@ public func buildUserList(client: Client, initial_data: InitialData, cb: (UserLi
 				self_entity: initial_data.self_entity,
 				entities: initial_data.entities + missing_entities.entities,
 				conv_parts: initial_data.conversation_participants
-				))
+			))
 		}
 	} else {
 		cb(UserList(
@@ -131,6 +131,6 @@ public func buildUserList(client: Client, initial_data: InitialData, cb: (UserLi
 			self_entity: initial_data.self_entity,
 			entities: initial_data.entities,
 			conv_parts: initial_data.conversation_participants
-			))
+		))
 	}
 }
