@@ -105,13 +105,13 @@ public class UserList : NSObject {
 public func buildUserList(client: Client, initial_data: InitialData, cb: (UserList) -> Void) {
 	let all_entities = initial_data.entities + [initial_data.self_entity]
 	let present_user_ids = Set(all_entities.map {
-		UserID(chat_id: $0.id.chat_id as String, gaia_id: $0.id.gaia_id as String)
+		UserID(chat_id: $0.id.chat_id as! String, gaia_id: $0.id.gaia_id as! String)
 		})
 	
 	var required_user_ids = Set<UserID>()
 	for conv_state in initial_data.conversation_states {
 		required_user_ids = required_user_ids.union(Set(conv_state.conversation.participant_data.map {
-			UserID(chat_id: $0.id.chat_id as String, gaia_id: $0.id.gaia_id as String)
+			UserID(chat_id: $0.id.chat_id as! String, gaia_id: $0.id.gaia_id as! String)
 			}))
 	}
 	

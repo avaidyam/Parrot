@@ -1,9 +1,5 @@
 import Foundation
 
-/* TODO: Support `oneof` and nested `Message` types. */
-/* TODO: Step away from using NS* types with Swift reflection. */
-/* TODO: Convert to Swift `enum` and `struct` types. */
-
 /****************************************
 *										*
 *				  ENUMS 				*
@@ -321,21 +317,33 @@ public class PhoneValidationResult : Enum  {
  *										*
  ****************************************/
 
-@objc(CONVERSATION_ID)
-public class CONVERSATION_ID : Message {
-    public var id: NSString = ""
+@objc(DO_NOT_DISTURB_SETTING)
+public class DO_NOT_DISTURB_SETTING : Message {
+	public var do_not_disturb: NSNumber? = nil
+	public var expiration_timestamp: NSNumber? = nil
+	public var version: NSNumber? = nil
 }
 
-@objc(USER_ID)
-public class USER_ID : Message {
-    public var gaia_id: NSString = ""
-    public var chat_id: NSString = ""
+@objc(NOTIFICATION_SETTINGS)
+public class NOTIFICATION_SETTINGS : Message {
+	public var dnd_settings: DO_NOT_DISTURB_SETTING? = nil
+}
+
+@objc(CONVERSATION_ID)
+public class CONVERSATION_ID : Message {
+    public var id: NSString? = nil
+}
+
+@objc(PARTICIPANT_ID)
+public class PARTICIPANT_ID : Message {
+    public var gaia_id: NSString? = nil
+    public var chat_id: NSString? = nil
 }
 
 @objc(CLIENT_SET_TYPING_NOTIFICATION)
 public class CLIENT_SET_TYPING_NOTIFICATION : Message {
     public var conversation_id = CONVERSATION_ID()
-    public var user_id = USER_ID()
+    public var user_id = PARTICIPANT_ID()
     public var timestamp: NSNumber = 0
     public var status: TypingType = 0
 }
@@ -343,7 +351,7 @@ public class CLIENT_SET_TYPING_NOTIFICATION : Message {
 @objc(CLIENT_SET_FOCUS_NOTIFICATION)
 public class CLIENT_SET_FOCUS_NOTIFICATION : Message {
     public var conversation_id = CONVERSATION_ID()
-    public var user_id = USER_ID()
+    public var user_id = PARTICIPANT_ID()
     public var timestamp: NSString = ""
     public var status: FocusType = 0
     public var device: FocusDevice?
@@ -351,7 +359,7 @@ public class CLIENT_SET_FOCUS_NOTIFICATION : Message {
 
 @objc(CLIENT_CONVERSATION_READ_STATE)
 public class CLIENT_CONVERSATION_READ_STATE : Message {
-    public var participant_id = USER_ID()
+    public var participant_id = PARTICIPANT_ID()
     public var latest_read_timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
 }
 
@@ -371,7 +379,7 @@ public class CLIENT_CONVERSATION_INTERNAL_STATE : Message {
 
     public var view = [ConversationView]()
 
-    public var inviter_id = USER_ID()
+    public var inviter_id = PARTICIPANT_ID()
     public var invite_timestamp: NSString = ""
     public var sort_timestamp: NSDate?
     public var active_timestamp: NSDate?
@@ -384,7 +392,7 @@ public class CLIENT_CONVERSATION_INTERNAL_STATE : Message {
 
 @objc(CLIENT_CONVERSATION_PARTICIPANT_DATA)
 public class CLIENT_CONVERSATION_PARTICIPANT_DATA : Message {
-    public var id = USER_ID()
+    public var id = PARTICIPANT_ID()
     public var fallback_name: NSString?
     public var field: AnyObject? = nil
 }
@@ -403,7 +411,7 @@ public class CLIENT_CONVERSATION : Message {
     public var otr_status: OffTheRecordStatus = 0
     public var otr_toggle: AnyObject? = nil
     public var conversation_history_supported: AnyObject? = nil
-    public var current_participant = [USER_ID]()
+    public var current_participant = [PARTICIPANT_ID]()
     public var participant_data = [CLIENT_CONVERSATION_PARTICIPANT_DATA]()
     public var field15: AnyObject? = nil
     public var field16: AnyObject? = nil
@@ -472,7 +480,7 @@ public class CLIENT_CONVERSATION_RENAME : Message {
 @objc(CLIENT_HANGOUT_EVENT)
 public class CLIENT_HANGOUT_EVENT : Message {
     public var event_type: HangoutEventType = 0
-    public var participant_id = [USER_ID]()
+    public var participant_id = [PARTICIPANT_ID]()
     public var hangout_duration_secs: NSNumber?
     public var transferred_conversation_id: NSString?
     public var refresh_timeout_secs: NSNumber?
@@ -492,13 +500,13 @@ public class CLIENT_OTR_MODIFICATION : Message {
 public class CLIENT_MEMBERSHIP_CHANGE : Message {
     public var type: MembershipChangeType = 0
     public var field1 = NSArray()
-    public var participant_ids = [USER_ID]()
+    public var participant_ids = [PARTICIPANT_ID]()
     public var field2: AnyObject? = nil
 }
 
 @objc(CLIENT_EVENT_STATE)
 public class CLIENT_EVENT_STATE : Message {
-    public var user_id = USER_ID()
+    public var user_id = PARTICIPANT_ID()
     public var client_generated_id: AnyObject? = nil
     public var notification_level: NotificationLevel = 0
 }
@@ -506,7 +514,7 @@ public class CLIENT_EVENT_STATE : Message {
 @objc(CLIENT_EVENT)
 public class CLIENT_EVENT : Message {
     public var conversation_id = CONVERSATION_ID()
-    public var sender_id = USER_ID()
+    public var sender_id = PARTICIPANT_ID()
     public var timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
 	public var self_event_state : CLIENT_EVENT_STATE?
 	public var field5: AnyObject? = nil
@@ -540,7 +548,7 @@ public class CLIENT_EVENT_NOTIFICATION : Message {
 
 @objc(CLIENT_WATERMARK_NOTIFICATION)
 public class CLIENT_WATERMARK_NOTIFICATION : Message {
-    public var participant_id = USER_ID()
+    public var participant_id = PARTICIPANT_ID()
     public var conversation_id = CONVERSATION_ID()
     public var latest_read_timestamp: NSNumber = 0
 }
@@ -616,7 +624,7 @@ public class CLIENT_ENTITY : Message {
     public var field6: AnyObject? = nil
     public var field7: AnyObject? = nil
     public var field8: AnyObject? = nil
-    public var id = USER_ID()
+    public var id = PARTICIPANT_ID()
 
     public var properties = CLIENT_ENTITY_PROPERTIES()
 }
@@ -685,3 +693,794 @@ public class CLIENT_GET_ENTITY_BY_ID_RESPONSE : Message {
     public var response_header = CLIENT_RESPONSE_HEADER()
     public var entities = [CLIENT_ENTITY]()
 }
+
+/*
+message DeviceStatus {
+	optional bool mobile = 1;
+	optional bool desktop = 2;
+	optional bool tablet = 3;
+}
+
+message Presence {
+	optional bool reachable = 1;
+	optional bool available = 2;
+	optional DeviceStatus device_status = 6;
+	optional MoodSetting mood_setting = 9;
+}
+
+message PresenceResult {
+	optional ParticipantId user_id = 1;
+	optional Presence presence = 2;
+}
+
+message ClientIdentifier {
+	optional string resource = 1;
+	optional string header_id = 2;
+}
+
+message ClientPresenceState {
+	optional ClientIdentifier identifier = 1;
+	optional ClientPresenceStateType state = 2;
+}
+
+message UserEventState {
+	optional ParticipantId user_id = 1;
+	optional string client_generated_id = 2;
+	optional NotificationLevel notification_level = 3;
+}
+
+message Formatting {
+	optional bool bold = 1;
+	optional bool italic = 2;
+	optional bool strikethrough = 3;
+	optional bool underline = 4;
+}
+
+message LinkData {
+	optional string link_target = 1;
+}
+
+message Segment {
+	required SegmentType type = 1;
+	optional string text = 2;
+	optional Formatting formatting = 3;
+	optional LinkData link_data = 4;
+}
+
+message Thumbnail {
+	optional string url = 1;
+	optional string image_url = 4;
+	optional uint64 width_px = 10;
+	optional uint64 height_px = 11;
+}
+
+message PlusPhoto {
+	optional Thumbnail thumbnail = 1;
+	optional string owner_obfuscated_id = 2;
+	optional string album_id = 3;
+	optional string photo_id = 4;
+	optional string url = 6;
+	optional string original_content_url = 10;
+	optional MediaType media_type = 13;
+	repeated string stream_id = 14;
+}
+
+message RepresentativeImage {
+	optional string url = 2;
+}
+
+message Place {
+	optional string url = 1;
+	optional string name = 3;
+	optional RepresentativeImage representative_image = 185;
+}
+
+message EmbedItem {
+	repeated ItemType type = 1;
+	optional string id = 2;
+	optional PlusPhoto plus_photo = 27639957;
+	optional Place place = 35825640;
+}
+
+message Attachment {
+	optional EmbedItem embed_item = 1;
+}
+
+message MessageContent {
+	repeated Segment segment = 1;
+	repeated Attachment attachment = 2;
+}
+
+message EventAnnotation {
+	optional int32 type = 1;
+	optional string value = 2;
+}
+
+message ChatMessage {
+	repeated EventAnnotation annotation = 2;
+	optional MessageContent message_content = 3;
+}
+
+message MembershipChange {
+	optional MembershipChangeType type = 1;
+	repeated ParticipantId participant_ids = 3;
+}
+
+message ConversationRename {
+	optional string new_name = 1;
+	optional string old_name = 2;
+}
+
+message HangoutEvent {
+	optional HangoutEventType event_type = 1;
+	repeated ParticipantId participant_id = 2;
+}
+
+message OTRModification {
+	optional OffTheRecordStatus old_otr_status = 1;
+	optional OffTheRecordStatus new_otr_status = 2;
+	optional OffTheRecordToggle old_otr_toggle = 3;
+	optional OffTheRecordToggle new_otr_toggle = 4;
+}
+
+message HashModifier {
+	optional string update_id = 1;
+	optional uint64 hash_diff = 2;
+	optional uint64 version = 4;
+}
+
+message Event {
+	optional ConversationId conversation_id = 1;
+	optional ParticipantId sender_id = 2;
+	optional uint64 timestamp = 3;
+	optional UserEventState self_event_state = 4;
+	optional SourceType source_type = 6;
+	optional ChatMessage chat_message = 7;
+	optional MembershipChange membership_change = 9;
+	optional ConversationRename conversation_rename = 10;
+	optional HangoutEvent hangout_event = 11;
+	optional string event_id = 12;
+	optional uint64 expiration_timestamp = 13;
+	optional OTRModification otr_modification = 14;
+	optional bool advances_sort_timestamp = 15;
+	optional OffTheRecordStatus otr_status = 16;
+	optional bool persisted = 17;
+	optional DeliveryMedium medium_type = 20;
+	optional EventType event_type = 23;
+	optional uint64 event_version = 24;
+	optional HashModifier hash_modifier = 26;
+}
+
+message UserReadState {
+	optional ParticipantId participant_id = 1;
+	optional uint64 latest_read_timestamp = 2;
+}
+
+message DeliveryMedium {
+	optional DeliveryMediumType medium_type = 1;
+	optional Phone phone = 2;
+}
+
+message DeliveryMediumOption {
+	optional DeliveryMedium delivery_medium = 1;
+	optional bool current_default = 2;
+}
+
+message UserConversationState {
+	optional string client_generated_id = 2;
+	optional UserReadState self_read_state = 7;
+	optional ConversationStatus status = 8;
+	optional NotificationLevel notification_level = 9;
+	repeated ConversationView view = 10;
+	optional ParticipantId inviter_id = 11;
+	optional uint64 invite_timestamp = 12;
+	optional uint64 sort_timestamp = 13;
+	optional uint64 active_timestamp = 14;
+	repeated DeliveryMediumOption delivery_medium_option = 17;
+}
+
+message ConversationParticipantData {
+	optional ParticipantId id = 1;
+	optional string fallback_name = 2;
+	optional InvitationStatus invitation_status = 3;
+	optional ParticipantType participant_type = 5;
+	optional InvitationStatus new_invitation_status = 6;
+}
+
+message Conversation {
+	optional ConversationId conversation_id = 1;
+	optional ConversationType type = 2;
+	optional string name = 3;
+	optional UserConversationState self_conversation_state = 4;
+	repeated UserReadState read_state = 8;
+	optional bool has_active_hangout = 9;
+	optional OffTheRecordStatus otr_status = 10;
+	optional OffTheRecordToggle otr_toggle = 11;
+	optional bool conversation_history_supported = 12;
+	repeated ParticipantId current_participant = 13;
+	repeated ConversationParticipantData participant_data = 14;
+	repeated NetworkType network_type = 18;
+	optional ForceHistory force_history_state = 19;
+}
+
+message EasterEgg {
+	optional string message = 1;
+}
+
+
+message BlockStateChange {
+	optional ParticipantId participant_id = 1;
+	optional BlockState new_block_state = 2;
+}
+
+message Photo {
+	optional string photo_id = 1;
+	optional bool delete_albumless_source_photo = 2;
+	optional string user_id = 3;
+	optional bool is_custom_user_id = 4;
+}
+
+message ExistingMedia {
+	optional Photo photo = 1;
+}
+
+message EventRequestHeader {
+	optional ConversationId conversation_id = 1;
+	optional uint64 client_generated_id = 2;
+	optional OffTheRecordStatus expected_otr = 3;
+	optional DeliveryMedium delivery_medium = 4;
+	optional EventType event_type = 5;
+}
+
+message ClientVersion {
+	optional ClientId client_id = 1;
+	optional ClientBuildType build_type = 2;
+	optional string major_version = 3;
+	optional uint64 version_timestamp = 4;
+	optional string device_os_version = 5;
+	optional string device_hardware = 6;
+}
+
+message RequestHeader {
+	optional ClientVersion client_version = 1;
+	optional ClientIdentifier client_identifier = 2;
+	optional string language_code = 4;
+}
+
+message Entity {
+	optional ParticipantId id = 9;
+	optional Presence presence = 8;
+	optional EntityProperties properties = 10;
+	optional ParticipantType entity_type = 13;
+	optional PastHangoutState had_past_hangout_state = 16;
+}
+
+message EntityProperties {
+	optional ProfileType type = 1;
+	optional string display_name = 2;
+	optional string first_name = 3;
+	optional string photo_url = 4;
+	repeated string email = 5;
+	repeated string phone = 6;
+	optional bool in_users_domain = 10;
+	optional Gender gender = 11;
+	optional PhotoUrlStatus photo_url_status = 12;
+	optional string canonical_email = 15;
+}
+
+message ConversationState {
+	optional ConversationId conversation_id = 1;
+	optional Conversation conversation = 2;
+	repeated Event event = 3;
+	optional EventContinuationToken event_continuation_token = 5;
+}
+
+message EventContinuationToken {
+	optional string event_id = 1;
+	optional bytes storage_continuation_token = 2;
+	optional uint64 event_timestamp = 3;
+}
+
+message EntityLookupSpec {
+	optional string gaia_id = 1;
+}
+
+message ConfigurationBit {
+	optional ConfigurationBitType configuration_bit_type = 1;
+	optional bool value = 2;
+}
+
+message RichPresenceState {
+	repeated RichPresenceEnabledState get_rich_presence_enabled_state = 3;
+}
+
+message RichPresenceEnabledState {
+	optional RichPresenceType type = 1;
+	optional bool enabled = 2;
+}
+
+message DesktopOffSetting {
+	optional bool desktop_off = 1;
+}
+
+message DesktopOffState {
+	optional bool desktop_off = 1;
+	optional uint64 version = 2;
+}
+
+message DndSetting {
+	optional bool do_not_disturb = 1;
+	optional uint64 timeout_secs = 2;
+}
+
+message PresenceStateSetting {
+	optional uint64 timeout_secs = 1;
+	optional ClientPresenceStateType type = 2;
+}
+
+message MoodMessage {
+	optional MoodContent mood_content = 1;
+}
+
+message MoodContent {
+	repeated Segment segment = 1;
+}
+
+message MoodSetting {
+	optional MoodMessage mood_message = 1;
+}
+
+message MoodState {
+	optional MoodSetting mood_setting = 4;
+}
+
+message DeleteAction {
+	optional uint64 delete_action_timestamp = 1;
+	optional uint64 delete_upper_bound_timestamp = 2;
+	optional DeleteType delete_type = 3;
+}
+
+message InviteeID {
+	optional string gaia_id = 1;
+	optional string fallback_name = 4;
+}
+
+message Country {
+	optional string region_code = 1;
+	optional uint64 country_code = 2;
+}
+
+message DesktopSoundSetting {
+	optional SoundState desktop_sound_state = 1;
+	optional SoundState desktop_ring_sound_state = 2;
+}
+
+message PhoneData {
+	repeated Phone phone = 1;
+	optional CallerIdSettingsMask caller_id_settings_mask = 3;
+}
+
+message Phone {
+	optional PhoneNumber phone_number = 1;
+	optional bool google_voice = 2;
+	optional PhoneVerificationStatus verification_status = 3;
+	optional bool discoverable = 4;
+	optional PhoneDiscoverabilityStatus discoverability_status = 5;
+	optional bool primary = 6;
+}
+
+enum PhoneValidationResult {
+	PHONE_VALIDATION_RESULT_IS_POSSIBLE = 0;
+}
+
+message I18nData {
+	optional string national_number = 1;
+	optional string international_number = 2;
+	optional uint64 country_code = 3;
+	optional string region_code = 4;
+	optional bool is_valid = 5;
+	optional PhoneValidationResult validation_result = 6;
+}
+
+message PhoneNumber {
+	optional string e164 = 1;
+	optional I18nData i18n_data = 2;
+}
+
+message SuggestedContactGroupHash {
+	optional uint64 max_results = 1;
+	optional bytes hash = 2;
+}
+
+message SuggestedContact {
+	optional Entity entity = 1;
+	optional InvitationStatus invitation_status = 2;
+}
+
+message SuggestedContactGroup {
+	optional bool hash_matched = 1;
+	optional bytes hash = 2;
+	repeated SuggestedContact contact = 3;
+}
+
+message StateUpdate {
+	optional StateUpdateHeader state_update_header = 1;
+	optional Conversation conversation = 13;
+	
+	// How to implement oneof in Swift?
+	oneof state_update {
+		EventNotification event_notification = 3;
+		SetFocusNotification focus_notification = 4;
+		SetTypingNotification typing_notification = 5;
+		SetConversationNotificationLevelNotification notification_level_notification = 6;
+		ReplyToInviteNotification reply_to_invite_notification = 7;
+		WatermarkNotification watermark_notification = 8;
+		ConversationViewModification view_modification = 11;
+		EasterEggNotification easter_egg_notification = 12;
+		SelfPresenceNotification self_presence_notification = 14;
+		DeleteActionNotification delete_notification = 15;
+		PresenceNotification presence_notification = 16;
+		BlockNotification block_notification = 17;
+		SetNotificationSettingNotification notification_setting_notification = 19;
+		RichPresenceEnabledStateNotification rich_presence_enabled_state_notification = 20;
+	}
+}
+
+message StateUpdateHeader {
+	optional ActiveClientState active_client_state = 1;
+	optional string request_trace_id = 3;
+	optional NotificationSettings notification_settings = 4;
+	optional uint64 current_server_time = 5;
+}
+
+message BatchUpdate {
+	repeated StateUpdate state_update = 1;
+}
+
+message EventNotification {
+	optional Event event = 1;
+}
+
+message SetFocusNotification {
+	optional ConversationId conversation_id = 1;
+	optional ParticipantId sender_id = 2;
+	optional uint64 timestamp = 3;
+	optional FocusType type = 4;
+	optional FocusDevice device = 5;
+}
+
+message SetTypingNotification {
+	optional ConversationId conversation_id = 1;
+	optional ParticipantId sender_id = 2;
+	optional uint64 timestamp = 3;
+	optional TypingType type = 4;
+}
+
+message SetConversationNotificationLevelNotification {
+	optional ConversationId conversation_id = 1;
+	optional NotificationLevel level = 2;
+	optional uint64 timestamp = 4;
+}
+
+message ReplyToInviteNotification {
+	optional ConversationId conversation_id = 1;
+	optional ReplyToInviteType type = 2;
+}
+
+message WatermarkNotification {
+	optional ParticipantId sender_id = 1;
+	optional ConversationId conversation_id = 2;
+	optional uint64 latest_read_timestamp = 3;
+}
+
+message ConversationViewModification {
+	optional ConversationId conversation_id = 1;
+	optional ConversationView old_view = 2;
+	optional ConversationView new_view = 3;
+}
+
+message EasterEggNotification {
+	optional ParticipantId sender_id = 1;
+	optional ConversationId conversation_id = 2;
+	optional EasterEgg easter_egg = 3;
+}
+
+message SelfPresenceNotification {
+	optional ClientPresenceState client_presence_state = 1;
+	optional DoNotDisturbSetting do_not_disturb_setting = 3;
+	optional DesktopOffSetting desktop_off_setting = 4;
+	optional DesktopOffState desktop_off_state = 5;
+	optional MoodState mood_state = 6;
+}
+
+message DeleteActionNotification {
+	optional ConversationId conversation_id = 1;
+	optional DeleteAction delete_action = 2;
+}
+
+message PresenceNotification {
+	repeated PresenceResult presence = 1;
+}
+
+message BlockNotification {
+	repeated BlockStateChange block_state_change = 1;
+}
+
+message SetNotificationSettingNotification {
+	optional DesktopSoundSetting desktop_sound_setting = 2;
+}
+
+message RichPresenceEnabledStateNotification {
+	repeated RichPresenceEnabledState rich_presence_enabled_state = 1;
+}
+
+message ConversationSpec {
+	optional ConversationId conversation_id = 1;
+}
+
+message AddUserRequest {
+	optional RequestHeader request_header = 1;
+	repeated InviteeID invitee_id = 3;
+	optional EventRequestHeader event_request_header = 5;
+}
+
+message AddUserResponse {
+	optional ResponseHeader response_header = 1;
+	optional Event created_event = 5;
+}
+
+message CreateConversationRequest {
+	optional RequestHeader request_header = 1;
+	optional ConversationType type = 2;
+	optional uint64 client_generated_id = 3;
+	optional string name = 4;
+	repeated InviteeID invitee_id = 5;
+}
+
+message CreateConversationResponse {
+	optional ResponseHeader response_header = 1;
+	optional Conversation conversation = 2;
+	optional bool new_conversation_created = 7;
+}
+
+message DeleteConversationRequest {
+	optional RequestHeader request_header = 1;
+	optional ConversationId conversation_id = 2;
+	optional uint64 delete_upper_bound_timestamp = 3;
+}
+
+message DeleteConversationResponse {
+	optional ResponseHeader response_header = 1;
+	optional DeleteAction delete_action = 2;
+}
+
+message EasterEggRequest {
+	optional RequestHeader request_header = 1;
+	optional ConversationId conversation_id = 2;
+	optional EasterEgg easter_egg = 3;
+}
+
+message EasterEggResponse {
+	optional ResponseHeader response_header = 1;
+	optional uint64 timestamp = 2;
+}
+
+message GetConversationRequest {
+	optional RequestHeader request_header = 1;
+	optional ConversationSpec conversation_spec = 2;
+	optional bool include_event = 4;
+	optional uint64 max_events_per_conversation = 6;
+	optional EventContinuationToken event_continuation_token = 7;
+}
+
+message GetConversationResponse {
+	optional ResponseHeader response_header = 1;
+	optional ConversationState conversation_state = 2;
+}
+
+message GetEntityByIdRequest {
+	optional RequestHeader request_header = 1;
+	repeated EntityLookupSpec batch_lookup_spec = 3;
+}
+
+message GetEntityByIdResponse {
+	optional ResponseHeader response_header = 1;
+	repeated Entity entity = 2;
+}
+
+message GetSuggestedEntitiesRequest {
+	optional RequestHeader request_header = 1;
+	optional SuggestedContactGroupHash favorites = 8;
+	optional SuggestedContactGroupHash contacts_you_hangout_with = 9;
+	optional SuggestedContactGroupHash other_contacts_on_hangouts = 10;
+	optional SuggestedContactGroupHash other_contacts = 11;
+	optional SuggestedContactGroupHash dismissed_contacts = 12;
+	optional SuggestedContactGroupHash pinned_favorites = 13;
+}
+
+message GetSuggestedEntitiesResponse {
+	optional ResponseHeader response_header = 1;
+	repeated Entity entity = 2;
+	optional SuggestedContactGroup favorites = 4;
+	optional SuggestedContactGroup contacts_you_hangout_with = 5;
+	optional SuggestedContactGroup other_contacts_on_hangouts = 6;
+	optional SuggestedContactGroup other_contacts = 7;
+	optional SuggestedContactGroup dismissed_contacts = 8;
+	optional SuggestedContactGroup pinned_favorites = 9;
+}
+
+message GetSelfInfoRequest {
+	optional RequestHeader request_header = 1;
+}
+
+message GetSelfInfoResponse {
+	optional ResponseHeader response_header = 1;
+	optional Entity self_entity = 2;
+	optional bool is_known_minor = 3;
+	optional DoNotDisturbSetting dnd_state = 5;
+	optional DesktopOffSetting desktop_off_setting = 6;
+	optional PhoneData phone_data = 7;
+	repeated ConfigurationBit configuration_bit = 8;
+	optional DesktopOffState desktop_off_state = 9;
+	optional bool google_plus_user = 10;
+	optional DesktopSoundSetting desktop_sound_setting = 11;
+	optional RichPresenceState rich_presence_state = 12;
+	optional Country default_country = 19;
+}
+
+message QueryPresenceRequest {
+	optional RequestHeader request_header = 1;
+	repeated ParticipantId participant_id = 2;
+	repeated FieldMask field_mask = 3;
+}
+
+message QueryPresenceResponse {
+	optional ResponseHeader response_header = 1;
+	repeated PresenceResult presence_result = 2;
+}
+
+message RemoveUserRequest {
+	optional RequestHeader request_header = 1;
+	optional EventRequestHeader event_request_header = 5;
+}
+
+message RemoveUserResponse {
+	optional ResponseHeader response_header = 1;
+	optional Event created_event = 4;
+}
+
+message RenameConversationRequest {
+	optional RequestHeader request_header = 1;
+	optional string new_name = 3;
+	optional EventRequestHeader event_request_header = 5;
+}
+
+message RenameConversationResponse {
+	optional ResponseHeader response_header = 1;
+	optional Event created_event = 4;
+}
+
+message SearchEntitiesRequest {
+	optional RequestHeader request_header = 1;
+	optional string query = 3;
+	optional uint64 max_count = 4;
+}
+
+message SearchEntitiesResponse {
+	optional ResponseHeader response_header = 1;
+	repeated Entity entity = 2;
+}
+
+message SendChatMessageRequest {
+	optional RequestHeader request_header = 1;
+	repeated EventAnnotation annotation = 5;
+	optional MessageContent message_content = 6;
+	optional ExistingMedia existing_media = 7;
+	optional EventRequestHeader event_request_header = 8;
+}
+
+message SendChatMessageResponse {
+	optional ResponseHeader response_header = 1;
+	optional Event created_event = 6;
+}
+
+message SetActiveClientRequest {
+	optional RequestHeader request_header = 1;
+	optional bool is_active = 2;
+	optional string full_jid = 3;
+	optional uint64 timeout_secs = 4;
+}
+
+message SetActiveClientResponse {
+	optional ResponseHeader response_header = 1;
+}
+
+message SetConversationLevelRequest {
+	optional RequestHeader request_header = 1;
+}
+
+message SetConversationLevelResponse {
+	optional ResponseHeader response_header = 1;
+}
+
+message SetConversationNotificationLevelRequest {
+	optional RequestHeader request_header = 1;
+	optional ConversationId conversation_id = 2;
+	optional NotificationLevel level = 3;
+}
+
+message SetConversationNotificationLevelResponse {
+	optional ResponseHeader response_header = 1;
+	optional uint64 timestamp = 2;
+}
+
+message SetFocusRequest {
+	optional RequestHeader request_header = 1;
+	optional ConversationId conversation_id = 2;
+	optional FocusType type = 3;
+	optional uint32 timeout_secs = 4;
+}
+
+message SetFocusResponse {
+	optional ResponseHeader response_header = 1;
+	optional uint64 timestamp = 2;
+}
+
+message SetPresenceRequest {
+	optional RequestHeader request_header = 1;
+	optional PresenceStateSetting presence_state_setting = 2;
+	optional DndSetting dnd_setting = 3;
+	optional DesktopOffSetting desktop_off_setting = 5;
+	optional MoodSetting mood_setting = 8;
+}
+
+message SetPresenceResponse {
+	optional ResponseHeader response_header = 1;
+}
+
+message SetTypingRequest {
+	optional RequestHeader request_header = 1;
+	optional ConversationId conversation_id = 2;
+	optional TypingType type = 3;
+}
+
+message SetTypingResponse {
+	optional ResponseHeader response_header = 1;
+	optional uint64 timestamp = 2;
+}
+
+message SyncAllNewEventsRequest {
+	optional RequestHeader request_header = 1;
+	optional uint64 last_sync_timestamp = 2;
+	optional uint64 max_response_size_bytes = 8;
+}
+
+message SyncAllNewEventsResponse {
+	optional ResponseHeader response_header = 1;
+	optional uint64 sync_timestamp = 2;
+	repeated ConversationState conversation_state = 3;
+}
+
+message SyncRecentConversationsRequest {
+	optional RequestHeader request_header = 1;
+	optional uint64 max_conversations = 3;
+	optional uint64 max_events_per_conversation = 4;
+	repeated SyncFilter sync_filter = 5;
+}
+
+message SyncRecentConversationsResponse {
+	optional ResponseHeader response_header = 1;
+	optional uint64 sync_timestamp = 2;
+	repeated ConversationState conversation_state = 3;
+}
+
+message UpdateWatermarkRequest {
+	optional RequestHeader request_header = 1;
+	optional ConversationId conversation_id = 2;
+	optional uint64 last_read_timestamp = 3;
+}
+
+message UpdateWatermarkResponse {
+	optional ResponseHeader response_header = 1;
+}
+*/

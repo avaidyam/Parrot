@@ -27,7 +27,7 @@ public struct User {
 	// Initialize from a ClientEntity.
 	// If self_user_id is nil, assume this is the self user.
     public init(entity: CLIENT_ENTITY, self_user_id: UserID?) {
-        let user_id = UserID(chat_id: entity.id.chat_id as String, gaia_id: entity.id.gaia_id as String)
+        let user_id = UserID(chat_id: entity.id.chat_id as! String, gaia_id: entity.id.gaia_id as! String)
         var is_self = false
         if let sui = self_user_id {
             is_self = sui == user_id
@@ -47,7 +47,7 @@ public struct User {
 	// Initialize from ClientConversationParticipantData.
 	// If self_user_id is nil, assume this is the self user.
     public init(conv_part_data: CLIENT_CONVERSATION_PARTICIPANT_DATA, self_user_id: UserID?) {
-        let user_id = UserID(chat_id: conv_part_data.id.chat_id as String, gaia_id: conv_part_data.id.gaia_id as String)
+        let user_id = UserID(chat_id: conv_part_data.id.chat_id as! String, gaia_id: conv_part_data.id.gaia_id as! String)
         var is_self = false
         if let sui = self_user_id {
             is_self = sui == user_id

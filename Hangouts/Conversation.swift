@@ -300,7 +300,7 @@ public class Conversation {
 	// The conversation's ID.
     public var id: String {
         get {
-            return self.conversation.conversation_id!.id as String
+            return self.conversation.conversation_id!.id as! String
         }
     }
 
@@ -308,8 +308,8 @@ public class Conversation {
         get {
             return conversation.participant_data.map {
                 self.user_list.get_user(UserID(
-                    chat_id: $0.id.chat_id as String,
-                    gaia_id: $0.id.gaia_id as String
+                    chat_id: $0.id.chat_id as! String,
+                    gaia_id: $0.id.gaia_id as! String
                 ))
             }
         }

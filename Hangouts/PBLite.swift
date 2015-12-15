@@ -90,7 +90,7 @@ public class PBLiteSerialization {
 	// FIXME: Use Swift reflection to unwrap [AnyObject].
 	public class func getArrayMessageType(arr: Any) -> Message.Type? {
 		if arr is [CONVERSATION_ID] { return CONVERSATION_ID.self }
-		if arr is [USER_ID] { return USER_ID.self }
+		if arr is [PARTICIPANT_ID] { return PARTICIPANT_ID.self }
 		if arr is [CLIENT_EVENT] { return CLIENT_EVENT.self }
 		if arr is [CLIENT_ENTITY] { return CLIENT_ENTITY.self }
 		if arr is [MESSAGE_SEGMENT] { return MESSAGE_SEGMENT.self }

@@ -86,8 +86,8 @@ public func to_timestamp(date: NSDate) -> NSNumber {
 // message is sent the typing status will not change to stopped.
 public func parse_typing_status_message(p: CLIENT_SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
     return TypingStatusMessage(
-        conv_id: p.conversation_id.id as String,
-        user_id: UserID(chat_id: p.user_id.chat_id as String, gaia_id: p.user_id.gaia_id as String),
+        conv_id: p.conversation_id.id as! String,
+        user_id: UserID(chat_id: p.user_id.chat_id as! String, gaia_id: p.user_id.gaia_id as! String),
         timestamp: from_timestamp(p.timestamp)!,
         status: p.status
     )
@@ -96,10 +96,10 @@ public func parse_typing_status_message(p: CLIENT_SET_TYPING_NOTIFICATION) -> Ty
 // Return WatermarkNotification from ClientWatermarkNotification.
 public func parse_watermark_notification(client_watermark_notification: CLIENT_WATERMARK_NOTIFICATION) -> WatermarkNotification {
     return WatermarkNotification(
-        conv_id: client_watermark_notification.conversation_id.id as String,
+        conv_id: client_watermark_notification.conversation_id.id as! String,
         user_id: UserID(
-            chat_id: client_watermark_notification.participant_id.chat_id as String,
-            gaia_id: client_watermark_notification.participant_id.gaia_id as String
+            chat_id: client_watermark_notification.participant_id.chat_id as! String,
+            gaia_id: client_watermark_notification.participant_id.gaia_id as! String
         ),
         read_timestamp: from_timestamp(client_watermark_notification.latest_read_timestamp)!
     )

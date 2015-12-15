@@ -67,7 +67,7 @@ public class ConversationList : ClientDelegate {
             client_events: client_events,
             conversationList: self
         )
-        conv_dict[conv_id as String] = conv
+        conv_dict[conv_id as! String] = conv
         return conv
     }
 	
@@ -81,7 +81,7 @@ public class ConversationList : ClientDelegate {
 	// Receive a ClientEvent and fan out to Conversations
     public func on_client_event(event: CLIENT_EVENT) {
         sync_timestamp = event.timestamp
-        if let conv = conv_dict[event.conversation_id.id as String] {
+        if let conv = conv_dict[event.conversation_id.id as! String] {
             let conv_event = conv.add_event(event)
 
             delegate?.conversationList(self, didReceiveEvent: conv_event)
@@ -94,7 +94,7 @@ public class ConversationList : ClientDelegate {
 	// Receive Conversation and create or update the conversation
     public func handle_client_conversation(client_conversation: CLIENT_CONVERSATION) {
         let conv_id = client_conversation.conversation_id!.id
-        if let conv = conv_dict[conv_id as String] {
+        if let conv = conv_dict[conv_id as! String] {
             conv.update_conversation(client_conversation)
             delegate?.conversationList(self, didUpdateConversation: conv)
         } else {
@@ -106,12 +106,12 @@ public class ConversationList : ClientDelegate {
 	// Receive ClientSetTypingNotification and update the conversation
     public func handle_set_typing_notification(set_typing_notification: CLIENT_SET_TYPING_NOTIFICATION) {
         let conv_id = set_typing_notification.conversation_id.id
-        if let conv = conv_dict[conv_id as String] {
+        if let conv = conv_dict[conv_id as! String] {
             let res = parse_typing_status_message(set_typing_notification)
             delegate?.conversationList(self, didChangeTypingStatusTo: res.status)
             let user = user_list.get_user(UserID(
-                chat_id: set_typing_notification.user_id.chat_id as String,
-                gaia_id: set_typing_notification.user_id.gaia_id as String
+                chat_id: set_typing_notification.user_id.chat_id as! String,
+                gaia_id: set_typing_notification.user_id.gaia_id as! String
             ))
             conv.handleTypingStatus(res.status, forUser: user)
         } else {
@@ -122,7 +122,7 @@ public class ConversationList : ClientDelegate {
 	// Receive ClientWatermarkNotification and update the conversation
     public func handle_watermark_notification(watermark_notification: CLIENT_WATERMARK_NOTIFICATION) {
         let conv_id = watermark_notification.conversation_id.id
-        if let conv = conv_dict[conv_id as String] {
+        if let conv = conv_dict[conv_id as! String] {
             let res = parse_watermark_notification(watermark_notification)
             delegate?.conversationList(self, didReceiveWatermarkNotification: res)
             conv.handleWatermarkNotification(res)
@@ -136,7 +136,7 @@ public class ConversationList : ClientDelegate {
         client.syncAllNewEvents(sync_timestamp) { res in
             if let response = res {
                 for conv_state in response.conversation_state {
-                    if let conv = self.conv_dict[conv_state.conversation_id.id as String] {
+                    if let conv = self.conv_dict[conv_state.conversation_id.id as! String] {
                         conv.update_conversation(conv_state.conversation)
                         for event in conv_state.event {
                             if event.timestamp > self.sync_timestamp {

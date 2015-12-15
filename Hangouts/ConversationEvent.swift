@@ -33,14 +33,14 @@ public class ConversationEvent : Equatable {
 	// A UserID indicating who created the event.
     public lazy var user_id: UserID = {
         return UserID(
-            chat_id: self.event.sender_id.chat_id as String,
-            gaia_id: self.event.sender_id.gaia_id as String
+            chat_id: self.event.sender_id.chat_id as! String,
+            gaia_id: self.event.sender_id.gaia_id as! String
         )
     }()
 	
 	// The ID of the conversation the event belongs to.
     public lazy var conversation_id: NSString = {
-        return self.event.conversation_id.id
+        return self.event.conversation_id.id!
     }()
 	
 	// The ID of the ConversationEvent.
@@ -217,7 +217,7 @@ public class MembershipChangeEvent : ConversationEvent {
     public var participant_ids: [UserID] {
         get {
             return self.event.membership_change!.participant_ids.map {
-                UserID(chat_id: $0.chat_id as String, gaia_id: $0.gaia_id as String)
+                UserID(chat_id: $0.chat_id as! String, gaia_id: $0.gaia_id as! String)
             }
         }
     }

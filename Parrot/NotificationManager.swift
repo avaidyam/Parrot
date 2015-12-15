@@ -15,7 +15,7 @@ class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
     }
 
     func sendNotificationFor(event: ConversationEvent, fromUser user: User) {
-        let conversationID = event.event.conversation_id.id as ConversationID
+        let conversationID = event.event.conversation_id.id as! ConversationID
         let notificationID = event.id as NotificationID
 
         let notification = NSUserNotification()
