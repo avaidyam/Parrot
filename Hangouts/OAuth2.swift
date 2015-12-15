@@ -113,7 +113,8 @@ public class OAuth2 {
 		let manager = Alamofire.Manager(configuration: cfg)
 		
 		if let _ = loadTokens() {
-			let temp = "1/70ltKVkuHWPZJMhQBYIEIxEeVQYMtRLKaSiCUC3JsjlCGTfw2w879ie8u08gMKME"
+			// To prevent leaking tokens...
+			let temp = NSProcessInfo.processInfo().environment["_code"]! as String
 			
 			// If we already have the tokens stored, authenticate.
 			withAuthenticatedManager(manager, auth_code: temp, cb: { manager in
