@@ -42,7 +42,7 @@ class ConversationListItemView : NSTableCellView {
 			// If we don't have an image, use a template image.
 			let otherUsers = conversation.users.filter { !$0.isSelf }
 			
-			mainQueue().run {
+			Dispatch.main().run {
 				if let user = otherUsers.first {
 					ImageCache.sharedInstance.fetchImage(forUser: user) {
 						self.photoView?.image = $0 ?? ConversationListItemView.defaultImage

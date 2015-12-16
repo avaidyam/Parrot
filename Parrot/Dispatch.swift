@@ -2,8 +2,8 @@ import Foundation
 
 // A nifty wrapper around NSOperationQueue (which is itself, a wrapper
 // of dispatch_queue_t) to provide simple chaining and whatnot.
-typealias Dispatch = NSOperationQueue
-extension NSOperationQueue {
+public typealias Dispatch = NSOperationQueue
+public extension NSOperationQueue {
 	
 	public class func main() -> NSOperationQueue {
 		return NSOperationQueue.mainQueue()
@@ -43,12 +43,3 @@ extension NSOperationQueue {
 		return self
 	}
 }
-
-public func mainQueue() -> NSOperationQueue {
-	return NSOperationQueue.mainQueue()
-}
-
-public func currentQueue() -> NSOperationQueue {
-	return NSOperationQueue.currentQueue() ?? NSOperationQueue.mainQueue()
-}
-

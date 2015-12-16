@@ -1,11 +1,24 @@
 import Cocoa
 import Hangouts
 
+// Existing Parrot Settings keys.
+public class Parrot {
+	public static let AllowEmojiMapping = "Parrot.AllowEmojiMapping"
+	public static let DarkAppearance = "Parrot.DarkAppearance"
+}
+
 class ConversationsViewController:  NSViewController, ClientDelegate,
 									NSTableViewDataSource, NSTableViewDelegate,
 									NSSplitViewDelegate, ConversationListDelegate {
 
     @IBOutlet weak var tableView: NSTableView!
+	
+	override func loadView() {
+		super.loadView()
+		Notifications.subscribe(NSUserDefaultsDidChangeNotification) { note in
+			self.switchAppearance(nil)
+		}
+	}
 	
     override func viewDidLoad() {
 		super.viewDidLoad()
@@ -26,20 +39,25 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		super.viewWillAppear()
 		
 		/* TODO: Should not be set here! Use a special window. */
-		self.view.window?.styleMask = self.view.window!.styleMask | NSFullSizeContentViewWindowMask
+		//self.view.window?.styleMask = self.view.window!.styleMask | NSFullSizeContentViewWindowMask
 		self.view.window?.titleVisibility = .Hidden;
 		self.view.window?.titlebarAppearsTransparent = true;
 		self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
+		// selectionColor = NSColor.disabledControlTextColor()
+		
+		let scroll = self.view.subviews[0] as? NSScrollView
+		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
 	}
 	
-	var dark = false
 	@IBAction func switchAppearance(sender: AnyObject?) {
+		let dark = Settings.get(Parrot.DarkAppearance) != nil
+		print("got dark \(Settings.get(Parrot.DarkAppearance))")
 		if dark {
 			self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
-			dark = false
+			//dark = false
 		} else {
 			self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
-			dark = true
+			//dark = true
 		}
 	}
 
@@ -56,7 +74,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
         didSet {
             conversationList?.delegate = self
 			
-			mainQueue().run {
+			Dispatch.main().run {
 				self.tableView.reloadData()
 			}
         }
@@ -73,7 +91,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
                 sync_timestamp: initialData.sync_timestamp
             )
 			
-			mainQueue().run {
+			Dispatch.main().run {
 				self.tableView.reloadData()
 				self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
 				self.tableView.scrollRowToVisible(0)
@@ -166,7 +184,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     }
 
     func conversationList(didUpdate list: ConversationList) {
-		mainQueue().run {
+		Dispatch.main().run {
 			self.tableView.reloadData()
 			self.updateAppBadge()
 		}
@@ -175,7 +193,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation) {
         //  TODO: Just update the one row that needs updating
 		
-		mainQueue().run {
+		Dispatch.main().run {
 			self.tableView.reloadData()
 			self.updateAppBadge()
 		}

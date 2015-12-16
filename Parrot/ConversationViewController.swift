@@ -13,12 +13,13 @@ class ConversationViewController:
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+		
+		let scroll = self.view.subviews[0] as? NSScrollView
+		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
+		
         conversationTableView.setDataSource(self)
         conversationTableView.setDelegate(self)
-
         messageTextField.delegate = self
-
         self.view.postsFrameChangedNotifications = true
     }
 
