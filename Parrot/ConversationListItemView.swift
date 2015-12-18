@@ -103,10 +103,10 @@ class ConversationListItemView : NSTableCellView {
 	override var draggingImageComponents: [NSDraggingImageComponent] {
 		get {
 			return [
-				_component(self.photoView, key: "Photo"),
-				_component(self.nameLabel, key: "Name"),
-				_component(self.textLabel, key: "Text"),
-				_component(self.timeLabel, key: "Time"),
+				self.photoView.draggingComponent("Photo"),
+				self.nameLabel.draggingComponent("Name"),
+				self.textLabel.draggingComponent("Text"),
+				self.timeLabel.draggingComponent("Time"),
 			]
 		}
 	}
@@ -117,19 +117,5 @@ class ConversationListItemView : NSTableCellView {
 		if let layer = self.photoView?.layer {
 			layer.cornerRadius = self.photoView!.bounds.width / 2.0
 		}
-	}
-	
-	// Automatically translate a subview into a NSDraggingImageComponent
-	private func _component(view: NSView, key: String) -> NSDraggingImageComponent {
-		var viewBounds = view.bounds
-		let imageRep = view.bitmapImageRepForCachingDisplayInRect(viewBounds)
-		view.cacheDisplayInRect(viewBounds, toBitmapImageRep: imageRep!)
-		let draggedImage = NSImage(size: imageRep!.size)
-		draggedImage.addRepresentation(imageRep!)
-		viewBounds = self.convertRect(viewBounds, fromView: view)
-		let component = NSDraggingImageComponent(key: key)
-		component.contents = draggedImage
-		component.frame = viewBounds
-		return component
 	}
 }
