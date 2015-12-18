@@ -1,8 +1,9 @@
 import Foundation
 
-/* TODO: Support suites. */
+public func Settings(domain: String? = nil) -> NSUserDefaults {
+	return NSUserDefaults(suiteName: domain)!
+}
 
-public typealias Settings = NSUserDefaults
 public extension NSUserDefaults {
 	
 	public class func set(key: String, value: AnyObject?, domain: String? = nil) {
@@ -27,16 +28,12 @@ public extension NSUserDefaults {
 		return map
 	}
 	
-	public class func suite(domain: String? = nil) -> NSUserDefaults {
-		return NSUserDefaults(suiteName: domain)!
-	}
-	
 	subscript(key: String) -> AnyObject? {
 		get {
-			return Settings.get(key)
+			return self.valueForKey(key)
 		}
 		set (value) {
-			Settings.set(key, value: value)
+			self.setValue(value, forKey: key)
 		}
 	}
 }

@@ -22,7 +22,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		Notifications.subscribe(NSUserDefaultsDidChangeNotification) { note in
 			
 			// Handle appearance colors.
-			let dark = Settings.get(Parrot.DarkAppearance) as? Bool ?? false
+			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
 		}
@@ -50,7 +50,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		self.view.window?.titleVisibility = .Hidden;
 		self.view.window?.titlebarAppearsTransparent = true;
 		
-		let dark = Settings.get(Parrot.DarkAppearance) as? Bool ?? false
+		let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
 		let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 		self.view.window?.appearance = NSAppearance(named: appearance)
 		

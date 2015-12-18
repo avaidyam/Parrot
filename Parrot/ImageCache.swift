@@ -15,7 +15,12 @@ class ImageCache {
         return cache[user.id]
     }
 
-    func fetchImage(forUser user: User, cb: ((NSImage?) -> Void)?) {
+    func fetchImage(forUser user: User?, cb: ((NSImage?) -> Void)?) {
+		guard let user = user else {
+			cb?(nil)
+			return
+		}
+		
         if let existingCachedImage = getImage(forUser: user) {
             cb?(existingCachedImage)
             return

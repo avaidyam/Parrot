@@ -270,7 +270,7 @@ class ConversationViewController:
 		
         let text = messageTextField.stringValue
         if text.characters.count > 0 {
-			var emojify = Settings.get(Parrot.AutoEmoji) as? Bool ?? false
+			var emojify = Settings()[Parrot.AutoEmoji] as? Bool ?? false
 			emojify = NSEvent.modifierFlags().contains(.AlternateKeyMask) ? false : emojify
 			conversation?.sendMessage(TextMapper.segmentsForInput(text, emojify: emojify))
             messageTextField.stringValue = ""

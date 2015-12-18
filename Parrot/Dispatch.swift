@@ -43,3 +43,10 @@ public extension NSOperationQueue {
 		return self
 	}
 }
+
+public typealias Closure = () -> ()
+public func Synchronized(lock: AnyObject, closure: Closure) {
+	objc_sync_enter(lock)
+	closure()
+	objc_sync_exit(lock)
+}

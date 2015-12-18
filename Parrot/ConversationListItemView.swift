@@ -1,14 +1,16 @@
 import Cocoa
 import Hangouts
 
+/* TODO: Support stickers, photos, videos, files, audio, and location. */
+
+// Create and cache the default image template.
+private let defaultImage = NSImage(named: "NSUserGuest")
+
+// Default colors for both GVoice and Hangouts.
+private let GVoiceColor = NSColor(red: 0.13, green: 0.59, blue: 0.95, alpha: 1.0)
+private let HangoutsColor = NSColor(red: 0.31, green: 0.63, blue: 0.25, alpha: 1.0)
+
 class ConversationListItemView : NSTableCellView {
-	
-	// Create and cache the default image template.
-	private static let defaultImage = NSImage(named: "NSUserGuest")
-	
-	// Default colors for both GVoice and Hangouts.
-	private static let GVoiceColor = NSColor(red: 0.13, green: 0.59, blue: 0.95, alpha: 1.0)
-	private static let HangoutsColor = NSColor(red: 0.31, green: 0.63, blue: 0.25, alpha: 1.0)
 	
 	@IBOutlet weak var photoView: NSImageView!
 	@IBOutlet weak var nameLabel: NSTextField!
@@ -26,30 +28,11 @@ class ConversationListItemView : NSTableCellView {
 			let a = conversation.messages.last?.user_id
 			let b = conversation.users.filter { $0.isSelf }.first?.id
 			let c = conversation.users.filter { !$0.isSelf }.first
+			let d = conversation.conversation.network_type?[0] as? Int
 			
 			// Mask the photo layer as a circle to match Hangouts.
 			self.photoView.layer?.masksToBounds = true
 			self.photoView.layer?.borderWidth = 2.0
-			
-			// Show different rings based on network (Hangouts vs. GVoice)
-			let layer = self.photoView?.layer
-			if conversation.conversation.network_type?[0] as? Int == 2 {
-				layer?.borderColor = ConversationListItemView.GVoiceColor.CGColor
-			} else {
-				layer?.borderColor = ConversationListItemView.HangoutsColor.CGColor
-			}
-			
-			// Get the first image for the users in the conversation to display.
-			// If we don't have an image, use a template image.
-			Dispatch.main().run {
-				if let user = c {
-					ImageCache.sharedInstance.fetchImage(forUser: user) {
-						self.photoView?.image = $0 ?? ConversationListItemView.defaultImage
-					}
-				} else {
-					self.photoView?.image = ConversationListItemView.defaultImage
-				}
-			}
 			
 			// Patch for Google Voice contacts to show their numbers.
 			// FIXME: Sometimes [1] is actually you, fix that.
@@ -59,19 +42,17 @@ class ConversationListItemView : NSTableCellView {
 					title = a as String
 				}
 			}
-			self.nameLabel?.stringValue = title
 			
-			if a != b {
-				self.textLabel.stringValue = conversation.messages.last?.text ?? ""
-				if conversation.hasUnreadEvents {
-					self.textLabel.font = NSFont.boldSystemFontOfSize(self.textLabel.font!.pointSize)
-				} else {
-					self.textLabel.font = NSFont.systemFontOfSize(self.textLabel.font!.pointSize)
-				}
-			} else {
-				self.textLabel.stringValue = "You: " + (conversation.messages.last?.text ?? "")
+			// Load all the field values from the conversation.
+			ImageCache.sharedInstance.fetchImage(forUser: c) {
+				self.photoView?.image = $0 ?? defaultImage
 			}
+			self.photoView?.layer?.borderColor = d == 2 ? GVoiceColor.CGColor : HangoutsColor.CGColor
+			self.textLabel.font = NSFont.systemFontOfSize(self.textLabel.font!.pointSize,
+				weight: conversation.hasUnreadEvents ? NSFontWeightBold : NSFontWeightRegular)
 			
+			self.nameLabel?.stringValue = title
+			self.textLabel.stringValue = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 			self.timeLabel.stringValue = conversation.messages.last?.timestamp.relativeString() ?? ""
 		}
 	}

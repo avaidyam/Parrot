@@ -782,7 +782,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView wantsLayer="YES" verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="61" rowSizeStyle="automatic" viewBased="YES" id="aTO-NH-oNU">
-                                            <rect key="frame" x="0.0" y="0.0" width="270" height="252"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="268" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <animations/>
                                             <size key="intercellSpacing" width="0.0" height="2"/>
@@ -885,7 +885,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="vi2-gd-3DO">
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="vi2-gd-3DO">
                                     <rect key="frame" x="224" y="17" width="15" height="102"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
@@ -917,13 +917,13 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="27" horizontalPageScroll="10" verticalLineScroll="27" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCf-gh-ObP">
-                                <rect key="frame" x="0.0" y="31" width="450" height="269"/>
+                                <rect key="frame" x="0.0" y="26" width="450" height="274"/>
                                 <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="q5q-sZ-aWf">
-                                    <rect key="frame" x="0.0" y="0.0" width="450" height="269"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="450" height="274"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView wantsLayer="YES" verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="25" rowSizeStyle="automatic" viewBased="YES" floatsGroupRows="NO" id="F84-Gi-Rrw">
-                                            <rect key="frame" x="0.0" y="0.0" width="450" height="221"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="450" height="226"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <animations/>
                                             <size key="intercellSpacing" width="3" height="2"/>
@@ -986,25 +986,25 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="EyY-Qf-GFZ">
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="EyY-Qf-GFZ">
                                     <rect key="frame" x="-15" y="1" width="16" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
                                 </scroller>
                             </scrollView>
                             <box wantsLayer="YES" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="dpk-F4-2R9">
-                                <rect key="frame" x="0.0" y="28" width="450" height="5"/>
+                                <rect key="frame" x="0.0" y="23" width="450" height="5"/>
                                 <animations/>
                                 <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                 <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <font key="titleFont" metaFont="system"/>
                             </box>
-                            <textField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="749" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="orf-m2-ObS">
-                                <rect key="frame" x="28" y="4" width="395" height="22"/>
+                            <textField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="751" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="orf-m2-ObS">
+                                <rect key="frame" x="26" y="4" width="399" height="17"/>
                                 <animations/>
-                                <textFieldCell key="cell" selectable="YES" editable="YES" state="on" borderStyle="bezel" focusRingType="none" alignment="left" placeholderString="Send a message..." allowsEditingTextAttributes="YES" bezelStyle="round" id="nRY-lf-Vew">
+                                <textFieldCell key="cell" selectable="YES" editable="YES" state="on" focusRingType="none" placeholderString="Send a message..." allowsEditingTextAttributes="YES" id="nRY-lf-Vew">
                                     <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                 </textFieldCell>
                                 <connections>
@@ -1012,7 +1012,7 @@
                                 </connections>
                             </textField>
                             <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ega-D2-ka6">
-                                <rect key="frame" x="4" y="2" width="20" height="25"/>
+                                <rect key="frame" x="4" y="2" width="20" height="20"/>
                                 <animations/>
                                 <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSIconViewTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ds1-BY-kXo">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1023,7 +1023,7 @@
                                 </connections>
                             </button>
                             <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="g2R-XT-xBl">
-                                <rect key="frame" x="427" y="2" width="19" height="25"/>
+                                <rect key="frame" x="427" y="2" width="19" height="20"/>
                                 <animations/>
                                 <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRightFacingTriangleTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pwc-Xx-1Zt">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1037,7 +1037,6 @@
                         <constraints>
                             <constraint firstItem="dpk-F4-2R9" firstAttribute="top" secondItem="gCf-gh-ObP" secondAttribute="bottom" id="1WK-qI-o9d"/>
                             <constraint firstAttribute="trailing" secondItem="dpk-F4-2R9" secondAttribute="trailing" id="7QW-sf-3GI"/>
-                            <constraint firstItem="orf-m2-ObS" firstAttribute="top" secondItem="dpk-F4-2R9" secondAttribute="bottom" constant="4" id="83j-lf-4Ko"/>
                             <constraint firstItem="g2R-XT-xBl" firstAttribute="leading" secondItem="orf-m2-ObS" secondAttribute="trailing" constant="4" id="FsP-tU-RDK"/>
                             <constraint firstItem="gCf-gh-ObP" firstAttribute="leading" secondItem="hAN-a4-RD8" secondAttribute="leading" id="Hk6-fG-mZv"/>
                             <constraint firstItem="orf-m2-ObS" firstAttribute="leading" secondItem="Ega-D2-ka6" secondAttribute="trailing" constant="4" id="NcK-3h-KHv"/>
