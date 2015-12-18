@@ -5,28 +5,39 @@ import Foundation
 public typealias Settings = NSUserDefaults
 public extension NSUserDefaults {
 	
-	public class func set(key: String, value: AnyObject?) {
-		NSUserDefaults.standardUserDefaults().setValue(value, forKey: key)
-		NSUserDefaults.standardUserDefaults().synchronize()
+	public class func set(key: String, value: AnyObject?, domain: String? = nil) {
+		NSUserDefaults(suiteName: domain)?.setValue(value, forKey: key)
 	}
 	
-	public class func get(key: String) -> AnyObject? {
-		return NSUserDefaults.standardUserDefaults().valueForKey(key)
+	public class func get(key: String, domain: String? = nil) -> AnyObject? {
+		return NSUserDefaults(suiteName: domain)?.valueForKey(key)
 	}
 	
-	public class func set(keys: [String: AnyObject?]) {
-		for (key, value) in keys {
-			NSUserDefaults.standardUserDefaults().setValue(value, forKey: key)
+	public class func set(keys: [String: AnyObject?], domain: String? = nil) {
+		keys.forEach { key, value in
+			NSUserDefaults(suiteName: domain)?.setValue(value, forKey: key)
 		}
-		NSUserDefaults.standardUserDefaults().synchronize()
 	}
 	
-	public class func get(keys: [String]) -> [String: AnyObject?] {
+	public class func get(keys: [String], domain: String? = nil) -> [String: AnyObject?] {
 		var map = [String: AnyObject?]()
 		for (key) in keys {
-			map[key] = NSUserDefaults.standardUserDefaults().valueForKey(key)
+			map[key] = NSUserDefaults(suiteName: domain)?.valueForKey(key)
 		}
 		return map
+	}
+	
+	public class func suite(domain: String? = nil) -> NSUserDefaults {
+		return NSUserDefaults(suiteName: domain)!
+	}
+	
+	subscript(key: String) -> AnyObject? {
+		get {
+			return Settings.get(key)
+		}
+		set (value) {
+			Settings.set(key, value: value)
+		}
 	}
 }
 

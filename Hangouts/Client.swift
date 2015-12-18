@@ -140,6 +140,7 @@ public class Client : ChannelDelegate {
 
                 let self_entity = PBLiteSerialization.parseArray(GET_SELF_INFO_RESPONSE.self, input: (data_dict["ds:20"] as! NSArray)[0] as? NSArray)!.self_entity
 
+				// FIXME: Sometimes crashes right here...
                 let initial_conv_states_raw = ((data_dict["ds:19"] as! NSArray)[0] as! NSArray)[3] as! NSArray
                 let initial_conv_states = (initial_conv_states_raw as! [NSArray]).map {
                     PBLiteSerialization.parseArray(CONVERSATION_STATE.self, input: $0)!

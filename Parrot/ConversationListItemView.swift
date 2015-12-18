@@ -10,15 +10,7 @@ class ConversationListItemView : NSTableCellView {
 	private static let GVoiceColor = NSColor(red: 0.13, green: 0.59, blue: 0.95, alpha: 1.0)
 	private static let HangoutsColor = NSColor(red: 0.31, green: 0.63, blue: 0.25, alpha: 1.0)
 	
-	// Mask the photo layer as a circle to match Hangouts.
-	@IBOutlet weak var photoView: NSImageView! {
-		didSet {
-			self.photoView.wantsLayer = true
-			self.photoView.layer?.masksToBounds = true
-			self.photoView.layer?.borderWidth = 2.0
-		}
-	}
-	
+	@IBOutlet weak var photoView: NSImageView!
 	@IBOutlet weak var nameLabel: NSTextField!
     @IBOutlet weak var textLabel: NSTextField!
     @IBOutlet weak var timeLabel: NSTextField!
@@ -30,6 +22,15 @@ class ConversationListItemView : NSTableCellView {
 				return
 			}
 			
+			// Propogate info for data filling
+			let a = conversation.messages.last?.user_id
+			let b = conversation.users.filter { $0.isSelf }.first?.id
+			let c = conversation.users.filter { !$0.isSelf }.first
+			
+			// Mask the photo layer as a circle to match Hangouts.
+			self.photoView.layer?.masksToBounds = true
+			self.photoView.layer?.borderWidth = 2.0
+			
 			// Show different rings based on network (Hangouts vs. GVoice)
 			let layer = self.photoView?.layer
 			if conversation.conversation.network_type?[0] as? Int == 2 {
@@ -40,10 +41,8 @@ class ConversationListItemView : NSTableCellView {
 			
 			// Get the first image for the users in the conversation to display.
 			// If we don't have an image, use a template image.
-			let otherUsers = conversation.users.filter { !$0.isSelf }
-			
 			Dispatch.main().run {
-				if let user = otherUsers.first {
+				if let user = c {
 					ImageCache.sharedInstance.fetchImage(forUser: user) {
 						self.photoView?.image = $0 ?? ConversationListItemView.defaultImage
 					}
@@ -62,11 +61,8 @@ class ConversationListItemView : NSTableCellView {
 			}
 			self.nameLabel?.stringValue = title
 			
-			let a = conversation.messages.last?.user_id
-			let b = conversation.users.filter { $0.isSelf }.first?.id
 			if a != b {
 				self.textLabel.stringValue = conversation.messages.last?.text ?? ""
-				
 				if conversation.hasUnreadEvents {
 					self.textLabel.font = NSFont.boldSystemFontOfSize(self.textLabel.font!.pointSize)
 				} else {
@@ -76,7 +72,7 @@ class ConversationListItemView : NSTableCellView {
 				self.textLabel.stringValue = "You: " + (conversation.messages.last?.text ?? "")
 			}
 			
-			self.timeLabel.stringValue = conversation.messages.last?.timestamp.timeAgo() ?? ""
+			self.timeLabel.stringValue = conversation.messages.last?.timestamp.relativeString() ?? ""
 		}
 	}
 	

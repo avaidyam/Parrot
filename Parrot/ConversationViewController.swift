@@ -263,10 +263,16 @@ class ConversationViewController:
     }
 
     // MARK: IBActions
-    @IBAction func messageTextFieldDidAction(sender: AnyObject) {
+    @IBAction func messageTextFieldDidAction(_:Sender) {
+		if NSEvent.modifierFlags().contains(.ShiftKeyMask) {
+			return
+		}
+		
         let text = messageTextField.stringValue
         if text.characters.count > 0 {
-            conversation?.sendMessage(TextMapper.segmentsForInput(text))
+			var emojify = Settings.get(Parrot.AutoEmoji) as? Bool ?? false
+			emojify = NSEvent.modifierFlags().contains(.AlternateKeyMask) ? false : emojify
+			conversation?.sendMessage(TextMapper.segmentsForInput(text, emojify: emojify))
             messageTextField.stringValue = ""
         }
     }

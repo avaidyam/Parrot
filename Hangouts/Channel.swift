@@ -95,8 +95,9 @@ public class Channel : NSObject {
 
         request.timeoutInterval = 30
         manager.request(request).stream { (data: NSData) in self.onPushData(data) }.responseData { response in
-            if response.response?.statusCode >= 400 {
-                print("Request failed with: \(NSString(data: response.result.value!, encoding: 4))")
+			if response.result.isFailure { // response.response?.statusCode >= 400
+				// Uh stuff dies here... don't use !'s.
+                print("Request failed with: \(response.result.error!)")
                 self.need_new_sid = true
                 self.listen()
             } else if response.response?.statusCode == 200 {

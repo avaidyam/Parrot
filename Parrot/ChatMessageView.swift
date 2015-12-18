@@ -10,12 +10,14 @@ class ChatMessageView : NSTableCellView {
     var string: NSAttributedString?
     var textLabel: NSTextField!
     var backgroundView: NSImageView!
+	var backgroundColor: NSColor = NSColor(red: 0.38, green: 0.49, blue: 0.54, alpha: 1.0)
 
     var orientation: Orientation = .Left
-    static let font = NSFont.systemFontOfSize(NSFont.systemFontSize())
+    //static let font = NSFont.systemFontOfSize(NSFont.systemFontSize())
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
+		//self.wantsLayer = true
 
 		backgroundView = NSImageView(frame: NSZeroRect)
 		backgroundView.wantsLayer = true
@@ -33,6 +35,13 @@ class ChatMessageView : NSTableCellView {
         textLabel.allowsEditingTextAttributes = true
         textLabel.selectable = true
         addSubview(textLabel)
+		
+		Notifications.subscribe(NSUserDefaultsDidChangeNotification) { note in
+			
+			// Handle appearance colors.
+			//let dark = Settings.get(Parrot.InvertChatStyle) as? Bool ?? false
+			//self.layer?.backgroundColor = self.backgroundColor.CGColor
+		}
     }
 
     required init?(coder: NSCoder) {
@@ -43,10 +52,11 @@ class ChatMessageView : NSTableCellView {
         self.orientation = orientation
         self.string = TextMapper.attributedStringForText(string)
         textLabel.attributedStringValue = self.string!
-        backgroundView.image = NSImage(named: orientation == .Right ? "gray_bubble_right" : "gray_bubble_left")
+			
+		backgroundView.image = NSImage(named: orientation == .Right ? "gray_bubble_right" : "gray_bubble_left")
 		
 		// Properly color the text and background based on network type.
-		textLabel.textColor = NSColor.whiteColor()
+		//textLabel.textColor = NSColor.whiteColor()
 		if bubble == 2 { // Hangouts
 			backgroundView.layer?.backgroundColor = NSColor(red: 0.13, green: 0.59, blue: 0.95, alpha: 1.0).CGColor
 		} else if bubble == 1 { // GVoice
@@ -55,6 +65,8 @@ class ChatMessageView : NSTableCellView {
 			backgroundView.layer?.backgroundColor = NSColor(red: 0.38, green: 0.49, blue: 0.54, alpha: 1.0).CGColor
 		}
     }
+	
+	// FRAME ADJUSTMENT
 
     static let WidthPercentage: CGFloat = 0.75
     static let TextPointySideBorder: CGFloat = 12
@@ -72,7 +84,7 @@ class ChatMessageView : NSTableCellView {
 
             let textMaxWidth = ChatMessageView.widthOfText(backgroundWidth: backgroundFrame.size.width)
             let textSize = ChatMessageView.textSizeInWidth(
-                self.textLabel.attributedStringValue,
+                textLabel.attributedStringValue,
                 width: textMaxWidth
             )
 
@@ -106,6 +118,8 @@ class ChatMessageView : NSTableCellView {
         }
     }
 
+	// MEASUREMENT
+	
     class func widthOfText(backgroundWidth backgroundWidth: CGFloat) -> CGFloat {
         return backgroundWidth
             - ChatMessageView.TextRoundSideBorder

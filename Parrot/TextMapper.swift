@@ -55,7 +55,7 @@ public class TextMapper {
 		return map
 	}()
 	
-	internal static func replaceEmoticonsWithEmoji(str: String) -> String {
+	internal static func _emojify(str: String) -> String {
 		return emoticonMap.reduce(str) { (str, b) -> String in
 			let unichar = String(UnicodeScalar(b.1))
 			//let replaced = String(str.characters.map { $0 == b.0 ? unichar : $0 })
@@ -63,9 +63,8 @@ public class TextMapper {
 		}
 	}
 	
-    public class func segmentsForInput(text: String) -> [ChatMessageSegment] {
-        let textWithUnicodeEmoji = replaceEmoticonsWithEmoji(text)
-        return [ChatMessageSegment(text: textWithUnicodeEmoji)]
+	public class func segmentsForInput(text: String, emojify: Bool = true) -> [ChatMessageSegment] {
+        return [ChatMessageSegment(text: (emojify ? _emojify(text) : text))]
     }
 
     public class func attributedStringForText(text: String) -> NSAttributedString {
@@ -78,7 +77,7 @@ public class TextMapper {
         for match in linkDetector.matchesInString(text, options: [], range: NSMakeRange(0, text.characters.count)) {
             if let url = match.URL {
                 attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
-                attrString.addAttribute(NSForegroundColorAttributeName, value: NSColor.grayColor(), range: match.range)
+                //attrString.addAttribute(NSForegroundColorAttributeName, value: NSColor.grayColor(), range: match.range)
                 attrString.addAttribute(
                     NSUnderlineStyleAttributeName,
                     value: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue),

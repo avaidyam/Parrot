@@ -1,10 +1,14 @@
 import Cocoa
 import Hangouts
 
+// Experimenting with new typealias to make code readable.
+typealias Sender = AnyObject?
+
 // Existing Parrot Settings keys.
 public class Parrot {
-	public static let AllowEmojiMapping = "Parrot.AllowEmojiMapping"
+	public static let AutoEmoji = "Parrot.AutoEmoji"
 	public static let DarkAppearance = "Parrot.DarkAppearance"
+	public static let InvertChatStyle = "Parrot.InvertChatStyle"
 }
 
 class ConversationsViewController:  NSViewController, ClientDelegate,
@@ -16,7 +20,11 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 	override func loadView() {
 		super.loadView()
 		Notifications.subscribe(NSUserDefaultsDidChangeNotification) { note in
-			self.switchAppearance(nil)
+			
+			// Handle appearance colors.
+			let dark = Settings.get(Parrot.DarkAppearance) as? Bool ?? false
+			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
+			self.view.window?.appearance = NSAppearance(named: appearance)
 		}
 	}
 	
@@ -39,26 +47,15 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		super.viewWillAppear()
 		
 		/* TODO: Should not be set here! Use a special window. */
-		//self.view.window?.styleMask = self.view.window!.styleMask | NSFullSizeContentViewWindowMask
 		self.view.window?.titleVisibility = .Hidden;
 		self.view.window?.titlebarAppearsTransparent = true;
-		self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
-		// selectionColor = NSColor.disabledControlTextColor()
+		
+		let dark = Settings.get(Parrot.DarkAppearance) as? Bool ?? false
+		let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
+		self.view.window?.appearance = NSAppearance(named: appearance)
 		
 		let scroll = self.view.subviews[0] as? NSScrollView
 		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
-	}
-	
-	@IBAction func switchAppearance(sender: AnyObject?) {
-		let dark = Settings.get(Parrot.DarkAppearance) != nil
-		print("got dark \(Settings.get(Parrot.DarkAppearance))")
-		if dark {
-			self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
-			//dark = false
-		} else {
-			self.view.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
-			//dark = true
-		}
 	}
 
     func updateAppBadge() {
@@ -163,7 +160,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     // MARK: NSTableViewDelegate
 
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        return tableView.makeViewWithIdentifier("ConversationListItemView", owner: self) as? ConversationListItemView
+        return tableView.makeViewWithIdentifier("ConversationListItemView", owner: self)
     }
 
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
