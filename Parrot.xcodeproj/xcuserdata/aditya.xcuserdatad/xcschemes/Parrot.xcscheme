@@ -101,13 +101,6 @@
             ReferencedContainer = "container:Parrot.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "_code"
-            value = "1/70ltKVkuHWPZJMhQBYIEIxEeVQYMtRLKaSiCUC3JsjlCGTfw2w879ie8u08gMKME"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
