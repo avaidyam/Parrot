@@ -14,7 +14,7 @@ class ChatMessageView : NSTableCellView {
 
     var orientation: Orientation = .Left
     //static let font = NSFont.systemFontOfSize(NSFont.systemFontSize())
-
+	
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
 		//self.wantsLayer = true
