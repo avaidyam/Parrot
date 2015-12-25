@@ -28,8 +28,7 @@ The architecture is as follows:
 
 ----------
 # Development
-[todo]
-
+A big thanks to Peter Sobot for the initial translation and development of Hangover, which was used as the initial code base for Parrot's Hangouts component.
 
 ----------
 # Progress

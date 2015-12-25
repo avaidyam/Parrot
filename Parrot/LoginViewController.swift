@@ -3,8 +3,8 @@ import Hangouts
 import WebKit
 
 let sb = NSStoryboard(name: "Main", bundle: nil)
-let login = sb.instantiateControllerWithIdentifier("Login") as? NSWindowController
-let vc = login?.contentViewController as? LoginViewController
+let _login = sb.instantiateControllerWithIdentifier("Login") as? NSWindowController
+let vc = _login?.contentViewController as? LoginViewController
 
 class LoginViewController : NSViewController, WebPolicyDelegate, WKNavigationDelegate {
 	
@@ -20,6 +20,11 @@ class LoginViewController : NSViewController, WebPolicyDelegate, WKNavigationDel
 		self.webView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
 		self.view.addSubview(self.webView)
     }
+	
+	class func loginWindow(url: NSURL, valid: NSURL, cb: (NSURLRequest) -> Void) {
+		login(url, valid: valid, cb: cb)
+		_login!.showWindow(nil)
+	}
 	
 	class func login(url: NSURL, valid: NSURL, cb: (NSURLRequest) -> Void) -> LoginViewController? {
 		vc?.url = url

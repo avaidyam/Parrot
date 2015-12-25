@@ -86,12 +86,6 @@ class ConversationViewController:
         }
     }
 
-    var windowIsKey: Bool {
-        get {
-            return self.window?.keyWindow ?? false
-        }
-    }
-
     func attributedStringForMessage(row: Int) -> NSAttributedString? {
         if let conversation = conversation where row < conversation.messages.count {
             let message = conversation.messages[row]
@@ -143,7 +137,7 @@ class ConversationViewController:
 			self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
 		})
 
-        if !windowIsKey {
+        if !(self.window?.keyWindow ?? false) {
             let user = conversation.user_list.get_user(event.user_id)
             if !user.isSelf {
                 NotificationManager.sharedInstance.sendNotificationFor(event, fromUser: user)

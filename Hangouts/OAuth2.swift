@@ -112,14 +112,35 @@ public class OAuth2 {
 		cfg.HTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
 		let manager = Alamofire.Manager(configuration: cfg)
 		
-		if let _ = loadTokens() {
-			// To prevent leaking tokens...
-			let temp = NSProcessInfo.processInfo().environment["_code"]! as String
+		if let code = loadTokens() {
 			
 			// If we already have the tokens stored, authenticate.
-			withAuthenticatedManager(manager, auth_code: temp, cb: { manager in
-				cb(client: Client(manager: manager))
-			})
+			//  - second: authenticate(manager, refresh_token)
+			authenticate(manager, refresh_token: code.refresh_token) { (access_token: String, refresh_token: String) in
+				saveTokens(access_token, refresh_token: refresh_token)
+				
+				let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"
+				let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+				request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
+				manager.request(request).responseData { response in
+					var uberauth = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
+					uberauth.replaceRange(Range<String.Index>(
+						start: uberauth.endIndex.advancedBy(-1),
+						end: uberauth.endIndex
+						), with: "")
+					
+					let request = NSMutableURLRequest(URL: NSURL(string: "https://accounts.google.com/MergeSession")!)
+					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
+					manager.request(request).responseData { response in
+						let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
+						let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+						request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
+						manager.request(request).responseData { response in
+							cb(client: Client(manager: manager))
+						}
+					}
+				}
+			}
 		} else {
 			
 			// Otherwise, we need to authenticate, so use the callback to do so.
@@ -130,7 +151,9 @@ public class OAuth2 {
 					let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)!
 					let auth_code = Regex("value=\"(.+?)\"").matches(body as String).first!
 					
-					withAuthenticatedManager(manager, auth_code: auth_code, cb: { manager in
+					//  - first: authenticate(auth_code)
+					authenticate(auth_code, cb: { (access_token, refresh_token) in
+						saveTokens(access_token, refresh_token: refresh_token)
 						cb(client: Client(manager: manager))
 					})
 				}
@@ -138,43 +161,8 @@ public class OAuth2 {
 		}
 	}
 	
-	// This method should *not* take an access_token, and pop up a window with web view
-	// to authenticate the user with Google, if possible.
-	private class func withAuthenticatedManager(manager: Alamofire.Manager,
-		auth_code: String, cb: (manager: Alamofire.Manager) -> Void) {
-			
-			// first: authenticate(auth_code)
-			// second: authenticate(manager, refresh_token)
-			authenticate(manager, refresh_token: auth_code) { (access_token: String, refresh_token: String) in
-			saveTokens(access_token, refresh_token: refresh_token)
-			
-			let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"
-			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-			request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
-			manager.request(request).responseData { response in
-				var uberauth = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
-				uberauth.replaceRange(Range<String.Index>(
-					start: uberauth.endIndex.advancedBy(-1),
-					end: uberauth.endIndex
-					), with: "")
-				
-				let request = NSMutableURLRequest(URL: NSURL(string: "https://accounts.google.com/MergeSession")!)
-				request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
-				manager.request(request).responseData { response in
-					let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
-					let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
-					manager.request(request).responseData { response in
-						cb(manager: manager)
-					}
-				}
-			}
-		}
-	}
-	
-	// Return authorization headers for API request.
-	// It doesn't seem to matter what the url and time are as long as they are
-	// consistent.
+	// Return authorization headers for API request. It doesn't seem to matter 
+	// what the url and time are as long as they are consistent.
 	public class func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
 		let time_msec = Int(NSDate().timeIntervalSince1970 * 1000)
 		let auth_string = "\(time_msec) \(sapisid_cookie) \(Channel.ORIGIN_URL)"

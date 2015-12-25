@@ -247,12 +247,9 @@ public class Client : ChannelDelegate {
         use_json: Bool = true,
         cb: (Response<NSData, NSError>) -> Void
     ) {
-        let url = "https://clients6.google.com/chat/v1/\(endpoint)"
-		let body_json = try! NSJSONSerialization.dataWithJSONObject(body, options: [])
-		
-        base_request(url,
+        base_request("https://clients6.google.com/chat/v1/\(endpoint)",
             content_type: "application/json+protobuf",
-            data: body_json,
+            data: try! NSJSONSerialization.dataWithJSONObject(body, options: []),
             use_json: use_json,
             cb: cb
         )

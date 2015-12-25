@@ -56,12 +56,15 @@ class ChatMessageView : NSTableCellView {
 		backgroundView.image = NSImage(named: orientation == .Right ? "gray_bubble_right" : "gray_bubble_left")
 		
 		// Properly color the text and background based on network type.
-		//textLabel.textColor = NSColor.whiteColor()
+		textLabel.textColor = NSColor.whiteColor()
 		if bubble == 2 { // Hangouts
+			//backgroundView.layer?.backgroundColor = NSColor.labelColor().CGColor
 			backgroundView.layer?.backgroundColor = NSColor(red: 0.13, green: 0.59, blue: 0.95, alpha: 1.0).CGColor
 		} else if bubble == 1 { // GVoice
+			//backgroundView.layer?.backgroundColor = NSColor.labelColor().CGColor
 			backgroundView.layer?.backgroundColor = NSColor(red: 0.31, green: 0.63, blue: 0.25, alpha: 1.0).CGColor
 		} else { // Self
+			//backgroundView.layer?.backgroundColor = NSColor.secondaryLabelColor().CGColor
 			backgroundView.layer?.backgroundColor = NSColor(red: 0.38, green: 0.49, blue: 0.54, alpha: 1.0).CGColor
 		}
     }

@@ -26,10 +26,6 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
 		}
-	}
-	
-    override func viewDidLoad() {
-		super.viewDidLoad()
 		
 		/* TODO: Should be a singleton outer class! */
 		OAuth2.authenticateClient({ client in
@@ -38,8 +34,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			client.connect()
 			self.updateAppBadge()
 		}, auth: { launch, actual, cb in
-			let vc = LoginViewController.login(launch, valid: actual, cb: cb)
-			self.presentViewControllerAsSheet(vc!)
+			LoginViewController.loginWindow(launch, valid: actual, cb: cb)
 		})
 	}
 	
