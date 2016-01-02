@@ -10,7 +10,7 @@ func center(dimension: Int) -> Int32 {
 
 // Create a new window first.
 var win = Terminal.begin()
-let draw = {
+Terminal.onResize {
 	// Reinitialize the window to update data structures.
 	Terminal.end()
 	win = Terminal.begin()
@@ -34,16 +34,9 @@ let draw = {
 	wrefresh(win)
 }
 
-// Method 1: We can refresh the UI only on size changes.
-Terminal.onResize(draw)
-
-// Method 2: We can have a 60fps update event loop to refresh the UI.
-// A 0.048 modifier gives us 16ms update latency. This is a TERRIBLE idea!
 /*
-EventLoop(name: "com.avaidyam.parrot-cli.main", frequency: 0.048) {
-	draw()
-	print("testing")
-}
+// A 0.048 modifier gives us 16ms update latency. This is a TERRIBLE idea!
+EventLoop(name: "com.avaidyam.parrot-cli.main", frequency: 0.048) {}
 */
 
 // End the program when ESC is pressed.

@@ -53,7 +53,7 @@ typealias Size = (rows: Int, columns: Int)
 private var _resizeHandler: (Void) -> Void = {}
 private func _redraw(sig: Int32) {
 	signal(SIGWINCH, SIG_IGN)
-	draw()
+	_resizeHandler()
 	signal(SIGWINCH, _redraw)
 }
 
