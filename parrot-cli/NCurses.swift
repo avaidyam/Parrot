@@ -1,8 +1,6 @@
 import Darwin.ncurses
 
-/* TODO: Missing characters and keys reference! */
-/* TODO: Support Terminal character break, half-delay, echo, raw mode. */
-/* TODO: Support Terminal toggling curses mode. */
+/* TODO: Support Terminal toggling curses, character break, half-delay, echo, raw mode. */
 
 // A nifty utility function for determining the centers of dimensions.
 func center(dimension: Int) -> Int32 {
@@ -142,6 +140,132 @@ struct Border {
 		}
 		return fromArray(values)
 	}
+}
+
+// A set of extended characters for NCurses terminal support.
+// This mess seriously reeks of the 1980s...
+struct ExtendedCharacters {
+	let rawValue: UInt32
+	
+	static let UpperLeftCorner = ExtendedCharacters(rawValue: _ULCORNER())
+	static let LowerLeftCorner = ExtendedCharacters(rawValue: _LLCORNER())
+	static let UpperRightCorner = ExtendedCharacters(rawValue: _URCORNER())
+	static let LowerRightCorner = ExtendedCharacters(rawValue: _LRCORNER())
+	static let LeftTee = ExtendedCharacters(rawValue: _LTEE())
+	static let RightTee = ExtendedCharacters(rawValue: _RTEE())
+	static let BottomTee = ExtendedCharacters(rawValue: _BTEE())
+	static let TopTee = ExtendedCharacters(rawValue: _TTEE())
+	static let HorizontalLine = ExtendedCharacters(rawValue: _HLINE())
+	static let VerticalLine = ExtendedCharacters(rawValue: _VLINE())
+	static let Plus = ExtendedCharacters(rawValue: _PLUS())
+	static let ScanLine1 = ExtendedCharacters(rawValue: _S1())
+	static let ScanLine9 = ExtendedCharacters(rawValue: _S9())
+	static let Diamond = ExtendedCharacters(rawValue: _DIAMOND())
+	static let Checkerboard = ExtendedCharacters(rawValue: _CKBOARD())
+	static let Degree = ExtendedCharacters(rawValue: _DEGREE())
+	static let PlusMinus = ExtendedCharacters(rawValue: _PLMINUS())
+	static let Bullet = ExtendedCharacters(rawValue: _BULLET())
+	static let LeftArrow = ExtendedCharacters(rawValue: _LARROW())
+	static let RightArrow = ExtendedCharacters(rawValue: _RARROW())
+	static let DownArrow = ExtendedCharacters(rawValue: _DARROW())
+	static let UpArrow = ExtendedCharacters(rawValue: _UARROW())
+	static let Board = ExtendedCharacters(rawValue: _BOARD())
+	static let Lantern = ExtendedCharacters(rawValue: _LANTERN())
+	static let Block = ExtendedCharacters(rawValue: _BLOCK())
+}
+
+struct KeyCode {
+	let rawValue: Int32
+	
+	static let Down = KeyCode(rawValue: KEY_DOWN)
+	static let Up = KeyCode(rawValue: KEY_UP)
+	static let Left = KeyCode(rawValue: KEY_LEFT)
+	static let Right = KeyCode(rawValue: KEY_RIGHT)
+	static let Home = KeyCode(rawValue: KEY_HOME)
+	static let Backspace =  KeyCode(rawValue: KEY_BACKSPACE)
+	static let Function0 =  KeyCode(rawValue: KEY_F0)
+	static let DeleteLine = KeyCode(rawValue: KEY_DL)
+	static let InsertLine = KeyCode(rawValue: KEY_IL)
+	static let DeleteCharacter = KeyCode(rawValue: KEY_DC)
+	static let InsertCharacter = KeyCode(rawValue: KEY_IC)
+	static let EnterInsertMode = KeyCode(rawValue: KEY_EIC)
+	static let Clear = KeyCode(rawValue: KEY_CLEAR)
+	static let ClearScreen = KeyCode(rawValue: KEY_EOS)
+	static let ClearLine = KeyCode(rawValue: KEY_EOL)
+	static let ScrollForward = KeyCode(rawValue: KEY_SF)
+	static let ScrollReverse = KeyCode(rawValue: KEY_SR)
+	static let NextPage = KeyCode(rawValue: KEY_NPAGE)
+	static let PreviousPage = KeyCode(rawValue: KEY_PPAGE)
+	static let SetTab = KeyCode(rawValue: KEY_STAB)
+	static let ClearTab = KeyCode(rawValue: KEY_CTAB)
+	static let ClearAllTabs = KeyCode(rawValue: KEY_CATAB)
+	static let Enter = KeyCode(rawValue: KEY_ENTER)
+	static let Print = KeyCode(rawValue: KEY_PRINT)
+	static let HomeKeypad = KeyCode(rawValue: KEY_LL)
+	static let UpperLeftKeypad = KeyCode(rawValue: KEY_A1)
+	static let UpperRightKeypad = KeyCode(rawValue: KEY_A3)
+	static let CenterKeypad = KeyCode(rawValue: KEY_B2)
+	static let LowerLeftKeypad = KeyCode(rawValue: KEY_C1)
+	static let LowerRightKeypad = KeyCode(rawValue: KEY_C3)
+	static let BackTab = KeyCode(rawValue: KEY_BTAB)
+	static let Begin = KeyCode(rawValue: KEY_BEG)
+	static let Cancel = KeyCode(rawValue: KEY_CANCEL)
+	static let Close = KeyCode(rawValue: KEY_CLOSE)
+	static let Command = KeyCode(rawValue: KEY_COMMAND)
+	static let Copy = KeyCode(rawValue: KEY_COPY)
+	static let Create = KeyCode(rawValue: KEY_CREATE)
+	static let End = KeyCode(rawValue: KEY_END)
+	static let Exit = KeyCode(rawValue: KEY_EXIT)
+	static let Find = KeyCode(rawValue: KEY_FIND)
+	static let Help = KeyCode(rawValue: KEY_HELP)
+	static let Mark = KeyCode(rawValue: KEY_MARK)
+	static let Message = KeyCode(rawValue: KEY_MESSAGE)
+	static let Move = KeyCode(rawValue: KEY_MOVE)
+	static let Next = KeyCode(rawValue: KEY_NEXT)
+	static let Open = KeyCode(rawValue: KEY_OPEN)
+	static let Options = KeyCode(rawValue: KEY_OPTIONS)
+	static let Previous = KeyCode(rawValue: KEY_PREVIOUS)
+	static let Redo = KeyCode(rawValue: KEY_REDO)
+	static let Reference = KeyCode(rawValue: KEY_REFERENCE)
+	static let Refresh = KeyCode(rawValue: KEY_REFRESH)
+	static let Replace = KeyCode(rawValue: KEY_REPLACE)
+	static let Restart = KeyCode(rawValue: KEY_RESTART)
+	static let Resume = KeyCode(rawValue: KEY_RESUME)
+	static let Save = KeyCode(rawValue: KEY_SAVE)
+	static let ShiftedBegin = KeyCode(rawValue: KEY_SBEG)
+	static let ShiftedCancel = KeyCode(rawValue: KEY_SCANCEL)
+	static let ShiftedCommand = KeyCode(rawValue: KEY_SCOMMAND)
+	static let ShiftedCopy = KeyCode(rawValue: KEY_SCOPY)
+	static let ShiftedCreate = KeyCode(rawValue: KEY_SCREATE)
+	static let ShiftedDeleteCharacter = KeyCode(rawValue: KEY_SDC)
+	static let ShiftedDeleteLine = KeyCode(rawValue: KEY_SDL)
+	static let Select = KeyCode(rawValue: KEY_SELECT)
+	static let ShiftedEnd = KeyCode(rawValue: KEY_SEND)
+	static let ShiftedClearLine = KeyCode(rawValue: KEY_SEOL)
+	static let ShiftedExit = KeyCode(rawValue: KEY_SEXIT)
+	static let ShiftedFind = KeyCode(rawValue: KEY_SFIND)
+	static let ShiftedHelp = KeyCode(rawValue: KEY_SHELP)
+	static let ShiftedHome = KeyCode(rawValue: KEY_SHOME)
+	static let ShiftedInsertCharacter = KeyCode(rawValue: KEY_SIC)
+	static let ShiftedLeft = KeyCode(rawValue: KEY_SLEFT)
+	static let ShiftedMessage = KeyCode(rawValue: KEY_SMESSAGE)
+	static let ShiftedMove = KeyCode(rawValue: KEY_SMOVE)
+	static let ShiftedNext = KeyCode(rawValue: KEY_SNEXT)
+	static let ShiftedOptions = KeyCode(rawValue: KEY_SOPTIONS)
+	static let ShiftedPrevious = KeyCode(rawValue: KEY_SPREVIOUS)
+	static let ShiftedPrint = KeyCode(rawValue: KEY_SPRINT)
+	static let ShiftedRedo = KeyCode(rawValue: KEY_SREDO)
+	static let ShiftedReplace = KeyCode(rawValue: KEY_SREPLACE)
+	static let ShiftedRight = KeyCode(rawValue: KEY_SRIGHT)
+	static let ShiftedResume = KeyCode(rawValue: KEY_SRSUME)
+	static let ShiftedSave = KeyCode(rawValue: KEY_SSAVE)
+	static let ShiftedSuspend = KeyCode(rawValue: KEY_SSUSPEND)
+	static let ShiftedUndo = KeyCode(rawValue: KEY_SUNDO)
+	static let Suspend = KeyCode(rawValue: KEY_SUSPEND)
+	static let Undo = KeyCode(rawValue: KEY_UNDO)
+	static let Mouse = KeyCode(rawValue: KEY_MOUSE)
+	static let Resize = KeyCode(rawValue: KEY_RESIZE)
+	static let Event = KeyCode(rawValue: KEY_EVENT)
 }
 
 // For dimensions
