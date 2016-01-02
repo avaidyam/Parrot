@@ -126,28 +126,44 @@ class Canvas {
 		doupdate()
 	}
 	
-	func setBorder(string: String) {
-		self.setBorder(Border.create(string))
+	func setBorder(string: String, colors: ColorPair? = nil) {
+		self.setBorder(Border.create(string), colors: colors)
 	}
 	
-	func setBorder(border: Border? = nil) {
+	func setBorder(border: Border? = nil, colors: ColorPair? = nil) {
 		let b = border ?? Border.`default`()
+		
+		if let colors = colors {
+			wattron(self.window, COLOR_PAIR(colors.rawValue))
+		}
 		wborder(self.window, b.leftSide, b.rightSide, b.topSide, b.bottomSide,
 			b.topLeft, b.topRight, b.bottomLeft, b.bottomRight)
+		if let colors = colors {
+			wattroff(self.window, COLOR_PAIR(colors.rawValue))
+		}
+		
 		self.border = b
 		self.refresh()
 	}
 	
 	// Writes a string or a single character if the string is only that long.
 	// If a point is specified, it writes to that point in the window.
-	func write(string: String, point: Point? = nil) -> Bool {
+	func write(string: String, point: Point? = nil, colors: ColorPair? = nil) -> Bool {
 		var result: Int32 = 0
 		let _p = (point ?? cursor())!, p = (x: Int32(_p.x), y: Int32(_p.y))
+		if let colors = colors {
+			wattron(self.window, COLOR_PAIR(colors.rawValue))
+		}
+		
 		if string.characters.count == 1 {
 			let ch = string.unicodeScalars.first!.value
 			result = mvwaddch(self.window, p.y, p.x, ch)
 		} else {
 			result = mvwaddstr(self.window, p.y, p.x, string)
+		}
+		
+		if let colors = colors {
+			wattroff(self.window, COLOR_PAIR(colors.rawValue))
 		}
 		self.refresh()
 		return result == OK
@@ -170,7 +186,7 @@ class Canvas {
 		} else {
 			r = wgetch(self.window)
 		}
-		return KeyCode(rawValue: r)
+		return KeyCode(r)
 	}
 	
 	func readString(point: Point? = nil) -> String? {

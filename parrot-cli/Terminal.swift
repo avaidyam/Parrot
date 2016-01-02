@@ -169,10 +169,13 @@ struct Terminal {
 	//
 	
 	// Sets a handler that is called whenever the terminal is resized.
-	static func onResize(draw: (Void) -> Void) {
+	// If call is true, the handler will also be called immediately.
+	static func onResize(call: Bool = false, draw: (Void) -> Void) {
 		_resizeHandler = draw
 		signal(SIGWINCH, _redraw)
-		_redraw(Int32(0))
+		if call {
+			_redraw(Int32(0))
+		}
 	}
 }
 

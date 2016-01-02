@@ -8,22 +8,28 @@ func center(dimension: Int) -> Int {
 	return Int((dimension / 2) - 1)
 }
 
-Terminal.begin()
-var window = Canvas.origin
-window.refresh(true)
-let str3 = "Debug[size: \(Terminal.size())]"
-
-wattron(window.window, COLOR_PAIR(ColorPair(1, colors: (.Black, .Red)).rawValue))
-window.write(str1, point: (center(Terminal.size().w) - center(str1.characters.count), center(Terminal.size().h) - 1))
-wattron(window.window, COLOR_PAIR(ColorPair(2, colors: (.Black, .Blue)).rawValue))
-window.write(str2, point: (center(Terminal.size().w) - center(str2.characters.count), center(Terminal.size().h) + 0))
-wattron(window.window, COLOR_PAIR(ColorPair(3, colors: (.Black, .Yellow)).rawValue))
-window.write(str3, point: (center(Terminal.size().w) - center(str3.characters.count), center(Terminal.size().h) + 1))
-
-wattron(window.window, COLOR_PAIR(ColorPair(4, colors: (.Magenta, .Black)).rawValue))
-window.setBorder("||--****")
-
-// End the program when ESC is pressed.
-Terminal.bell()
-Terminal.wait(KeyCode(rawValue: 27))
-Terminal.end()
+// Launch an encapsulated interactive Terminal.
+Terminal.interactive {
+	var window = Canvas()!
+	window.setBorder(Border.`default`(), colors: ColorPair(4, colors: (.Magenta, .Black)))
+	let str3 = "Debug[size: \(Terminal.size())]"
+	
+	window.write(str1,
+		point: (center(Terminal.size().w) - center(str1.characters.count), center(Terminal.size().h) - 1),
+		colors: ColorPair(1, colors: (.Black, .Red)))
+	window.write(str2,
+		point: (center(Terminal.size().w) - center(str2.characters.count), center(Terminal.size().h) + 0),
+		colors: ColorPair(2, colors: (.Black, .Blue)))
+	window.write(str3,
+		point: (center(Terminal.size().w) - center(str3.characters.count), center(Terminal.size().h) + 1),
+		colors: ColorPair(3, colors: (.Black, .Yellow)))
+	
+	/*Terminal.onResize {
+		window.refresh(true)
+		window.move((0, 0, Terminal.size().w, Terminal.size().h)) // stretch!
+	}*/
+	
+	// End the program when ESC is pressed.
+	Terminal.bell()
+	Terminal.wait(KeyCode(27))
+}
