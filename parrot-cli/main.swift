@@ -6,6 +6,7 @@ let str1 = "Parrot is not yet implemented as a CLI."
 let str2 = "Please try again later though!"
 
 // Create a new window first.
+setlocale(LC_CTYPE, "")
 var win = initscr()
 
 // Catch all terminal resizes and call it initially for drawing.
@@ -21,10 +22,17 @@ func redraw(sig: Int32) {
 	
 	// Draw our text in the middle of the window.
 	// Set ColorPairs that we can use and looks cool!
-	ColorPair(1, colors: (.Black, .Red)).set()
+	wattron(win, COLOR_PAIR(ColorPair(1, colors: (.Black, .Red)).rawValue))
 	mvaddstr(center(Terminal.size().rows), center(Terminal.size().columns) - center(str1.characters.count), str1)
-	ColorPair(2, colors: (.Black, .Blue)).set()
+	wattron(win, COLOR_PAIR(ColorPair(2, colors: (.Black, .Blue)).rawValue))
 	mvaddstr(center(Terminal.size().rows) + 1, center(Terminal.size().columns) - center(str2.characters.count), str2)
+	wrefresh(win)
+	
+	// Draw a window border.
+	wattron(win, COLOR_PAIR(ColorPair(3, colors: (.Yellow, .Black)).rawValue))
+	let border = Border.fromString("||--****")!
+	wborder(win, border.leftSide, border.rightSide, border.topSide, border.bottomSide,
+				 border.topLeft, border.topRight, border.bottomLeft, border.bottomRight)
 	wrefresh(win)
 	
 	signal(SIGWINCH, redraw);

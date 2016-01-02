@@ -1,7 +1,8 @@
 import Darwin.ncurses
 
-/* TODO: This is going to become an NCurses library real fast... */
-/* TODO: Missing borders, characters, and keys. */
+/* TODO: Missing characters and keys reference! */
+/* TODO: Support Terminal character break, half-delay, echo, raw mode. */
+/* TODO: Support Terminal toggling curses mode. */
 
 // A nifty utility function for determining the centers of dimensions.
 func center(dimension: Int) -> Int32 {
@@ -98,16 +99,48 @@ struct ColorPair {
 			init_pair(Int16(self.rawValue), f, b)
 		}
 	}
+}
+
+struct Border {
+	let leftSide: UInt32
+	let rightSide: UInt32
+	let topSide: UInt32
+	let bottomSide: UInt32
 	
-	// Set the ColorPair as the current one.
-	func set() {
-		attron(COLOR_PAIR(self.rawValue))
+	let topLeft: UInt32
+	let topRight: UInt32
+	let bottomLeft: UInt32
+	let bottomRight: UInt32
+	
+	// Using an array of zeros allows the standard values instead.
+	static let defaults = [0, 0, 0, 0, 0, 0, 0, 0]
+	
+	// Creates a Border from an array of 8 elements.
+	// Components must follow the same order as the above variables!
+	static func fromArray(values: [UInt32]) -> Border? {
+		if values.count != 8 {
+			return nil
+		}
+		
+		return Border(leftSide: values[0], rightSide: values[1],
+					  topSide: values[2], bottomSide: values[3],
+					  topLeft: values[4], topRight: values[5],
+					  bottomLeft: values[6], bottomRight: values[7])
 	}
 	
-	// Reset to the default/hidden ColorPair.
-	// This is inaccessible for modification, and is a static func.
-	static func reset() {
-		attron(COLOR_PAIR(0))
+	// Creates a Border from a string of 8 characters.
+	// Components must follow the same order as the above variables!
+	static func fromString(string: String) -> Border? {
+		if string.characters.count != 8 {
+			return nil
+		}
+		
+		var values = [UInt32](count: 8, repeatedValue: 0)
+		for i in (0 ... 7) {
+			let str = String(Array(string.characters)[i])
+			values[i] = str.unicodeScalars.first!.value
+		}
+		return fromArray(values)
 	}
 }
 
@@ -145,7 +178,4 @@ struct Terminal {
 			use_default_colors()
 		}
 	}
-	
-	/* TODO: Support character break, half-delay, echo, raw mode. */
-	/* TODO: Support toggling curses mode. */
 }
