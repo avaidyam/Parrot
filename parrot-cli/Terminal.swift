@@ -49,6 +49,14 @@ struct Border {
 // For dimensions
 typealias Size = (rows: Int, columns: Int)
 
+// To allow for a Terminal resize handler.
+private var _resizeHandler: (Void) -> Void = {}
+private func _redraw(sig: Int32) {
+	signal(SIGWINCH, SIG_IGN)
+	draw()
+	signal(SIGWINCH, _redraw)
+}
+
 struct Terminal {
 	
 	// Default terminal values, initialized when begin() is called.
@@ -181,6 +189,17 @@ struct Terminal {
 		halfdelay(Int32(value))
 		_halfDelay = value
 	}
+	
+	//
+	// Terminal Resize
+	//
+	
+	// Sets a handler that is called whenever the terminal is resized.
+	static func onResize(draw: (Void) -> Void) {
+		_resizeHandler = draw
+		signal(SIGWINCH, _redraw)
+		_redraw(Int32(0))
+	}
 }
 
 // Rudimentary event loop to drive UI refreshing and whatnot.
@@ -206,5 +225,13 @@ class EventLoop {
 	deinit {
 		dispatch_source_cancel(source)
 		// can't delete anything :(
+	}
+	
+	// Use only in case of a heavy operation that could backlog the queue.
+	// This temporarily disables the queue execution!
+	func execute(handler: (Void) -> Void) {
+		dispatch_suspend(source)
+		handler()
+		dispatch_resume(source)
 	}
 }

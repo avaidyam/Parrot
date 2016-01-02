@@ -35,14 +35,7 @@ let draw = {
 }
 
 // Method 1: We can refresh the UI only on size changes.
-// We'll catch SIGWINCH's and mask them out when we update.
-func redraw(sig: Int32) {
-	signal(SIGWINCH, SIG_IGN)
-	draw()
-	signal(SIGWINCH, redraw)
-}
-signal(SIGWINCH, redraw)
-redraw(Int32(0))
+Terminal.onResize(draw)
 
 // Method 2: We can have a 60fps update event loop to refresh the UI.
 // A 0.048 modifier gives us 16ms update latency. This is a TERRIBLE idea!
