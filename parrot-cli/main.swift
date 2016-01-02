@@ -1,22 +1,16 @@
 import Foundation
 import Darwin.ncurses
 
-// The string we want to show in the window for now.
 let str1 = "Parrot is not yet implemented as a CLI."
 let str2 = "Please try again later though!"
 
-// A nifty utility function for determining the centers of dimensions.
 func center(dimension: Int) -> Int32 {
 	return Int32((dimension / 2) - 1)
 }
 
 // Create a new window first.
 var win = Terminal.begin()
-
-// Catch all terminal resizes and call it initially for drawing.
-func redraw(sig: Int32) {
-	signal(SIGWINCH, SIG_IGN)
-	
+let draw = {
 	// Reinitialize the window to update data structures.
 	Terminal.end()
 	win = Terminal.begin()
@@ -36,16 +30,30 @@ func redraw(sig: Int32) {
 	wattron(win, COLOR_PAIR(ColorPair(3, colors: (.Yellow, .Black)).rawValue))
 	let b = Border.fromString("||--****")!
 	wborder(win, b.leftSide, b.rightSide, b.topSide, b.bottomSide,
-				 b.topLeft, b.topRight, b.bottomLeft, b.bottomRight)
+		b.topLeft, b.topRight, b.bottomLeft, b.bottomRight)
 	wrefresh(win)
-	
-	signal(SIGWINCH, redraw);
+}
+
+// Method 1: We can refresh the UI only on size changes.
+// We'll catch SIGWINCH's and mask them out when we update.
+func redraw(sig: Int32) {
+	signal(SIGWINCH, SIG_IGN)
+	draw()
+	signal(SIGWINCH, redraw)
 }
 signal(SIGWINCH, redraw)
 redraw(Int32(0))
 
+// Method 2: We can have a 60fps update event loop to refresh the UI.
+// A 0.048 modifier gives us 16ms update latency. This is a TERRIBLE idea!
+/*
+EventLoop(name: "com.avaidyam.parrot-cli.main", frequency: 0.048) {
+	draw()
+	print("testing")
+}
+*/
+
 // End the program when ESC is pressed.
-Terminal.bell()
 Terminal.bell()
 while getch() != 27 {}
 Terminal.end()

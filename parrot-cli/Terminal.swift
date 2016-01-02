@@ -1,3 +1,4 @@
+import Dispatch
 import Darwin.ncurses
 
 struct Border {
@@ -179,5 +180,31 @@ struct Terminal {
 	static func halfDelay(value: Int) {
 		halfdelay(Int32(value))
 		_halfDelay = value
+	}
+}
+
+// Rudimentary event loop to drive UI refreshing and whatnot.
+class EventLoop {
+	let attr: dispatch_queue_attr_t
+	let queue: dispatch_queue_t
+	let source: dispatch_source_t
+	
+	// name - name of the dispatch queue
+	// frequency - how many times per second to update
+	// handler - what to do during the update
+	init(name: String, frequency: Double, handler: (Void) -> Void) {
+		attr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_USER_INTERACTIVE, 0)
+		queue = dispatch_queue_create(name, attr)
+		source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue)
+		
+		let int = UInt64(frequency * Double(NSEC_PER_SEC))
+		dispatch_source_set_timer(source, dispatch_time(DISPATCH_TIME_NOW, 0), int, 0)
+		dispatch_source_set_event_handler(source, handler)
+		dispatch_resume(source)
+	}
+	
+	deinit {
+		dispatch_source_cancel(source)
+		// can't delete anything :(
 	}
 }
