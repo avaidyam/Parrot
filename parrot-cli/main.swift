@@ -5,8 +5,12 @@ import Darwin.ncurses
 let str1 = "Parrot is not yet implemented as a CLI."
 let str2 = "Please try again later though!"
 
+// A nifty utility function for determining the centers of dimensions.
+func center(dimension: Int) -> Int32 {
+	return Int32((dimension / 2) - 1)
+}
+
 // Create a new window first.
-setlocale(LC_CTYPE, "")
 var win = initscr()
 
 // Catch all terminal resizes and call it initially for drawing.
