@@ -2,43 +2,33 @@ import Foundation
 import Darwin.ncurses
 
 // The string we want to show in the window for now.
-let str = "Parrot is not yet implemented as a CLI."
-
-// A nifty utility function for determining the centers of dimensions.
-func center(dimension: Int) -> Int32 {
-	return Int32((dimension / 2) - 1)
-}
-func center(dimension: Int32) -> Int32 {
-	return Int32((dimension / 2) - 1)
-}
+let str1 = "Parrot is not yet implemented as a CLI."
+let str2 = "Please try again later though!"
 
 // Create a new window first.
 var win = initscr()
 
+// Catch all terminal resizes and call it initially for drawing.
 func redraw(sig: Int32) {
-	
-	// Block terminal resize signals for now.
 	signal(SIGWINCH, SIG_IGN)
 	
 	// Reinitialize the window to update data structures.
 	endwin()
 	win = initscr()
-	start_color()
+	Terminal.startColors()
 	wrefresh(win)
 	wclear(win)
 	
-	init_pair(1, Int16(Color.Black.rawValue), Int16(Color.Red.rawValue))
-	
 	// Draw our text in the middle of the window.
-	attron(COLOR_PAIR(1))
-	mvaddstr(center(LINES), center(COLS) - center(str.characters.count), str)
+	// Set ColorPairs that we can use and looks cool!
+	ColorPair(1, colors: (.Black, .Red)).set()
+	mvaddstr(center(Terminal.size().rows), center(Terminal.size().columns) - center(str1.characters.count), str1)
+	ColorPair(2, colors: (.Black, .Blue)).set()
+	mvaddstr(center(Terminal.size().rows) + 1, center(Terminal.size().columns) - center(str2.characters.count), str2)
 	wrefresh(win)
 	
-	// Allow terminal resizes again.
 	signal(SIGWINCH, redraw);
 }
-
-// Catch all terminal resizes and call it initially for drawing.
 signal(SIGWINCH, redraw)
 redraw(Int32(0))
 
