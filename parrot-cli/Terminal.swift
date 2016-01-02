@@ -1,54 +1,6 @@
 import Dispatch
 import Darwin.ncurses
 
-struct Border {
-	let leftSide: UInt32
-	let rightSide: UInt32
-	let topSide: UInt32
-	let bottomSide: UInt32
-	
-	let topLeft: UInt32
-	let topRight: UInt32
-	let bottomLeft: UInt32
-	let bottomRight: UInt32
-	
-	// Using an array of zeros allows the standard values instead.
-	static func `default`() -> Border {
-		return fromArray([0, 0, 0, 0, 0, 0, 0, 0])!
-	}
-	
-	// Creates a Border from an array of 8 elements.
-	// Components must follow the same order as the above variables!
-	static func fromArray(values: [UInt32]) -> Border? {
-		if values.count != 8 {
-			return nil
-		}
-		
-		return Border(leftSide: values[0], rightSide: values[1],
-					  topSide: values[2], bottomSide: values[3],
-					  topLeft: values[4], topRight: values[5],
-					  bottomLeft: values[6], bottomRight: values[7])
-	}
-	
-	// Creates a Border from a string of 8 characters.
-	// Components must follow the same order as the above variables!
-	static func fromString(string: String) -> Border? {
-		if string.characters.count != 8 {
-			return nil
-		}
-		
-		var values = [UInt32](count: 8, repeatedValue: 0)
-		for i in (0 ... 7) {
-			let str = String(Array(string.characters)[i])
-			values[i] = str.unicodeScalars.first!.value
-		}
-		return fromArray(values)
-	}
-}
-
-// For dimensions
-typealias Size = (rows: Int, columns: Int)
-
 // To allow for a Terminal resize handler.
 private var _resizeHandler: (Void) -> Void = {}
 private func _redraw(sig: Int32) {
@@ -74,14 +26,18 @@ struct Terminal {
 	//
 	
 	// Starts the ncurses session.
-	static func begin() -> COpaquePointer {
-		let win = initscr()
+	// Will automatically enable colors if possible.
+	static func begin(colors: Bool = true) {
+		initscr() // basically just newterm()
 		noraw()
 		cbreak()
 		noecho()
 		halfdelay(0)
+		
 		_cursesActive = true
-		return win
+		if colors {
+			Terminal.startColors()
+		}
 	}
 	
 	// Pause ncurses session to standard terminal.
@@ -112,9 +68,27 @@ struct Terminal {
 		return _cursesActive
 	}
 	
+	// Runs an entire Terminal/ncurses session between a begin() and end().
+	static func interactive(handler: (Void) -> Void) {
+		self.begin()
+		handler()
+		self.end()
+	}
+	
+	// Executes a handler with the ncurses session paused.
+	static func paused(handler: (Void) -> Void) {
+		self.pause()
+		handler()
+		self.resume()
+	}
+	
+	static func wait(key: KeyCode) {
+		while(getch() != key.rawValue) {}
+	}
+	
 	// What is the current terminal size?
 	static func size() -> Size {
-		return (Int(LINES), Int(COLS))
+		return (w:Int(COLS), h: Int(LINES))
 	}
 	
 	// Beep the terminal!

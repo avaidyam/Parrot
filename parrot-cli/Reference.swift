@@ -1,5 +1,16 @@
 import Darwin.ncurses
 
+// For dimensions of various things.
+typealias Point = (x: Int, y: Int)
+typealias Size = (w: Int, h: Int)
+typealias Frame = (x: Int, y: Int, w: Int, h: Int)
+
+// For RGB components.
+typealias RGB = (R: Double, G: Double, B: Double)
+
+// For Foreground/Background values.
+typealias FB = (F: Color, B: Color)
+
 struct Attribute: OptionSetType {
 	let rawValue: Int32
 	
@@ -138,5 +149,125 @@ struct KeyCode {
 	static let Undo = KeyCode(rawValue: KEY_UNDO)
 	static let Mouse = KeyCode(rawValue: KEY_MOUSE)
 	static let Resize = KeyCode(rawValue: KEY_RESIZE)
-	static let Event = KeyCode(rawValue: KEY_EVENT)
+	static let F1 = KeyCode(rawValue: KEY_F0 + 1)
+	static let F2 = KeyCode(rawValue: KEY_F0 + 2)
+	static let F3 = KeyCode(rawValue: KEY_F0 + 3)
+	static let F4 = KeyCode(rawValue: KEY_F0 + 4)
+	static let F5 = KeyCode(rawValue: KEY_F0 + 5)
+	static let F6 = KeyCode(rawValue: KEY_F0 + 6)
+	static let F7 = KeyCode(rawValue: KEY_F0 + 7)
+	static let F8 = KeyCode(rawValue: KEY_F0 + 8)
+	static let F9 = KeyCode(rawValue: KEY_F0 + 9)
+	static let F10 = KeyCode(rawValue: KEY_F0 + 10)
+	static let F11 = KeyCode(rawValue: KEY_F0 + 11)
+	static let F12 = KeyCode(rawValue: KEY_F0 + 12)
+}
+
+struct Color {
+	let rawValue: Int32
+	
+	// All the available terminal colors.
+	static var Black = Color(rawValue: COLOR_BLACK)
+	static var Red = Color(rawValue: COLOR_RED)
+	static var Green = Color(rawValue: COLOR_GREEN)
+	static var Yellow = Color(rawValue: COLOR_YELLOW)
+	static var Blue = Color(rawValue: COLOR_BLUE)
+	static var Magenta = Color(rawValue: COLOR_MAGENTA)
+	static var Cyan = Color(rawValue: COLOR_CYAN)
+	static var White = Color(rawValue: COLOR_WHITE)
+	
+	// You can only access the predefined colors!
+	internal init(rawValue: Int32) {
+		self.rawValue = rawValue
+	}
+	
+	// The RGB components of this defined color.
+	var rgb: RGB {
+		get {
+			var r: Int16 = 0
+			var g: Int16 = 0
+			var b: Int16 = 0
+			color_content(Int16(self.rawValue), &r, &g, &b)
+			return (Double(r) / 1000.0, Double(g) / 1000.0, Double(b) / 1000.0)
+		}
+		set {
+			let r = Int16(min(newValue.R, 0) * 1000)
+			let g = Int16(min(newValue.G, 0) * 1000)
+			let b = Int16(min(newValue.B, 0) * 1000)
+			init_color(Int16(self.rawValue), r, g, b)
+		}
+	}
+}
+
+struct ColorPair {
+	let rawValue: Int32
+	
+	// Note that pair 0 may not be modifiable.
+	init(_ rawValue: Int) {
+		self.rawValue = Int32(rawValue < COLOR_PAIRS - 1 ? rawValue : 0)
+	}
+	
+	init(_ rawValue: Int, colors: FB) {
+		self.init(rawValue)
+		self.colors = colors
+	}
+	
+	// The foreground/background pair for this ColorPair.
+	var colors: FB {
+		get {
+			var f: Int16 = 0
+			var b: Int16 = 0
+			pair_content(Int16(self.rawValue), &f, &b)
+			return (Color(rawValue: Int32(f)), Color(rawValue: Int32(b)))
+		}
+		set {
+			let f = Int16(newValue.F.rawValue)
+			let b = Int16(newValue.B.rawValue)
+			init_pair(Int16(self.rawValue), f, b)
+		}
+	}
+}
+
+struct Border {
+	let leftSide: UInt32
+	let rightSide: UInt32
+	let topSide: UInt32
+	let bottomSide: UInt32
+	
+	let topLeft: UInt32
+	let topRight: UInt32
+	let bottomLeft: UInt32
+	let bottomRight: UInt32
+	
+	// Using a string of spaces shows no border.
+	static func `default`() -> Border {
+		return create("        ")
+	}
+	
+	// Creates a Border from an array of 8 elements.
+	// Components must follow the same order as the above variables!
+	static func create(var values: [UInt32]) -> Border {
+		if values.count != 8 {
+			values = [32, 32, 32, 32, 32, 32, 32, 32]
+		}
+		return Border(leftSide: values[0], rightSide: values[1],
+			topSide: values[2], bottomSide: values[3],
+			topLeft: values[4], topRight: values[5],
+			bottomLeft: values[6], bottomRight: values[7])
+	}
+	
+	// Creates a Border from a string of 8 characters.
+	// Components must follow the same order as the above variables!
+	static func create(var string: String) -> Border {
+		if string.characters.count != 8 {
+			string = "        " // 8 spaces
+		}
+		
+		var values = [UInt32](count: 8, repeatedValue: 0)
+		for i in (0 ... 7) {
+			let str = String(Array(string.characters)[i])
+			values[i] = str.unicodeScalars.first!.value
+		}
+		return create(values)
+	}
 }

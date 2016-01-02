@@ -1,45 +1,29 @@
 import Foundation
 import Darwin.ncurses
 
-let str1 = "Parrot is not yet implemented as a CLI."
-let str2 = "Please try again later though!"
+let str1 = "Parrot is not yet ready as a CLI tool."
+let str2 = "Press ESC to exit."
 
-func center(dimension: Int) -> Int32 {
-	return Int32((dimension / 2) - 1)
+func center(dimension: Int) -> Int {
+	return Int((dimension / 2) - 1)
 }
 
-// Create a new window first.
-var win = Terminal.begin()
-Terminal.onResize {
-	// Reinitialize the window to update data structures.
-	Terminal.end()
-	win = Terminal.begin()
-	Terminal.startColors()
-	wrefresh(win)
-	wclear(win)
-	
-	// Draw our text in the middle of the window.
-	// Set ColorPairs that we can use and looks cool!
-	wattron(win, COLOR_PAIR(ColorPair(1, colors: (.Black, .Red)).rawValue))
-	mvaddstr(center(Terminal.size().rows), center(Terminal.size().columns) - center(str1.characters.count), str1)
-	wattron(win, COLOR_PAIR(ColorPair(2, colors: (.Black, .Blue)).rawValue))
-	mvaddstr(center(Terminal.size().rows) + 1, center(Terminal.size().columns) - center(str2.characters.count), str2)
-	wrefresh(win)
-	
-	// Draw a window border.
-	wattron(win, COLOR_PAIR(ColorPair(3, colors: (.Yellow, .Black)).rawValue))
-	let b = Border.fromString("||--****")!
-	wborder(win, b.leftSide, b.rightSide, b.topSide, b.bottomSide,
-		b.topLeft, b.topRight, b.bottomLeft, b.bottomRight)
-	wrefresh(win)
-}
+Terminal.begin()
+var window = Canvas.origin
+window.refresh(true)
+let str3 = "Debug[size: \(Terminal.size())]"
 
-/*
-// A 0.048 modifier gives us 16ms update latency. This is a TERRIBLE idea!
-EventLoop(name: "com.avaidyam.parrot-cli.main", frequency: 0.048) {}
-*/
+wattron(window.window, COLOR_PAIR(ColorPair(1, colors: (.Black, .Red)).rawValue))
+window.write(str1, point: (center(Terminal.size().w) - center(str1.characters.count), center(Terminal.size().h) - 1))
+wattron(window.window, COLOR_PAIR(ColorPair(2, colors: (.Black, .Blue)).rawValue))
+window.write(str2, point: (center(Terminal.size().w) - center(str2.characters.count), center(Terminal.size().h) + 0))
+wattron(window.window, COLOR_PAIR(ColorPair(3, colors: (.Black, .Yellow)).rawValue))
+window.write(str3, point: (center(Terminal.size().w) - center(str3.characters.count), center(Terminal.size().h) + 1))
+
+wattron(window.window, COLOR_PAIR(ColorPair(4, colors: (.Magenta, .Black)).rawValue))
+window.setBorder("||--****")
 
 // End the program when ESC is pressed.
 Terminal.bell()
-while getch() != 27 {}
+Terminal.wait(KeyCode(rawValue: 27))
 Terminal.end()
