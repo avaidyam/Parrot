@@ -14,17 +14,17 @@ Terminal.interactive {
 	canvas.borderColor = ColorPair(4, colors: (.Magenta, .Black))
 	
 	// Write our three strings by centering them with specific colors.
-	canvas.redraw = { canvas in
+	canvas.redraw = { c in
 		let str3 = "Debug[size: \(canvas.frame)]"
 		
-		canvas.write(str1,
-			point: (center(canvas.frame.w) - center(str1.characters.count), center(canvas.frame.h) - 1),
+		c.write(str1,
+			point: (center(c.frame.s.w) - center(str1.characters.count), center(c.frame.s.h) - 1),
 			colors: ColorPair(1, colors: (.Black, .Red)))
-		canvas.write(str2,
-			point: (center(canvas.frame.w) - center(str2.characters.count), center(canvas.frame.h) + 0),
+		c.write(str2,
+			point: (center(c.frame.s.w) - center(str2.characters.count), center(c.frame.s.h) + 0),
 			colors: ColorPair(2, colors: (.Black, .Blue)))
-		canvas.write(str3,
-			point: (center(canvas.frame.w) - center(str3.characters.count), center(canvas.frame.h) + 1),
+		c.write(str3,
+			point: (center(c.frame.s.w) - center(str3.characters.count), center(c.frame.s.h) + 1),
 			colors: ColorPair(3, colors: (.Black, .Yellow)))
 	}
 	

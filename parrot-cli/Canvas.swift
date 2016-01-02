@@ -2,7 +2,7 @@ import Darwin.ncurses
 
 /* TODO: Scrolling, Lines, Menus and Forms...? */
 /* TODO: Use mvwinnstr instead of scanning or reading. */
-/* TODO: Switch to pads instead of windows for offscreen size. */
+/* TODO: Maybe use panel_userptr to link back to the Canvas? */
 
 // del char, get char
 
@@ -21,43 +21,111 @@ class Canvas {
 	private var panel: UnsafeMutablePointer<PANEL>
 	private var isRoot = false
 	
-	// Indicates current size and location on screen.
-	var frame: Frame {
+	// Forms a Canvas tree hierarchy.
+	let parent: Canvas?
+	let children: [Canvas] = [Canvas]()
+	
+	/* TODO: Canvas Attributes? */
+	var attributes: [Attribute] = [Attribute]()
+	
+	// Sets and gets the canvas's current cursor position.
+	var cursor: Point {
+		get {
+			return (x: Int(getcurx(self.window)), y: Int(getcury(self.window)))
+		}
+		set(new) {
+			wmove(self.window, Int32(new.y), Int32(new.x))
+		}
+	}
+	
+	// Sets and gets the canvas's origin position.
+	var origin: Point {
+		get {
+			let bx = getbegx(self.window), by = getbegy(self.window)
+			return (x: Int(bx), y: Int(by))
+		}
+		set(origin) {
+			move_panel(self.panel, Int32(origin.y), Int32(origin.x))
+			self.refresh()
+		}
+	}
+	
+	// Sets and gets the canvas's size position.
+	var size: Size {
 		get {
 			let bx = getbegx(self.window), by = getbegy(self.window)
 			let mx = getmaxx(self.window), my = getmaxy(self.window)
-			return (x: Int(bx), y: Int(by), w: Int(mx - bx), h: Int(my - by))
+			return (w: Int(mx - bx), h: Int(my - by))
 		}
-		set(frame) {
-			let newWindow = newwin(Int32(frame.h), Int32(frame.w), Int32(frame.y), Int32(frame.x))
+		set(size) {
+			let _pt = self.origin
+			let newWindow = newwin(Int32(size.h), Int32(size.w), Int32(_pt.y), Int32(_pt.x))
 			overwrite(self.window, newWindow)
 			replace_panel(self.panel, newWindow)
 			delwin(self.window)
 			self.window = newWindow
 		}
 	}
-	var origin: Point {
+	
+	// Sets and gets the canvas's origin and size together.
+	var frame: Frame {
 		get {
-			return (x: self.frame.x, y: self.frame.y)
+			let bx = getbegx(self.window), by = getbegy(self.window)
+			let mx = getmaxx(self.window), my = getmaxy(self.window)
+			return (p: (x: Int(bx), y: Int(by)), s: (w: Int(mx - bx), h: Int(my - by)))
 		}
-		set(point) {
-			move_panel(self.panel, Int32(point.y), Int32(point.x))
-			self.refresh(soft: true)
+		set(frame) {
+			let newWindow = newwin(Int32(frame.s.h), Int32(frame.s.w), Int32(frame.p.y), Int32(frame.p.x))
+			overwrite(self.window, newWindow)
+			replace_panel(self.panel, newWindow)
+			delwin(self.window)
+			self.window = newWindow
 		}
 	}
-	var cursor: Point {
+	
+	// Returns the depth of the canvas in the hierarchy.
+	var depth: Int {
 		get {
-			return (x: Int(getcurx(self.window)), y: Int(getcury(self.window)))
+			var counter = 0
+			var curr_parent: Canvas? = self.parent
+			
+			// Traverse the canvas hierarchy until the root.
+			while true {
+				if curr_parent == nil {
+					break
+				}
+				
+				curr_parent = self.parent
+				counter++
+			}
+			return counter
 		}
-		set(new) {} // possibly move cursor later
 	}
 	
-	// Forms a Canvas tree hierarchy.
-	let parent: Canvas?
-	let children: [Canvas] = [Canvas]()
+	// Returns the Z-order of this canvas in relation to its siblings.
+	// That is, of the stacked appearance, and not the container depth.
+	var zOrder: Int {
+		get {
+			/* TODO: Use panel_above and panel_below. */
+			// Currently there needs to be a way to distinguish z-order from depth.
+			// i.e. subviews could be clipped by size, etc.
+			return 0
+		}
+	}
 	
-	// TODO: Attributes.
-	var attributes: [Attribute] = [Attribute]()
+	// Allows or disables the Canvas from rendering in the current hierarchy.
+	var hidden: Bool {
+		get {
+			return panel_hidden(self.panel) == 0
+		}
+		set(hidden) {
+			if hidden {
+				hide_panel(self.panel)
+			} else {
+				show_panel(self.panel)
+			}
+		}
+	}
 	
 	// The border pattern, which once set will refresh and display the canvas.
 	var border: Border = Border.none() {
@@ -100,32 +168,36 @@ class Canvas {
 	
 	// If frame isn't specified, or given as (0, 0, 0, 0) it'll fill the screen.
 	// If parent isn't specified, the mainWindow will be used as parent.
-	init(_ frame: Frame = (0, 0, 0, 0), parent: Canvas? = nil) {
-		self.window = newwin(Int32(frame.h), Int32(frame.w), Int32(frame.y), Int32(frame.x))
+	init(_ frame: Frame = ((0, 0), (0, 0)), parent: Canvas? = nil) {
+		
+		// Establish underlying ncurses structures.
+		self.window = newwin(Int32(frame.s.h), Int32(frame.s.w), Int32(frame.p.y), Int32(frame.p.x))
+		keypad(self.window, true)
 		self.panel = new_panel(self.window)
 		
+		// Establish hierarchy and clear canvas.
 		self.parent = parent ?? Canvas.root
 		self.parent!.children.append(self)
-		
-		keypad(self.window, true)
-		self.refresh(soft: true)
+		self.refresh(clear: true)
 	}
 	
 	// ONLY for Canvas.root!
 	private init(window: COpaquePointer) {
+		
+		// Establish underlying ncurses structures.
 		self.window = window
+		keypad(self.window, true)
 		self.panel = new_panel(self.window)
 		
+		// Establish hierarchy and clear canvas.
 		self.parent = nil
 		self.isRoot = true
-		
-		keypad(self.window, true)
-		self.refresh(soft: true)
+		self.refresh(clear: true)
 	}
 	
 	deinit {
-		delwin(self.window)
 		del_panel(self.panel)
+		delwin(self.window)
 	}
 	
 	/* TODO: Support ColorPairs here too! */
@@ -158,14 +230,23 @@ class Canvas {
 		wattrset(self.window, Attribute.Normal.rawValue)
 	}
 	
+	// Brings this canvas to the front of the hierarchy (highest Z order).
+	// Note that a hidden panel cannot perform this action.
+	func bringToFront() {
+		top_panel(self.panel)
+	}
+	
+	// Sends this canvas to the back of the hierarchy (lowest Z order).
+	// Note that a hidden panel cannot perform this action.
+	func sendToBack() {
+		bottom_panel(self.panel)
+	}
+	
 	// If clear is true, the window is cleared and then refreshed.
 	// If soft is true, wrefresh() isn't called. Panels are updated.
-	func refresh(clear: Bool = false, soft: Bool = false) {
+	func refresh(clear clear: Bool = false) {
 		if clear {
 			wclear(self.window)
-		}
-		if !soft {
-			wrefresh(self.window)
 		}
 		update_panels()
 		doupdate()
@@ -235,6 +316,7 @@ class Canvas {
 	
 	// Allows the subcanvas heirarchy to redraw itself.
 	func needsRedraw() {
+		self.refresh(clear: true)
 		if self.isRoot {
 			// Canvas.origin also HAS to resize.
 			//self.frame = (0, 0, Terminal.size().w, Terminal.size().h)
@@ -250,7 +332,6 @@ class Canvas {
 		wattroff(self.window, COLOR_PAIR(self.borderColor.rawValue))
 		
 		self.redraw(self)
-		self.refresh()
 		for cv in self.children {
 			cv.needsRedraw()
 		}

@@ -3,7 +3,10 @@ import Darwin.ncurses
 // For dimensions of various things.
 typealias Point = (x: Int, y: Int)
 typealias Size = (w: Int, h: Int)
-typealias Frame = (x: Int, y: Int, w: Int, h: Int)
+typealias Frame = (p: Point, s: Size)
+
+// For percentage-based dimensions of various things.
+typealias Start = ()
 
 // For RGB components.
 typealias RGB = (R: Double, G: Double, B: Double)

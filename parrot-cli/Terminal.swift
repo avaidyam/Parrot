@@ -104,13 +104,18 @@ struct Terminal {
 		self.resume()
 	}
 	
-	static func wait(key: KeyCode) {
-		while(getch() != key.rawValue) {}
+	// Block until a certain key (or any key) is pressed.
+	static func wait(key: KeyCode? = nil) {
+		if key != nil {
+			while(getch() != key!.rawValue) {}
+		} else {
+			getch() // no particular key
+		}
 	}
 	
 	// What is the current terminal size?
 	static func size() -> Frame {
-		return (x: 0, y: 0, w:Int(COLS), h: Int(LINES))
+		return (p: (x: 0, y: 0), s: (w:Int(COLS), h: Int(LINES)))
 	}
 	
 	// Beep the terminal!
