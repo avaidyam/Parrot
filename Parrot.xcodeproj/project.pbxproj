@@ -54,6 +54,7 @@
 		48834E571C1B490B009BC442 /* CommonCrypto in Resources */ = {isa = PBXBuildFile; fileRef = 48834E561C1B490B009BC442 /* CommonCrypto */; settings = {ASSET_TAGS = (); }; };
 		48AD01DF1C1EC8A90031FDD7 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* Settings.swift */; settings = {ASSET_TAGS = (); }; };
 		48AD01E11C1ECBE70031FDD7 /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* Dispatch.swift */; settings = {ASSET_TAGS = (); }; };
+		48BA5B4B1C37A55A00ACA29B /* Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4A1C37A55A00ACA29B /* Attributes.swift */; settings = {ASSET_TAGS = (); }; };
 		48BF49A31C1D23D000AC4DD5 /* NSDate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF49A21C1D23D000AC4DD5 /* NSDate+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		48DE52CC1C1CC12900647C63 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52CB1C1CC12900647C63 /* icon.icns */; };
 		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
@@ -275,6 +276,8 @@
 		48AD01DE1C1EC8A90031FDD7 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		48AD01E01C1ECBE70031FDD7 /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
 		48BA5B481C379CCF00ACA29B /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
+		48BA5B4A1C37A55A00ACA29B /* Attributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attributes.swift; sourceTree = "<group>"; };
+		48BA5B4C1C37ABB600ACA29B /* ncurses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ncurses.h; sourceTree = "<group>"; };
 		48BF49A21C1D23D000AC4DD5 /* NSDate+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Extensions.swift"; sourceTree = "<group>"; };
 		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52CB1C1CC12900647C63 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
@@ -381,6 +384,8 @@
 			isa = PBXGroup;
 			children = (
 				4803639C1C1D08490008E9F5 /* main.swift */,
+				48BA5B4A1C37A55A00ACA29B /* Attributes.swift */,
+				48BA5B4C1C37ABB600ACA29B /* ncurses.h */,
 			);
 			path = "parrot-cli";
 			sourceTree = "<group>";
@@ -1087,6 +1092,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48BA5B4B1C37A55A00ACA29B /* Attributes.swift in Sources */,
 				4803639D1C1D08490008E9F5 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1282,18 +1288,20 @@
 		4803639E1C1D08490008E9F5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/parrot-cli/ncurses.h";
 			};
 			name = Debug;
 		};
 		4803639F1C1D08490008E9F5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/parrot-cli/ncurses.h";
 			};
 			name = Release;
 		};

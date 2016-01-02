@@ -23,10 +23,14 @@ func redraw(sig: Int32) {
 	// Reinitialize the window to update data structures.
 	endwin()
 	win = initscr()
+	start_color()
 	wrefresh(win)
 	wclear(win)
 	
+	init_pair(1, Int16(Color.Black.rawValue), Int16(Color.Red.rawValue))
+	
 	// Draw our text in the middle of the window.
+	attron(COLOR_PAIR(1))
 	mvaddstr(center(LINES), center(COLS) - center(str.characters.count), str)
 	wrefresh(win)
 	
