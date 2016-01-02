@@ -1,7 +1,5 @@
 import Darwin.ncurses
 
-/* TODO: Support Terminal toggling curses, character break, half-delay, echo, raw mode. */
-
 struct Border {
 	let leftSide: UInt32
 	let rightSide: UInt32
@@ -52,18 +50,77 @@ typealias Size = (rows: Int, columns: Int)
 
 struct Terminal {
 	
+	// Default terminal values, initialized when begin() is called.
+	private static var _cursesActive = false
+	private static var _rawMode = false
+	private static var _charBreak = true
+	private static var _echoOn = false
+	private static var _halfDelay = 0
+	
 	// Cannot be initialized; only class functions.
 	private init() {}
+	
+	//
+	// Terminal Session
+	//
+	
+	// Starts the ncurses session.
+	static func begin() -> COpaquePointer {
+		let win = initscr()
+		noraw()
+		cbreak()
+		noecho()
+		halfdelay(0)
+		_cursesActive = true
+		return win
+	}
+	
+	// Pause ncurses session to standard terminal.
+	static func pause() {
+		if _cursesActive {
+			def_prog_mode()
+			endwin()
+			_cursesActive = false
+		}
+	}
+	
+	// Resume ncurses session from standard terminal.
+	static func resume() {
+		if !_cursesActive {
+			reset_prog_mode();
+			_cursesActive = true
+		}
+	}
+	
+	// Ends the ncurses session.
+	static func end() {
+		endwin();
+		_cursesActive = false
+	}
+	
+	// Is there an active ncurses session?
+	static func active() -> Bool {
+		return _cursesActive
+	}
 	
 	// What is the current terminal size?
 	static func size() -> Size {
 		return (Int(LINES), Int(COLS))
 	}
 	
+	// Beep the terminal!
+	static func bell() {
+		beep()
+	}
+	
 	// Does the terminal support a specific key?
 	static func supportsKey(key: Int) -> Bool {
 		return has_key(Int32(key)) == OK
 	}
+	
+	//
+	// Color Properties
+	//
 	
 	// Does the terminal support color mode?
 	static func supportsColors() -> Bool {
@@ -75,10 +132,52 @@ struct Terminal {
 		return can_change_color()
 	}
 	
+	// Start color support if possible.
+	// Ideally this will be automatic, done by the window.
 	static func startColors() {
 		if Terminal.supportsColors() {
 			start_color()
 			use_default_colors()
 		}
+	}
+	
+	//
+	// Terminal Properties
+	//
+	
+	static func rawMode() -> Bool {
+		return _rawMode
+	}
+	
+	static func rawMode(flag: Bool) {
+		flag ? raw() : noraw()
+		_rawMode = flag
+	}
+	
+	static func characterBreak() -> Bool {
+		return _charBreak
+	}
+	
+	static func characterBreak(flag: Bool) {
+		flag ? cbreak() : nocbreak()
+		_charBreak = flag
+	}
+	
+	static func echoMode() -> Bool {
+		return _echoOn
+	}
+	
+	static func echoMode(flag: Bool) {
+		flag ? echo() : noecho()
+		_echoOn = flag
+	}
+	
+	static func halfDelay() -> Int {
+		return _halfDelay
+	}
+	
+	static func halfDelay(value: Int) {
+		halfdelay(Int32(value))
+		_halfDelay = value
 	}
 }

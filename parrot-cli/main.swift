@@ -11,15 +11,15 @@ func center(dimension: Int) -> Int32 {
 }
 
 // Create a new window first.
-var win = initscr()
+var win = Terminal.begin()
 
 // Catch all terminal resizes and call it initially for drawing.
 func redraw(sig: Int32) {
 	signal(SIGWINCH, SIG_IGN)
 	
 	// Reinitialize the window to update data structures.
-	endwin()
-	win = initscr()
+	Terminal.end()
+	win = Terminal.begin()
 	Terminal.startColors()
 	wrefresh(win)
 	wclear(win)
@@ -45,5 +45,7 @@ signal(SIGWINCH, redraw)
 redraw(Int32(0))
 
 // End the program when ESC is pressed.
-while wgetch(win) != 27 {}
-endwin()
+Terminal.bell()
+Terminal.bell()
+while getch() != 27 {}
+Terminal.end()
