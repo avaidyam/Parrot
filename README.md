@@ -8,9 +8,9 @@ The architecture is as follows:
 
 - Applications
 - Parrot (GUI):
-[todo]
+![Parrot](Documentation/images/Parrot?raw=true "Parrot")
 - parrot-cli (CLI):
-[todo]
+![parrot-cli](Documentation/images/parrot-cli?raw=true "parrot-cli")
 - Frameworks
 - Hangouts (framework)
 [todo]
