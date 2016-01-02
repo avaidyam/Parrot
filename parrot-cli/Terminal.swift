@@ -9,6 +9,8 @@ private func _redraw(sig: Int32) {
 	signal(SIGWINCH, _redraw)
 }
 
+/* TODO: Unify raw + cbreak modes. */
+
 struct Terminal {
 	
 	// Default terminal values, initialized when begin() is called.
@@ -38,6 +40,22 @@ struct Terminal {
 		if colors {
 			Terminal.startColors()
 		}
+		
+		// Set up a resize handler for events
+		_resizeHandler = {
+			// 1. Fire an Event
+			// 2. Responders will cascade down the chain
+			// 3. Redraw what needs to be redrawn
+			// TODO: Also do this for key events and stuff
+			
+			endwin();
+			initscr()
+			refresh();
+			clear();
+			Canvas.root.needsRedraw()
+		}
+		signal(SIGWINCH, _redraw)
+		_redraw(Int32(0))
 	}
 	
 	// Pause ncurses session to standard terminal.
@@ -45,6 +63,7 @@ struct Terminal {
 		if _cursesActive {
 			def_prog_mode()
 			endwin()
+			signal(SIGWINCH, SIG_IGN)
 			_cursesActive = false
 		}
 	}
@@ -53,6 +72,8 @@ struct Terminal {
 	static func resume() {
 		if !_cursesActive {
 			reset_prog_mode();
+			signal(SIGWINCH, _redraw)
+			_redraw(Int32(0))
 			_cursesActive = true
 		}
 	}
@@ -60,6 +81,7 @@ struct Terminal {
 	// Ends the ncurses session.
 	static func end() {
 		endwin();
+		signal(SIGWINCH, SIG_IGN)
 		_cursesActive = false
 	}
 	
@@ -87,8 +109,8 @@ struct Terminal {
 	}
 	
 	// What is the current terminal size?
-	static func size() -> Size {
-		return (w:Int(COLS), h: Int(LINES))
+	static func size() -> Frame {
+		return (x: 0, y: 0, w:Int(COLS), h: Int(LINES))
 	}
 	
 	// Beep the terminal!
@@ -128,20 +150,20 @@ struct Terminal {
 	// Terminal Properties
 	//
 	
-	static func rawMode() -> Bool {
+	static func ignoreSignals() -> Bool {
 		return _rawMode
 	}
 	
-	static func rawMode(flag: Bool) {
+	static func ignoreSignals(flag: Bool) {
 		flag ? raw() : noraw()
 		_rawMode = flag
 	}
 	
-	static func characterBreak() -> Bool {
+	static func printSignals() -> Bool {
 		return _charBreak
 	}
 	
-	static func characterBreak(flag: Bool) {
+	static func printSignals(flag: Bool) {
 		flag ? cbreak() : nocbreak()
 		_charBreak = flag
 	}
@@ -155,11 +177,11 @@ struct Terminal {
 		_echoOn = flag
 	}
 	
-	static func halfDelay() -> Int {
+	static func entryTimeout() -> Int {
 		return _halfDelay
 	}
 	
-	static func halfDelay(value: Int) {
+	static func entryTimeout(value: Int) {
 		halfdelay(Int32(value))
 		_halfDelay = value
 	}
@@ -170,12 +192,9 @@ struct Terminal {
 	
 	// Sets a handler that is called whenever the terminal is resized.
 	// If call is true, the handler will also be called immediately.
-	static func onResize(call: Bool = false, draw: (Void) -> Void) {
+	static func onResize(draw: (Void) -> Void) {
 		_resizeHandler = draw
 		signal(SIGWINCH, _redraw)
-		if call {
-			_redraw(Int32(0))
-		}
 	}
 }
 
