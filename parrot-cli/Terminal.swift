@@ -14,7 +14,9 @@ struct Border {
 	let bottomRight: UInt32
 	
 	// Using an array of zeros allows the standard values instead.
-	static let defaults = [0, 0, 0, 0, 0, 0, 0, 0]
+	static func `default`() -> Border {
+		return fromArray([0, 0, 0, 0, 0, 0, 0, 0])!
+	}
 	
 	// Creates a Border from an array of 8 elements.
 	// Components must follow the same order as the above variables!

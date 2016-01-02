@@ -34,9 +34,9 @@ func redraw(sig: Int32) {
 	
 	// Draw a window border.
 	wattron(win, COLOR_PAIR(ColorPair(3, colors: (.Yellow, .Black)).rawValue))
-	let border = Border.fromString("||--****")!
-	wborder(win, border.leftSide, border.rightSide, border.topSide, border.bottomSide,
-				 border.topLeft, border.topRight, border.bottomLeft, border.bottomRight)
+	let b = Border.fromString("||--****")!
+	wborder(win, b.leftSide, b.rightSide, b.topSide, b.bottomSide,
+				 b.topLeft, b.topRight, b.bottomLeft, b.bottomRight)
 	wrefresh(win)
 	
 	signal(SIGWINCH, redraw);
