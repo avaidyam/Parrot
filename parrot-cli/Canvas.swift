@@ -3,7 +3,8 @@ import Darwin.ncurses
 /* TODO: Scrolling, Lines, Menus and Forms...? */
 /* TODO: Use mvwinnstr instead of scanning or reading. */
 /* TODO: Maybe use panel_userptr to link back to the Canvas? */
-
+/* TODO: Canvas Attributes don't work. */
+/* TODO: Use panel_above and panel_below for Z-order. */
 // del char, get char
 
 private extension Array where Element : Equatable {
@@ -25,7 +26,7 @@ class Canvas {
 	let parent: Canvas?
 	let children: [Canvas] = [Canvas]()
 	
-	/* TODO: Canvas Attributes? */
+	// A_BLINK, A_BOLD, A_DIM, A_REVERSE, A_STANDOUT and A_UNDERLINE
 	var attributes: [Attribute] = [Attribute]()
 	
 	// Sets and gets the canvas's current cursor position.
@@ -106,7 +107,6 @@ class Canvas {
 	// That is, of the stacked appearance, and not the container depth.
 	var zOrder: Int {
 		get {
-			/* TODO: Use panel_above and panel_below. */
 			// Currently there needs to be a way to distinguish z-order from depth.
 			// i.e. subviews could be clipped by size, etc.
 			return 0
@@ -200,36 +200,6 @@ class Canvas {
 		delwin(self.window)
 	}
 	
-	/* TODO: Support ColorPairs here too! */
-	
-	func enableAttributes(attrs: [Attribute]) {
-		for attr in attrs {
-			wattron(self.window, attr.rawValue);
-			self.attributes.append(attr)
-		}
-	}
-	
-	func disableAttributes(attrs: [Attribute]) {
-		for attr in attrs {
-			wattroff(self.window, attr.rawValue);
-			self.attributes.removeObject(attr)
-		}
-	}
-	
-	func setAttributes(attrs: [Attribute]) {
-		var sum: Int32 = 0
-		for attr in attrs {
-			sum |= attr.rawValue
-		}
-		
-		wattrset(self.window, sum)
-		self.attributes = attrs
-	}
-	
-	func clearAttributes() {
-		wattrset(self.window, Attribute.Normal.rawValue)
-	}
-	
 	// Brings this canvas to the front of the hierarchy (highest Z order).
 	// Note that a hidden panel cannot perform this action.
 	func bringToFront() {
@@ -257,20 +227,15 @@ class Canvas {
 	func write(string: String, point: Point? = nil, colors: ColorPair? = nil) -> Bool {
 		var result: Int32 = 0
 		let _p = (point ?? self.cursor)!, p = (x: Int32(_p.x), y: Int32(_p.y))
+		
 		if let colors = colors {
 			wattron(self.window, COLOR_PAIR(colors.rawValue))
 		}
-		
-		if string.characters.count == 1 {
-			let ch = string.unicodeScalars.first!.value
-			result = mvwaddch(self.window, p.y, p.x, ch)
-		} else {
-			result = mvwaddstr(self.window, p.y, p.x, string)
-		}
-		
+		result = mvwaddstr(self.window, p.y, p.x, string)
 		if let colors = colors {
 			wattroff(self.window, COLOR_PAIR(colors.rawValue))
 		}
+		
 		self.refresh()
 		return result == OK
 	}

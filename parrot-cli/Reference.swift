@@ -6,7 +6,25 @@ typealias Size = (w: Int, h: Int)
 typealias Frame = (p: Point, s: Size)
 
 // For percentage-based dimensions of various things.
-typealias Start = ()
+// Finds the % slice of any bounds.
+func slice(bounds: (Int, Int), percent: Double) -> Int {
+	return 0 // TODO
+}
+
+// Returns the midpoint of a dimension
+func mid(item: Int) -> Int {
+	return (item / 2) - 1
+}
+
+func center(item: Int, _ inset: Int) -> Int {
+	return (item / 2) - (inset / 2)
+}
+
+// Returns a frame padded by the given X/Y padding.
+func pad(frame: Frame, _ pad: Size) -> Frame {
+	return (p: (x: frame.p.x + pad.w, y: frame.p.y + pad.h),
+		s: (w: frame.s.w - (2 * pad.w), h: frame.s.h - (2 * pad.h)))
+}
 
 // For RGB components.
 typealias RGB = (R: Double, G: Double, B: Double)
