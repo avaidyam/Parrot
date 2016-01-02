@@ -6,9 +6,20 @@ typealias Size = (w: Int, h: Int)
 typealias Frame = (p: Point, s: Size)
 
 // For percentage-based dimensions of various things.
-// Finds the % slice of any bounds.
-func slice(bounds: (Int, Int), percent: Double) -> Int {
-	return 0 // TODO
+typealias Slicer = (x: Double, y: Double)
+
+// Finds the % slice of any frame.
+func slice(s: Slicer, _ f: Frame) -> Frame {
+	return (p: f.p, s: (Int(Double(f.s.w - f.p.x) * s.x), Int(Double(f.s.h - f.p.y) * s.y)))
+}
+
+func shift(f: Frame, _ p: Point) -> Frame {
+	var q = f
+	q.p.y += p.y
+	q.s.h -= p.y
+	q.p.x += p.x
+	q.s.w -= p.x
+	return q
 }
 
 // Returns the midpoint of a dimension

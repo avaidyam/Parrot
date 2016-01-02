@@ -212,6 +212,12 @@ class Canvas {
 		bottom_panel(self.panel)
 	}
 	
+	// Scrolls the contents of the canvas vertically by the given amount.
+	// Note: if amount is positive, the canvas scrolls up, and vice versa.
+	func scrollBy(amount: Int) {
+		wscrl(self.window, Int32(amount))
+	}
+	
 	// If clear is true, the window is cleared and then refreshed.
 	// If soft is true, wrefresh() isn't called. Panels are updated.
 	func refresh(clear clear: Bool = false) {
