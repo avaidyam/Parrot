@@ -90,6 +90,7 @@ public class Client : ChannelDelegate {
         let ec = (CHAT_INIT_PARAMS["ec"] as! String).encodeURL()
         let url = "\(PVT_TOKEN_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)"
 		
+		// MANAGER DATATASK
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
         manager.request(request).responseData { response in
             let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
@@ -104,6 +105,7 @@ public class Client : ChannelDelegate {
             let pvt_enc = (self.CHAT_INIT_PARAMS["pvt"] as! String).encodeURL()
             let url = "\(CHAT_INIT_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)&pvt=\(pvt_enc)"
 			
+			// MANAGER DATATASK
 			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
             self.manager.request(request).responseData { response in
                 let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
@@ -275,6 +277,8 @@ public class Client : ChannelDelegate {
             request.setValue(v, forHTTPHeaderField: k)
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")
+		
+		// MANAGER DATATASK
         manager.request(request).responseData(cb)
     }
 

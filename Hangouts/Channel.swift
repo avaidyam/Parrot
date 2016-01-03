@@ -31,7 +31,7 @@ public class Channel : NSObject {
     public var retries = MAX_RETRIES // number of remaining retries
     public var need_new_sid = true   // whether a new SID is needed
 
-    public let manager: Alamofire.Manager
+	public let manager: Alamofire.Manager
     public var delegate: ChannelDelegate?
 
     public init(manager: Alamofire.Manager) {
@@ -94,6 +94,8 @@ public class Channel : NSObject {
         }
 
         request.timeoutInterval = 30
+		
+		// MANAGER DATATASK + STREAM
         manager.request(request).stream { (data: NSData) in self.onPushData(data) }.responseData { response in
 			if response.result.isFailure { // response.response?.statusCode >= 400
 				// Uh stuff dies here... don't use !'s.
@@ -101,7 +103,7 @@ public class Channel : NSObject {
                 self.need_new_sid = true
                 self.listen()
             } else if response.response?.statusCode == 200 {
-                //self.onPushData(response.result.value!)
+                //self.onPushData(response.result.value!) // why is this commented again??
                 self.makeLongPollingRequest()
             } else {
                 print("Received unknown response code \(response.response?.statusCode)")
@@ -128,6 +130,8 @@ public class Channel : NSObject {
 
         let data = "count=0".dataUsingEncoding(NSUTF8StringEncoding)!
         isSubscribed = false
+		
+		// MANAGER UPLOADTASK
         manager.upload(URLRequest, data: data).responseData { response in
             if response.result.isFailure {
                 print("Request failed: \(response.result.error!)")
@@ -202,6 +206,7 @@ public class Channel : NSObject {
 				request.setValue(v, forHTTPHeaderField: k)
 			}
 			
+			// MANAGER DATATASK
 			self.manager.request(request).responseData { response in
 				self.isSubscribed = true
 				cb?()

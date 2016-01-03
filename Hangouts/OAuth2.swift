@@ -71,6 +71,8 @@ public class OAuth2 {
 			"grant_type": "authorization_code",
 			"redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
 		]
+		
+		// MANAGER DATATASK + JSON
 		Alamofire.request(.POST, OAUTH2_TOKEN_REQUEST_URL, parameters: token_request_data).responseJSON { response in
 			switch response.result {
 			case .Success(let JSON):
@@ -95,6 +97,8 @@ public class OAuth2 {
 				"grant_type": "refresh_token",
 				"refresh_token": refresh_token,
 			]
+			
+			// MANAGER DATATASK + JSON
 			manager.request(.POST, OAUTH2_TOKEN_REQUEST_URL, parameters: token_request_data).responseJSON { response in
 				switch response.result {
 				case .Success(let JSON):
@@ -122,6 +126,7 @@ public class OAuth2 {
 				let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"
 				let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 				request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
+				// MANAGER DATATASK
 				manager.request(request).responseData { response in
 					var uberauth = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
 					uberauth.replaceRange(Range<String.Index>(
@@ -131,10 +136,12 @@ public class OAuth2 {
 					
 					let request = NSMutableURLRequest(URL: NSURL(string: "https://accounts.google.com/MergeSession")!)
 					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
+					// MANAGER DATATASK
 					manager.request(request).responseData { response in
 						let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
 						let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 						request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
+						// MANAGER DATATASK
 						manager.request(request).responseData { response in
 							cb(client: Client(manager: manager))
 						}
@@ -147,6 +154,7 @@ public class OAuth2 {
 			let a = NSURL(string: OAUTH2_LOGIN_URL)!
 			let b = NSURL(string: "https://accounts.google.com/o/oauth2/approval")!
 			auth(a, b, { request in
+				// MANAGER DATATASK
 				manager.request(request).responseData { response in
 					let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)!
 					let auth_code = Regex("value=\"(.+?)\"").match(body as String).first!

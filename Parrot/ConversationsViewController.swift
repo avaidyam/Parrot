@@ -66,7 +66,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
         didSet {
             conversationList?.delegate = self
 			
-			Dispatch.main().run {
+			Dispatch.main().add {
 				self.tableView.reloadData()
 			}
         }
@@ -83,7 +83,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
                 sync_timestamp: initialData.sync_timestamp
             )
 			
-			Dispatch.main().run {
+			Dispatch.main().add {
 				self.tableView.reloadData()
 				self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
 				self.tableView.scrollRowToVisible(0)
@@ -176,7 +176,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     }
 
     func conversationList(didUpdate list: ConversationList) {
-		Dispatch.main().run {
+		Dispatch.main().add {
 			self.tableView.reloadData()
 			self.updateAppBadge()
 		}
@@ -185,7 +185,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation) {
         //  TODO: Just update the one row that needs updating
 		
-		Dispatch.main().run {
+		Dispatch.main().add {
 			self.tableView.reloadData()
 			self.updateAppBadge()
 		}
