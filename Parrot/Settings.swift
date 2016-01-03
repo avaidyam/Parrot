@@ -6,28 +6,34 @@ public func Settings(domain: String? = nil) -> NSUserDefaults {
 
 public extension NSUserDefaults {
 	
-	public class func set(key: String, value: AnyObject?, domain: String? = nil) {
-		NSUserDefaults(suiteName: domain)?.setValue(value, forKey: key)
+	// Set a settings key with a given non-nil value.
+	// If the value is nil, the key will be removed.
+	public func set(key: String, value: AnyObject?, domain: String? = nil) {
+		self.setValue(value, forKey: key)
 	}
 	
-	public class func get(key: String, domain: String? = nil) -> AnyObject? {
-		return NSUserDefaults(suiteName: domain)?.valueForKey(key)
+	public func get(key: String, domain: String? = nil) -> AnyObject? {
+		return self.valueForKey(key)
 	}
 	
-	public class func set(keys: [String: AnyObject?], domain: String? = nil) {
+	// Utility for setting multiple settings at a time.
+	public func set(keys: [String: AnyObject?], domain: String? = nil) {
 		keys.forEach { key, value in
-			NSUserDefaults(suiteName: domain)?.setValue(value, forKey: key)
+			self.setValue(value, forKey: key)
 		}
 	}
 	
-	public class func get(keys: [String], domain: String? = nil) -> [String: AnyObject?] {
+	// Utility for getting multiple settings at a time.
+	/* TODO: Replace with a map from an array to a dictionary. */
+	public func get(keys: [String], domain: String? = nil) -> [String: AnyObject?] {
 		var map = [String: AnyObject?]()
 		for (key) in keys {
-			map[key] = NSUserDefaults(suiteName: domain)?.valueForKey(key)
+			map[key] = self.valueForKey(key)
 		}
 		return map
 	}
 	
+	// Allows shorter syntax, like so: Settings()["Test"] = 42
 	subscript(key: String) -> AnyObject? {
 		get {
 			return self.valueForKey(key)
@@ -38,37 +44,4 @@ public extension NSUserDefaults {
 	}
 }
 
-/*
-private var _observers = [SettingsObserver]()
-private class SettingsObserver : NSObject {
-	private var path: String = ""
-	private var ctx = 0
-	private var action: (AnyObject? -> Void) = {a in }
-	
-	required init(path: String, action: (AnyObject? -> Void)) {
-		super.init()
-		self.path = "values." + path
-		self.action = action
-		
-		print("obs path \(self.path)")
-		
-		NSUserDefaultsController.sharedUserDefaultsController().addObserver(self,
-			forKeyPath: self.path, options: .New, context: nil)
-	}
-	
-	override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
-		change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-			print("got \(path)")
-			if let newValue = change?[NSKeyValueChangeNewKey] {
-				print("got \(newValue)")
-				action(newValue)
-			}
-	}
-	
-	deinit {
-		NSUserDefaultsController.sharedUserDefaultsController().removeObserver(self,
-			forKeyPath: self.path, context: nil)
-		print("dead")
-	}
-}
-*/
+

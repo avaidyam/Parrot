@@ -149,7 +149,7 @@ public class OAuth2 {
 			auth(a, b, { request in
 				manager.request(request).responseData { response in
 					let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)!
-					let auth_code = Regex("value=\"(.+?)\"").matches(body as String).first!
+					let auth_code = Regex("value=\"(.+?)\"").match(body as String).first!
 					
 					//  - first: authenticate(auth_code)
 					authenticate(auth_code, cb: { (access_token, refresh_token) in

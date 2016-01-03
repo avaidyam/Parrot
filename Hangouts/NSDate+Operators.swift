@@ -1,5 +1,7 @@
 import Foundation
 
+// Provides equality and comparison operators for NSDate
+
 public func <=(lhs: NSDate, rhs: NSDate) -> Bool {
 	let res = lhs.compare(rhs)
 	return res == .OrderedAscending || res == .OrderedSame

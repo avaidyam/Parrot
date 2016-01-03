@@ -51,3 +51,5 @@ A big thanks to Peter Sobot for the initial translation and development of Hango
 - [ ] Add Transcript viewer.
 - [ ] Support Date/Time, Address, Transit detectors.
 - [ ] Fix proper bold, italics, underline.
+
+- [ ] Move all extensions into appropriate library or similar.

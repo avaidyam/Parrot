@@ -115,7 +115,7 @@ public class Client : ChannelDelegate {
                 let regex = Regex(CHAT_INIT_REGEX,
                     options: [NSRegularExpressionOptions.CaseInsensitive, NSRegularExpressionOptions.DotMatchesLineSeparators]
                 )
-                for data in regex.matches(body) {
+                for data in regex.match(body) {
                     if data.rangeOfString("data:function") == nil {
                         let dict = JSContext().evaluateScript("a = " + data).toDictionary()! // FIXME: Don't use this.
                         data_dict[dict["key"] as! String] = dict["data"]
