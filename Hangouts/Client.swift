@@ -42,6 +42,7 @@ extension String {
 
 public class Client : ChannelDelegate {
 	public let manager: Alamofire.Manager
+	public let session: NSURLSession
     public var delegate: ClientDelegate?
 
     public var CHAT_INIT_PARAMS: Dictionary<String, AnyObject?> = [
@@ -53,6 +54,7 @@ public class Client : ChannelDelegate {
 
     public init(manager: Alamofire.Manager) {
         self.manager = manager
+		self.session = manager.session
     }
 
     public var initial_data: InitialData?
@@ -92,7 +94,7 @@ public class Client : ChannelDelegate {
 		
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 		
-		self.manager.session.request(request) {
+		self.session.request(request) {
 			guard let data = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return
@@ -111,7 +113,7 @@ public class Client : ChannelDelegate {
 			let url = "\(CHAT_INIT_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)&pvt=\(pvt_enc)"
 			
 			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-			self.manager.session.request(request) {
+			self.session.request(request) {
 				guard let data = $0.data else {
 					print("Request failed with error: \($0.error!)")
 					return
@@ -287,7 +289,7 @@ public class Client : ChannelDelegate {
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")
 		
-		self.manager.session.request(request) {
+		self.session.request(request) {
 			guard let _ = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return

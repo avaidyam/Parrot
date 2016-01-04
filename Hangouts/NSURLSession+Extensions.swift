@@ -34,8 +34,6 @@ public enum Result {
 	}
 }
 
-// Again, I dislike the NS* prefix a lot.
-public typealias URLSession = NSURLSession
 public extension NSURLSession {
 	
 	/* TODO: Many different session task types are not supported yet. */

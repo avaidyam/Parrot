@@ -32,10 +32,12 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
     public var need_new_sid = true   // whether a new SID is needed
 
 	public let manager: Alamofire.Manager
+	public let session: NSURLSession
     public var delegate: ChannelDelegate?
 
     public init(manager: Alamofire.Manager) {
         self.manager = manager
+		self.session = manager.session
     }
 
     public func getCookieValue(key: String) -> String? {
@@ -97,7 +99,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 		
 		// TODO: FIX THIS:
 		//.stream { (data: NSData) in self.onPushData(data) }
-		/*self.manager.session.request(request) {
+		/*self.session.request(request) {
 			guard let data = $0.data else {
 				// Uh stuff dies here... don't use !'s.
 				print("Request failed with error: \($0.error!)")
@@ -151,7 +153,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
         let data = "count=0".dataUsingEncoding(NSUTF8StringEncoding)!
         isSubscribed = false
 		
-		self.manager.session.request(URLRequest, type: .UploadData(data)) {
+		self.session.request(URLRequest, type: .UploadData(data)) {
 			guard let data = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return
@@ -225,7 +227,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 				request.setValue(v, forHTTPHeaderField: k)
 			}
 			
-			self.manager.session.request(request) {
+			self.session.request(request) {
 				guard let _ = $0.data else {
 					print("Request failed with error: \($0.error!)")
 					return

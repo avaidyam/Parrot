@@ -76,7 +76,7 @@ public class OAuth2 {
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
 		req.HTTPBody = query(token_request_data).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
 		
-		URLSession.sharedSession().request(req) {
+		NSURLSession.sharedSession().request(req) {
 			guard let _ = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return
@@ -112,7 +112,7 @@ public class OAuth2 {
 			req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
 			req.HTTPBody = query(token_request_data).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
 			
-			URLSession.sharedSession().request(req) {
+			NSURLSession.sharedSession().request(req) {
 				guard let data = $0.data else {
 					print("Request failed with error: \($0.error!)")
 					return
@@ -134,6 +134,7 @@ public class OAuth2 {
 		let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
 		cfg.HTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
 		let manager = Alamofire.Manager(configuration: cfg)
+		let session = manager.session
 		
 		if let code = loadTokens() {
 			
@@ -146,7 +147,7 @@ public class OAuth2 {
 				let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 				request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 				
-				manager.session.request(request) {
+				session.request(request) {
 					guard let data = $0.data else {
 						print("Request failed with error: \($0.error!)")
 						return
@@ -161,7 +162,7 @@ public class OAuth2 {
 					let request = NSMutableURLRequest(URL: NSURL(string: "https://accounts.google.com/MergeSession")!)
 					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 					
-					manager.session.request(request) {
+					session.request(request) {
 						guard let _ = $0.data else {
 							print("Request failed with error: \($0.error!)")
 							return
@@ -171,7 +172,7 @@ public class OAuth2 {
 						let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 						request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 						
-						manager.session.request(request) {
+						session.request(request) {
 							guard let _ = $0.data else {
 								print("Request failed with error: \($0.error!)")
 								return
@@ -187,7 +188,7 @@ public class OAuth2 {
 			let a = NSURL(string: OAUTH2_LOGIN_URL)!
 			let b = NSURL(string: "https://accounts.google.com/o/oauth2/approval")!
 			auth(a, b, { request in
-				manager.session.request(request) {
+				session.request(request) {
 					guard let data = $0.data else {
 						print("Request failed with error: \($0.error!)")
 						return
