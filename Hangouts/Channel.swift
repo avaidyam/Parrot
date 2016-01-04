@@ -31,13 +31,16 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
     public var retries = MAX_RETRIES // number of remaining retries
     public var need_new_sid = true   // whether a new SID is needed
 
-	public let manager: Alamofire.Manager
 	public let session: NSURLSession
     public var delegate: ChannelDelegate?
-
-    public init(manager: Alamofire.Manager) {
-        self.manager = manager
-		self.session = manager.session
+	
+	// FIXME: REMOVE THIS!
+	public let manager: Alamofire.Manager
+	
+	public init(session: NSURLSession) {
+		self.session = session
+		self.manager = Manager(session: session,
+			delegate: (session.delegate as! Manager.SessionDelegate))!
     }
 
     public func getCookieValue(key: String) -> String? {
@@ -97,29 +100,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 
         request.timeoutInterval = 30
 		
-		// TODO: FIX THIS:
-		//.stream { (data: NSData) in self.onPushData(data) }
-		/*self.session.request(request) {
-			guard let data = $0.data else {
-				// Uh stuff dies here... don't use !'s.
-				print("Request failed with error: \($0.error!)")
-				self.need_new_sid = true
-				self.listen()
-				return
-			}
-			
-			if ($0.response as? NSHTTPURLResponse)?.statusCode == 200 {
-				//self.onPushData(data) // why is this commented again??
-				self.makeLongPollingRequest()
-			} else {
-				print("Received unknown response code")
-				print(NSString(data: data, encoding: 4)! as String)
-			}
-		}*/
-		
-        manager.request(request)
-			.stream { (data: NSData) in self.onPushData(data) }
-			.responseData { response in
+		manager.request(request).stream { (data: NSData) in self.onPushData(data) }.responseData { response in
 			if response.result.isFailure { // response.response?.statusCode >= 400
 				// Uh stuff dies here... don't use !'s.
                 print("Request failed with: \(response.result.error!)")

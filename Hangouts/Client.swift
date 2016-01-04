@@ -40,8 +40,9 @@ extension String {
 	}
 }
 
+var session: NSURLSession? = nil
+
 public class Client : ChannelDelegate {
-	public let manager: Alamofire.Manager
 	public let session: NSURLSession
     public var delegate: ClientDelegate?
 
@@ -51,10 +52,10 @@ public class Client : ChannelDelegate {
         "ec": "[\"ci:ec\",true,true,false]",
         "pvt": nil, // Populated later
     ]
-
-    public init(manager: Alamofire.Manager) {
-        self.manager = manager
-		self.session = manager.session
+	
+	public init(configuration: NSURLSessionConfiguration) {
+		session = NSURLSession(configuration: configuration,
+			delegate: Manager.SessionDelegate(), delegateQueue: nil)
     }
 
     public var initial_data: InitialData?
@@ -73,7 +74,7 @@ public class Client : ChannelDelegate {
     public func connect() {
         self.initialize_chat { (id: InitialData?) in
             self.initial_data = id
-            self.channel = Channel(manager: self.manager)
+            self.channel = Channel(session: self.session)
             self.channel?.delegate = self
             self.channel?.listen()
         }

@@ -13,6 +13,8 @@ public typealias Notification = (name: String, object: AnyObject?, userInfo: [NS
 // Here's a quick alias for the default one, which is shorter to type.
 public let Notifications = NSNotificationCenter.defaultCenter()
 
+/* TODO: Support the global/Darwin notification center via CF and proxying. */
+
 public extension NSNotificationCenter {
 	
 	public func post(name: String, object: AnyObject? = nil, userInfo: [NSObject: AnyObject]? = nil) {

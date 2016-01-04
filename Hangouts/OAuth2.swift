@@ -133,7 +133,8 @@ public class OAuth2 {
 		// Prepare the manager for any requests.
 		let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
 		cfg.HTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-		let manager = Alamofire.Manager(configuration: cfg)
+		cfg.HTTPAdditionalHeaders = _defaultHTTPHeaders
+		let manager = Alamofire.Manager.sharedInstance//(configuration: cfg)
 		let session = manager.session
 		
 		if let code = loadTokens() {
@@ -177,7 +178,7 @@ public class OAuth2 {
 								print("Request failed with error: \($0.error!)")
 								return
 							}
-							cb(client: Client(manager: manager))
+							cb(client: Client(configuration: session.configuration))
 						}
 					}
 				}
@@ -200,7 +201,7 @@ public class OAuth2 {
 					//  - first: authenticate(auth_code)
 					authenticate(auth_code, cb: { (access_token, refresh_token) in
 						saveTokens(access_token, refresh_token: refresh_token)
-						cb(client: Client(manager: manager))
+						cb(client: Client(configuration: session.configuration))
 					})
 				}
 			})
