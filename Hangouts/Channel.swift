@@ -103,17 +103,49 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 		manager.request(request).stream { (data: NSData) in self.onPushData(data) }.responseData { response in
 			if response.result.isFailure { // response.response?.statusCode >= 400
 				// Uh stuff dies here... don't use !'s.
-                print("Request failed with: \(response.result.error!)")
-                self.need_new_sid = true
-                self.listen()
-            } else if response.response?.statusCode == 200 {
-                //self.onPushData(response.result.value!) // why is this commented again??
-                self.makeLongPollingRequest()
-            } else {
-                print("Received unknown response code \(response.response?.statusCode)")
-                print(NSString(data: response.result.value!, encoding: 4)! as String)
-            }
+				print("Request failed with: \(response.result.error!)")
+				self.need_new_sid = true
+				self.listen()
+			} else if response.response?.statusCode == 200 {
+				//self.onPushData(response.result.value!) // why is this commented again??
+				self.makeLongPollingRequest()
+			} else {
+				print("Received unknown response code \(response.response?.statusCode)")
+				print(NSString(data: response.result.value!, encoding: 4)! as String)
+			}
+		}
+		
+		/*
+		// First set up the data task.
+		let task = session.request(request) {
+			guard let data = $0.data else { // $0.response.statusCode >= 400
+				// Uh stuff dies here... don't use !'s.
+				print("Request failed with: \($0.error!)")
+				self.need_new_sid = true
+				self.listen()
+				return
+			}
+			
+			let res = ($0.response as? NSHTTPURLResponse)
+			if res?.statusCode == 200 {
+				//self.onPushData(response.result.value!) // why is this commented again??
+				self.makeLongPollingRequest()
+			} else {
+				print("Received unknown response code \(res?.statusCode)")
+				print(NSString(data: data, encoding: 4)! as String)
+			}
         }
+		
+		// Configure a proxy to push all data to us.
+		let proxy = NSURLSessionDataDelegateProxy()
+		proxy.didReceiveData = { s, t, d in
+			self.onPushData(d)
+		}
+		
+		// Register it and then run the task.
+		(session.delegate as! NSURLSessionDelegateProxy)[task] = proxy
+		task.resume()
+		*/
     }
 	
 	// Creates a new channel for receiving push data.

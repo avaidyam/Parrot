@@ -11,6 +11,7 @@
 		480363A71C1D08A20008E9F5 /* parrot-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4803639A1C1D08490008E9F5 /* parrot-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		481687251C39DA900070EEF6 /* NSView+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481687241C39DA900070EEF6 /* NSView+Snapshot.swift */; settings = {ASSET_TAGS = (); }; };
 		481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */; settings = {ASSET_TAGS = (); }; };
 		482E21391C23F5F500A4C7B3 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482E21381C23F5F500A4C7B3 /* ChatModel.swift */; settings = {ASSET_TAGS = (); }; };
 		4835ECA41C1C61BB00193EBC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4835ECA11C1C61BB00193EBC /* Main.storyboard */; settings = {ASSET_TAGS = (); }; };
 		4835ECA91C1C620000193EBC /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* ChatMessageView.swift */; settings = {ASSET_TAGS = (); }; };
@@ -227,6 +228,7 @@
 		4803639C1C1D08490008E9F5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		481687241C39DA900070EEF6 /* NSView+Snapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSView+Snapshot.swift"; sourceTree = "<group>"; };
 		481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLSession+Extensions.swift"; sourceTree = "<group>"; };
+		4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLSession+Delegate.swift"; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* ChatModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
 		4835ECA21C1C61BB00193EBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4835ECA61C1C620000193EBC /* ChatMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageView.swift; sourceTree = "<group>"; };
@@ -649,6 +651,7 @@
 				48834E4F1C1B4377009BC442 /* NSDate+Operators.swift */,
 				48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */,
 				481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */,
+				4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1182,6 +1185,7 @@
 				487A0E131C1E4389007A4696 /* ChunkParser.swift in Sources */,
 				48834E3B1C1B4098009BC442 /* OAuth2.swift in Sources */,
 				48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */,
+				4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */,
 				481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */,
 				48834E411C1B4098009BC442 /* Parsers.swift in Sources */,
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,

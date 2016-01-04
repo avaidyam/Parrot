@@ -1,5 +1,4 @@
 import Foundation
-import Alamofire
 import Cocoa
 import CommonCrypto
 
@@ -97,7 +96,7 @@ public class OAuth2 {
 	- parameter refresh_token the specified refresh_token
 	- parameter cb a callback to execute upon completion
 	*/
-	private class func authenticate(manager: Alamofire.Manager, refresh_token: String,
+	private class func authenticate(session: NSURLSession, refresh_token: String,
 		cb: (access_token: String, refresh_token: String) -> Void) {
 			let token_request_data = [
 				"client_id": OAUTH2_CLIENT_ID,
@@ -112,7 +111,7 @@ public class OAuth2 {
 			req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
 			req.HTTPBody = query(token_request_data).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
 			
-			NSURLSession.sharedSession().request(req) {
+			session.request(req) {
 				guard let data = $0.data else {
 					print("Request failed with error: \($0.error!)")
 					return
@@ -134,14 +133,13 @@ public class OAuth2 {
 		let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
 		cfg.HTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
 		cfg.HTTPAdditionalHeaders = _defaultHTTPHeaders
-		let manager = Alamofire.Manager.sharedInstance//(configuration: cfg)
-		let session = manager.session
+		let session = NSURLSession(configuration: cfg)
 		
 		if let code = loadTokens() {
 			
 			// If we already have the tokens stored, authenticate.
 			//  - second: authenticate(manager, refresh_token)
-			authenticate(manager, refresh_token: code.refresh_token) { (access_token: String, refresh_token: String) in
+			authenticate(session, refresh_token: code.refresh_token) { (access_token: String, refresh_token: String) in
 				saveTokens(access_token, refresh_token: refresh_token)
 				
 				let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"
