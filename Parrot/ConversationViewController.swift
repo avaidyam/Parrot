@@ -65,8 +65,6 @@ class ConversationViewController:
             self.conversation?.delegate = self
 			self.conversation?.getEvents(conversation?.events.first?.id, max_events: 50)
 			
-			//let a = self.conversation?.client.uploadImage("/Users/aditya/Desktop/test.png")
-			//Swift.print("a \(a)")
 			dispatch_async(dispatch_get_main_queue(), {
 				self.conversationTableView.reloadData()
 				self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
@@ -162,50 +160,49 @@ class ConversationViewController:
 
     // MARK: NSTableViewDataSource
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        return (conversation?.messages.count ?? 0) + ((conversation?.otherUserIsTyping ?? false) ? 1 : 0)
+        return conversation?.messages.count ?? 0
     }
 
     // MARK: NSTableViewDelegate
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
         if let conversation = conversation where row < conversation.messages.count {
-            var view = tableView.makeViewWithIdentifier(ChatMessageView.className(), owner: self) as? ChatMessageView
+            var view = tableView.makeViewWithIdentifier(MessageView.className(), owner: self) as? MessageView
 
             if view == nil {
-                view = ChatMessageView(frame: NSZeroRect)
-                view!.identifier = ChatMessageView.className()
+                view = MessageView(frame: NSZeroRect)
+                view!.identifier = MessageView.className()
             }
 			
 			let message = conversation.messages[row]
 			let user = conversation.user_list.get_user(message.user_id)
 			let network = conversation.conversation.network_type![0] as! Int
-            view!.configureWithText(message.text, orientation: user.isSelf ? .Right : .Left,
-				bubble: user.isSelf ? 3 : network)
+			var color: NSColor?
+			if user.isSelf {
+				color = NSColor.materialBlueGreyColor()
+			} else if network == 1 {
+				color = NSColor.materialGreenColor()
+			} else if network == 2 {
+				color = NSColor.materialBlueColor()
+			}
+			
+            view!.objectValue = Wrapper<MessageView.Configuration>((TextMapper.attributedStringForText(message.text),
+									orientation: user.isSelf ? .Right : .Left,
+									color: color!))
             return view
         }
-
+		
         if conversation?.otherUserIsTyping ?? false {
-            var view = tableView.makeViewWithIdentifier(ChatTypingView.className(), owner: self) as? ChatTypingView
-
-            if view == nil {
-                view = ChatTypingView(frame: NSZeroRect)
-                view!.identifier = ChatTypingView.className()
-            }
-
-            view!.configureWithTypingStatus()
-            return view
+            print("THEY'RE TYPING!")
         }
-
+		
         return nil
     }
 
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         if let conversation = conversation where row < conversation.messages.count {
-			return ChatMessageView.heightForContainerWidth(attributedStringForMessage(row)!, width: self.view.frame.width)
-        } else if row >= conversation!.messages.count && (conversation?.otherUserIsTyping ?? false) {
-            return ChatTypingView.heightForWidth(self.view.frame.width)
-        } else {
-            return 0
-        }
+			return MessageView.heightForContainerWidth(attributedStringForMessage(row)!, width: self.view.frame.width)
+		}
+		return 0
     }
 
     // MARK: Window notifications

@@ -15,29 +15,38 @@ class ImageCache {
         return cache[user.id]
     }
 
-    func fetchImage(forUser user: User?, cb: ((NSImage?) -> Void)?) {
+    func fetchImage(forUser user: User?, cb: ((NSImage?) -> Void)? = nil) -> NSImage? {
 		guard let user = user else {
 			cb?(nil)
-			return
+			return nil
 		}
 		
         if let existingCachedImage = getImage(forUser: user) {
             cb?(existingCachedImage)
-            return
+            return existingCachedImage
         }
 
         if let photo_url = user.photo_url, let url = NSURL(string: photo_url) {
             let request = NSURLRequest(URL: url)
+			let semaphore = dispatch_semaphore_create(0)
 			let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { (data, response, error) in
 				if let data = data {
 					let image = NSImage(data: data)
 					self.cache[user.id] = image
 					cb?(image)
+					dispatch_semaphore_signal(semaphore)
 				}
 			}
-			task.resume();
+			task.resume()
+			if cb == nil {
+				dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+				return getImage(forUser: user)
+			} else {
+				return nil
+			}
         } else {
             cb?(nil)
+			return nil
         }
     }
 }

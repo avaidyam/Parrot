@@ -126,21 +126,18 @@ public class Client : ChannelDelegate {
 				var data_dict = Dictionary<String, AnyObject?>()
 				let regex = Regex(CHAT_INIT_REGEX, options: [.CaseInsensitive, .DotMatchesLineSeparators])
 				for data in regex.match(body) {
-					if data.rangeOfString("data:function") == nil {
+					/*if data.rangeOfString("data:function") == nil {
 						let dict = evalDict(data)!
 						data_dict[dict["key"] as! String] = dict["data"]
 					} else {
-						var cleanedData = data
-						cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
-							"data:function(){return", withString: "data:")
-						cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
-							"}}", withString: "}")
-						if let dict = evalDict(cleanedData) {
-							data_dict[dict["key"] as! String] = dict["data"]
-						} else {
-							print("Could not parse!")
-						}
-					}
+					}*/
+					var cleanedData = data
+					cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
+						"data:function(){return", withString: "data:")
+					cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
+						"}}", withString: "}")
+					let dict = evalDict(cleanedData)!
+					data_dict[dict["key"] as! String] = dict["data"]
 				}
 				self.api_key = ((data_dict["ds:7"] as! NSArray)[0] as! NSArray)[2] as? String
 				self.email = ((data_dict["ds:33"] as! NSArray)[0] as! NSArray)[2] as? String

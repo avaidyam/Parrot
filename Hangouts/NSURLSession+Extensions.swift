@@ -34,6 +34,9 @@ public enum Result {
 	}
 }
 
+// For creating tasks off the main thread but still one-by-one.
+private var q = dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT)
+
 public extension NSURLSession {
 	
 	/* TODO: Many different session task types are not supported yet. */
@@ -46,36 +49,39 @@ public extension NSURLSession {
 	// Essentially acts as a "one-size-fits-all" factory method.
 	// By default the request type will be data, and the task is auto-started.
 	public func request(request: NSURLRequest, type: RequestType = .Data,
-						start: Bool = true, handler: Result -> Void) -> NSURLSessionTask {
-		let cb: (NSData?, NSURLResponse?, NSError?) -> Void = { data, response, error in
-			if let error = error {
-				handler(Result.Failure(error, response!))
-			} else {
-				handler(Result.Success(data!, response!))
+						start: Bool = true, handler: Result -> Void) -> NSURLSessionTask
+	{
+		var task: NSURLSessionTask? = nil
+		dispatch_sync(q) {
+			let cb: (NSData?, NSURLResponse?, NSError?) -> Void = { data, response, error in
+				if let error = error {
+					handler(Result.Failure(error, response!))
+				} else {
+					handler(Result.Success(data!, response!))
+				}
+			}
+			
+			/* TODO: Transparently use a dispatch queue for each session here! */
+			switch type {
+			case .Data:
+				task = self.dataTaskWithRequest(request, completionHandler: cb)
+			case .UploadData(let data):
+				task = self.uploadTaskWithRequest(request, fromData: data, completionHandler: cb)
+			case .UploadFile(let url):
+				task = self.uploadTaskWithRequest(request, fromFile: url, completionHandler: cb)
+			//case .UploadStream(let stream):
+			//	task = self.uploadTaskWithRequest(request, withStream: stream, completionHandler: cb)
+			//case .Download:
+			//	task = self.downloadTaskWithRequest(request, completionHandler: cb)
+			//case .DownloadResume(let data):
+			//	task = self.downloadTaskWithResumeData(data, completionHandler: cb)
+			}
+			
+			if start {
+				task!.resume()
 			}
 		}
-		
-		/* TODO: Transparently use a dispatch queue for each session here! */
-		var task: NSURLSessionTask
-		switch type {
-		case .Data:
-			task = self.dataTaskWithRequest(request, completionHandler: cb)
-		case .UploadData(let data):
-			task = self.uploadTaskWithRequest(request, fromData: data, completionHandler: cb)
-		case .UploadFile(let url):
-			task = self.uploadTaskWithRequest(request, fromFile: url, completionHandler: cb)
-		//case .UploadStream(let stream):
-		//	task = self.uploadTaskWithRequest(request, withStream: stream, completionHandler: cb)
-		//case .Download:
-		//	task = self.downloadTaskWithRequest(request, completionHandler: cb)
-		//case .DownloadResume(let data):
-		//	task = self.downloadTaskWithResumeData(data, completionHandler: cb)
-		}
-		
-		if start {
-			task.resume()
-		}
-		return task
+		return task!
 	}
 }
 

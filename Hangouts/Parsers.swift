@@ -60,26 +60,6 @@ public func _parse_payload(payload: [AnyObject]) -> [STATE_UPDATE] {
         return []
     }
 }
-
-public let MicrosecondsPerSecond = 1000000.0
-public func from_timestamp(microsecond_timestamp: NSNumber?) -> NSDate? {
-    if microsecond_timestamp == nil {
-        return nil
-    }
-    let date = from_timestamp(microsecond_timestamp!)
-    return date
-}
-
-// Convert a microsecond timestamp to an NSDate instance.
-public func from_timestamp(microsecond_timestamp: NSNumber) -> NSDate {
-    return NSDate(timeIntervalSince1970: microsecond_timestamp.doubleValue / MicrosecondsPerSecond)
-}
-
-// Convert UTC datetime to microsecond timestamp used by Hangouts.
-public func to_timestamp(date: NSDate) -> NSNumber {
-    return date.timeIntervalSince1970 * MicrosecondsPerSecond
-}
-
 // Return TypingStatusMessage from ClientSetTypingNotification.
 // The same status may be sent multiple times consecutively, and when a
 // message is sent the typing status will not change to stopped.

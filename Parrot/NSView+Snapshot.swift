@@ -23,3 +23,11 @@ public extension NSView {
 		return component
 	}
 }
+
+// Can hold any non-object type as an object type.
+public class Wrapper<T> {
+	let element: T
+	init(_ element: T) {
+		self.element = element
+	}
+}

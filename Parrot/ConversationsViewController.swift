@@ -1,6 +1,8 @@
 import Cocoa
 import Hangouts
 
+/* TODO: Support stickers, photos, videos, files, audio, and location. */
+
 // Experimenting with new typealias to make code readable.
 typealias Sender = AnyObject?
 
@@ -11,6 +13,10 @@ public class Parrot {
 	public static let InvertChatStyle = "Parrot.InvertChatStyle"
 }
 
+// Create and cache the default image template.
+private let defaultImage = NSImage(named: "NSUserGuest")!
+
+
 class ConversationsViewController:  NSViewController, ClientDelegate,
 									NSTableViewDataSource, NSTableViewDelegate,
 									NSSplitViewDelegate, ConversationListDelegate {
@@ -19,6 +25,10 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 	
 	override func loadView() {
 		super.loadView()
+		
+		tableView.registerNib(NSNib(nibNamed: "PersonView", bundle: NSBundle.mainBundle()),
+									forIdentifier: PersonView.className())
+		
 		Notifications.subscribe(NSUserDefaultsDidChangeNotification) { note in
 			
 			// Handle appearance colors.
@@ -148,14 +158,40 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		return actions
 	}
 	
-	func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-		return conversationList?.conversations[row]
+	func tableView(tableView: NSTableView, tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
+		let conversation = (conversationList?.conversations[row])!
+		print("gothere \(row)")
+		
+		// Propogate info for data filling
+		let a = conversation.messages.last?.user_id
+		let b = conversation.users.filter { $0.isSelf }.first?.id
+		let c = conversation.users.filter { !$0.isSelf }.first
+		let d = conversation.conversation.network_type?[0] as? Int
+		
+		// Patch for Google Voice contacts to show their numbers.
+		// FIXME: Sometimes [1] is actually you, fix that.
+		var title = conversation.name
+		if title == "Unknown" {
+			if let a = conversation.conversation.participant_data[1].fallback_name {
+				title = a as String
+			}
+		}
+		
+		// Load all the field values from the conversation.
+		let img = ImageCache.sharedInstance.fetchImage(forUser: c) ?? defaultImage
+		let ring = d == 2 ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
+		let ind = conversation.hasUnreadEvents
+		let name = title
+		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
+		let time = conversation.messages.last?.timestamp.relativeString() ?? ""
+		
+		return Wrapper<PersonView.Configuration>((img, ring, ind, name, sub, time))
 	}
 
     // MARK: NSTableViewDelegate
 
-    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        return tableView.makeViewWithIdentifier("ConversationListItemView", owner: self)
+	func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+		return tableView.makeViewWithIdentifier(PersonView.className(), owner: self)
     }
 
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
