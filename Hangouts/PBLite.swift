@@ -1,5 +1,4 @@
 import Foundation
-import JavaScriptCore
 
 // PBLite Enum Type
 
@@ -119,8 +118,8 @@ public class PBLiteSerialization {
 	}
 	
 	public class func parseProtoJSON<T: Message>(input: NSData) -> T? {
-		let script = "a = " + (NSString(data: input, encoding: 4)! as String)
-		if let parsedObject = JSContext().evaluateScript(script).toArray() { // FIXME: Don't use this.
+		let script = (NSString(data: input, encoding: 4)! as String)
+		if let parsedObject = evalArray(script) {
 			return parseArray(T.self, input: parsedObject)
 		}
 		return nil
@@ -247,4 +246,17 @@ public class PBLiteSerialization {
 		}
 		return instance
 	}
+}
+
+
+//
+// BIG CRUTCH: Should be replaced later.
+//
+
+import JavaScriptCore
+public func evalArray(string: String) -> [AnyObject]? {
+	return JSContext().evaluateScript("a = " + string).toArray()
+}
+public func evalDict(string: String) -> [NSObject: AnyObject]? {
+	return JSContext().evaluateScript("a = " + string).toDictionary()
 }

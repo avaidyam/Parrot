@@ -1,6 +1,5 @@
 import Foundation
 import Alamofire
-import JavaScriptCore
 
 public let ORIGIN_URL = "https://talkgadget.google.com"
 public let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
@@ -102,8 +101,7 @@ public class Client : ChannelDelegate {
 			}
 			
 			let body = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
-			let ctx = JSContext() // FIXME: Don't use this.
-			let pvt: AnyObject = ctx.evaluateScript(body).toArray()[1] as! String
+			let pvt: AnyObject = evalArray(body)![1] as! String
 			self.CHAT_INIT_PARAMS["pvt"] = pvt
 			
 			// Now make the actual initialization request:
@@ -126,12 +124,10 @@ public class Client : ChannelDelegate {
 				// parsing them. Not everything will be parsable, but we don't care if
 				// an object we don't need can't be parsed.
 				var data_dict = Dictionary<String, AnyObject?>()
-				let regex = Regex(CHAT_INIT_REGEX,
-					options: [NSRegularExpressionOptions.CaseInsensitive, NSRegularExpressionOptions.DotMatchesLineSeparators]
-				)
+				let regex = Regex(CHAT_INIT_REGEX, options: [.CaseInsensitive, .DotMatchesLineSeparators])
 				for data in regex.match(body) {
 					if data.rangeOfString("data:function") == nil {
-						let dict = JSContext().evaluateScript("a = " + data).toDictionary()! // FIXME: Don't use this.
+						let dict = evalDict(data)!
 						data_dict[dict["key"] as! String] = dict["data"]
 					} else {
 						var cleanedData = data
@@ -139,7 +135,7 @@ public class Client : ChannelDelegate {
 							"data:function(){return", withString: "data:")
 						cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
 							"}}", withString: "}")
-						if let dict = JSContext().evaluateScript("a = " + cleanedData).toDictionary() { // FIXME: Don't use this.
+						if let dict = evalDict(cleanedData) {
 							data_dict[dict["key"] as! String] = dict["data"]
 						} else {
 							print("Could not parse!")
@@ -572,8 +568,8 @@ public class Client : ChannelDelegate {
                 to_timestamp(event_timestamp),  // eventTimestamp
             ]
         ], use_json: false) { r in
-            let result = JSContext().evaluateScript("a = " + (NSString(data: r.data!,
-				encoding: NSUTF8StringEncoding)! as String)).toArray() // FIXME: Don't use this.
+			let str = (NSString(data: r.data!, encoding: NSUTF8StringEncoding)! as String)
+            let result = evalArray(str)!
             cb(PBLiteSerialization.parseArray(GET_CONVERSATION_RESPONSE.self, input: result)!)
         }
     }

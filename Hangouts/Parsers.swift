@@ -1,5 +1,4 @@
 import Foundation
-import JavaScriptCore
 
 public typealias TypingStatusMessage = (conv_id: String, user_id: UserID, timestamp: NSDate, status: TypingType)
 public typealias WatermarkNotification = (conv_id: String, user_id: UserID, read_timestamp: NSDate)
@@ -19,12 +18,12 @@ public func parse_submission(submission: String) -> (client_id: String?, updates
 // connection was closed while something happened, there can be multiple
 // payloads.
 public func _get_submission_payloads(submission: String) -> (client_id: String?, updates: [[AnyObject]]) {
-    let result = JSContext().evaluateScript("a = " + submission) // FIXME: Don't use this.
+    let result = evalArray(submission)!
     let nullResult: (client_id: String?, updates: [[AnyObject]]) = (nil, [])
-    let r: [(client_id: String?, updates: [[AnyObject]])] = result.toArray().map { sub in
+    let r: [(client_id: String?, updates: [[AnyObject]])] = result.map { sub in
         if (((sub as! NSArray)[1] as! NSArray)[0] as? String) != "noop" {
             let script = ((sub[1] as! NSArray)[0] as! NSDictionary)["p"] as! String
-            let wrapper = JSContext().evaluateScript("a = " + script).toDictionary() // FIXME: Don't use this.
+            let wrapper = evalDict(script)!
             if let wrapper3 = wrapper["3"] as? NSDictionary {
                 if let wrapper32 = wrapper3["2"] as? String {
                     return (client_id: wrapper32, updates: [])
@@ -32,7 +31,7 @@ public func _get_submission_payloads(submission: String) -> (client_id: String?,
             }
             if let wrapper2 = wrapper["2"] as? NSDictionary {
                 if let wrapper22 = wrapper2["2"] as? String {
-                    let updates = JSContext().evaluateScript("a = " + wrapper22).toArray() // FIXME: Don't use this.
+                    let updates = evalArray(wrapper22)!
                     return (client_id: nil, updates: [updates as [AnyObject]])
                 }
             }

@@ -1,6 +1,5 @@
 import Foundation
 import Alamofire
-import JavaScriptCore
 
 public protocol ChannelDelegate {
     func channelDidConnect(channel: Channel)
@@ -257,10 +256,9 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 	//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
 	private class func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
 		if let firstSubmission = ChunkParser().getSubmissions(res).first {
-			let ctx = JSContext() // FIXME: Don't use this.
-			let val: JSValue = ctx.evaluateScript(firstSubmission)
-			let sid = ((val.toArray()[0] as! NSArray)[1] as! NSArray)[1] as! String
-			let gSessionID = (((val.toArray()[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String
+			let val = evalArray(firstSubmission)!
+			let sid = ((val[0] as! NSArray)[1] as! NSArray)[1] as! String
+			let gSessionID = (((val[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String
 			return (sid, gSessionID)
 		}
 		return ("", "")
