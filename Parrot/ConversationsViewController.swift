@@ -2,6 +2,7 @@ import Cocoa
 import Hangouts
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
+/* TODO: Use the NSSplitViewController magic to allow docking windows! */
 
 // Existing Parrot Settings keys.
 public class Parrot {
@@ -61,7 +62,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		
 		// Handle collapsed sidebar.
 		let split = (self.parentViewController as? NSSplitViewController)?.splitViewItems[0]
-		split?.collapsed = Settings()[Parrot.ShowSidebar] as? Bool ?? false
+		split?.collapsed = !(Settings()[Parrot.ShowSidebar] as? Bool ?? false)
 		
 		let scroll = self.view.subviews[0] as? NSScrollView
 		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
