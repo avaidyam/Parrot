@@ -119,7 +119,6 @@ public class OAuth2 {
 				
 				do {
 					let JSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-					print("got \(JSON)")
 					cb(access_token: JSON["access_token"] as! String, refresh_token: refresh_token)
 				} catch {
 					print("Request failed with error: \(error)")

@@ -18,7 +18,7 @@ public func parse_submission(submission: String) -> (client_id: String?, updates
 // connection was closed while something happened, there can be multiple
 // payloads.
 public func _get_submission_payloads(submission: String) -> (client_id: String?, updates: [[AnyObject]]) {
-    let result = evalArray(submission)!
+    let result = evalArray(submission) as! NSArray
     let nullResult: (client_id: String?, updates: [[AnyObject]]) = (nil, [])
     let r: [(client_id: String?, updates: [[AnyObject]])] = result.map { sub in
         if (((sub as! NSArray)[1] as! NSArray)[0] as? String) != "noop" {
@@ -31,7 +31,7 @@ public func _get_submission_payloads(submission: String) -> (client_id: String?,
             }
             if let wrapper2 = wrapper["2"] as? NSDictionary {
                 if let wrapper22 = wrapper2["2"] as? String {
-                    let updates = evalArray(wrapper22)!
+                    let updates = evalArray(wrapper22) as! NSArray
                     return (client_id: nil, updates: [updates as [AnyObject]])
                 }
             }

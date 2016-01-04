@@ -569,7 +569,7 @@ public class Client : ChannelDelegate {
             ]
         ], use_json: false) { r in
 			let str = (NSString(data: r.data!, encoding: NSUTF8StringEncoding)! as String)
-            let result = evalArray(str)!
+            let result = evalArray(str) as! NSArray
             cb(PBLiteSerialization.parseArray(GET_CONVERSATION_RESPONSE.self, input: result)!)
         }
     }

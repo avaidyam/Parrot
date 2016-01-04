@@ -119,7 +119,7 @@ public class PBLiteSerialization {
 	
 	public class func parseProtoJSON<T: Message>(input: NSData) -> T? {
 		let script = (NSString(data: input, encoding: 4)! as String)
-		if let parsedObject = evalArray(script) {
+		if let parsedObject = evalArray(script) as? NSArray {
 			return parseArray(T.self, input: parsedObject)
 		}
 		return nil
@@ -254,9 +254,11 @@ public class PBLiteSerialization {
 //
 
 import JavaScriptCore
-public func evalArray(string: String) -> [AnyObject]? {
+@available(iOS, deprecated=1.0, message="Avoid JSContext!")
+@available(OSX, deprecated=1.0, message="Avoid JSContext!")
+public func evalArray(string: String) -> AnyObject? {
 	return JSContext().evaluateScript("a = " + string).toArray()
 }
-public func evalDict(string: String) -> [NSObject: AnyObject]? {
+public func evalDict(string: String) -> AnyObject? {
 	return JSContext().evaluateScript("a = " + string).toDictionary()
 }
