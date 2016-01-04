@@ -1,11 +1,13 @@
 import Cocoa
 import Hangouts
+import WebKit
 
-public class OAuth2 {
+public let AUTH = Authenticator()
+public class Authenticator : NSObject, WebPolicyDelegate {
 	
 	// For UI authentication, we ask the client to take our request
 	// URL as well as the expected approval URL. We'll use their request.
-	public typealias Authenticator = (NSURL, NSURL, (request: NSURLRequest) -> Void) -> Void
+	public typealias AuthFlow = (NSURL, NSURL, (request: NSURLRequest) -> Void) -> Void
 	
 	private static let DEFAULTS = NSUserDefaults.standardUserDefaults()
 	
@@ -125,7 +127,7 @@ public class OAuth2 {
 			}
 	}
 	
-	public class func authenticateClient(cb: (client: Client) -> Void, auth: Authenticator) {
+	public class func authenticateClient(cb: (configuration: NSURLSessionConfiguration) -> Void) {
 		
 		// Prepare the manager for any requests.
 		let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
@@ -174,7 +176,7 @@ public class OAuth2 {
 								print("Request failed with error: \($0.error!)")
 								return
 							}
-							cb(client: Client(configuration: session.configuration))
+							cb(configuration: session.configuration)
 						}
 					}
 				}
@@ -184,7 +186,8 @@ public class OAuth2 {
 			// Otherwise, we need to authenticate, so use the callback to do so.
 			let a = NSURL(string: OAUTH2_LOGIN_URL)!
 			let b = NSURL(string: "https://accounts.google.com/o/oauth2/approval")!
-			auth(a, b, { request in
+			
+			AUTH.prompt(a, valid: b) { request in
 				session.request(request) {
 					guard let data = $0.data else {
 						print("Request failed with error: \($0.error!)")
@@ -197,10 +200,56 @@ public class OAuth2 {
 					//  - first: authenticate(auth_code)
 					authenticate(auth_code, cb: { (access_token, refresh_token) in
 						saveTokens(access_token, refresh_token: refresh_token)
-						cb(client: Client(configuration: session.configuration))
+						cb(configuration: session.configuration)
 					})
 				}
-			})
+			}
 		}
+	}
+	
+	//
+	// UI FLOW follows:
+	//
+	
+	var window: NSWindow? = nil
+	var validURL: NSURL? = nil
+	var handler: ((NSURLRequest) -> Void)? = nil
+	
+	func prompt(url: NSURL, valid: NSURL, cb: (NSURLRequest) -> Void) {
+		self.validURL = valid
+		self.handler = cb
+		
+		let webView = WebView(frame: NSMakeRect(0, 0, 386, 512))
+		webView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
+		webView.policyDelegate = self
+		webView.mainFrame.loadRequest(NSMutableURLRequest(URL: url))
+		
+		window = NSWindow(contentRect: NSMakeRect(0, 0, 386, 512),
+			styleMask: NSTitledWindowMask | NSClosableWindowMask,
+			backing: .Buffered, `defer`: false)
+		window?.title = "Login to Parrot"
+		window?.opaque = false
+		window?.movableByWindowBackground = true
+		window?.contentView = webView
+		window?.center()
+		window?.makeKeyAndOrderFront(nil)
+	}
+	
+	public func webView(
+		webView: WebView!,
+		decidePolicyForNavigationAction actionInformation: [NSObject : AnyObject]!,
+		request: NSURLRequest!,
+		frame: WebFrame!,
+		decisionListener listener: WebPolicyDecisionListener!) {
+			
+			let url = request.URL!.absoluteString
+			let val = (self.validURL?.absoluteString)!
+			if url.containsString(val) {
+				listener.ignore()
+				self.handler?(request)
+				self.window?.close()
+			} else {
+				listener.use()
+			}
 	}
 }

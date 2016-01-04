@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="hOY-6e-51O">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
@@ -689,45 +689,9 @@
             <point key="canvasLocation" x="731" y="-864"/>
         </scene>
         <!--Window Controller-->
-        <scene sceneID="doe-KA-CfA">
-            <objects>
-                <customObject id="rrj-V2-Sm2" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <windowController storyboardIdentifier="Login" showSeguePresentationStyle="single" id="HoM-6g-BXM" sceneMemberID="viewController">
-                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="5fg-b1-5DQ">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" fullSizeContentView="YES"/>
-                        <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES" transient="YES" ignoresCycle="YES" fullScreenAuxiliary="YES" fullScreenDisallowsTiling="YES"/>
-                        <rect key="contentRect" x="245" y="310" width="386" height="512"/>
-                        <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="titlebarAppearsTransparent" value="YES"/>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="movableByWindowBackground" value="YES"/>
-                        </userDefinedRuntimeAttributes>
-                    </window>
-                    <connections>
-                        <segue destination="riD-gF-N2n" kind="relationship" relationship="window.shadowedContentViewController" id="XP2-SM-ZaL"/>
-                    </connections>
-                </windowController>
-            </objects>
-            <point key="canvasLocation" x="1500" y="-512"/>
-        </scene>
-        <!--Login-->
-        <scene sceneID="ifW-OW-ZNE">
-            <objects>
-                <viewController title="Login" id="riD-gF-N2n" customClass="LoginViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="wlY-Ac-gqM">
-                        <rect key="frame" x="0.0" y="0.0" width="386" height="512"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
-                    </view>
-                </viewController>
-                <customObject id="FNu-n2-bLZ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2005" y="-512"/>
-        </scene>
-        <!--Window Controller-->
         <scene sceneID="oN2-hz-lmd">
             <objects>
-                <windowController showSeguePresentationStyle="single" id="hOY-6e-51O" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="Main" showSeguePresentationStyle="single" id="hOY-6e-51O" sceneMemberID="viewController">
                     <window key="window" title="Parrot" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="hld-qI-SKY">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -848,13 +812,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="27" horizontalPageScroll="10" verticalLineScroll="27" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCf-gh-ObP">
+                            <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCf-gh-ObP">
                                 <rect key="frame" x="0.0" y="26" width="450" height="274"/>
                                 <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="q5q-sZ-aWf">
                                     <rect key="frame" x="0.0" y="0.0" width="450" height="274"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView wantsLayer="YES" verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="25" rowSizeStyle="automatic" viewBased="YES" floatsGroupRows="NO" id="F84-Gi-Rrw">
+                                        <tableView wantsLayer="YES" verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" viewBased="YES" floatsGroupRows="NO" id="F84-Gi-Rrw">
                                             <rect key="frame" x="0.0" y="0.0" width="450" height="226"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <animations/>

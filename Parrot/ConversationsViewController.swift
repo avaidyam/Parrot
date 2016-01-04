@@ -16,7 +16,6 @@ public class Parrot {
 // Create and cache the default image template.
 private let defaultImage = NSImage(named: "NSUserGuest")!
 
-
 class ConversationsViewController:  NSViewController, ClientDelegate,
 									NSTableViewDataSource, NSTableViewDelegate,
 									NSSplitViewDelegate, ConversationListDelegate {
@@ -37,15 +36,10 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			self.view.window?.appearance = NSAppearance(named: appearance)
 		}
 		
-		/* TODO: Should be a singleton outer class! */
-		OAuth2.authenticateClient({ client in
-			self.representedObject = client
-			client.delegate = self
-			client.connect()
-			self.updateAppBadge()
-		}, auth: { launch, actual, cb in
-			LoginViewController.loginWindow(launch, valid: actual, cb: cb)
-		})
+		let client = NSApp.hangoutsClient!
+		client.delegate = self
+		client.connect()
+		self.updateAppBadge()
 	}
 	
 	override func viewWillAppear() {
