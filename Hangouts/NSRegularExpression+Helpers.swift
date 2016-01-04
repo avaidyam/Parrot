@@ -11,7 +11,7 @@ private func NSRangeToRange(s: String, r: NSRange) -> Range<String.Index> {
 	return  Range<String.Index>(start: i1, end: i2)
 }
 
-typealias Regex = NSRegularExpression
+public typealias Regex = NSRegularExpression
 public extension NSRegularExpression {
 	
 	// Easier/more convenient initializer.

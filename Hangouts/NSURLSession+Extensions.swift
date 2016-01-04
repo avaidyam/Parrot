@@ -89,7 +89,7 @@ public extension NSURLSession {
 // For constructing URL escaped/encoded strings:
 //
 
-func escape(string: String) -> String {
+public func escape(string: String) -> String {
 	let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
 	let subDelimitersToEncode = "!$&'()*+,;="
 	
@@ -119,7 +119,7 @@ func escape(string: String) -> String {
 	return escaped
 }
 
-func queryComponents(key: String, _ value: AnyObject) -> [(String, String)] {
+public func queryComponents(key: String, _ value: AnyObject) -> [(String, String)] {
 	var components: [(String, String)] = []
 	
 	if let dictionary = value as? [String: AnyObject] {
@@ -137,7 +137,7 @@ func queryComponents(key: String, _ value: AnyObject) -> [(String, String)] {
 	return components
 }
 
-func query(parameters: [String: AnyObject]) -> String {
+public func query(parameters: [String: AnyObject]) -> String {
 	var components: [(String, String)] = []
 	
 	for key in parameters.keys.sort(<) {

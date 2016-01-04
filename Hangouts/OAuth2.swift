@@ -1,6 +1,5 @@
-import Foundation
 import Cocoa
-import CommonCrypto
+import Hangouts
 
 public class OAuth2 {
 	
@@ -203,32 +202,5 @@ public class OAuth2 {
 				}
 			})
 		}
-	}
-	
-	// Return authorization headers for API request. It doesn't seem to matter 
-	// what the url and time are as long as they are consistent.
-	public class func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
-		let time_msec = Int(NSDate().timeIntervalSince1970 * 1000)
-		let auth_string = "\(time_msec) \(sapisid_cookie) \(Channel.ORIGIN_URL)"
-		let auth_hash = auth_string.SHA1()
-		let sapisidhash = "SAPISIDHASH \(time_msec)_\(auth_hash)"
-		return [
-			"Authorization": sapisidhash,
-			"X-Origin": Channel.ORIGIN_URL,
-			"X-Goog-Authuser": "0",
-		]
-	}
-}
-
-/* String Crypto extensions */
-public extension String {
-	public func SHA1() -> String {
-		let data = self.dataUsingEncoding(NSUTF8StringEncoding)!
-		var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
-		CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
-		let hexBytes = digest.map {
-			String(format: "%02hhx", $0)
-		}
-		return hexBytes.joinWithSeparator("")
 	}
 }

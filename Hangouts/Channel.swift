@@ -93,7 +93,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 
         let sapisid = getCookieValue("SAPISID")!
-        for (k, v) in OAuth2.getAuthorizationHeaders(sapisid) {
+        for (k, v) in getAuthorizationHeaders(sapisid) {
             request.setValue(v, forHTTPHeaderField: k)
         }
 
@@ -153,7 +153,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 	// will return a gsessionid as well as the SID.
     public func fetchChannelSID() {
 		_ = ["VER": 8, "RID": 81187, "ctype": "hangouts"] // params
-        let headers = OAuth2.getAuthorizationHeaders(getCookieValue("SAPISID")!)
+        let headers = getAuthorizationHeaders(getCookieValue("SAPISID")!)
         let url = "\(CHANNEL_URL_PREFIX)/channel/bind?VER=8&RID=81187&ctype=hangouts"
 
         let URLRequest = NSMutableURLRequest(URL: NSURL(string: url)!)
@@ -235,7 +235,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 			request.HTTPMethod = "POST"
 			request.HTTPBody = postBody.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-			for (k, v) in OAuth2.getAuthorizationHeaders(self.getCookieValue("SAPISID")!) {
+			for (k, v) in getAuthorizationHeaders(self.getCookieValue("SAPISID")!) {
 				request.setValue(v, forHTTPHeaderField: k)
 			}
 			
