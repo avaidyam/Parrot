@@ -27,7 +27,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		super.loadView()
 		
 		tableView.registerNib(NSNib(nibNamed: "PersonView", bundle: NSBundle.mainBundle()),
-									forIdentifier: PersonView.className())
+									forIdentifier: "PersonView")
 		
 		Notifications.subscribe(NSUserDefaultsDidChangeNotification) { note in
 			
@@ -157,10 +157,15 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		}
 		return actions
 	}
-	
-	func tableView(tableView: NSTableView, tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
+
+    // MARK: NSTableViewDelegate
+
+	func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+		let _cell = tableView.makeViewWithIdentifier("PersonView", owner: self) as? NSTableCellView
+		guard let cell = _cell else {
+			return nil
+		}
 		let conversation = (conversationList?.conversations[row])!
-		print("gothere \(row)")
 		
 		// Propogate info for data filling
 		let a = conversation.messages.last?.user_id
@@ -185,13 +190,8 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp.relativeString() ?? ""
 		
-		return Wrapper<PersonView.Configuration>((img, ring, ind, name, sub, time))
-	}
-
-    // MARK: NSTableViewDelegate
-
-	func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		return tableView.makeViewWithIdentifier(PersonView.className(), owner: self)
+		cell.objectValue = Wrapper<PersonView.Configuration>((img, ring, ind, name, sub, time))
+		return cell
     }
 
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
