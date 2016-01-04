@@ -3,14 +3,12 @@ import Hangouts
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
 
-// Experimenting with new typealias to make code readable.
-typealias Sender = AnyObject?
-
 // Existing Parrot Settings keys.
 public class Parrot {
 	public static let AutoEmoji = "Parrot.AutoEmoji"
 	public static let DarkAppearance = "Parrot.DarkAppearance"
 	public static let InvertChatStyle = "Parrot.InvertChatStyle"
+	public static let ShowSidebar = "Parrot.ShowSidebar"
 }
 
 // Create and cache the default image template.
@@ -18,7 +16,7 @@ private let defaultImage = NSImage(named: "NSUserGuest")!
 
 class ConversationsViewController:  NSViewController, ClientDelegate,
 									NSTableViewDataSource, NSTableViewDelegate,
-									NSSplitViewDelegate, ConversationListDelegate {
+									ConversationListDelegate {
 
     @IBOutlet weak var tableView: NSTableView!
 	
@@ -34,12 +32,20 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
+			
+			// Handle collapsed sidebar as best we can...
+			let split = self.parentViewController as? NSSplitViewController
+			let old = !((split?.splitViewItems[0].collapsed)!)
+			let new = Settings()[Parrot.ShowSidebar] as? Bool ?? false
+			if old != new {
+				split?.toggleSidebar(nil)
+			}
 		}
 		
 		let client = NSApp.hangoutsClient!
 		client.delegate = self
 		client.connect()
-		self.updateAppBadge()
+		NotificationManager.updateAppBadge(conversationList?.unreadEventCount ?? 0)
 	}
 	
 	override func viewWillAppear() {
@@ -53,23 +59,17 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 		self.view.window?.appearance = NSAppearance(named: appearance)
 		
+		// Handle collapsed sidebar.
+		let split = (self.parentViewController as? NSSplitViewController)?.splitViewItems[0]
+		split?.collapsed = Settings()[Parrot.ShowSidebar] as? Bool ?? false
+		
 		let scroll = self.view.subviews[0] as? NSScrollView
 		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
 	}
-
-    func updateAppBadge() {
-        if let list = conversationList where list.unreadEventCount > 0 {
-            NSApp.dockTile.badgeLabel = "\(list.unreadEventCount)"
-        } else {
-            NSApp.dockTile.badgeLabel = ""
-        }
-    }
-
-    // MARK: Client Delegate
+	
     var conversationList: ConversationList? {
         didSet {
             conversationList?.delegate = self
-			
 			Dispatch.main().add {
 				self.tableView.reloadData()
 			}
@@ -78,8 +78,6 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 
     func clientDidConnect(client: Client, initialData: InitialData) {
 		buildUserList(client, initial_data: initialData) { user_list in
-			//print("users: \(user_list.get_all())")
-			
             self.conversationList = ConversationList(
                 client: client,
                 conv_states: initialData.conversation_states,
@@ -106,8 +104,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     func clientDidUpdateState(client: Client, update: STATE_UPDATE) {
         
     }
-
-    // MARK: NSTableViewDataSource delegate
+	
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
         return conversationList?.conversations.count ?? 0
     }
@@ -152,8 +149,6 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		return actions
 	}
 
-    // MARK: NSTableViewDelegate
-
 	func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		let _cell = tableView.makeViewWithIdentifier("PersonView", owner: self) as? NSTableCellView
 		guard let cell = _cell else {
@@ -188,42 +183,40 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		return cell
     }
 
+	/* TODO: Should be moved to the PersonView instead. */
+	/* TODO: Support different size classes. */
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return 64
     }
-    
-    // MARK: ConversationListDelegate
+	
     func conversationList(list: ConversationList, didReceiveEvent event: Event) {
 
     }
 
     func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType) {
-		print("changed something \(status)")
+		
     }
 
     func conversationList(list: ConversationList, didReceiveWatermarkNotification status: WatermarkNotification) {
-
+		
     }
-
+	
+	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: ConversationList) {
 		Dispatch.main().add {
 			self.tableView.reloadData()
-			self.updateAppBadge()
+			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
-
+	
+	/* TODO: Just update the row that is updated. */
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation) {
-        //  TODO: Just update the one row that needs updating
-		
 		Dispatch.main().add {
 			self.tableView.reloadData()
-			self.updateAppBadge()
+			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
-
-
-    // MARK: IBActions
-
+	
     func selectConversation(conversation: Conversation?) {
 		let item = (self.parentViewController as? NSSplitViewController)?.splitViewItems[1]
         if let vc = item?.viewController as? ConversationViewController {

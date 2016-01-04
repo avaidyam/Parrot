@@ -49,7 +49,11 @@ class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
         }
 
         groupedNotifications.removeValueForKey(conversationID)
-    }
+	}
+	
+	class func updateAppBadge(messages: Int) {
+		NSApp.dockTile.badgeLabel = messages > 0 ? "\(messages)" : ""
+	}
 
     // MARK: NSUserNotificationCenterDelegate
 

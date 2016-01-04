@@ -254,7 +254,7 @@ class ConversationViewController:
     }
 
     // MARK: IBActions
-    @IBAction func messageTextFieldDidAction(_:Sender) {
+    @IBAction func messageTextFieldDidAction(_:AnyObject?) {
 		if NSEvent.modifierFlags().contains(.ShiftKeyMask) {
 			return
 		}

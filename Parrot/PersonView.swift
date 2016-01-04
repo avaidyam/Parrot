@@ -72,6 +72,7 @@ class PersonView : NSTableCellView {
 		}
 	}
 	
+	
 	// Allows the circle crop to dynamically change.
 	override func layout() {
 		super.layout()

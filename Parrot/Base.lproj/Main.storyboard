@@ -591,7 +591,6 @@
                                         <menuItem title="Dark Appearance" id="snW-S8-Cw5">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleToolbarShown:" target="Ady-hI-5gd" id="BXY-wc-z0C"/>
                                                 <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.DarkAppearance" id="5CY-ro-hvr">
                                                     <dictionary key="options">
                                                         <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
@@ -603,7 +602,6 @@
                                         <menuItem title="Invert Chat Style" id="wJg-Ua-skg">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleToolbarShown:" target="Ady-hI-5gd" id="rN3-lR-xkv"/>
                                                 <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.InvertChatStyle" id="8Ji-uS-FpT">
                                                     <dictionary key="options">
                                                         <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
@@ -615,7 +613,6 @@
                                         <menuItem title="Auto Emoji" id="Ojh-FQ-Nth">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleToolbarShown:" target="Ady-hI-5gd" id="qfv-As-AQv"/>
                                                 <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.AutoEmoji" id="kcP-0g-Rgz">
                                                     <dictionary key="options">
                                                         <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
@@ -624,16 +621,15 @@
                                                 </binding>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Show Toolbar" keyEquivalent="t" id="ISI-Dd-ffs">
+                                        <menuItem title="Show Sidebar" keyEquivalent="t" id="ISI-Dd-ffs">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
-                                                <action selector="toggleToolbarShown:" target="Ady-hI-5gd" id="HOJ-cc-9el"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Customize Toolbar…" id="1UK-8n-QPP">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="runToolbarCustomizationPalette:" target="Ady-hI-5gd" id="pQI-g3-MTW"/>
+                                                <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.ShowSidebar" id="U0v-BK-Dia">
+                                                    <dictionary key="options">
+                                                        <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                        <bool key="NSValidatesImmediately" value="YES"/>
+                                                    </dictionary>
+                                                </binding>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -686,13 +682,13 @@
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="5Jg-0f-uLC"/>
             </objects>
-            <point key="canvasLocation" x="731" y="-864"/>
+            <point key="canvasLocation" x="1513" y="-315"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="oN2-hz-lmd">
             <objects>
                 <windowController storyboardIdentifier="Main" showSeguePresentationStyle="single" id="hOY-6e-51O" sceneMemberID="viewController">
-                    <window key="window" title="Parrot" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="hld-qI-SKY">
+                    <window key="window" title="Parrot" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="ParrotWindow" animationBehavior="default" id="hld-qI-SKY">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="720" height="300"/>
