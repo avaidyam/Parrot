@@ -9,7 +9,7 @@ public protocol ChannelDelegate {
     func channel(channel: Channel, didReceiveMessage: NSString)
 }
 
-public class Channel : NSObject {
+public class Channel : NSObject, NSURLSessionDataDelegate {
     public static let ORIGIN_URL = "https://talkgadget.google.com"
     public let CHANNEL_URL_PREFIX = "https://0.client-channel.google.com/client-channel"
 
@@ -95,8 +95,29 @@ public class Channel : NSObject {
 
         request.timeoutInterval = 30
 		
-		// MANAGER DATATASK + STREAM
-        manager.request(request).stream { (data: NSData) in self.onPushData(data) }.responseData { response in
+		// TODO: FIX THIS:
+		//.stream { (data: NSData) in self.onPushData(data) }
+		/*self.manager.session.request(request) {
+			guard let data = $0.data else {
+				// Uh stuff dies here... don't use !'s.
+				print("Request failed with error: \($0.error!)")
+				self.need_new_sid = true
+				self.listen()
+				return
+			}
+			
+			if ($0.response as? NSHTTPURLResponse)?.statusCode == 200 {
+				//self.onPushData(data) // why is this commented again??
+				self.makeLongPollingRequest()
+			} else {
+				print("Received unknown response code")
+				print(NSString(data: data, encoding: 4)! as String)
+			}
+		}*/
+		
+        manager.request(request)
+			.stream { (data: NSData) in self.onPushData(data) }
+			.responseData { response in
 			if response.result.isFailure { // response.response?.statusCode >= 400
 				// Uh stuff dies here... don't use !'s.
                 print("Request failed with: \(response.result.error!)")
@@ -109,7 +130,6 @@ public class Channel : NSObject {
                 print("Received unknown response code \(response.response?.statusCode)")
                 print(NSString(data: response.result.value!, encoding: 4)! as String)
             }
-
         }
     }
 	
@@ -131,19 +151,18 @@ public class Channel : NSObject {
         let data = "count=0".dataUsingEncoding(NSUTF8StringEncoding)!
         isSubscribed = false
 		
-		// MANAGER UPLOADTASK
-        manager.upload(URLRequest, data: data).responseData { response in
-            if response.result.isFailure {
-                print("Request failed: \(response.result.error!)")
-            } else {
-                let responseValues = Channel.parseSIDResponse(response.result.value!)
-                self.sidParam = responseValues.sid
-                self.gSessionIDParam = responseValues.gSessionID
-                self.need_new_sid = false
-                self.listen()
-            }
-        }
-
+		self.manager.session.request(URLRequest, type: .UploadData(data)) {
+			guard let data = $0.data else {
+				print("Request failed with error: \($0.error!)")
+				return
+			}
+			
+			let responseValues = Channel.parseSIDResponse(data)
+			self.sidParam = responseValues.sid
+			self.gSessionIDParam = responseValues.gSessionID
+			self.need_new_sid = false
+			self.listen()
+		}
     }
 	
 	// Delay subscribing until first byte is received prevent "channel not
@@ -206,8 +225,11 @@ public class Channel : NSObject {
 				request.setValue(v, forHTTPHeaderField: k)
 			}
 			
-			// MANAGER DATATASK
-			self.manager.request(request).responseData { response in
+			self.manager.session.request(request) {
+				guard let _ = $0.data else {
+					print("Request failed with error: \($0.error!)")
+					return
+				}
 				self.isSubscribed = true
 				cb?()
 			}

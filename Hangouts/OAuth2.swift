@@ -3,75 +3,6 @@ import Alamofire
 import Cocoa
 import CommonCrypto
 
-func escape(string: String) -> String {
-	let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
-	let subDelimitersToEncode = "!$&'()*+,;="
-	
-	let allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet().mutableCopy() as! NSMutableCharacterSet
-	allowedCharacterSet.removeCharactersInString(generalDelimitersToEncode + subDelimitersToEncode)
-	
-	var escaped = ""
-	if #available(iOS 8.3, OSX 10.10, *) {
-		escaped = string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? string
-	} else {
-		let batchSize = 50
-		var index = string.startIndex
-		
-		while index != string.endIndex {
-			let startIndex = index
-			let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
-			let range = Range(start: startIndex, end: endIndex)
-			
-			let substring = string.substringWithRange(range)
-			
-			escaped += substring.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? substring
-			
-			index = endIndex
-		}
-	}
-	
-	return escaped
-}
-
-func queryComponents(key: String, _ value: AnyObject) -> [(String, String)] {
-	var components: [(String, String)] = []
-	
-	if let dictionary = value as? [String: AnyObject] {
-		for (nestedKey, value) in dictionary {
-			components += queryComponents("\(key)[\(nestedKey)]", value)
-		}
-	} else if let array = value as? [AnyObject] {
-		for value in array {
-			components += queryComponents("\(key)[]", value)
-		}
-	} else {
-		components.append((escape(key), escape("\(value)")))
-	}
-	
-	return components
-}
-
-func query(parameters: [String: AnyObject]) -> String {
-	var components: [(String, String)] = []
-	
-	for key in parameters.keys.sort(<) {
-		let value = parameters[key]!
-		components += queryComponents(key, value)
-	}
-	
-	return (components.map { "\($0)=\($1)" } as [String]).joinWithSeparator("&")
-}
-
-/*
-session.dataTaskWithRequest(request) { data, reponse, error in
-	if let error = error { // error case
-		print("Request failed with error: \(error)")
-	} else {
-		// skeleton for doing stuff with the data
-	}
-}.resume()
-*/
-
 public class OAuth2 {
 	
 	// For UI authentication, we ask the client to take our request
@@ -145,19 +76,19 @@ public class OAuth2 {
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
 		req.HTTPBody = query(token_request_data).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
 		
-		// Execute the request.
-		NSURLSession.sharedSession().dataTaskWithRequest(req) { data, reponse, error in
-			if let error = error { // error case
-				print("Request failed with error: \(error)")
-			} else {
-				do {
-					let JSON = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
-					cb(access_token: JSON["access_token"] as! String, refresh_token: JSON["refresh_token"] as! String)
-				} catch {
-					print("Request failed with error: \(error)")
-				}
+		URLSession.sharedSession().request(req) {
+			guard let _ = $0.data else {
+				print("Request failed with error: \($0.error!)")
+				return
 			}
-		}.resume()
+			
+			do {
+				let JSON = try NSJSONSerialization.JSONObjectWithData($0.data!, options: .AllowFragments)
+				cb(access_token: JSON["access_token"] as! String, refresh_token: JSON["refresh_token"] as! String)
+			} catch {
+				print("Request failed with error: \(error)")
+			}
+		}
 	}
 	
 	/**
@@ -181,19 +112,20 @@ public class OAuth2 {
 			req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
 			req.HTTPBody = query(token_request_data).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
 			
-			manager.session.dataTaskWithRequest(req) { data, reponse, error in
-				if let error = error { // error case
-					print("Request failed with error: \(error)")
-				} else {
-					do {
-						let JSON = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
-						print("got \(JSON)")
-						cb(access_token: JSON["access_token"] as! String, refresh_token: refresh_token)
-					} catch {
-						print("Request failed with error: \(error)")
-					}
+			URLSession.sharedSession().request(req) {
+				guard let data = $0.data else {
+					print("Request failed with error: \($0.error!)")
+					return
 				}
-			}.resume()
+				
+				do {
+					let JSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+					print("got \(JSON)")
+					cb(access_token: JSON["access_token"] as! String, refresh_token: refresh_token)
+				} catch {
+					print("Request failed with error: \(error)")
+				}
+			}
 	}
 	
 	public class func authenticateClient(cb: (client: Client) -> Void, auth: Authenticator) {
@@ -214,38 +146,40 @@ public class OAuth2 {
 				let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 				request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 				
-				manager.session.dataTaskWithRequest(request) { data, reponse, error in
-					if let error = error { // error case
-						print("Request failed with error: \(error)")
-					} else {
-						var uberauth = NSString(data: data!, encoding: NSUTF8StringEncoding)! as String
-						uberauth.replaceRange(Range<String.Index>(
-							start: uberauth.endIndex.advancedBy(-1),
-							end: uberauth.endIndex
+				manager.session.request(request) {
+					guard let data = $0.data else {
+						print("Request failed with error: \($0.error!)")
+						return
+					}
+					
+					var uberauth = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+					uberauth.replaceRange(Range<String.Index>(
+						start: uberauth.endIndex.advancedBy(-1),
+						end: uberauth.endIndex
 						), with: "")
+					
+					let request = NSMutableURLRequest(URL: NSURL(string: "https://accounts.google.com/MergeSession")!)
+					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
+					
+					manager.session.request(request) {
+						guard let _ = $0.data else {
+							print("Request failed with error: \($0.error!)")
+							return
+						}
 						
-						let request = NSMutableURLRequest(URL: NSURL(string: "https://accounts.google.com/MergeSession")!)
+						let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
+						let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 						request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 						
-						manager.session.dataTaskWithRequest(request) { data, reponse, error in
-							if let error = error { // error case
-								print("Request failed with error: \(error)")
-							} else {
-								let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
-								let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-								request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
-								
-								manager.session.dataTaskWithRequest(request) { data, reponse, error in
-									if let error = error { // error case
-										print("Request failed with error: \(error)")
-									} else {
-										cb(client: Client(manager: manager))
-									}
-								}.resume()
+						manager.session.request(request) {
+							guard let _ = $0.data else {
+								print("Request failed with error: \($0.error!)")
+								return
 							}
-						}.resume()
+							cb(client: Client(manager: manager))
+						}
 					}
-				}.resume()
+				}
 			}
 		} else {
 			
@@ -253,21 +187,21 @@ public class OAuth2 {
 			let a = NSURL(string: OAUTH2_LOGIN_URL)!
 			let b = NSURL(string: "https://accounts.google.com/o/oauth2/approval")!
 			auth(a, b, { request in
-				
-				manager.session.dataTaskWithRequest(request) { data, reponse, error in
-					if let error = error { // error case
-						print("Request failed with error: \(error)")
-					} else {
-						let body = NSString(data: data!, encoding: NSUTF8StringEncoding)!
-						let auth_code = Regex("value=\"(.+?)\"").match(body as String).first!
-						
-						//  - first: authenticate(auth_code)
-						authenticate(auth_code, cb: { (access_token, refresh_token) in
-							saveTokens(access_token, refresh_token: refresh_token)
-							cb(client: Client(manager: manager))
-						})
+				manager.session.request(request) {
+					guard let data = $0.data else {
+						print("Request failed with error: \($0.error!)")
+						return
 					}
-				}.resume()
+					
+					let body = NSString(data: data, encoding: NSUTF8StringEncoding)!
+					let auth_code = Regex("value=\"(.+?)\"").match(body as String).first!
+					
+					//  - first: authenticate(auth_code)
+					authenticate(auth_code, cb: { (access_token, refresh_token) in
+						saveTokens(access_token, refresh_token: refresh_token)
+						cb(client: Client(manager: manager))
+					})
+				}
 			})
 		}
 	}

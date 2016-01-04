@@ -90,90 +90,99 @@ public class Client : ChannelDelegate {
         let ec = (CHAT_INIT_PARAMS["ec"] as! String).encodeURL()
         let url = "\(PVT_TOKEN_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)"
 		
-		// MANAGER DATATASK
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-        manager.request(request).responseData { response in
-            let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
-            let ctx = JSContext() // FIXME: Don't use this.
-            let pvt: AnyObject = ctx.evaluateScript(body).toArray()[1] as! String
-            self.CHAT_INIT_PARAMS["pvt"] = pvt
-
-            // Now make the actual initialization request:
-            let prop = (self.CHAT_INIT_PARAMS["prop"] as! String).encodeURL()
-            let fid = (self.CHAT_INIT_PARAMS["fid"] as! String).encodeURL()
-            let ec = (self.CHAT_INIT_PARAMS["ec"] as! String).encodeURL()
-            let pvt_enc = (self.CHAT_INIT_PARAMS["pvt"] as! String).encodeURL()
-            let url = "\(CHAT_INIT_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)&pvt=\(pvt_enc)"
+		
+		self.manager.session.request(request) {
+			guard let data = $0.data else {
+				print("Request failed with error: \($0.error!)")
+				return
+			}
 			
-			// MANAGER DATATASK
+			let body = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+			let ctx = JSContext() // FIXME: Don't use this.
+			let pvt: AnyObject = ctx.evaluateScript(body).toArray()[1] as! String
+			self.CHAT_INIT_PARAMS["pvt"] = pvt
+			
+			// Now make the actual initialization request:
+			let prop = (self.CHAT_INIT_PARAMS["prop"] as! String).encodeURL()
+			let fid = (self.CHAT_INIT_PARAMS["fid"] as! String).encodeURL()
+			let ec = (self.CHAT_INIT_PARAMS["ec"] as! String).encodeURL()
+			let pvt_enc = (self.CHAT_INIT_PARAMS["pvt"] as! String).encodeURL()
+			let url = "\(CHAT_INIT_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)&pvt=\(pvt_enc)"
+			
 			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-            self.manager.request(request).responseData { response in
-                let body = NSString(data: response.result.value!, encoding: NSUTF8StringEncoding)! as String
-
-                // Parse the response by using a regex to find all the JS objects, and
-                // parsing them. Not everything will be parsable, but we don't care if
-                // an object we don't need can't be parsed.
-                var data_dict = Dictionary<String, AnyObject?>()
-                let regex = Regex(CHAT_INIT_REGEX,
-                    options: [NSRegularExpressionOptions.CaseInsensitive, NSRegularExpressionOptions.DotMatchesLineSeparators]
-                )
-                for data in regex.match(body) {
-                    if data.rangeOfString("data:function") == nil {
-                        let dict = JSContext().evaluateScript("a = " + data).toDictionary()! // FIXME: Don't use this.
-                        data_dict[dict["key"] as! String] = dict["data"]
-                    } else {
-                        var cleanedData = data
-                        cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
-                            "data:function(){return", withString: "data:")
-                        cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
-                            "}}", withString: "}")
-                        if let dict = JSContext().evaluateScript("a = " + cleanedData).toDictionary() { // FIXME: Don't use this.
-                            data_dict[dict["key"] as! String] = dict["data"]
-                        } else {
-                            print("Could not parse!")
-                        }
-                    }
-                }
-                self.api_key = ((data_dict["ds:7"] as! NSArray)[0] as! NSArray)[2] as? String
-                self.email = ((data_dict["ds:33"] as! NSArray)[0] as! NSArray)[2] as? String
-                self.header_date = ((data_dict["ds:2"] as! NSArray)[0] as! NSArray)[4] as? String
-                self.header_version = ((data_dict["ds:2"] as! NSArray)[0] as! NSArray)[6] as? String
-                self.header_id = ((data_dict["ds:4"] as! NSArray)[0] as! NSArray)[7] as? String
-
-                let self_entity = PBLiteSerialization.parseArray(GET_SELF_INFO_RESPONSE.self, input: (data_dict["ds:20"] as! NSArray)[0] as? NSArray)!.self_entity
-
+			self.manager.session.request(request) {
+				guard let data = $0.data else {
+					print("Request failed with error: \($0.error!)")
+					return
+				}
+				
+				let body = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+				
+				// Parse the response by using a regex to find all the JS objects, and
+				// parsing them. Not everything will be parsable, but we don't care if
+				// an object we don't need can't be parsed.
+				var data_dict = Dictionary<String, AnyObject?>()
+				let regex = Regex(CHAT_INIT_REGEX,
+					options: [NSRegularExpressionOptions.CaseInsensitive, NSRegularExpressionOptions.DotMatchesLineSeparators]
+				)
+				for data in regex.match(body) {
+					if data.rangeOfString("data:function") == nil {
+						let dict = JSContext().evaluateScript("a = " + data).toDictionary()! // FIXME: Don't use this.
+						data_dict[dict["key"] as! String] = dict["data"]
+					} else {
+						var cleanedData = data
+						cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
+							"data:function(){return", withString: "data:")
+						cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
+							"}}", withString: "}")
+						if let dict = JSContext().evaluateScript("a = " + cleanedData).toDictionary() { // FIXME: Don't use this.
+							data_dict[dict["key"] as! String] = dict["data"]
+						} else {
+							print("Could not parse!")
+						}
+					}
+				}
+				self.api_key = ((data_dict["ds:7"] as! NSArray)[0] as! NSArray)[2] as? String
+				self.email = ((data_dict["ds:33"] as! NSArray)[0] as! NSArray)[2] as? String
+				self.header_date = ((data_dict["ds:2"] as! NSArray)[0] as! NSArray)[4] as? String
+				self.header_version = ((data_dict["ds:2"] as! NSArray)[0] as! NSArray)[6] as? String
+				self.header_id = ((data_dict["ds:4"] as! NSArray)[0] as! NSArray)[7] as? String
+				
+				let self_entity = PBLiteSerialization.parseArray(GET_SELF_INFO_RESPONSE.self, input: (data_dict["ds:20"] as! NSArray)[0] as? NSArray)!.self_entity
+				
 				// FIXME: Sometimes crashes right here...
-                let initial_conv_states_raw = ((data_dict["ds:19"] as! NSArray)[0] as! NSArray)[3] as! NSArray
-                let initial_conv_states = (initial_conv_states_raw as! [NSArray]).map {
-                    PBLiteSerialization.parseArray(CONVERSATION_STATE.self, input: $0)!
-                }
-                let initial_conv_parts = initial_conv_states.flatMap { $0.conversation.participant_data }
-
-                var initial_entities = [ENTITY]()
-                var sync_timestamp: NSNumber? = nil
-
-                if let ds21 = data_dict["ds:21"] as? NSArray {
-                    sync_timestamp = ((ds21[0] as! NSArray)[1] as! NSArray)[4] as? NSNumber
-
-                    let entities = PBLiteSerialization.parseArray(INITIAL_CLIENT_ENTITIES.self, input: ds21[0] as? NSArray)!
-                    initial_entities = (entities.entities) + [
-                        entities.group1.entity,
-                        entities.group2.entity,
-                        entities.group3.entity,
-                        entities.group4.entity,
-                        entities.group5.entity,
-                    ].flatMap { $0 }.map { $0.entity }
-                }
-
-                cb(data: InitialData(
-                    initial_conv_states,
-                    self_entity,
-                    initial_entities,
-                    initial_conv_parts,
-                    from_timestamp(sync_timestamp)
-                ))
-            }
-        }
+				let initial_conv_states_raw = ((data_dict["ds:19"] as! NSArray)[0] as! NSArray)[3] as! NSArray
+				let initial_conv_states = (initial_conv_states_raw as! [NSArray]).map {
+					PBLiteSerialization.parseArray(CONVERSATION_STATE.self, input: $0)!
+				}
+				let initial_conv_parts = initial_conv_states.flatMap { $0.conversation.participant_data }
+				
+				var initial_entities = [ENTITY]()
+				var sync_timestamp: NSNumber? = nil
+				
+				if let ds21 = data_dict["ds:21"] as? NSArray {
+					sync_timestamp = ((ds21[0] as! NSArray)[1] as! NSArray)[4] as? NSNumber
+					
+					let entities = PBLiteSerialization.parseArray(INITIAL_CLIENT_ENTITIES.self, input: ds21[0] as? NSArray)!
+					initial_entities = (entities.entities) + [
+						entities.group1.entity,
+						entities.group2.entity,
+						entities.group3.entity,
+						entities.group4.entity,
+						entities.group5.entity,
+						].flatMap { $0 }.map { $0.entity }
+				}
+				
+				cb(data: InitialData(
+					initial_conv_states,
+					self_entity,
+					initial_entities,
+					initial_conv_parts,
+					from_timestamp(sync_timestamp)
+				))
+			}
+		}
     }
 
     private func getRequestHeader() -> NSArray {
@@ -247,7 +256,7 @@ public class Client : ChannelDelegate {
         endpoint: String,
         body: AnyObject,
         use_json: Bool = true,
-        cb: (Response<NSData, NSError>) -> Void
+        cb: (Result) -> Void
     ) {
         base_request("https://clients6.google.com/chat/v1/\(endpoint)",
             content_type: "application/json+protobuf",
@@ -262,7 +271,7 @@ public class Client : ChannelDelegate {
         content_type: String,
         data: NSData,
         use_json: Bool = true,
-        cb: (Response<NSData, NSError>) -> Void
+        cb: (Result) -> Void
     ) {
         let params = [
             "key": self.api_key!,
@@ -278,8 +287,13 @@ public class Client : ChannelDelegate {
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")
 		
-		// MANAGER DATATASK
-        manager.request(request).responseData(cb)
+		self.manager.session.request(request) {
+			guard let _ = $0.data else {
+				print("Request failed with error: \($0.error!)")
+				return
+			}
+			cb($0)
+		}
     }
 
     private func verifyResponseOK(responseObject: NSData) {
@@ -303,7 +317,7 @@ public class Client : ChannelDelegate {
             1048576 // max_response_size_bytes
         ]
         self.request("conversations/syncallnewevents", body: data, use_json: false) { r in
-            cb(response: PBLiteSerialization.parseProtoJSON(r.result.value!))
+            cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
         }
     }
 	
@@ -355,7 +369,7 @@ public class Client : ChannelDelegate {
 		
 		// sendchatmessage can return 200 but still contain an error
         self.request("conversations/sendchatmessage", body: body) {
-            r in self.verifyResponseOK(r.result.value!); cb?()
+            r in self.verifyResponseOK(r.data!); cb?()
         }
     }
 	
@@ -405,7 +419,7 @@ public class Client : ChannelDelegate {
 
         // Set the active client.
         self.request("clients/setactiveclient", body: data, use_json: true) {
-            r in self.verifyResponseOK(r.result.value!); cb?()
+            r in self.verifyResponseOK(r.data!); cb?()
         }
     }
 	
@@ -416,7 +430,7 @@ public class Client : ChannelDelegate {
             self.getRequestHeader(),
             NSNull(), NSNull(), NSNull(),
             [[conversation_id], generateClientID(), 2],
-        ]) { r in self.verifyResponseOK(r.result.value!); cb?() }
+        ]) { r in self.verifyResponseOK(r.data!); cb?() }
     }
 	
 	// Delete one-to-one conversation.
@@ -430,7 +444,7 @@ public class Client : ChannelDelegate {
             // it Hangouts client in GMail sent something like now() - 5 hours
             to_timestamp(NSDate()), // TODO: This should be in UTC
             NSNull(), []
-        ]) { r in self.verifyResponseOK(r.result.value!); cb?() }
+        ]) { r in self.verifyResponseOK(r.data!); cb?() }
     }
 	
 	// Send typing notification.
@@ -441,7 +455,7 @@ public class Client : ChannelDelegate {
             typing.representation
         ]
         self.request("conversations/settyping", body: data) {
-            r in self.verifyResponseOK(r.result.value!); cb?()
+            r in self.verifyResponseOK(r.data!); cb?()
         }
     }
 	
@@ -451,7 +465,7 @@ public class Client : ChannelDelegate {
             self.getRequestHeader(),
             [conv_id], // conversation_id
             to_timestamp(read_timestamp), // latest_read_timestamp
-        ]) { r in self.verifyResponseOK(r.result.value!); cb?() }
+        ]) { r in self.verifyResponseOK(r.data!); cb?() }
     }
 	
 	// FIXME: Doesn't return actual data, only calls cb.
@@ -469,7 +483,7 @@ public class Client : ChannelDelegate {
             [conversation_id],
             1,
             20
-        ]){ r in self.verifyResponseOK(r.result.value!); cb?() }
+        ]){ r in self.verifyResponseOK(r.data!); cb?() }
     }
     
     //    @asyncio.coroutine
@@ -524,7 +538,7 @@ public class Client : ChannelDelegate {
     public func getEntitiesByID(chat_id_list: [String], cb: (GET_ENTITY_BY_ID_RESPONSE) -> Void) {
         let data = [self.getRequestHeader(), NSNull(), chat_id_list.map { [$0] }]
         self.request("contacts/getentitybyid", body: data, use_json: false) { r in
-			let obj: GET_ENTITY_BY_ID_RESPONSE? = PBLiteSerialization.parseProtoJSON(r.result.value!)
+			let obj: GET_ENTITY_BY_ID_RESPONSE? = PBLiteSerialization.parseProtoJSON(r.data!)
 			cb(obj!)
         }
     }
@@ -555,7 +569,7 @@ public class Client : ChannelDelegate {
                 to_timestamp(event_timestamp),  // eventTimestamp
             ]
         ], use_json: false) { r in
-            let result = JSContext().evaluateScript("a = " + (NSString(data: r.result.value!,
+            let result = JSContext().evaluateScript("a = " + (NSString(data: r.data!,
 				encoding: NSUTF8StringEncoding)! as String)).toArray() // FIXME: Don't use this.
             cb(PBLiteSerialization.parseArray(GET_CONVERSATION_RESPONSE.self, input: result)!)
         }
@@ -585,7 +599,7 @@ public class Client : ChannelDelegate {
             [[conversation_id], client_generated_id, 1]
         ]
         self.request("conversations/renameconversation", body: data) {
-            r in self.verifyResponseOK(r.result.value!); cb?()
+            r in self.verifyResponseOK(r.data!); cb?()
         }
     }
 
