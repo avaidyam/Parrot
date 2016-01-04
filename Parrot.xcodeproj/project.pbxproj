@@ -73,6 +73,8 @@
 		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
 		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E3C0811C1F363F008B2D1D /* UserList.swift */; settings = {ASSET_TAGS = (); }; };
+		48EE21251C3AE64400790620 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE21241C3AE64400790620 /* MessagesView.swift */; settings = {ASSET_TAGS = (); }; };
+		48EE21271C3AE64C00790620 /* PersonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE21261C3AE64C00790620 /* PersonsView.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -307,6 +309,8 @@
 		48DE52FB1C1CC28000647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DE52FD1C1CC28000647C63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		48E3C0811C1F363F008B2D1D /* UserList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserList.swift; sourceTree = "<group>"; };
+		48EE21241C3AE64400790620 /* MessagesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
+		48EE21261C3AE64C00790620 /* PersonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -431,9 +435,11 @@
 		4835ECA51C1C61F300193EBC /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4835ECA61C1C620000193EBC /* MessageView.swift */,
-				4835ECA81C1C620000193EBC /* PersonView.swift */,
 				4838C6FC1C3A9E41005A8CBB /* PersonView.xib */,
+				4835ECA61C1C620000193EBC /* MessageView.swift */,
+				48EE21241C3AE64400790620 /* MessagesView.swift */,
+				4835ECA81C1C620000193EBC /* PersonView.swift */,
+				48EE21261C3AE64C00790620 /* PersonsView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1150,10 +1156,12 @@
 			files = (
 				487A0E151C1E6D61007A4696 /* Notifications.swift in Sources */,
 				48BF49A31C1D23D000AC4DD5 /* NSDate+TimeAgo.swift in Sources */,
+				48EE21251C3AE64400790620 /* MessagesView.swift in Sources */,
 				4835ECB11C1C620E00193EBC /* Authenticator.swift in Sources */,
 				488C65B01C3A8EA600D792C6 /* NSColor+MaterialDesign.swift in Sources */,
 				4835ECA91C1C620000193EBC /* MessageView.swift in Sources */,
 				48AD01DF1C1EC8A90031FDD7 /* Settings.swift in Sources */,
+				48EE21271C3AE64C00790620 /* PersonsView.swift in Sources */,
 				482E21391C23F5F500A4C7B3 /* ChatModel.swift in Sources */,
 				4835ECAF1C1C620E00193EBC /* ConversationsViewController.swift in Sources */,
 				4835ECB81C1C672900193EBC /* ImageCache.swift in Sources */,
