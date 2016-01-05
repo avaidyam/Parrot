@@ -10,6 +10,8 @@ class ConversationViewController:
 
     @IBOutlet weak var conversationTableView: NSTableView!
     @IBOutlet weak var messageTextField: NSTextField!
+	
+	var notifications = [TokenObserver]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,17 +26,13 @@ class ConversationViewController:
     }
 
     override func viewWillAppear() {
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: Selector("windowDidBecomeKey:"),
-            name: NSWindowDidBecomeKeyNotification,
-            object: self.window
-        )
-
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: Selector("frameDidChangeNotification:"),
-            name: NSViewFrameDidChangeNotification,
-            object: self.view
-        );
+		self.notifications.append(Notifications.subscribe(NSWindowDidBecomeKeyNotification, object: self.window) { a in
+			self.windowDidBecomeKey(nil)
+		})
+		
+		self.notifications.append(Notifications.subscribe(NSViewFrameDidChangeNotification, object: self.view) { a in
+			self.frameDidChangeNotification(nil)
+		})
 
         if self.window?.keyWindow ?? false {
             self.windowDidBecomeKey(nil)
@@ -46,14 +44,9 @@ class ConversationViewController:
     }
 
     override func viewWillDisappear() {
-        NSNotificationCenter.defaultCenter().removeObserver(self,
-            name: NSWindowDidBecomeKeyNotification,
-            object: self.view.window
-        )
-        NSNotificationCenter.defaultCenter().removeObserver(self,
-            name:NSViewBoundsDidChangeNotification,
-            object:self.view
-        );
+		self.notifications.forEach {
+			Notifications.unsubscribe($0)
+		}
     }
 
     override var representedObject: AnyObject? {

@@ -16,7 +16,7 @@
                 <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="z0H-Z8-vqh">
                     <rect key="frame" x="59" y="4" width="207" height="32"/>
                     <animations/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="This is a two-line message sample from John Smith." id="uxv-20-blI">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="This is a two-line subtitle sample from John Smith." id="uxv-20-blI">
                         <font key="font" metaFont="cellTitle"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

@@ -131,8 +131,8 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			]
 			
 			// Fix the colors set by the given styles.
-			actions[0].backgroundColor = NSColor.blueColor()
-			actions[1].backgroundColor = NSColor.clearColor()
+			actions[0].backgroundColor = NSColor.materialBlueColor()
+			actions[1].backgroundColor = NSColor.materialAmberColor()
 		} else if edge == .Trailing { // Swipe Left Actions
 			actions = [
 				NSTableViewRowAction(style: .Destructive, title: "Delete", handler: { action, select in
@@ -144,8 +144,8 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			]
 			
 			// Fix the colors set by the given styles.
-			actions[0].backgroundColor = NSColor.clearColor()
-			actions[1].backgroundColor = NSColor.redColor()
+			actions[0].backgroundColor = NSColor.materialAmberColor()
+			actions[1].backgroundColor = NSColor.materialRedColor()
 		}
 		return actions
 	}

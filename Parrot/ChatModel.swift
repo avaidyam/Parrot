@@ -1,8 +1,6 @@
 import Foundation
 
-/* TODO: Flesh out the framework-facing API for implementing a Parrot extension. */
-
-/* Modularize Conversations + ConversationsView */
+// Modularize Conversations + ConversationsView
 // for widget:
 // - main view is conversation view selected
 // - press (i) to show conversations list

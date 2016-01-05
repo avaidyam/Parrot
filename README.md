@@ -1,55 +1,13 @@
 # Introduction
 
-Parrot is an extensible cross-platform instant messaging architecture (currently for OS X only, due to limitations of Swift). It currently features a reverse-engineered API for Google Hangouts, done by [Tom Dryer](https://github.com/tdryer/hangups), with scaffolding around it for multifaceted use. In the future, Facebook Messenger, custom Jabber, WhatsApp, and more protocols may be supported, depending on API availability (or reverse engineering).
+Parrot is an extensible (for now only) OS X instant messaging architecture. It currently features a reverse-engineered API for Google Hangouts, with scaffolding around it for multifaceted use. In the future, Facebook Messenger, custom Jabber, WhatsApp, and more protocols may be supported, depending on API availability (or reverse engineering).
 
 ----------
-# Architecture
-The architecture is as follows:
-
-- Applications
-- Parrot (GUI):
-![Parrot](Documentation/images/Parrot.png?raw=true "Parrot")
-- parrot-cli (CLI):
-![parrot-cli](Documentation/images/parrot-cli.png?raw=true "parrot-cli")
-- Frameworks
-- Hangouts (framework)
-[todo]
-- HangoutsProvider (XPC)
-[todo]
-- Extensions
-- Share:
-[todo]
-- Link:
-[todo]
-- Today: 
-[todo]
-- Unit Tests
-[todo]
+# Images
+![Parrot](https://raw.githubusercontent.com/avaidyam/Parrot/master/Documentation/images/Parrot.png "Parrot")
+![parrot-cli](https://raw.githubusercontent.com/avaidyam/Parrot/master/Documentation/images/parrot-cli.png "parrot-cli")
 
 ----------
-# Development
-A big thanks to Peter Sobot for the initial translation and development of Hangover, which was used as the initial code base for Parrot's Hangouts component.
-
-----------
-# Progress
-- [ ] Support multiple conversation views.
-- [ ] Support drag/drop: dragging images/text/links will add them.
-- [ ] Support pasteboard: pasting a user will translate to: First Last <email@domain.com>.
-- [ ] Support group views: Favorites will be pinned to top.
-- [ ] Support tooltips: similar to pasteboard view.
-- [ ] Support force touch and gestures for actions.
-- [ ] Support menus (detail popover), force click, double click.
-- [ ] Support toggling sidebar (once closed)
-- [ ] Support pin to favorites and snooze for later.
-- [ ] Sending voice and video messages, along with photos and stickers.
-- [ ] Support a user list view instead of only conversations.
-- [ ] Support keybindings ctrl+arrow to shift conversations.
-- [ ] Support custom conversation sort (time, alphabet, or manually).
-- [ ] Support showing images for users in chat view.
-- [ ] Support sounds and vibrations in NotificationManager.
-- [ ] Support auto-reply and hangouts mood + status.
-- [ ] Add Transcript viewer.
-- [ ] Support Date/Time, Address, Transit detectors.
-- [ ] Fix proper bold, italics, underline.
-
-- [ ] Move all extensions into appropriate library or similar.
+# Acknowledgements
+- Tom Dryer, for reverse-engineering the Hangouts protocol in `hangups`
+- Peter Sobot, for the initial translation and development of `Hangover`, a Swift port of `hangups`, which was used as the initial code base for Parrot's Hangouts component.

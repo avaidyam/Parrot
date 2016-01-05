@@ -21,8 +21,8 @@ public extension NSNotificationCenter {
 		self.postNotificationName(name, object: object, userInfo: userInfo)
 	}
 	
-	public func subscribe(name: String, block: (Notification -> Void)) -> TokenObserver {
-		return self.addObserverForName(name, object: nil, queue: nil) { n in
+	public func subscribe(name: String, object: AnyObject? = nil, block: (Notification -> Void)) -> TokenObserver {
+		return self.addObserverForName(name, object: object, queue: nil) { n in
 			block((n.name, n.object, n.userInfo))
 		}
 	}
