@@ -77,14 +77,16 @@ public class Authenticator : NSObject, WebPolicyDelegate {
 		req.HTTPBody = query(token_request_data).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
 		
 		NSURLSession.sharedSession().request(req) {
-			guard let _ = $0.data else {
+			guard let data = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return
 			}
 			
 			do {
-				let JSON = try NSJSONSerialization.JSONObjectWithData($0.data!, options: .AllowFragments)
-				cb(access_token: JSON["access_token"] as! String, refresh_token: JSON["refresh_token"] as! String)
+				let JSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+				let a = JSON["access_token"] as? String
+				let b = JSON["refresh_token"] as? String
+				cb(access_token: a!, refresh_token: b!)
 			} catch {
 				print("Request failed with error: \(error)")
 			}
@@ -120,7 +122,8 @@ public class Authenticator : NSObject, WebPolicyDelegate {
 				
 				do {
 					let JSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-					cb(access_token: JSON["access_token"] as! String, refresh_token: refresh_token)
+					let a = JSON["access_token"] as? String
+					cb(access_token: a!, refresh_token: refresh_token)
 				} catch {
 					print("Request failed with error: \(error)")
 				}
