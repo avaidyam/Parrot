@@ -63,6 +63,8 @@ public class TextMapper {
 		}
 	}
 	
+	///////
+	
 	public class func segmentsForInput(text: String, emojify: Bool = true) -> [ChatMessageSegment] {
         return [ChatMessageSegment(text: (emojify ? _emojify(text) : text))]
     }
@@ -77,7 +79,6 @@ public class TextMapper {
         for match in linkDetector.matchesInString(text, options: [], range: NSMakeRange(0, text.characters.count)) {
             if let url = match.URL {
                 attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
-                //attrString.addAttribute(NSForegroundColorAttributeName, value: NSColor.grayColor(), range: match.range)
                 attrString.addAttribute(
                     NSUnderlineStyleAttributeName,
                     value: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue),

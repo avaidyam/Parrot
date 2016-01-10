@@ -4,6 +4,31 @@ import Cocoa
 
 class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	
+	var scrollView: NSScrollView!
+	var tableView: NSTableView!
+	
+	// Override and patch in the default initializers to our init.
+	override init(frame frameRect: NSRect) {
+		super.init(frame: frameRect)
+		self.commonInit()
+	}
+	required init?(coder: NSCoder) {
+		super.init(coder: coder)
+		self.commonInit()
+	}
+	
+	func commonInit() {
+		self.scrollView = NSScrollView(frame: self.bounds)
+		self.tableView = NSTableView(frame: self.scrollView.bounds)
+		
+		self.tableView.setDelegate(self)
+		self.tableView.setDataSource(self)
+		self.tableView.reloadData()
+		
+		self.scrollView.documentView = self.tableView
+		self.scrollView.hasVerticalScroller = true
+		self.addSubview(self.scrollView)
+	}
 }
 
 // Essential Support

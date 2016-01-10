@@ -1,69 +1,58 @@
 import Cocoa
 import Hangouts
 
+typealias ItemID = String
+typealias GroupID = String
+
 class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
     static let sharedInstance = NotificationManager()
-    private let notificationCenter = NSUserNotificationCenter.defaultUserNotificationCenter()
-
-    typealias ConversationID = String
-    typealias NotificationID = String
-    private var groupedNotifications = Dictionary<ConversationID, [NotificationID]>()
+	
+    private let nc = NSUserNotificationCenter.defaultUserNotificationCenter()
+    private var notes = Dictionary<GroupID, [ItemID]>()
 
     override init() {
         super.init()
-        notificationCenter.delegate = self
+        nc.delegate = self
     }
-
-    func sendNotificationFor(event: Event, fromUser user: User) {
-		
-		
-        let conversationID = event.event.conversation_id.id as! ConversationID
-        let notificationID = event.id as NotificationID
-
-        let notification = NSUserNotification()
-        notification.title = user.full_name
-        notification.informativeText = event.event.chat_message?.message_content.segment?.first?.text as? String
-        notification.deliveryDate = NSDate()
-        notification.soundName = "notification.wav"
-        notification.contentImage = ImageCache.sharedInstance.getImage(forUser: user)
+	
+	// Overrides notification identifier
+	func sendNotificationFor(group: (GroupID, ItemID), notification: NSUserNotification) {
+        let conversationID = group.0
+        let notificationID = group.1
         notification.identifier = notificationID
 
-        var notificationIDs = groupedNotifications[conversationID]
+        var notificationIDs = notes[conversationID]
         if notificationIDs != nil {
             notificationIDs!.append(notificationID)
-            groupedNotifications[conversationID] = notificationIDs
+            notes[conversationID] = notificationIDs
         } else {
-            groupedNotifications[conversationID] = [notificationID]
+            notes[conversationID] = [notificationID]
         }
-
-        notificationCenter.deliverNotification(notification)
+        nc.deliverNotification(notification)
     }
 
-    func clearNotificationsFor(conversation: Conversation) {
-        let conversationID = conversation.id as ConversationID
-
-        for notificationID in (groupedNotifications[conversationID] ?? []) {
+    func clearNotificationsFor(group: GroupID) {
+        for notificationID in (notes[group] ?? []) {
             let notification = NSUserNotification()
             notification.identifier = notificationID
-            notificationCenter.removeDeliveredNotification(notification)
+            nc.removeDeliveredNotification(notification)
         }
-
-        groupedNotifications.removeValueForKey(conversationID)
+        notes.removeValueForKey(group)
 	}
 	
 	class func updateAppBadge(messages: Int) {
 		NSApp.dockTile.badgeLabel = messages > 0 ? "\(messages)" : ""
 	}
 
-    // MARK: NSUserNotificationCenterDelegate
-
     func userNotificationCenter(center: NSUserNotificationCenter, didDeliverNotification notification: NSUserNotification) {
+		
     }
+	
+	func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
+		
+	}
 
-    func userNotificationCenter(
-        center: NSUserNotificationCenter,
-        shouldPresentNotification notification: NSUserNotification
-    ) -> Bool {
+    func userNotificationCenter(center: NSUserNotificationCenter, shouldPresentNotification notification: NSUserNotification) -> Bool {
         return true
     }
 }

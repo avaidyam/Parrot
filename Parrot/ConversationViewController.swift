@@ -131,7 +131,17 @@ class ConversationViewController:
         if !(self.window?.keyWindow ?? false) {
             let user = conversation.user_list.get_user(event.user_id)
             if !user.isSelf {
-                NotificationManager.sharedInstance.sendNotificationFor(event, fromUser: user)
+				let a = (event.event.conversation_id.id as! GroupID, event.id as ItemID)
+				let text = event.event.chat_message?.message_content.segment?.first?.text as? String
+				
+				let notification = NSUserNotification()
+				notification.title = user.full_name
+				notification.informativeText = text
+				notification.deliveryDate = NSDate()
+				notification.soundName = NSUserNotificationDefaultSoundName
+				notification.contentImage = ImageCache.sharedInstance.getImage(forUser: user)
+				
+				NotificationManager.sharedInstance.sendNotificationFor(a, notification: notification)
             }
         }
     }
@@ -202,7 +212,7 @@ class ConversationViewController:
 
     func windowDidBecomeKey(sender: AnyObject?) {
         if let conversation = conversation {
-            NotificationManager.sharedInstance.clearNotificationsFor(conversation)
+            NotificationManager.sharedInstance.clearNotificationsFor(conversation.id)
         }
 
         //  Delay here to ensure that small context switches don't send focus messages.
