@@ -188,9 +188,8 @@ class ConversationViewController:
 				color = NSColor.materialBlueColor()
 			}
 			
-            view!.objectValue = Wrapper<MessageView.Configuration>((TextMapper.attributedStringForText(message.text),
-									orientation: user.isSelf ? .Right : .Left,
-									color: color!))
+            view!.objectValue = Wrapper<Message>(Message(string: TextMapper.attributedStringForText(message.text),
+									orientation: (user.isSelf ? .Right : .Left), color: color!))
             return view
         }
 		

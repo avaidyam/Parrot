@@ -2,7 +2,13 @@ import Cocoa
 
 /* TODO: Needs a complete refactor, with something like CSS styling. */
 
-class MessageView : NSTableCellView {
+// Serves as the "model" behind the view. Technically speaking, this is a translation
+// layer between the application model and decouples it from the view.
+public struct Message {
+	var string: NSAttributedString, orientation: NSTextAlignment, color: NSColor
+}
+
+public class MessageView : NSTableCellView {
 	
 	// Customization settings for rendering the message.
 	// Support: fill percentages, text border and padding, optional photo,
@@ -11,16 +17,11 @@ class MessageView : NSTableCellView {
 	internal static var TextBorder = (l: CGFloat(2), r: CGFloat(2), t: CGFloat(2), b: CGFloat(2))
 	internal static var TextPadding = (v: CGFloat(4), h: CGFloat(4))
 	
-	// Might be tuple abuse. Careful not to have the PETA called on us!
-	// I really don't want to create a class just for this,
-	// nor would it be a good idea to expose the views... or properties.
-	typealias Configuration = (string: NSAttributedString, orientation: NSTextAlignment, color: NSColor)
-	
 	var backgroundView: NSImageView!
 	var textLabel: NSTextField!
 	var orientation: NSTextAlignment = .Left
 	
-    override init(frame frameRect: NSRect) {
+    public override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
 		
 		self.backgroundView = NSImageView(frame: NSZeroRect)
@@ -41,14 +42,14 @@ class MessageView : NSTableCellView {
         self.addSubview(self.textLabel)
 	}
 	
-	required init?(coder: NSCoder) {
+	public required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
 	// Upon assignment of the represented object, configure the subview contents.
-	override var objectValue: AnyObject? {
+	public override var objectValue: AnyObject? {
 		didSet {
-			guard let o = (self.objectValue as? Wrapper<Configuration>)?.element else {
+			guard let o = (self.objectValue as? Wrapper<Message>)?.element else {
 				return
 			}
 			self.orientation = o.orientation
@@ -61,7 +62,7 @@ class MessageView : NSTableCellView {
 	// FRAME ADJUSTMENT
 	//
 
-    override var frame: NSRect {
+    public override var frame: NSRect {
         didSet {
             var backgroundFrame = frame
 

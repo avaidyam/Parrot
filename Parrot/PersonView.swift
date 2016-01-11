@@ -2,14 +2,15 @@ import Cocoa
 
 /* TODO: Design completely in code, replacing IB usage. */
 
+// Serves as the "model" behind the view. Technically speaking, this is a translation
+// layer between the application model and decouples it from the view.
+public struct Person {
+	var photo: NSImage, highlight: NSColor, indicator: Bool
+	var primary: String, secondary: String, tertiary: String
+}
+
 // A general person view
-class PersonView : NSTableCellView {
-	
-	// Might be tuple abuse. Careful not to have the PETA called on us!
-	// I really don't want to create a class just for this,
-	// nor would it be a good idea to expose the views... or properties.
-	typealias Configuration = (photo: NSImage, highlight: NSColor, indicator: Bool,
-							   primary: String, secondary: String, tertiary: String)
+public class PersonView : NSTableCellView {
 	
 	// Wired up in Interface Builder.
 	@IBOutlet weak var photoView: NSImageView?
@@ -19,9 +20,9 @@ class PersonView : NSTableCellView {
 	@IBOutlet weak var indicator: NSView?
 	
 	// Upon assignment of the represented object, configure the subview contents.
-	override var objectValue: AnyObject? {
+	public override var objectValue: AnyObject? {
 		didSet {
-			guard let o = (self.objectValue as? Wrapper<Configuration>)?.element else {
+			guard let o = (self.objectValue as? Wrapper<Person>)?.element else {
 				return
 			}
 			
@@ -38,7 +39,7 @@ class PersonView : NSTableCellView {
 	}
 	
 	// Upon selection, make all the text visible, and restore it when unselected.
-	override var backgroundStyle: NSBackgroundStyle {
+	public override var backgroundStyle: NSBackgroundStyle {
 		didSet {
 			if self.backgroundStyle == .Light {
 				self.nameLabel?.textColor = NSColor.labelColor()
@@ -54,14 +55,14 @@ class PersonView : NSTableCellView {
 	
 	// Dynamically adjust subviews based on the indicated row size.
 	// Technically should be unimplemented, as AutoLayout does this for free.
-	override var rowSizeStyle: NSTableViewRowSizeStyle {
+	public override var rowSizeStyle: NSTableViewRowSizeStyle {
 		didSet {
 			// FIXME: What do we do here?
 		}
 	}
 	
 	// Return an array of all dragging components corresponding to our subviews.
-	override var draggingImageComponents: [NSDraggingImageComponent] {
+	public override var draggingImageComponents: [NSDraggingImageComponent] {
 		get {
 			return [
 				self.photoView!.draggingComponent("Photo"),
@@ -72,9 +73,8 @@ class PersonView : NSTableCellView {
 		}
 	}
 	
-	
 	// Allows the circle crop to dynamically change.
-	override func layout() {
+	public override func layout() {
 		super.layout()
 		if let layer = self.photoView?.layer {
 			layer.masksToBounds = true

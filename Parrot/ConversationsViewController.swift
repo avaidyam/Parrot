@@ -182,7 +182,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp.relativeString() ?? ""
 		
-		cell.objectValue = Wrapper<PersonView.Configuration>((img, ring, ind, name, sub, time))
+		cell.objectValue = Wrapper<Person>(Person(photo: img, highlight: ring, indicator: ind, primary: name, secondary: sub, tertiary: time))
 		return cell
     }
 
