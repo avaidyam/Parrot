@@ -84,9 +84,8 @@ public class Authenticator : NSObject, WebPolicyDelegate {
 			
 			do {
 				let JSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-				let a = JSON["access_token"] as? String
-				let b = JSON["refresh_token"] as? String
-				cb(access_token: a!, refresh_token: b!)
+				let a = JSON["access_token"], b = JSON["refresh_token"]
+				cb(access_token: a as! String, refresh_token: b as! String)
 			} catch {
 				print("Request failed with error: \(error)")
 			}

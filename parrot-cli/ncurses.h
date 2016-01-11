@@ -1,6 +1,9 @@
 #include <curses.h>
 #include <panel.h>
 
+#import <os/activity.h>
+#import <os/trace.h>
+
 // #defines aren't accessible to Swift.
 static const int _NORMAL = A_NORMAL;
 static const int _ATTRIBUTES = A_ATTRIBUTES;
