@@ -18,12 +18,24 @@ public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	}
 	
 	func commonInit() {
+		self.dataSource = []
+		
 		self.scrollView = NSScrollView(frame: self.bounds)
 		self.tableView = NSTableView(frame: self.scrollView.bounds)
 		
 		self.tableView.setDelegate(self)
 		self.tableView.setDataSource(self)
-		self.tableView.reloadData()
+		
+		let col = NSTableColumn(identifier: "")
+		col.resizingMask = .AutoresizingMask
+		self.tableView.addTableColumn(col)
+		
+		self.scrollView.drawsBackground = false
+		self.scrollView.borderType = .NoBorder
+		self.tableView.allowsEmptySelection = true
+		self.tableView.selectionHighlightStyle = .SourceList
+		self.tableView.floatsGroupRows = true
+		self.tableView.columnAutoresizingStyle = .UniformColumnAutoresizingStyle
 		
 		self.scrollView.documentView = self.tableView
 		self.scrollView.hasVerticalScroller = true
@@ -36,7 +48,9 @@ public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		}
 		didSet {
 			/* TODO: Monitor actual addition/removal changes. */
-			self.tableView.reloadData()
+			Dispatch.main().add {
+				self.tableView.reloadData()
+			}
 		}
 	}
 }

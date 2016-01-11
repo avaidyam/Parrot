@@ -18,16 +18,30 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	}
 	
 	func commonInit() {
+		self.dataSource = []
+		
 		self.scrollView = NSScrollView(frame: self.bounds)
 		self.tableView = NSTableView(frame: self.scrollView.bounds)
 		
 		self.tableView.setDelegate(self)
 		self.tableView.setDataSource(self)
-		self.tableView.reloadData()
+		
+		let col = NSTableColumn(identifier: "")
+		col.resizingMask = .AutoresizingMask
+		self.tableView.addTableColumn(col)
+		
+		self.scrollView.drawsBackground = false
+		self.scrollView.borderType = .NoBorder
+		self.tableView.allowsEmptySelection = true
+		self.tableView.selectionHighlightStyle = .SourceList
+		self.tableView.floatsGroupRows = true
+		self.tableView.columnAutoresizingStyle = .UniformColumnAutoresizingStyle
 		
 		self.scrollView.documentView = self.tableView
 		self.scrollView.hasVerticalScroller = true
 		self.addSubview(self.scrollView)
+		
+		self.tableView.sizeLastColumnToFit()
 	}
 	
 	public var dataSource: [Message]! {
@@ -36,7 +50,9 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		}
 		didSet {
 			/* TODO: Monitor actual addition/removal changes. */
-			self.tableView.reloadData()
+			Dispatch.main().add {
+				self.tableView.reloadData()
+			}
 		}
 	}
 }
@@ -45,11 +61,12 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 public extension MessagesView {
 	
 	public func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-		return 0
+		Swift.print("got \(self.dataSource.count)")
+		return self.dataSource.count
 	}
 	
 	public func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-		return 1.0
+		return 48.0//MessageView.heightForContainerWidth(attributedStringForMessage(row)!, width: self.view.frame.width)
 	}
 	
 	public func tableView(tableView: NSTableView, isGroupRow row: Int) -> Bool {
@@ -61,7 +78,15 @@ public extension MessagesView {
 	}
 	
 	public func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		return nil
+		var view = tableView.makeViewWithIdentifier(MessageView.className(), owner: self) as? MessageView
+		if view == nil {
+			view = MessageView(frame: NSZeroRect)
+			view!.identifier = MessageView.className()
+		}
+		
+		Swift.print("got \(self.dataSource[row])")
+		view!.objectValue = Wrapper<Message>(self.dataSource[row])
+		return view
 	}
 	
 	public func tableView(tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {

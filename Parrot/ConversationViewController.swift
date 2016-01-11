@@ -8,7 +8,7 @@ class ConversationViewController:
     NSTableViewDelegate,
     NSTextFieldDelegate {
 
-    @IBOutlet weak var conversationTableView: NSTableView!
+	@IBOutlet var messagesView: MessagesView!
     @IBOutlet weak var messageTextField: NSTextField!
 	
 	var notifications = [TokenObserver]()
@@ -16,11 +16,9 @@ class ConversationViewController:
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		let scroll = self.view.subviews[0] as? NSScrollView
-		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
+		//let scroll = self.view.subviews[0] as? NSScrollView
+		//scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
 		
-        conversationTableView.setDataSource(self)
-        conversationTableView.setDelegate(self)
         messageTextField.delegate = self
         self.view.postsFrameChangedNotifications = true
     }
@@ -58,9 +56,10 @@ class ConversationViewController:
             self.conversation?.delegate = self
 			self.conversation?.getEvents(conversation?.events.first?.id, max_events: 50)
 			
+			self.messagesView.dataSource = self._getAllMessages()!
 			dispatch_async(dispatch_get_main_queue(), {
-				self.conversationTableView.reloadData()
-				self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
+				//self.conversationTableView.reloadData()
+				//self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
 			})
         }
     }
@@ -95,7 +94,7 @@ class ConversationViewController:
             return
         }
 
-        switch (status) {
+        /*switch (status) {
         case TypingType.STARTED:
             if conversationTableView.numberOfRows == conversation.messages.count {
 				dispatch_async(dispatch_get_main_queue(), {
@@ -118,14 +117,15 @@ class ConversationViewController:
             }
         default:
             break
-        }
+        }*/
         //conversationTableView.reloadData()
     }
 
-    func conversation(conversation: Conversation, didReceiveEvent event: Event) {
+	func conversation(conversation: Conversation, didReceiveEvent event: Event) {
+		self.messagesView.dataSource = self._getAllMessages()!
 		dispatch_async(dispatch_get_main_queue(), {
-			self.conversationTableView.reloadData()
-			self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
+			//self.conversationTableView.reloadData()
+			//self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
 		})
 
         if !(self.window?.keyWindow ?? false) {
@@ -150,16 +150,55 @@ class ConversationViewController:
 
     }
 
-    func conversationDidUpdateEvents(conversation: Conversation) {
+	func conversationDidUpdateEvents(conversation: Conversation) {
+		self.messagesView.dataSource = self._getAllMessages()!
 		dispatch_async(dispatch_get_main_queue(), {
-			self.conversationTableView.reloadData()
-			self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
+			//self.conversationTableView.reloadData()
+			//self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
 		})
     }
 
     func conversationDidUpdate(conversation: Conversation) {
         
     }
+	
+	// get a single message
+	private func _getMessage(row: Int) -> Message? {
+		if let conversation = conversation where row < conversation.messages.count && row > 0 {
+			let message = conversation.messages[row]
+			let user = conversation.user_list.get_user(message.user_id)
+			let network = conversation.conversation.network_type![0] as! Int
+			var color: NSColor?
+			if user.isSelf {
+				color = NSColor.materialBlueGreyColor()
+			} else if network == 1 {
+				color = NSColor.materialGreenColor()
+			} else if network == 2 {
+				color = NSColor.materialBlueColor()
+			}
+			return Message(string: TextMapper.attributedStringForText(message.text),
+				orientation: (user.isSelf ? .Right : .Left), color: color!)
+		}
+		return nil
+	}
+	
+	// get all messages
+	private func _getAllMessages() -> [Message]? {
+		return conversation?.messages.map { message in
+			let user = conversation!.user_list.get_user(message.user_id)
+			let network = conversation!.conversation.network_type![0] as! Int
+			var color: NSColor?
+			if user.isSelf {
+				color = NSColor.materialBlueGreyColor()
+			} else if network == 1 {
+				color = NSColor.materialGreenColor()
+			} else if network == 2 {
+				color = NSColor.materialBlueColor()
+			}
+			return Message(string: TextMapper.attributedStringForText(message.text),
+				orientation: (user.isSelf ? .Right : .Left), color: color!)
+		}
+	}
 
     // MARK: NSTableViewDataSource
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
