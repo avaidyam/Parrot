@@ -5,7 +5,9 @@ import Cocoa
 // Serves as the "model" behind the view. Technically speaking, this is a translation
 // layer between the application model and decouples it from the view.
 public struct Message {
-	var string: NSAttributedString, orientation: NSTextAlignment, color: NSColor
+	var string: NSAttributedString
+	var orientation: NSTextAlignment
+	var color: NSColor
 }
 
 public class MessageView : NSTableCellView {

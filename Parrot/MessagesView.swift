@@ -61,12 +61,11 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 public extension MessagesView {
 	
 	public func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-		Swift.print("got \(self.dataSource.count)")
 		return self.dataSource.count
 	}
 	
 	public func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-		return 48.0//MessageView.heightForContainerWidth(attributedStringForMessage(row)!, width: self.view.frame.width)
+		return MessageView.heightForContainerWidth(self.dataSource[row].string, width: self.frame.width)
 	}
 	
 	public func tableView(tableView: NSTableView, isGroupRow row: Int) -> Bool {
@@ -84,7 +83,6 @@ public extension MessagesView {
 			view!.identifier = MessageView.className()
 		}
 		
-		Swift.print("got \(self.dataSource[row])")
 		view!.objectValue = Wrapper<Message>(self.dataSource[row])
 		return view
 	}

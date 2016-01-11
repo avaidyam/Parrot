@@ -805,22 +805,22 @@
             <objects>
                 <viewController title="Conversation View" id="MHo-xn-Myi" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="hAN-a4-RD8" customClass="NSVisualEffectView">
-                        <rect key="frame" x="0.0" y="0.0" width="483" height="320"/>
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="383"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="L3M-cX-on4" customClass="MessagesView" customModule="Parrot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="25" width="483" height="295"/>
+                                <rect key="frame" x="0.0" y="30" width="568" height="353"/>
                                 <animations/>
                             </customView>
                             <box wantsLayer="YES" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="dpk-F4-2R9">
-                                <rect key="frame" x="0.0" y="23" width="483" height="5"/>
+                                <rect key="frame" x="0.0" y="23" width="568" height="5"/>
                                 <animations/>
                                 <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                 <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <font key="titleFont" metaFont="system"/>
                             </box>
                             <textField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="751" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="orf-m2-ObS">
-                                <rect key="frame" x="26" y="4" width="432" height="17"/>
+                                <rect key="frame" x="26" y="4" width="517" height="17"/>
                                 <animations/>
                                 <textFieldCell key="cell" selectable="YES" editable="YES" state="on" focusRingType="none" placeholderString="Send a message..." allowsEditingTextAttributes="YES" id="nRY-lf-Vew">
                                     <font key="font" metaFont="system"/>
@@ -843,7 +843,7 @@
                                 </connections>
                             </button>
                             <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="g2R-XT-xBl">
-                                <rect key="frame" x="460" y="2" width="19" height="20"/>
+                                <rect key="frame" x="545" y="2" width="19" height="20"/>
                                 <animations/>
                                 <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRightFacingTriangleTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pwc-Xx-1Zt">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -860,8 +860,9 @@
                             <constraint firstItem="L3M-cX-on4" firstAttribute="top" secondItem="hAN-a4-RD8" secondAttribute="top" id="Bs0-Rd-lja"/>
                             <constraint firstItem="g2R-XT-xBl" firstAttribute="leading" secondItem="orf-m2-ObS" secondAttribute="trailing" constant="4" id="FsP-tU-RDK"/>
                             <constraint firstItem="orf-m2-ObS" firstAttribute="leading" secondItem="Ega-D2-ka6" secondAttribute="trailing" constant="4" id="NcK-3h-KHv"/>
+                            <constraint firstItem="L3M-cX-on4" firstAttribute="leading" secondItem="hAN-a4-RD8" secondAttribute="leading" id="PKK-Iu-fQv"/>
+                            <constraint firstItem="orf-m2-ObS" firstAttribute="top" secondItem="dpk-F4-2R9" secondAttribute="bottom" constant="4" id="SKM-uc-ww4"/>
                             <constraint firstAttribute="bottom" secondItem="Ega-D2-ka6" secondAttribute="bottom" constant="4" id="XI3-9z-I43"/>
-                            <constraint firstItem="L3M-cX-on4" firstAttribute="leading" secondItem="hAN-a4-RD8" secondAttribute="leading" id="Yey-wi-pBs"/>
                             <constraint firstItem="g2R-XT-xBl" firstAttribute="centerY" secondItem="orf-m2-ObS" secondAttribute="centerY" id="a39-74-7EQ"/>
                             <constraint firstItem="dpk-F4-2R9" firstAttribute="leading" secondItem="hAN-a4-RD8" secondAttribute="leading" id="aa6-DT-U5j"/>
                             <constraint firstItem="Ega-D2-ka6" firstAttribute="top" secondItem="dpk-F4-2R9" secondAttribute="bottom" constant="4" id="dG2-bR-0EF"/>
@@ -871,7 +872,7 @@
                             <constraint firstItem="Ega-D2-ka6" firstAttribute="centerY" secondItem="orf-m2-ObS" secondAttribute="centerY" id="obd-bR-MME"/>
                             <constraint firstAttribute="trailing" secondItem="g2R-XT-xBl" secondAttribute="trailing" constant="4" id="qBf-I9-l3N"/>
                             <constraint firstAttribute="bottom" secondItem="orf-m2-ObS" secondAttribute="bottom" constant="4" id="ui3-QF-p8n"/>
-                            <constraint firstItem="dpk-F4-2R9" firstAttribute="top" secondItem="L3M-cX-on4" secondAttribute="bottom" constant="-1" id="vSy-m5-QNb"/>
+                            <constraint firstItem="dpk-F4-2R9" firstAttribute="top" secondItem="L3M-cX-on4" secondAttribute="bottom" constant="4" id="vSy-m5-QNb"/>
                         </constraints>
                         <animations/>
                     </view>
@@ -882,7 +883,7 @@
                 </viewController>
                 <customObject id="xkI-ba-quA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2385.5" y="435"/>
+            <point key="canvasLocation" x="2418" y="439.5"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="YEc-bi-jxu">
@@ -927,7 +928,7 @@
                 </viewController>
                 <customObject id="zmJ-nd-SwD" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2392" y="755"/>
+            <point key="canvasLocation" x="2418" y="722"/>
         </scene>
     </scenes>
     <resources>

@@ -5,8 +5,13 @@ import Cocoa
 // Serves as the "model" behind the view. Technically speaking, this is a translation
 // layer between the application model and decouples it from the view.
 public struct Person {
-	var photo: NSImage, highlight: NSColor, indicator: Bool
-	var primary: String, secondary: String, tertiary: String
+	var photo: NSImage
+	var highlight: NSColor
+	var indicator: Bool
+	
+	var primary: String
+	var secondary: String
+	var tertiary: String
 }
 
 // A general person view
