@@ -1,12 +1,7 @@
 import Cocoa
 import Hangouts
 
-class ConversationViewController:
-    NSViewController,
-    ConversationDelegate,
-    NSTableViewDataSource,
-    NSTableViewDelegate,
-    NSTextFieldDelegate {
+class ConversationViewController: NSViewController, ConversationDelegate, NSTextFieldDelegate {
 
 	@IBOutlet var messagesView: MessagesView!
     @IBOutlet weak var messageTextField: NSTextField!
@@ -16,9 +11,7 @@ class ConversationViewController:
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		//let scroll = self.view.subviews[0] as? NSScrollView
-		//scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
-		
+		self.messagesView.insets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
         messageTextField.delegate = self
         self.view.postsFrameChangedNotifications = true
     }
@@ -28,10 +21,6 @@ class ConversationViewController:
 			self.windowDidBecomeKey(nil)
 		})
 		
-		self.notifications.append(Notifications.subscribe(NSViewFrameDidChangeNotification, object: self.view) { a in
-			self.frameDidChangeNotification(nil)
-		})
-
         if self.window?.keyWindow ?? false {
             self.windowDidBecomeKey(nil)
         }
@@ -56,11 +45,8 @@ class ConversationViewController:
             self.conversation?.delegate = self
 			self.conversation?.getEvents(conversation?.events.first?.id, max_events: 50)
 			
+			//self.messagesView.removeElements(self._getAllMessages()!)
 			self.messagesView.dataSource = self._getAllMessages()!
-			dispatch_async(dispatch_get_main_queue(), {
-				//self.conversationTableView.reloadData()
-				//self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
-			})
         }
     }
 
@@ -122,12 +108,12 @@ class ConversationViewController:
     }
 
 	func conversation(conversation: Conversation, didReceiveEvent event: Event) {
+		
 		self.messagesView.dataSource = self._getAllMessages()!
-		dispatch_async(dispatch_get_main_queue(), {
-			//self.conversationTableView.reloadData()
-			//self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
-		})
-
+		let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
+		//self.messagesView.appendElements(found)
+		print("got \(msg)")
+		
         if !(self.window?.keyWindow ?? false) {
             let user = conversation.user_list.get_user(event.user_id)
             if !user.isSelf {
@@ -152,10 +138,6 @@ class ConversationViewController:
 
 	func conversationDidUpdateEvents(conversation: Conversation) {
 		self.messagesView.dataSource = self._getAllMessages()!
-		dispatch_async(dispatch_get_main_queue(), {
-			//self.conversationTableView.reloadData()
-			//self.conversationTableView.scrollRowToVisible(self.numberOfRowsInTableView(self.conversationTableView) - 1)
-		})
     }
 
     func conversationDidUpdate(conversation: Conversation) {
@@ -163,11 +145,10 @@ class ConversationViewController:
     }
 	
 	// get a single message
-	private func _getMessage(row: Int) -> Message? {
-		if let conversation = conversation where row < conversation.messages.count && row > 0 {
-			let message = conversation.messages[row]
-			let user = conversation.user_list.get_user(message.user_id)
-			let network = conversation.conversation.network_type![0] as! Int
+	private func _getMessage(message: ChatMessageEvent) -> Message? {
+		if conversation != nil {
+			let user = conversation!.user_list.get_user(message.user_id)
+			let network = conversation!.conversation.network_type![0] as! Int
 			var color: NSColor?
 			if user.isSelf {
 				color = NSColor.materialBlueGreyColor()
@@ -200,52 +181,6 @@ class ConversationViewController:
 		}
 	}
 
-    // MARK: NSTableViewDataSource
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        return conversation?.messages.count ?? 0
-    }
-
-    // MARK: NSTableViewDelegate
-    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        if let conversation = conversation where row < conversation.messages.count {
-            var view = tableView.makeViewWithIdentifier(MessageView.className(), owner: self) as? MessageView
-
-            if view == nil {
-                view = MessageView(frame: NSZeroRect)
-                view!.identifier = MessageView.className()
-            }
-			
-			let message = conversation.messages[row]
-			let user = conversation.user_list.get_user(message.user_id)
-			let network = conversation.conversation.network_type![0] as! Int
-			var color: NSColor?
-			if user.isSelf {
-				color = NSColor.materialBlueGreyColor()
-			} else if network == 1 {
-				color = NSColor.materialGreenColor()
-			} else if network == 2 {
-				color = NSColor.materialBlueColor()
-			}
-			
-            view!.objectValue = Wrapper<Message>(Message(string: TextMapper.attributedStringForText(message.text),
-									orientation: (user.isSelf ? .Right : .Left), color: color!))
-            return view
-        }
-		
-        if conversation?.otherUserIsTyping ?? false {
-            print("THEY'RE TYPING!")
-        }
-		
-        return nil
-    }
-
-    func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        if let conversation = conversation where row < conversation.messages.count {
-			return MessageView.heightForContainerWidth(attributedStringForMessage(row)!, width: self.view.frame.width)
-		}
-		return 0
-    }
-
     // MARK: Window notifications
 
     func windowDidBecomeKey(sender: AnyObject?) {
@@ -261,14 +196,6 @@ class ConversationViewController:
             }
             self.conversation?.updateReadTimestamp()
         }
-    }
-
-    func frameDidChangeNotification(sender: AnyObject?) {
-        //  TODO: This is a horrible, horrible way to do this, and super CPU-intensive.
-        //  B U T   I T   W O R K S   F O R   N O W
-		//dispatch_async(dispatch_get_main_queue(), {
-		//	self.conversationTableView.reloadData()
-		//})
     }
 
     // MARK: NSTextFieldDelegate
@@ -307,9 +234,5 @@ class ConversationViewController:
 			conversation?.sendMessage(TextMapper.segmentsForInput(text, emojify: emojify))
             messageTextField.stringValue = ""
         }
-    }
-
-    @IBAction func conversationTableViewDidAction(sender: AnyObject) {
-        self.window?.makeFirstResponder(messageTextField)
     }
 }

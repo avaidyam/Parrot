@@ -45,30 +45,50 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		self.tableView.sizeLastColumnToFit()
 	}
 	
+	// Allow accessing the insets from the scroll view.
+	public var insets: NSEdgeInsets {
+		get {
+			return self.scrollView.scrollerInsets
+		}
+		set {
+			self.scrollView.scrollerInsets = newValue
+		}
+	}
+	
+	/* TODO: My life is a struggle. Abort animations. :( */
 	public var dataSource: [Message]! {
 		didSet {
-			Dispatch.main().add {
-				let old = (oldValue ?? []) // safeguard
-				
-				old /* removed */
-					.filter { !self.dataSource.contains($0) }
-					.forEach {
-						let idx = NSIndexSet(index: old.indexOf($0)!)
-						self.tableView.removeRowsAtIndexes(idx, withAnimation: .SlideRight)
-						//Swift.print("removed \($0)")
-				}
-				
-				self.dataSource /* added */
-					.filter { !old.contains($0) }
-					.forEach {
-						let idx = NSIndexSet(index: self.dataSource.indexOf($0)!)
-						self.tableView.insertRowsAtIndexes(idx, withAnimation: .SlideRight)
-						//Swift.print("added \($0)")
-				}
-				
-				//self.tableView.reloadData()
+			UI {
+				self.tableView.reloadData()
+				self.tableView.scrollRowToVisible(self.numberOfRowsInTableView(self.tableView) - 1)
 			}
 		}
+	}
+	
+	// If you REALLY want animations, use this to append a set of elements.
+	public func appendElements(elements: [Message]) {
+		self.dataSource.appendContentsOf(elements)
+		
+		UI { self.tableView.beginUpdates() }
+		elements.forEach {
+			let idx = NSIndexSet(index: self.dataSource.indexOf($0)!)
+			self.tableView.insertRowsAtIndexes(idx, withAnimation: [.EffectFade, .SlideUp])
+		}
+		UI { self.tableView.endUpdates() }
+	}
+	
+	// If you REALLY want animations, use this to remove a set of elements.
+	// Note: this is arbitrary removal, not sequential removal, like appendElements().
+	public func removeElements(elements: [Message]) {
+		UI { self.tableView.beginUpdates() }
+		elements.forEach {
+			if let i = self.dataSource.indexOf($0) {
+				self.tableView.removeRowsAtIndexes(NSIndexSet(index: i), withAnimation: [.EffectFade, .SlideUp])
+			}
+		}
+		UI { self.tableView.endUpdates() }
+		
+		self.dataSource.removeContentsOf(elements)
 	}
 	
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
@@ -86,8 +106,7 @@ public extension MessagesView {
 	}
 	
 	public func tableView(tableView: NSTableView, isGroupRow row: Int) -> Bool {
-		Swift.print("Unimplemented \(__FUNCTION__)")
-		return false
+		return false // Messages can't be grouped!
 	}
 	
 	public func tableView(tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
@@ -106,16 +125,15 @@ public extension MessagesView {
 	}
 	
 	public func tableView(tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-		Swift.print("Unimplemented \(__FUNCTION__)")
-		return nil
+		return nil // no default row yet
 	}
 	
 	public func tableView(tableView: NSTableView, didAddRowView rowView: NSTableRowView, forRow row: Int) {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		// Intentionally Unimplemented
 	}
 	
 	public func tableView(tableView: NSTableView, didRemoveRowView rowView: NSTableRowView, forRow row: Int) {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		// Intentionally Unimplemented
 	}
 }
 

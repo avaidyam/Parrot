@@ -44,6 +44,11 @@ public extension NSOperationQueue {
 	}
 }
 
+// alias for the UI thread
+public func UI(block: () -> Void) {
+	Dispatch.main().add(block)
+}
+
 // Provides the old-style @synchronized {} statements from Objective-C.
 public func Synchronized(lock: AnyObject, closure: () -> ()) {
 	objc_sync_enter(lock)
