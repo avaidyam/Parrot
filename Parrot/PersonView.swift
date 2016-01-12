@@ -13,6 +13,11 @@ public struct Person {
 	var secondary: String
 	var tertiary: String
 }
+public func ==(lhs: Person, rhs: Person) -> Bool {
+	return lhs.primary == rhs.primary &&
+		lhs.secondary == rhs.secondary &&
+		lhs.tertiary == rhs.tertiary
+}
 
 // A general person view
 public class PersonView : NSTableCellView {

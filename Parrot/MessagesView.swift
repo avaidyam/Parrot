@@ -1,6 +1,7 @@
 import Cocoa
 
 /* TODO: Migrate multi-management of views into this. */
+/* TODO: Generics would be *so* nice, but IBOutlets don't work then. */
 
 public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	
@@ -45,16 +46,32 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	}
 	
 	public var dataSource: [Message]! {
-		willSet {
-			Swift.print("setting!")
-		}
 		didSet {
-			/* TODO: Monitor actual addition/removal changes. */
 			Dispatch.main().add {
-				self.tableView.reloadData()
+				let old = (oldValue ?? []) // safeguard
+				
+				old /* removed */
+					.filter { !self.dataSource.contains($0) }
+					.forEach {
+						let idx = NSIndexSet(index: old.indexOf($0)!)
+						self.tableView.removeRowsAtIndexes(idx, withAnimation: .SlideRight)
+						//Swift.print("removed \($0)")
+				}
+				
+				self.dataSource /* added */
+					.filter { !old.contains($0) }
+					.forEach {
+						let idx = NSIndexSet(index: self.dataSource.indexOf($0)!)
+						self.tableView.insertRowsAtIndexes(idx, withAnimation: .SlideRight)
+						//Swift.print("added \($0)")
+				}
+				
+				//self.tableView.reloadData()
 			}
 		}
 	}
+	
+	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
 }
 
 // Essential Support
@@ -69,11 +86,12 @@ public extension MessagesView {
 	}
 	
 	public func tableView(tableView: NSTableView, isGroupRow row: Int) -> Bool {
+		Swift.print("Unimplemented \(__FUNCTION__)")
 		return false
 	}
 	
 	public func tableView(tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
-		return []
+		return self.rowActionProvider?(row: row, edge: edge) ?? []
 	}
 	
 	public func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -88,15 +106,16 @@ public extension MessagesView {
 	}
 	
 	public func tableView(tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+		Swift.print("Unimplemented \(__FUNCTION__)")
 		return nil
 	}
 	
 	public func tableView(tableView: NSTableView, didAddRowView rowView: NSTableRowView, forRow row: Int) {
-		
+		Swift.print("Unimplemented \(__FUNCTION__)")
 	}
 	
 	public func tableView(tableView: NSTableView, didRemoveRowView rowView: NSTableRowView, forRow row: Int) {
-		
+		Swift.print("Unimplemented \(__FUNCTION__)")
 	}
 }
 
@@ -104,19 +123,21 @@ public extension MessagesView {
 public extension MessagesView {
 	
 	public func selectionShouldChangeInTableView(tableView: NSTableView) -> Bool {
+		Swift.print("Unimplemented \(__FUNCTION__)")
 		return false
 	}
 	
 	public func tableView(tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet {
+		Swift.print("Unimplemented \(__FUNCTION__)")
 		return proposedSelectionIndexes
 	}
 	
 	public func tableViewSelectionDidChange(notification: NSNotification) {
-		
+		Swift.print("Unimplemented \(__FUNCTION__)")
 	}
 	
 	public func tableViewSelectionIsChanging(notification: NSNotification) {
-		
+		Swift.print("Unimplemented \(__FUNCTION__)")
 	}
 }
 
@@ -124,34 +145,39 @@ public extension MessagesView {
 public extension MessagesView {
 	
 	public func tableView(tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+		Swift.print("Unimplemented \(__FUNCTION__)")
 		return nil
 	}
 	
 	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
-		
+		Swift.print("Unimplemented \(__FUNCTION__)")
 	}
 	
 	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
-		
+		Swift.print("Unimplemented \(__FUNCTION__)")
 	}
 	
 	public func tableView(tableView: NSTableView, updateDraggingItemsForDrag draggingInfo: NSDraggingInfo) {
-		
+		Swift.print("Unimplemented \(__FUNCTION__)")
 	}
 	
 	public func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
+		Swift.print("Unimplemented \(__FUNCTION__)")
 		return false
 	}
 	
 	public func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+		Swift.print("Unimplemented \(__FUNCTION__)")
 		return .None
 	}
 	
 	public func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+		Swift.print("Unimplemented \(__FUNCTION__)")
 		return false
 	}
 	
 	public func tableView(tableView: NSTableView, namesOfPromisedFilesDroppedAtDestination dropDestination: NSURL, forDraggedRowsWithIndexes indexSet: NSIndexSet) -> [String] {
+		Swift.print("Unimplemented \(__FUNCTION__)")
 		return []
 	}
 }

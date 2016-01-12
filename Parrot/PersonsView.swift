@@ -1,6 +1,7 @@
 import Cocoa
 
 /* TODO: Migrate multi-management of views into this. */
+/* TODO: Generics would be *so* nice, but IBOutlets don't work then. */
 
 public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	
@@ -40,6 +41,11 @@ public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		self.scrollView.documentView = self.tableView
 		self.scrollView.hasVerticalScroller = true
 		self.addSubview(self.scrollView)
+		
+		/* TODO: Remove dependency on IB for this view! */
+		let nib = NSNib(nibNamed: "PersonView", bundle: NSBundle.mainBundle())
+		self.tableView.registerNib(nib, forIdentifier: "PersonView")
+		self.tableView.sizeLastColumnToFit()
 	}
 	
 	public var dataSource: [Person]! {
@@ -59,11 +65,12 @@ public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 public extension PersonsView {
 	
 	public func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-		return 0
+		return self.dataSource.count
 	}
 	
+	/* TODO: Support different size classes. */
 	public func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-		return 1.0
+		return 64.0
 	}
 	
 	public func tableView(tableView: NSTableView, isGroupRow row: Int) -> Bool {

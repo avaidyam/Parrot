@@ -186,7 +186,6 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		return cell
     }
 
-	/* TODO: Should be moved to the PersonView instead. */
 	/* TODO: Support different size classes. */
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return 64

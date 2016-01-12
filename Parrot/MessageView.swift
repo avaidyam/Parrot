@@ -4,10 +4,15 @@ import Cocoa
 
 // Serves as the "model" behind the view. Technically speaking, this is a translation
 // layer between the application model and decouples it from the view.
-public struct Message {
+public struct Message: Equatable {
 	var string: NSAttributedString
 	var orientation: NSTextAlignment
 	var color: NSColor
+}
+public func ==(lhs: Message, rhs: Message) -> Bool {
+	return lhs.string == rhs.string &&
+		lhs.orientation == rhs.orientation &&
+		lhs.color == rhs.color
 }
 
 public class MessageView : NSTableCellView {
@@ -16,8 +21,8 @@ public class MessageView : NSTableCellView {
 	// Support: fill percentages, text border and padding, optional photo,
 	// decorators, etc. (anything NSView or CALayer can support!)
 	internal static var FillPercentage = (x: CGFloat(0.75), y: CGFloat(1.00))
-	internal static var TextBorder = (l: CGFloat(2), r: CGFloat(2), t: CGFloat(2), b: CGFloat(2))
-	internal static var TextPadding = (v: CGFloat(4), h: CGFloat(4))
+	internal static var TextBorder = (l: CGFloat(4), r: CGFloat(4), t: CGFloat(4), b: CGFloat(4))
+	internal static var TextPadding = (v: CGFloat(8), h: CGFloat(8))
 	
 	var backgroundView: NSImageView!
 	var textLabel: NSTextField!
