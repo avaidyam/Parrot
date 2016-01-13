@@ -5,6 +5,9 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
 	@IBOutlet var messagesView: MessagesView!
     @IBOutlet weak var messageTextField: NSTextField!
+	@IBOutlet var statusView: NSTextField!
+	
+	var popover: NSPopover!
 	
 	var notifications = [TokenObserver]()
 
@@ -14,6 +17,11 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		self.messagesView.insets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
         messageTextField.delegate = self
         self.view.postsFrameChangedNotifications = true
+		
+		self.popover = NSPopover()
+		self.popover.contentViewController = NSViewController()
+		self.popover.contentViewController!.view = self.statusView
+		self.popover.behavior = .ApplicationDefined
     }
 
     override func viewWillAppear() {
@@ -27,7 +35,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
         if let window = self.window, name = conversation?.name {
             window.title = name
-        }
+		}
+		
     }
 
     override func viewWillDisappear() {
@@ -79,31 +88,17 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         if user.isSelf {
             return
         }
-
-        /*switch (status) {
+		
+        switch (status) {
         case TypingType.STARTED:
-            if conversationTableView.numberOfRows == conversation.messages.count {
-				dispatch_async(dispatch_get_main_queue(), {
-					self.conversationTableView.insertRowsAtIndexes(
-						NSIndexSet(index: conversation.messages.count),
-						withAnimation: .SlideDown
-					)
-					self.conversationTableView.scrollRowToVisible(conversation.messages.count)
-				})
-            }
-        case TypingType.STOPPED, TypingType.PAUSED:
-            if conversationTableView.numberOfRows > conversation.messages.count {
-				dispatch_async(dispatch_get_main_queue(), {
-					self.conversationTableView.scrollRowToVisible(conversation.messages.count - 1)
-					self.conversationTableView.removeRowsAtIndexes(
-						NSIndexSet(index: conversation.messages.count),
-						withAnimation: .SlideUp
-					)
-				})
-            }
-        default:
-            break
-        }*/
+			self.popover.showRelativeToRect(self.messageTextField!.bounds, ofView: self.messageTextField!, preferredEdge: .MaxY)
+			self.statusView.stringValue = "Typing..."
+		case TypingType.PAUSED:
+			self.statusView.stringValue = "Entered text"
+		default: // .STOPPED, .UNKNOWN
+			self.popover.performClose(self)
+			self.statusView.stringValue = "None"
+        }
         //conversationTableView.reloadData()
     }
 
@@ -146,7 +141,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	
 	// get a single message
 	private func _getMessage(message: ChatMessageEvent) -> Message? {
-		if conversation != nil {
+		/*if conversation != nil {
 			let user = conversation!.user_list.get_user(message.user_id)
 			let network = conversation!.conversation.network_type![0] as! Int
 			var color: NSColor?
@@ -159,7 +154,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			}
 			return Message(string: TextMapper.attributedStringForText(message.text),
 				orientation: (user.isSelf ? .Right : .Left), color: color!)
-		}
+		}*/
 		return nil
 	}
 	

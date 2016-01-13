@@ -158,7 +158,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			return nil
 		}
 		let conversation = (conversationList?.conversations[row])!
-		
+
 		// Propogate info for data filling
 		let a = conversation.messages.last?.user_id
 		let b = conversation.users.filter { $0.isSelf }.first?.id

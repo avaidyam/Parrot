@@ -55,6 +55,14 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		}
 	}
 	
+	// Forward the layer-backing down to our subviews.
+	public override var wantsLayer: Bool {
+		didSet {
+			self.scrollView.wantsLayer = self.wantsLayer
+			self.tableView.wantsLayer = self.wantsLayer
+		}
+	}
+	
 	/* TODO: My life is a struggle. Abort animations. :( */
 	public var dataSource: [Message]! {
 		didSet {

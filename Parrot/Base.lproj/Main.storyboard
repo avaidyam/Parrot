@@ -725,10 +725,10 @@
             </objects>
             <point key="canvasLocation" x="1667" y="445"/>
         </scene>
-        <!--Conversation List-->
+        <!--Conversations-->
         <scene sceneID="8u4-p6-XjP">
             <objects>
-                <viewController title="Conversation List" id="AA2-4a-jNw" customClass="ConversationsViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Conversations" id="AA2-4a-jNw" customClass="ConversationsViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="270" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -800,10 +800,10 @@
             </objects>
             <point key="canvasLocation" x="2279" y="41"/>
         </scene>
-        <!--Conversation View-->
+        <!--Conversation-->
         <scene sceneID="RZU-x9-0el">
             <objects>
-                <viewController title="Conversation View" id="MHo-xn-Myi" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Conversation" id="MHo-xn-Myi" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="hAN-a4-RD8" customClass="NSVisualEffectView">
                         <rect key="frame" x="0.0" y="0.0" width="568" height="383"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -879,16 +879,27 @@
                     <connections>
                         <outlet property="messageTextField" destination="orf-m2-ObS" id="YOa-dN-yi7"/>
                         <outlet property="messagesView" destination="L3M-cX-on4" id="v0J-cl-wnb"/>
+                        <outlet property="statusView" destination="ojR-cU-VHC" id="dpV-kj-EsG"/>
                     </connections>
                 </viewController>
                 <customObject id="xkI-ba-quA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ojR-cU-VHC">
+                    <rect key="frame" x="0.0" y="0.0" width="132" height="22"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Status" id="JAC-WH-BFW">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </objects>
-            <point key="canvasLocation" x="2418" y="439.5"/>
+            <point key="canvasLocation" x="2418" y="496.5"/>
         </scene>
-        <!--View Controller-->
+        <!--Attach Media-->
         <scene sceneID="YEc-bi-jxu">
             <objects>
-                <viewController id="7J1-0Q-9RG" sceneMemberID="viewController">
+                <viewController title="Attach Media" id="7J1-0Q-9RG" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" focusRingType="none" id="WI9-1J-Hmg">
                         <rect key="frame" x="0.0" y="0.0" width="304" height="58"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -928,7 +939,7 @@
                 </viewController>
                 <customObject id="zmJ-nd-SwD" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2418" y="722"/>
+            <point key="canvasLocation" x="2418" y="815"/>
         </scene>
     </scenes>
     <resources>
