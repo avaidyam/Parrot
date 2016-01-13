@@ -941,31 +941,34 @@ private let GOOGLE_EMOJI: [String: Int] = [
 	"=^_^="		: 0x1f638,
 ]
 
-// Convert instances of textual Github markdown emoji into UTF Emoji.
-public func applyGithubEmoji(text: String) -> String {
-	let regex = try! NSRegularExpression(pattern: "(:[a-z0-9-+_]+:)",
-		options: NSRegularExpressionOptions.CaseInsensitive)
-	var resultText = text
-	let matchingRange = NSMakeRange(0, resultText.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
-	regex.enumerateMatchesInString(resultText,
-		options: .ReportCompletion, range: matchingRange) { result, flags, stop in
-		if ((result != nil) && (result!.resultType == .RegularExpression)) {
-			let range = result!.range
-			if (range.location != NSNotFound) {
-				let code = (text as NSString).substringWithRange(range), unicode = GITHUB_EMOJI[code]
-				if !unicode!.isEmpty {
-					resultText = resultText.stringByReplacingOccurrencesOfString(code,
-						withString:unicode!, options: NSStringCompareOptions(rawValue: 0), range: nil)
+public extension String {
+	
+	// Convert instances of textual Github markdown emoji into UTF Emoji.
+	public func applyGithubEmoji() -> String {
+		let regex = try! NSRegularExpression(pattern: "(:[a-z0-9-+_]+:)",
+			options: NSRegularExpressionOptions.CaseInsensitive)
+		var resultText = self
+		let matchingRange = NSMakeRange(0, resultText.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
+		regex.enumerateMatchesInString(resultText,
+			options: .ReportCompletion, range: matchingRange) { result, flags, stop in
+				if ((result != nil) && (result!.resultType == .RegularExpression)) {
+					let range = result!.range
+					if (range.location != NSNotFound) {
+						let code = (self as NSString).substringWithRange(range), unicode = GITHUB_EMOJI[code]
+						if !unicode!.isEmpty {
+							resultText = resultText.stringByReplacingOccurrencesOfString(code,
+								withString:unicode!, options: NSStringCompareOptions(rawValue: 0), range: nil)
+						}
+					}
 				}
-			}
 		}
+		return resultText
 	}
-	return resultText
-}
-
-// Convert instances of textual Google emoticons into UTF Emoji.
-public func applyGoogleEmoji(text: String) -> String {
-	return GOOGLE_EMOJI.reduce(text) {
-		($0 as NSString).stringByReplacingOccurrencesOfString($1.0, withString: String(UnicodeScalar($1.1)))
+	
+	// Convert instances of textual Google emoticons into UTF Emoji.
+	public func applyGoogleEmoji() -> String {
+		return GOOGLE_EMOJI.reduce(self) {
+			($0 as NSString).stringByReplacingOccurrencesOfString($1.0, withString: String(UnicodeScalar($1.1)))
+		}
 	}
 }

@@ -224,7 +224,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 	
 	private class func segmentsForInput(text: String, emojify: Bool = true) -> [ChatMessageSegment] {
-		return [ChatMessageSegment(text: (emojify ? applyGoogleEmoji(text) : text))]
+		return [ChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
 	}
 	
 	private class func attributedStringForText(text: String) -> NSAttributedString {
