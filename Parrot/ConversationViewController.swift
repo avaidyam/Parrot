@@ -163,7 +163,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			} else if network == 2 {
 				color = NSColor.materialBlueColor()
 			}
-			return Message(string: TextMapper.attributedStringForText(message.text),
+			return Message(string: ConversationViewController.attributedStringForText(message.text),
 				orientation: (user.isSelf ? .Right : .Left), color: color!)
 		}
 	}
@@ -218,8 +218,46 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         if text.characters.count > 0 {
 			var emojify = Settings()[Parrot.AutoEmoji] as? Bool ?? false
 			emojify = NSEvent.modifierFlags().contains(.AlternateKeyMask) ? false : emojify
-			conversation?.sendMessage(TextMapper.segmentsForInput(text, emojify: emojify))
+			conversation?.sendMessage(ConversationViewController.segmentsForInput(text, emojify: emojify))
             messageTextField.stringValue = ""
         }
     }
+	
+	private class func segmentsForInput(text: String, emojify: Bool = true) -> [ChatMessageSegment] {
+		return [ChatMessageSegment(text: (emojify ? applyGoogleEmoji(text) : text))]
+	}
+	
+	private class func attributedStringForText(text: String) -> NSAttributedString {
+		let attrString = NSMutableAttributedString(string: text)
+		
+		let style = NSMutableParagraphStyle()
+		style.lineBreakMode = NSLineBreakMode.ByWordWrapping
+		
+		let linkDetector = try! NSDataDetector(types: NSTextCheckingType.Link.rawValue)
+		for match in linkDetector.matchesInString(text, options: [], range: NSMakeRange(0, text.characters.count)) {
+			if let url = match.URL {
+				attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
+				attrString.addAttribute(
+					NSUnderlineStyleAttributeName,
+					value: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue),
+					range: match.range
+				)
+			}
+		}
+		
+		/* TODO: Move this paragraph style and font stuff to the view. */
+		attrString.addAttribute(
+			NSFontAttributeName,
+			value: NSFont.systemFontOfSize(12),
+			range: NSMakeRange(0, attrString.length)
+		)
+		
+		attrString.addAttribute(
+			NSParagraphStyleAttributeName,
+			value: style,
+			range: NSMakeRange(0, attrString.length)
+		)
+		
+		return attrString
+	}
 }
