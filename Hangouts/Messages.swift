@@ -178,6 +178,7 @@ public class ForceHistory : Enum {
 public class NetworkType : Enum {
 	public static let UNKNOWN: NetworkType = 0
 	public static let BABEL: NetworkType = 1
+	public static let GVOICE: NetworkType = 2
 }
 
 @objc(BlockState)
@@ -416,7 +417,7 @@ public class CONVERSATION : Message {
     public var field15: AnyObject?
     public var field16: AnyObject?
     public var field17: AnyObject?
-    public var network_type: AnyObject?
+    public var network_type = [NetworkType]()
     public var force_history_state: AnyObject?
 }
 

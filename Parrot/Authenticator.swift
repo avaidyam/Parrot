@@ -178,11 +178,14 @@ public class Authenticator {
 			}
 			
 			do {
-				let JSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-				let a = JSON["access_token"], b = JSON["refresh_token"]
-				cb(access_token: a as! String, refresh_token: b as! String)
-			} catch {
-				print("Request failed with error: \(error)")
+				let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as! [String: AnyObject]
+				if let access = json["access_token"] as? String, refresh = json["refresh_token"] as? String  {
+					cb(access_token: access, refresh_token: refresh)
+				} else {
+					print("JSON was invalid: \(json)")
+				}
+			} catch let error as NSError {
+				print("JSON returned invalid data: \(error.localizedDescription)")
 			}
 		}
 	}
@@ -214,11 +217,14 @@ public class Authenticator {
 			}
 			
 			do {
-				let JSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-				let a = JSON["access_token"] as? String
-				cb(access_token: a!, refresh_token: refresh_token)
-			} catch {
-				print("Request failed with error: \(error)")
+				let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as! [String: AnyObject]
+				if let access = json["access_token"] as? String  {
+					cb(access_token: access, refresh_token: refresh_token)
+				} else {
+					print("JSON was invalid: \(json)")
+				}
+			} catch let error as NSError {
+				print("JSON returned invalid data: \(error.localizedDescription)")
 			}
 		}
 	}

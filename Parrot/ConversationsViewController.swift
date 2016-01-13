@@ -158,7 +158,8 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		let a = conversation.messages.last?.user_id
 		let b = conversation.users.filter { $0.isSelf }.first?.id
 		let c = conversation.users.filter { !$0.isSelf }.first
-		let d = conversation.conversation.network_type?[0] as? Int
+		let network_ = conversation.conversation.network_type as NSArray
+		let d = NetworkType(value: network_[0] as! NSNumber)
 		
 		// Patch for Google Voice contacts to show their numbers.
 		// FIXME: Sometimes [1] is actually you, fix that.
@@ -175,7 +176,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			img = NSImage(data: d)!
 		}
 		
-		let ring = d == 2 ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
+		let ring = d == NetworkType.GVOICE ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
 		let ind = conversation.hasUnreadEvents
 		let name = title
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")

@@ -1,34 +1,27 @@
 import Cocoa
 import Hangouts
 
-class ConversationViewController: NSViewController, ConversationDelegate, NSTextFieldDelegate {
+/* TODO: Use NSWindow occlusion API to fully support focus. */
 
+class ConversationViewController: NSViewController, ConversationDelegate, NSTextFieldDelegate {
+	
 	@IBOutlet var messagesView: MessagesView!
     @IBOutlet weak var messageTextField: NSTextField!
 	@IBOutlet var statusView: NSTextField!
-	
+	var _note: TokenObserver!
 	var popover: NSPopover!
-	
-	var notifications = [TokenObserver]()
-	
 	var conversation: Conversation? {
-		get {
-			return representedObject as? Conversation
-		}
+		get { return representedObject as? Conversation }
 	}
-	
 	var window: NSWindow? {
-		get {
-			return self.view.window
-		}
+		get { return self.view.window }
 	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		self.messagesView.insets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
-        messageTextField.delegate = self
-        self.view.postsFrameChangedNotifications = true
+        self.messageTextField.delegate = self
 		
 		self.popover = NSPopover()
 		self.popover.contentViewController = NSViewController()
@@ -37,23 +30,12 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
     override func viewWillAppear() {
-		self.notifications.append(Notifications.subscribe(NSWindowDidBecomeKeyNotification, object: self.window) { a in
+		_note = Notifications.subscribe(NSWindowDidBecomeKeyNotification, object: self.window) { a in
 			self.windowDidBecomeKey(nil)
-		})
-		
+		}
         if self.window?.keyWindow ?? false {
             self.windowDidBecomeKey(nil)
         }
-
-        if let window = self.window, name = conversation?.name {
-            window.title = name
-		}
-    }
-
-    override func viewWillDisappear() {
-		self.notifications.forEach {
-			Notifications.unsubscribe($0)
-		}
     }
 
     override var representedObject: AnyObject? {
@@ -69,13 +51,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			self.messagesView.dataSource = self._getAllMessages()!
         }
     }
-
-    // conversation delegate
-    func conversation(
-        conversation: Conversation,
-        didChangeTypingStatusForUser user: User,
-        toStatus status: TypingType
-    ) {
+	
+    func conversation(conversation: Conversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
         if user.isSelf {
             return
         }
@@ -95,8 +72,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
 	func conversation(conversation: Conversation, didReceiveEvent event: Event) {
-		
 		self.messagesView.dataSource = self._getAllMessages()!
+		
 		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
 		//self.messagesView.appendElements(found)
 		//print("got \(msg)")
@@ -136,43 +113,30 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         
     }
 	
-	// get a single message
-	private func _getMessage(message: ChatMessageEvent) -> Message? {
-		/*if conversation != nil {
-			let user = conversation!.user_list.get_user(message.user_id)
-			let network = conversation!.conversation.network_type![0] as! Int
-			var color: NSColor?
-			if user.isSelf {
-				color = NSColor.materialBlueGreyColor()
-			} else if network == 1 {
-				color = NSColor.materialGreenColor()
-			} else if network == 2 {
-				color = NSColor.materialBlueColor()
-			}
-			return Message(string: TextMapper.attributedStringForText(message.text),
-				orientation: (user.isSelf ? .Right : .Left), color: color!)
-		}*/
-		return nil
-	}
-	
 	// get all messages
 	private func _getAllMessages() -> [Message]? {
-		return conversation?.messages.map { message in
-			let user = conversation!.user_list.get_user(message.user_id)
-			let network = conversation!.conversation.network_type![0] as! Int
-			var color: NSColor?
-			if user.isSelf {
-				color = NSColor.materialBlueGreyColor()
-			} else if network == 1 {
-				color = NSColor.materialGreenColor()
-			} else if network == 2 {
-				color = NSColor.materialBlueColor()
-			}
-			return Message(string: ConversationViewController.attributedStringForText(message.text),
-				orientation: (user.isSelf ? .Right : .Left), color: color!)
-		}
+		return self.conversation?.messages.map { _getMessage($0) }
 	}
-
+	
+	// get a single message
+	func _getMessage(ev: ChatMessageEvent) -> Message {
+		let user = self.conversation!.user_list.get_user(ev.user_id)
+		let network_ = self.conversation!.conversation.network_type as NSArray
+		let network = NetworkType(value: network_[0] as! NSNumber)
+		
+		var color: NSColor = NSColor.materialBlueGreyColor()
+		if !user.isSelf && network == NetworkType.BABEL {
+			color = NSColor.materialGreenColor()
+		} else if !user.isSelf && network == NetworkType.GVOICE {
+			color = NSColor.materialBlueColor()
+		}
+		
+		let text = ConversationViewController.attributedStringForText(ev.text)
+		let orientation = (user.isSelf ? NSTextAlignment.Right : .Left)
+		
+		return Message(string: text, orientation: orientation, color: color)
+	}
+	
     // MARK: Window notifications
 
     func windowDidBecomeKey(sender: AnyObject?) {
