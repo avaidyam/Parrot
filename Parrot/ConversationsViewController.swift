@@ -173,7 +173,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		}
 		
 		// Load all the field values from the conversation.
-		let img = ImageCache.sharedInstance.fetchImage(forUser: c) ?? defaultImage
+		let img = fetchImage(c?.id.chat_id, c?.photo_url) ?? defaultImage
 		let ring = d == 2 ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
 		let ind = conversation.hasUnreadEvents
 		let name = title

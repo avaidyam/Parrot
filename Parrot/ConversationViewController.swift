@@ -104,7 +104,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         if !(self.window?.keyWindow ?? false) {
             let user = conversation.user_list.get_user(event.user_id)
             if !user.isSelf {
-				let a = (event.event.conversation_id.id as! GroupID, event.id as ItemID)
+				let a = (event.event.conversation_id.id as! String, event.id as String)
 				let text = event.event.chat_message?.message_content.segment?.first?.text as? String
 				
 				let notification = NSUserNotification()
@@ -112,7 +112,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				notification.informativeText = text
 				notification.deliveryDate = NSDate()
 				notification.soundName = NSUserNotificationDefaultSoundName
-				notification.contentImage = ImageCache.sharedInstance.getImage(forUser: user)
+				notification.contentImage = fetchImage(user.id.chat_id, user.photo_url)
 				
 				NotificationManager.sharedInstance.sendNotificationFor(a, notification: notification)
             }

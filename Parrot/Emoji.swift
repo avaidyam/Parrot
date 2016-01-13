@@ -1,5 +1,4 @@
-import Cocoa
-import Hangouts
+import Foundation
 
 // from @kylefrost: https://github.com/kylefrost/StringEmojize/
 private let GITHUB_EMOJI: [String: String] = [

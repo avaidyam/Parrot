@@ -44,6 +44,24 @@ public extension NSOperationQueue {
 	}
 }
 
+// Wrap a Dispatch Semaphore in a nice struct.
+public struct Semaphore {
+	let rawValue: dispatch_semaphore_t
+	
+	init(count: Int = 0) {
+		self.rawValue = dispatch_semaphore_create(count)
+	}
+	
+	public func signal() -> Int {
+		return dispatch_semaphore_signal(self.rawValue)
+	}
+	
+	/* TODO: Use dispatch_time_t until we replace it nicely. */
+	public func wait(timeout: dispatch_time_t = DISPATCH_TIME_FOREVER) -> Int {
+		return dispatch_semaphore_wait(self.rawValue, timeout)
+	}
+}
+
 // alias for the UI thread
 public func UI(block: () -> Void) {
 	Dispatch.main().add(block)
