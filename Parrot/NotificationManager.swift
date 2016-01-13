@@ -1,12 +1,19 @@
 import Cocoa
 
-private var _cache = Dictionary<String, NSImage>()
+/* TODO: Switch to a Disk LRU Cache instead of Dictionary. */
+
+// Internal NSImage cache, and
+private var _cache = Dictionary<String, NSData>()
+private var _notes = Dictionary<String, [String]>()
+
+// Quick alias just for us.
+private let nc = NSUserNotificationCenter.defaultUserNotificationCenter()
+
+// The default user image, when none can be located.
+public let defaultUserImage = NSImage(named: "NSUserGuest")!
 
 public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
     static let sharedInstance = NotificationManager()
-	
-    private let nc = NSUserNotificationCenter.defaultUserNotificationCenter()
-    private var notes = Dictionary<String, [String]>()
 
     public override init() {
         super.init()
@@ -19,23 +26,23 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
         let notificationID = group.1
         notification.identifier = notificationID
 
-        var notificationIDs = notes[conversationID]
+        var notificationIDs = _notes[conversationID]
         if notificationIDs != nil {
             notificationIDs!.append(notificationID)
-            notes[conversationID] = notificationIDs
+            _notes[conversationID] = notificationIDs
         } else {
-            notes[conversationID] = [notificationID]
+            _notes[conversationID] = [notificationID]
         }
         nc.deliverNotification(notification)
     }
 
     public func clearNotificationsFor(group: String) {
-        for notificationID in (notes[group] ?? []) {
+        for notificationID in (_notes[group] ?? []) {
             let notification = NSUserNotification()
             notification.identifier = notificationID
             nc.removeDeliveredNotification(notification)
         }
-        notes.removeValueForKey(group)
+        _notes.removeValueForKey(group)
 	}
 	
 	// Handle NSApp dock badge.
@@ -59,18 +66,17 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
     }
 }
 
-// Single use function for getting a user's photo:
 // Note that this is general purpose! It needs a unique ID and a resource URL string.
-public func fetchImage(user: String?, _ resource: String?, handler: ((NSImage?) -> Void)? = nil) -> NSImage? {
+public func fetchData(id: String?, _ resource: String?, handler: ((NSData?) -> Void)? = nil) -> NSData? {
 	
 	// Case 1: No unique ID -> bail.
-	guard let user = user else {
+	guard let id = id else {
 		handler?(nil)
 		return nil
 	}
 	
 	// Case 2: We've already fetched it -> return image.
-	if let img = _cache[user] {
+	if let img = _cache[id] {
 		handler?(img)
 		return img
 	}
@@ -85,9 +91,8 @@ public func fetchImage(user: String?, _ resource: String?, handler: ((NSImage?) 
 	let semaphore = Semaphore(count: 0)
 	NSURLSession.sharedSession().request(NSURLRequest(URL: url)) {
 		if let data = $0.data {
-			let image = NSImage(data: data)
-			_cache[user] = image
-			handler?(image)
+			_cache[id] = data
+			handler?(data)
 			semaphore.signal()
 		}
 	}
@@ -95,7 +100,7 @@ public func fetchImage(user: String?, _ resource: String?, handler: ((NSImage?) 
 	// Onlt wait on the semaphore if we don't have a handler.
 	if handler == nil {
 		semaphore.wait()
-		return _cache[user]
+		return _cache[id]
 	} else {
 		return nil
 	}

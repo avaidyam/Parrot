@@ -12,9 +12,6 @@ public class Parrot {
 	public static let ShowSidebar = "Parrot.ShowSidebar"
 }
 
-// Create and cache the default image template.
-private let defaultImage = NSImage(named: "NSUserGuest")!
-
 class ConversationsViewController:  NSViewController, ClientDelegate,
 									NSTableViewDataSource, NSTableViewDelegate,
 									ConversationListDelegate {
@@ -173,7 +170,11 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		}
 		
 		// Load all the field values from the conversation.
-		let img = fetchImage(c?.id.chat_id, c?.photo_url) ?? defaultImage
+		var img: NSImage = defaultUserImage
+		if let d = fetchData(c?.id.chat_id, c?.photo_url) {
+			img = NSImage(data: d)!
+		}
+		
 		let ring = d == 2 ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
 		let ind = conversation.hasUnreadEvents
 		let name = title

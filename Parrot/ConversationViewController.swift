@@ -112,7 +112,12 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				notification.informativeText = text
 				notification.deliveryDate = NSDate()
 				notification.soundName = NSUserNotificationDefaultSoundName
-				notification.contentImage = fetchImage(user.id.chat_id, user.photo_url)
+				
+				var img: NSImage = defaultUserImage
+				if let d = fetchData(user.id.chat_id, user.photo_url) {
+					img = NSImage(data: d)!
+				}
+				notification.contentImage = img
 				
 				NotificationManager.sharedInstance.sendNotificationFor(a, notification: notification)
             }
