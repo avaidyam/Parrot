@@ -184,7 +184,12 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		
 		cell.objectValue = Wrapper<Person>(Person(photo: img, highlight: ring, indicator: ind, primary: name, secondary: sub, tertiary: time))
 		return cell
-    }
+	}
+	
+	func tableView(tableView: NSTableView, didAddRowView rowView: NSTableRowView, forRow row: Int) {
+		// Intentionally Unimplemented
+		rowView.emphasized = false
+	}
 
 	/* TODO: Support different size classes. */
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {

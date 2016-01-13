@@ -30,6 +30,7 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		let col = NSTableColumn(identifier: "")
 		col.resizingMask = .AutoresizingMask
 		self.tableView.addTableColumn(col)
+		self.tableView.headerView = nil
 		
 		self.scrollView.drawsBackground = false
 		self.scrollView.borderType = .NoBorder
@@ -42,16 +43,17 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		self.scrollView.hasVerticalScroller = true
 		self.addSubview(self.scrollView)
 		
+		self.scrollView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
 		self.tableView.sizeLastColumnToFit()
 	}
 	
 	// Allow accessing the insets from the scroll view.
 	public var insets: NSEdgeInsets {
 		get {
-			return self.scrollView.scrollerInsets
+			return self.scrollView.contentInsets
 		}
 		set {
-			self.scrollView.scrollerInsets = newValue
+			self.scrollView.contentInsets = newValue
 		}
 	}
 	
@@ -138,6 +140,7 @@ public extension MessagesView {
 	
 	public func tableView(tableView: NSTableView, didAddRowView rowView: NSTableRowView, forRow row: Int) {
 		// Intentionally Unimplemented
+		rowView.emphasized = false
 	}
 	
 	public func tableView(tableView: NSTableView, didRemoveRowView rowView: NSTableRowView, forRow row: Int) {

@@ -49,6 +49,7 @@ public class PersonView : NSTableCellView {
 	}
 	
 	// Upon selection, make all the text visible, and restore it when unselected.
+	// NOTE: If the rowView isn't emphasized, the colors will look odd because of blending.
 	public override var backgroundStyle: NSBackgroundStyle {
 		didSet {
 			if self.backgroundStyle == .Light {

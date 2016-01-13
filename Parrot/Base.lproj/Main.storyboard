@@ -808,31 +808,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="568" height="383"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="L3M-cX-on4" customClass="MessagesView" customModule="Parrot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="30" width="568" height="353"/>
+                            <customView wantsLayer="YES" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="L3M-cX-on4" customClass="MessagesView" customModule="Parrot" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="39" width="568" height="344"/>
                                 <animations/>
                             </customView>
-                            <box wantsLayer="YES" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="dpk-F4-2R9">
-                                <rect key="frame" x="0.0" y="23" width="568" height="5"/>
+                            <box wantsLayer="YES" verticalHuggingPriority="751" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="dpk-F4-2R9">
+                                <rect key="frame" x="0.0" y="36" width="568" height="5"/>
                                 <animations/>
                                 <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                 <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <font key="titleFont" metaFont="system"/>
                             </box>
-                            <textField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="751" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="orf-m2-ObS">
-                                <rect key="frame" x="26" y="4" width="517" height="17"/>
-                                <animations/>
-                                <textFieldCell key="cell" selectable="YES" editable="YES" state="on" focusRingType="none" placeholderString="Send a message..." allowsEditingTextAttributes="YES" id="nRY-lf-Vew">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
-                                </textFieldCell>
-                                <connections>
-                                    <action selector="messageTextFieldDidAction:" target="MHo-xn-Myi" id="TZC-Pq-sdP"/>
-                                </connections>
-                            </textField>
                             <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ega-D2-ka6">
-                                <rect key="frame" x="4" y="2" width="20" height="20"/>
+                                <rect key="frame" x="8" y="6" width="20" height="25"/>
                                 <animations/>
                                 <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSIconViewTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ds1-BY-kXo">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -843,7 +831,7 @@
                                 </connections>
                             </button>
                             <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="g2R-XT-xBl">
-                                <rect key="frame" x="545" y="2" width="19" height="20"/>
+                                <rect key="frame" x="541" y="6" width="19" height="25"/>
                                 <animations/>
                                 <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRightFacingTriangleTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pwc-Xx-1Zt">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -853,26 +841,38 @@
                                     <action selector="messageTextFieldDidAction:" target="MHo-xn-Myi" id="px3-SY-Saj"/>
                                 </connections>
                             </button>
+                            <textField wantsLayer="YES" focusRingType="exterior" verticalHuggingPriority="751" verticalCompressionResistancePriority="49" translatesAutoresizingMaskIntoConstraints="NO" id="orf-m2-ObS">
+                                <rect key="frame" x="36" y="8" width="497" height="22"/>
+                                <animations/>
+                                <textFieldCell key="cell" selectable="YES" editable="YES" state="on" borderStyle="bezel" focusRingType="exterior" placeholderString="Send a message..." allowsEditingTextAttributes="YES" bezelStyle="round" id="nRY-lf-Vew">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <action selector="messageTextFieldDidAction:" target="MHo-xn-Myi" id="TZC-Pq-sdP"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="dpk-F4-2R9" secondAttribute="trailing" id="7QW-sf-3GI"/>
-                            <constraint firstAttribute="trailing" secondItem="L3M-cX-on4" secondAttribute="trailing" id="9qu-As-g8u"/>
-                            <constraint firstItem="L3M-cX-on4" firstAttribute="top" secondItem="hAN-a4-RD8" secondAttribute="top" id="Bs0-Rd-lja"/>
-                            <constraint firstItem="g2R-XT-xBl" firstAttribute="leading" secondItem="orf-m2-ObS" secondAttribute="trailing" constant="4" id="FsP-tU-RDK"/>
-                            <constraint firstItem="orf-m2-ObS" firstAttribute="leading" secondItem="Ega-D2-ka6" secondAttribute="trailing" constant="4" id="NcK-3h-KHv"/>
+                            <constraint firstItem="g2R-XT-xBl" firstAttribute="leading" secondItem="orf-m2-ObS" secondAttribute="trailing" constant="8" id="FsP-tU-RDK"/>
+                            <constraint firstItem="orf-m2-ObS" firstAttribute="leading" secondItem="Ega-D2-ka6" secondAttribute="trailing" constant="8" id="NcK-3h-KHv"/>
+                            <constraint firstItem="L3M-cX-on4" firstAttribute="width" secondItem="hAN-a4-RD8" secondAttribute="width" id="OFq-Rt-9h8"/>
                             <constraint firstItem="L3M-cX-on4" firstAttribute="leading" secondItem="hAN-a4-RD8" secondAttribute="leading" id="PKK-Iu-fQv"/>
-                            <constraint firstItem="orf-m2-ObS" firstAttribute="top" secondItem="dpk-F4-2R9" secondAttribute="bottom" constant="4" id="SKM-uc-ww4"/>
-                            <constraint firstAttribute="bottom" secondItem="Ega-D2-ka6" secondAttribute="bottom" constant="4" id="XI3-9z-I43"/>
+                            <constraint firstItem="orf-m2-ObS" firstAttribute="top" secondItem="dpk-F4-2R9" secondAttribute="bottom" constant="8" id="SKM-uc-ww4"/>
+                            <constraint firstItem="L3M-cX-on4" firstAttribute="top" secondItem="hAN-a4-RD8" secondAttribute="top" id="W4a-Ww-1s2"/>
+                            <constraint firstAttribute="bottom" secondItem="Ega-D2-ka6" secondAttribute="bottom" constant="8" id="XI3-9z-I43"/>
                             <constraint firstItem="g2R-XT-xBl" firstAttribute="centerY" secondItem="orf-m2-ObS" secondAttribute="centerY" id="a39-74-7EQ"/>
                             <constraint firstItem="dpk-F4-2R9" firstAttribute="leading" secondItem="hAN-a4-RD8" secondAttribute="leading" id="aa6-DT-U5j"/>
-                            <constraint firstItem="Ega-D2-ka6" firstAttribute="top" secondItem="dpk-F4-2R9" secondAttribute="bottom" constant="4" id="dG2-bR-0EF"/>
-                            <constraint firstItem="g2R-XT-xBl" firstAttribute="top" secondItem="dpk-F4-2R9" secondAttribute="bottom" constant="4" id="dRS-qd-PZi"/>
-                            <constraint firstItem="Ega-D2-ka6" firstAttribute="leading" secondItem="hAN-a4-RD8" secondAttribute="leading" constant="4" id="ekY-Fq-TsD"/>
-                            <constraint firstAttribute="bottom" secondItem="g2R-XT-xBl" secondAttribute="bottom" constant="4" id="fey-wd-SDT"/>
+                            <constraint firstItem="Ega-D2-ka6" firstAttribute="top" secondItem="dpk-F4-2R9" secondAttribute="bottom" constant="8" id="dG2-bR-0EF"/>
+                            <constraint firstItem="g2R-XT-xBl" firstAttribute="top" secondItem="dpk-F4-2R9" secondAttribute="bottom" constant="8" id="dRS-qd-PZi"/>
+                            <constraint firstItem="Ega-D2-ka6" firstAttribute="leading" secondItem="hAN-a4-RD8" secondAttribute="leading" constant="8" id="ekY-Fq-TsD"/>
+                            <constraint firstAttribute="bottom" secondItem="g2R-XT-xBl" secondAttribute="bottom" constant="8" id="fey-wd-SDT"/>
                             <constraint firstItem="Ega-D2-ka6" firstAttribute="centerY" secondItem="orf-m2-ObS" secondAttribute="centerY" id="obd-bR-MME"/>
-                            <constraint firstAttribute="trailing" secondItem="g2R-XT-xBl" secondAttribute="trailing" constant="4" id="qBf-I9-l3N"/>
-                            <constraint firstAttribute="bottom" secondItem="orf-m2-ObS" secondAttribute="bottom" constant="4" id="ui3-QF-p8n"/>
-                            <constraint firstItem="dpk-F4-2R9" firstAttribute="top" secondItem="L3M-cX-on4" secondAttribute="bottom" constant="4" id="vSy-m5-QNb"/>
+                            <constraint firstAttribute="trailing" secondItem="g2R-XT-xBl" secondAttribute="trailing" constant="8" id="qBf-I9-l3N"/>
+                            <constraint firstAttribute="bottom" secondItem="orf-m2-ObS" secondAttribute="bottom" constant="8" id="ui3-QF-p8n"/>
+                            <constraint firstItem="dpk-F4-2R9" firstAttribute="top" secondItem="L3M-cX-on4" secondAttribute="bottom" id="vSy-m5-QNb"/>
                         </constraints>
                         <animations/>
                     </view>

@@ -30,6 +30,7 @@ public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		let col = NSTableColumn(identifier: "")
 		col.resizingMask = .AutoresizingMask
 		self.tableView.addTableColumn(col)
+		self.tableView.headerView = nil
 		
 		self.scrollView.drawsBackground = false
 		self.scrollView.borderType = .NoBorder
@@ -45,6 +46,8 @@ public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		/* TODO: Remove dependency on IB for this view! */
 		let nib = NSNib(nibNamed: "PersonView", bundle: NSBundle.mainBundle())
 		self.tableView.registerNib(nib, forIdentifier: "PersonView")
+		
+		self.scrollView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
 		self.tableView.sizeLastColumnToFit()
 	}
 	
