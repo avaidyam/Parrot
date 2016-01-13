@@ -86,8 +86,6 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
                 sync_timestamp: initialData.sync_timestamp
             )
 			
-			print("got data \(user_list.get_all())")
-			
 			Dispatch.main().add {
 				self.tableView.reloadData()
 				self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)

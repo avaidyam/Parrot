@@ -80,25 +80,26 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
             return
         }
 		
-        switch (status) {
-        case TypingType.STARTED:
-			self.popover.showRelativeToRect(self.messageTextField!.bounds, ofView: self.messageTextField!, preferredEdge: .MaxY)
-			self.statusView.stringValue = "Typing..."
-		case TypingType.PAUSED:
-			self.statusView.stringValue = "Entered text"
-		default: // .STOPPED, .UNKNOWN
-			self.popover.performClose(self)
-			self.statusView.stringValue = "None"
-        }
-        //conversationTableView.reloadData()
+		UI {
+			switch (status) {
+			case TypingType.STARTED:
+				self.popover.showRelativeToRect(self.messageTextField!.bounds, ofView: self.messageTextField!, preferredEdge: .MinY)
+				self.statusView.stringValue = "Typing..."
+			case TypingType.PAUSED:
+				self.statusView.stringValue = "Entered text."
+			default: // .STOPPED, .UNKNOWN
+				self.popover.performClose(self)
+				self.statusView.stringValue = "Done."
+			}
+		}
     }
 
 	func conversation(conversation: Conversation, didReceiveEvent event: Event) {
 		
 		self.messagesView.dataSource = self._getAllMessages()!
-		let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
+		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
 		//self.messagesView.appendElements(found)
-		print("got \(msg)")
+		//print("got \(msg)")
 		
         if !(self.window?.keyWindow ?? false) {
             let user = conversation.user_list.get_user(event.user_id)
