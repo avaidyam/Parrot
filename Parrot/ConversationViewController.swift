@@ -10,6 +10,18 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	var popover: NSPopover!
 	
 	var notifications = [TokenObserver]()
+	
+	var conversation: Conversation? {
+		get {
+			return representedObject as? Conversation
+		}
+	}
+	
+	var window: NSWindow? {
+		get {
+			return self.view.window
+		}
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +48,6 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         if let window = self.window, name = conversation?.name {
             window.title = name
 		}
-		
     }
 
     override func viewWillDisappear() {
@@ -57,26 +68,6 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			//self.messagesView.removeElements(self._getAllMessages()!)
 			self.messagesView.dataSource = self._getAllMessages()!
         }
-    }
-
-    var conversation: Conversation? {
-        get {
-            return representedObject as? Conversation
-        }
-    }
-
-    var window: NSWindow? {
-        get {
-            return self.view.window
-        }
-    }
-
-    func attributedStringForMessage(row: Int) -> NSAttributedString? {
-        if let conversation = conversation where row < conversation.messages.count {
-            let message = conversation.messages[row]
-            return TextMapper.attributedStringForText(message.text)
-        }
-        return nil
     }
 
     // conversation delegate

@@ -49,9 +49,20 @@ public extension NSNotificationCenter {
 // Post a notification like so:  Notifications <- ("Test", self, ["a": 42])
 // CAUTION: USE SPARINGLY! Makes little to no sense what's going on in code.
 infix operator <- { associativity left precedence 160 }
-func <- (inout left: NSNotificationCenter, right: String) {
+public func <- (left: NSNotificationCenter, right: String) {
 	left.postNotificationName(right, object: nil, userInfo: nil)
 }
-func <- (inout left: NSNotificationCenter, right: Notification) {
+public func <- (left: NSNotificationCenter, right: Notification) {
 	left.postNotificationName(right.name, object: right.object, userInfo: right.userInfo)
+}
+
+// Post a notification like so:  ("Test", self, ["a": 42])^+>
+// CAUTION: USE SPARINGLY! Makes little to no sense what's going on in code.
+// Like, really, it's just a fun experiment. Bad idea...
+postfix operator ^+> { }
+public postfix func ^+> (right: String) {
+	Notifications.postNotificationName(right, object: nil, userInfo: nil)
+}
+public postfix func ^+> (right: Notification) {
+	Notifications.postNotificationName(right.name, object: right.object, userInfo: right.userInfo)
 }
