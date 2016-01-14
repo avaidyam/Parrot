@@ -149,27 +149,27 @@ public class ChatMessageEvent : Event {
             let raw_attachments = self.event.chat_message?.message_content.attachment ?? [MESSAGE_ATTACHMENT]()
             var attachments = [String]()
             for attachment in raw_attachments {
-                if attachment.embed_item.type == [249] { // PLUS_PHOTO
+                if attachment.embed_item!.type == [249] { // PLUS_PHOTO
 					
                     // Try to parse an image message. Image messages contain no
                     // message segments, and thus have no automatic textual
                     // fallback.
-                    if let data = attachment.embed_item.data["27639957"] as? NSArray,
+                    if let data = attachment.embed_item!.data["27639957"] as? NSArray,
                         zeroth = data[0] as? NSArray,
                         third = zeroth[3] as? String {
                             attachments.append(third)
                     }
-				} else if attachment.embed_item.type == [438] { // VOICE_PHOTO
+				} else if attachment.embed_item!.type == [438] { // VOICE_PHOTO
 					
 					// Try to parse an image message. Image messages contain no
 					// message segments, and thus have no automatic textual
 					// fallback.
-					if let data = attachment.embed_item.data["62101782"] as? NSArray,
+					if let data = attachment.embed_item!.data["62101782"] as? NSArray,
 						zeroth = data[0] as? NSArray,
 						third = zeroth[3] as? String {
 							attachments.append(third)
 					}
-				} else if attachment.embed_item.type == [340, 335, 0] {
+				} else if attachment.embed_item!.type == [340, 335, 0] {
                     // Google Maps URL that's already in the text.
                 } else {
                     print("Ignoring unknown chat message attachment: \(attachment)")

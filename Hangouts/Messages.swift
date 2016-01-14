@@ -454,13 +454,13 @@ public class MESSAGE_ATTACHMENT_EMBED_ITEM : Message {
 
 @objc(MESSAGE_ATTACHMENT)
 public class MESSAGE_ATTACHMENT : Message {
-    public var embed_item = MESSAGE_ATTACHMENT_EMBED_ITEM()
+	public var embed_item: MESSAGE_ATTACHMENT_EMBED_ITEM?
 }
 
 @objc(CHAT_MESSAGE_CONTENT)
 public class CHAT_MESSAGE_CONTENT : Message {
-    public var segment: [MESSAGE_SEGMENT]?
-    public var attachment: [MESSAGE_ATTACHMENT]?
+    public var segment = [MESSAGE_SEGMENT]()
+    public var attachment = [MESSAGE_ATTACHMENT]()
 }
 
 @objc(CHAT_MESSAGE)
@@ -694,59 +694,60 @@ public class GET_ENTITY_BY_ID_RESPONSE : Message {
     public var entities = [ENTITY]()
 }
 
+@objc(DeviceStatus)
+public class DeviceStatus : Message {
+	public var mobile: NSNumber?
+	public var desktop: NSNumber?
+	public var tablet: NSNumber?
+}
+
+@objc(Presence)
+public class Presence : Message {
+	public var reachable: NSNumber?
+	public var available: NSNumber?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var field5: AnyObject?
+	public var device_status: DeviceStatus?
+	public var field7: AnyObject?
+	public var field8: AnyObject?
+	public var mood_setting: AnyObject? //MoodSetting?
+	
+}
+
+@objc(PresenceResult)
+public class PresenceResult : Message {
+	public var user_id: PARTICIPANT_ID?
+	public var presence: Presence?
+}
+
+@objc(ClientIdentifier)
+public class ClientIdentifier : Message {
+	public var resource: NSString?
+	public var header_id: NSString?
+}
+
+@objc(ClientPresenceState)
+public class ClientPresenceState : Message {
+	public var identifier: ClientIdentifier?
+	public var state: ClientPresenceStateType?
+}
+
+@objc(UserEventState)
+public class UserEventState : Message {
+	public var user_id: PARTICIPANT_ID?
+	public var client_generated_id: NSString?
+	public var notification_level: NotificationLevel?
+}
+
+/* TEMPLATE:
+@objc(XYZ)
+public class XYZ : Message {
+	
+}
+*/
+
 /*
-message DeviceStatus {
-	optional bool mobile = 1;
-	optional bool desktop = 2;
-	optional bool tablet = 3;
-}
-
-message Presence {
-	optional bool reachable = 1;
-	optional bool available = 2;
-	optional DeviceStatus device_status = 6;
-	optional MoodSetting mood_setting = 9;
-}
-
-message PresenceResult {
-	optional ParticipantId user_id = 1;
-	optional Presence presence = 2;
-}
-
-message ClientIdentifier {
-	optional string resource = 1;
-	optional string header_id = 2;
-}
-
-message ClientPresenceState {
-	optional ClientIdentifier identifier = 1;
-	optional ClientPresenceStateType state = 2;
-}
-
-message UserEventState {
-	optional ParticipantId user_id = 1;
-	optional string client_generated_id = 2;
-	optional NotificationLevel notification_level = 3;
-}
-
-message Formatting {
-	optional bool bold = 1;
-	optional bool italic = 2;
-	optional bool strikethrough = 3;
-	optional bool underline = 4;
-}
-
-message LinkData {
-	optional string link_target = 1;
-}
-
-message Segment {
-	required SegmentType type = 1;
-	optional string text = 2;
-	optional Formatting formatting = 3;
-	optional LinkData link_data = 4;
-}
-
 message Thumbnail {
 	optional string url = 1;
 	optional string image_url = 4;
@@ -780,15 +781,6 @@ message EmbedItem {
 	optional string id = 2;
 	optional PlusPhoto plus_photo = 27639957;
 	optional Place place = 35825640;
-}
-
-message Attachment {
-	optional EmbedItem embed_item = 1;
-}
-
-message MessageContent {
-	repeated Segment segment = 1;
-	repeated Attachment attachment = 2;
 }
 
 message EventAnnotation {
