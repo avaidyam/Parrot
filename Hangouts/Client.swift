@@ -276,9 +276,9 @@ public class Client : ChannelDelegate {
 			return
 		}
 		
-		guard self.email != nil else {
+		if self.email == nil {
 			self.getSelfInfo {
-				self.email = $0.self_entity.properties.email[0]
+				self.email = $0!.self_entity!.properties.emails[0] as! String
 			}
 		}
 		
@@ -514,11 +514,14 @@ public class Client : ChannelDelegate {
     }
 	
 	// FIXME: Doesn't return actual data, only calls cb.
-	public func getSelfInfo(cb: (() -> Void)? = nil) {
-		self.request("contacts/getselfinfo", body: [
-			self.getRequestHeader(),
-			[], []
-		]) { r in cb?()}
+	public func getSelfInfo(cb: ((response: GetSelfInfoResponse?) -> Void)) {
+		let data = [
+			self.getRequestHeader()
+		]
+		self.request("contacts/getselfinfo", body: data, use_json: false) { r in
+			let obj: GetSelfInfoResponse? = PBLiteSerialization.parseProtoJSON(r.data!)
+			cb(response: obj!)
+		}
 	}
 	
 	// Set focus (occurs whenever you give focus to a client).

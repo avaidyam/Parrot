@@ -165,8 +165,7 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 		
 		var self_entity = ENTITY()
 		client.getSelfInfo {
-			// FIXME
-			//self_entity = $0.self_entity
+			self_entity = $0!.self_entity!
 		}
 		
 		let userList = UserList(client: client, self_entity: self_entity, entities: required_entities, conv_parts: conv_part_list)

@@ -748,6 +748,36 @@ public class SyncRecentConversationsResponse : Message {
 	public var conversation_state = [CONVERSATION_STATE]()
 }
 
+@objc(ConfigurationBit)
+public class ConfigurationBit : Message {
+	public var configuration_bit_type: ConfigurationBitType?
+	public var value: NSNumber?
+}
+
+// REORDER!
+@objc(GetSelfInfoResponse)
+public class GetSelfInfoResponse : Message {
+	public var response_header: RESPONSE_HEADER?
+	public var self_entity: ENTITY?
+	public var is_known_minor: NSNumber?
+	public var field4: AnyObject?
+	public var dnd_state: DO_NOT_DISTURB_SETTING?
+	public var desktop_off_setting: AnyObject?//DESKTOP_OFF_SETTING?
+	public var phone_data: AnyObject?//PHONE_DATA?
+	public var configuration_bit = [ConfigurationBit]()
+	public var desktop_off_state: AnyObject?//DESKTOP_OFF_STATE?
+	public var google_plus_user: NSNumber?
+	public var desktop_sound_setting: AnyObject?//DesktopSoundSetting?
+	public var rich_presence_state: AnyObject?//RichPresenceState?
+	public var field13: AnyObject?
+	public var field14: AnyObject?
+	public var field15: AnyObject?
+	public var field16: AnyObject?
+	public var field17: AnyObject?
+	public var field18: AnyObject?
+	public var default_country: AnyObject?//Country?
+}
+
 /* TEMPLATE:
 @objc(XYZ)
 public class XYZ : Message {
@@ -982,11 +1012,6 @@ message EventContinuationToken {
 
 message EntityLookupSpec {
 	optional string gaia_id = 1;
-}
-
-message ConfigurationBit {
-	optional ConfigurationBitType configuration_bit_type = 1;
-	optional bool value = 2;
 }
 
 message RichPresenceState {
@@ -1304,21 +1329,6 @@ message GetSuggestedEntitiesResponse {
 
 message GetSelfInfoRequest {
 	optional RequestHeader request_header = 1;
-}
-
-message GetSelfInfoResponse {
-	optional ResponseHeader response_header = 1;
-	optional Entity self_entity = 2;
-	optional bool is_known_minor = 3;
-	optional DoNotDisturbSetting dnd_state = 5;
-	optional DesktopOffSetting desktop_off_setting = 6;
-	optional PhoneData phone_data = 7;
-	repeated ConfigurationBit configuration_bit = 8;
-	optional DesktopOffState desktop_off_state = 9;
-	optional bool google_plus_user = 10;
-	optional DesktopSoundSetting desktop_sound_setting = 11;
-	optional RichPresenceState rich_presence_state = 12;
-	optional Country default_country = 19;
 }
 
 message QueryPresenceRequest {
