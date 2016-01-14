@@ -557,7 +557,7 @@ public class Client : ChannelDelegate {
 		}
 	}
 	
-	// FIXME: Doesn't return actual data, only calls cb.
+	/* TODO: Does not return data, only calls the callback. */
 	public func queryPresence(chat_id: String, cb: (() -> Void)? = nil) {
 		self.request("contacts/getselfinfo", body: [
 			self.getRequestHeader(),
@@ -691,28 +691,23 @@ public class Client : ChannelDelegate {
     }
 	
 	
-	/* TODO: Does not return data, and get rid of a/b/c/d variables. */
+	/* TODO: Does not return data, only calls the callback. */
 	public func setPresence(online: Bool, mood: String?, cb: (() -> Void)? = nil) {
-		
-		//client_presence_state:
-		// 40 => DESKTOP_ACTIVE
-		// 30 => DESKTOP_IDLE
-		// 1 => nil
-		let a = online ? 1 : 40
-		let b = !online
-		let c = mood ?? NSNull()
-		let d = 720 // timeout_secs timeout in seconds for this presence
-		
 		let data = [
 			self.getRequestHeader(),
 			[
-				d,
-				a
+				720, // timeout_secs timeout in seconds for this presence
+				
+				//client_presence_state:
+				// 40 => DESKTOP_ACTIVE
+				// 30 => DESKTOP_IDLE
+				// 1 => nil
+				(online ? 1 : 40)
 			],
 			NSNull(),
 			NSNull(),
-			[b], // True if going offline, False if coming online
-			[c] // UTF-8 smiley like 0x1f603
+			[!online], // True if going offline, False if coming online
+			[mood ?? NSNull()] // UTF-8 smiley like 0x1f603
 		]
 		self.request("contacts/getselfinfo", body: data) { r in cb?()}
 		// result['response_header']['status']
