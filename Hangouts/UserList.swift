@@ -102,6 +102,7 @@ public class UserList : NSObject {
 // The initial data contains the user's contacts, but there may be conversations
 // containing users that are not in the contacts. This function takes care of
 // requesting data for those users and constructing the UserList.
+/* INITIALDATA
 public func buildUserList(client: Client, initial_data: InitialData, cb: (UserList) -> Void) {
 	let all_entities = initial_data.entities + [initial_data.self_entity]
 	let present_user_ids = Set(all_entities.map {
@@ -133,4 +134,52 @@ public func buildUserList(client: Client, initial_data: InitialData, cb: (UserLi
 			conv_parts: initial_data.conversation_participants
 		))
 	}
+}
+*/
+
+public func buildUserConversationList(client: Client, cb: (UserList, ConversationList) -> Void) {
+	
+	// Retrieve recent conversations so we can preemptively look up their participants.
+	
+	/*
+	sync_recent_conversations_response = (
+	yield from client.syncrecentconversations()
+	)
+	conv_states = sync_recent_conversations_response.conversation_state
+	sync_timestamp = parsers.from_timestamp(
+	sync_recent_conversations_response.sync_timestamp
+	)
+	
+	// Retrieve entities participating in all conversations.
+	required_user_ids = set()
+	for conv_state in conv_states:
+	required_user_ids |= {
+		user.UserID(chat_id=part.id.chat_id, gaia_id=part.id.gaia_id)
+		for part in conv_state.conversation.participant_data
+	}
+	required_entities = []
+	if required_user_ids:
+	logger.debug('Need to request additional users: {}'
+	.format(required_user_ids))
+	try:
+	response = yield from client.getentitybyid(
+	[user_id.gaia_id for user_id in required_user_ids]
+	)
+	required_entities = list(response.entity)
+	except exceptions.NetworkError as e:
+	logger.warning('Failed to request missing users: {}'.format(e))
+	
+	// Build list of conversation participants.
+	conv_part_list = []
+	for conv_state in conv_states:
+	conv_part_list.extend(conv_state.conversation.participant_data)
+	
+	// Retrieve self entity.
+	get_self_info_response = yield from client.getselfinfo()
+	self_entity = get_self_info_response.self_entity
+	
+	userList = UserList(client, self_entity, required_entities, conv_part_list)
+	conversationList = ConversationList(client, conv_states, user_list, sync_timestamp)
+	cb(userList, conversationList)
+	*/
 }

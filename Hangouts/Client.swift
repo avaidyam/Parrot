@@ -3,9 +3,12 @@ import Alamofire
 
 public let ORIGIN_URL = "https://talkgadget.google.com"
 public let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
+
+/* INITIALDATA
 public let PVT_TOKEN_URL = "https://talkgadget.google.com/talkgadget/_/extension-start"
 public let CHAT_INIT_URL = "https://talkgadget.google.com/u/0/talkgadget/_/chat"
 public let CHAT_INIT_REGEX = "(?:<script>AF_initDataCallback\\((.*?)\\);</script>)"
+*/
 
 // Timeout to send for setactiveclient requests:
 public let ACTIVE_TIMEOUT_SECS = 120
@@ -13,6 +16,7 @@ public let ACTIVE_TIMEOUT_SECS = 120
 // Minimum timeout between subsequent setactiveclient requests:
 public let SETACTIVECLIENT_LIMIT_SECS = 60
 
+/*
 public typealias InitialData = (
 	conversation_states: [CONVERSATION_STATE],
 	self_entity: ENTITY,
@@ -20,16 +24,20 @@ public typealias InitialData = (
 	conversation_participants: [CONVERSATION_PARTICIPANT_DATA],
 	sync_timestamp: NSDate?
 )
+*/
 
 public protocol ClientDelegate {
-    func clientDidConnect(client: Client, initialData: InitialData)
+    func clientDidConnect(client: Client)
+	/* INITIALDATA
+	, initialData: InitialData)
+	*/
     func clientDidDisconnect(client: Client)
     func clientDidReconnect(client: Client)
     func clientDidUpdateState(client: Client, update: STATE_UPDATE)
 }
 
 public func generateClientID() -> Int {
-    return Int(arc4random_uniform(4294967295))
+    return Int(arc4random_uniform(2^32))
 }
 
 // cleaner code pls.
@@ -45,38 +53,45 @@ public class Client : ChannelDelegate {
 	public let session: NSURLSession
     public var delegate: ClientDelegate?
 
+	/*
     public var CHAT_INIT_PARAMS: Dictionary<String, AnyObject?> = [
         "prop": "aChromeExtension",
         "fid": "gtn-roster-iframe-id",
         "ec": "[\"ci:ec\",true,true,false]",
         "pvt": nil, // Populated later
-    ]
+    ]*/
 	
 	public init(configuration: NSURLSessionConfiguration) {
 		session = NSURLSession(configuration: configuration,
 			delegate: Manager.SessionDelegate(), delegateQueue: nil)
     }
 
-    public var initial_data: InitialData?
     public var channel: Channel?
-
+	
+	/* INITIALDATA
+	public var initial_data: InitialData?
     public var api_key: String?
-    public var email: String?
     public var header_date: String?
     public var header_version: String?
     public var header_id: String?
+	*/
+	
+	public var email: String?
     public var client_id: String?
 
     public var last_active_secs: NSNumber? = 0
     public var active_client_state: ActiveClientState?
 
     public func connect() {
-        self.initialize_chat { (id: InitialData?) in
+		/* INITIALDATA
+		self.initialize_chat { (id: InitialData?) in
             self.initial_data = id
-            self.channel = Channel(session: self.session)
-            self.channel?.delegate = self
-            self.channel?.listen()
-        }
+		}
+		*/
+		
+		self.channel = Channel(session: self.session)
+		self.channel?.delegate = self
+		self.channel?.listen()
     }
 	
 	// Request push channel creation and initial chat data.
@@ -86,7 +101,8 @@ public class Client : ChannelDelegate {
 	// the data.
 	// We first need to fetch the 'pvt' token, which is required for the
 	// initialization request (otherwise it will return 400).
-    public func initialize_chat(cb: (data: InitialData?) -> Void) {
+	/* INITIALDATA
+	public func initialize_chat(cb: (data: InitialData?) -> Void) {
         let prop = (CHAT_INIT_PARAMS["prop"] as! String).encodeURL()
         let fid = (CHAT_INIT_PARAMS["fid"] as! String).encodeURL()
         let ec = (CHAT_INIT_PARAMS["ec"] as! String).encodeURL()
@@ -185,7 +201,9 @@ public class Client : ChannelDelegate {
 			}
 		}
     }
+	*/
 
+	/* INITIALDATA
     private func getRequestHeader() -> NSArray {
         return [
             [6, 3, self.header_version!, self.header_date!],
@@ -194,9 +212,17 @@ public class Client : ChannelDelegate {
             "en"
         ]
     }
-
+	*/
+	
+	private func getRequestHeader() -> NSArray {
+		return []
+	}
+	
     public func channelDidConnect(channel: Channel) {
-        delegate?.clientDidConnect(self, initialData: initial_data!)
+        delegate?.clientDidConnect(self)
+		/* INITIALDATA
+		, initialData: initial_data!)
+		*/
     }
 
     public func channelDidDisconnect(channel: Channel) {
@@ -275,7 +301,9 @@ public class Client : ChannelDelegate {
         cb: (Result) -> Void
     ) {
         let params = [
-            "key": self.api_key!,
+			/* INITIALDATA
+			"key": self.api_key!,
+			*/
             "alt": use_json ? "json" : "protojson",
         ]
         let url = NSURL(string: (path + "?" + params.encodeURL()))!

@@ -161,9 +161,15 @@ public class ConversationList : ClientDelegate {
 
     //  MARK: ClientDelegate
 
+	/* INITIALDATA
     public func clientDidConnect(client: Client, initialData: InitialData) {
         sync()
     }
+	*/
+	
+	public func clientDidConnect(client: Client) {
+		sync()
+	}
 
     public func clientDidDisconnect(client: Client) {
 		

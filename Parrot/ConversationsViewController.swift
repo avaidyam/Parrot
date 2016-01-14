@@ -65,6 +65,8 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
 	}
 	
+	var userList: UserList? // FIXME
+	
     var conversationList: ConversationList? {
         didSet {
             conversationList?.delegate = self
@@ -74,6 +76,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
         }
     }
 
+	/* INITIALDATA
     func clientDidConnect(client: Client, initialData: InitialData) {
 		buildUserList(client, initial_data: initialData) { user_list in
             self.conversationList = ConversationList(
@@ -89,7 +92,21 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 				self.tableView.scrollRowToVisible(0)
 			}
         }
-    }
+	}
+	*/
+	
+	func clientDidConnect(client: Client) {
+		buildUserConversationList(client) { (userList, conversationList) in
+			self.userList = userList
+			self.conversationList = conversationList
+			
+			Dispatch.main().add {
+				self.tableView.reloadData()
+				self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
+				self.tableView.scrollRowToVisible(0)
+			}
+		}
+	}
 
     func clientDidDisconnect(client: Client) {
 
