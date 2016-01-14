@@ -128,7 +128,8 @@ public class Conversation {
 	// takes precedence and supplied image_id will be ignored)
 	// Send messages with OTR status matching the conversation's status.
     public func sendMessage(segments: [ChatMessageSegment],
-        image_file: String? = nil,
+		image_data: NSData? = nil,
+		image_name: String? = nil,
 		image_id: String? = nil,
 		image_user_id: String? = nil,
         cb: (() -> Void)? = nil
@@ -136,8 +137,8 @@ public class Conversation {
         let otr_status = (is_off_the_record ? OffTheRecordStatus.OFF_THE_RECORD : OffTheRecordStatus.ON_THE_RECORD)
 
 		// TODO: Fix the conditionality here.
-        if let _ = image_file {
-			client.uploadImage(image_file!, filename: nil) {
+        if let image_data = image_data, image_name = image_name {
+			client.uploadImage(image_data, filename: image_name) { photoID in
 				self.client.sendChatMessage(self.id,
 					segments: segments.map { $0.serialize() },
 					image_id: image_id,
