@@ -215,7 +215,12 @@ public class Client : ChannelDelegate {
 	*/
 	
 	private func getRequestHeader() -> NSArray {
-		return []
+		return [
+			[NSNull(), NSNull(), "parrot-0.1", NSNull(), NSNull(), NSNull()],
+			[NSNull(), NSNull()],
+			NSNull(),
+			"en"
+		]
 	}
 	
     public func channelDidConnect(channel: Channel) {
@@ -266,6 +271,17 @@ public class Client : ChannelDelegate {
 	// interacting with this client. This method may be called very
 	// frequently, and it will only make a request when necessary.
     public func setActive() {
+		guard self.client_id != nil else {
+			print("Cannot set active client until client_id is received")
+			return
+		}
+		
+		guard self.email != nil else {
+			self.getSelfInfo {
+				self.email = $0.self_entity.properties.email[0]
+			}
+		}
+		
         let isActive = (active_client_state == ActiveClientState.IS_ACTIVE_CLIENT)
         let time_since_active = (NSDate().timeIntervalSince1970 - last_active_secs!.doubleValue)
         let timed_out = time_since_active > Double(SETACTIVECLIENT_LIMIT_SECS)
@@ -617,8 +633,27 @@ public class Client : ChannelDelegate {
     //                                       [self.getRequestHeader()])
     //        return json.loads(res.body.decode())
 	
+	// List the contents of recent conversations, including messages.
+	public func syncRecentConversations(maxConversations: Int = 100, maxEventsPer: Int = 1,
+		cb: ((response: SyncRecentConversationsResponse?) -> Void)) {
+			
+		let data = [
+			self.getRequestHeader(),
+			NSNull(),
+			maxConversations,
+			maxEventsPer,
+			NSNull(),
+			[1]
+		]
+			
+		self.request("conversations/syncrecentconversations", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
+		}
+	}
+	
 	// Set the name of a conversation.
-    public func setChatName(conversation_id: String, name: String, cb: (() -> Void)? = nil) {
+	public func setChatName(conversation_id: String, name: String, cb: (() -> Void)? = nil) {
+		
         let client_generated_id = generateClientID()
         let data = [
             self.getRequestHeader(),

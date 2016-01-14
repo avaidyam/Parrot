@@ -740,6 +740,14 @@ public class UserEventState : Message {
 	public var notification_level: NotificationLevel?
 }
 
+// REORDER!
+@objc(SyncRecentConversationsResponse)
+public class SyncRecentConversationsResponse : Message {
+	public var response_header: RESPONSE_HEADER?
+	public var sync_timestamp: NSNumber?
+	public var conversation_state = [CONVERSATION_STATE]()
+}
+
 /* TEMPLATE:
 @objc(XYZ)
 public class XYZ : Message {

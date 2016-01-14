@@ -140,46 +140,37 @@ public func buildUserList(client: Client, initial_data: InitialData, cb: (UserLi
 public func buildUserConversationList(client: Client, cb: (UserList, ConversationList) -> Void) {
 	
 	// Retrieve recent conversations so we can preemptively look up their participants.
-	
-	/*
-	sync_recent_conversations_response = (
-	yield from client.syncrecentconversations()
-	)
-	conv_states = sync_recent_conversations_response.conversation_state
-	sync_timestamp = parsers.from_timestamp(
-	sync_recent_conversations_response.sync_timestamp
-	)
-	
-	// Retrieve entities participating in all conversations.
-	required_user_ids = set()
-	for conv_state in conv_states:
-	required_user_ids |= {
-		user.UserID(chat_id=part.id.chat_id, gaia_id=part.id.gaia_id)
-		for part in conv_state.conversation.participant_data
+	client.syncRecentConversations { response in
+		let conv_states = response!.conversation_state
+		let sync_timestamp = from_timestamp(response!.sync_timestamp)
+		
+		var required_user_ids = Set<UserID>()
+		for conv_state in conv_states {
+			required_user_ids = required_user_ids.union(Set(conv_state.conversation.participant_data.map {
+				UserID(chat_id: $0.id.chat_id as! String, gaia_id: $0.id.gaia_id as! String)
+			}))
+		}
+		
+		var required_entities = Array<ENTITY>()
+		if required_user_ids.count > 0 {
+			client.getEntitiesByID(required_user_ids.map { $0.chat_id }) { resp in
+				required_entities = resp.entities
+			}
+		}
+		
+		var conv_part_list = Array<CONVERSATION_PARTICIPANT_DATA>()
+		for conv_state in conv_states {
+			conv_part_list.appendContentsOf(conv_state.conversation.participant_data)
+		}
+		
+		var self_entity = ENTITY()
+		client.getSelfInfo {
+			// FIXME
+			//self_entity = $0.self_entity
+		}
+		
+		let userList = UserList(client: client, self_entity: self_entity, entities: required_entities, conv_parts: conv_part_list)
+		let conversationList = ConversationList(client: client, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
+		cb(userList, conversationList)
 	}
-	required_entities = []
-	if required_user_ids:
-	logger.debug('Need to request additional users: {}'
-	.format(required_user_ids))
-	try:
-	response = yield from client.getentitybyid(
-	[user_id.gaia_id for user_id in required_user_ids]
-	)
-	required_entities = list(response.entity)
-	except exceptions.NetworkError as e:
-	logger.warning('Failed to request missing users: {}'.format(e))
-	
-	// Build list of conversation participants.
-	conv_part_list = []
-	for conv_state in conv_states:
-	conv_part_list.extend(conv_state.conversation.participant_data)
-	
-	// Retrieve self entity.
-	get_self_info_response = yield from client.getselfinfo()
-	self_entity = get_self_info_response.self_entity
-	
-	userList = UserList(client, self_entity, required_entities, conv_part_list)
-	conversationList = ConversationList(client, conv_states, user_list, sync_timestamp)
-	cb(userList, conversationList)
-	*/
 }
