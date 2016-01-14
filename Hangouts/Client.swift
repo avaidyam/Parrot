@@ -278,7 +278,7 @@ public class Client : ChannelDelegate {
 		
 		if self.email == nil {
 			self.getSelfInfo {
-				self.email = $0!.self_entity!.properties.emails[0] as! String
+				self.email = $0!.self_entity!.properties.emails[0] as? String
 			}
 		}
 		
@@ -513,7 +513,6 @@ public class Client : ChannelDelegate {
         ]) { r in self.verifyResponseOK(r.data!); cb?() }
     }
 	
-	// FIXME: Doesn't return actual data, only calls cb.
 	public func getSelfInfo(cb: ((response: GetSelfInfoResponse?) -> Void)) {
 		let data = [
 			self.getRequestHeader()
