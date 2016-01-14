@@ -113,11 +113,15 @@ public class Client : ChannelDelegate {
 			
 			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 			self.session.request(request) {
-				guard let data = $0.data else {
-					print("Request failed with error: \($0.error!)")
-					return
-				}
 				
+				// Ensure we have a proper HTTP status code and data to work with.
+				// Once met, we can use the string body for parsing.
+				guard let data = $0.data else {
+					print("Request returned no data with error: \($0.error!)"); return
+				}
+				if let res = $0.response as? NSHTTPURLResponse where res.statusCode >= 400 {
+					print("Request failed with HTTP status \(res.statusCode)."); return
+				}
 				let body = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
 				
 				// Parse the response by using a regex to find all the JS objects, and
@@ -126,11 +130,12 @@ public class Client : ChannelDelegate {
 				var data_dict = Dictionary<String, AnyObject?>()
 				let regex = Regex(CHAT_INIT_REGEX, options: [.CaseInsensitive, .DotMatchesLineSeparators])
 				for data in regex.match(body) {
-					/*if data.rangeOfString("data:function") == nil {
+					/*
+					if data.rangeOfString("data:function") == nil {
 						let dict = evalDict(data)!
 						data_dict[dict["key"] as! String] = dict["data"]
-					} else {
-					}*/
+					} else { }
+					*/
 					var cleanedData = data
 					cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
 						"data:function(){return", withString: "data:")

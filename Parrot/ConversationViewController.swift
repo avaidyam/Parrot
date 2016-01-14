@@ -8,6 +8,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	@IBOutlet var messagesView: MessagesView!
     @IBOutlet weak var messageTextField: NSTextField!
 	@IBOutlet var statusView: NSTextField!
+	
 	var _note: TokenObserver!
 	var popover: NSPopover!
 	var conversation: Conversation? {
