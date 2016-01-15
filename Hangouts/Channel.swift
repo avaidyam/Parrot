@@ -31,7 +31,6 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
     public var gSessionIDParam: String? = nil
 
     public static let MAX_RETRIES = 5       // maximum number of times to retry after a failure
-    public var retries = MAX_RETRIES // number of remaining retries
     public var need_new_sid = true   // whether a new SID is needed
 
 	public let session: NSURLSession
@@ -40,20 +39,25 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 	// FIXME: REMOVE THIS!
 	public let manager: Alamofire.Manager
 	
-	public init(session: NSURLSession) {
-		self.session = session
+	public init(configuration: NSURLSessionConfiguration) {
+		session = NSURLSession(configuration: configuration,
+			delegate: Manager.SessionDelegate(), delegateQueue: nil)
 		self.manager = Manager(session: session,
 			delegate: (session.delegate as! Manager.SessionDelegate))!
-    }
+	}
 	
 	// Listen for messages on the backwards channel.
 	// This method only returns when the connection has been closed due to an error.
-    public func listen() {
-        while self.retries >= 0 {
+	public func listen() {
+		var retries = Channel.MAX_RETRIES
+		
+        while retries >= 0 {
             // After the first failed retry, back off exponentially longer after
             // each attempt.
-            if self.retries <= Channel.MAX_RETRIES {
-                let backoff_seconds = UInt64(2 << (Channel.MAX_RETRIES - self.retries))
+			
+			/* TODO: Use `retries + 1 < Channel.MAX_RETRIES`? */
+            if retries <= Channel.MAX_RETRIES {
+                let backoff_seconds = UInt64(2 << (Channel.MAX_RETRIES - retries))
                 print("Backing off for \(backoff_seconds) seconds")
                 usleep(useconds_t(backoff_seconds * USEC_PER_SEC))
             }
@@ -87,11 +91,12 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 			*/
 			
 			// The connection closed successfully, so reset the number of retries.
-			self.retries = Channel.MAX_RETRIES
+			retries = Channel.MAX_RETRIES
         }
 	}
 	
 	/* TODO: Remove the below, since sendMaps() takes care of everything. */
+	/*
 	// Subscribes the channel to receive relevant events.
 	// Only needs to be called when a new channel (SID/gsessionid) is opened.
 	private func subscribe(cb: (() -> Void)?) {
@@ -131,6 +136,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 			}
 		}
 	}
+	*/
 	
 	// Sends a request to the server containing maps (dicts).
 	public func sendMaps(var mapList: [String: [String: AnyObject]]?, cb: (NSData -> Void)? = nil) {

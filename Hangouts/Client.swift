@@ -47,7 +47,7 @@ var session: NSURLSession? = nil
 
 public class Client : ChannelDelegate {
 	
-	public let session: NSURLSession
+	public let config: NSURLSessionConfiguration
 	public var delegate: ClientDelegate?
 	public var channel: Channel?
 	
@@ -73,8 +73,7 @@ public class Client : ChannelDelegate {
     ]*/
 	
 	public init(configuration: NSURLSessionConfiguration) {
-		session = NSURLSession(configuration: configuration,
-			delegate: Manager.SessionDelegate(), delegateQueue: nil)
+		self.config = configuration
     }
 	
 	// Establish a connection to the chat server.
@@ -85,7 +84,7 @@ public class Client : ChannelDelegate {
 		}
 		*/
 		
-		self.channel = Channel(session: self.session)
+		self.channel = Channel(configuration: self.config)
 		self.channel?.delegate = self
 		self.channel?.listen()
     }
@@ -390,7 +389,7 @@ public class Client : ChannelDelegate {
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")
 		
-		self.session.request(request) {
+		self.channel?.session.request(request) {
 			guard let _ = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return
