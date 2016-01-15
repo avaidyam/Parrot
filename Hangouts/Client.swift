@@ -475,15 +475,19 @@ public class Client : ChannelDelegate {
 	// Delete one-to-one conversation.
 	// conversation_id must be a valid conversation ID.
 	public func deleteConversation(conversation_id: String, cb: (() -> Void)? = nil) {
-		self.request("conversations/deleteconversation", body: [
+		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
 			
 			// Not sure what timestamp should be there, last time I have tried
 			// it Hangouts client in GMail sent something like now() - 5 hours
-			to_timestamp(NSDate()), // TODO: This should be in UTC
-			NSNull(), []
-			]) { r in self.verifyResponseOK(r.data!); cb?() }
+			to_timestamp(NSDate()), /* TODO: This should be in UTC form. */
+			NSNull(),
+			[]
+		]
+		self.request("conversations/deleteconversation", body: data) { r in
+			self.verifyResponseOK(r.data!); cb?()
+		}
 	}
 	
 	//    @asyncio.coroutine
@@ -515,33 +519,40 @@ public class Client : ChannelDelegate {
 		conversation_id: String,
 		event_timestamp: NSDate,
 		max_events: Int = 50,
-		cb: (GET_CONVERSATION_RESPONSE) -> Void
-		) {
-			
-			self.request("conversations/getconversation", body: [
-				self.getRequestHeader(),
-				[[conversation_id], [], []],  // conversationSpec
-				false,  // includeConversationMetadata
-				true,  // includeEvents
-				NSNull(),  // ???
-				max_events,  // maxEventsPerConversation
-				
-				// eventContinuationToken (specifying timestamp is sufficient)
-				[
-					NSNull(),  // eventId
-					NSNull(),  // storageContinuationToken
-					to_timestamp(event_timestamp),  // eventTimestamp
-				]
-				], use_json: false) { r in
-					let str = (NSString(data: r.data!, encoding: NSUTF8StringEncoding)! as String)
-					let result = evalArray(str) as! NSArray
-					cb(PBLiteSerialization.parseArray(GET_CONVERSATION_RESPONSE.self, input: result)!)
-			}
+		cb: (GET_CONVERSATION_RESPONSE) -> Void)
+	{
+		let data = [
+			self.getRequestHeader(),
+			[
+				[conversation_id],
+				[],
+				[]
+			],  // conversationSpec
+			false,  // includeConversationMetadata
+			true,  // includeEvents
+			NSNull(),  // ???
+			max_events,  // maxEventsPerConversation
+			[
+				NSNull(),  // eventId
+				NSNull(),  // storageContinuationToken
+				to_timestamp(event_timestamp),  // eventTimestamp
+			] // eventContinuationToken (specifying timestamp is sufficient)
+		]
+		
+		self.request("conversations/getconversation", body: data, use_json: false) { r in
+			let str = (NSString(data: r.data!, encoding: NSUTF8StringEncoding)! as String)
+			let result = evalArray(str) as! NSArray
+			cb(PBLiteSerialization.parseArray(GET_CONVERSATION_RESPONSE.self, input: result)!)
+		}
 	}
 	
 	// Return information about a list of contacts.
 	public func getEntitiesByID(chat_id_list: [String], cb: (GET_ENTITY_BY_ID_RESPONSE) -> Void) {
-		let data = [self.getRequestHeader(), NSNull(), chat_id_list.map { [$0] }]
+		let data = [
+			self.getRequestHeader(),
+			NSNull(),
+			chat_id_list.map { [$0] }
+		]
 		self.request("contacts/getentitybyid", body: data, use_json: false) { r in
 			let obj: GET_ENTITY_BY_ID_RESPONSE? = PBLiteSerialization.parseProtoJSON(r.data!)
 			cb(obj!)
@@ -553,41 +564,51 @@ public class Client : ChannelDelegate {
 			self.getRequestHeader()
 		]
 		self.request("contacts/getselfinfo", body: data, use_json: false) { r in
-			let obj: GetSelfInfoResponse? = PBLiteSerialization.parseProtoJSON(r.data!)
-			cb(response: obj!)
+			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
 		}
 	}
 	
 	/* TODO: Does not return data, only calls the callback. */
 	public func queryPresence(chat_id: String, cb: (() -> Void)? = nil) {
-		self.request("contacts/getselfinfo", body: [
+		let data = [
 			self.getRequestHeader(),
-			[
-				[chat_id]
-			],
+			[[chat_id]],
 			[1, 2, 5, 7, 8]
-			]) { r in cb?()}
+		]
+		self.request("presence/querypresence", body: data) { r in cb?()}
 	}
 	
 	// Leave group conversation.
 	// conversation_id must be a valid conversation ID.
-	public func removeuser(conversation_id: String, cb: (() -> Void)? = nil) {
-		self.request("conversations/removeuser", body: [
+	public func removeUser(conversation_id: String, cb: (() -> Void)? = nil) {
+		let data = [
 			self.getRequestHeader(),
-			NSNull(), NSNull(), NSNull(),
-			[[conversation_id], generateClientID(), 2],
-			]) { r in self.verifyResponseOK(r.data!); cb?() }
+			NSNull(),
+			NSNull(),
+			NSNull(),
+			[
+				[conversation_id],
+				generateClientID(),
+				2
+			],
+		]
+		self.request("conversations/removeuser", body: data) { r in
+			self.verifyResponseOK(r.data!); cb?()
+		}
 	}
 	
 	// Set the name of a conversation.
 	public func renameConversation(conversation_id: String, name: String, cb: (() -> Void)? = nil) {
-		let client_generated_id = generateClientID()
 		let data = [
 			self.getRequestHeader(),
 			NSNull(),
 			name,
 			NSNull(),
-			[[conversation_id], client_generated_id, 1]
+			[
+				[conversation_id],
+				generateClientID(),
+				1
+			]
 		]
 		self.request("conversations/renameconversation", body: data) {
 			r in self.verifyResponseOK(r.data!); cb?()
@@ -639,11 +660,15 @@ public class Client : ChannelDelegate {
 			}
 			
 			let client_generated_id = generateClientID()
-			let body = [
+			let data = [
 				self.getRequestHeader(),
-				NSNull(), NSNull(), NSNull(), [],
+				NSNull(),
+				NSNull(),
+				NSNull(),
+				[],
 				[
-					segments, []
+					segments,
+					[]
 				],
 				a, // it's too long for one line!
 				[
@@ -651,17 +676,20 @@ public class Client : ChannelDelegate {
 					client_generated_id,
 					otr_status.representation,
 				],
-				NSNull(), NSNull(), NSNull(), []
+				NSNull(),
+				NSNull(),
+				NSNull(),
+				[]
 			]
 			
 			// sendchatmessage can return 200 but still contain an error
-			self.request("conversations/sendchatmessage", body: body) {
+			self.request("conversations/sendchatmessage", body: data) {
 				r in self.verifyResponseOK(r.data!); cb?()
 			}
 	}
 	
 	public func setActiveClient(is_active: Bool, timeout_secs: Int, cb: (() -> Void)? = nil) {
-		let data: Array<AnyObject> = [
+		let data = [
 			self.getRequestHeader(),
 			is_active, // whether the client is active or not
 			"\(self.email!)/" + (self.client_id ?? ""), // full_jid: user@domain/resource
@@ -675,20 +703,26 @@ public class Client : ChannelDelegate {
 	}
 	
 	public func setConversationNotificationLevel(conversation_id: String, level: Int = 0, cb: (() -> Void)? = nil) {
-		self.request("conversations/setconversationnotificationlevel", body: [
+		let data = [
 			self.getRequestHeader(),
 			[conversation_id]
-		]){ r in self.verifyResponseOK(r.data!); cb?() }
+		]
+		self.request("conversations/setconversationnotificationlevel", body: data){ r in
+			self.verifyResponseOK(r.data!); cb?()
+		}
 	}
 	
 	// Set focus (occurs whenever you give focus to a client).
     public func setFocus(conversation_id: String, cb: (() -> Void)? = nil) {
-        self.request("conversations/setfocus", body: [
-            self.getRequestHeader(),
-            [conversation_id],
-            1,
-            20
-        ]){ r in self.verifyResponseOK(r.data!); cb?() }
+		let data = [
+			self.getRequestHeader(),
+			[conversation_id],
+			1,
+			20
+		]
+        self.request("conversations/setfocus", body: data) { r in
+			self.verifyResponseOK(r.data!); cb?()
+		}
     }
 	
 	
@@ -710,7 +744,7 @@ public class Client : ChannelDelegate {
 			[!online], // True if going offline, False if coming online
 			[mood ?? NSNull()] // UTF-8 smiley like 0x1f603
 		]
-		self.request("contacts/getselfinfo", body: data) { r in cb?()}
+		self.request("presence/setpresence", body: data) { r in cb?()}
 		// result['response_header']['status']
 	}
 	
@@ -731,7 +765,11 @@ public class Client : ChannelDelegate {
 		let data: NSArray = [
 			self.getRequestHeader(),
 			to_timestamp(timestamp),
-			[], NSNull(), [], false, [],
+			[],
+			NSNull(),
+			[],
+			false,
+			[],
 			1048576 // max_response_size_bytes
 		]
 		self.request("conversations/syncallnewevents", body: data, use_json: false) { r in
@@ -747,27 +785,27 @@ public class Client : ChannelDelegate {
 	// Return info on recent conversations and their events.
 	public func syncRecentConversations(maxConversations: Int = 100, maxEventsPer: Int = 1,
 		cb: ((response: SyncRecentConversationsResponse?) -> Void)) {
-			
-			let data = [
-				self.getRequestHeader(),
-				NSNull(),
-				maxConversations,
-				maxEventsPer,
-				NSNull(),
-				[1]
-			]
-			
-			self.request("conversations/syncrecentconversations", body: data, use_json: false) { r in
-				cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
-			}
+		let data = [
+			self.getRequestHeader(),
+			NSNull(),
+			maxConversations,
+			maxEventsPer,
+			[1]
+		]
+		self.request("conversations/syncrecentconversations", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
+		}
 	}
 	
 	// Update the watermark (read timestamp) for a conversation.
 	public func updateWatermark(conv_id: String, read_timestamp: NSDate, cb: (() -> Void)? = nil) {
-		self.request("conversations/updatewatermark", body: [
+		let data = [
 			self.getRequestHeader(),
 			[conv_id], // conversation_id
 			to_timestamp(read_timestamp), // latest_read_timestamp
-			]) { r in self.verifyResponseOK(r.data!); cb?() }
+		]
+		self.request("conversations/updatewatermark", body: data) { r in
+			self.verifyResponseOK(r.data!); cb?()
+		}
 	}
 }

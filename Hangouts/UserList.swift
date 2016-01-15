@@ -143,9 +143,12 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 	var self_entity = ENTITY()
 	client.getSelfInfo {
 		self_entity = $0!.self_entity!
+		print("selfinfo \($0)")
 		
 		// Retrieve recent conversations so we can preemptively look up their participants.
 		client.syncRecentConversations { response in
+			print("syncrecentconversations \(response)")
+			
 			let conv_states = response!.conversation_state
 			let sync_timestamp = from_timestamp(response!.sync_timestamp)
 			
