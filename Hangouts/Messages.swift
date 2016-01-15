@@ -645,6 +645,7 @@ public class ENTITY_GROUP : Message {
     public var entity = [ENTITY_GROUP_ENTITY]()
 }
 
+/* TODO: This is really a response to some request. */
 @objc(INITIAL_CLIENT_ENTITIES)
 public class INITIAL_CLIENT_ENTITIES : Message {
     public var cgserp: NSString = ""
@@ -660,8 +661,15 @@ public class INITIAL_CLIENT_ENTITIES : Message {
 
 @objc(GET_SELF_INFO_RESPONSE)
 public class GET_SELF_INFO_RESPONSE : Message {
-    public var cgsirp: NSString = ""
-    public var response_header: AnyObject?
+	
+	/* TODO: Retrofit PBLiteSerialization for this case: */
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
+    public var response_header = RESPONSE_HEADER()
     public var self_entity = ENTITY()
 }
 
@@ -676,7 +684,14 @@ public class RESPONSE_HEADER : Message {
 
 @objc(SYNC_ALL_NEW_EVENTS_RESPONSE)
 public class SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
-    public var csanerp: NSString = ""
+	
+	/* TODO: Retrofit PBLiteSerialization for this case: */
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
     public var response_header = RESPONSE_HEADER()
     public var sync_timestamp: NSString = ""
     public var conversation_state = [CONVERSATION_STATE]()
@@ -684,14 +699,28 @@ public class SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
 
 @objc(GET_CONVERSATION_RESPONSE)
 public class GET_CONVERSATION_RESPONSE : Message {
-    public var cgcrp: NSString = ""
+	
+	/* TODO: Retrofit PBLiteSerialization for this case: */
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
     public var response_header = RESPONSE_HEADER()
     public var conversation_state = CONVERSATION_STATE()
 }
 
 @objc(GET_ENTITY_BY_ID_RESPONSE)
 public class GET_ENTITY_BY_ID_RESPONSE : Message {
-    public var cgebirp: NSString = ""
+	
+	/* TODO: Retrofit PBLiteSerialization for this case: */
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
     public var response_header = RESPONSE_HEADER()
     public var entities = [ENTITY]()
 }
@@ -746,9 +775,11 @@ public class UserEventState : Message {
 @objc(SyncRecentConversationsResponse)
 public class SyncRecentConversationsResponse : Message {
 	
-	/* TODO: This is some weird magic voodoo. */
-	// Essentially, it seems without this here, all the fields in the
-	// message are shifted down by one. This shouldn't be the case!
+	/* TODO: Retrofit PBLiteSerialization for this case: */
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the 
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
 	public var field0: AnyObject?
 	
 	public var response_header: RESPONSE_HEADER?
@@ -766,10 +797,11 @@ public class ConfigurationBit : Message {
 @objc(GetSelfInfoResponse)
 public class GetSelfInfoResponse : Message {
 	
-	
-	/* TODO: This is some weird magic voodoo. */
-	// Essentially, it seems without this here, all the fields in the
-	// message are shifted down by one. This shouldn't be the case!
+	/* TODO: Retrofit PBLiteSerialization for this case: */
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
 	public var field0: AnyObject?
 	
 	public var response_header: RESPONSE_HEADER?

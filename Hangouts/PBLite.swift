@@ -48,6 +48,7 @@ public class Message : NSObject {
 		let mirror = Mirror(reflecting: self)
 		var string = "message \(self.dynamicType.description()) {\n"
 		for thing in mirror.children {
+			print("thing \(thing)")
 			string += "\t\(thing.label!) = \(thing.value);\n"
 		}
 		return string + "}\n"

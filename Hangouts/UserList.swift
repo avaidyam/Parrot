@@ -152,6 +152,16 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 		//
 		// from_timestamp(response!.response_header!.current_server_time)
 		
+		/*
+		print("got \(response!)")
+		var states = [CONVERSATION_STATE]()
+		for conv_state in conv_states {
+			let res = PBLiteSerialization.parseArray(CONVERSATION_STATE.self, input: conv_state as! NSArray)!
+			print("get res \(res)")
+			states.append(res)
+		}
+		*/
+		
 		var required_user_ids = Set<UserID>()
 		for conv_state in conv_states {
 			
@@ -163,7 +173,7 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 				participants.append(res)
 			}
 			
-			// Now use the mess from above here:
+			//let participants = conv_state.conversation!.participant_data
 			required_user_ids = required_user_ids.union(Set(participants.map {
 				UserID(chat_id: $0.id.chat_id as! String, gaia_id: $0.id.gaia_id as! String)
 			}))
@@ -187,6 +197,7 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 				participants.append(res)
 			}
 			
+			//let participants = conv_state.conversation!.participant_data
 			conv_part_list.appendContentsOf(participants)
 		}
 		
