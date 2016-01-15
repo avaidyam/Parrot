@@ -139,40 +139,66 @@ public func buildUserList(client: Client, initial_data: InitialData, cb: (UserLi
 
 public func buildUserConversationList(client: Client, cb: (UserList, ConversationList) -> Void) {
 	
-	// Let's request our own entity first.
-	var self_entity = ENTITY()
-	client.getSelfInfo {
-		self_entity = $0!.self_entity!
-		print("selfinfo \($0)")
+	// Retrieve recent conversations so we can preemptively look up their participants.
+	client.syncRecentConversations { response in
 		
-		// Retrieve recent conversations so we can preemptively look up their participants.
-		client.syncRecentConversations { response in
-			print("syncrecentconversations \(response)")
+		let conv_states = response!.conversation_state
+		let sync_timestamp = from_timestamp(response!.sync_timestamp)
+		
+		// syncrecentconversations seems to return a sync_timestamp 4 minutes
+		// before the present. To prevent syncallnewevents later breaking
+		// requesting events older than what we already have, use
+		// current_server_time instead. use:
+		//
+		// from_timestamp(response!.response_header!.current_server_time)
+		
+		var required_user_ids = Set<UserID>()
+		for conv_state in conv_states {
 			
-			let conv_states = response!.conversation_state
-			let sync_timestamp = from_timestamp(response!.sync_timestamp)
-			
-			var required_user_ids = Set<UserID>()
-			for conv_state in conv_states {
-				required_user_ids = required_user_ids.union(Set(conv_state.conversation.participant_data.map {
-					UserID(chat_id: $0.id.chat_id as! String, gaia_id: $0.id.gaia_id as! String)
-				}))
+			/* TODO: Somehow, this mess is a workaround for an issue de-serializing the message. */
+			let convs = (conv_state[1][13]) as! [NSArray]
+			var participants = [CONVERSATION_PARTICIPANT_DATA]()
+			for part in convs {
+				let res = PBLiteSerialization.parseArray(CONVERSATION_PARTICIPANT_DATA.self, input: part)!
+				participants.append(res)
 			}
 			
-			var required_entities = Array<ENTITY>()
-			if required_user_ids.count > 0 {
-				client.getEntitiesByID(required_user_ids.map { $0.chat_id }) { resp in
-					required_entities = resp.entities
-				}
+			// Now use the mess from above here:
+			required_user_ids = required_user_ids.union(Set(participants.map {
+				UserID(chat_id: $0.id.chat_id as! String, gaia_id: $0.id.gaia_id as! String)
+			}))
+		}
+		
+		var required_entities = Array<ENTITY>()
+		if required_user_ids.count > 0 {
+			client.getEntitiesByID(required_user_ids.map { $0.chat_id }) { resp in
+				required_entities = resp.entities
+			}
+		}
+		
+		var conv_part_list = Array<CONVERSATION_PARTICIPANT_DATA>()
+		for conv_state in conv_states {
+			
+			/* TODO: Somehow, this mess is a workaround for an issue de-serializing the message. */
+			let convs = (conv_state[1][13]) as! [NSArray]
+			var participants = [CONVERSATION_PARTICIPANT_DATA]()
+			for part in convs {
+				let res = PBLiteSerialization.parseArray(CONVERSATION_PARTICIPANT_DATA.self, input: part)!
+				participants.append(res)
 			}
 			
-			var conv_part_list = Array<CONVERSATION_PARTICIPANT_DATA>()
-			for conv_state in conv_states {
-				conv_part_list.appendContentsOf(conv_state.conversation.participant_data)
-			}
+			conv_part_list.appendContentsOf(participants)
+		}
+		
+		// Let's request our own entity now.
+		var self_entity = ENTITY()
+		client.getSelfInfo {
+			self_entity = $0!.self_entity!
 			
 			let userList = UserList(client: client, self_entity: self_entity, entities: required_entities, conv_parts: conv_part_list)
-			let conversationList = ConversationList(client: client, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
+			
+			/* TODO: Still a little work here. Not sure why [CONVERSATION_STATE] keeps dying. */
+			let conversationList = ConversationList(client: client, conv_states: conv_states as! [CONVERSATION_STATE], user_list: userList, sync_timestamp: sync_timestamp)
 			cb(userList, conversationList)
 		}
 	}

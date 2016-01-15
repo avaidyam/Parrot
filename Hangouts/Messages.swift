@@ -251,7 +251,7 @@ public class ProfileType : Enum {
 @objc(ConfigurationBitType)
 public class ConfigurationBitType : Enum {
 	public static let UNKNOWN: ConfigurationBitType = 0
-	// TODO
+	// TODO, 0 -> 36 bits
 }
 
 @objc(RichPresenceType)
@@ -395,7 +395,9 @@ public class CONVERSATION_INTERNAL_STATE : Message {
 public class CONVERSATION_PARTICIPANT_DATA : Message {
     public var id = PARTICIPANT_ID()
     public var fallback_name: NSString?
-    public var field: AnyObject?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var field5: AnyObject?
 }
 
 @objc(CONVERSATION)
@@ -418,7 +420,9 @@ public class CONVERSATION : Message {
     public var field16: AnyObject?
     public var field17: AnyObject?
     public var network_type = [NetworkType]()
-    public var force_history_state: AnyObject?
+	public var force_history_state: AnyObject?
+	public var field20: AnyObject?
+	public var field21: AnyObject?
 }
 
 //  Unfortunately, some of PBLite's introspection
@@ -590,19 +594,17 @@ public class STATE_UPDATE : Message {
 @objc(EVENT_CONTINUATION_TOKEN)
 public class EVENT_CONTINUATION_TOKEN : Message {
     public var event_id: NSString?
-    public var storage_continuation_token: NSString = ""
-    public var event_timestamp: NSString = ""
+    public var storage_continuation_token: NSString? //bytes
+    public var event_timestamp: NSNumber?
 }
 
 @objc(CONVERSATION_STATE)
 public class CONVERSATION_STATE : Message {
-    public var conversation_id = CONVERSATION_ID()
-    public var conversation = CONVERSATION()
+	public var conversation_id: CONVERSATION_ID?
+	public var conversation: CONVERSATION?
     public var event = [EVENT]()
-    public var field1: AnyObject?
+    public var field4: AnyObject?
     public var event_continuation_token: EVENT_CONTINUATION_TOKEN?
-    //public var field2: AnyObject?
-    //public var field3: AnyObject?
 }
 
 @objc(ENTITY_PROPERTIES)
@@ -743,9 +745,15 @@ public class UserEventState : Message {
 // REORDER!
 @objc(SyncRecentConversationsResponse)
 public class SyncRecentConversationsResponse : Message {
+	
+	/* TODO: This is some weird magic voodoo. */
+	// Essentially, it seems without this here, all the fields in the
+	// message are shifted down by one. This shouldn't be the case!
+	public var field0: AnyObject?
+	
 	public var response_header: RESPONSE_HEADER?
 	public var sync_timestamp: NSNumber?
-	public var conversation_state = [CONVERSATION_STATE]()
+	public var conversation_state = [AnyObject]()//[CONVERSATION_STATE]()
 }
 
 @objc(ConfigurationBit)
@@ -757,25 +765,35 @@ public class ConfigurationBit : Message {
 // REORDER!
 @objc(GetSelfInfoResponse)
 public class GetSelfInfoResponse : Message {
+	
+	
+	/* TODO: This is some weird magic voodoo. */
+	// Essentially, it seems without this here, all the fields in the
+	// message are shifted down by one. This shouldn't be the case!
+	public var field0: AnyObject?
+	
 	public var response_header: RESPONSE_HEADER?
 	public var self_entity: ENTITY?
 	public var is_known_minor: NSNumber?
-	public var field4: AnyObject?
+	public var client_presence: AnyObject? //??
 	public var dnd_state: DO_NOT_DISTURB_SETTING?
 	public var desktop_off_setting: AnyObject?//DESKTOP_OFF_SETTING?
 	public var phone_data: AnyObject?//PHONE_DATA?
-	public var configuration_bit = [ConfigurationBit]()
+	public var configuration_bit = [AnyObject]() //[ConfigurationBit]?
 	public var desktop_off_state: AnyObject?//DESKTOP_OFF_STATE?
 	public var google_plus_user: NSNumber?
 	public var desktop_sound_setting: AnyObject?//DesktopSoundSetting?
 	public var rich_presence_state: AnyObject?//RichPresenceState?
-	public var field13: AnyObject?
-	public var field14: AnyObject?
-	public var field15: AnyObject?
+	public var babel_user: AnyObject? //??
+	public var desktop_availability_sharing_enabled: AnyObject? //??
+	public var google_plus_mobile_user: AnyObject? //?? bool
 	public var field16: AnyObject?
 	public var field17: AnyObject?
 	public var field18: AnyObject?
 	public var default_country: AnyObject?//Country?
+	public var field20: AnyObject?
+	public var field21: AnyObject?
+	public var field22: AnyObject?
 }
 
 /* TEMPLATE:

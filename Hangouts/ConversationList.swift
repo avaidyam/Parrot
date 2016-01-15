@@ -24,7 +24,7 @@ public class ConversationList : ClientDelegate {
 
         // Initialize the list of conversations from Client's list of ClientConversationStates.
         for conv_state in conv_states {
-            self.add_conversation(conv_state.conversation, client_events: conv_state.event)
+            self.add_conversation(conv_state.conversation!, client_events: conv_state.event)
         }
 
         client.delegate = self
@@ -136,8 +136,8 @@ public class ConversationList : ClientDelegate {
         client.syncAllNewEvents(sync_timestamp) { res in
             if let response = res {
                 for conv_state in response.conversation_state {
-                    if let conv = self.conv_dict[conv_state.conversation_id.id as! String] {
-                        conv.update_conversation(conv_state.conversation)
+                    if let conv = self.conv_dict[conv_state.conversation_id!.id as! String] {
+                        conv.update_conversation(conv_state.conversation!)
                         for event in conv_state.event {
                             if event.timestamp > self.sync_timestamp {
 								
@@ -146,7 +146,7 @@ public class ConversationList : ClientDelegate {
                             }
                         }
                     } else {
-                        self.add_conversation(conv_state.conversation, client_events: conv_state.event)
+                        self.add_conversation(conv_state.conversation!, client_events: conv_state.event)
                     }
                 }
             }
