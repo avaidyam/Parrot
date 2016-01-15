@@ -274,12 +274,12 @@ public func evalDict(string: String) -> AnyObject? {
 // what the url and time are as long as they are consistent.
 public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
 	let time_msec = Int(NSDate().timeIntervalSince1970 * 1000)
-	let auth_string = "\(time_msec) \(sapisid_cookie) \(Channel.ORIGIN_URL)"
+	let auth_string = "\(time_msec) \(sapisid_cookie) \(ORIGIN_URL)"
 	let auth_hash = auth_string.SHA1()
 	let sapisidhash = "SAPISIDHASH \(time_msec)_\(auth_hash)"
 	return [
 		"Authorization": sapisidhash,
-		"X-Origin": Channel.ORIGIN_URL,
+		"X-Origin": ORIGIN_URL,
 		"X-Goog-Authuser": "0",
 	]
 }

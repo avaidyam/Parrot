@@ -176,7 +176,7 @@ public class Conversation {
 	// custom names for one-to-one conversations may or may not appear in all
 	// first party clients.
     public func rename(name: String, cb: (() -> Void)?) {
-        self.client.setChatName(self.id, name: name, cb: cb)
+        self.client.renameConversation(self.id, name: name, cb: cb)
     }
 
 //    func set_notification_level(level, cb: (() -> Void)?) {

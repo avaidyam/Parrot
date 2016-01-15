@@ -408,6 +408,8 @@ public class Client : ChannelDelegate {
     }
 	
 	// MARK - Client Requests
+	/* TODO: Implement the last four requests and refactor them to use Request messages. */
+	/* TODO: Refactor everything into just protojson. */
 	
 	//    @asyncio.coroutine
 	//    def adduser(self, conversation_id, chat_id_list):
@@ -725,11 +727,7 @@ public class Client : ChannelDelegate {
 		}
 	}
 	
-	// List all events occurring at or after timestamp.
-	// This method requests protojson rather than json so we have one chat
-	// message parser rather than two.
-	// timestamp: datetime.datetime instance specifying the time after
-	// which to return all events occurring in.
+	// List all events occurring at or after a timestamp.
 	public func syncAllNewEvents(timestamp: NSDate, cb: (response: SYNC_ALL_NEW_EVENTS_RESPONSE?) -> Void) {
 		let data: NSArray = [
 			self.getRequestHeader(),
@@ -740,9 +738,14 @@ public class Client : ChannelDelegate {
 		self.request("conversations/syncallnewevents", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
 		}
+		
+		// This method requests protojson rather than json so we have one chat
+		// message parser rather than two.
+		// timestamp: datetime.datetime instance specifying the time after
+		// which to return all events occurring in.
 	}
 	
-	// List the contents of recent conversations, including messages.
+	// Return info on recent conversations and their events.
 	public func syncRecentConversations(maxConversations: Int = 100, maxEventsPer: Int = 1,
 		cb: ((response: SyncRecentConversationsResponse?) -> Void)) {
 			
