@@ -14,19 +14,18 @@ public class ConversationList : ClientDelegate {
     private var conv_dict = [String : Conversation]()
     public var sync_timestamp: NSDate
     public let user_list: UserList
-
+	
     public var delegate: ConversationListDelegate?
 
     public init(client: Client, conv_states: [CONVERSATION_STATE], user_list: UserList, sync_timestamp: NSDate?) {
         self.client = client
         self.sync_timestamp = sync_timestamp ?? NSDate(timeIntervalSince1970: 0)
         self.user_list = user_list
-
+		
         // Initialize the list of conversations from Client's list of ClientConversationStates.
-        for conv_state in conv_states {
+		for conv_state in conv_states {
             self.add_conversation(conv_state.conversation!, client_events: conv_state.event)
         }
-
         client.delegate = self
     }
 

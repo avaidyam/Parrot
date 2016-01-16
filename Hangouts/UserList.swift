@@ -71,7 +71,6 @@ public class UserList : NSObject {
 	public func add_user_from_conv_part(conv_part: CONVERSATION_PARTICIPANT_DATA) -> User {
 		let user = User(conv_part_data: conv_part, self_user_id: self.self_user.id)
 		if self.user_dict[user.id] == nil {
-			print("Adding fallback User: \(user)")
 			self.user_dict[user.id] = user
 		}
 		return user
@@ -201,15 +200,20 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 			conv_part_list.appendContentsOf(participants)
 		}
 		
+		/* TODO: Still a little work here. Not sure why [CONVERSATION_STATE] keeps dying. */
+		var fixed_states = [CONVERSATION_STATE]()
+		for conv_state in conv_states {
+			let a = PBLiteSerialization.parseArray(CONVERSATION_STATE.self, input: conv_state as? NSArray)!
+			fixed_states.append(a)
+		}
+		
 		// Let's request our own entity now.
 		var self_entity = ENTITY()
 		client.getSelfInfo {
 			self_entity = $0!.self_entity!
 			
 			let userList = UserList(client: client, self_entity: self_entity, entities: required_entities, conv_parts: conv_part_list)
-			
-			/* TODO: Still a little work here. Not sure why [CONVERSATION_STATE] keeps dying. */
-			let conversationList = ConversationList(client: client, conv_states: conv_states as! [CONVERSATION_STATE], user_list: userList, sync_timestamp: sync_timestamp)
+			let conversationList = ConversationList(client: client, conv_states: fixed_states, user_list: userList, sync_timestamp: sync_timestamp)
 			cb(userList, conversationList)
 		}
 	}

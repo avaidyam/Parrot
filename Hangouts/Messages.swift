@@ -419,7 +419,8 @@ public class CONVERSATION : Message {
     public var field15: AnyObject?
     public var field16: AnyObject?
     public var field17: AnyObject?
-    public var network_type = [NetworkType]()
+	/* TODO: There's a weird bug here where it won't convert to a Swift array. */
+    public var network_type = [AnyObject]() // [NetworkType]()
 	public var force_history_state: AnyObject?
 	public var field20: AnyObject?
 	public var field21: AnyObject?
