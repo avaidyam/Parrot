@@ -702,7 +702,7 @@ public class Client : ChannelDelegate {
 		}
 	}
 	
-	public func setConversationNotificationLevel(conversation_id: String, level: Int = 0, cb: (() -> Void)? = nil) {
+	public func setConversationNotificationLevel(conversation_id: String, level: NotificationLevel = .RING, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id]

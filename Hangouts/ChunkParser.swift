@@ -1,6 +1,10 @@
 import Foundation
 
-// Parse data from the long-polling endpoint.
+// Parse data from the backward channel into chunks.
+// Responses from the backward channel consist of a sequence of chunks which
+// are streamed to the client. Each chunk is prefixed with its length,
+// followed by a newline. The length allows the client to identify when the
+// entire chunk has been received.
 public class ChunkParser {
 	
 	public var buf = NSMutableData()
@@ -17,7 +21,7 @@ public class ChunkParser {
 	// encoding everything in UTF-16 and multipling the reported length by 2.
 	// Note that when encoding a string in UTF-16, Python will prepend a
 	// byte-order character, so we need to remove the first two bytes.
-	public func getSubmissions(newBytes: NSData) -> [String] {
+	public func getChunks(newBytes: NSData) -> [String] {
 		buf.appendData(newBytes)
 		var submissions = [String]()
 		

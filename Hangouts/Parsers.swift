@@ -1,5 +1,8 @@
 import Foundation
 
+/* TODO: Update parsers to match hangups. */
+/* TODO: Include markdown and URL formatting, along with HTML. */
+
 public typealias TypingStatusMessage = (conv_id: String, user_id: UserID, timestamp: NSDate, status: TypingType)
 public typealias WatermarkNotification = (conv_id: String, user_id: UserID, read_timestamp: NSDate)
 

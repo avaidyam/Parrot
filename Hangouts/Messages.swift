@@ -568,7 +568,7 @@ public class STATE_UPDATE_HEADER : Message {
     public var updating_client_id: AnyObject?
 }
 
-// FIXME: How to implement oneof?
+/* TODO: Implement Oneof support here, but how? */
 @objc(STATE_UPDATE)
 public class STATE_UPDATE : Message {
     public var state_update_header = STATE_UPDATE_HEADER()

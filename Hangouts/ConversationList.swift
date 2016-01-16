@@ -63,8 +63,8 @@ public class ConversationList : ClientDelegate {
         let conv = Conversation(
             client: client,
             user_list: user_list,
-            client_conversation: client_conversation,
-            client_events: client_events,
+            conversation: client_conversation,
+            events: client_events,
             conversationList: self
         )
         conv_dict[conv_id as! String] = conv
@@ -180,6 +180,7 @@ public class ConversationList : ClientDelegate {
     }
 	
 	// Receive a ClientStateUpdate and fan out to Conversations
+	/* TODO: Refactor this to use the Oneof support in Protobuf. */
     public func clientDidUpdateState(client: Client, update: STATE_UPDATE) {
         if let client_conversation = update.client_conversation {
             handle_client_conversation(client_conversation)

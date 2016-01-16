@@ -30,16 +30,16 @@ public class Conversation {
 
     public init(client: Client,
         user_list: UserList,
-        client_conversation: CONVERSATION,
-        client_events: [EVENT] = [],
+        conversation: CONVERSATION,
+        events: [EVENT] = [],
         conversationList: ConversationList
     ) {
         self.client = client
         self.user_list = user_list
-        self.conversation = client_conversation
+        self.conversation = conversation
         self.conversationList = conversationList
 
-        for event in client_events {
+        for event in events {
             add_event(event)
         }
     }
@@ -52,12 +52,23 @@ public class Conversation {
     }
 	
 	// Update the internal Conversation.
-	// When latest_read_timestamp is 0, this seems to indicate no change
-	// from the previous value. Word around this by saving and restoring the
-	// previous value.
-    public func update_conversation(client_conversation: CONVERSATION) {
+	// StateUpdate.conversation is actually a delta; fields that aren't
+	// specified are assumed to be unchanged. Until this class is
+	// refactored, hide this by saving and restoring previous values where
+	// necessary.
+    public func update_conversation(conversation: CONVERSATION) {
+		
+		/* TODO: Enable this. */
+		/*
+		let new_state = conversation.self_conversation_state
+		if new_state.delivery_medium_option.count == 0 {
+			let old_state = self.conversation.self_conversation_state
+			new_state.delivery_medium_option.appendContentsOf(old_state.delivery_medium_option)
+		}
+		*/
+		
         let old_timestamp = self.latest_read_timestamp
-        self.conversation = client_conversation
+        self.conversation = conversation
         
         if to_timestamp(self.latest_read_timestamp) == 0 {
             self.conversation.self_conversation_state.self_read_state.latest_read_timestamp = old_timestamp
@@ -93,7 +104,14 @@ public class Conversation {
 	// Returns an instance of Event or subclass.
     public func add_event(event: EVENT) -> Event {
         let conv_event = Conversation.wrap_event(event)
-        self.events_dict[conv_event.id] = conv_event
+		/* TODO: Enable this. */
+		/*if !self.events_dict.contains(conv_event.id) {
+			self.events.append(conv_event)
+			self.events_dict[conv_event.id] = conv_event
+		} else {
+			return nil
+		}*/
+		self.events_dict[conv_event.id] = conv_event
         return conv_event
     }
 	
@@ -101,6 +119,42 @@ public class Conversation {
     public func get_user(user_id: UserID) -> User {
         return self.user_list.get_user(user_id)
     }
+	
+	/* TODO: Translate these methods: */
+	/*
+	    def _get_default_delivery_medium(self):
+	        """Return default DeliveryMedium to use for sending messages.
+	
+	        Use the first option, or an option that's marked as the current
+	        default.
+	        """
+	        medium_options = (
+	            self._conversation.self_conversation_state.delivery_medium_option
+	        )
+	        try:
+	            default_medium = medium_options[0].delivery_medium
+	        except IndexError:
+	            logger.warning('Conversation %r has no delivery medium')
+	            default_medium = hangouts_pb2.DeliveryMedium(
+	                medium_type=hangouts_pb2.DELIVERY_MEDIUM_BABEL
+	            )
+	        for medium_option in medium_options:
+	            if medium_option.current_default:
+	                default_medium = medium_option.delivery_medium
+	        return default_medium
+	
+	    def _get_event_request_header(self):
+	        """Return EventRequestHeader for conversation."""
+	        otr_status = (hangouts_pb2.OFF_THE_RECORD_STATUS_OFF_THE_RECORD
+	                      if self.is_off_the_record else
+	                      hangouts_pb2.OFF_THE_RECORD_STATUS_ON_THE_RECORD)
+	        return hangouts_pb2.EventRequestHeader(
+	            conversation_id=hangouts_pb2.ConversationId(id=self.id_),
+	            client_generated_id=self._client.get_client_generated_id(),
+	            expected_otr=otr_status,
+	            delivery_medium=self._get_default_delivery_medium(),
+	        )
+	*/
 
     public var otherUserIsTyping: Bool {
         get {
@@ -136,7 +190,7 @@ public class Conversation {
     ) {
         let otr_status = (is_off_the_record ? OffTheRecordStatus.OFF_THE_RECORD : OffTheRecordStatus.ON_THE_RECORD)
 
-		// TODO: Fix the conditionality here.
+		/* TODO: Fix the conditionality here. */
         if let image_data = image_data, image_name = image_name {
 			client.uploadImage(image_data, filename: image_name) { photoID in
 				self.client.sendChatMessage(self.id,
@@ -161,8 +215,8 @@ public class Conversation {
     public func leave(cb: (() -> Void)? = nil) {
         switch (self.conversation.type) {
         case ConversationType.GROUP:
-            print("Remove Not Implemented!")
-            //client.removeUser(id, cb)
+            //print("Remove Not Implemented!")
+            client.removeUser(id, cb: cb)
         case ConversationType.ONE_TO_ONE:
             client.deleteConversation(id, cb: cb)
         default:
@@ -178,13 +232,12 @@ public class Conversation {
     public func rename(name: String, cb: (() -> Void)?) {
         self.client.renameConversation(self.id, name: name, cb: cb)
     }
-
-//    func set_notification_level(level, cb: (() -> Void)?) {
-//        // Set the notification level of the conversation.
-//        // Pass ClientNotificationLevel.QUIET to disable notifications,
-//        // or ClientNotificationLevel.RING to enable them.
-//        self.client.setconversationnotificationlevel(self.id_, level, cb)
-//    }
+	
+	// Set the notification level of the conversation.
+	// Pass .QUIET to disable notifications or .RING to enable them.
+	public func setConversationNotificationLevel(level: NotificationLevel, cb: (() -> Void)?) {
+		self.client.setConversationNotificationLevel(self.id, level: level, cb: cb)
+    }
 	
 	// Set typing status.
 	// TODO: Add rate-limiting to avoid unnecessary requests.
@@ -241,7 +294,7 @@ public class Conversation {
     }
 	
 	// Return list of Events ordered newest-first.
-	// If event_id is specified, return events preceeding this event.
+	// If event_id is specified, return events preceding this event.
 	// This method will make an API request to load historical events if
 	// necessary. If the beginning of the conversation is reached, an empty
 	// list will be returned.
@@ -327,7 +380,8 @@ public class Conversation {
 
     public var last_modified: NSDate {
         get {
-            return conversation.self_conversation_state.sort_timestamp!
+			return conversation.self_conversation_state.sort_timestamp
+				?? NSDate(timeIntervalSinceReferenceDate: 0)
         }
     }
 	
@@ -369,15 +423,13 @@ public class Conversation {
             return self.conversation.self_conversation_state.view.contains(ConversationView.ARCHIVED)
         }
     }
-    
-//        var is_quiet {
-//            get {
-//                // True if notification level for this conversation is quiet.
-//                level = self._conversation.self_conversation_state.notification_level
-//                return level == ClientNotificationLevel.QUIET
-//            }
-//        }
-//        
+	
+	// True if notification level for this conversation is quiet.
+	public var is_quiet: Bool {
+		get {
+			return self.conversation.self_conversation_state.notification_level == NotificationLevel.QUIET
+		}
+	}
 	
 	// True if conversation is off the record (history is disabled).
     public var is_off_the_record: Bool {

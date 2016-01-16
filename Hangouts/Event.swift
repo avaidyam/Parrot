@@ -88,6 +88,8 @@ public class ChatMessageSegment {
         self.link_target = link_target
     }
 	
+	/* TODO: Refactor to match hangups and Protobuf docs. */
+	
 	// Create a chat message segment from a parsed MESSAGE_SEGMENT.
 	// The formatting options are optional.
     public init(segment: MESSAGE_SEGMENT) {
@@ -221,4 +223,15 @@ public class MembershipChangeEvent : Event {
             }
         }
     }
+}
+
+// An event in a Hangout voice/video call.
+// Corresponds to hangouts_pb2.HangoutEvent.
+public class HangoutEvent : Event {
+	
+	public var type: HangoutEventType {
+		get {
+			return self.event.hangout_event!.event_type
+		}
+	}
 }

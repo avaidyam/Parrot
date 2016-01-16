@@ -1,7 +1,6 @@
 import Foundation
 import Alamofire
 
-public let ORIGIN_URL = "https://talkgadget.google.com"
 public let CHANNEL_URL_PREFIX = "https://0.client-channel.google.com/client-channel"
 
 // Long-polling requests send heartbeats every 15 seconds, so if we miss two in
@@ -24,8 +23,8 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 	public var chunkParser: ChunkParser? = nil
 	
 	// REMOVE
-	public var isSubscribed = false
-	public var isSubscribing = false
+	//public var isSubscribed = false
+	//public var isSubscribing = false
 	
     public var sidParam: String? = nil
     public var gSessionIDParam: String? = nil
@@ -281,21 +280,30 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
         }
 		*/
 
-        // This method is only called when the long-polling request was
-        // successful, so use it to trigger connection events if necessary.
-        if !self.isConnected {
-            if self.onConnectCalled {
-                self.isConnected = true
-                self.delegate?.channelDidReconnect(self)
-            } else {
-                self.onConnectCalled = true
-                self.isConnected = true
-                self.delegate?.channelDidConnect(self)
-            }
-        }
-
-        for submission in (self.chunkParser?.getSubmissions(data))! {
-            delegate?.channel(self, didReceiveMessage: submission)
+		for chunk in (self.chunkParser?.getChunks(data))! {
+			
+			// This method is only called when the long-polling request was
+			// successful, so use it to trigger connection events if necessary.
+			if !self.isConnected {
+				if self.onConnectCalled {
+					self.isConnected = true
+					self.delegate?.channelDidReconnect(self)
+				} else {
+					self.onConnectCalled = true
+					self.isConnected = true
+					self.delegate?.channelDidConnect(self)
+				}
+			}
+			
+			/* TODO: a chunk contains a container array of inner arrays. */
+			// Inner array always contains 2 elements: array_id and data_array.
+			
+			//container_array = json.loads(chunk)
+			//for inner_array in container_array:
+			//    array_id, data_array = inner_array
+			//    delegate?.channel(self, didReceiveMessage: data_array)
+			
+            delegate?.channel(self, didReceiveMessage: chunk)
         }
     }
 	
@@ -318,7 +326,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 	//  [   [0,["c","SID_HERE","",8]],
 	//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
 	private class func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
-		if let firstSubmission = ChunkParser().getSubmissions(res).first {
+		if let firstSubmission = ChunkParser().getChunks(res).first {
 			let val = evalArray(firstSubmission)!
 			let sid = ((val[0] as! NSArray)[1] as! NSArray)[1] as! String
 			let gSessionID = (((val[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String

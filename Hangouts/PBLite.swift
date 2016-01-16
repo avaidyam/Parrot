@@ -1,6 +1,9 @@
 import Foundation
 import CommonCrypto
 
+/* TODO: Remove dependency on CommonCrypto. */
+/* TODO: Revamp PBLite parser with a real Protobuf class set. */
+
 // PBLite Enum Type
 
 public class Enum : NSObject, IntegerLiteralConvertible {
@@ -271,6 +274,7 @@ public func evalDict(string: String) -> AnyObject? {
 //
 
 
+public let ORIGIN_URL = "https://talkgadget.google.com"
 // Return authorization headers for API request. It doesn't seem to matter
 // what the url and time are as long as they are consistent.
 public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
