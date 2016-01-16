@@ -1,19 +1,5 @@
 import Foundation
 
-public struct UserID : Hashable {
-    public let chat_id: String
-    public let gaia_id: String
-
-    public var hashValue: Int {
-        get {
-            return chat_id.hashValue &+ gaia_id.hashValue
-        }
-    }
-}
-
-public func ==(lhs: UserID, rhs: UserID) -> Bool {
-    return lhs.hashValue == rhs.hashValue
-}
 
 // An event which becomes part of the permanent record of a conversation.
 // This corresponds to ClientEvent in the API.
@@ -33,8 +19,8 @@ public class Event : Equatable {
 	// A UserID indicating who created the event.
     public lazy var user_id: UserID = {
         return UserID(
-            chat_id: self.event.sender_id.chat_id as! String,
-            gaia_id: self.event.sender_id.gaia_id as! String
+            chatID: self.event.sender_id.chat_id as! String,
+            gaiaID: self.event.sender_id.gaia_id as! String
         )
     }()
 	
@@ -219,7 +205,7 @@ public class MembershipChangeEvent : Event {
     public var participant_ids: [UserID] {
         get {
             return self.event.membership_change!.participant_ids.map {
-                UserID(chat_id: $0.chat_id as! String, gaia_id: $0.gaia_id as! String)
+                UserID(chatID: $0.chat_id as! String, gaiaID: $0.gaia_id as! String)
             }
         }
     }

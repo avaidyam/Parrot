@@ -1,65 +1,88 @@
 import Cocoa
 
+// A chat user identifier.
+// Use the much more full-featured User class for more data.
+public struct UserID : Hashable, Equatable {
+	public let chatID: String
+	public let gaiaID: String
+	
+	// UserID: Equatable
+	public var hashValue: Int {
+		return chatID.hashValue &+ gaiaID.hashValue
+	}
+}
+
+// UserID: Equatable
+public func ==(lhs: UserID, rhs: UserID) -> Bool {
+	return lhs.hashValue == rhs.hashValue
+}
+
 // A chat user.
-// Handles full_name or first_name being nil by creating an approximate
-// first_name from the full_name, or setting both to DEFAULT_NAME.
-public struct User {
+public struct User: Hashable, Equatable {
     public static let DEFAULT_NAME = "Unknown"
 
     public let id: UserID
-    public let full_name: String
-    public let first_name: String
-    public let photo_url: String?
+    public let fullName: String
+    public let firstName: String
+    public let photoURL: String?
     public let emails: [String]
     public let isSelf: Bool
 	
-	// Initialize a User.
-    public init(user_id: UserID, full_name: String?=nil, first_name: String?=nil, photo_url: String?, emails: [String], is_self: Bool) {
-		self.id = user_id
-		let fname = full_name ?? User.DEFAULT_NAME
-        self.full_name = fname
-        self.first_name = first_name ?? fname.characters.split{$0==" "}.map{String($0)}.first!
-		self.photo_url = photo_url != nil ? "https:" + photo_url! : nil
+	// Initialize a User directly.
+	// Handles full_name or first_name being nil by creating an approximate
+	// first_name from the full_name, or setting both to DEFAULT_NAME.
+    public init(userID: UserID, var fullName: String? = nil, firstName: String? = nil,
+		photoURL: String? = nil, emails: [String] = [], isSelf: Bool = false) {
+		fullName = fullName ?? User.DEFAULT_NAME
+		
+		self.id = userID
+        self.fullName = fullName!
+        self.firstName = firstName ?? fullName!.characters.split { $0 == " " }.map{ String($0) }.first!
+		self.photoURL = photoURL != nil ? "https:" + photoURL! : nil
         self.emails = emails
-        self.isSelf = is_self
+        self.isSelf = isSelf
     }
 	
-	// Initialize from a ClientEntity.
-	// If self_user_id is nil, assume this is the self user.
-    public init(entity: ENTITY, self_user_id: UserID?) {
-        let user_id = UserID(chat_id: entity.id.chat_id as! String, gaia_id: entity.id.gaia_id as! String)
-        var is_self = false
-        if let sui = self_user_id {
-            is_self = sui == user_id
-        } else {
-            is_self = true
-        }
-        self.init(user_id: user_id,
-            full_name: entity.properties.display_name as String?,
-            first_name: entity.properties.first_name as String?,
-            photo_url: entity.properties.photo_url as String?,
+	// Initialize a User from an Entity.
+	// If selfUser is nil, assume this is the self user.
+    public init(entity: ENTITY, selfUser: UserID?) {
+		let userID = UserID(chatID: entity.id.chat_id as! String,
+			gaiaID: entity.id.gaia_id as! String)
+		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
+		
+        self.init(userID: userID,
+            fullName: entity.properties.display_name as String?,
+            firstName: entity.properties.first_name as String?,
+            photoURL: entity.properties.photo_url as String?,
             emails: entity.properties.emails.map { $0 as! String },
-            is_self: is_self
+            isSelf: isSelf
         )
 
     }
 	
 	// Initialize from ClientConversationParticipantData.
-	// If self_user_id is nil, assume this is the self user.
-    public init(conv_part_data: CONVERSATION_PARTICIPANT_DATA, self_user_id: UserID?) {
-        let user_id = UserID(chat_id: conv_part_data.id.chat_id as! String, gaia_id: conv_part_data.id.gaia_id as! String)
-        var is_self = false
-        if let sui = self_user_id {
-            is_self = sui == user_id
-        } else {
-            is_self = true
-        }
-        self.init(user_id: user_id,
-            full_name: conv_part_data.fallback_name as? String,
-            first_name: nil,
-            photo_url: nil,
+	// If selfUser is nil, assume this is the self user.
+    public init(data: CONVERSATION_PARTICIPANT_DATA, selfUser: UserID?) {
+		let userID = UserID(chatID: data.id.chat_id as! String,
+			gaiaID: data.id.gaia_id as! String)
+		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
+		
+        self.init(userID: userID,
+            fullName: data.fallback_name as? String,
+            firstName: nil,
+            photoURL: nil,
             emails: [],
-            is_self: is_self
+            isSelf: isSelf
         )
     }
+	
+	// User: Hashable
+	public var hashValue: Int {
+		return self.id.hashValue
+	}
+}
+
+// User: Equatable
+public func ==(lhs: User, rhs: User) -> Bool {
+	return lhs.id == rhs.id
 }

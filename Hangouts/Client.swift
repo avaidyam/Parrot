@@ -10,6 +10,9 @@ public let CHAT_INIT_URL = "https://talkgadget.google.com/u/0/talkgadget/_/chat"
 public let CHAT_INIT_REGEX = "(?:<script>AF_initDataCallback\\((.*?)\\);</script>)"
 */
 
+public let ClientStateUpdatedNotification = "ClientStateUpdated"
+public let ClientStateUpdatedNewStateKey = "ClientStateNewState"
+
 // Timeout to send for setactiveclient requests:
 public let ACTIVE_TIMEOUT_SECS = 120
 

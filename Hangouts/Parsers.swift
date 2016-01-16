@@ -69,7 +69,7 @@ public func _parse_payload(payload: [AnyObject]) -> [STATE_UPDATE] {
 public func parse_typing_status_message(p: SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
     return TypingStatusMessage(
         conv_id: p.conversation_id.id as! String,
-        user_id: UserID(chat_id: p.user_id.chat_id as! String, gaia_id: p.user_id.gaia_id as! String),
+        user_id: UserID(chatID: p.user_id.chat_id as! String, gaiaID: p.user_id.gaia_id as! String),
         timestamp: from_timestamp(p.timestamp)!,
         status: p.status
     )
@@ -80,8 +80,8 @@ public func parse_watermark_notification(client_watermark_notification: WATERMAR
     return WatermarkNotification(
         conv_id: client_watermark_notification.conversation_id.id as! String,
         user_id: UserID(
-            chat_id: client_watermark_notification.participant_id.chat_id as! String,
-            gaia_id: client_watermark_notification.participant_id.gaia_id as! String
+            chatID: client_watermark_notification.participant_id.chat_id as! String,
+            gaiaID: client_watermark_notification.participant_id.gaia_id as! String
         ),
         read_timestamp: from_timestamp(client_watermark_notification.latest_read_timestamp)!
     )

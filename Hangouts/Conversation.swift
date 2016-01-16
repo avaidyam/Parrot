@@ -117,7 +117,7 @@ public class Conversation {
 	
 	// Return the User instance with the given UserID.
     public func get_user(user_id: UserID) -> User {
-        return self.user_list.get_user(user_id)
+        return self.user_list[user_id]
     }
 	
 	/* TODO: Translate these methods: */
@@ -159,7 +159,7 @@ public class Conversation {
     public var otherUserIsTyping: Bool {
         get {
             return self.typingStatuses.filter {
-                (k, v) in !self.user_list.get_user(k).isSelf
+                (k, v) in !self.user_list[k].isSelf
             }.map {
                 (k, v) in v == TypingType.STARTED
             }.first ?? false
@@ -268,7 +268,7 @@ public class Conversation {
         if let delegate = delegate {
             delegate.conversation(self, didReceiveEvent: event)
         } else {
-            let user = user_list.get_user(event.user_id)
+            let user = user_list[event.user_id]
             if !user.isSelf {
 				print("Notification \(event) from User \(user)!");
             }
@@ -360,10 +360,10 @@ public class Conversation {
     public var users: [User] {
         get {
             return conversation.participant_data.map {
-                self.user_list.get_user(UserID(
-                    chat_id: $0.id.chat_id as! String,
-                    gaia_id: $0.id.gaia_id as! String
-                ))
+                self.user_list[UserID(
+                    chatID: $0.id.chat_id as! String,
+                    gaiaID: $0.id.gaia_id as! String
+                )]
             }
         }
     }
@@ -373,7 +373,7 @@ public class Conversation {
             if let name = self.conversation.name {
                 return name as String
             } else {
-                return users.filter { !$0.isSelf }.map { $0.full_name }.joinWithSeparator(", ")
+                return users.filter { !$0.isSelf }.map { $0.fullName }.joinWithSeparator(", ")
             }
         }
     }

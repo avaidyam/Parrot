@@ -189,7 +189,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		
 		// Load all the field values from the conversation.
 		var img: NSImage = defaultUserImage
-		if let d = fetchData(c?.id.chat_id, c?.photo_url) {
+		if let d = fetchData(c?.id.gaiaID, c?.photoURL) {
 			img = NSImage(data: d)!
 		}
 		

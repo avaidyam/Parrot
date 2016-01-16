@@ -1,36 +1,49 @@
 import Foundation
 
-public let ClientStateUpdatedNotification = "ClientStateUpdated"
-public let ClientStateUpdatedNewStateKey = "ClientStateNewState"
-
 // Collection of User instances.
-public class UserList : NSObject {
+public class UserList {
 	
 	private let client: Client
-	private let self_user: User
-	private var user_dict: [UserID : User]
+	private let selfUser: User
+	private var users: [UserID : User]
+	
+	// Returns all users as an array.
+	public var allUsers: [User] {
+		return Array(self.users.values)
+	}
+	
+	// Return a User by their UserID.
+	// Logs and returns a placeholder User if not found.
+	public subscript(userID: UserID) -> User {
+		if let user = self.users[userID] {
+			return user
+		} else {
+			print("UserList returning unknown User for UserID \(userID)")
+			return User(userID: userID)
+		}
+	}
 	
 	// Initialize the list of Users.
 	// Creates users from the given ClientEntity and
 	// ClientConversationParticipantData instances. The latter is used only as
 	// a fallback, because it doesn't include a real first_name.
-	public init(client: Client, self_entity: ENTITY, entities: [ENTITY], conv_parts: [CONVERSATION_PARTICIPANT_DATA]) {
-		
+	public init(client: Client, selfEntity: ENTITY, entities: [ENTITY] = [], data: [CONVERSATION_PARTICIPANT_DATA]) {
 		self.client = client
-		self.self_user = User(entity: self_entity, self_user_id: nil)
-		self.user_dict = [self.self_user.id: self.self_user]
-		
-		super.init()
+		self.selfUser = User(entity: selfEntity, selfUser: nil)
+		self.users = [self.selfUser.id: self.selfUser]
 		
 		// Add each entity as a new User.
 		for entity in entities {
-			let user = User(entity: entity, self_user_id: self.self_user.id)
-			self.user_dict[user.id] = user
+			let user = User(entity: entity, selfUser: self.selfUser.id)
+			self.users[user.id] = user
 		}
 		
 		// Add each conversation participant as a new User if we didn't already add them from an entity.
-		for participant in conv_parts {
-			self.add_user_from_conv_part(participant)
+		for participant in data {
+			let user = User(data: participant, selfUser: self.selfUser.id)
+			if self.users[user.id] == nil {
+				self.users[user.id] = user
+			}
 		}
 		
 		NSNotificationCenter.defaultCenter().addObserver(
@@ -45,37 +58,9 @@ public class UserList : NSObject {
 		NSNotificationCenter.defaultCenter().removeObserver(self)
 	}
 	
-	// Return a User by their UserID.
-	// Raises KeyError if the User is not available.
-	public func get_user(user_id: UserID) -> User {
-		if let elem = self.user_dict[user_id] {
-			return elem
-		} else {
-			print("UserList returning unknown User for UserID \(user_id)")
-			return User(user_id: user_id,
-				full_name: User.DEFAULT_NAME,
-				first_name: nil,
-				photo_url: nil,
-				emails: [],
-				is_self: false
-			)
-		}
-	}
+	/* TODO: Switch away from the old API to a nicer Notification one. */
 	
-	// Returns all the users known
-	public func get_all() -> [User] {
-		return Array(self.user_dict.values)
-	}
-	
-	// Add new User from ClientConversationParticipantData
-	public func add_user_from_conv_part(conv_part: CONVERSATION_PARTICIPANT_DATA) -> User {
-		let user = User(conv_part_data: conv_part, self_user_id: self.self_user.id)
-		if self.user_dict[user.id] == nil {
-			self.user_dict[user.id] = user
-		}
-		return user
-	}
-	
+	// Receive a ClientStateUpdatedNotification
 	public func on_state_update_notification(notification: NSNotification) {
 		if let userInfo = notification.userInfo, state_update = userInfo[ClientStateUpdatedNewStateKey as NSString] {
 			on_state_update(state_update as! STATE_UPDATE)
@@ -92,7 +77,10 @@ public class UserList : NSObject {
 	// Receive Conversation and update list of users
 	private func handle_client_conversation(client_conversation: CONVERSATION) {
 		for participant in client_conversation.participant_data {
-			self.add_user_from_conv_part(participant)
+			let user = User(data: participant, selfUser: self.selfUser.id)
+			if self.users[user.id] == nil {
+				self.users[user.id] = user
+			}
 		}
 	}
 }
@@ -162,13 +150,13 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 		for conv_state in conv_states {
 			let participants = conv_state.conversation!.participant_data
 			required_user_ids = required_user_ids.union(Set(participants.map {
-				UserID(chat_id: $0.id.chat_id as! String, gaia_id: $0.id.gaia_id as! String)
+				UserID(chatID: $0.id.chat_id as! String, gaiaID: $0.id.gaia_id as! String)
 			}))
 		}
 		
 		var required_entities = Array<ENTITY>()
 		if required_user_ids.count > 0 {
-			client.getEntitiesByID(required_user_ids.map { $0.chat_id }) { resp in
+			client.getEntitiesByID(required_user_ids.map { $0.chatID }) { resp in
 				required_entities = resp.entities
 			}
 		}
@@ -184,7 +172,7 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 		client.getSelfInfo {
 			self_entity = $0!.self_entity!
 			
-			let userList = UserList(client: client, self_entity: self_entity, entities: required_entities, conv_parts: conv_part_list)
+			let userList = UserList(client: client, selfEntity: self_entity, entities: required_entities, data: conv_part_list)
 			let conversationList = ConversationList(client: client, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
 			cb(userList, conversationList)
 		}

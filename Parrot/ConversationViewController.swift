@@ -83,19 +83,19 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		//print("got \(msg)")
 		
         if !(self.window?.keyWindow ?? false) {
-            let user = conversation.user_list.get_user(event.user_id)
+            let user = conversation.user_list[event.user_id]
             if !user.isSelf {
 				let a = (event.event.conversation_id.id as! String, event.id as String)
 				let text = event.event.chat_message?.message_content.segment.first?.text as? String
 				
 				let notification = NSUserNotification()
-				notification.title = user.full_name
+				notification.title = user.fullName
 				notification.informativeText = text
 				notification.deliveryDate = NSDate()
 				notification.soundName = NSUserNotificationDefaultSoundName
 				
 				var img: NSImage = defaultUserImage
-				if let d = fetchData(user.id.chat_id, user.photo_url) {
+				if let d = fetchData(user.id.chatID, user.photoURL) {
 					img = NSImage(data: d)!
 				}
 				notification.contentImage = img
@@ -124,7 +124,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	
 	// get a single message
 	func _getMessage(ev: ChatMessageEvent) -> Message {
-		let user = self.conversation!.user_list.get_user(ev.user_id)
+		let user = self.conversation!.user_list[ev.user_id]
 		let network_ = self.conversation!.conversation.network_type as NSArray
 		let network = NetworkType(value: network_[0] as! NSNumber)
 		
