@@ -45,27 +45,34 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 			delegate: (session.delegate as! Manager.SessionDelegate))!
 	}
 	
+	/* TODO: Fix the retry semantics instead of what we have right now. */
+	var retries = Channel.MAX_RETRIES
+	
 	// Listen for messages on the backwards channel.
 	// This method only returns when the connection has been closed due to an error.
 	public func listen() {
-		var retries = Channel.MAX_RETRIES
+		self.need_new_sid = true
 		
-        while retries >= 0 {
-            // After the first failed retry, back off exponentially longer after
-            // each attempt.
+        if retries >= 0 {
 			
-			/* TODO: Use `retries + 1 < Channel.MAX_RETRIES`? */
-            if retries <= Channel.MAX_RETRIES {
+			// After the first failed retry, back off exponentially longer each time.
+            if retries + 1 < Channel.MAX_RETRIES {
                 let backoff_seconds = UInt64(2 << (Channel.MAX_RETRIES - retries))
                 print("Backing off for \(backoff_seconds) seconds")
                 usleep(useconds_t(backoff_seconds * USEC_PER_SEC))
-            }
+			}
 
             // Request a new SID if we don't have one yet, or the previous one
             // became invalid.
             if self.need_new_sid {
-                // TODO: error handling
-                self.fetchChannelSID()
+				
+				/* TODO: Figure out how to turn a callback into a blocking func using these: */
+				let s = dispatch_semaphore_create(0)
+				
+				self.fetchChannelSID {
+					dispatch_semaphore_signal(s)
+				}
+				dispatch_semaphore_wait(s, DISPATCH_TIME_FOREVER)
 				self.need_new_sid = false
             }
 
@@ -138,17 +145,12 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 	*/
 	
 	// Sends a request to the server containing maps (dicts).
-	public func sendMaps(var mapList: [String: [String: AnyObject]]?, cb: (NSData -> Void)? = nil) {
-		if mapList == nil {
-			mapList = [String: [String: AnyObject]]()
-		}
-		
+	public func sendMaps(mapList: [String: [String: AnyObject]]?, cb: (NSData -> Void)? = nil) {
 		var params = [
 			"VER":		8,			// channel protocol version
 			"RID":		81188,		// request identifier
 			"ctype":	"hangouts",	// client type
 		]
-		
 		if self.gSessionIDParam != nil {
 			params["gsessionid"] = self.gSessionIDParam!
 		}
@@ -157,19 +159,22 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 		}
 		
 		var data_dict = [
-			"count": mapList!.count,
+			"count": mapList?.count ?? 0,
 			"ofs": 0
 		] as [String: AnyObject]
 		
-		for (map_num, map_) in mapList! {
-			for (map_key, map_val) in map_ {
-				data_dict["req\(map_num)_\(map_key)"] = map_val
+		if let mapList = mapList {
+			for (map_num, map_) in mapList {
+				for (map_key, map_val) in map_ {
+					data_dict["req\(map_num)_\(map_key)"] = map_val
+				}
 			}
 		}
 		
-		let url = "\(CHANNEL_URL_PREFIX)/channel/bind"
+		let url = "\(CHANNEL_URL_PREFIX)/channel/bind?\(params.encodeURL())"
 		let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 		request.HTTPMethod = "POST"
+		/* TODO: Clearly, we shouldn't call encodeURL(), but what do we do? */
 		request.HTTPBody = data_dict.encodeURL().dataUsingEncoding(NSUTF8StringEncoding,
 			allowLossyConversion: false)!
 		for (k, v) in getAuthorizationHeaders(self.getCookieValue("SAPISID")!) {
@@ -189,13 +194,14 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 	// There's a separate API to get the gsessionid alone that Hangouts for
 	// Chrome uses, but if we don't send a gsessionid with this request, it
 	// will return a gsessionid as well as the SID.
-	public func fetchChannelSID() {
+	public func fetchChannelSID(cb: (Void -> Void)? = nil) {
 		self.sidParam = nil
 		self.gSessionIDParam = nil
 		self.sendMaps(nil) {
 			let r = Channel.parseSIDResponse($0)
 			self.sidParam = r.sid
 			self.gSessionIDParam = r.gSessionID
+			cb?()
 		}
 		
 		/*
@@ -259,7 +265,10 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 				self.listen()
 			} else if response.response?.statusCode == 200 {
 				//self.onPushData(response.result.value!) // why is this commented again??
-				//self.longPollRequest() // we don't call ourselves; the while loop thing does.
+				self.longPollRequest()
+				
+				// we shouldn't call ourselves; the while loop thing should.
+				// doesn't work right though.
 			} else {
 				print("Received unknown response code \(response.response?.statusCode)")
 				print(NSString(data: response.result.value!, encoding: 4)! as String)
@@ -338,6 +347,9 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 
 extension Dictionary {
 	
+	/* TODO: Returns a really weird result like below: */
+	// "%63%74%79%70%65=%68%61%6E%67%6F%75%74%73&%56%45%52=%38&%52%49%44=%38%31%31%38%38"
+	// instead of "ctype=hangouts&VER=8&RID=81188"
 	public func encodeURL() -> String {
 		let set = NSCharacterSet(charactersInString: ":/?&=;+!@#$()',*")
 		
