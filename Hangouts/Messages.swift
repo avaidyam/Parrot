@@ -785,7 +785,7 @@ public class SyncRecentConversationsResponse : Message {
 	
 	public var response_header: RESPONSE_HEADER?
 	public var sync_timestamp: NSNumber?
-	public var conversation_state = [AnyObject]()//[CONVERSATION_STATE]()
+	public var conversation_state = [CONVERSATION_STATE]()
 }
 
 @objc(ConfigurationBit)
