@@ -1,7 +1,7 @@
 import Foundation
 
 // Collection of User instances.
-public class UserList {
+public class UserList: SequenceType {
 	
 	private let client: Client
 	private let selfUser: User
@@ -20,6 +20,14 @@ public class UserList {
 		} else {
 			print("UserList returning unknown User for UserID \(userID)")
 			return User(userID: userID)
+		}
+	}
+	
+	public func generate() -> AnyGenerator<User> {
+		var index = 0
+		return anyGenerator {
+			defer { index++ }
+			return Array(self.users.values)[index]
 		}
 	}
 	
@@ -58,28 +66,16 @@ public class UserList {
 		NSNotificationCenter.defaultCenter().removeObserver(self)
 	}
 	
-	/* TODO: Switch away from the old API to a nicer Notification one. */
-	
-	// Receive a ClientStateUpdatedNotification
+	/* TODO: Switch away from the old API to a nicer EventBus-style one. */
 	public func on_state_update_notification(notification: NSNotification) {
 		if let userInfo = notification.userInfo, state_update = userInfo[ClientStateUpdatedNewStateKey as NSString] {
-			on_state_update(state_update as! STATE_UPDATE)
-		}
-	}
-	
-	// Receive a ClientStateUpdate
-	private func on_state_update(state_update: STATE_UPDATE) {
-		if let conversation = state_update.client_conversation {
-			self.handle_client_conversation(conversation)
-		}
-	}
-	
-	// Receive Conversation and update list of users
-	private func handle_client_conversation(client_conversation: CONVERSATION) {
-		for participant in client_conversation.participant_data {
-			let user = User(data: participant, selfUser: self.selfUser.id)
-			if self.users[user.id] == nil {
-				self.users[user.id] = user
+			if let conversation = (state_update as! STATE_UPDATE).client_conversation {
+				for participant in conversation.participant_data {
+					let user = User(data: participant, selfUser: self.selfUser.id)
+					if self.users[user.id] == nil {
+						self.users[user.id] = user
+					}
+				}
 			}
 		}
 	}
