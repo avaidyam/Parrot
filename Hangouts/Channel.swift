@@ -13,7 +13,7 @@ public protocol ChannelDelegate {
     func channelDidConnect(channel: Channel)
     func channelDidDisconnect(channel: Channel)
     func channelDidReconnect(channel: Channel)
-    func channel(channel: Channel, didReceiveMessage: NSString)
+    func channel(channel: Channel, didReceiveMessage: [AnyObject])
 }
 
 public class Channel : NSObject, NSURLSessionDataDelegate {
@@ -145,7 +145,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 	*/
 	
 	// Sends a request to the server containing maps (dicts).
-	public func sendMaps(mapList: [String: [String: AnyObject]]?, cb: (NSData -> Void)? = nil) {
+	public func sendMaps(mapList: [[String: AnyObject]]?, cb: (NSData -> Void)? = nil) {
 		var params = [
 			"VER":		8,			// channel protocol version
 			"RID":		81188,		// request identifier
@@ -164,7 +164,7 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 		] as [String: AnyObject]
 		
 		if let mapList = mapList {
-			for (map_num, map_) in mapList {
+			for (map_num, map_) in mapList.enumerate() {
 				for (map_key, map_val) in map_ {
 					data_dict["req\(map_num)_\(map_key)"] = map_val
 				}
@@ -304,15 +304,14 @@ public class Channel : NSObject, NSURLSessionDataDelegate {
 				}
 			}
 			
-			/* TODO: a chunk contains a container array of inner arrays. */
-			// Inner array always contains 2 elements: array_id and data_array.
-			
-			//container_array = json.loads(chunk)
-			//for inner_array in container_array:
-			//    array_id, data_array = inner_array
-			//    delegate?.channel(self, didReceiveMessage: data_array)
-			
-            delegate?.channel(self, didReceiveMessage: chunk)
+			let _str = (chunk as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+			let container_array = try! NSJSONSerialization.JSONObjectWithData(_str!, options: [])
+			for inner_array in (container_array as! [AnyObject]) {
+				//let array_id = inner_array[0]
+				let data_array = inner_array[1]
+				
+				delegate?.channel(self, didReceiveMessage: data_array as! [AnyObject])
+			}
         }
     }
 	

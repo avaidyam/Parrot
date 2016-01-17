@@ -321,27 +321,68 @@ public class Client : ChannelDelegate {
 		delegate?.clientDidReconnect(self)
 	}
 	
-	/* TODO: Refactor into an array directly from the Channel. */
-	public func channel(channel: Channel, didReceiveMessage message: NSString) {
-		let result = parse_submission(message as String)
-		// uses _get_submission_payloads internally
-		// SHOULD ALSO DO _add_channel_services!
-		
-		if let new_client_id = result.client_id {
-			self.client_id = new_client_id
+	// Parse channel array and call the appropriate events.
+	public func channel(channel: Channel, didReceiveMessage message: [AnyObject]) {
+		guard message[0] as? String != "noop" else {
+			return
 		}
 		
-		for state_update in result.updates {
-			self.active_client_state = (
-				state_update.state_update_header.active_client_state
-			)
-			NSNotificationCenter.defaultCenter().postNotificationName(
-				ClientStateUpdatedNotification,
-				object: self,
-				userInfo: [ClientStateUpdatedNewStateKey: state_update]
-			)
-			delegate?.clientDidUpdateState(self, update: state_update)
+		// Wrapper appears to be a Protocol Buffer message, but encoded via
+		// field numbers as dictionary keys. Since we don't have a parser
+		// for that, parse it ad-hoc here.
+		let thr = (message[0] as! [String: String])["p"]!
+		let val = thr.dataUsingEncoding(NSUTF8StringEncoding)
+		let wrapper = try! NSJSONSerialization.JSONObjectWithData(val!, options: .AllowFragments)
+		
+		// Once client_id is received, the channel is ready to have services added.
+		if let id = wrapper["3"] as? [String: AnyObject] {
+			self.client_id = (id["2"] as! String)
+			self.addChannelServices()
 		}
+		if let cbu = wrapper["2"] as? [String: AnyObject] {
+			let val2 = cbu["2"]!.dataUsingEncoding(NSUTF8StringEncoding)
+			let payload = try! NSJSONSerialization.JSONObjectWithData(val2!, options: .AllowFragments)
+			
+			// This is a (Client)BatchUpdate containing StateUpdate messages.
+			// payload[1] is a list of state updates.
+			if payload[0] as? String == "cbu" {
+				let result = flatMap(payload[1] as! [NSArray]) {
+					PBLiteSerialization.parseArray(STATE_UPDATE.self, input: $0)
+				}
+				
+				/* TODO: A little work needs to be done here. Crashes. */
+				print("result: \(result)")
+				
+				for state_update in result {
+					self.active_client_state = state_update.state_update_header.active_client_state
+					NSNotificationCenter.defaultCenter().postNotificationName(
+						ClientStateUpdatedNotification, object: self,
+						userInfo: [ClientStateUpdatedNewStateKey: state_update])
+					delegate?.clientDidUpdateState(self, update: state_update)
+				}
+			} else {
+				print("Ignoring message: \(payload[0])")
+			}
+		}
+	}
+	
+	// Add services to the channel.
+	//
+	// The services we add to the channel determine what kind of data we will
+	// receive on it. The "babel" service includes what we need for Hangouts.
+	// If this fails for some reason, hangups will never receive any events.
+	// This needs to be re-called whenever we open a new channel (when there's
+	// a new SID and client_id.
+	//
+	// Based on what Hangouts for Chrome does over 2 requests, this is
+	// trimmed down to 1 request that includes the bare minimum to make
+	// things work.
+	private func addChannelServices() {
+		let inner = ["3": ["1": ["1": "babel"]]]
+		let dat = try! NSJSONSerialization.dataWithJSONObject(inner, options: [])
+		let str = NSString(data: dat, encoding: NSUTF8StringEncoding) as! String
+		
+		self.channel?.sendMaps([["p": str]])
 	}
 	
 	// MARK - Request Factories

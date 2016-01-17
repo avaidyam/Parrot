@@ -1,11 +1,15 @@
 import Foundation
 
+/* TODO: Support DictionaryLiteralConvertible, CollectionType, Indexable. */
+/* TODO: Support SequenceType, MutableCollectionType, MutableIndexable. */
+
 // Collection of User instances.
-public class UserList: SequenceType {
+public class UserList {
 	
+	/* TODO: Don't hold a reference to client. */
 	private let client: Client
 	private let selfUser: User
-	private var users: [UserID : User]
+	private var users: [UserID: User]
 	
 	// Returns all users as an array.
 	public var allUsers: [User] {
@@ -23,13 +27,14 @@ public class UserList: SequenceType {
 		}
 	}
 	
-	public func generate() -> AnyGenerator<User> {
+	// UserList: SequenceType
+	/*public func generate() -> AnyGenerator<User> {
 		var index = 0
 		return anyGenerator {
 			defer { index++ }
 			return Array(self.users.values)[index]
 		}
-	}
+	}*/
 	
 	// Initialize the list of Users.
 	// Creates users from the given ClientEntity and
@@ -54,16 +59,21 @@ public class UserList: SequenceType {
 			}
 		}
 		
-		NSNotificationCenter.defaultCenter().addObserver(
+		let n = NSNotificationCenter.defaultCenter()
+		n.addObserverForName(ClientStateUpdatedNotification, object: self.client, queue: nil) {
+			self.on_state_update_notification($0)
+		}
+		
+		/*n.addObserver(
 			self,
 			selector: Selector("on_state_update_notification:"),
 			name: ClientStateUpdatedNotification,
 			object: self.client
-		)
+		)*/
 	}
 	
 	deinit {
-		NSNotificationCenter.defaultCenter().removeObserver(self)
+		//NSNotificationCenter.defaultCenter().removeObserver(self)
 	}
 	
 	/* TODO: Switch away from the old API to a nicer EventBus-style one. */
