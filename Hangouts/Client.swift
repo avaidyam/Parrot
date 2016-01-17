@@ -185,9 +185,6 @@ public class Client : ChannelDelegate {
 					PBLiteSerialization.parseArray(STATE_UPDATE.self, input: $0)
 				}
 				
-				/* TODO: A little work needs to be done here. Crashes. */
-				print("result: \(result)")
-				
 				for state_update in result {
 					self.active_client_state = state_update.state_update_header.active_client_state
 					NSNotificationCenter.defaultCenter().postNotificationName(

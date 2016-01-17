@@ -93,6 +93,7 @@ public class PBLiteSerialization {
 	// FIXME: Use Swift reflection to unwrap [AnyObject].
 	public class func getArrayMessageType(arr: Any) -> Message.Type? {
 		if arr is [CONVERSATION_ID] { return CONVERSATION_ID.self }
+		if arr is [CONVERSATION_STATE] { return CONVERSATION_STATE.self }
 		if arr is [PARTICIPANT_ID] { return PARTICIPANT_ID.self }
 		if arr is [EVENT] { return EVENT.self }
 		if arr is [ENTITY] { return ENTITY.self }
@@ -101,6 +102,7 @@ public class PBLiteSerialization {
 		if arr is [CONVERSATION_PARTICIPANT_DATA] { return CONVERSATION_PARTICIPANT_DATA.self }
 		if arr is [CONVERSATION_READ_STATE] { return CONVERSATION_READ_STATE.self }
 		if arr is [ENTITY_GROUP_ENTITY] { return ENTITY_GROUP_ENTITY.self }
+		if arr is [PARTICIPANT_ID] { return PARTICIPANT_ID.self }
 		return nil
 	}
 	
@@ -122,7 +124,7 @@ public class PBLiteSerialization {
 	}
 	
 	public class func parseProtoJSON<T: Message>(input: NSData) -> T? {
-		let script = (NSString(data: input, encoding: 4)! as String)
+		let script = (NSString(data: input, encoding: NSUTF8StringEncoding)! as String)
 		if let parsedObject = evalArray(script) as? NSArray {
 			return parseArray(T.self, input: parsedObject)
 		}

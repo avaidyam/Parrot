@@ -95,15 +95,7 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 	
 	// Retrieve recent conversations so we can preemptively look up their participants.
 	client.syncRecentConversations { response in
-		
-		/* TODO: Still a little work here. Not sure why [CONVERSATION_STATE] keeps dying. */
-		// Essentially, without this fixing code here, everything crashes.
-		// I'm guessing PBLite skips over the elements here for some reason?
-		var conv_states = [CONVERSATION_STATE]()
-		for conv_state in (response!.conversation_state as [AnyObject]) {
-			let a = PBLiteSerialization.parseArray(CONVERSATION_STATE.self, input: conv_state as? NSArray)!
-			conv_states.append(a)
-		}
+		let conv_states = response!.conversation_state
 		
 		// syncrecentconversations seems to return a sync_timestamp 4 minutes
 		// before the present. To prevent syncallnewevents later breaking

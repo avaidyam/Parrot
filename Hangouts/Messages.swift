@@ -377,7 +377,8 @@ public class CONVERSATION_INTERNAL_STATE : Message {
 
     public var status: ConversationStatus = 0
     public var notification_level: NotificationLevel = 0
-
+	
+	/* TODO: getArrayMessageType() doesn't support enum array types yet. */
     public var view = [ConversationView]()
 
     public var inviter_id = PARTICIPANT_ID()
@@ -419,8 +420,8 @@ public class CONVERSATION : Message {
     public var field15: AnyObject?
     public var field16: AnyObject?
     public var field17: AnyObject?
-	/* TODO: There's a weird bug here where it won't convert to a Swift array. */
-    public var network_type = [AnyObject]() // [NetworkType]()
+	/* TODO: getArrayMessageType() doesn't support enum array types yet. */
+    public var network_type = [AnyObject]() //[NetworkType]()
 	public var force_history_state: AnyObject?
 	public var field20: AnyObject?
 	public var field21: AnyObject?
@@ -575,7 +576,7 @@ public class STATE_UPDATE : Message {
     public var state_update_header = STATE_UPDATE_HEADER()
     public var conversation_notification: AnyObject?
     public var event_notification: EVENT_NOTIFICATION?
-    public var focus_notification = SET_FOCUS_NOTIFICATION()
+	public var focus_notification: SET_FOCUS_NOTIFICATION?
     public var typing_notification: SET_TYPING_NOTIFICATION?
     public var notification_level_notification: AnyObject?
     public var reply_to_invite_notification: AnyObject?
