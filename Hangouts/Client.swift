@@ -3,13 +3,6 @@ import Alamofire
 
 public let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
 
-/* INITIALDATA
-public let ORIGIN_URL = "https://talkgadget.google.com"
-public let PVT_TOKEN_URL = "https://talkgadget.google.com/talkgadget/_/extension-start"
-public let CHAT_INIT_URL = "https://talkgadget.google.com/u/0/talkgadget/_/chat"
-public let CHAT_INIT_REGEX = "(?:<script>AF_initDataCallback\\((.*?)\\);</script>)"
-*/
-
 public let ClientStateUpdatedNotification = "ClientStateUpdated"
 public let ClientStateUpdatedNewStateKey = "ClientStateNewState"
 
@@ -19,21 +12,8 @@ public let ACTIVE_TIMEOUT_SECS = 120
 // Minimum timeout between subsequent setactiveclient requests:
 public let SETACTIVECLIENT_LIMIT_SECS = 60
 
-/*
-public typealias InitialData = (
-	conversation_states: [CONVERSATION_STATE],
-	self_entity: ENTITY,
-	entities: [ENTITY],
-	conversation_participants: [CONVERSATION_PARTICIPANT_DATA],
-	sync_timestamp: NSDate?
-)
-*/
-
 public protocol ClientDelegate {
     func clientDidConnect(client: Client)
-	/* INITIALDATA
-	, initialData: InitialData)
-	*/
     func clientDidDisconnect(client: Client)
     func clientDidReconnect(client: Client)
     func clientDidUpdateState(client: Client, update: STATE_UPDATE)
@@ -59,158 +39,16 @@ public class Client : ChannelDelegate {
 	public var last_active_secs: NSNumber? = 0
 	public var active_client_state: ActiveClientState?
 	
-	/* INITIALDATA
-	public var initial_data: InitialData?
-	public var api_key: String?
-	public var header_date: String?
-	public var header_version: String?
-	public var header_id: String?
-	*/
-
-	/*
-    public var CHAT_INIT_PARAMS: Dictionary<String, AnyObject?> = [
-        "prop": "aChromeExtension",
-        "fid": "gtn-roster-iframe-id",
-        "ec": "[\"ci:ec\",true,true,false]",
-        "pvt": nil, // Populated later
-    ]*/
-	
 	public init(configuration: NSURLSessionConfiguration) {
 		self.config = configuration
     }
 	
 	// Establish a connection to the chat server.
     public func connect() {
-		/* INITIALDATA
-		self.initialize_chat { (id: InitialData?) in
-            self.initial_data = id
-		}
-		*/
-		
 		self.channel = Channel(configuration: self.config)
 		self.channel?.delegate = self
 		self.channel?.listen()
     }
-	
-	// Request push channel creation and initial chat data.
-	// Returns instance of InitialData.
-	// The response body is a HTML document containing a series of script tags
-	// containing JavaScript objects. We need to parse the objects to get at
-	// the data.
-	// We first need to fetch the 'pvt' token, which is required for the
-	// initialization request (otherwise it will return 400).
-	/* INITIALDATA
-	public func initialize_chat(cb: (data: InitialData?) -> Void) {
-        let prop = (CHAT_INIT_PARAMS["prop"] as! String).encodeURL()
-        let fid = (CHAT_INIT_PARAMS["fid"] as! String).encodeURL()
-        let ec = (CHAT_INIT_PARAMS["ec"] as! String).encodeURL()
-        let url = "\(PVT_TOKEN_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)"
-		
-        let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-		
-		self.session.request(request) {
-			guard let data = $0.data else {
-				print("Request failed with error: \($0.error!)")
-				return
-			}
-			
-			let body = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
-			let pvt: AnyObject = evalArray(body)![1] as! String
-			self.CHAT_INIT_PARAMS["pvt"] = pvt
-			
-			// Now make the actual initialization request:
-			let prop = (self.CHAT_INIT_PARAMS["prop"] as! String).encodeURL()
-			let fid = (self.CHAT_INIT_PARAMS["fid"] as! String).encodeURL()
-			let ec = (self.CHAT_INIT_PARAMS["ec"] as! String).encodeURL()
-			let pvt_enc = (self.CHAT_INIT_PARAMS["pvt"] as! String).encodeURL()
-			let url = "\(CHAT_INIT_URL)?prop=\(prop)&fid=\(fid)&ec=\(ec)&pvt=\(pvt_enc)"
-			
-			let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-			self.session.request(request) {
-				
-				// Ensure we have a proper HTTP status code and data to work with.
-				// Once met, we can use the string body for parsing.
-				guard let data = $0.data else {
-					print("Request returned no data with error: \($0.error!)"); return
-				}
-				if let res = $0.response as? NSHTTPURLResponse where res.statusCode >= 400 {
-					print("Request failed with HTTP status \(res.statusCode)."); return
-				}
-				let body = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
-				
-				// Parse the response by using a regex to find all the JS objects, and
-				// parsing them. Not everything will be parsable, but we don't care if
-				// an object we don't need can't be parsed.
-				var data_dict = Dictionary<String, AnyObject?>()
-				let regex = Regex(CHAT_INIT_REGEX, options: [.CaseInsensitive, .DotMatchesLineSeparators])
-				for data in regex.match(body) {
-					/*
-					if data.rangeOfString("data:function") == nil {
-						let dict = evalDict(data)!
-						data_dict[dict["key"] as! String] = dict["data"]
-					} else { }
-					*/
-					var cleanedData = data
-					cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
-						"data:function(){return", withString: "data:")
-					cleanedData = cleanedData.stringByReplacingOccurrencesOfString(
-						"}}", withString: "}")
-					let dict = evalDict(cleanedData)!
-					data_dict[dict["key"] as! String] = dict["data"]
-				}
-				self.api_key = ((data_dict["ds:7"] as! NSArray)[0] as! NSArray)[2] as? String
-				self.email = ((data_dict["ds:33"] as! NSArray)[0] as! NSArray)[2] as? String
-				self.header_date = ((data_dict["ds:2"] as! NSArray)[0] as! NSArray)[4] as? String
-				self.header_version = ((data_dict["ds:2"] as! NSArray)[0] as! NSArray)[6] as? String
-				self.header_id = ((data_dict["ds:4"] as! NSArray)[0] as! NSArray)[7] as? String
-				
-				let self_entity = PBLiteSerialization.parseArray(GET_SELF_INFO_RESPONSE.self, input: (data_dict["ds:20"] as! NSArray)[0] as? NSArray)!.self_entity
-				
-				// FIXME: Sometimes crashes right here...
-				let initial_conv_states_raw = ((data_dict["ds:19"] as! NSArray)[0] as! NSArray)[3] as! NSArray
-				let initial_conv_states = (initial_conv_states_raw as! [NSArray]).map {
-					PBLiteSerialization.parseArray(CONVERSATION_STATE.self, input: $0)!
-				}
-				let initial_conv_parts = initial_conv_states.flatMap { $0.conversation.participant_data }
-				
-				var initial_entities = [ENTITY]()
-				var sync_timestamp: NSNumber? = nil
-				
-				if let ds21 = data_dict["ds:21"] as? NSArray {
-					sync_timestamp = ((ds21[0] as! NSArray)[1] as! NSArray)[4] as? NSNumber
-					
-					let entities = PBLiteSerialization.parseArray(INITIAL_CLIENT_ENTITIES.self, input: ds21[0] as? NSArray)!
-					initial_entities = (entities.entities) + [
-						entities.group1.entity,
-						entities.group2.entity,
-						entities.group3.entity,
-						entities.group4.entity,
-						entities.group5.entity,
-						].flatMap { $0 }.map { $0.entity }
-				}
-				
-				cb(data: InitialData(
-					initial_conv_states,
-					self_entity,
-					initial_entities,
-					initial_conv_parts,
-					from_timestamp(sync_timestamp)
-				))
-			}
-		}
-    }
-	*/
-
-	/* INITIALDATA
-    private func getRequestHeader() -> NSArray {
-        return [
-            [6, 3, self.header_version!, self.header_date!],
-            [self.client_id ?? NSNull(), self.header_id!],
-            NSNull(),
-            "en"
-        ]
-    }
-	*/
 	
 	/* TODO: Can't disconnect a Channel yet. */
 	// Gracefully disconnect from the server.
@@ -308,9 +146,6 @@ public class Client : ChannelDelegate {
 	
 	public func channelDidConnect(channel: Channel) {
 		delegate?.clientDidConnect(self)
-		/* INITIALDATA
-		, initialData: initial_data!)
-		*/
 	}
 	
 	public func channelDidDisconnect(channel: Channel) {
@@ -417,12 +252,7 @@ public class Client : ChannelDelegate {
         use_json: Bool = true,
         cb: (Result) -> Void
     ) {
-        let params = [
-			/* INITIALDATA
-			"key": self.api_key!,
-			*/
-            "alt": use_json ? "json" : "protojson",
-        ]
+        let params = ["alt": use_json ? "json" : "protojson"]
         let url = NSURL(string: (path + "?" + params.encodeURL()))!
         let request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "POST"

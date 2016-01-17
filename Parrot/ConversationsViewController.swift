@@ -75,25 +75,6 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			}
         }
     }
-
-	/* INITIALDATA
-    func clientDidConnect(client: Client, initialData: InitialData) {
-		buildUserList(client, initial_data: initialData) { user_list in
-            self.conversationList = ConversationList(
-                client: client,
-                conv_states: initialData.conversation_states,
-                user_list: user_list,
-                sync_timestamp: initialData.sync_timestamp
-            )
-			
-			Dispatch.main().add {
-				self.tableView.reloadData()
-				self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
-				self.tableView.scrollRowToVisible(0)
-			}
-        }
-	}
-	*/
 	
 	func clientDidConnect(client: Client) {
 		buildUserConversationList(client) { (userList, conversationList) in
