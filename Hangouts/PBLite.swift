@@ -61,7 +61,7 @@ public class Message : NSObject {
 
 public class PBLiteSerialization {
 	
-	// FIXME: Use Swift reflection to unwrap AnyObject?.
+	/* TODO: Use Swift reflection to unwrap AnyObject?. */
 	public class func _unwrapOptionalType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
 		if dynamicTypeName.containsString("Optional<") {
@@ -72,7 +72,7 @@ public class PBLiteSerialization {
 		return nil
 	}
 	
-	// FIXME: Use Swift reflection to unwrap [AnyObject]?.
+	/* TODO: Use Swift reflection to unwrap [AnyObject]?. */
 	public class func _unwrapOptionalArrayType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
 		
@@ -90,7 +90,7 @@ public class PBLiteSerialization {
 		return nil
 	}
 	
-	// FIXME: Use Swift reflection to unwrap [AnyObject].
+	/* TODO: Use Swift reflection to unwrap [AnyObject]. */
 	public class func getArrayMessageType(arr: Any) -> Message.Type? {
 		if arr is [CONVERSATION_ID] { return CONVERSATION_ID.self }
 		if arr is [CONVERSATION_STATE] { return CONVERSATION_STATE.self }
@@ -106,13 +106,13 @@ public class PBLiteSerialization {
 		return nil
 	}
 	
-	// FIXME: Use Swift reflection to unwrap [AnyObject].
+	/* TODO: Use Swift reflection to unwrap [AnyObject]. */
 	public class func getArrayEnumType(arr: Any) -> Enum.Type? {
 		if arr is [ConversationView] { return ConversationView.self }
 		return nil
 	}
 	
-	// FIXME: Use Swift reflection to unwrap.
+	/* TODO: Use Swift reflection to unwrap. */
 	public class func valueWithTypeCoercion(property: Any, value: AnyObject?) -> AnyObject? {
 		if property is NSDate || _unwrapOptionalType(property) is NSDate.Type {
 			if let number = value as? NSNumber {
@@ -163,7 +163,8 @@ public class PBLiteSerialization {
 				//  Using a non-optional sub-struct
 			} else if let enumv = property as? Enum {
 				var val: AnyObject?
-				if arr[i] as? NSNumber == nil { // TODO: NSNull literal conversion
+				/* TODO: Support NSNull literal conversion. */
+				if arr[i] as? NSNumber == nil {
 					val = enumv.dynamicType.init(value: 0)
 				} else {
 					val = enumv.dynamicType.init(value: (arr[i] as! NSNumber))

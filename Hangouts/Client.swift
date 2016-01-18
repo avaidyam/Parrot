@@ -19,13 +19,6 @@ public protocol ClientDelegate {
     func clientDidUpdateState(client: Client, update: STATE_UPDATE)
 }
 
-// cleaner code pls.
-extension String {
-	func encodeURL() -> String {
-		return self.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
-	}
-}
-
 var session: NSURLSession? = nil
 
 public class Client : ChannelDelegate {
@@ -255,7 +248,7 @@ public class Client : ChannelDelegate {
         request.HTTPMethod = "POST"
         request.HTTPBody = data
 
-        for (k, v) in getAuthorizationHeaders(self.channel!.getCookieValue("SAPISID")!) {
+        for (k, v) in getAuthorizationHeaders(getCookieValue("SAPISID")!) {
             request.setValue(v, forHTTPHeaderField: k)
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")
@@ -418,15 +411,14 @@ public class Client : ChannelDelegate {
 	}
 	
 	// Return information about a list of contacts.
-	public func getEntitiesByID(chat_id_list: [String], cb: (GET_ENTITY_BY_ID_RESPONSE) -> Void) {
+	public func getEntitiesByID(chat_id_list: [String], cb: (GET_ENTITY_BY_ID_RESPONSE?) -> Void) {
 		let data = [
 			self.getRequestHeader(),
 			NSNull(),
 			chat_id_list.map { [$0] }
 		]
 		self.request("contacts/getentitybyid", body: data, use_json: false) { r in
-			let obj: GET_ENTITY_BY_ID_RESPONSE? = PBLiteSerialization.parseProtoJSON(r.data!)
-			cb(obj!)
+			cb(PBLiteSerialization.parseProtoJSON(r.data!))
 		}
 	}
 	
@@ -439,14 +431,23 @@ public class Client : ChannelDelegate {
 		}
 	}
 	
-	/* TODO: Does not return data, only calls the callback. */
-	public func queryPresence(chat_id: String, cb: (() -> Void)? = nil) {
+	public func queryPresence(chat_ids: [String] = [], cb: (() -> Void)? = nil) {
+		guard chat_ids.count > 0 else {
+			print("Cannot query presence for zero chat IDs!")
+			return
+		}
+		
 		let data = [
 			self.getRequestHeader(),
-			[[chat_id]],
-			[1, 2, 5, 7, 8]
+			[chat_ids],
+			[1, 2, 5, 7, 8] // what are FieldMasks 5 and 8?
 		]
-		self.request("presence/querypresence", body: data) { r in cb?()}
+		self.request("presence/querypresence", body: data) { r in
+			
+			/* TODO: Does not return data, only calls the callback. */
+			// cb(response: PBLiteSerialization.parseProtoJSON(r.data!)) //PresenceResult
+			cb?()
+		}
 	}
 	
 	// Leave group conversation.

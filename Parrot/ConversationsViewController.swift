@@ -77,9 +77,13 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
     }
 	
 	func clientDidConnect(client: Client) {
-		buildUserConversationList(client) { (userList, conversationList) in
-			self.userList = userList
-			self.conversationList = conversationList
+		buildUserConversationList(client) {
+			self.userList = $0
+			self.conversationList = $1
+			
+			self.userList!.allUsers.forEach {
+				print($0)
+			}
 			
 			Dispatch.main().add {
 				self.tableView.reloadData()
@@ -88,13 +92,13 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			}
 		}
 	}
-
+	
     func clientDidDisconnect(client: Client) {
-
+		
     }
 
     func clientDidReconnect(client: Client) {
-
+		
     }
 
     func clientDidUpdateState(client: Client, update: STATE_UPDATE) {

@@ -116,7 +116,7 @@ public func buildUserConversationList(client: Client, cb: (UserList, Conversatio
 		var required_entities = Array<ENTITY>()
 		if required_user_ids.count > 0 {
 			client.getEntitiesByID(required_user_ids.map { $0.chatID }) { resp in
-				required_entities = resp.entities
+				required_entities = resp!.entities
 			}
 		}
 		

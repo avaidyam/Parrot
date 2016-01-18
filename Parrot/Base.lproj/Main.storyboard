@@ -844,11 +844,14 @@
                             <textField wantsLayer="YES" focusRingType="exterior" verticalHuggingPriority="751" verticalCompressionResistancePriority="49" translatesAutoresizingMaskIntoConstraints="NO" id="orf-m2-ObS">
                                 <rect key="frame" x="36" y="8" width="497" height="22"/>
                                 <animations/>
-                                <textFieldCell key="cell" selectable="YES" editable="YES" state="on" borderStyle="bezel" focusRingType="exterior" placeholderString="Send a message..." allowsEditingTextAttributes="YES" bezelStyle="round" id="nRY-lf-Vew">
+                                <textFieldCell key="cell" selectable="YES" editable="YES" refusesFirstResponder="YES" state="on" borderStyle="bezel" focusRingType="exterior" placeholderString="Send a message..." allowsEditingTextAttributes="YES" bezelStyle="round" id="nRY-lf-Vew">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                 </textFieldCell>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="drawsBackground" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="messageTextFieldDidAction:" target="MHo-xn-Myi" id="TZC-Pq-sdP"/>
                                 </connections>

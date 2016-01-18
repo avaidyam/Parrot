@@ -24,7 +24,6 @@
 		4835ECBD1C1C67D300193EBC /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E2A1C1B3F7F009BC442 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4838C6FD1C3A9E41005A8CBB /* PersonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4838C6FC1C3A9E41005A8CBB /* PersonView.xib */; settings = {ASSET_TAGS = (); }; };
 		48682CC81C46F00400E649DE /* NSTextField+AutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48682CC71C46F00400E649DE /* NSTextField+AutoLayout.swift */; settings = {ASSET_TAGS = (); }; };
-		487A0E131C1E4389007A4696 /* ChunkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A0E121C1E4389007A4696 /* ChunkParser.swift */; settings = {ASSET_TAGS = (); }; };
 		487A0E151C1E6D61007A4696 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A0E141C1E6D61007A4696 /* Notifications.swift */; settings = {ASSET_TAGS = (); }; };
 		488239A31C455CED00C5E8EB /* Array+Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488239A21C455CED00C5E8EB /* Array+Remove.swift */; settings = {ASSET_TAGS = (); }; };
 		48834D961C1B3602009BC442 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* AppDelegate.swift */; };
@@ -245,7 +244,6 @@
 		48682CC71C46F00400E649DE /* NSTextField+AutoLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextField+AutoLayout.swift"; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
-		487A0E121C1E4389007A4696 /* ChunkParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChunkParser.swift; sourceTree = "<group>"; };
 		487A0E141C1E6D61007A4696 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		488239A21C455CED00C5E8EB /* Array+Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Remove.swift"; sourceTree = "<group>"; };
 		48834D921C1B3602009BC442 /* Parrot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parrot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -474,7 +472,6 @@
 			children = (
 				48834E351C1B4098009BC442 /* Client.swift */,
 				48834E341C1B4098009BC442 /* Channel.swift */,
-				487A0E121C1E4389007A4696 /* ChunkParser.swift */,
 				48834E391C1B4098009BC442 /* Parsers.swift */,
 				48834E371C1B4098009BC442 /* Event.swift */,
 				48834E361C1B4098009BC442 /* Conversation.swift */,
@@ -1200,7 +1197,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
-				487A0E131C1E4389007A4696 /* ChunkParser.swift in Sources */,
 				48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */,
 				4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */,
 				481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */,

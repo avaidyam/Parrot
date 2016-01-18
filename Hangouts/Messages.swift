@@ -648,8 +648,8 @@ public class ENTITY_GROUP : Message {
 }
 
 /* TODO: This is really a response to some request. */
-@objc(INITIAL_CLIENT_ENTITIES)
-public class INITIAL_CLIENT_ENTITIES : Message {
+@objc(INITIAL_CLIENT_ENTITIES_RESPONSE)
+public class INITIAL_CLIENT_ENTITIES_RESPONSE : Message {
     public var cgserp: NSString = ""
     public var header: AnyObject?
     public var entities = [ENTITY]()

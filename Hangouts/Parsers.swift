@@ -8,7 +8,7 @@ public typealias WatermarkNotification = (conv_id: String, user_id: UserID, read
 
 // Yield ClientStateUpdate instances from a channel submission.
 // For each submission payload, yield its messages
-public func parse_submission(submission: String) -> (client_id: String?, updates: [STATE_UPDATE]) {
+internal func parse_submission(submission: String) -> (client_id: String?, updates: [STATE_UPDATE]) {
     let result = _get_submission_payloads(submission)
     let parsed_submissions = result.updates.flatMap {
 		_parse_payload($0)
@@ -20,7 +20,7 @@ public func parse_submission(submission: String) -> (client_id: String?, updates
 // Most submissions only contain one payload, but if the long-polling
 // connection was closed while something happened, there can be multiple
 // payloads.
-public func _get_submission_payloads(submission: String) -> (client_id: String?, updates: [[AnyObject]]) {
+internal func _get_submission_payloads(submission: String) -> (client_id: String?, updates: [[AnyObject]]) {
     let result = evalArray(submission) as! NSArray
     let nullResult: (client_id: String?, updates: [[AnyObject]]) = (nil, [])
     let r: [(client_id: String?, updates: [[AnyObject]])] = result.map { sub in
@@ -46,12 +46,12 @@ public func _get_submission_payloads(submission: String) -> (client_id: String?,
 	}
 }
 
-public func flatMap<A,B>(x: [A], y: A -> B?) -> [B] {
+internal func flatMap<A,B>(x: [A], y: A -> B?) -> [B] {
     return x.map { y($0) }.filter { $0 != nil }.map { $0! }
 }
 // Yield a list of ClientStateUpdates.
 
-public func _parse_payload(payload: [AnyObject]) -> [STATE_UPDATE] {
+internal func _parse_payload(payload: [AnyObject]) -> [STATE_UPDATE] {
     if payload[0] as? String == "cbu" {
 		
 		// payload[1] is a list of state updates.
@@ -66,7 +66,7 @@ public func _parse_payload(payload: [AnyObject]) -> [STATE_UPDATE] {
 // Return TypingStatusMessage from ClientSetTypingNotification.
 // The same status may be sent multiple times consecutively, and when a
 // message is sent the typing status will not change to stopped.
-public func parse_typing_status_message(p: SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
+internal func parse_typing_status_message(p: SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
     return TypingStatusMessage(
         conv_id: p.conversation_id.id as! String,
         user_id: UserID(chatID: p.user_id.chat_id as! String, gaiaID: p.user_id.gaia_id as! String),
@@ -76,7 +76,7 @@ public func parse_typing_status_message(p: SET_TYPING_NOTIFICATION) -> TypingSta
 }
 
 // Return WatermarkNotification from ClientWatermarkNotification.
-public func parse_watermark_notification(client_watermark_notification: WATERMARK_NOTIFICATION) -> WatermarkNotification {
+internal func parse_watermark_notification(client_watermark_notification: WATERMARK_NOTIFICATION) -> WatermarkNotification {
     return WatermarkNotification(
         conv_id: client_watermark_notification.conversation_id.id as! String,
         user_id: UserID(
@@ -85,4 +85,57 @@ public func parse_watermark_notification(client_watermark_notification: WATERMAR
         ),
         read_timestamp: from_timestamp(client_watermark_notification.latest_read_timestamp)!
     )
+}
+
+
+internal func getCookieValue(key: String) -> String? {
+	if let c = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
+		if let match = (c.filter {
+			($0 as NSHTTPCookie).name == key &&
+				($0 as NSHTTPCookie).domain == ".google.com"
+			}).first {
+				return match.value
+		}
+	}
+	return nil
+}
+
+//  Parse response format for request for new channel SID.
+//  Example format (after parsing JS):
+//  [   [0,["c","SID_HERE","",8]],
+//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
+internal func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
+	if let firstSubmission = Channel.ChunkParser().getChunks(res).first {
+		let val = evalArray(firstSubmission)!
+		let sid = ((val[0] as! NSArray)[1] as! NSArray)[1] as! String
+		let gSessionID = (((val[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String
+		return (sid, gSessionID)
+	}
+	return ("", "")
+}
+
+// cleaner code pls.
+internal extension String {
+	internal func encodeURL() -> String {
+		return self.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
+	}
+}
+
+internal extension Dictionary {
+	
+	/* TODO: Returns a really weird result like below: */
+	// "%63%74%79%70%65=%68%61%6E%67%6F%75%74%73&%56%45%52=%38&%52%49%44=%38%31%31%38%38"
+	// instead of "ctype=hangouts&VER=8&RID=81188"
+	internal func encodeURL() -> String {
+		let set = NSCharacterSet(charactersInString: ":/?&=;+!@#$()',*")
+		
+		var parts = [String]()
+		for (key, value) in self {
+			let keyString: String = "\(key)".stringByAddingPercentEncodingWithAllowedCharacters(set)!
+			let valueString: String = "\(value)".stringByAddingPercentEncodingWithAllowedCharacters(set)!
+			let query: String = "\(keyString)=\(valueString)"
+			parts.append(query)
+		}
+		return parts.joinWithSeparator("&")
+	}
 }

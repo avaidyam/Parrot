@@ -175,12 +175,9 @@ public class ConversationList : ClientDelegate {
 	// Receive a ClientStateUpdate and fan out to Conversations
 	/* TODO: Refactor this to use the Oneof support in Protobuf. */
     public func clientDidUpdateState(client: Client, update: STATE_UPDATE) {
-		print("got an update \(update)")
-		
         if let client_conversation = update.client_conversation {
             handle_client_conversation(client_conversation)
         }
-
         if let typing_notification = update.typing_notification {
             handle_set_typing_notification(typing_notification)
         }

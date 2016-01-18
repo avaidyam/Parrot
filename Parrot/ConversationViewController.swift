@@ -24,9 +24,6 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		self.messagesView.insets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
         self.messageTextField.delegate = self
 		
-		// To fix the weird label appearance.
-		//self.messageTextField.appearance = NSAppearance(named: NSAppearanceNameAqua)
-		
 		self.popover = NSPopover()
 		self.popover.contentViewController = NSViewController()
 		self.popover.contentViewController!.view = self.statusView
