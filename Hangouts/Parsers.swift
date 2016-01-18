@@ -114,7 +114,7 @@ internal func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String)
 	return ("", "")
 }
 
-// cleaner code pls.
+// Needs to be fixed somehow to not use NSString stuff.
 internal extension String {
 	internal func encodeURL() -> String {
 		return self.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
@@ -123,7 +123,7 @@ internal extension String {
 
 internal extension Dictionary {
 	
-	/* TODO: Returns a really weird result like below: */
+	// Returns a really weird result like below:
 	// "%63%74%79%70%65=%68%61%6E%67%6F%75%74%73&%56%45%52=%38&%52%49%44=%38%31%31%38%38"
 	// instead of "ctype=hangouts&VER=8&RID=81188"
 	internal func encodeURL() -> String {
@@ -139,3 +139,5 @@ internal extension Dictionary {
 		return parts.joinWithSeparator("&")
 	}
 }
+
+internal let None = NSNull()

@@ -1,4 +1,4 @@
-import Foundation
+import Foundation // NSDate
 
 public protocol ConversationListDelegate {
     func conversationList(list: ConversationList, didReceiveEvent event: Event)
@@ -10,6 +10,7 @@ public protocol ConversationListDelegate {
 
 // Wrapper around Client that maintains a list of Conversations
 public class ConversationList : ClientDelegate {
+	
     public let client: Client
     private var conv_dict = [String : Conversation]()
     public var sync_timestamp: NSDate

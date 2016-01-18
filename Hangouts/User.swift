@@ -1,4 +1,3 @@
-import Cocoa
 
 // A chat user identifier.
 // Use the much more full-featured User class for more data.
@@ -57,7 +56,6 @@ public struct User: Hashable, Equatable {
             emails: entity.properties.emails.map { $0 as! String },
             isSelf: isSelf
         )
-
     }
 	
 	// Initialize from ClientConversationParticipantData.

@@ -82,8 +82,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         if !(self.window?.keyWindow ?? false) {
             let user = conversation.user_list[event.user_id]
             if !user.isSelf {
-				let a = (event.event.conversation_id.id as! String, event.id as String)
-				let text = event.event.chat_message?.message_content.segment.first?.text as? String
+				let a = (event.conversation_id as String, event.id as String)
+				let text = (event as? ChatMessageEvent)?.text ?? "Event"
 				
 				let notification = NSUserNotification()
 				notification.title = user.fullName

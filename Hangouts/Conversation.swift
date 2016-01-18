@@ -1,4 +1,3 @@
-import Foundation
 
 public protocol ConversationDelegate {
     func conversation(conversation: Conversation, didChangeTypingStatusForUser: User, toStatus: TypingType)
@@ -223,7 +222,6 @@ public class Conversation {
             break
         }
     }
-    
 	
 	// Rename the conversation.
 	// Hangouts only officially supports renaming group conversations, so

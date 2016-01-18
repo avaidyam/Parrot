@@ -270,7 +270,7 @@
 		48834E271C1B3D98009BC442 /* Hangouts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Hangouts.h; sourceTree = "<group>"; };
 		48834E2A1C1B3F7F009BC442 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = External/Alamofire.framework; sourceTree = SOURCE_ROOT; };
 		48834E341C1B4098009BC442 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
-		48834E351C1B4098009BC442 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		48834E351C1B4098009BC442 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Client.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		48834E361C1B4098009BC442 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		48834E371C1B4098009BC442 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		48834E381C1B4098009BC442 /* ConversationList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationList.swift; sourceTree = "<group>"; };

@@ -19,9 +19,7 @@ public protocol ClientDelegate {
     func clientDidUpdateState(client: Client, update: STATE_UPDATE)
 }
 
-var session: NSURLSession? = nil
-
-public class Client : ChannelDelegate {
+public final class Client : ChannelDelegate {
 	
 	public let config: NSURLSessionConfiguration
 	public var delegate: ClientDelegate?
@@ -516,48 +514,46 @@ public class Client : ChannelDelegate {
 		image_id: String? = nil,
 		image_user_id: String? = nil,
 		otr_status: OffTheRecordStatus = .ON_THE_RECORD,
-		cb: (() -> Void)? = nil
-	) {
-			
-			// Support sending images from other user id's.
-			var a: NSObject
-			if image_id != nil {
-				if image_user_id != nil {
-					a = [[image_id!, false, image_user_id!, true]]
-				} else {
-					a = [[image_id!, false, NSNull(), false]]
-				}
+		cb: (() -> Void)? = nil)
+	{
+		// Support sending images from other user id's.
+		var a: NSObject
+		if image_id != nil {
+			if image_user_id != nil {
+				a = [[image_id!, false, image_user_id!, true]]
 			} else {
-				a = NSNull()
+				a = [[image_id!, false, NSNull(), false]]
 			}
-			
-			let client_generated_id = generateClientID()
-			let data = [
-				self.getRequestHeader(),
-				NSNull(),
-				NSNull(),
-				NSNull(),
-				[],
-				[
-					segments,
-					[]
-				],
-				a, // it's too long for one line!
-				[
-					[conversation_id],
-					client_generated_id,
-					otr_status.representation,
-				],
-				NSNull(),
-				NSNull(),
-				NSNull(),
+		} else {
+			a = NSNull()
+		}
+		
+		let data = [
+			self.getRequestHeader(),
+			NSNull(),
+			NSNull(),
+			NSNull(),
+			[],
+			[
+				segments,
 				[]
-			]
-			
-			// sendchatmessage can return 200 but still contain an error
-			self.request("conversations/sendchatmessage", body: data) {
-				r in self.verifyResponseOK(r.data!); cb?()
-			}
+			],
+			a, // it's too long for one line!
+			[
+				[conversation_id],
+				generateClientID(),
+				otr_status.representation,
+			],
+			NSNull(),
+			NSNull(),
+			NSNull(),
+			[]
+		]
+		
+		// sendchatmessage can return 200 but still contain an error
+		self.request("conversations/sendchatmessage", body: data) {
+			r in self.verifyResponseOK(r.data!); cb?()
+		}
 	}
 	
 	public func setActiveClient(is_active: Bool, timeout_secs: Int, cb: (() -> Void)? = nil) {

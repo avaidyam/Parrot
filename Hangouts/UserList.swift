@@ -1,4 +1,4 @@
-import Foundation
+import Foundation // NSNotificationCenter
 
 /* TODO: Support DictionaryLiteralConvertible, CollectionType, Indexable. */
 /* TODO: Support SequenceType, MutableCollectionType, MutableIndexable. */

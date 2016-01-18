@@ -12,7 +12,7 @@ public protocol ChannelDelegate {
     func channel(channel: Channel, didReceiveMessage: [AnyObject])
 }
 
-public class Channel : NSObject, NSURLSessionDataDelegate {
+public final class Channel : NSObject, NSURLSessionDataDelegate {
 	
 	// The prefix for any BrowserChannel endpoint.
 	private static let URLPrefix = "https://0.client-channel.google.com/client-channel"
