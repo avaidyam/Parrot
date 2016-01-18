@@ -2,12 +2,12 @@ import Foundation // NSNotificationCenter
 
 /* TODO: Support DictionaryLiteralConvertible, CollectionType, Indexable. */
 /* TODO: Support SequenceType, MutableCollectionType, MutableIndexable. */
+/* TODO: Clean up the NSNotificationCenter mess here. */
 
 // Collection of User instances.
 public class UserList {
 	
-	/* TODO: Don't hold a reference to client. */
-	private let client: Client
+	private var observer: NSObjectProtocol? // for NSNotification
 	private let selfUser: User
 	private var users: [UserID: User]
 	
@@ -41,7 +41,6 @@ public class UserList {
 	// ClientConversationParticipantData instances. The latter is used only as
 	// a fallback, because it doesn't include a real first_name.
 	public init(client: Client, selfEntity: ENTITY, entities: [ENTITY] = [], data: [CONVERSATION_PARTICIPANT_DATA]) {
-		self.client = client
 		self.selfUser = User(entity: selfEntity, selfUser: nil)
 		self.users = [self.selfUser.id: self.selfUser]
 		
@@ -59,36 +58,27 @@ public class UserList {
 			}
 		}
 		
-		let n = NSNotificationCenter.defaultCenter()
-		n.addObserverForName(Client.ClientStateUpdatedNotification, object: self.client, queue: nil) {
-			self.on_state_update_notification($0)
-		}
-		
-		/*n.addObserver(
-			self,
-			selector: Selector("on_state_update_notification:"),
-			name: ClientStateUpdatedNotification,
-			object: self.client
-		)*/
-	}
-	
-	deinit {
-		//NSNotificationCenter.defaultCenter().removeObserver(self)
-	}
-	
-	/* TODO: Switch away from the old API to a nicer EventBus-style one. */
-	public func on_state_update_notification(notification: NSNotification) {
-		if let userInfo = notification.userInfo,
-			state_update = userInfo[Client.ClientStateUpdatedNewStateKey as NSString] {
-			if let conversation = (state_update as! STATE_UPDATE).client_conversation {
-				for participant in conversation.participant_data {
-					let user = User(data: participant, selfUser: self.selfUser.id)
-					if self.users[user.id] == nil {
-						self.users[user.id] = user
+		self.observer = NSNotificationCenter.defaultCenter()
+			.addObserverForName(Client.ClientStateUpdatedNotification, object: client, queue: nil) {
+			
+			if let userInfo = $0.userInfo,
+				state_update = userInfo[Client.ClientStateUpdatedNewStateKey as NSString] {
+				
+				if let conversation = (state_update as! STATE_UPDATE).client_conversation {
+					for participant in conversation.participant_data {
+						
+						let user = User(data: participant, selfUser: self.selfUser.id)
+						if self.users[user.id] == nil {
+							self.users[user.id] = user
+						}
 					}
 				}
 			}
 		}
+	}
+	
+	deinit {
+		NSNotificationCenter.defaultCenter().removeObserver(self.observer!)
 	}
 }
 
