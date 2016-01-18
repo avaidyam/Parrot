@@ -50,9 +50,9 @@ public final class Client : ChannelDelegate {
 	// Use this method for constructing request messages when calling Hangouts APIs.
 	private func getRequestHeader() -> NSArray {
 		return [
-			[NSNull() /* 6 */, NSNull() /* 3 */, "parrot-0.1", NSNull(), NSNull(), NSNull()],
-			[self.client_id ?? NSNull(), NSNull()],
-			NSNull(),
+			[None /* 6 */, None /* 3 */, "parrot-0.1", None, None, None],
+			[self.client_id ?? None, None],
+			None,
 			"en"
 		]
 	}
@@ -344,7 +344,7 @@ public final class Client : ChannelDelegate {
 			// Not sure what timestamp should be there, last time I have tried
 			// it Hangouts client in GMail sent something like now() - 5 hours
 			to_timestamp(NSDate()), /* TODO: This should be in UTC form. */
-			NSNull(),
+			None,
 			[]
 		]
 		self.request("conversations/deleteconversation", body: data) { r in
@@ -392,11 +392,11 @@ public final class Client : ChannelDelegate {
 			],  // conversationSpec
 			false,  // includeConversationMetadata
 			true,  // includeEvents
-			NSNull(),  // ???
+			None,  // ???
 			max_events,  // maxEventsPerConversation
 			[
-				NSNull(),  // eventId
-				NSNull(),  // storageContinuationToken
+				None,  // eventId
+				None,  // storageContinuationToken
 				to_timestamp(event_timestamp),  // eventTimestamp
 			] // eventContinuationToken (specifying timestamp is sufficient)
 		]
@@ -412,7 +412,7 @@ public final class Client : ChannelDelegate {
 	public func getEntitiesByID(chat_id_list: [String], cb: (GET_ENTITY_BY_ID_RESPONSE?) -> Void) {
 		let data = [
 			self.getRequestHeader(),
-			NSNull(),
+			None,
 			chat_id_list.map { [$0] }
 		]
 		self.request("contacts/getentitybyid", body: data, use_json: false) { r in
@@ -453,9 +453,9 @@ public final class Client : ChannelDelegate {
 	public func removeUser(conversation_id: String, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
-			NSNull(),
-			NSNull(),
-			NSNull(),
+			None,
+			None,
+			None,
 			[
 				[conversation_id],
 				generateClientID(),
@@ -471,9 +471,9 @@ public final class Client : ChannelDelegate {
 	public func renameConversation(conversation_id: String, name: String, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
-			NSNull(),
+			None,
 			name,
-			NSNull(),
+			None,
 			[
 				[conversation_id],
 				generateClientID(),
@@ -522,17 +522,17 @@ public final class Client : ChannelDelegate {
 			if image_user_id != nil {
 				a = [[image_id!, false, image_user_id!, true]]
 			} else {
-				a = [[image_id!, false, NSNull(), false]]
+				a = [[image_id!, false, None, false]]
 			}
 		} else {
-			a = NSNull()
+			a = None
 		}
 		
 		let data = [
 			self.getRequestHeader(),
-			NSNull(),
-			NSNull(),
-			NSNull(),
+			None,
+			None,
+			None,
 			[],
 			[
 				segments,
@@ -544,9 +544,9 @@ public final class Client : ChannelDelegate {
 				generateClientID(),
 				otr_status.representation,
 			],
-			NSNull(),
-			NSNull(),
-			NSNull(),
+			None,
+			None,
+			None,
 			[]
 		]
 		
@@ -607,10 +607,10 @@ public final class Client : ChannelDelegate {
 				// 1 => nil
 				(online ? 1 : 40)
 			],
-			NSNull(),
-			NSNull(),
+			None,
+			None,
 			[!online], // True if going offline, False if coming online
-			[mood ?? NSNull()] // UTF-8 smiley like 0x1f603
+			[mood ?? None] // UTF-8 smiley like 0x1f603
 		]
 		self.request("presence/setpresence", body: data) { r in cb?()}
 		// result['response_header']['status']
@@ -634,7 +634,7 @@ public final class Client : ChannelDelegate {
 			self.getRequestHeader(),
 			to_timestamp(timestamp),
 			[],
-			NSNull(),
+			None,
 			[],
 			false,
 			[],
@@ -655,7 +655,7 @@ public final class Client : ChannelDelegate {
 		cb: ((response: SyncRecentConversationsResponse?) -> Void)) {
 		let data = [
 			self.getRequestHeader(),
-			NSNull(),
+			None,
 			maxConversations,
 			maxEventsPer,
 			[1]

@@ -140,4 +140,5 @@ internal extension Dictionary {
 	}
 }
 
+// Since we can't use nil in JSON arrays due to the parser.
 internal let None = NSNull()
