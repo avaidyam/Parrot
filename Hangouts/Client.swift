@@ -1,16 +1,4 @@
-import Foundation
-import Alamofire
-
-public let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
-
-public let ClientStateUpdatedNotification = "ClientStateUpdated"
-public let ClientStateUpdatedNewStateKey = "ClientStateNewState"
-
-// Timeout to send for setactiveclient requests:
-public let ACTIVE_TIMEOUT_SECS = 120
-
-// Minimum timeout between subsequent setactiveclient requests:
-public let SETACTIVECLIENT_LIMIT_SECS = 60
+import Foundation // lots of things here
 
 public protocol ClientDelegate {
     func clientDidConnect(client: Client)
@@ -20,6 +8,19 @@ public protocol ClientDelegate {
 }
 
 public final class Client : ChannelDelegate {
+	
+	// URL for uploading any URL to Photos
+	public static let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
+	
+	// Update keys to use in Notifications instead of a delegate.
+	public static let ClientStateUpdatedNotification = "ClientStateUpdated"
+	public static let ClientStateUpdatedNewStateKey = "ClientStateNewState"
+	
+	// Timeout to send for setactiveclient requests:
+	public static let ACTIVE_TIMEOUT_SECS = 120
+	
+	// Minimum timeout between subsequent setactiveclient requests:
+	public static let SETACTIVECLIENT_LIMIT_SECS = 60
 	
 	public let config: NSURLSessionConfiguration
 	public var delegate: ClientDelegate?
@@ -77,7 +78,7 @@ public final class Client : ChannelDelegate {
 		
 		let is_active = (active_client_state == ActiveClientState.IS_ACTIVE_CLIENT)
 		let time_since_active = (NSDate().timeIntervalSince1970 - last_active_secs!.doubleValue)
-		let timed_out = time_since_active > Double(SETACTIVECLIENT_LIMIT_SECS)
+		let timed_out = time_since_active > Double(Client.SETACTIVECLIENT_LIMIT_SECS)
 		
 		if !is_active || timed_out {
 			
@@ -94,7 +95,7 @@ public final class Client : ChannelDelegate {
 				}
 			}
 			
-			setActiveClient(true, timeout_secs: ACTIVE_TIMEOUT_SECS)
+			setActiveClient(true, timeout_secs: Client.ACTIVE_TIMEOUT_SECS)
         }
 	}
 	
@@ -103,7 +104,7 @@ public final class Client : ChannelDelegate {
 	public func uploadImage(data: NSData, filename: String, cb: ((String) -> Void)? = nil) {
 		let json = "{\"protocolVersion\":\"0.8\",\"createSessionRequest\":{\"fields\":[{\"external\":{\"name\":\"file\",\"filename\":\"\(filename)\",\"put\":{},\"size\":\(data.length)}}]}}"
 		
-		self.base_request(IMAGE_UPLOAD_URL,
+		self.base_request(Client.IMAGE_UPLOAD_URL,
 			content_type: "application/x-www-form-urlencoded;charset=UTF-8",
 			data: json.dataUsingEncoding(NSUTF8StringEncoding)!) { response in
 			
@@ -179,8 +180,8 @@ public final class Client : ChannelDelegate {
 				for state_update in result {
 					self.active_client_state = state_update.state_update_header.active_client_state
 					NSNotificationCenter.defaultCenter().postNotificationName(
-						ClientStateUpdatedNotification, object: self,
-						userInfo: [ClientStateUpdatedNewStateKey: state_update])
+						Client.ClientStateUpdatedNotification, object: self,
+						userInfo: [Client.ClientStateUpdatedNewStateKey: state_update])
 					delegate?.clientDidUpdateState(self, update: state_update)
 				}
 			} else {

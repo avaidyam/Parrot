@@ -60,7 +60,7 @@ public class UserList {
 		}
 		
 		let n = NSNotificationCenter.defaultCenter()
-		n.addObserverForName(ClientStateUpdatedNotification, object: self.client, queue: nil) {
+		n.addObserverForName(Client.ClientStateUpdatedNotification, object: self.client, queue: nil) {
 			self.on_state_update_notification($0)
 		}
 		
@@ -78,7 +78,8 @@ public class UserList {
 	
 	/* TODO: Switch away from the old API to a nicer EventBus-style one. */
 	public func on_state_update_notification(notification: NSNotification) {
-		if let userInfo = notification.userInfo, state_update = userInfo[ClientStateUpdatedNewStateKey as NSString] {
+		if let userInfo = notification.userInfo,
+			state_update = userInfo[Client.ClientStateUpdatedNewStateKey as NSString] {
 			if let conversation = (state_update as! STATE_UPDATE).client_conversation {
 				for participant in conversation.participant_data {
 					let user = User(data: participant, selfUser: self.selfUser.id)

@@ -1,4 +1,3 @@
-import Foundation // NSArray, NSNull
 
 // An event which becomes part of the permanent record of a conversation.
 // Acts as a base class for the events defined below.
