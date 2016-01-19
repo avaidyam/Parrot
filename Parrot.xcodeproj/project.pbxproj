@@ -46,13 +46,12 @@
 		48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E361C1B4098009BC442 /* Conversation.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E3F1C1B4098009BC442 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E371C1B4098009BC442 /* Event.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E401C1B4098009BC442 /* ConversationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E381C1B4098009BC442 /* ConversationList.swift */; settings = {ASSET_TAGS = (); }; };
-		48834E411C1B4098009BC442 /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E391C1B4098009BC442 /* Parsers.swift */; settings = {ASSET_TAGS = (); }; };
+		48834E411C1B4098009BC442 /* FoundationSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E391C1B4098009BC442 /* FoundationSupport.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E451C1B40A4009BC442 /* PBLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLite.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E461C1B40A4009BC442 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E441C1B40A4009BC442 /* Messages.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E481C1B40FA009BC442 /* NSRegularExpression+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E4C1C1B4253009BC442 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */; };
-		48834E501C1B4377009BC442 /* NSDate+Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E4F1C1B4377009BC442 /* NSDate+Operators.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E571C1B490B009BC442 /* CommonCrypto in Resources */ = {isa = PBXBuildFile; fileRef = 48834E561C1B490B009BC442 /* CommonCrypto */; settings = {ASSET_TAGS = (); }; };
 		488C65B01C3A8EA600D792C6 /* NSColor+MaterialDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */; settings = {ASSET_TAGS = (); }; };
 		48AD01DF1C1EC8A90031FDD7 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* Settings.swift */; settings = {ASSET_TAGS = (); }; };
@@ -274,13 +273,12 @@
 		48834E361C1B4098009BC442 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		48834E371C1B4098009BC442 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		48834E381C1B4098009BC442 /* ConversationList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationList.swift; sourceTree = "<group>"; };
-		48834E391C1B4098009BC442 /* Parsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parsers.swift; sourceTree = "<group>"; };
+		48834E391C1B4098009BC442 /* FoundationSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationSupport.swift; sourceTree = "<group>"; };
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		48834E431C1B40A4009BC442 /* PBLite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLite.swift; sourceTree = "<group>"; };
 		48834E441C1B40A4009BC442 /* Messages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+Helpers.swift"; sourceTree = "<group>"; };
 		48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		48834E4F1C1B4377009BC442 /* NSDate+Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Operators.swift"; sourceTree = "<group>"; };
 		48834E561C1B490B009BC442 /* CommonCrypto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CommonCrypto; path = External/CommonCrypto; sourceTree = SOURCE_ROOT; };
 		488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+MaterialDesign.swift"; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -472,7 +470,6 @@
 			children = (
 				48834E351C1B4098009BC442 /* Client.swift */,
 				48834E341C1B4098009BC442 /* Channel.swift */,
-				48834E391C1B4098009BC442 /* Parsers.swift */,
 				48834E361C1B4098009BC442 /* Conversation.swift */,
 				48834E381C1B4098009BC442 /* ConversationList.swift */,
 				48834E371C1B4098009BC442 /* Event.swift */,
@@ -654,7 +651,7 @@
 		48834E511C1B4380009BC442 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				48834E4F1C1B4377009BC442 /* NSDate+Operators.swift */,
+				48834E391C1B4098009BC442 /* FoundationSupport.swift */,
 				48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */,
 				481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */,
 				4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */,
@@ -1200,7 +1197,7 @@
 				48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */,
 				4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */,
 				481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */,
-				48834E411C1B4098009BC442 /* Parsers.swift in Sources */,
+				48834E411C1B4098009BC442 /* FoundationSupport.swift in Sources */,
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				48834E451C1B40A4009BC442 /* PBLite.swift in Sources */,
@@ -1208,7 +1205,6 @@
 				48834E461C1B40A4009BC442 /* Messages.swift in Sources */,
 				48834E401C1B4098009BC442 /* ConversationList.swift in Sources */,
 				48834E3D1C1B4098009BC442 /* Client.swift in Sources */,
-				48834E501C1B4377009BC442 /* NSDate+Operators.swift in Sources */,
 				48834E481C1B40FA009BC442 /* NSRegularExpression+Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
