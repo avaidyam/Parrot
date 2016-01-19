@@ -21,8 +21,7 @@ public struct User: Hashable, Equatable {
     public static let DEFAULT_NAME = "Unknown"
 
     public let id: UserID
-    public let fullName: String
-    public let firstName: String
+	public let nameComponents: [String]
     public let photoURL: String?
     public let emails: [String]
     public let isSelf: Bool
@@ -30,14 +29,13 @@ public struct User: Hashable, Equatable {
 	// Initialize a User directly.
 	// Handles full_name or first_name being nil by creating an approximate
 	// first_name from the full_name, or setting both to DEFAULT_NAME.
-    public init(userID: UserID, var fullName: String? = nil, firstName: String? = nil,
-		photoURL: String? = nil, emails: [String] = [], isSelf: Bool = false) {
-		fullName = fullName ?? User.DEFAULT_NAME
-		
+    public init(userID: UserID, fullName: String? = nil, firstName: String? = nil,
+		photoURL: String? = nil, emails: [String] = [], isSelf: Bool = false)
+	{
 		self.id = userID
-        self.fullName = fullName!
-        self.firstName = firstName ?? fullName!.characters.split { $0 == " " }.map{ String($0) }.first!
-		self.photoURL = photoURL != nil ? "https:" + photoURL! : nil
+		self.nameComponents = (fullName ?? "").characters
+			.split { $0 == " " }.map { String($0) }
+        self.photoURL = photoURL != nil ? "https:" + photoURL! : nil
         self.emails = emails
         self.isSelf = isSelf
     }
@@ -72,7 +70,21 @@ public struct User: Hashable, Equatable {
             emails: [],
             isSelf: isSelf
         )
-    }
+	}
+	
+	// Computes the full name by taking the name components like so:
+	// ["John", "Mark", "Smith"] => "John Mark Smith"
+	// Will return an empty string if there are no name components.
+	public var fullName: String {
+		return self.nameComponents.joinWithSeparator(" ")
+	}
+	
+	// Computes the first name by taking the first of the name components:
+	// ["John", "Mark", "Smith"] => "John"
+	// Will return a default string if there are no name components.
+	public var firstName: String {
+		return self.nameComponents.first ?? User.DEFAULT_NAME
+	}
 	
 	// User: Hashable
 	public var hashValue: Int {
