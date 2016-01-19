@@ -53,6 +53,7 @@
 		48834E481C1B40FA009BC442 /* NSRegularExpression+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */; settings = {ASSET_TAGS = (); }; };
 		48834E4C1C1B4253009BC442 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */; };
 		48834E571C1B490B009BC442 /* CommonCrypto in Resources */ = {isa = PBXBuildFile; fileRef = 48834E561C1B490B009BC442 /* CommonCrypto */; settings = {ASSET_TAGS = (); }; };
+		488997151C4E0EA30034AEF3 /* NSAutoLayout+Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488997141C4E0EA30034AEF3 /* NSAutoLayout+Operators.swift */; settings = {ASSET_TAGS = (); }; };
 		488C65B01C3A8EA600D792C6 /* NSColor+MaterialDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */; settings = {ASSET_TAGS = (); }; };
 		48AD01DF1C1EC8A90031FDD7 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* Settings.swift */; settings = {ASSET_TAGS = (); }; };
 		48AD01E11C1ECBE70031FDD7 /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* Dispatch.swift */; settings = {ASSET_TAGS = (); }; };
@@ -280,6 +281,7 @@
 		48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+Helpers.swift"; sourceTree = "<group>"; };
 		48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		48834E561C1B490B009BC442 /* CommonCrypto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CommonCrypto; path = External/CommonCrypto; sourceTree = SOURCE_ROOT; };
+		488997141C4E0EA30034AEF3 /* NSAutoLayout+Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAutoLayout+Operators.swift"; sourceTree = "<group>"; };
 		488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+MaterialDesign.swift"; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		48AD01E01C1ECBE70031FDD7 /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
@@ -445,6 +447,7 @@
 			isa = PBXGroup;
 			children = (
 				488239A21C455CED00C5E8EB /* Array+Remove.swift */,
+				488997141C4E0EA30034AEF3 /* NSAutoLayout+Operators.swift */,
 				48682CC71C46F00400E649DE /* NSTextField+AutoLayout.swift */,
 				488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */,
 				481687241C39DA900070EEF6 /* NSView+Snapshot.swift */,
@@ -1164,6 +1167,7 @@
 				4835ECAF1C1C620E00193EBC /* ConversationsViewController.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* ConversationViewController.swift in Sources */,
 				481687251C39DA900070EEF6 /* NSView+Snapshot.swift in Sources */,
+				488997151C4E0EA30034AEF3 /* NSAutoLayout+Operators.swift in Sources */,
 				488239A31C455CED00C5E8EB /* Array+Remove.swift in Sources */,
 				48834D961C1B3602009BC442 /* AppDelegate.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* PersonView.swift in Sources */,
