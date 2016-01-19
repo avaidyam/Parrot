@@ -1,8 +1,6 @@
-import Foundation // NSNotificationCenter
+import Foundation
 
-/* TODO: Support DictionaryLiteralConvertible, CollectionType, Indexable. */
-/* TODO: Support SequenceType, MutableCollectionType, MutableIndexable. */
-/* TODO: Clean up the NSNotificationCenter mess here. */
+/* TODO: Remove the NSNotificationCenter mess here. */
 
 // Collection of User instances.
 public class UserList {
@@ -26,15 +24,6 @@ public class UserList {
 			return User(userID: userID)
 		}
 	}
-	
-	// UserList: SequenceType
-	/*public func generate() -> AnyGenerator<User> {
-		var index = 0
-		return anyGenerator {
-			defer { index++ }
-			return Array(self.users.values)[index]
-		}
-	}*/
 	
 	// Initialize the list of Users.
 	// Creates users from the given ClientEntity and
@@ -79,6 +68,26 @@ public class UserList {
 	
 	deinit {
 		NSNotificationCenter.defaultCenter().removeObserver(self.observer!)
+	}
+}
+
+// UserList CollectionType support.
+extension UserList: CollectionType {
+	public typealias Index = DictionaryIndex<UserID, User>
+	
+	// UserList: CollectionType
+	public var startIndex : UserList.Index {
+		return self.users.values.startIndex
+	}
+	
+	// UserList: CollectionType
+	public var endIndex : UserList.Index {
+		return self.users.values.startIndex
+	}
+	
+	// UserList: CollectionType
+	public subscript(index: UserList.Index) -> User {
+		return self.users.values[index]
 	}
 }
 

@@ -19,7 +19,7 @@ public func ==(lhs: UserID, rhs: UserID) -> Bool {
 // A chat user.
 public struct User: Hashable, Equatable {
     public static let DEFAULT_NAME = "Unknown"
-
+	
     public let id: UserID
 	public let nameComponents: [String]
     public let photoURL: String?
