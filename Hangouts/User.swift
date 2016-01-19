@@ -29,12 +29,13 @@ public struct User: Hashable, Equatable {
 	// Initialize a User directly.
 	// Handles full_name or first_name being nil by creating an approximate
 	// first_name from the full_name, or setting both to DEFAULT_NAME.
+	//
+	// Ignores firstName value.
     public init(userID: UserID, fullName: String? = nil, firstName: String? = nil,
 		photoURL: String? = nil, emails: [String] = [], isSelf: Bool = false)
 	{
 		self.id = userID
-		self.nameComponents = (fullName ?? "").characters
-			.split { $0 == " " }.map { String($0) }
+		self.nameComponents = (fullName ?? User.DEFAULT_NAME).characters.split{$0 == " "}.map(String.init)
         self.photoURL = photoURL != nil ? "https:" + photoURL! : nil
         self.emails = emails
         self.isSelf = isSelf
@@ -81,9 +82,9 @@ public struct User: Hashable, Equatable {
 	
 	// Computes the first name by taking the first of the name components:
 	// ["John", "Mark", "Smith"] => "John"
-	// Will return a default string if there are no name components.
+	// Will return an empty string if there are no name components.
 	public var firstName: String {
-		return self.nameComponents.first ?? User.DEFAULT_NAME
+		return self.nameComponents.first ?? ""
 	}
 	
 	// User: Hashable

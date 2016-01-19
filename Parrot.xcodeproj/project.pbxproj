@@ -473,9 +473,9 @@
 				48834E351C1B4098009BC442 /* Client.swift */,
 				48834E341C1B4098009BC442 /* Channel.swift */,
 				48834E391C1B4098009BC442 /* Parsers.swift */,
-				48834E371C1B4098009BC442 /* Event.swift */,
 				48834E361C1B4098009BC442 /* Conversation.swift */,
 				48834E381C1B4098009BC442 /* ConversationList.swift */,
+				48834E371C1B4098009BC442 /* Event.swift */,
 				48834E3A1C1B4098009BC442 /* User.swift */,
 				48E3C0811C1F363F008B2D1D /* UserList.swift */,
 			);

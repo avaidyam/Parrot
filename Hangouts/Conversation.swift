@@ -45,8 +45,8 @@ public class Conversation {
 	
 	// Update the conversations latest_read_timestamp.
     public func on_watermark_notification(notif: WatermarkNotification) {
-        if self.get_user(notif.user_id).isSelf {
-            self.conversation.self_conversation_state.self_read_state.latest_read_timestamp = notif.read_timestamp
+        if self.get_user(notif.userID).isSelf {
+            self.conversation.self_conversation_state.self_read_state.latest_read_timestamp = notif.readTimestamp
         }
     }
 	
@@ -79,13 +79,13 @@ public class Conversation {
 	// Wrap ClientEvent in Event subclass.
     private class func wrap_event(event: EVENT) -> Event {
         if event.chat_message != nil {
-            return ChatMessageEvent(client_event: event)
+            return ChatMessageEvent(event: event)
         } else if event.conversation_rename != nil {
-            return RenameEvent(client_event: event)
+            return RenameEvent(event: event)
         } else if event.membership_change != nil {
-            return MembershipChangeEvent(client_event: event)
+            return MembershipChangeEvent(event: event)
         } else {
-            return Event(client_event: event)
+            return Event(event: event)
         }
     }
 
@@ -266,7 +266,7 @@ public class Conversation {
         if let delegate = delegate {
             delegate.conversation(self, didReceiveEvent: event)
         } else {
-            let user = user_list[event.user_id]
+            let user = user_list[event.userID]
             if !user.isSelf {
 				print("Notification \(event) from User \(user)!");
             }

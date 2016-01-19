@@ -81,10 +81,6 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			self.userList = $0
 			self.conversationList = $1
 			
-			self.userList!.allUsers.forEach {
-				print($0)
-			}
-			
 			Dispatch.main().add {
 				self.tableView.reloadData()
 				self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
@@ -157,7 +153,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		let conversation = (conversationList?.conversations[row])!
 
 		// Propogate info for data filling
-		let a = conversation.messages.last?.user_id
+		let a = conversation.messages.last?.userID
 		let b = conversation.users.filter { $0.isSelf }.first?.id
 		let c = conversation.users.filter { !$0.isSelf }.first
 		let network_ = conversation.conversation.network_type as NSArray

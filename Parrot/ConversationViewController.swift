@@ -80,7 +80,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		//print("got \(msg)")
 		
         if !(self.window?.keyWindow ?? false) {
-            let user = conversation.user_list[event.user_id]
+            let user = conversation.user_list[event.userID]
             if !user.isSelf {
 				let a = (event.conversation_id as String, event.id as String)
 				let text = (event as? ChatMessageEvent)?.text ?? "Event"
@@ -121,7 +121,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	
 	// get a single message
 	func _getMessage(ev: ChatMessageEvent) -> Message {
-		let user = self.conversation!.user_list[ev.user_id]
+		let user = self.conversation!.user_list[ev.userID]
 		let network_ = self.conversation!.conversation.network_type as NSArray
 		let network = NetworkType(value: network_[0] as! NSNumber)
 		

@@ -1,11 +1,14 @@
 
+/* TODO: Refactor ChatMessageSegment to match hangups and Protobuf docs. */
+/* TODO: Include Markdown, HTML, and URL formatting parsers. */
+
 // An event which becomes part of the permanent record of a conversation.
 // Acts as a base class for the events defined below.
 public class Event : Hashable, Equatable {
     private let event: EVENT
 	
-    public init(client_event: EVENT) {
-        event = client_event
+    public init(event: EVENT) {
+        self.event = event
     }
 	
 	// A timestamp of when the event occurred.
@@ -14,7 +17,7 @@ public class Event : Hashable, Equatable {
     }()
 	
 	// A UserID indicating who created the event.
-    public lazy var user_id: UserID = {
+    public lazy var userID: UserID = {
         return UserID(
             chatID: self.event.sender_id.chat_id as! String,
             gaiaID: self.event.sender_id.gaia_id as! String
@@ -60,6 +63,7 @@ public class ChatMessageEvent : Event {
                 print("Ignoring unknown chat message segment type: \(segment.type.representation)")
             }
         }
+		
         lines += self.attachments
         return lines.joinWithSeparator("\n")
     }()
@@ -74,9 +78,10 @@ public class ChatMessageEvent : Event {
 	
 	// Attachments in the message.
     public var attachments: [String] {
-		let raw_attachments = self.event.chat_message?.message_content.attachment ?? [MESSAGE_ATTACHMENT]()
+		let raws = self.event.chat_message?.message_content.attachment ?? [MESSAGE_ATTACHMENT]()
 		var attachments = [String]()
-		for attachment in raw_attachments {
+		
+		for attachment in raws {
 			if attachment.embed_item!.type == [249] { // PLUS_PHOTO
 				
 				// Try to parse an image message. Image messages contain no
@@ -109,12 +114,12 @@ public class ChatMessageEvent : Event {
 public class RenameEvent : Event {
 	
 	// The conversation's new name, or "" if the name was cleared.
-    public var new_name: String {
+    public var newName: String {
         return self.event.conversation_rename!.new_name as String
     }
 	
 	// The conversation's old name, or "" if no previous name.
-    public var old_name: String {
+    public var oldName: String {
         return self.event.conversation_rename!.old_name as String
     }
 }
@@ -129,7 +134,7 @@ public class MembershipChangeEvent : Event {
 	
 	// Return the UserIDs involved in the membership change.
 	// Multiple users may be added to a conversation at the same time.
-    public var participant_ids: [UserID] {
+    public var participantIDs: [UserID] {
 		return self.event.membership_change!.participant_ids.map {
 			UserID(chatID: $0.chat_id as! String, gaiaID: $0.gaia_id as! String)
 		}
@@ -150,52 +155,50 @@ public class HangoutEvent : Event {
 //
 
 public class ChatMessageSegment {
+	
+	// Primary: type and text (always applicable).
 	public let type: SegmentType
 	public let text: String
-	public let is_bold: Bool
-	public let is_italic: Bool
-	public let is_strikethrough: Bool
-	public let is_underline: Bool
-	public let link_target: String?
+	
+	// Secondary: text and link attributes (optional).
+	public let bold: Bool
+	public let italic: Bool
+	public let strikethrough: Bool
+	public let underline: Bool
+	public let linkTarget: String?
 	
 	// A segment of a chat message.
 	// Create a new chat message segment.
-	public init(text: String,
-		segment_type: SegmentType?=nil,
-		is_bold: Bool=false,
-		is_italic: Bool=false,
-		is_strikethrough: Bool=false,
-		is_underline: Bool=false,
-		link_target: String?=nil
-		) {
-			if let type = segment_type {
-				self.type = type
-			} else if link_target != nil {
-				self.type = SegmentType.LINK
-			} else {
-				self.type = SegmentType.TEXT
-			}
-			
-			self.text = text
-			self.is_bold = is_bold
-			self.is_italic = is_italic
-			self.is_strikethrough = is_strikethrough
-			self.is_underline = is_underline
-			self.link_target = link_target
+	public init(text: String, segmentType: SegmentType? = nil,
+		bold: Bool = false, italic: Bool = false, strikethrough: Bool = false,
+		underline: Bool = false, linkTarget: String? = nil)
+	{
+		if let type = segmentType {
+			self.type = type
+		} else if linkTarget != nil {
+			self.type = SegmentType.LINK
+		} else {
+			self.type = SegmentType.TEXT
+		}
+		
+		self.text = text
+		self.bold = bold
+		self.italic = italic
+		self.strikethrough = strikethrough
+		self.underline = underline
+		self.linkTarget = linkTarget
 	}
-	
-	/* TODO: Refactor to match hangups and Protobuf docs. */
 	
 	// Create a chat message segment from a parsed MESSAGE_SEGMENT.
 	// The formatting options are optional.
 	public init(segment: MESSAGE_SEGMENT) {
-		text = segment.text as String? ?? "" // weird bug here?
-		type = segment.type
-		is_bold = segment.formatting?.bold?.boolValue ?? false
-		is_italic = segment.formatting?.italic?.boolValue ?? false
-		is_strikethrough = segment.formatting?.strikethrough?.boolValue ?? false
-		is_underline = segment.formatting?.underline?.boolValue ?? false
-		link_target = (segment.link_data?.link_target as String?) ?? nil
+		self.text = segment.text as String? ?? ""
+		self.type = segment.type
+		self.bold = segment.formatting?.bold?.boolValue ?? false
+		self.italic = segment.formatting?.italic?.boolValue ?? false
+		self.strikethrough = segment.formatting?.strikethrough?.boolValue ?? false
+		self.underline = segment.formatting?.underline?.boolValue ?? false
+		self.linkTarget = (segment.link_data?.link_target as String?) ?? nil
 	}
 	
 	// Serialize the segment to pblite.
@@ -204,12 +207,46 @@ public class ChatMessageSegment {
 			self.type.representation,
 			self.text,
 			[
-				self.is_bold ? 1 : 0,
-				self.is_italic ? 1 : 0,
-				self.is_strikethrough ? 1 : 0,
-				self.is_underline ? 1 : 0,
+				self.bold ? 1 : 0,
+				self.italic ? 1 : 0,
+				self.strikethrough ? 1 : 0,
+				self.underline ? 1 : 0,
 			],
-			[self.link_target ?? None]
+			[self.linkTarget ?? None]
 		]
 	}
+}
+
+//
+// TypingStatusMessage & WatermarkNotification
+//
+
+// Definition of the public TypingStatusMessage.
+public typealias TypingStatusMessage = (convID: String, userID: UserID, timestamp: NSDate, status: TypingType)
+
+// Definition of the public WatermarkNotification.
+public typealias WatermarkNotification = (convID: String, userID: UserID, readTimestamp: NSDate)
+
+// Return TypingStatusMessage from ClientSetTypingNotification.
+// The same status may be sent multiple times consecutively, and when a
+// message is sent the typing status will not change to stopped.
+internal func parseTypingStatusMessage(p: SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
+	return TypingStatusMessage(
+		convID: p.conversation_id.id as! String,
+		userID: UserID(chatID: p.user_id.chat_id as! String, gaiaID: p.user_id.gaia_id as! String),
+		timestamp: from_timestamp(p.timestamp)!,
+		status: p.status
+	)
+}
+
+// Return WatermarkNotification from ClientWatermarkNotification.
+internal func parseWatermarkNotification(client_watermark_notification: WATERMARK_NOTIFICATION) -> WatermarkNotification {
+	return WatermarkNotification(
+		convID: client_watermark_notification.conversation_id.id as! String,
+		userID: UserID(
+			chatID: client_watermark_notification.participant_id.chat_id as! String,
+			gaiaID: client_watermark_notification.participant_id.gaia_id as! String
+		),
+		readTimestamp: from_timestamp(client_watermark_notification.latest_read_timestamp)!
+	)
 }

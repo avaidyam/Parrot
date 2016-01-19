@@ -107,7 +107,7 @@ public class ConversationList : ClientDelegate {
     public func handle_set_typing_notification(set_typing_notification: SET_TYPING_NOTIFICATION) {
         let conv_id = set_typing_notification.conversation_id.id
         if let conv = conv_dict[conv_id as! String] {
-            let res = parse_typing_status_message(set_typing_notification)
+            let res = parseTypingStatusMessage(set_typing_notification)
             delegate?.conversationList(self, didChangeTypingStatusTo: res.status)
             let user = user_list[UserID(
                 chatID: set_typing_notification.user_id.chat_id as! String,
@@ -123,7 +123,7 @@ public class ConversationList : ClientDelegate {
     public func handle_watermark_notification(watermark_notification: WATERMARK_NOTIFICATION) {
         let conv_id = watermark_notification.conversation_id.id
         if let conv = conv_dict[conv_id as! String] {
-            let res = parse_watermark_notification(watermark_notification)
+            let res = parseWatermarkNotification(watermark_notification)
             delegate?.conversationList(self, didReceiveWatermarkNotification: res)
             conv.handleWatermarkNotification(res)
         } else {

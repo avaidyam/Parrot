@@ -181,7 +181,6 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 			return subdelegate
 		}
 		set {
-			print("HERE345")
 			dispatch_barrier_async(subdelegateQueue) { self.subdelegates[task.taskIdentifier] = newValue }
 		}
 	}
@@ -345,7 +344,6 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 		dataTask: NSURLSessionDataTask,
 		didReceiveData data: NSData)
 	{
-		print("HERE123")
 		if let dataTaskDidReceiveData = dataTaskDidReceiveData {
 			dataTaskDidReceiveData(session, dataTask, data)
 		} else if let delegate = self[dataTask] as? NSURLSessionDataDelegateProxy {

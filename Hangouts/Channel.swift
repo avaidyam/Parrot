@@ -200,7 +200,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 		/* TODO: Clearly, we shouldn't call encodeURL(), but what do we do? */
 		request.HTTPBody = data_dict.encodeURL().dataUsingEncoding(NSUTF8StringEncoding,
 			allowLossyConversion: false)!
-		for (k, v) in getAuthorizationHeaders(getCookieValue("SAPISID")!) {
+		for (k, v) in getAuthorizationHeaders(Channel.getCookieValue("SAPISID")!) {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
@@ -231,7 +231,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 		let url = "\(Channel.URLPrefix)/channel/bind?\(params.encodeURL())"
 		let request = NSMutableURLRequest(URL: NSURL(string: url)!)
 		request.timeoutInterval = Double(Channel.connectTimeout)
-		for (k, v) in getAuthorizationHeaders(getCookieValue("SAPISID")!) {
+		for (k, v) in getAuthorizationHeaders(Channel.getCookieValue("SAPISID")!) {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
@@ -264,7 +264,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 		self.sidParam = nil
 		self.gSessionIDParam = nil
 		self.sendMaps {
-			let r = parseSIDResponse($0)
+			let r = Channel.parseSIDResponse($0)
 			self.sidParam = r.sid
 			self.gSessionIDParam = r.gSessionID
 			cb?()
@@ -299,5 +299,32 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 			}
         }
     }
+	
+	// Get the cookie value of the key given from the NSHTTPCookieStorage.
+	internal class func getCookieValue(key: String) -> String? {
+		if let c = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
+			if let match = (c.filter {
+				($0 as NSHTTPCookie).name == key &&
+					($0 as NSHTTPCookie).domain == ".google.com"
+				}).first {
+					return match.value
+			}
+		}
+		return nil
+	}
+	
+	//  Parse response format for request for new channel SID.
+	//  Example format (after parsing JS):
+	//  [   [0,["c","SID_HERE","",8]],
+	//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
+	internal class func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
+		if let firstSubmission = Channel.ChunkParser().getChunks(res).first {
+			let val = evalArray(firstSubmission)!
+			let sid = ((val[0] as! NSArray)[1] as! NSArray)[1] as! String
+			let gSessionID = (((val[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String
+			return (sid, gSessionID)
+		}
+		return ("", "")
+	}
 }
 
