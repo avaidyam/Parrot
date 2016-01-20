@@ -60,6 +60,19 @@
 		48BA5B4B1C37A55A00ACA29B /* Terminal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4A1C37A55A00ACA29B /* Terminal.swift */; settings = {ASSET_TAGS = (); }; };
 		48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4F1C37DACE00ACA29B /* Reference.swift */; settings = {ASSET_TAGS = (); }; };
 		48BF49A31C1D23D000AC4DD5 /* NSDate+TimeAgo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF49A21C1D23D000AC4DD5 /* NSDate+TimeAgo.swift */; settings = {ASSET_TAGS = (); }; };
+		48CA70141C5022830026270E /* PBLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLite.swift */; };
+		48CA70151C5022830026270E /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E441C1B40A4009BC442 /* Messages.swift */; };
+		48CA70161C5022830026270E /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E351C1B4098009BC442 /* Client.swift */; };
+		48CA70171C5022830026270E /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E341C1B4098009BC442 /* Channel.swift */; };
+		48CA70181C5022830026270E /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E361C1B4098009BC442 /* Conversation.swift */; };
+		48CA70191C5022830026270E /* ConversationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E381C1B4098009BC442 /* ConversationList.swift */; };
+		48CA701A1C5022830026270E /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E371C1B4098009BC442 /* Event.swift */; };
+		48CA701B1C5022830026270E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
+		48CA701C1C5022830026270E /* UserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E3C0811C1F363F008B2D1D /* UserList.swift */; };
+		48CA701D1C5022830026270E /* FoundationSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E391C1B4098009BC442 /* FoundationSupport.swift */; };
+		48CA701E1C5022830026270E /* NSRegularExpression+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */; };
+		48CA701F1C5022830026270E /* NSURLSession+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */; };
+		48CA70201C5022830026270E /* NSURLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */; };
 		48DE52CC1C1CC12900647C63 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52CB1C1CC12900647C63 /* icon.icns */; };
 		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
 		48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -1143,6 +1156,19 @@
 				48B3AD781C38043B0023FAA3 /* Canvas.swift in Sources */,
 				48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */,
 				4803639D1C1D08490008E9F5 /* main.swift in Sources */,
+				48CA70141C5022830026270E /* PBLite.swift in Sources */,
+				48CA70151C5022830026270E /* Messages.swift in Sources */,
+				48CA70161C5022830026270E /* Client.swift in Sources */,
+				48CA70171C5022830026270E /* Channel.swift in Sources */,
+				48CA70181C5022830026270E /* Conversation.swift in Sources */,
+				48CA70191C5022830026270E /* ConversationList.swift in Sources */,
+				48CA701A1C5022830026270E /* Event.swift in Sources */,
+				48CA701B1C5022830026270E /* User.swift in Sources */,
+				48CA701C1C5022830026270E /* UserList.swift in Sources */,
+				48CA701D1C5022830026270E /* FoundationSupport.swift in Sources */,
+				48CA701E1C5022830026270E /* NSRegularExpression+Helpers.swift in Sources */,
+				48CA701F1C5022830026270E /* NSURLSession+Extensions.swift in Sources */,
+				48CA70201C5022830026270E /* NSURLSession+Delegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
