@@ -61,6 +61,7 @@
 		48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4F1C37DACE00ACA29B /* Reference.swift */; settings = {ASSET_TAGS = (); }; };
 		48BF49A31C1D23D000AC4DD5 /* NSDate+TimeAgo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF49A21C1D23D000AC4DD5 /* NSDate+TimeAgo.swift */; settings = {ASSET_TAGS = (); }; };
 		48CA70211C50252F0026270E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
+		48CA70231C502B6A0026270E /* AuthenticatorCLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA70221C502B6A0026270E /* AuthenticatorCLI.swift */; settings = {ASSET_TAGS = (); }; };
 		48DE52CC1C1CC12900647C63 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52CB1C1CC12900647C63 /* icon.icns */; };
 		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
 		48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -290,6 +291,7 @@
 		48BA5B4C1C37ABB600ACA29B /* ncurses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ncurses.h; sourceTree = "<group>"; };
 		48BA5B4F1C37DACE00ACA29B /* Reference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reference.swift; sourceTree = "<group>"; };
 		48BF49A21C1D23D000AC4DD5 /* NSDate+TimeAgo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+TimeAgo.swift"; sourceTree = "<group>"; };
+		48CA70221C502B6A0026270E /* AuthenticatorCLI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticatorCLI.swift; sourceTree = "<group>"; };
 		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52CB1C1CC12900647C63 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		48DE52CD1C1CC12900647C63 /* ParrotShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotShare.entitlements; sourceTree = "<group>"; };
@@ -398,6 +400,7 @@
 			isa = PBXGroup;
 			children = (
 				4803639C1C1D08490008E9F5 /* main.swift */,
+				48CA70221C502B6A0026270E /* AuthenticatorCLI.swift */,
 				48BA5B511C37DB2900ACA29B /* Curses */,
 			);
 			path = "parrot-cli";
@@ -1141,6 +1144,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48CA70231C502B6A0026270E /* AuthenticatorCLI.swift in Sources */,
 				48BA5B4B1C37A55A00ACA29B /* Terminal.swift in Sources */,
 				48B3AD781C38043B0023FAA3 /* Canvas.swift in Sources */,
 				48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */,

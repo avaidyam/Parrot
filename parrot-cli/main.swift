@@ -1,7 +1,27 @@
 import Hangouts
 
-print("testing!")
+let sem = dispatch_semaphore_create(0)
+print("Initializing...")
 
+// Authenticate and initialize the Hangouts client.
+// Build the user and conversation lists.
+var client: Client!
+var userList: UserList!
+var conversationList: ConversationList!
+
+AuthenticatorCLI.authenticateClient {
+	client = Client(configuration: $0)
+	
+	buildUserConversationList(client) {
+		userList = $0; conversationList = $1
+		print("Obtained userList \(userList) and conversationList! \(conversationList)")
+		dispatch_semaphore_signal(sem)
+	}
+}
+dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER)
+print("Continuing...")
+
+print(conversationList.all_conversations.map { $0.conversation.conversation_id })
 
 // Start with the constant strings up here.
 let str1 = "Parrot is not yet ready as a CLI tool."
