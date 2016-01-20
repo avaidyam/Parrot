@@ -1,3 +1,7 @@
+import Hangouts
+
+print("testing!")
+
 
 // Start with the constant strings up here.
 let str1 = "Parrot is not yet ready as a CLI tool."

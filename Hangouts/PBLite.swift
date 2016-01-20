@@ -33,10 +33,6 @@ public func !=(lhs: Enum, rhs: Enum) -> Bool {
 	return !(lhs == rhs)
 }
 
-public func ~=(pattern: Enum, predicate: Enum) -> Bool {
-	return pattern == predicate
-}
-
 // PBLite Message Type
 
 public class Message : NSObject {
