@@ -3,6 +3,7 @@ import Cocoa
 /* TODO: Migrate multi-management of views into this. */
 /* TODO: Generics would be *so* nice, but IBOutlets don't work then. */
 
+@IBDesignable
 public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	
 	private var scrollView: NSScrollView!

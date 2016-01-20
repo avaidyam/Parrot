@@ -21,9 +21,6 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 	override func loadView() {
 		super.loadView()
 		
-		tableView.registerNib(NSNib(nibNamed: "PersonView", bundle: NSBundle.mainBundle()),
-									forIdentifier: "PersonView")
-		
 		Notifications.subscribe(NSUserDefaultsDidChangeNotification) { note in
 			
 			// Handle appearance colors.
@@ -146,9 +143,10 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 	}
 
 	func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		let _cell = tableView.makeViewWithIdentifier("PersonView", owner: self) as? NSTableCellView
-		guard let cell = _cell else {
-			return nil
+		var cell = tableView.makeViewWithIdentifier("PersonView", owner: self) as? NSTableCellView
+		if cell == nil {
+			cell = PersonView(frame: NSZeroRect)
+			cell?.identifier = PersonView.className()
 		}
 		let conversation = (conversationList?.conversations[row])!
 
@@ -180,7 +178,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp.relativeString() ?? ""
 		
-		cell.objectValue = Wrapper<Person>(Person(photo: img, highlight: ring, indicator: ind, primary: name, secondary: sub, tertiary: time))
+		cell?.objectValue = Wrapper<Person>(Person(photo: img, highlight: ring, indicator: ind, primary: name, secondary: sub, tertiary: time))
 		return cell
 	}
 	

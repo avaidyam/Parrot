@@ -4,7 +4,7 @@ import Cocoa
 
 // Serves as the "model" behind the view. Technically speaking, this is a translation
 // layer between the application model and decouples it from the view.
-public struct Person {
+public struct Person: Equatable {
 	var photo: NSImage
 	var highlight: NSColor
 	var indicator: Bool
@@ -13,6 +13,8 @@ public struct Person {
 	var secondary: String
 	var tertiary: String
 }
+
+// Person: Equatable
 public func ==(lhs: Person, rhs: Person) -> Bool {
 	return lhs.primary == rhs.primary &&
 		lhs.secondary == rhs.secondary &&
@@ -22,12 +24,64 @@ public func ==(lhs: Person, rhs: Person) -> Bool {
 // A general person view
 public class PersonView : NSTableCellView {
 	
-	// Wired up in Interface Builder.
-	@IBOutlet weak var photoView: NSImageView?
-	@IBOutlet weak var nameLabel: NSTextField?
-    @IBOutlet weak var textLabel: NSTextField?
-	@IBOutlet weak var timeLabel: NSTextField?
-	@IBOutlet weak var indicator: NSView?
+	var photoView: NSImageView
+	var nameLabel: NSLabel
+	var textLabel: NSLabel
+	var timeLabel: NSLabel
+	var indicator: NSView
+	
+	public override init(frame: NSRect) {
+		self.photoView = NSImageView(true)
+		self.photoView.imageScaling = .ScaleProportionallyDown
+		
+		self.nameLabel = NSLabel(true, false)
+		self.nameLabel.textColor = NSColor.labelColor()
+		self.nameLabel.lineBreakMode = .ByTruncatingTail
+		self.nameLabel.font = NSFont.systemFontOfSize(13.0, weight: NSFontWeightSemibold)
+		
+		self.textLabel = NSLabel(true, true)
+		self.textLabel.textColor = NSColor.secondaryLabelColor()
+		self.textLabel.lineBreakMode = .ByWordWrapping
+		self.textLabel.font = NSFont.systemFontOfSize(12.0, weight: NSFontWeightRegular)
+		
+		self.timeLabel = NSLabel(true, false)
+		self.timeLabel.textColor = NSColor.tertiaryLabelColor()
+		self.timeLabel.lineBreakMode = .ByClipping
+		self.timeLabel.font = NSFont.systemFontOfSize(11.0, weight: NSFontWeightRegular)
+		
+		self.indicator = NSView(true)
+		
+		// Swift is funny like this.
+		super.init(frame: frame)
+		
+		// Add subviews.
+		self.addSubview(self.photoView)
+		self.addSubview(self.nameLabel)
+		self.addSubview(self.textLabel)
+		self.addSubview(self.timeLabel)
+		self.addSubview(self.indicator)
+		
+		// Setup layout constraints.
+		(photoView.leading == self.leading + 4.0)%
+		(self.bottom == photoView.bottom + 4.0)%
+		(photoView.centerY == self.centerY)%
+		(photoView.top == self.top + 4.0)%
+		(nameLabel.leading == photoView.trailing + 4.0)%
+		(nameLabel.top == self.top + 4.0)%
+		(textLabel.top == timeLabel.bottom + 4.0)%
+		(textLabel.leading == photoView.trailing + 4.0)%
+		(textLabel.top == nameLabel.bottom + 4.0)%
+		(self.trailing == textLabel.trailing + 4.0)%
+		(self.bottom == textLabel.bottom + 4.0)%
+		(self.trailing == timeLabel.trailing + 4.0)%
+		(timeLabel.leading == nameLabel.trailing + 4.0)%
+		(timeLabel.top == self.top + 4.0)%
+		(photoView.width == photoView.height * 1.0 ~ 1000)%
+	}
+
+	public required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
@@ -36,14 +90,14 @@ public class PersonView : NSTableCellView {
 				return
 			}
 			
-			self.photoView?.image = o.photo
-			self.photoView?.layer?.borderColor = o.highlight.CGColor
-			self.nameLabel?.stringValue = o.primary
-			self.textLabel?.stringValue = o.secondary
-			self.timeLabel?.stringValue = o.tertiary
-			self.indicator?.hidden = o.indicator
+			self.photoView.image = o.photo
+			self.photoView.layer?.borderColor = o.highlight.CGColor
+			self.nameLabel.stringValue = o.primary
+			self.textLabel.stringValue = o.secondary
+			self.timeLabel.stringValue = o.tertiary
+			self.indicator.hidden = o.indicator
 			
-			self.textLabel?.font = NSFont.systemFontOfSize(self.textLabel!.font!.pointSize,
+			self.textLabel.font = NSFont.systemFontOfSize(self.textLabel.font!.pointSize,
 				weight: o.indicator ? NSFontWeightBold : NSFontWeightRegular)
 		}
 	}
@@ -53,13 +107,13 @@ public class PersonView : NSTableCellView {
 	public override var backgroundStyle: NSBackgroundStyle {
 		didSet {
 			if self.backgroundStyle == .Light {
-				self.nameLabel?.textColor = NSColor.labelColor()
-				self.textLabel?.textColor = NSColor.secondaryLabelColor()
-				self.timeLabel?.textColor = NSColor.tertiaryLabelColor()
+				self.nameLabel.textColor = NSColor.labelColor()
+				self.textLabel.textColor = NSColor.secondaryLabelColor()
+				self.timeLabel.textColor = NSColor.tertiaryLabelColor()
 			} else if self.backgroundStyle == .Dark {
-				self.nameLabel?.textColor = NSColor.alternateSelectedControlTextColor()
-				self.textLabel?.textColor = NSColor.alternateSelectedControlTextColor()
-				self.timeLabel?.textColor = NSColor.alternateSelectedControlTextColor()
+				self.nameLabel.textColor = NSColor.alternateSelectedControlTextColor()
+				self.textLabel.textColor = NSColor.alternateSelectedControlTextColor()
+				self.timeLabel.textColor = NSColor.alternateSelectedControlTextColor()
 			}
 		}
 	}
@@ -76,10 +130,10 @@ public class PersonView : NSTableCellView {
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
 		get {
 			return [
-				self.photoView!.draggingComponent("Photo"),
-				self.nameLabel!.draggingComponent("Name"),
-				self.textLabel!.draggingComponent("Text"),
-				self.timeLabel!.draggingComponent("Time"),
+				self.photoView.draggingComponent("Photo"),
+				self.nameLabel.draggingComponent("Name"),
+				self.textLabel.draggingComponent("Text"),
+				self.timeLabel.draggingComponent("Time"),
 			]
 		}
 	}
@@ -87,10 +141,11 @@ public class PersonView : NSTableCellView {
 	// Allows the circle crop to dynamically change.
 	public override func layout() {
 		super.layout()
-		if let layer = self.photoView?.layer {
+		if let layer = self.photoView.layer {
 			layer.masksToBounds = true
 			layer.borderWidth = 2.0
-			layer.cornerRadius = self.photoView!.bounds.width / 2.0
+			layer.cornerRadius = self.photoView.bounds.width / 2.0
 		}
 	}
 }
+

@@ -9,6 +9,8 @@ public struct Message: Equatable {
 	var orientation: NSTextAlignment
 	var color: NSColor
 }
+
+// Message: Equatable
 public func ==(lhs: Message, rhs: Message) -> Bool {
 	return lhs.string == rhs.string &&
 		lhs.orientation == rhs.orientation &&
