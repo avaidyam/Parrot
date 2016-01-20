@@ -53,8 +53,6 @@ public class PersonView : NSTableCellView {
 		
 		// Swift is funny like this.
 		super.init(frame: frame)
-		
-		// Add subviews.
 		self.addSubview(self.photoView)
 		self.addSubview(self.nameLabel)
 		self.addSubview(self.textLabel)

@@ -594,7 +594,6 @@ public final class Client : ChannelDelegate {
 		}
     }
 	
-	
 	/* TODO: Does not return data, only calls the callback. */
 	public func setPresence(online: Bool, mood: String?, cb: (() -> Void)? = nil) {
 		let data = [

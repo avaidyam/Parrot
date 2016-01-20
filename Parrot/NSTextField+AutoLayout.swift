@@ -12,14 +12,14 @@ public extension NSView {
 }
 
 public extension NSTextField {
-	public convenience init(_ layerBacked: Bool, _ wraps: Bool) {
+	public convenience init(_ layerBacked: Bool, _ singleLine: Bool) {
 		self.init(layerBacked)
 		self.bezeled = false
 		self.bordered = false
 		self.editable = false
 		self.selectable = false
 		self.drawsBackground = false
-		self.usesSingleLineMode = wraps
+		self.usesSingleLineMode = singleLine
 		self.allowsEditingTextAttributes = false
 	}
 }
