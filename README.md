@@ -11,3 +11,7 @@ Parrot is an extensible cross-platform instant messaging architecture (currently
 # Acknowledgements
 - Tom Dryer, for reverse-engineering the Hangouts protocol in `hangups`
 - Peter Sobot, for the initial translation and development of `Hangover`, a Swift port of `hangups`, which was used as the initial code base for Parrot's Hangouts component.
+
+----------
+# User Issues
+- Please see [this link](https://gitreports.com/issue/avaidyam/Parrot) if you're a user of Parrot and don't have a GitHub account.
