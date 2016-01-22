@@ -1,3 +1,5 @@
+![Parrot](https://raw.githubusercontent.com/avaidyam/Parrot/master/Documentation/images/icon/AppIcon_128x128@2x.png "Parrot")
+
 # Introduction
 
 Parrot is an extensible cross-platform instant messaging architecture (currently for OS X only, due to limitations of Swift). It currently features a reverse-engineered API for Google Hangouts, done by [Tom Dryer](https://github.com/tdryer/hangups), with scaffolding around it for multifaceted use. In the future, Facebook Messenger, custom Jabber, WhatsApp, and more protocols may be supported, depending on API availability (or reverse engineering).
