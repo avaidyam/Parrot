@@ -49,7 +49,7 @@ public final class Client : ChannelDelegate {
 	}
 	
 	// Use this method for constructing request messages when calling Hangouts APIs.
-	private func getRequestHeader() -> NSArray {
+	private func getRequestHeader() -> [AnyObject] {
 		return [
 			[None /* 6 */, None /* 3 */, "parrot-0.1", None, None, None],
 			[self.client_id ?? None, None],
