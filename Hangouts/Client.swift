@@ -158,8 +158,7 @@ public final class Client : ChannelDelegate {
 		// field numbers as dictionary keys. Since we don't have a parser
 		// for that, parse it ad-hoc here.
 		let thr = (message[0] as! [String: String])["p"]!
-		let val = thr.dataUsingEncoding(NSUTF8StringEncoding)
-		let wrapper = try! NSJSONSerialization.JSONObjectWithData(val!, options: .AllowFragments)
+		let wrapper = try! thr.decodeJSON()
 		
 		// Once client_id is received, the channel is ready to have services added.
 		if let id = wrapper["3"] as? [String: AnyObject] {

@@ -289,13 +289,13 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 				}
 			}
 			
-			let _str = (chunk as NSString).dataUsingEncoding(NSUTF8StringEncoding)
-			let container_array = try! NSJSONSerialization.JSONObjectWithData(_str!, options: [])
-			for inner_array in (container_array as! [AnyObject]) {
-				//let array_id = inner_array[0]
-				let data_array = inner_array[1]
-				
-				delegate?.channel(self, didReceiveMessage: data_array as! [AnyObject])
+			if let json = try? chunk.decodeJSON(), let container = json as? [AnyObject] {
+				for inner in container {
+					//let array_id = inner[0]
+					if let array = inner[1] as? [AnyObject] {
+						delegate?.channel(self, didReceiveMessage: array)
+					}
+				}
 			}
         }
     }

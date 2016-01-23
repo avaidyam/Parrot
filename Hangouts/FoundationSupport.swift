@@ -10,6 +10,42 @@ internal extension String {
 	internal func encodeURL() -> String {
 		return self.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
 	}
+	
+	// Will return any JSON object, array, number, or string.
+	// If there is an error, the error will be presented instead.
+	// Allows fragments, and always returns mutable object types.
+	internal func decodeJSON() throws -> AnyObject {
+		let _str = (self as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+		guard let _ = _str else {
+			throw NSError(domain: NSStringEncodingErrorKey, code: Int(NSUTF8StringEncoding), userInfo: nil)
+		}
+		
+		let options: NSJSONReadingOptions = [.AllowFragments, .MutableContainers, .MutableLeaves]
+		do {
+			let obj = try NSJSONSerialization.JSONObjectWithData(_str!, options: options)
+			return obj
+		} catch {
+			throw error
+		}
+	}
+	
+	// Will return a String from any Array, Dictionary, Number, or String.
+	// If there is an error, the error will be presented instead.
+	// Allows fragments and can optionally return a pretty-printed string.
+	internal static func encodeJSON(object: AnyObject, pretty: Bool = false) throws -> String {
+		let options: NSJSONWritingOptions = pretty ? [.PrettyPrinted] : []
+		do {
+			let obj = try NSJSONSerialization.dataWithJSONObject(object, options: options)
+			let str = NSString(data: obj, encoding: NSUTF8StringEncoding) as? String
+			
+			guard let _ = str else {
+				throw NSError(domain: NSStringEncodingErrorKey, code: Int(NSUTF8StringEncoding), userInfo: nil)
+			}
+			return str!
+		} catch {
+			throw error
+		}
+	}
 }
 
 internal extension Dictionary {
