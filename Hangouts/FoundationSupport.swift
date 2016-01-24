@@ -5,6 +5,43 @@ internal func flatMap<A,B>(x: [A], y: A -> B?) -> [B] {
 	return x.map { y($0) }.filter { $0 != nil }.map { $0! }
 }
 
+internal func findFirst<S : SequenceType> (s: S, condition: (S.Generator.Element) -> Bool) -> S.Generator.Element? {
+	for value in s where condition(value) {
+		return value
+	}
+	return nil
+}
+
+public extension Mirror {
+	
+	/// Labels of properties.
+	public var labels: [String?] {
+		return self.children.map { $0.label }
+	}
+	
+	/// Values of properties.
+	public var values: [Any] {
+		return self.children.map { $0.value }
+	}
+	
+	/// Types of properties.
+	public var types: [Any.Type] {
+		return self.children.map { $0.value.dynamicType }
+	}
+	
+	/// Returns a property value for a property name.
+	public subscript(key: String) -> Any? {
+		let res = findFirst(self.children) { $0.label == key }
+		return res.map { $0.value }
+	}
+	
+	/// Returns a value for a property name with a generic type.
+	public func getValue<U>(forKey key: String) -> U? {
+		let res = findFirst(self.children) { $0.label == key }
+		return res.flatMap { $0.value as? U }
+	}
+}
+
 // Needs to be fixed somehow to not use NSString stuff.
 internal extension String {
 	internal func encodeURL() -> String {

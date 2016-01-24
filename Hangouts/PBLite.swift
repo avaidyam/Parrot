@@ -92,6 +92,8 @@ public class PBLiteSerialization {
 	
 	/* TODO: Use Swift reflection to unwrap [AnyObject]. */
 	public class func getArrayMessageType(arr: Any) -> Message.Type? {
+		//let mirror = Mirror(reflecting: arr)
+		//return mirror.types[0] as! Message.Type
 		if arr is [CONVERSATION_ID] { return CONVERSATION_ID.self }
 		if arr is [CONVERSATION_STATE] { return CONVERSATION_STATE.self }
 		if arr is [PARTICIPANT_ID] { return PARTICIPANT_ID.self }
