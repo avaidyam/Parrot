@@ -24,7 +24,9 @@ class ServiceManager: NSObject, NSApplicationDelegate, ClientDelegate {
 	
 	func clientDidConnect(client: Client) {
 		buildUserConversationList(client) { (userList, conversationList) in
-			// Not implemented!
+			_REMOVE.forEach {
+				$0(userList, conversationList)
+			}
 		}
 	}
 	
@@ -55,6 +57,10 @@ class ServiceManager: NSObject, NSApplicationDelegate, ClientDelegate {
 
 // Private service points go here:
 private var _hangoutsClient: Client? = nil
+
+/* TODO: SHOULD NOT BE USED. */
+public typealias _RM2 = (UserList, ConversationList) -> Void
+public var _REMOVE = [_RM2]()
 
 // In the future, this will be an extensible service point for all services.
 public extension NSApplication {

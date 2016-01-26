@@ -44,10 +44,6 @@ public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		self.scrollView.hasVerticalScroller = true
 		self.addSubview(self.scrollView)
 		
-		/* TODO: Remove dependency on IB for this view! */
-		let nib = NSNib(nibNamed: "PersonView", bundle: NSBundle.mainBundle())
-		self.tableView.registerNib(nib, forIdentifier: "PersonView")
-		
 		self.scrollView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
 		self.tableView.sizeLastColumnToFit()
 	}
@@ -100,6 +96,7 @@ public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		self.dataSource.removeContentsOf(elements)
 	}
 	
+	public var selectionProvider: ((row: Int) -> Void)? = nil
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
 }
 
@@ -161,7 +158,7 @@ public extension PersonsView {
 	}
 	
 	public func tableViewSelectionDidChange(notification: NSNotification) {
-		
+		self.selectionProvider?(row: self.tableView.selectedRow)
 	}
 	
 	public func tableViewSelectionIsChanging(notification: NSNotification) {
