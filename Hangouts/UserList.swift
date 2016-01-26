@@ -1,6 +1,4 @@
-import Foundation
-
-/* TODO: Remove the NSNotificationCenter mess here. */
+import Foundation // NSNotificationCenter
 
 // Collection of User instances.
 public class UserList {

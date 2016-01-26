@@ -50,12 +50,8 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	
 	// Allow accessing the insets from the scroll view.
 	public var insets: NSEdgeInsets {
-		get {
-			return self.scrollView.contentInsets
-		}
-		set {
-			self.scrollView.contentInsets = newValue
-		}
+		get { return self.scrollView.contentInsets }
+		set { self.scrollView.contentInsets = newValue }
 	}
 	
 	// Forward the layer-backing down to our subviews.
@@ -66,14 +62,12 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		}
 	}
 	
-	/* TODO: My life is a struggle. Abort animations. :( */
+	/* TODO: Monitor actual addition/removal changes. */
 	public var dataSource: [Message]! {
-		didSet {
-			UI {
-				self.tableView.reloadData()
-				self.tableView.scrollRowToVisible(self.numberOfRowsInTableView(self.tableView) - 1)
-			}
-		}
+		didSet { UI {
+			self.tableView.reloadData()
+			self.tableView.scrollRowToVisible(self.numberOfRowsInTableView(self.tableView) - 1)
+		}}
 	}
 	
 	// If you REALLY want animations, use this to append a set of elements.

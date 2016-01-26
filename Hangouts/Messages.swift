@@ -677,7 +677,7 @@ public class GET_SELF_INFO_RESPONSE : Message {
 
 @objc(RESPONSE_HEADER)
 public class RESPONSE_HEADER : Message {
-    public var status: NSString = ""
+    public var status: ResponseStatus?
     public var field1: AnyObject?
     public var field2: AnyObject?
     public var request_trace_id: NSString = ""

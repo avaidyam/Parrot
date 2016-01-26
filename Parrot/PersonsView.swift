@@ -52,17 +52,55 @@ public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		self.tableView.sizeLastColumnToFit()
 	}
 	
-	public var dataSource: [Person]! {
-		willSet {
-			Swift.print("setting!")
-		}
+	// Allow accessing the insets from the scroll view.
+	public var insets: NSEdgeInsets {
+		get { return self.scrollView.contentInsets }
+		set { self.scrollView.contentInsets = newValue }
+	}
+	
+	// Forward the layer-backing down to our subviews.
+	public override var wantsLayer: Bool {
 		didSet {
-			/* TODO: Monitor actual addition/removal changes. */
-			Dispatch.main().add {
-				self.tableView.reloadData()
-			}
+			self.scrollView.wantsLayer = self.wantsLayer
+			self.tableView.wantsLayer = self.wantsLayer
 		}
 	}
+	
+	/* TODO: Monitor actual addition/removal changes. */
+	public var dataSource: [Person]! {
+		didSet { UI {
+			self.tableView.reloadData()
+			self.tableView.scrollRowToVisible(self.numberOfRowsInTableView(self.tableView) - 1)
+		}}
+	}
+	
+	// If you REALLY want animations, use this to append a set of elements.
+	public func appendElements(elements: [Person]) {
+		self.dataSource.appendContentsOf(elements)
+		
+		UI { self.tableView.beginUpdates() }
+		elements.forEach {
+			let idx = NSIndexSet(index: self.dataSource.indexOf($0)!)
+			self.tableView.insertRowsAtIndexes(idx, withAnimation: [.EffectFade, .SlideUp])
+		}
+		UI { self.tableView.endUpdates() }
+	}
+	
+	// If you REALLY want animations, use this to remove a set of elements.
+	// Note: this is arbitrary removal, not sequential removal, like appendElements().
+	public func removeElements(elements: [Person]) {
+		UI { self.tableView.beginUpdates() }
+		elements.forEach {
+			if let i = self.dataSource.indexOf($0) {
+				self.tableView.removeRowsAtIndexes(NSIndexSet(index: i), withAnimation: [.EffectFade, .SlideUp])
+			}
+		}
+		UI { self.tableView.endUpdates() }
+		
+		self.dataSource.removeContentsOf(elements)
+	}
+	
+	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
 }
 
 // Essential Support
@@ -78,27 +116,36 @@ public extension PersonsView {
 	}
 	
 	public func tableView(tableView: NSTableView, isGroupRow row: Int) -> Bool {
+		// Intentionally Unimplemented
 		return false
 	}
 	
 	public func tableView(tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
-		return []
+		return self.rowActionProvider?(row: row, edge: edge) ?? []
 	}
 	
 	public func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		return nil
+		var view = tableView.makeViewWithIdentifier("PersonView", owner: self) as? NSTableCellView
+		if view == nil {
+			view = PersonView(frame: NSZeroRect)
+			view?.identifier = PersonView.className()
+		}
+		
+		view!.objectValue = Wrapper<Person>(self.dataSource[row])
+		return view
 	}
 	
 	public func tableView(tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-		return nil
+		return nil // no default row yet
 	}
 	
 	public func tableView(tableView: NSTableView, didAddRowView rowView: NSTableRowView, forRow row: Int) {
-		
+		// Intentionally Unimplemented
+		rowView.emphasized = false
 	}
 	
 	public func tableView(tableView: NSTableView, didRemoveRowView rowView: NSTableRowView, forRow row: Int) {
-		
+		// Intentionally Unimplemented
 	}
 }
 

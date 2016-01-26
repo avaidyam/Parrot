@@ -678,7 +678,7 @@
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Parrot" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="ServiceManager" customModule="Parrot" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="5Jg-0f-uLC"/>
             </objects>

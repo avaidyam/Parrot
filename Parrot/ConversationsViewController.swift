@@ -12,7 +12,7 @@ public class Parrot {
 	public static let ShowSidebar = "Parrot.ShowSidebar"
 }
 
-class ConversationsViewController:  NSViewController, ClientDelegate,
+class ConversationsViewController:  NSViewController,
 									NSTableViewDataSource, NSTableViewDelegate,
 									ConversationListDelegate {
 
@@ -37,9 +37,6 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			}
 		}
 		
-		let client = NSApp.hangoutsClient!
-		client.delegate = self
-		client.connect()
 		NotificationManager.updateAppBadge(conversationList?.unreadEventCount ?? 0)
 	}
 	
@@ -73,30 +70,16 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
         }
     }
 	
-	func clientDidConnect(client: Client) {
-		buildUserConversationList(client) {
-			self.userList = $0
-			self.conversationList = $1
-			
-			Dispatch.main().add {
-				self.tableView.reloadData()
-				self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
-				self.tableView.scrollRowToVisible(0)
-			}
+	func clientActivated(userList: UserList, conversationList: ConversationList) {
+		self.userList = userList
+		self.conversationList = conversationList
+		
+		Dispatch.main().add {
+			self.tableView.reloadData()
+			self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
+			self.tableView.scrollRowToVisible(0)
 		}
 	}
-	
-    func clientDidDisconnect(client: Client) {
-		
-    }
-
-    func clientDidReconnect(client: Client) {
-		
-    }
-
-    func clientDidUpdateState(client: Client, update: STATE_UPDATE) {
-        
-    }
 	
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
         return conversationList?.conversations.count ?? 0
@@ -110,6 +93,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
         }
     }
 	
+	/*
 	func tableView(tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
 		var actions: [NSTableViewRowAction] = []
 		if edge == .Leading { // Swipe Right Actions
@@ -140,7 +124,7 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 			actions[1].backgroundColor = NSColor.materialRedColor()
 		}
 		return actions
-	}
+	}*/
 
 	func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		var cell = tableView.makeViewWithIdentifier("PersonView", owner: self) as? NSTableCellView
@@ -182,10 +166,12 @@ class ConversationsViewController:  NSViewController, ClientDelegate,
 		return cell
 	}
 	
+	/*
 	func tableView(tableView: NSTableView, didAddRowView rowView: NSTableRowView, forRow row: Int) {
 		// Intentionally Unimplemented
 		rowView.emphasized = false
 	}
+	*/
 
 	/* TODO: Support different size classes. */
     func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {

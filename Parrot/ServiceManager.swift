@@ -2,21 +2,42 @@ import Cocoa
 import Hangouts
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class ServiceManager: NSObject, NSApplicationDelegate, ClientDelegate {
+	
 	private var windowController: NSWindowController? = nil
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(notification: NSNotification) {
 		Authenticator.authenticateClient {
 			_hangoutsClient = Client(configuration: $0)
+			_hangoutsClient?.delegate = self
+			_hangoutsClient?.connect()
+			
+			// Instantiate storyboard and controller and begin the UI from here.
 			Dispatch.main().add {
-				
-				// Instantiate storyboard and controller and begin the UI from here.
 				let s = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
 				self.windowController = s.instantiateControllerWithIdentifier("Main") as? NSWindowController
 				self.windowController?.showWindow(nil)
 			}
 		}
+	}
+	
+	func clientDidConnect(client: Client) {
+		buildUserConversationList(client) { (userList, conversationList) in
+			// Not implemented!
+		}
+	}
+	
+	func clientDidDisconnect(client: Client) {
+		// Not implemented.
+	}
+	
+	func clientDidReconnect(client: Client) {
+		// Not implemented.
+	}
+	
+	func clientDidUpdateState(client: Client, update: STATE_UPDATE) {
+		// Not implemented.
 	}
 	
 	// So clicking on the dock icon actually shows the window again.
@@ -32,6 +53,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 }
 
+// Private service points go here:
+private var _hangoutsClient: Client? = nil
+
 // In the future, this will be an extensible service point for all services.
 public extension NSApplication {
 	
@@ -42,6 +66,3 @@ public extension NSApplication {
 		}
 	}
 }
-
-// Private service points go here:
-private var _hangoutsClient: Client? = nil

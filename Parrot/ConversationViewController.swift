@@ -12,10 +12,10 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	var _note: TokenObserver!
 	var popover: NSPopover!
 	var conversation: Conversation? {
-		get { return representedObject as? Conversation }
+		return representedObject as? Conversation
 	}
 	var window: NSWindow? {
-		get { return self.view.window }
+		return self.view.window
 	}
 
     override func viewDidLoad() {
@@ -188,7 +188,9 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         if text.characters.count > 0 {
 			var emojify = Settings()[Parrot.AutoEmoji] as? Bool ?? false
 			emojify = NSEvent.modifierFlags().contains(.AlternateKeyMask) ? false : emojify
-			conversation?.sendMessage(ConversationViewController.segmentsForInput(text, emojify: emojify))
+			let txt = ConversationViewController.segmentsForInput(text, emojify: emojify)
+			Swift.print("sending \(txt) to \(conversation)")
+			conversation?.sendMessage(txt)
             messageTextField.stringValue = ""
         }
     }

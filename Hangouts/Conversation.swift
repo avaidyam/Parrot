@@ -314,7 +314,11 @@ public class Conversation {
             }
 			
             client.getConversation(id, event_timestamp: conv_event.timestamp, max_events: max_events) { res in
-                let conv_events = res.conversation_state.event.map { Conversation.wrap_event($0) }
+				if res.response_header.status == ResponseStatus.INVALID_REQUEST {
+					print("Invalid request! \(res.response_header)")
+					return
+				}
+				let conv_events = res.conversation_state.event.map { Conversation.wrap_event($0) }
 
                 for conv_event in conv_events {
                     self.events_dict[conv_event.id] = conv_event
@@ -409,7 +413,7 @@ public class Conversation {
     public var hasUnreadEvents: Bool {
         get {
             if unread_events.first != nil {
-                print("Conversation \(name) has unread events, latest read timestamp is \(self.latest_read_timestamp)")
+                //print("Conversation \(name) has unread events, latest read timestamp is \(self.latest_read_timestamp)")
             }
             return unread_events.first != nil
         }
