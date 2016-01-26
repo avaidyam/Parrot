@@ -3,6 +3,12 @@ import Cocoa
 /* TODO: Migrate multi-management of views into this. */
 /* TODO: Generics would be *so* nice, but IBOutlets don't work then. */
 
+public class MessagesView: ElementContainerView {
+	public typealias Element = Message
+	public typealias Container = MessageView
+}
+
+/*
 @IBDesignable
 public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	
@@ -47,6 +53,9 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		self.scrollView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
 		self.tableView.sizeLastColumnToFit()
 	}
+	
+	public var sizeClass: SizeClass = .Large
+	public var selectionCapability: SelectionCapability = .None
 	
 	// Allow accessing the insets from the scroll view.
 	public var insets: NSEdgeInsets {
@@ -96,6 +105,7 @@ public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 		self.dataSource.removeContentsOf(elements)
 	}
 	
+	public var selectionProvider: ((row: Int) -> Void)? = nil
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
 }
 
@@ -205,3 +215,4 @@ public extension MessagesView {
 		return []
 	}
 }
+*/

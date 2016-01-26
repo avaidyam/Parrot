@@ -23,6 +23,13 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		_REMOVE.append {
 			self.userList = $0
 			self.conversationList = $1
+			
+			UI {
+				self.personsView.dataSource = self._getAllPersons()!
+				//self.tableView.reloadData()
+				//self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
+				//self.tableView.scrollRowToVisible(0)
+			}
 		}
 		
 		Notifications.subscribe(NSUserDefaultsDidChangeNotification) { note in
@@ -47,6 +54,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		self.personsView.insets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
 		self.personsView.selectionProvider = { row in
 			self.selectConversation(row >= 0 ? self.conversationList?.conversations[row] : nil)
 		}
@@ -104,143 +112,16 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	}
 	
 	var userList: UserList? // FIXME
-	
     var conversationList: ConversationList? {
         didSet {
             conversationList?.delegate = self
-			Dispatch.main().add {
+			UI {
 				self.personsView.dataSource = self._getAllPersons()!
-				//self.tableView.reloadData()
 			}
         }
     }
 	
-	func clientActivated(userList: UserList, conversationList: ConversationList) {
-		self.userList = userList
-		self.conversationList = conversationList
-		
-		Dispatch.main().add {
-			self.personsView.dataSource = self._getAllPersons()!
-			//self.tableView.reloadData()
-			//self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
-			//self.tableView.scrollRowToVisible(0)
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        return conversationList?.conversations.count ?? 0
-	}
-	
-	func tableViewSelectionDidChange(notification: NSNotification) {
-		if tableView.selectedRow >= 0 {
-			selectConversation(conversationList?.conversations[tableView.selectedRow])
-		} else {
-			selectConversation(nil)
-		}
-	}
-	
-	func tableView(tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
-		var actions: [NSTableViewRowAction] = []
-		if edge == .Leading { // Swipe Right Actions
-			actions = [
-				NSTableViewRowAction(style: .Regular, title: "Mute", handler: { action, select in
-					print("Mute row:\(select)")
-				}),
-				NSTableViewRowAction(style: .Destructive, title: "Block", handler: { action, select in
-					print("Block row:\(select)")
-				})
-			]
-			
-			// Fix the colors set by the given styles.
-			actions[0].backgroundColor = NSColor.materialBlueColor()
-			actions[1].backgroundColor = NSColor.materialAmberColor()
-		} else if edge == .Trailing { // Swipe Left Actions
-			actions = [
-				NSTableViewRowAction(style: .Destructive, title: "Delete", handler: { action, select in
-					print("Delete row:\(select)")
-				}),
-				NSTableViewRowAction(style: .Regular, title: "Archive", handler: { action, select in
-					print("Archive row:\(select)")
-				})
-			]
-			
-			// Fix the colors set by the given styles.
-			actions[0].backgroundColor = NSColor.materialAmberColor()
-			actions[1].backgroundColor = NSColor.materialRedColor()
-		}
-		return actions
-	}
-
-	func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		var cell = tableView.makeViewWithIdentifier("PersonView", owner: self) as? NSTableCellView
-		if cell == nil {
-			cell = PersonView(frame: NSZeroRect)
-			cell?.identifier = PersonView.className()
-		}
-		let conversation = (conversationList?.conversations[row])!
-
-		// Propogate info for data filling
-		let a = conversation.messages.last?.userID
-		let b = conversation.users.filter { $0.isSelf }.first?.id
-		let c = conversation.users.filter { !$0.isSelf }.first
-		let network_ = conversation.conversation.network_type as NSArray
-		let d = NetworkType(value: network_[0] as! NSNumber)
-		
-		// Patch for Google Voice contacts to show their numbers.
-		// FIXME: Sometimes [1] is actually you, fix that.
-		var title = conversation.name
-		if title == "Unknown" {
-			if let a = conversation.conversation.participant_data[1].fallback_name {
-				title = a as String
-			}
-		}
-		
-		// Load all the field values from the conversation.
-		var img: NSImage = defaultUserImage
-		if let d = fetchData(c?.id.gaiaID, c?.photoURL) {
-			img = NSImage(data: d)!
-		}
-		
-		let ring = d == NetworkType.GVOICE ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
-		let ind = conversation.hasUnreadEvents
-		let name = title
-		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
-		let time = conversation.messages.last?.timestamp.relativeString() ?? ""
-		
-		cell?.objectValue = Wrapper<Person>(Person(photo: img, highlight: ring, indicator: ind, primary: name, secondary: sub, tertiary: time))
-		return cell
-	}
-	
-	func tableView(tableView: NSTableView, didAddRowView rowView: NSTableRowView, forRow row: Int) {
-		// Intentionally Unimplemented
-		rowView.emphasized = false
-	}
-
-	/* TODO: Support different size classes. */
-	func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        return 64
-    }
-	*/
-	
-	
-	
-	
-	
 	func _getPerson(conversation: Conversation) -> Person {
-		//let conversation = (conversationList?.conversations[row])!
 		
 		// Propogate info for data filling
 		let a = conversation.messages.last?.userID
@@ -277,10 +158,6 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		return self.conversationList?.conversations.map { _getPerson($0) }
 	}
 	
-	
-	
-	
-	
     func conversationList(list: ConversationList, didReceiveEvent event: Event) {
 
     }
@@ -295,18 +172,16 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	
 	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: ConversationList) {
-		Dispatch.main().add {
+		UI {
 			self.personsView.dataSource = self._getAllPersons()!
-			//self.tableView.reloadData()
 			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 	
 	/* TODO: Just update the row that is updated. */
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation) {
-		Dispatch.main().add {
+		UI {
 			self.personsView.dataSource = self._getAllPersons()!
-			//self.tableView.reloadData()
 			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
