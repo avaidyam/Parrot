@@ -27,11 +27,19 @@ public enum SelectionCapability {
 	case Any
 }
 
+/// Can hold any (including non-object) type as an object type.
+public class Wrapper<T> {
+	let element: T
+	
+	init(_ element: T) {
+		self.element = element
+	}
+}
+
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDelegate {
-	public typealias Element = String
 	public typealias Container = NSTableCellView
 	
 	private var scrollView: NSScrollView!
@@ -47,7 +55,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		self.commonInit()
 	}
 	
-	func commonInit() {
+	private func commonInit() {
 		self.dataSource = []
 		
 		self.scrollView = NSScrollView(frame: self.bounds)
@@ -94,13 +102,14 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	}
 	
 	/* TODO: Monitor actual addition/removal changes. */
-	public var dataSource: [Element]! {
+	public var dataSource: [Wrapper<Any>]! {
 		didSet { UI {
 			self.tableView.reloadData()
 			self.tableView.scrollRowToVisible(self.numberOfRowsInTableView(self.tableView) - 1)
 		}}
 	}
 	
+	/*
 	// If you REALLY want animations, use this to append a set of elements.
 	public func appendElements(elements: [Element]) {
 		self.dataSource.appendContentsOf(elements)
@@ -125,7 +134,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		UI { self.tableView.endUpdates() }
 		
 		self.dataSource.removeContentsOf(elements)
-	}
+	}*/
 	
 	public var selectionProvider: ((row: Int) -> Void)? = nil
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
@@ -159,7 +168,7 @@ public extension ElementContainerView {
 			view!.identifier = Container.className()
 		}
 		
-		view!.objectValue = Wrapper<Element>(self.dataSource[row])
+		view!.objectValue = self.dataSource[row]
 		return view
 	}
 	

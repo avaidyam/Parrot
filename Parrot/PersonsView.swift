@@ -3,6 +3,11 @@ import Cocoa
 /* TODO: Migrate multi-management of views into this. */
 /* TODO: Generics would be *so* nice, but IBOutlets don't work then. */
 
+public class PersonsView: ElementContainerView {
+	public typealias Container = PersonView
+}
+
+/*
 @IBDesignable
 public class PersonsView: NSView, NSTableViewDataSource, NSTableViewDelegate {
 	
@@ -204,3 +209,4 @@ public extension PersonsView {
 		return []
 	}
 }
+*/

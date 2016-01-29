@@ -49,7 +49,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			self.conversation?.getEvents(conversation?.events.first?.id, max_events: 50)
 			
 			//self.messagesView.removeElements(self._getAllMessages()!)
-			self.messagesView.dataSource = self._getAllMessages()!
+			self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
         }
     }
 	
@@ -73,7 +73,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
 	func conversation(conversation: Conversation, didReceiveEvent event: Event) {
-		self.messagesView.dataSource = self._getAllMessages()!
+		self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
 		
 		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
 		//self.messagesView.appendElements(found)
@@ -107,7 +107,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
 	func conversationDidUpdateEvents(conversation: Conversation) {
-		self.messagesView.dataSource = self._getAllMessages()!
+		self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
     }
 
     func conversationDidUpdate(conversation: Conversation) {

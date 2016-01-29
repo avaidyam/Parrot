@@ -62,6 +62,7 @@ public class MessageView : NSTableCellView {
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
+			Swift.print("self.objectValue = \(self.objectValue)")
 			guard let o = (self.objectValue as? Wrapper<Message>)?.element else {
 				return
 			}

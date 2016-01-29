@@ -25,7 +25,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			self.conversationList = $1
 			
 			UI {
-				self.personsView.dataSource = self._getAllPersons()!
+				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 				//self.tableView.reloadData()
 				//self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
 				//self.tableView.scrollRowToVisible(0)
@@ -116,7 +116,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
         didSet {
             conversationList?.delegate = self
 			UI {
-				self.personsView.dataSource = self._getAllPersons()!
+				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 			}
         }
     }
@@ -173,7 +173,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: ConversationList) {
 		UI {
-			self.personsView.dataSource = self._getAllPersons()!
+			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
@@ -181,7 +181,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	/* TODO: Just update the row that is updated. */
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation) {
 		UI {
-			self.personsView.dataSource = self._getAllPersons()!
+			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
