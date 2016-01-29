@@ -54,7 +54,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.personsView.insets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
+		self.personsView.insets = NSEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.personsView.selectionProvider = { row in
 			self.selectConversation(row >= 0 ? self.conversationList?.conversations[row] : nil)
 		}

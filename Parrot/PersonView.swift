@@ -84,7 +84,7 @@ public class PersonView : NSTableCellView {
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
-			guard let o = (self.objectValue as? Wrapper<Person>)?.element else {
+			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Person else {
 				return
 			}
 			
@@ -147,3 +147,13 @@ public class PersonView : NSTableCellView {
 	}
 }
 
+public class PersonsView: ElementContainerView {
+	internal override func createView() -> PersonView {
+		var view = self.tableView.makeViewWithIdentifier(PersonView.className(), owner: self) as? PersonView
+		if view == nil {
+			view = PersonView(frame: NSZeroRect)
+			view!.identifier = PersonView.className()
+		}
+		return view!
+	}
+}

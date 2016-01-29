@@ -21,7 +21,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		self.messagesView.insets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
+		self.messagesView.insets = NSEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
         self.messageTextField.delegate = self
 		
 		self.popover = NSPopover()

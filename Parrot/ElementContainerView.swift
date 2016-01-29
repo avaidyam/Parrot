@@ -1,7 +1,6 @@
 import Cocoa
 
-/* TODO: Migrate multi-management of views into this. */
-/* TODO: Generics would be *so* nice, but IBOutlets don't work then. */
+/* TODO: Rewrite to use associatedtype Element and Container as protocol-style. */
 
 /// Provides default size classes for displayed elements of a list.
 /// Any of the provided classes have an associated size.
@@ -40,10 +39,8 @@ public class Wrapper<T> {
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDelegate {
-	public typealias Container = NSTableCellView
-	
-	private var scrollView: NSScrollView!
-	private var tableView: NSTableView!
+	internal var scrollView: NSScrollView!
+	internal var tableView: NSTableView!
 	
 	// Override and patch in the default initializers to our init.
 	public override init(frame frameRect: NSRect) {
@@ -55,7 +52,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		self.commonInit()
 	}
 	
-	private func commonInit() {
+	internal func commonInit() {
 		self.dataSource = []
 		
 		self.scrollView = NSScrollView(frame: self.bounds)
@@ -82,6 +79,15 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		
 		self.scrollView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
 		self.tableView.sizeLastColumnToFit()
+	}
+	
+	internal func createView() -> NSTableCellView {
+		var view = tableView.makeViewWithIdentifier(NSTableCellView.className(), owner: self) as? NSTableCellView
+		if view == nil {
+			view = NSTableCellView(frame: NSZeroRect)
+			view!.identifier = NSTableCellView.className()
+		}
+		return view!
 	}
 	
 	public var sizeClass: SizeClass = .Large
@@ -162,13 +168,8 @@ public extension ElementContainerView {
 	}
 	
 	public func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		var view = tableView.makeViewWithIdentifier(Container.className(), owner: self) as? Container
-		if view == nil {
-			view = Container(frame: NSZeroRect)
-			view!.identifier = Container.className()
-		}
-		
-		view!.objectValue = self.dataSource[row]
+		let view = createView()
+		view.objectValue = self.dataSource[row]
 		return view
 	}
 	

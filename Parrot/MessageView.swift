@@ -62,8 +62,7 @@ public class MessageView : NSTableCellView {
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
-			Swift.print("self.objectValue = \(self.objectValue)")
-			guard let o = (self.objectValue as? Wrapper<Message>)?.element else {
+			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Message else {
 				return
 			}
 			self.orientation = o.orientation
@@ -157,4 +156,15 @@ public class MessageView : NSTableCellView {
         let height = size.height + TextBorder.t + TextBorder.b
         return height
     }
+}
+
+public class MessagesView: ElementContainerView {
+	internal override func createView() -> MessageView {
+		var view = self.tableView.makeViewWithIdentifier(MessageView.className(), owner: self) as? MessageView
+		if view == nil {
+			view = MessageView(frame: NSZeroRect)
+			view!.identifier = MessageView.className()
+		}
+		return view!
+	}
 }

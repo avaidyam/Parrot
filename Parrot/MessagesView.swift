@@ -3,11 +3,6 @@ import Cocoa
 /* TODO: Migrate multi-management of views into this. */
 /* TODO: Generics would be *so* nice, but IBOutlets don't work then. */
 
-
-public class MessagesView: ElementContainerView {
-	public typealias Container = MessageView
-}
-
 /*
 @IBDesignable
 public class MessagesView: NSView, NSTableViewDataSource, NSTableViewDelegate {
