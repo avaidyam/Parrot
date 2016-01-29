@@ -192,8 +192,7 @@ public extension ElementContainerView {
 public extension ElementContainerView {
 	
 	public func selectionShouldChangeInTableView(tableView: NSTableView) -> Bool {
-		Swift.print("Unimplemented \(__FUNCTION__)")
-		return false
+		return self.selectionProvider != nil
 	}
 	
 	public func tableView(tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet {

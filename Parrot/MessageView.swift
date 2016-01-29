@@ -158,6 +158,7 @@ public class MessageView : NSTableCellView {
     }
 }
 
+// Container-type view for MessageView.
 public class MessagesView: ElementContainerView {
 	internal override func createView() -> MessageView {
 		var view = self.tableView.makeViewWithIdentifier(MessageView.className(), owner: self) as? MessageView
