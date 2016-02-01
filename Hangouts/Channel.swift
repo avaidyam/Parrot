@@ -5,13 +5,6 @@ import Alamofire
 /* TODO: Auto-turn a callback into a blocking using semaphores. */
 /* TODO: Remove Alamofire dependency - stream{}. */
 
-/*public protocol ChannelDelegate {
-    func channelDidConnect(channel: Channel)
-    func channelDidDisconnect(channel: Channel)
-    func channelDidReconnect(channel: Channel)
-    func channel(channel: Channel, didReceiveMessage: [AnyObject])
-}*/
-
 public final class Channel : NSObject, NSURLSessionDataDelegate {
 	
 	// The prefix for any BrowserChannel endpoint.
@@ -24,6 +17,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	private static let maxBytesRead = 1024 * 1024
 	private static let maxRetries = 5
 	
+	// NotificationCenter notification and userInfo keys.
 	public static let didConnectNotification = "Hangouts.Channel.DidConnect"
 	public static let didReconnectNotification = "Hangouts.Channel.DidReconnect"
 	public static let didDisconnectNotification = "Hangouts.Channel.DidDisconnect"
@@ -102,7 +96,6 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	
 	// For use in Client:
 	internal let session: NSURLSession
-	//internal var delegate: ChannelDelegate?
 	
     private var isConnected = false
     private var onConnectCalled = false
@@ -289,13 +282,11 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 					self.isConnected = true
 					NSNotificationCenter.defaultCenter()
 						.postNotificationName(Channel.didReconnectNotification, object: self)
-					//self.delegate?.channelDidReconnect(self)
 				} else {
 					self.onConnectCalled = true
 					self.isConnected = true
 					NSNotificationCenter.defaultCenter()
 						.postNotificationName(Channel.didConnectNotification, object: self)
-					//self.delegate?.channelDidConnect(self)
 				}
 			}
 			
@@ -306,7 +297,6 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 						NSNotificationCenter.defaultCenter()
 							.postNotificationName(Channel.didReceiveMessageNotification, object: self,
 								userInfo: [Channel.didReceiveMessageKey: array])
-						//delegate?.channel(self, didReceiveMessage: array)
 					}
 				}
 			}

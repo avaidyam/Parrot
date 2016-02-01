@@ -1,21 +1,11 @@
 import Foundation // lots of things here
 
-/*public protocol ClientDelegate {
-    func clientDidConnect(client: Client)
-    func clientDidDisconnect(client: Client)
-    func clientDidReconnect(client: Client)
-    func clientDidUpdateState(client: Client, update: STATE_UPDATE)
-}*/
-
-public final class Client {//: ChannelDelegate {
+public final class Client {
 	
 	// URL for uploading any URL to Photos
 	public static let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
 	
-	// Update keys to use in Notifications instead of a delegate.
-	//public static let ClientStateUpdatedNotification = "ClientStateUpdated"
-	//public static let ClientStateUpdatedNewStateKey = "ClientStateNewState"
-	
+	// NotificationCenter notification and userInfo keys.
 	public static let didConnectNotification = "Hangouts.Client.DidConnect"
 	public static let didReconnectNotification = "Hangouts.Client.DidReconnect"
 	public static let didDisconnectNotification = "Hangouts.Client.DidDisconnect"
@@ -29,7 +19,6 @@ public final class Client {//: ChannelDelegate {
 	public static let SETACTIVECLIENT_LIMIT_SECS = 60
 	
 	public let config: NSURLSessionConfiguration
-	//public var delegate: ClientDelegate?
 	public var channel: Channel?
 	
 	public var email: String?
@@ -55,13 +44,13 @@ public final class Client {//: ChannelDelegate {
 		
 		let _c = NSNotificationCenter.defaultCenter()
 		let a = _c.addObserverForName(Channel.didConnectNotification, object: self.channel, queue: nil) { _ in
-			self.channelDidConnect(self.channel!)
+			NSNotificationCenter.defaultCenter().postNotificationName(Client.didConnectNotification, object: self)
 		}
 		let b = _c.addObserverForName(Channel.didReconnectNotification, object: self.channel, queue: nil) { _ in
-			self.channelDidReconnect(self.channel!)
+			NSNotificationCenter.defaultCenter().postNotificationName(Client.didReconnectNotification, object: self)
 		}
 		let c = _c.addObserverForName(Channel.didDisconnectNotification, object: self.channel, queue: nil) { _ in
-			self.channelDidDisconnect(self.channel!)
+			NSNotificationCenter.defaultCenter().postNotificationName(Client.didDisconnectNotification, object: self)
 		}
 		let d = _c.addObserverForName(Channel.didReceiveMessageNotification, object: self.channel, queue: nil) { note in
 			if let val = (note.userInfo as! [String: AnyObject])[Channel.didReceiveMessageKey] as? [AnyObject] {
@@ -170,23 +159,6 @@ public final class Client {//: ChannelDelegate {
 		}
 	}
 	
-	// MARK - ChannelDelegate
-	
-	public func channelDidConnect(channel: Channel) {
-		NSNotificationCenter.defaultCenter().postNotificationName(Client.didConnectNotification, object: self)
-		//delegate?.clientDidConnect(self)
-	}
-	
-	public func channelDidDisconnect(channel: Channel) {
-		NSNotificationCenter.defaultCenter().postNotificationName(Client.didDisconnectNotification, object: self)
-		//delegate?.clientDidDisconnect(self)
-	}
-	
-	public func channelDidReconnect(channel: Channel) {
-		NSNotificationCenter.defaultCenter().postNotificationName(Client.didReconnectNotification, object: self)
-		//delegate?.clientDidReconnect(self)
-	}
-	
 	// Parse channel array and call the appropriate events.
 	public func channel(channel: Channel, didReceiveMessage message: [AnyObject]) {
 		guard message[0] as? String != "noop" else {
@@ -220,7 +192,6 @@ public final class Client {//: ChannelDelegate {
 					NSNotificationCenter.defaultCenter().postNotificationName(
 						Client.didUpdateStateNotification, object: self,
 						userInfo: [Client.didUpdateStateKey: state_update])
-					//delegate?.clientDidUpdateState(self, update: state_update)
 				}
 			} else {
 				print("Ignoring message: \(payload[0])")

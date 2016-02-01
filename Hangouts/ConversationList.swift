@@ -9,7 +9,7 @@ public protocol ConversationListDelegate {
 }
 
 // Wrapper around Client that maintains a list of Conversations
-public class ConversationList {//: ClientDelegate {
+public class ConversationList {
 	
     public let client: Client
     private var conv_dict = [String : Conversation]()
@@ -29,21 +29,19 @@ public class ConversationList {//: ClientDelegate {
             self.add_conversation(conv_state.conversation!, client_events: conv_state.event)
         }
 		
-		//client.delegate = self
-		
 		//
 		// A notification-based delegate replacement:
 		//
 		
 		let _c = NSNotificationCenter.defaultCenter()
 		let a = _c.addObserverForName(Client.didConnectNotification, object: client, queue: nil) { _ in
-			self.clientDidConnect(self.client)
+			self.sync()
 		}
 		let b = _c.addObserverForName(Client.didReconnectNotification, object: client, queue: nil) { _ in
-			self.clientDidReconnect(self.client)
+			self.sync()
 		}
 		let c = _c.addObserverForName(Client.didDisconnectNotification, object: client, queue: nil) { _ in
-			self.clientDidDisconnect(self.client)
+			// nothing here
 		}
 		let d = _c.addObserverForName(Client.didUpdateStateNotification, object: client, queue: nil) { note in
 			if let val = (note.userInfo as! [String: AnyObject])[Client.didUpdateStateKey] as? STATE_UPDATE {
@@ -190,20 +188,6 @@ public class ConversationList {//: ClientDelegate {
 	
     public func conversationDidUpdate(conversation: Conversation) {
         delegate?.conversationList(self, didUpdateConversation: conversation)
-    }
-
-    //  MARK: ClientDelegate
-	
-	public func clientDidConnect(client: Client) {
-		sync()
-	}
-
-    public func clientDidDisconnect(client: Client) {
-		
-    }
-
-    public func clientDidReconnect(client: Client) {
-        sync()
     }
 	
 	// Receive a ClientStateUpdate and fan out to Conversations
