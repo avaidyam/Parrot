@@ -46,10 +46,10 @@ public class UserList {
 		}
 		
 		self.observer = NSNotificationCenter.defaultCenter()
-			.addObserverForName(Client.ClientStateUpdatedNotification, object: client, queue: nil) {
+			.addObserverForName(Client.didUpdateStateNotification, object: client, queue: nil) {
 			
 			if let userInfo = $0.userInfo,
-				state_update = userInfo[Client.ClientStateUpdatedNewStateKey as NSString] {
+				state_update = userInfo[Client.didUpdateStateKey as NSString] {
 				
 				if let conversation = (state_update as! STATE_UPDATE).client_conversation {
 					for participant in conversation.participant_data {

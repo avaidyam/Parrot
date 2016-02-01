@@ -24,10 +24,11 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	private static let maxBytesRead = 1024 * 1024
 	private static let maxRetries = 5
 	
-	public static let didConnectNotificationKey = "Hangouts.Channel.DidConnect"
-	public static let didReconnectNotificationKey = "Hangouts.Channel.DidReconnect"
-	public static let didDisconnectNotificationKey = "Hangouts.Channel.DidDisconnect"
-	public static let didReceiveMessageNotificationKey = "Hangouts.Channel.ReceiveMessage"
+	public static let didConnectNotification = "Hangouts.Channel.DidConnect"
+	public static let didReconnectNotification = "Hangouts.Channel.DidReconnect"
+	public static let didDisconnectNotification = "Hangouts.Channel.DidDisconnect"
+	public static let didReceiveMessageNotification = "Hangouts.Channel.ReceiveMessage"
+	public static let didReceiveMessageKey = "Hangouts.Channel.ReceiveMessage.Key"
 	
 	// Parse data from the backward channel into chunks.
 	// Responses from the backward channel consist of a sequence of chunks which
@@ -287,13 +288,13 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 				if self.onConnectCalled {
 					self.isConnected = true
 					NSNotificationCenter.defaultCenter()
-						.postNotificationName(Channel.didReconnectNotificationKey, object: self)
+						.postNotificationName(Channel.didReconnectNotification, object: self)
 					//self.delegate?.channelDidReconnect(self)
 				} else {
 					self.onConnectCalled = true
 					self.isConnected = true
 					NSNotificationCenter.defaultCenter()
-						.postNotificationName(Channel.didConnectNotificationKey, object: self)
+						.postNotificationName(Channel.didConnectNotification, object: self)
 					//self.delegate?.channelDidConnect(self)
 				}
 			}
@@ -303,8 +304,8 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 					//let array_id = inner[0]
 					if let array = inner[1] as? [AnyObject] {
 						NSNotificationCenter.defaultCenter()
-							.postNotificationName(Channel.didReceiveMessageNotificationKey, object: self,
-								userInfo: ["chunk": array])
+							.postNotificationName(Channel.didReceiveMessageNotification, object: self,
+								userInfo: [Channel.didReceiveMessageKey: array])
 						//delegate?.channel(self, didReceiveMessage: array)
 					}
 				}

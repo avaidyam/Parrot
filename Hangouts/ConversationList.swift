@@ -9,14 +9,15 @@ public protocol ConversationListDelegate {
 }
 
 // Wrapper around Client that maintains a list of Conversations
-public class ConversationList : ClientDelegate {
+public class ConversationList {//: ClientDelegate {
 	
     public let client: Client
     private var conv_dict = [String : Conversation]()
     public var sync_timestamp: NSDate
     public let user_list: UserList
 	
-    public var delegate: ConversationListDelegate?
+	public var delegate: ConversationListDelegate?
+	private var tokens = [NSObjectProtocol]()
 
     public init(client: Client, conv_states: [CONVERSATION_STATE], user_list: UserList, sync_timestamp: NSDate?) {
         self.client = client
@@ -27,8 +28,40 @@ public class ConversationList : ClientDelegate {
 		for conv_state in conv_states {
             self.add_conversation(conv_state.conversation!, client_events: conv_state.event)
         }
-        client.delegate = self
+		
+		//client.delegate = self
+		
+		//
+		// A notification-based delegate replacement:
+		//
+		
+		let _c = NSNotificationCenter.defaultCenter()
+		let a = _c.addObserverForName(Client.didConnectNotification, object: client, queue: nil) { _ in
+			self.clientDidConnect(self.client)
+		}
+		let b = _c.addObserverForName(Client.didReconnectNotification, object: client, queue: nil) { _ in
+			self.clientDidReconnect(self.client)
+		}
+		let c = _c.addObserverForName(Client.didDisconnectNotification, object: client, queue: nil) { _ in
+			self.clientDidDisconnect(self.client)
+		}
+		let d = _c.addObserverForName(Client.didUpdateStateNotification, object: client, queue: nil) { note in
+			if let val = (note.userInfo as! [String: AnyObject])[Client.didUpdateStateKey] as? STATE_UPDATE {
+				self.clientDidUpdateState(self.client, update: val)
+			} else {
+				print("Encountered an error! \(note)")
+			}
+		}
+		self.tokens.appendContentsOf([a, b, c, d])
     }
+	
+	deinit {
+		
+		// Remove all the observers so we aren't receiving calls later on.
+		self.tokens.forEach {
+			NSNotificationCenter.defaultCenter().removeObserver($0)
+		}
+	}
 
     public var conversations: [Conversation] {
         get {
