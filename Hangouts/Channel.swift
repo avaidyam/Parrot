@@ -5,12 +5,12 @@ import Alamofire
 /* TODO: Auto-turn a callback into a blocking using semaphores. */
 /* TODO: Remove Alamofire dependency - stream{}. */
 
-public protocol ChannelDelegate {
+/*public protocol ChannelDelegate {
     func channelDidConnect(channel: Channel)
     func channelDidDisconnect(channel: Channel)
     func channelDidReconnect(channel: Channel)
     func channel(channel: Channel, didReceiveMessage: [AnyObject])
-}
+}*/
 
 public final class Channel : NSObject, NSURLSessionDataDelegate {
 	
@@ -23,6 +23,11 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	private static let pushTimeout = 30
 	private static let maxBytesRead = 1024 * 1024
 	private static let maxRetries = 5
+	
+	public static let didConnectNotificationKey = "Hangouts.Channel.DidConnect"
+	public static let didReconnectNotificationKey = "Hangouts.Channel.DidReconnect"
+	public static let didDisconnectNotificationKey = "Hangouts.Channel.DidDisconnect"
+	public static let didReceiveMessageNotificationKey = "Hangouts.Channel.ReceiveMessage"
 	
 	// Parse data from the backward channel into chunks.
 	// Responses from the backward channel consist of a sequence of chunks which
@@ -96,7 +101,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	
 	// For use in Client:
 	internal let session: NSURLSession
-	internal var delegate: ChannelDelegate?
+	//internal var delegate: ChannelDelegate?
 	
     private var isConnected = false
     private var onConnectCalled = false
@@ -281,11 +286,15 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 			if !self.isConnected {
 				if self.onConnectCalled {
 					self.isConnected = true
-					self.delegate?.channelDidReconnect(self)
+					NSNotificationCenter.defaultCenter()
+						.postNotificationName(Channel.didReconnectNotificationKey, object: self)
+					//self.delegate?.channelDidReconnect(self)
 				} else {
 					self.onConnectCalled = true
 					self.isConnected = true
-					self.delegate?.channelDidConnect(self)
+					NSNotificationCenter.defaultCenter()
+						.postNotificationName(Channel.didConnectNotificationKey, object: self)
+					//self.delegate?.channelDidConnect(self)
 				}
 			}
 			
@@ -293,7 +302,10 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 				for inner in container {
 					//let array_id = inner[0]
 					if let array = inner[1] as? [AnyObject] {
-						delegate?.channel(self, didReceiveMessage: array)
+						NSNotificationCenter.defaultCenter()
+							.postNotificationName(Channel.didReceiveMessageNotificationKey, object: self,
+								userInfo: ["chunk": array])
+						//delegate?.channel(self, didReceiveMessage: array)
 					}
 				}
 			}

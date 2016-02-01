@@ -7,7 +7,7 @@ public protocol ClientDelegate {
     func clientDidUpdateState(client: Client, update: STATE_UPDATE)
 }
 
-public final class Client : ChannelDelegate {
+public final class Client {//: ChannelDelegate {
 	
 	// URL for uploading any URL to Photos
 	public static let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
@@ -35,17 +35,47 @@ public final class Client : ChannelDelegate {
 		self.config = configuration
     }
 	
+	private var tokens = [NSObjectProtocol]()
+	
 	// Establish a connection to the chat server.
     public func connect() {
 		self.channel = Channel(configuration: self.config)
-		self.channel?.delegate = self
+		//self.channel?.delegate = self
 		self.channel?.listen()
+		
+		// 
+		// A notification-based delegate replacement:
+		//
+		
+		let _c = NSNotificationCenter.defaultCenter()
+		let a = _c.addObserverForName(Channel.didConnectNotificationKey, object: self.channel, queue: nil) { _ in
+			self.channelDidConnect(self.channel!)
+		}
+		let b = _c.addObserverForName(Channel.didReconnectNotificationKey, object: self.channel, queue: nil) { _ in
+			self.channelDidReconnect(self.channel!)
+		}
+		let c = _c.addObserverForName(Channel.didDisconnectNotificationKey, object: self.channel, queue: nil) { _ in
+			self.channelDidDisconnect(self.channel!)
+		}
+		let d = _c.addObserverForName(Channel.didReceiveMessageNotificationKey, object: self.channel, queue: nil) { note in
+			if let val = (note.userInfo as! [String: AnyObject])["chunk"] as? [AnyObject] {
+				self.channel(self.channel!, didReceiveMessage: val)
+			} else {
+				print("Encountered an error! \(note)")
+			}
+		}
+		self.tokens.appendContentsOf([a, b, c, d])
     }
 	
 	/* TODO: Can't disconnect a Channel yet. */
 	// Gracefully disconnect from the server.
 	public func disconnect() {
 		//self.channel?.disconnect()
+		
+		// Remove all the observers so we aren't receiving calls later on.
+		self.tokens.forEach {
+			NSNotificationCenter.defaultCenter().removeObserver($0)
+		}
 	}
 	
 	// Use this method for constructing request messages when calling Hangouts APIs.
