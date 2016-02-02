@@ -2,7 +2,7 @@ import Cocoa
 import Hangouts
 
 @NSApplicationMain
-class ServiceManager: NSObject, NSApplicationDelegate{//, ClientDelegate {
+class ServiceManager: NSObject, NSApplicationDelegate{
 	
 	private var windowController: NSWindowController? = nil
 	
@@ -10,12 +10,11 @@ class ServiceManager: NSObject, NSApplicationDelegate{//, ClientDelegate {
 	func applicationWillFinishLaunching(notification: NSNotification) {
 		Authenticator.authenticateClient {
 			_hangoutsClient = Client(configuration: $0)
-			//_hangoutsClient?.delegate = self
 			_hangoutsClient?.connect()
 			
 			NSNotificationCenter.defaultCenter()
 				.addObserverForName(Client.didConnectNotification, object: _hangoutsClient!, queue: nil) { _ in
-					buildUserConversationList(_hangoutsClient!) { (userList, conversationList) in
+					_hangoutsClient!.buildUserConversationList { (userList, conversationList) in
 						_REMOVE.forEach {
 							$0(userList, conversationList)
 						}
@@ -29,26 +28,6 @@ class ServiceManager: NSObject, NSApplicationDelegate{//, ClientDelegate {
 				self.windowController?.showWindow(nil)
 			}
 		}
-	}
-	
-	func clientDidConnect(client: Client) {
-		buildUserConversationList(client) { (userList, conversationList) in
-			_REMOVE.forEach {
-				$0(userList, conversationList)
-			}
-		}
-	}
-	
-	func clientDidDisconnect(client: Client) {
-		// Not implemented.
-	}
-	
-	func clientDidReconnect(client: Client) {
-		// Not implemented.
-	}
-	
-	func clientDidUpdateState(client: Client, update: STATE_UPDATE) {
-		// Not implemented.
 	}
 	
 	// So clicking on the dock icon actually shows the window again.

@@ -12,7 +12,7 @@ var conversationList: ConversationList!
 AuthenticatorCLI.authenticateClient {
 	client = Client(configuration: $0)
 	
-	buildUserConversationList(client) {
+	client.buildUserConversationList {
 		userList = $0; conversationList = $1
 		print("Obtained userList \(userList) and conversationList! \(conversationList)")
 		dispatch_semaphore_signal(sem)

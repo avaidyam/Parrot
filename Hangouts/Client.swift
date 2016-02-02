@@ -218,6 +218,53 @@ public final class Client {
 		self.channel?.sendMaps([["p": str]])
 	}
 	
+	public func buildUserConversationList(cb: (UserList, ConversationList) -> Void) {
+		
+		// Retrieve recent conversations so we can preemptively look up their participants.
+		self.syncRecentConversations { response in
+			let conv_states = response!.conversation_state
+			
+			// syncrecentconversations seems to return a sync_timestamp 4 minutes
+			// before the present. To prevent syncallnewevents later breaking
+			// requesting events older than what we already have, use
+			// current_server_time instead. use:
+			//
+			// from_timestamp(response!.response_header!.current_server_time)
+			let sync_timestamp = from_timestamp(response!.sync_timestamp)
+			
+			var required_user_ids = Set<UserID>()
+			for conv_state in conv_states {
+				let participants = conv_state.conversation!.participant_data
+				required_user_ids = required_user_ids.union(Set(participants.map {
+					UserID(chatID: $0.id.chat_id as! String, gaiaID: $0.id.gaia_id as! String)
+					}))
+			}
+			
+			var required_entities = Array<ENTITY>()
+			if required_user_ids.count > 0 {
+				self.getEntitiesByID(required_user_ids.map { $0.chatID }) { resp in
+					required_entities = resp!.entities
+				}
+			}
+			
+			var conv_part_list = Array<CONVERSATION_PARTICIPANT_DATA>()
+			for conv_state in conv_states {
+				let participants = conv_state.conversation!.participant_data
+				conv_part_list.appendContentsOf(participants)
+			}
+			
+			// Let's request our own entity now.
+			var self_entity = ENTITY()
+			self.getSelfInfo {
+				self_entity = $0!.self_entity!
+				
+				let userList = UserList(client: self, selfEntity: self_entity, entities: required_entities, data: conv_part_list)
+				let conversationList = ConversationList(client: self, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
+				cb(userList, conversationList)
+			}
+		}
+	}
+	
 	// MARK - Request Factories
 	
 	/* TODO: Refactor request() and base_request(). */
@@ -543,16 +590,18 @@ public final class Client {
 			None,
 			None,
 			None,
-			[],
-			[
+			[], //EventAnnotation
+			[ //MessageContent
 				segments,
 				[]
 			],
-			a, // it's too long for one line!
-			[
+			a, // it's too long for one line! // ExistingMedia
+			[ //EventRequestHeader
 				[conversation_id],
 				generateClientID(),
 				otr_status.representation,
+				// delivery medium
+				// event type
 			],
 			None,
 			None,

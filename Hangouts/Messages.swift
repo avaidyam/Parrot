@@ -1145,10 +1145,6 @@ message Phone {
 	optional bool primary = 6;
 }
 
-enum PhoneValidationResult {
-	PHONE_VALIDATION_RESULT_IS_POSSIBLE = 0;
-}
-
 message I18nData {
 	optional string national_number = 1;
 	optional string international_number = 2;
