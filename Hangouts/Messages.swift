@@ -726,7 +726,7 @@ public typealias GetSelfInfoResponse = GET_SELF_INFO_RESPONSE
 
 @objc(RESPONSE_HEADER)
 public class RESPONSE_HEADER : Message {
-    public var status: NSNumber? // ResponseStatus?
+    public var status: ResponseStatus?
     public var field1: AnyObject?
     public var field2: AnyObject?
     public var request_trace_id: NSString = ""
@@ -1068,10 +1068,10 @@ public class UserConversationState: Message {
 public class ConversationParticipantData: Message {
 	public var id: ParticipantId?
 	public var fallback_name: NSString?
-	public var invitation_status: NSNumber? // InvitationStatus?
+	public var invitation_status: InvitationStatus?
 	public var field4: AnyObject?
-	public var participant_type: NSNumber? // ParticipantType?
-	public var new_invitation_status: NSNumber? // InvitationStatus?
+	public var participant_type: ParticipantType?
+	public var new_invitation_status: InvitationStatus?
 }
 public typealias CONVERSATION_PARTICIPANT_DATA = ConversationParticipantData
 
@@ -1165,16 +1165,16 @@ public class Entity: Message {
 	public var properties: EntityProperties?
 	public var field11: AnyObject?
 	public var field12: AnyObject?
-	public var entity_type: AnyObject? // ParticipantType?
+	public var entity_type: ParticipantType?
 	public var field14: AnyObject?
 	public var field15: AnyObject?
-	public var had_past_hangout_state: AnyObject? // PastHangoutState?
+	public var had_past_hangout_state: PastHangoutState?
 }
 public typealias ENTITY = Entity
 
 @objc(EntityProperties)
 public class EntityProperties: Message {
-	public var type: NSNumber? // ProfileType?
+	public var type: ProfileType?
 	public var display_name: NSString?
 	public var first_name: NSString?
 	public var photo_url: NSString?
@@ -1184,8 +1184,8 @@ public class EntityProperties: Message {
 	public var field8: AnyObject?
 	public var field9: AnyObject?
 	public var in_users_domain: NSNumber?
-	public var gender: NSNumber? // Gender?
-	public var photo_url_status: NSNumber? // PhotoUrlStatus?
+	public var gender: Gender?
+	public var photo_url_status: PhotoUrlStatus?
 	public var field13: AnyObject?
 	public var field14: AnyObject?
 	public var canonical_email: NSString?

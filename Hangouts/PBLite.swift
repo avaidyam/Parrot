@@ -200,9 +200,10 @@ public class PBLiteSerialization {
 				
 				//  Unwrapping an optional enum
 			} else if let type = _unwrapOptionalType(property) as? Enum.Type {
-				print("TEST \(propertyName): \(type)")
-				let val: (AnyObject?) = type.init(value: (arr[i] as! NSNumber))
-				instance.setValue(val, forKey: propertyName)
+				if !(arr[i] is NSNull) {
+					let val: (AnyObject?) = type.init(value: (arr[i] as! NSNumber))
+					instance.setValue(val, forKey: propertyName)
+				}
 				
 				//  Using a non-optional sub-struct
 			} else if let enumv = property as? Enum {
