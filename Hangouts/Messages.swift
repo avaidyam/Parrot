@@ -205,6 +205,7 @@ public class ClientID : Enum {
 	public static let WEB_GMAIL: ClientID = 6
 	public static let ULTRAVIOLET: ClientID = 13
 }
+public typealias ClientId = ClientID
 
 @objc(ClientBuildType)
 public class ClientBuildType : Enum {
@@ -234,6 +235,7 @@ public class PhotoURLStatus : Enum {
 	public static let PLACEHOLDER: PhotoURLStatus = 1
 	public static let USER_PHOTO: PhotoURLStatus = 2
 }
+public typealias PhotoUrlStatus = PhotoURLStatus
 
 @objc(Gender)
 public class Gender : Enum {
@@ -294,6 +296,7 @@ public class CallerIDSettingsMask : Enum  {
 	public static let UNKNOWN: CallerIDSettingsMask = 0;
 	public static let PROVIDED: CallerIDSettingsMask = 1;
 }
+public typealias CallerIdSettingsMask = CallerIDSettingsMask
 
 @objc(PhoneVerificationStatus)
 public class PhoneVerificationStatus : Enum  {
@@ -345,6 +348,7 @@ public class PARTICIPANT_ID : Message {
 }
 public typealias ParticipantId = PARTICIPANT_ID
 
+/* REDECLARATION
 @objc(SET_TYPING_NOTIFICATION)
 public class SET_TYPING_NOTIFICATION : Message {
     public var conversation_id = CONVERSATION_ID()
@@ -352,8 +356,9 @@ public class SET_TYPING_NOTIFICATION : Message {
     public var timestamp: NSNumber = 0
     public var status: TypingType = 0
 }
-public typealias SetTypingNotification = SET_TYPING_NOTIFICATION
+*/
 
+/*
 @objc(SET_FOCUS_NOTIFICATION)
 public class SET_FOCUS_NOTIFICATION : Message {
     public var conversation_id = CONVERSATION_ID()
@@ -362,7 +367,7 @@ public class SET_FOCUS_NOTIFICATION : Message {
     public var status: FocusType = 0
     public var device: FocusDevice?
 }
-public typealias SetFocusNotification = SET_FOCUS_NOTIFICATION
+*/
 
 @objc(CONVERSATION_READ_STATE)
 public class CONVERSATION_READ_STATE : Message {
@@ -400,6 +405,7 @@ public class CONVERSATION_INTERNAL_STATE : Message {
 }
 public typealias ConversationInternalState = CONVERSATION_INTERNAL_STATE
 
+/* REDECLARATION
 @objc(CONVERSATION_PARTICIPANT_DATA)
 public class CONVERSATION_PARTICIPANT_DATA : Message {
     public var id = PARTICIPANT_ID()
@@ -408,7 +414,7 @@ public class CONVERSATION_PARTICIPANT_DATA : Message {
 	public var field4: AnyObject?
 	public var field5: AnyObject?
 }
-public typealias ConversationParticipantData = CONVERSATION_PARTICIPANT_DATA
+*/
 
 @objc(CONVERSATION)
 public class CONVERSATION : Message {
@@ -435,7 +441,7 @@ public class CONVERSATION : Message {
 	public var field20: AnyObject?
 	public var field21: AnyObject?
 }
-public typealias Conversation = CONVERSATION
+//public typealias Conversation = CONVERSATION
 
 //  Unfortunately, some of PBLite's introspection
 //  uses string-based public class lookup, and nested
@@ -488,7 +494,7 @@ public typealias ChatMessageContent = CHAT_MESSAGE_CONTENT
 @objc(CHAT_MESSAGE)
 public class CHAT_MESSAGE : Message {
     public var field1: AnyObject?
-    public var annotation: NSArray?
+    public var annotation = [EventAnnotation]() // NSArray?
     public var message_content = CHAT_MESSAGE_CONTENT()
 }
 public typealias ChatMessage = CHAT_MESSAGE
@@ -510,14 +516,14 @@ public class HANGOUT_EVENT : Message {
     public var is_periodic_refresh: NSNumber?
     public var field1: AnyObject?
 }
-public typealias HangoutEvent = HANGOUT_EVENT
+//public typealias HangoutEvent = HANGOUT_EVENT
 
 @objc(OTR_MODIFICATION)
 public class OTR_MODIFICATION : Message {
-    public var old_otr_status: OffTheRecordStatus = 0
-    public var new_otr_status: OffTheRecordStatus = 0
-    public var old_otr_toggle: OffTheRecordToggle = 0
-    public var new_otr_toggle: OffTheRecordToggle = 0
+    public var old_otr_status: OffTheRecordStatus?
+    public var new_otr_status: OffTheRecordStatus?
+    public var old_otr_toggle: OffTheRecordToggle?
+    public var new_otr_toggle: OffTheRecordToggle?
 }
 public typealias OTRModification = OTR_MODIFICATION
 
@@ -567,13 +573,14 @@ public class EVENT : Message {
 	public var field25: AnyObject?
 	public var hash_modifier: AnyObject?
 }
-public typealias Event = EVENT
+//public typealias Event = EVENT
 
+/* REDECLARATION
 @objc(EVENT_NOTIFICATION)
 public class EVENT_NOTIFICATION : Message {
     public var event = EVENT()
 }
-public typealias EventNotification = EVENT_NOTIFICATION
+*/
 
 @objc(WATERMARK_NOTIFICATION)
 public class WATERMARK_NOTIFICATION : Message {
@@ -581,8 +588,9 @@ public class WATERMARK_NOTIFICATION : Message {
     public var conversation_id = CONVERSATION_ID()
     public var latest_read_timestamp: NSNumber = 0
 }
-public typealias WatermarkNotification = WATERMARK_NOTIFICATION
+//public typealias WatermarkNotification = WATERMARK_NOTIFICATION
 
+/*
 @objc(STATE_UPDATE_HEADER)
 public class STATE_UPDATE_HEADER : Message {
     public var active_client_state: ActiveClientState = 0
@@ -594,7 +602,7 @@ public class STATE_UPDATE_HEADER : Message {
     public var field4: AnyObject?
     public var updating_client_id: AnyObject?
 }
-public typealias StateUpdateHeader = STATE_UPDATE_HEADER
+*/
 
 /* TODO: Implement Oneof support here, but how? */
 @objc(STATE_UPDATE)
@@ -638,6 +646,7 @@ public class CONVERSATION_STATE : Message {
 }
 public typealias ConversationState = CONVERSATION_STATE
 
+/* REDECLARATION
 @objc(ENTITY_PROPERTIES)
 public class ENTITY_PROPERTIES : Message {
     public var type: NSNumber?
@@ -647,7 +656,9 @@ public class ENTITY_PROPERTIES : Message {
     public var emails = NSArray()
 }
 public typealias EntityProperties = ENTITY_PROPERTIES
+*/
 
+/* REDECLARATION
 @objc(ENTITY)
 public class ENTITY : Message {
     public var field1: AnyObject?
@@ -663,6 +674,7 @@ public class ENTITY : Message {
     public var properties = ENTITY_PROPERTIES()
 }
 public typealias Entity = ENTITY
+*/
 
 @objc(ENTITY_GROUP_ENTITY)
 public class ENTITY_GROUP_ENTITY : Message {
@@ -695,6 +707,7 @@ public class INITIAL_CLIENT_ENTITIES_RESPONSE : Message {
 }
 public typealias InitialClientEntitiesResponse = INITIAL_CLIENT_ENTITIES_RESPONSE
 
+/* REDECLARATION; INCOMPLETE
 @objc(GET_SELF_INFO_RESPONSE)
 public class GET_SELF_INFO_RESPONSE : Message {
 	
@@ -709,6 +722,7 @@ public class GET_SELF_INFO_RESPONSE : Message {
     public var self_entity = ENTITY()
 }
 public typealias GetSelfInfoResponse = GET_SELF_INFO_RESPONSE
+*/
 
 @objc(RESPONSE_HEADER)
 public class RESPONSE_HEADER : Message {
@@ -730,8 +744,8 @@ public class SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
 	// that's not part of the protobuf.
 	public var field0: AnyObject?
 	
-    public var response_header = RESPONSE_HEADER()
-    public var sync_timestamp: NSString = ""
+	public var response_header: ResponseHeader? // RESPONSE_HEADER()
+    public var sync_timestamp: NSNumber? // NSString = ""
     public var conversation_state = [CONVERSATION_STATE]()
 }
 public typealias SyncAllNewEventsResponse = SYNC_ALL_NEW_EVENTS_RESPONSE
@@ -929,31 +943,40 @@ public class EventAnnotation: Message {
 	public var value: NSString?
 }
 
+/* REDECLARATION
 @objc(ChatMessage)
 public class ChatMessage: Message {
 	public var annotation = [EventAnnotation]()
 	public var message_content: MessageContent?
 }
+*/
 
+/* REDECLARATION
 @objc(MembershipChange)
 public class MembershipChange: Message {
 	public var type: MembershipChangeType?
 	public var field2: AnyObject?
 	public var participant_ids = [ParticipantId]()
 }
+*/
 
+/* REDECLARATION
 @objc(ConversationRename)
 public class ConversationRename: Message {
 	public var new_name: NSString?
 	public var old_name: NSString?
 }
+*/
 
+/* REDECLARATION
 @objc(HangoutEvent)
 public class HangoutEvent: Message {
 	public var event_type: HangoutEventType?
 	public var participant_id = [ParticipantId]()
 }
+*/
 
+/* REDECLARATION
 @objc(OTRModification)
 public class OTRModification: Message {
 	public var old_otr_status: OffTheRecordStatus?
@@ -961,6 +984,7 @@ public class OTRModification: Message {
 	public var old_otr_toggle: OffTheRecordToggle?
 	public var new_otr_toggle: OffTheRecordToggle?
 }
+*/
 
 @objc(HashModifier)
 public class HashModifier: Message {
@@ -970,6 +994,7 @@ public class HashModifier: Message {
 	public var version: NSNumber?
 }
 
+/* REDECLARATION
 @objc(Event)
 public class Event: Message {
 	public var conversation_id: ConversationId?
@@ -999,6 +1024,7 @@ public class Event: Message {
 	public var field25: AnyObject?
 	public var hash_modifier: HashModifier?
 }
+*/
 
 @objc(UserReadState)
 public class UserReadState: Message {
@@ -1047,7 +1073,9 @@ public class ConversationParticipantData: Message {
 	public var participant_type: ParticipantType?
 	public var new_invitation_status: InvitationStatus?
 }
+public typealias CONVERSATION_PARTICIPANT_DATA = ConversationParticipantData
 
+/* REDECLARATION
 @objc(Conversation)
 public class Conversation: Message {
 	public var conversation_id: ConversationId?
@@ -1070,6 +1098,7 @@ public class Conversation: Message {
 	public var network_type = [NetworkType]()
 	public var force_history_state: ForceHistory?
 }
+*/
 
 @objc(EasterEgg)
 public class EasterEgg: Message {
@@ -1140,6 +1169,7 @@ public class Entity: Message {
 	public var field15: AnyObject?
 	public var had_past_hangout_state: PastHangoutState?
 }
+public typealias ENTITY = Entity
 
 @objc(EntityProperties)
 public class EntityProperties: Message {
@@ -1159,7 +1189,9 @@ public class EntityProperties: Message {
 	public var field14: AnyObject?
 	public var canonical_email: NSString?
 }
+public typealias ENTITY_PROPERTIES = EntityProperties
 
+/* REDECLARATION
 @objc(ConversationState)
 public class ConversationState: Message {
 	public var conversation_id: ConversationId?
@@ -1168,13 +1200,16 @@ public class ConversationState: Message {
 	public var field4: AnyObject?
 	public var event_continuation_token: EventContinuationToken?
 }
+*/
 
+/* REDECLARATION
 @objc(EventContinuationToken)
 public class EventContinuationToken: Message {
 	public var event_id: NSString?
 	public var storage_continuation_token: NSString?
 	public var event_timestamp: NSNumber?
 }
+*/
 
 @objc(EntityLookupSpec)
 public class EntityLookupSpec: Message {
@@ -1223,7 +1258,7 @@ public class MoodMessage: Message {
 
 @objc(MoodContent)
 public class MoodContent: Message {
-	public var segment = [Segment]()
+	public var segment = [MessageSegment]()
 }
 
 @objc(MoodSetting)
@@ -1301,7 +1336,7 @@ public class PhoneNumber: Message {
 @objc(SuggestedContactGroupHash)
 public class SuggestedContactGroupHash: Message {
 	public var max_results: NSNumber?
-	public var hash: NSString?
+	public var hash_: NSString? // title: hash
 }
 
 @objc(SuggestedContact)
@@ -1313,7 +1348,7 @@ public class SuggestedContact: Message {
 @objc(SuggestedContactGroup)
 public class SuggestedContactGroup: Message {
 	public var hash_matched: NSNumber?
-	public var hash: NSString?
+	public var hash_: NSString? // title: hash
 	public var contact = [SuggestedContact]()
 }
 
@@ -1324,7 +1359,11 @@ public class StateUpdateHeader: Message {
 	public var request_trace_id: NSString?
 	public var notification_settings: NotificationSettings?
 	public var current_server_time: NSNumber?
+	public var field6: AnyObject?
+	public var field7: AnyObject?
+	public var updating_client_id: AnyObject?
 }
+public typealias STATE_UPDATE_HEADER = StateUpdateHeader
 
 @objc(BatchUpdate)
 public class BatchUpdate: Message {
@@ -1333,8 +1372,9 @@ public class BatchUpdate: Message {
 
 @objc(EventNotification)
 public class EventNotification: Message {
-	public var event: Event?
+	public var event: EVENT?
 }
+public typealias EVENT_NOTIFICATION = EventNotification
 
 @objc(SetFocusNotification)
 public class SetFocusNotification: Message {
@@ -1344,6 +1384,7 @@ public class SetFocusNotification: Message {
 	public var type: FocusType?
 	public var device: FocusDevice?
 }
+public typealias SET_FOCUS_NOTIFICATION = SetFocusNotification
 
 @objc(SetTypingNotification)
 public class SetTypingNotification: Message {
@@ -1352,6 +1393,7 @@ public class SetTypingNotification: Message {
 	public var timestamp: NSNumber?
 	public var type: TypingType?
 }
+public typealias SET_TYPING_NOTIFICATION = SetTypingNotification
 
 @objc(SetConversationNotificationLevelNotification)
 public class SetConversationNotificationLevelNotification: Message {
@@ -1437,7 +1479,7 @@ public class AddUserResponse: Message {
 	public var field2: AnyObject?
 	public var field3: AnyObject?
 	public var field4: AnyObject?
-	public var created_event: Event?
+	public var created_event: EVENT?
 }
 
 @objc(CreateConversationRequest)
@@ -1497,11 +1539,13 @@ public class GetConversationRequest: Message {
 	public var event_continuation_token: EventContinuationToken?
 }
 
+/* REDECLARATION
 @objc(GetConversationResponse)
 public class GetConversationResponse: Message {
 	public var response_header: ResponseHeader?
 	public var conversation_state: ConversationState?
 }
+*/
 
 @objc(GetEntityByIdRequest)
 public class GetEntityByIdRequest: Message {
@@ -1510,11 +1554,13 @@ public class GetEntityByIdRequest: Message {
 	public var batch_lookup_spec = [EntityLookupSpec]()
 }
 
+/* REDECLARATION
 @objc(GetEntityByIdResponse)
 public class GetEntityByIdResponse: Message {
 	public var response_header: ResponseHeader?
 	public var entity = [Entity]()
 }
+*/
 
 @objc(GetSuggestedEntitiesRequest)
 public class GetSuggestedEntitiesRequest: Message {
@@ -1578,7 +1624,7 @@ public class RemoveUserResponse: Message {
 	public var response_header: ResponseHeader?
 	public var field2: AnyObject?
 	public var field3: AnyObject?
-	public var created_event: Event?
+	public var created_event: EVENT?
 }
 
 @objc(RenameConversationRequest)
@@ -1595,7 +1641,7 @@ public class RenameConversationResponse: Message {
 	public var response_header: ResponseHeader?
 	public var field2: AnyObject?
 	public var field3: AnyObject?
-	public var created_event: Event?
+	public var created_event: EVENT?
 }
 
 @objc(SearchEntitiesRequest)
@@ -1619,7 +1665,7 @@ public class SendChatMessageRequest: Message {
 	public var field3: AnyObject?
 	public var field4: AnyObject?
 	public var annotation = [EventAnnotation]()
-	public var message_content: MessageContent?
+	public var message_content: ChatMessageContent?
 	public var existing_media: ExistingMedia?
 	public var event_request_header: EventRequestHeader?
 }
@@ -1631,7 +1677,7 @@ public class SendChatMessageResponse: Message {
 	public var field3: AnyObject?
 	public var field4: AnyObject?
 	public var field5: AnyObject?
-	public var created_event: Event?
+	public var created_event: EVENT?
 }
 
 @objc(SetActiveClientRequest)
@@ -1726,12 +1772,14 @@ public class SyncAllNewEventsRequest: Message {
 	public var max_response_size_bytes: NSNumber?
 }
 
+/* REDECLARATION
 @objc(SyncAllNewEventsResponse)
 public class SyncAllNewEventsResponse: Message {
 	public var response_header: ResponseHeader?
 	public var sync_timestamp: NSNumber?
 	public var conversation_state = [ConversationState]()
 }
+*/
 
 @objc(SyncRecentConversationsRequest)
 public class SyncRecentConversationsRequest: Message {
@@ -1742,12 +1790,14 @@ public class SyncRecentConversationsRequest: Message {
 	public var sync_filter = [SyncFilter]()
 }
 
+/* REDECLARATION
 @objc(SyncRecentConversationsResponse)
 public class SyncRecentConversationsResponse: Message {
 	public var response_header: ResponseHeader?
 	public var sync_timestamp: NSNumber?
 	public var conversation_state = [ConversationState]()
 }
+*/
 
 @objc(UpdateWatermarkRequest)
 public class UpdateWatermarkRequest: Message {
