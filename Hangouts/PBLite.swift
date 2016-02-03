@@ -257,6 +257,71 @@ public class PBLiteSerialization {
 	}
 }
 
+//
+// TRANSLATION CODE
+//
+
+extension String {
+	func substring(between start: String, and to: String) -> String? {
+		return (rangeOfString(start)?.endIndex).flatMap { startIdx in
+			(rangeOfString(to, range: startIdx..<endIndex)?.startIndex).map { endIdx in
+				substringWithRange(startIdx..<endIdx)
+			}
+		}
+	}
+}
+
+// @unused: Only used in compiling proto files to Swift!
+func _translateProtoToSwift(str: String) -> String {
+	let title = str.substring(between: "message ", and: " {")!
+	var scanned = 1
+	let b = str.substring(between: "{", and: "}")?
+		.componentsSeparatedByString(";")
+		.map {
+			$0.stringByTrimmingCharactersInSet(.whitespaceAndNewlineCharacterSet())
+		}.filter {
+			!$0.isEmpty
+		}.map {
+			$0.componentsSeparatedByString(" ").filter { $0 != "=" }
+		}.map { a -> String in
+			var modifier = a[0], type = a[1], name = a[2], id = Int(a[3])!
+			
+			switch type {
+			case "string", "bytes": type = "NSString"
+			case "double", "float", "int32", "int64", "uint32",
+				 "uint64", "sint32", "sint64", "fixed32", "fixed64",
+				 "sfixed32", "sfixed64", "bool": type = "NSNumber"
+			default: break
+			}
+			
+			var filler = ""
+			for r in (scanned..<id).dropFirst() {
+				filler += "public var field\(r): AnyObject?\n\t"
+			}
+			scanned = Int(a[3])!
+			
+			switch modifier {
+			case "optional":
+				return filler + "public var \(name): \(type)?"
+			case "required":
+				return filler + "public var \(name) = \(type)()"
+			case "repeated":
+				return filler + "public var \(name) = [\(type)]()"
+			default: return ""
+			}
+		}
+	let body = b!.reduce("") { $0 + "\n\t" + $1 }
+	
+	let TEMPLATE = "@objc(%NAME%)\npublic class %NAME%: Message {%BODY%\n}"
+	let tmp = TEMPLATE.stringByReplacingOccurrencesOfString("%NAME%", withString: title)
+	return tmp.stringByReplacingOccurrencesOfString("%BODY%", withString: body)
+}
+func _translateAllProtoToSwift(str: String) -> String {
+	return str.componentsSeparatedByString("}\n").map { $0 + "}\n" }
+		.map(_translateProtoToSwift).reduce("") { $0 + "\n\n" + $1 }
+}
+
+
 
 //
 // BIG CRUTCH: Should be replaced later.

@@ -324,22 +324,26 @@ public class DO_NOT_DISTURB_SETTING : Message {
 	public var expiration_timestamp: NSNumber?
 	public var version: NSNumber?
 }
+public typealias DoNotDisturbSetting = DO_NOT_DISTURB_SETTING
 
 @objc(NOTIFICATION_SETTINGS)
 public class NOTIFICATION_SETTINGS : Message {
 	public var dnd_settings: DO_NOT_DISTURB_SETTING?
 }
+public typealias NotificationSettings = NOTIFICATION_SETTINGS
 
 @objc(CONVERSATION_ID)
 public class CONVERSATION_ID : Message {
     public var id: NSString?
 }
+public typealias ConversationId = CONVERSATION_ID
 
 @objc(PARTICIPANT_ID)
 public class PARTICIPANT_ID : Message {
     public var gaia_id: NSString?
     public var chat_id: NSString?
 }
+public typealias ParticipantId = PARTICIPANT_ID
 
 @objc(SET_TYPING_NOTIFICATION)
 public class SET_TYPING_NOTIFICATION : Message {
@@ -348,6 +352,7 @@ public class SET_TYPING_NOTIFICATION : Message {
     public var timestamp: NSNumber = 0
     public var status: TypingType = 0
 }
+public typealias SetTypingNotification = SET_TYPING_NOTIFICATION
 
 @objc(SET_FOCUS_NOTIFICATION)
 public class SET_FOCUS_NOTIFICATION : Message {
@@ -357,12 +362,14 @@ public class SET_FOCUS_NOTIFICATION : Message {
     public var status: FocusType = 0
     public var device: FocusDevice?
 }
+public typealias SetFocusNotification = SET_FOCUS_NOTIFICATION
 
 @objc(CONVERSATION_READ_STATE)
 public class CONVERSATION_READ_STATE : Message {
     public var participant_id = PARTICIPANT_ID()
     public var latest_read_timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
 }
+public typealias ConversationReadState = CONVERSATION_READ_STATE
 
 @objc(CONVERSATION_INTERNAL_STATE)
 public class CONVERSATION_INTERNAL_STATE : Message {
@@ -391,6 +398,7 @@ public class CONVERSATION_INTERNAL_STATE : Message {
     public var field9: AnyObject?
     public var field10: AnyObject?
 }
+public typealias ConversationInternalState = CONVERSATION_INTERNAL_STATE
 
 @objc(CONVERSATION_PARTICIPANT_DATA)
 public class CONVERSATION_PARTICIPANT_DATA : Message {
@@ -400,6 +408,7 @@ public class CONVERSATION_PARTICIPANT_DATA : Message {
 	public var field4: AnyObject?
 	public var field5: AnyObject?
 }
+public typealias ConversationParticipantData = CONVERSATION_PARTICIPANT_DATA
 
 @objc(CONVERSATION)
 public class CONVERSATION : Message {
@@ -426,6 +435,7 @@ public class CONVERSATION : Message {
 	public var field20: AnyObject?
 	public var field21: AnyObject?
 }
+public typealias Conversation = CONVERSATION
 
 //  Unfortunately, some of PBLite's introspection
 //  uses string-based public class lookup, and nested
@@ -438,11 +448,13 @@ public class MESSAGE_SEGMENT_FORMATTING : Message {
     public var strikethrough: NSNumber?
     public var underline: NSNumber?
 }
+public typealias MessageSegmentFormatting = MESSAGE_SEGMENT_FORMATTING
 
 @objc(MESSAGE_SEGMENT_LINK_DATA)
 public class MESSAGE_SEGMENT_LINK_DATA : Message {
     public var link_target: NSString?
 }
+public typealias MessageSegmentLinkData = MESSAGE_SEGMENT_LINK_DATA
 
 @objc(MESSAGE_SEGMENT)
 public class MESSAGE_SEGMENT : Message {
@@ -451,23 +463,27 @@ public class MESSAGE_SEGMENT : Message {
     public var formatting: MESSAGE_SEGMENT_FORMATTING?
     public var link_data: MESSAGE_SEGMENT_LINK_DATA?
 }
+public typealias MessageSegment = MESSAGE_SEGMENT
 
 @objc(MESSAGE_ATTACHMENT_EMBED_ITEM)
 public class MESSAGE_ATTACHMENT_EMBED_ITEM : Message {
     public var type = NSArray()
     public var data = NSDictionary()
 }
+public typealias MessageAttachmentEmbedItem = MESSAGE_ATTACHMENT_EMBED_ITEM
 
 @objc(MESSAGE_ATTACHMENT)
 public class MESSAGE_ATTACHMENT : Message {
 	public var embed_item: MESSAGE_ATTACHMENT_EMBED_ITEM?
 }
+public typealias MessageAttachment = MESSAGE_ATTACHMENT
 
 @objc(CHAT_MESSAGE_CONTENT)
 public class CHAT_MESSAGE_CONTENT : Message {
     public var segment = [MESSAGE_SEGMENT]()
     public var attachment = [MESSAGE_ATTACHMENT]()
 }
+public typealias ChatMessageContent = CHAT_MESSAGE_CONTENT
 
 @objc(CHAT_MESSAGE)
 public class CHAT_MESSAGE : Message {
@@ -475,12 +491,14 @@ public class CHAT_MESSAGE : Message {
     public var annotation: NSArray?
     public var message_content = CHAT_MESSAGE_CONTENT()
 }
+public typealias ChatMessage = CHAT_MESSAGE
 
 @objc(CONVERSATION_RENAME)
 public class CONVERSATION_RENAME : Message {
     public var new_name: NSString = ""
     public var old_name: NSString = ""
 }
+public typealias ConversationRename = CONVERSATION_RENAME
 
 @objc(HANGOUT_EVENT)
 public class HANGOUT_EVENT : Message {
@@ -492,6 +510,7 @@ public class HANGOUT_EVENT : Message {
     public var is_periodic_refresh: NSNumber?
     public var field1: AnyObject?
 }
+public typealias HangoutEvent = HANGOUT_EVENT
 
 @objc(OTR_MODIFICATION)
 public class OTR_MODIFICATION : Message {
@@ -500,6 +519,7 @@ public class OTR_MODIFICATION : Message {
     public var old_otr_toggle: OffTheRecordToggle = 0
     public var new_otr_toggle: OffTheRecordToggle = 0
 }
+public typealias OTRModification = OTR_MODIFICATION
 
 @objc(MEMBERSHIP_CHANGE)
 public class MEMBERSHIP_CHANGE : Message {
@@ -508,6 +528,7 @@ public class MEMBERSHIP_CHANGE : Message {
     public var participant_ids = [PARTICIPANT_ID]()
     public var field2: AnyObject?
 }
+public typealias MembershipChange = MEMBERSHIP_CHANGE
 
 @objc(EVENT_STATE)
 public class EVENT_STATE : Message {
@@ -515,6 +536,7 @@ public class EVENT_STATE : Message {
     public var client_generated_id: AnyObject?
     public var notification_level: NotificationLevel = 0
 }
+public typealias EventState = EVENT_STATE
 
 @objc(EVENT)
 public class EVENT : Message {
@@ -545,11 +567,13 @@ public class EVENT : Message {
 	public var field25: AnyObject?
 	public var hash_modifier: AnyObject?
 }
+public typealias Event = EVENT
 
 @objc(EVENT_NOTIFICATION)
 public class EVENT_NOTIFICATION : Message {
     public var event = EVENT()
 }
+public typealias EventNotification = EVENT_NOTIFICATION
 
 @objc(WATERMARK_NOTIFICATION)
 public class WATERMARK_NOTIFICATION : Message {
@@ -557,6 +581,7 @@ public class WATERMARK_NOTIFICATION : Message {
     public var conversation_id = CONVERSATION_ID()
     public var latest_read_timestamp: NSNumber = 0
 }
+public typealias WatermarkNotification = WATERMARK_NOTIFICATION
 
 @objc(STATE_UPDATE_HEADER)
 public class STATE_UPDATE_HEADER : Message {
@@ -569,6 +594,7 @@ public class STATE_UPDATE_HEADER : Message {
     public var field4: AnyObject?
     public var updating_client_id: AnyObject?
 }
+public typealias StateUpdateHeader = STATE_UPDATE_HEADER
 
 /* TODO: Implement Oneof support here, but how? */
 @objc(STATE_UPDATE)
@@ -592,6 +618,7 @@ public class STATE_UPDATE : Message {
     public var block_notification: AnyObject?
     public var invitation_watermark_notification: AnyObject?
 }
+public typealias StateUpdate = STATE_UPDATE
 
 @objc(EVENT_CONTINUATION_TOKEN)
 public class EVENT_CONTINUATION_TOKEN : Message {
@@ -599,6 +626,7 @@ public class EVENT_CONTINUATION_TOKEN : Message {
     public var storage_continuation_token: NSString? //bytes
     public var event_timestamp: NSNumber?
 }
+public typealias EventContinuationToken = EVENT_CONTINUATION_TOKEN
 
 @objc(CONVERSATION_STATE)
 public class CONVERSATION_STATE : Message {
@@ -608,6 +636,7 @@ public class CONVERSATION_STATE : Message {
     public var field4: AnyObject?
     public var event_continuation_token: EVENT_CONTINUATION_TOKEN?
 }
+public typealias ConversationState = CONVERSATION_STATE
 
 @objc(ENTITY_PROPERTIES)
 public class ENTITY_PROPERTIES : Message {
@@ -617,6 +646,7 @@ public class ENTITY_PROPERTIES : Message {
     public var photo_url: NSString?
     public var emails = NSArray()
 }
+public typealias EntityProperties = ENTITY_PROPERTIES
 
 @objc(ENTITY)
 public class ENTITY : Message {
@@ -632,12 +662,14 @@ public class ENTITY : Message {
 
     public var properties = ENTITY_PROPERTIES()
 }
+public typealias Entity = ENTITY
 
 @objc(ENTITY_GROUP_ENTITY)
 public class ENTITY_GROUP_ENTITY : Message {
     public var entity = ENTITY()
     public var field1: AnyObject?
 }
+public typealias EntityGroupEntity = ENTITY_GROUP_ENTITY
 
 @objc(ENTITY_GROUP)
 public class ENTITY_GROUP : Message {
@@ -646,6 +678,7 @@ public class ENTITY_GROUP : Message {
 
     public var entity = [ENTITY_GROUP_ENTITY]()
 }
+public typealias EntityGroup = ENTITY_GROUP
 
 /* TODO: This is really a response to some request. */
 @objc(INITIAL_CLIENT_ENTITIES_RESPONSE)
@@ -660,6 +693,7 @@ public class INITIAL_CLIENT_ENTITIES_RESPONSE : Message {
     public var group4 = ENTITY_GROUP()
     public var group5 = ENTITY_GROUP()
 }
+public typealias InitialClientEntitiesResponse = INITIAL_CLIENT_ENTITIES_RESPONSE
 
 @objc(GET_SELF_INFO_RESPONSE)
 public class GET_SELF_INFO_RESPONSE : Message {
@@ -674,6 +708,7 @@ public class GET_SELF_INFO_RESPONSE : Message {
     public var response_header = RESPONSE_HEADER()
     public var self_entity = ENTITY()
 }
+public typealias GetSelfInfoResponse = GET_SELF_INFO_RESPONSE
 
 @objc(RESPONSE_HEADER)
 public class RESPONSE_HEADER : Message {
@@ -683,6 +718,7 @@ public class RESPONSE_HEADER : Message {
     public var request_trace_id: NSString = ""
     public var current_server_time: NSString = ""
 }
+public typealias ResponseHeader = RESPONSE_HEADER
 
 @objc(SYNC_ALL_NEW_EVENTS_RESPONSE)
 public class SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
@@ -698,6 +734,7 @@ public class SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
     public var sync_timestamp: NSString = ""
     public var conversation_state = [CONVERSATION_STATE]()
 }
+public typealias SyncAllNewEventsResponse = SYNC_ALL_NEW_EVENTS_RESPONSE
 
 @objc(GET_CONVERSATION_RESPONSE)
 public class GET_CONVERSATION_RESPONSE : Message {
@@ -712,6 +749,7 @@ public class GET_CONVERSATION_RESPONSE : Message {
     public var response_header = RESPONSE_HEADER()
     public var conversation_state = CONVERSATION_STATE()
 }
+public typealias GetConversationResponse = GET_CONVERSATION_RESPONSE
 
 @objc(GET_ENTITY_BY_ID_RESPONSE)
 public class GET_ENTITY_BY_ID_RESPONSE : Message {
@@ -726,6 +764,7 @@ public class GET_ENTITY_BY_ID_RESPONSE : Message {
     public var response_header = RESPONSE_HEADER()
     public var entities = [ENTITY]()
 }
+public typealias GetEntityByIdResponse = GET_ENTITY_BY_ID_RESPONSE
 
 @objc(DeviceStatus)
 public class DeviceStatus : Message {
@@ -830,708 +869,894 @@ public class GetSelfInfoResponse : Message {
 	public var field22: AnyObject?
 }
 
-/* TEMPLATE:
-@objc(XYZ)
-public class XYZ : Message {
-	
-}
-*/
-
-/*
-message Thumbnail {
-	optional string url = 1;
-	optional string image_url = 4;
-	optional uint64 width_px = 10;
-	optional uint64 height_px = 11;
-}
-
-message PlusPhoto {
-	optional Thumbnail thumbnail = 1;
-	optional string owner_obfuscated_id = 2;
-	optional string album_id = 3;
-	optional string photo_id = 4;
-	optional string url = 6;
-	optional string original_content_url = 10;
-	optional MediaType media_type = 13;
-	repeated string stream_id = 14;
-}
-
-message RepresentativeImage {
-	optional string url = 2;
-}
-
-message Place {
-	optional string url = 1;
-	optional string name = 3;
-	optional RepresentativeImage representative_image = 185;
-}
-
-message EmbedItem {
-	repeated ItemType type = 1;
-	optional string id = 2;
-	optional PlusPhoto plus_photo = 27639957;
-	optional Place place = 35825640;
-}
-
-message EventAnnotation {
-	optional int32 type = 1;
-	optional string value = 2;
-}
-
-message ChatMessage {
-	repeated EventAnnotation annotation = 2;
-	optional MessageContent message_content = 3;
-}
-
-message MembershipChange {
-	optional MembershipChangeType type = 1;
-	repeated ParticipantId participant_ids = 3;
-}
-
-message ConversationRename {
-	optional string new_name = 1;
-	optional string old_name = 2;
-}
-
-message HangoutEvent {
-	optional HangoutEventType event_type = 1;
-	repeated ParticipantId participant_id = 2;
-}
-
-message OTRModification {
-	optional OffTheRecordStatus old_otr_status = 1;
-	optional OffTheRecordStatus new_otr_status = 2;
-	optional OffTheRecordToggle old_otr_toggle = 3;
-	optional OffTheRecordToggle new_otr_toggle = 4;
-}
-
-message HashModifier {
-	optional string update_id = 1;
-	optional uint64 hash_diff = 2;
-	optional uint64 version = 4;
-}
-
-message Event {
-	optional ConversationId conversation_id = 1;
-	optional ParticipantId sender_id = 2;
-	optional uint64 timestamp = 3;
-	optional UserEventState self_event_state = 4;
-	optional SourceType source_type = 6;
-	optional ChatMessage chat_message = 7;
-	optional MembershipChange membership_change = 9;
-	optional ConversationRename conversation_rename = 10;
-	optional HangoutEvent hangout_event = 11;
-	optional string event_id = 12;
-	optional uint64 expiration_timestamp = 13;
-	optional OTRModification otr_modification = 14;
-	optional bool advances_sort_timestamp = 15;
-	optional OffTheRecordStatus otr_status = 16;
-	optional bool persisted = 17;
-	optional DeliveryMedium medium_type = 20;
-	optional EventType event_type = 23;
-	optional uint64 event_version = 24;
-	optional HashModifier hash_modifier = 26;
-}
-
-message UserReadState {
-	optional ParticipantId participant_id = 1;
-	optional uint64 latest_read_timestamp = 2;
-}
-
-message DeliveryMedium {
-	optional DeliveryMediumType medium_type = 1;
-	optional Phone phone = 2;
-}
-
-message DeliveryMediumOption {
-	optional DeliveryMedium delivery_medium = 1;
-	optional bool current_default = 2;
-}
-
-message UserConversationState {
-	optional string client_generated_id = 2;
-	optional UserReadState self_read_state = 7;
-	optional ConversationStatus status = 8;
-	optional NotificationLevel notification_level = 9;
-	repeated ConversationView view = 10;
-	optional ParticipantId inviter_id = 11;
-	optional uint64 invite_timestamp = 12;
-	optional uint64 sort_timestamp = 13;
-	optional uint64 active_timestamp = 14;
-	repeated DeliveryMediumOption delivery_medium_option = 17;
-}
-
-message ConversationParticipantData {
-	optional ParticipantId id = 1;
-	optional string fallback_name = 2;
-	optional InvitationStatus invitation_status = 3;
-	optional ParticipantType participant_type = 5;
-	optional InvitationStatus new_invitation_status = 6;
-}
-
-message Conversation {
-	optional ConversationId conversation_id = 1;
-	optional ConversationType type = 2;
-	optional string name = 3;
-	optional UserConversationState self_conversation_state = 4;
-	repeated UserReadState read_state = 8;
-	optional bool has_active_hangout = 9;
-	optional OffTheRecordStatus otr_status = 10;
-	optional OffTheRecordToggle otr_toggle = 11;
-	optional bool conversation_history_supported = 12;
-	repeated ParticipantId current_participant = 13;
-	repeated ConversationParticipantData participant_data = 14;
-	repeated NetworkType network_type = 18;
-	optional ForceHistory force_history_state = 19;
-}
-
-message EasterEgg {
-	optional string message = 1;
-}
-
-message BlockStateChange {
-	optional ParticipantId participant_id = 1;
-	optional BlockState new_block_state = 2;
-}
-
-message Photo {
-	optional string photo_id = 1;
-	optional bool delete_albumless_source_photo = 2;
-	optional string user_id = 3;
-	optional bool is_custom_user_id = 4;
-}
-
-message ExistingMedia {
-	optional Photo photo = 1;
-}
-
-message EventRequestHeader {
-	optional ConversationId conversation_id = 1;
-	optional uint64 client_generated_id = 2;
-	optional OffTheRecordStatus expected_otr = 3;
-	optional DeliveryMedium delivery_medium = 4;
-	optional EventType event_type = 5;
-}
-
-message ClientVersion {
-	optional ClientId client_id = 1;
-	optional ClientBuildType build_type = 2;
-	optional string major_version = 3;
-	optional uint64 version_timestamp = 4;
-	optional string device_os_version = 5;
-	optional string device_hardware = 6;
-}
-
-message RequestHeader {
-	optional ClientVersion client_version = 1;
-	optional ClientIdentifier client_identifier = 2;
-	optional string language_code = 4;
-}
-
-message Entity {
-	optional ParticipantId id = 9;
-	optional Presence presence = 8;
-	optional EntityProperties properties = 10;
-	optional ParticipantType entity_type = 13;
-	optional PastHangoutState had_past_hangout_state = 16;
-}
-
-message EntityProperties {
-	optional ProfileType type = 1;
-	optional string display_name = 2;
-	optional string first_name = 3;
-	optional string photo_url = 4;
-	repeated string email = 5;
-	repeated string phone = 6;
-	optional bool in_users_domain = 10;
-	optional Gender gender = 11;
-	optional PhotoUrlStatus photo_url_status = 12;
-	optional string canonical_email = 15;
-}
-
-message ConversationState {
-	optional ConversationId conversation_id = 1;
-	optional Conversation conversation = 2;
-	repeated Event event = 3;
-	optional EventContinuationToken event_continuation_token = 5;
-}
-
-message EventContinuationToken {
-	optional string event_id = 1;
-	optional bytes storage_continuation_token = 2;
-	optional uint64 event_timestamp = 3;
-}
-
-message EntityLookupSpec {
-	optional string gaia_id = 1;
-}
-
-message RichPresenceState {
-	repeated RichPresenceEnabledState get_rich_presence_enabled_state = 3;
-}
-
-message RichPresenceEnabledState {
-	optional RichPresenceType type = 1;
-	optional bool enabled = 2;
-}
-
-message DesktopOffSetting {
-	optional bool desktop_off = 1;
-}
-
-message DesktopOffState {
-	optional bool desktop_off = 1;
-	optional uint64 version = 2;
-}
-
-message DndSetting {
-	optional bool do_not_disturb = 1;
-	optional uint64 timeout_secs = 2;
-}
-
-message PresenceStateSetting {
-	optional uint64 timeout_secs = 1;
-	optional ClientPresenceStateType type = 2;
-}
-
-message MoodMessage {
-	optional MoodContent mood_content = 1;
-}
-
-message MoodContent {
-	repeated Segment segment = 1;
-}
-
-message MoodSetting {
-	optional MoodMessage mood_message = 1;
-}
-
-message MoodState {
-	optional MoodSetting mood_setting = 4;
-}
-
-message DeleteAction {
-	optional uint64 delete_action_timestamp = 1;
-	optional uint64 delete_upper_bound_timestamp = 2;
-	optional DeleteType delete_type = 3;
-}
-
-message InviteeID {
-	optional string gaia_id = 1;
-	optional string fallback_name = 4;
-}
-
-message Country {
-	optional string region_code = 1;
-	optional uint64 country_code = 2;
-}
-
-message DesktopSoundSetting {
-	optional SoundState desktop_sound_state = 1;
-	optional SoundState desktop_ring_sound_state = 2;
-}
-
-message PhoneData {
-	repeated Phone phone = 1;
-	optional CallerIdSettingsMask caller_id_settings_mask = 3;
-}
-
-message Phone {
-	optional PhoneNumber phone_number = 1;
-	optional bool google_voice = 2;
-	optional PhoneVerificationStatus verification_status = 3;
-	optional bool discoverable = 4;
-	optional PhoneDiscoverabilityStatus discoverability_status = 5;
-	optional bool primary = 6;
-}
-
-message I18nData {
-	optional string national_number = 1;
-	optional string international_number = 2;
-	optional uint64 country_code = 3;
-	optional string region_code = 4;
-	optional bool is_valid = 5;
-	optional PhoneValidationResult validation_result = 6;
-}
+@objc(Thumbnail)
+public class Thumbnail: Message {
+	public var url: NSString?
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var image_url: NSString?
+	public var field5: AnyObject?
+	public var field6: AnyObject?
+	public var field7: AnyObject?
+	public var field8: AnyObject?
+	public var field9: AnyObject?
+	public var width_px: NSNumber?
+	public var height_px: NSNumber?
+}
+
+@objc(PlusPhoto)
+public class PlusPhoto: Message {
+	public var thumbnail: Thumbnail?
+	public var owner_obfuscated_id: NSString?
+	public var album_id: NSString?
+	public var photo_id: NSString?
+	public var field5: AnyObject?
+	public var url: NSString?
+	public var field7: AnyObject?
+	public var field8: AnyObject?
+	public var field9: AnyObject?
+	public var original_content_url: NSString?
+	public var field11: AnyObject?
+	public var field12: AnyObject?
+	public var media_type: MediaType?
+	public var stream_id = [NSString]()
+}
+
+@objc(RepresentativeImage)
+public class RepresentativeImage: Message {
+	public var url: NSString?
+}
+
+@objc(Place)
+public class Place: Message {
+	public var url: NSString?
+	public var field2: AnyObject?
+	public var name: NSString?
+	public var representative_image: RepresentativeImage?
+}
+
+@objc(EmbedItem)
+public class EmbedItem: Message {
+	public var type = [ItemType]()
+	public var id: NSString?
+	public var plus_photo: PlusPhoto?
+	public var place: Place?
+}
+
+@objc(EventAnnotation)
+public class EventAnnotation: Message {
+	public var type: NSNumber?
+	public var value: NSString?
+}
+
+@objc(ChatMessage)
+public class ChatMessage: Message {
+	public var annotation = [EventAnnotation]()
+	public var message_content: MessageContent?
+}
+
+@objc(MembershipChange)
+public class MembershipChange: Message {
+	public var type: MembershipChangeType?
+	public var field2: AnyObject?
+	public var participant_ids = [ParticipantId]()
+}
+
+@objc(ConversationRename)
+public class ConversationRename: Message {
+	public var new_name: NSString?
+	public var old_name: NSString?
+}
+
+@objc(HangoutEvent)
+public class HangoutEvent: Message {
+	public var event_type: HangoutEventType?
+	public var participant_id = [ParticipantId]()
+}
+
+@objc(OTRModification)
+public class OTRModification: Message {
+	public var old_otr_status: OffTheRecordStatus?
+	public var new_otr_status: OffTheRecordStatus?
+	public var old_otr_toggle: OffTheRecordToggle?
+	public var new_otr_toggle: OffTheRecordToggle?
+}
+
+@objc(HashModifier)
+public class HashModifier: Message {
+	public var update_id: NSString?
+	public var hash_diff: NSNumber?
+	public var field3: AnyObject?
+	public var version: NSNumber?
+}
+
+@objc(Event)
+public class Event: Message {
+	public var conversation_id: ConversationId?
+	public var sender_id: ParticipantId?
+	public var timestamp: NSNumber?
+	public var self_event_state: UserEventState?
+	public var field5: AnyObject?
+	public var source_type: SourceType?
+	public var chat_message: ChatMessage?
+	public var field8: AnyObject?
+	public var membership_change: MembershipChange?
+	public var conversation_rename: ConversationRename?
+	public var hangout_event: HangoutEvent?
+	public var event_id: NSString?
+	public var expiration_timestamp: NSNumber?
+	public var otr_modification: OTRModification?
+	public var advances_sort_timestamp: NSNumber?
+	public var otr_status: OffTheRecordStatus?
+	public var persisted: NSNumber?
+	public var field18: AnyObject?
+	public var field19: AnyObject?
+	public var medium_type: DeliveryMedium?
+	public var field21: AnyObject?
+	public var field22: AnyObject?
+	public var event_type: EventType?
+	public var event_version: NSNumber?
+	public var field25: AnyObject?
+	public var hash_modifier: HashModifier?
+}
+
+@objc(UserReadState)
+public class UserReadState: Message {
+	public var participant_id: ParticipantId?
+	public var latest_read_timestamp: NSNumber?
+}
+
+@objc(DeliveryMedium)
+public class DeliveryMedium: Message {
+	public var medium_type: DeliveryMediumType?
+	public var phone: Phone?
+}
+
+@objc(DeliveryMediumOption)
+public class DeliveryMediumOption: Message {
+	public var delivery_medium: DeliveryMedium?
+	public var current_default: NSNumber?
+}
+
+@objc(UserConversationState)
+public class UserConversationState: Message {
+	public var client_generated_id: NSString?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var field5: AnyObject?
+	public var field6: AnyObject?
+	public var self_read_state: UserReadState?
+	public var status: ConversationStatus?
+	public var notification_level: NotificationLevel?
+	public var view = [ConversationView]()
+	public var inviter_id: ParticipantId?
+	public var invite_timestamp: NSNumber?
+	public var sort_timestamp: NSNumber?
+	public var active_timestamp: NSNumber?
+	public var field15: AnyObject?
+	public var field16: AnyObject?
+	public var delivery_medium_option = [DeliveryMediumOption]()
+}
+
+@objc(ConversationParticipantData)
+public class ConversationParticipantData: Message {
+	public var id: ParticipantId?
+	public var fallback_name: NSString?
+	public var invitation_status: InvitationStatus?
+	public var field4: AnyObject?
+	public var participant_type: ParticipantType?
+	public var new_invitation_status: InvitationStatus?
+}
+
+@objc(Conversation)
+public class Conversation: Message {
+	public var conversation_id: ConversationId?
+	public var type: ConversationType?
+	public var name: NSString?
+	public var self_conversation_state: UserConversationState?
+	public var field5: AnyObject?
+	public var field6: AnyObject?
+	public var field7: AnyObject?
+	public var read_state = [UserReadState]()
+	public var has_active_hangout: NSNumber?
+	public var otr_status: OffTheRecordStatus?
+	public var otr_toggle: OffTheRecordToggle?
+	public var conversation_history_supported: NSNumber?
+	public var current_participant = [ParticipantId]()
+	public var participant_data = [ConversationParticipantData]()
+	public var field15: AnyObject?
+	public var field16: AnyObject?
+	public var field17: AnyObject?
+	public var network_type = [NetworkType]()
+	public var force_history_state: ForceHistory?
+}
+
+@objc(EasterEgg)
+public class EasterEgg: Message {
+	public var message: NSString?
+}
+
+@objc(BlockStateChange)
+public class BlockStateChange: Message {
+	public var participant_id: ParticipantId?
+	public var new_block_state: BlockState?
+}
+
+@objc(Photo)
+public class Photo: Message {
+	public var photo_id: NSString?
+	public var delete_albumless_source_photo: NSNumber?
+	public var user_id: NSString?
+	public var is_custom_user_id: NSNumber?
+}
+
+@objc(ExistingMedia)
+public class ExistingMedia: Message {
+	public var photo: Photo?
+}
+
+@objc(EventRequestHeader)
+public class EventRequestHeader: Message {
+	public var conversation_id: ConversationId?
+	public var client_generated_id: NSNumber?
+	public var expected_otr: OffTheRecordStatus?
+	public var delivery_medium: DeliveryMedium?
+	public var event_type: EventType?
+}
+
+@objc(ClientVersion)
+public class ClientVersion: Message {
+	public var client_id: ClientId?
+	public var build_type: ClientBuildType?
+	public var major_version: NSString?
+	public var version_timestamp: NSNumber?
+	public var device_os_version: NSString?
+	public var device_hardware: NSString?
+}
+
+@objc(RequestHeader)
+public class RequestHeader: Message {
+	public var client_version: ClientVersion?
+	public var client_identifier: ClientIdentifier?
+	public var field3: AnyObject?
+	public var language_code: NSString?
+}
+
+@objc(Entity)
+public class Entity: Message {
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var field5: AnyObject?
+	public var field6: AnyObject?
+	public var field7: AnyObject?
+	public var presence: Presence?
+	public var id: ParticipantId?
+	public var properties: EntityProperties?
+	public var field11: AnyObject?
+	public var field12: AnyObject?
+	public var entity_type: ParticipantType?
+	public var field14: AnyObject?
+	public var field15: AnyObject?
+	public var had_past_hangout_state: PastHangoutState?
+}
+
+@objc(EntityProperties)
+public class EntityProperties: Message {
+	public var type: ProfileType?
+	public var display_name: NSString?
+	public var first_name: NSString?
+	public var photo_url: NSString?
+	public var email = [NSString]()
+	public var phone = [NSString]()
+	public var field7: AnyObject?
+	public var field8: AnyObject?
+	public var field9: AnyObject?
+	public var in_users_domain: NSNumber?
+	public var gender: Gender?
+	public var photo_url_status: PhotoUrlStatus?
+	public var field13: AnyObject?
+	public var field14: AnyObject?
+	public var canonical_email: NSString?
+}
+
+@objc(ConversationState)
+public class ConversationState: Message {
+	public var conversation_id: ConversationId?
+	public var conversation: Conversation?
+	public var event = [Event]()
+	public var field4: AnyObject?
+	public var event_continuation_token: EventContinuationToken?
+}
+
+@objc(EventContinuationToken)
+public class EventContinuationToken: Message {
+	public var event_id: NSString?
+	public var storage_continuation_token: NSString?
+	public var event_timestamp: NSNumber?
+}
+
+@objc(EntityLookupSpec)
+public class EntityLookupSpec: Message {
+	public var gaia_id: NSString?
+}
+
+@objc(RichPresenceState)
+public class RichPresenceState: Message {
+	public var field2: AnyObject?
+	public var get_rich_presence_enabled_state = [RichPresenceEnabledState]()
+}
+
+@objc(RichPresenceEnabledState)
+public class RichPresenceEnabledState: Message {
+	public var type: RichPresenceType?
+	public var enabled: NSNumber?
+}
+
+@objc(DesktopOffSetting)
+public class DesktopOffSetting: Message {
+	public var desktop_off: NSNumber?
+}
+
+@objc(DesktopOffState)
+public class DesktopOffState: Message {
+	public var desktop_off: NSNumber?
+	public var version: NSNumber?
+}
+
+@objc(DndSetting)
+public class DndSetting: Message {
+	public var do_not_disturb: NSNumber?
+	public var timeout_secs: NSNumber?
+}
+
+@objc(PresenceStateSetting)
+public class PresenceStateSetting: Message {
+	public var timeout_secs: NSNumber?
+	public var type: ClientPresenceStateType?
+}
+
+@objc(MoodMessage)
+public class MoodMessage: Message {
+	public var mood_content: MoodContent?
+}
+
+@objc(MoodContent)
+public class MoodContent: Message {
+	public var segment = [Segment]()
+}
+
+@objc(MoodSetting)
+public class MoodSetting: Message {
+	public var mood_message: MoodMessage?
+}
+
+@objc(MoodState)
+public class MoodState: Message {
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var mood_setting: MoodSetting?
+}
+
+@objc(DeleteAction)
+public class DeleteAction: Message {
+	public var delete_action_timestamp: NSNumber?
+	public var delete_upper_bound_timestamp: NSNumber?
+	public var delete_type: DeleteType?
+}
+
+@objc(InviteeID)
+public class InviteeID: Message {
+	public var gaia_id: NSString?
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var fallback_name: NSString?
+}
+
+@objc(Country)
+public class Country: Message {
+	public var region_code: NSString?
+	public var country_code: NSNumber?
+}
+
+@objc(DesktopSoundSetting)
+public class DesktopSoundSetting: Message {
+	public var desktop_sound_state: SoundState?
+	public var desktop_ring_sound_state: SoundState?
+}
+
+@objc(PhoneData)
+public class PhoneData: Message {
+	public var phone = [Phone]()
+	public var field2: AnyObject?
+	public var caller_id_settings_mask: CallerIdSettingsMask?
+}
+
+@objc(Phone)
+public class Phone: Message {
+	public var phone_number: PhoneNumber?
+	public var google_voice: NSNumber?
+	public var verification_status: PhoneVerificationStatus?
+	public var discoverable: NSNumber?
+	public var discoverability_status: PhoneDiscoverabilityStatus?
+	public var primary: NSNumber?
+}
+
+@objc(I18nData)
+public class I18nData: Message {
+	public var national_number: NSString?
+	public var international_number: NSString?
+	public var country_code: NSNumber?
+	public var region_code: NSString?
+	public var is_valid: NSNumber?
+	public var validation_result: PhoneValidationResult?
+}
+
+@objc(PhoneNumber)
+public class PhoneNumber: Message {
+	public var e164: NSString?
+	public var i18n_data: I18nData?
+}
+
+@objc(SuggestedContactGroupHash)
+public class SuggestedContactGroupHash: Message {
+	public var max_results: NSNumber?
+	public var hash: NSString?
+}
+
+@objc(SuggestedContact)
+public class SuggestedContact: Message {
+	public var entity: Entity?
+	public var invitation_status: InvitationStatus?
+}
+
+@objc(SuggestedContactGroup)
+public class SuggestedContactGroup: Message {
+	public var hash_matched: NSNumber?
+	public var hash: NSString?
+	public var contact = [SuggestedContact]()
+}
+
+@objc(StateUpdateHeader)
+public class StateUpdateHeader: Message {
+	public var active_client_state: ActiveClientState?
+	public var field2: AnyObject?
+	public var request_trace_id: NSString?
+	public var notification_settings: NotificationSettings?
+	public var current_server_time: NSNumber?
+}
+
+@objc(BatchUpdate)
+public class BatchUpdate: Message {
+	public var state_update = [StateUpdate]()
+}
+
+@objc(EventNotification)
+public class EventNotification: Message {
+	public var event: Event?
+}
+
+@objc(SetFocusNotification)
+public class SetFocusNotification: Message {
+	public var conversation_id: ConversationId?
+	public var sender_id: ParticipantId?
+	public var timestamp: NSNumber?
+	public var type: FocusType?
+	public var device: FocusDevice?
+}
+
+@objc(SetTypingNotification)
+public class SetTypingNotification: Message {
+	public var conversation_id: ConversationId?
+	public var sender_id: ParticipantId?
+	public var timestamp: NSNumber?
+	public var type: TypingType?
+}
+
+@objc(SetConversationNotificationLevelNotification)
+public class SetConversationNotificationLevelNotification: Message {
+	public var conversation_id: ConversationId?
+	public var level: NotificationLevel?
+	public var field3: AnyObject?
+	public var timestamp: NSNumber?
+}
+
+@objc(ReplyToInviteNotification)
+public class ReplyToInviteNotification: Message {
+	public var conversation_id: ConversationId?
+	public var type: ReplyToInviteType?
+}
+
+@objc(ConversationViewModification)
+public class ConversationViewModification: Message {
+	public var conversation_id: ConversationId?
+	public var old_view: ConversationView?
+	public var new_view: ConversationView?
+}
+
+@objc(EasterEggNotification)
+public class EasterEggNotification: Message {
+	public var sender_id: ParticipantId?
+	public var conversation_id: ConversationId?
+	public var easter_egg: EasterEgg?
+}
+
+@objc(SelfPresenceNotification)
+public class SelfPresenceNotification: Message {
+	public var client_presence_state: ClientPresenceState?
+	public var field2: AnyObject?
+	public var do_not_disturb_setting: DoNotDisturbSetting?
+	public var desktop_off_setting: DesktopOffSetting?
+	public var desktop_off_state: DesktopOffState?
+	public var mood_state: MoodState?
+}
+
+@objc(DeleteActionNotification)
+public class DeleteActionNotification: Message {
+	public var conversation_id: ConversationId?
+	public var delete_action: DeleteAction?
+}
+
+@objc(PresenceNotification)
+public class PresenceNotification: Message {
+	public var presence = [PresenceResult]()
+}
+
+@objc(BlockNotification)
+public class BlockNotification: Message {
+	public var block_state_change = [BlockStateChange]()
+}
+
+@objc(SetNotificationSettingNotification)
+public class SetNotificationSettingNotification: Message {
+	public var desktop_sound_setting: DesktopSoundSetting?
+}
+
+@objc(RichPresenceEnabledStateNotification)
+public class RichPresenceEnabledStateNotification: Message {
+	public var rich_presence_enabled_state = [RichPresenceEnabledState]()
+}
 
-message PhoneNumber {
-	optional string e164 = 1;
-	optional I18nData i18n_data = 2;
-}
-
-message SuggestedContactGroupHash {
-	optional uint64 max_results = 1;
-	optional bytes hash = 2;
-}
-
-message SuggestedContact {
-	optional Entity entity = 1;
-	optional InvitationStatus invitation_status = 2;
-}
-
-message SuggestedContactGroup {
-	optional bool hash_matched = 1;
-	optional bytes hash = 2;
-	repeated SuggestedContact contact = 3;
-}
-
-message StateUpdate {
-	optional StateUpdateHeader state_update_header = 1;
-	optional Conversation conversation = 13;
-	
-	// How to implement oneof in Swift?
-	oneof state_update {
-		EventNotification event_notification = 3;
-		SetFocusNotification focus_notification = 4;
-		SetTypingNotification typing_notification = 5;
-		SetConversationNotificationLevelNotification notification_level_notification = 6;
-		ReplyToInviteNotification reply_to_invite_notification = 7;
-		WatermarkNotification watermark_notification = 8;
-		ConversationViewModification view_modification = 11;
-		EasterEggNotification easter_egg_notification = 12;
-		SelfPresenceNotification self_presence_notification = 14;
-		DeleteActionNotification delete_notification = 15;
-		PresenceNotification presence_notification = 16;
-		BlockNotification block_notification = 17;
-		SetNotificationSettingNotification notification_setting_notification = 19;
-		RichPresenceEnabledStateNotification rich_presence_enabled_state_notification = 20;
-	}
-}
-
-message StateUpdateHeader {
-	optional ActiveClientState active_client_state = 1;
-	optional string request_trace_id = 3;
-	optional NotificationSettings notification_settings = 4;
-	optional uint64 current_server_time = 5;
-}
-
-message BatchUpdate {
-	repeated StateUpdate state_update = 1;
-}
-
-message EventNotification {
-	optional Event event = 1;
-}
-
-message SetFocusNotification {
-	optional ConversationId conversation_id = 1;
-	optional ParticipantId sender_id = 2;
-	optional uint64 timestamp = 3;
-	optional FocusType type = 4;
-	optional FocusDevice device = 5;
-}
-
-message SetTypingNotification {
-	optional ConversationId conversation_id = 1;
-	optional ParticipantId sender_id = 2;
-	optional uint64 timestamp = 3;
-	optional TypingType type = 4;
-}
-
-message SetConversationNotificationLevelNotification {
-	optional ConversationId conversation_id = 1;
-	optional NotificationLevel level = 2;
-	optional uint64 timestamp = 4;
-}
-
-message ReplyToInviteNotification {
-	optional ConversationId conversation_id = 1;
-	optional ReplyToInviteType type = 2;
-}
-
-message ConversationViewModification {
-	optional ConversationId conversation_id = 1;
-	optional ConversationView old_view = 2;
-	optional ConversationView new_view = 3;
-}
-
-message EasterEggNotification {
-	optional ParticipantId sender_id = 1;
-	optional ConversationId conversation_id = 2;
-	optional EasterEgg easter_egg = 3;
-}
-
-message SelfPresenceNotification {
-	optional ClientPresenceState client_presence_state = 1;
-	optional DoNotDisturbSetting do_not_disturb_setting = 3;
-	optional DesktopOffSetting desktop_off_setting = 4;
-	optional DesktopOffState desktop_off_state = 5;
-	optional MoodState mood_state = 6;
-}
-
-message DeleteActionNotification {
-	optional ConversationId conversation_id = 1;
-	optional DeleteAction delete_action = 2;
-}
-
-message PresenceNotification {
-	repeated PresenceResult presence = 1;
-}
-
-message BlockNotification {
-	repeated BlockStateChange block_state_change = 1;
-}
-
-message SetNotificationSettingNotification {
-	optional DesktopSoundSetting desktop_sound_setting = 2;
-}
-
-message RichPresenceEnabledStateNotification {
-	repeated RichPresenceEnabledState rich_presence_enabled_state = 1;
-}
-
-message ConversationSpec {
-	optional ConversationId conversation_id = 1;
-}
-
-message AddUserRequest {
-	optional RequestHeader request_header = 1;
-	repeated InviteeID invitee_id = 3;
-	optional EventRequestHeader event_request_header = 5;
-}
-
-message AddUserResponse {
-	optional ResponseHeader response_header = 1;
-	optional Event created_event = 5;
-}
-
-message CreateConversationRequest {
-	optional RequestHeader request_header = 1;
-	optional ConversationType type = 2;
-	optional uint64 client_generated_id = 3;
-	optional string name = 4;
-	repeated InviteeID invitee_id = 5;
-}
-
-message CreateConversationResponse {
-	optional ResponseHeader response_header = 1;
-	optional Conversation conversation = 2;
-	optional bool new_conversation_created = 7;
-}
+@objc(ConversationSpec)
+public class ConversationSpec: Message {
+	public var conversation_id: ConversationId?
+}
+
+@objc(AddUserRequest)
+public class AddUserRequest: Message {
+	public var request_header: RequestHeader?
+	public var field2: AnyObject?
+	public var invitee_id = [InviteeID]()
+	public var field4: AnyObject?
+	public var event_request_header: EventRequestHeader?
+}
+
+@objc(AddUserResponse)
+public class AddUserResponse: Message {
+	public var response_header: ResponseHeader?
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var created_event: Event?
+}
+
+@objc(CreateConversationRequest)
+public class CreateConversationRequest: Message {
+	public var request_header: RequestHeader?
+	public var type: ConversationType?
+	public var client_generated_id: NSNumber?
+	public var name: NSString?
+	public var invitee_id = [InviteeID]()
+}
+
+@objc(CreateConversationResponse)
+public class CreateConversationResponse: Message {
+	public var response_header: ResponseHeader?
+	public var conversation: Conversation?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var field5: AnyObject?
+	public var field6: AnyObject?
+	public var new_conversation_created: NSNumber?
+}
+
+@objc(DeleteConversationRequest)
+public class DeleteConversationRequest: Message {
+	public var request_header: RequestHeader?
+	public var conversation_id: ConversationId?
+	public var delete_upper_bound_timestamp: NSNumber?
+}
+
+@objc(DeleteConversationResponse)
+public class DeleteConversationResponse: Message {
+	public var response_header: ResponseHeader?
+	public var delete_action: DeleteAction?
+}
+
+@objc(EasterEggRequest)
+public class EasterEggRequest: Message {
+	public var request_header: RequestHeader?
+	public var conversation_id: ConversationId?
+	public var easter_egg: EasterEgg?
+}
+
+@objc(EasterEggResponse)
+public class EasterEggResponse: Message {
+	public var response_header: ResponseHeader?
+	public var timestamp: NSNumber?
+}
+
+@objc(GetConversationRequest)
+public class GetConversationRequest: Message {
+	public var request_header: RequestHeader?
+	public var conversation_spec: ConversationSpec?
+	public var field3: AnyObject?
+	public var include_event: NSNumber?
+	public var field5: AnyObject?
+	public var max_events_per_conversation: NSNumber?
+	public var event_continuation_token: EventContinuationToken?
+}
+
+@objc(GetConversationResponse)
+public class GetConversationResponse: Message {
+	public var response_header: ResponseHeader?
+	public var conversation_state: ConversationState?
+}
+
+@objc(GetEntityByIdRequest)
+public class GetEntityByIdRequest: Message {
+	public var request_header: RequestHeader?
+	public var field2: AnyObject?
+	public var batch_lookup_spec = [EntityLookupSpec]()
+}
+
+@objc(GetEntityByIdResponse)
+public class GetEntityByIdResponse: Message {
+	public var response_header: ResponseHeader?
+	public var entity = [Entity]()
+}
+
+@objc(GetSuggestedEntitiesRequest)
+public class GetSuggestedEntitiesRequest: Message {
+	public var request_header: RequestHeader?
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var field5: AnyObject?
+	public var field6: AnyObject?
+	public var field7: AnyObject?
+	public var favorites: SuggestedContactGroupHash?
+	public var contacts_you_hangout_with: SuggestedContactGroupHash?
+	public var other_contacts_on_hangouts: SuggestedContactGroupHash?
+	public var other_contacts: SuggestedContactGroupHash?
+	public var dismissed_contacts: SuggestedContactGroupHash?
+	public var pinned_favorites: SuggestedContactGroupHash?
+}
+
+@objc(GetSuggestedEntitiesResponse)
+public class GetSuggestedEntitiesResponse: Message {
+	public var response_header: ResponseHeader?
+	public var entity = [Entity]()
+	public var field3: AnyObject?
+	public var favorites: SuggestedContactGroup?
+	public var contacts_you_hangout_with: SuggestedContactGroup?
+	public var other_contacts_on_hangouts: SuggestedContactGroup?
+	public var other_contacts: SuggestedContactGroup?
+	public var dismissed_contacts: SuggestedContactGroup?
+	public var pinned_favorites: SuggestedContactGroup?
+}
+
+@objc(GetSelfInfoRequest)
+public class GetSelfInfoRequest: Message {
+	public var request_header: RequestHeader?
+}
+
+@objc(QueryPresenceRequest)
+public class QueryPresenceRequest: Message {
+	public var request_header: RequestHeader?
+	public var participant_id = [ParticipantId]()
+	public var field_mask = [FieldMask]()
+}
+
+@objc(QueryPresenceResponse)
+public class QueryPresenceResponse: Message {
+	public var response_header: ResponseHeader?
+	public var presence_result = [PresenceResult]()
+}
+
+@objc(RemoveUserRequest)
+public class RemoveUserRequest: Message {
+	public var request_header: RequestHeader?
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var event_request_header: EventRequestHeader?
+}
+
+@objc(RemoveUserResponse)
+public class RemoveUserResponse: Message {
+	public var response_header: ResponseHeader?
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var created_event: Event?
+}
+
+@objc(RenameConversationRequest)
+public class RenameConversationRequest: Message {
+	public var request_header: RequestHeader?
+	public var field2: AnyObject?
+	public var new_name: NSString?
+	public var field4: AnyObject?
+	public var event_request_header: EventRequestHeader?
+}
+
+@objc(RenameConversationResponse)
+public class RenameConversationResponse: Message {
+	public var response_header: ResponseHeader?
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var created_event: Event?
+}
+
+@objc(SearchEntitiesRequest)
+public class SearchEntitiesRequest: Message {
+	public var request_header: RequestHeader?
+	public var field2: AnyObject?
+	public var query: NSString?
+	public var max_count: NSNumber?
+}
+
+@objc(SearchEntitiesResponse)
+public class SearchEntitiesResponse: Message {
+	public var response_header: ResponseHeader?
+	public var entity = [Entity]()
+}
+
+@objc(SendChatMessageRequest)
+public class SendChatMessageRequest: Message {
+	public var request_header: RequestHeader?
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var annotation = [EventAnnotation]()
+	public var message_content: MessageContent?
+	public var existing_media: ExistingMedia?
+	public var event_request_header: EventRequestHeader?
+}
+
+@objc(SendChatMessageResponse)
+public class SendChatMessageResponse: Message {
+	public var response_header: ResponseHeader?
+	public var field2: AnyObject?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var field5: AnyObject?
+	public var created_event: Event?
+}
 
-message DeleteConversationRequest {
-	optional RequestHeader request_header = 1;
-	optional ConversationId conversation_id = 2;
-	optional uint64 delete_upper_bound_timestamp = 3;
-}
-
-message DeleteConversationResponse {
-	optional ResponseHeader response_header = 1;
-	optional DeleteAction delete_action = 2;
-}
-
-message EasterEggRequest {
-	optional RequestHeader request_header = 1;
-	optional ConversationId conversation_id = 2;
-	optional EasterEgg easter_egg = 3;
-}
-
-message EasterEggResponse {
-	optional ResponseHeader response_header = 1;
-	optional uint64 timestamp = 2;
-}
-
-message GetConversationRequest {
-	optional RequestHeader request_header = 1;
-	optional ConversationSpec conversation_spec = 2;
-	optional bool include_event = 4;
-	optional uint64 max_events_per_conversation = 6;
-	optional EventContinuationToken event_continuation_token = 7;
-}
-
-message GetConversationResponse {
-	optional ResponseHeader response_header = 1;
-	optional ConversationState conversation_state = 2;
-}
-
-message GetEntityByIdRequest {
-	optional RequestHeader request_header = 1;
-	repeated EntityLookupSpec batch_lookup_spec = 3;
-}
-
-message GetEntityByIdResponse {
-	optional ResponseHeader response_header = 1;
-	repeated Entity entity = 2;
-}
-
-message GetSuggestedEntitiesRequest {
-	optional RequestHeader request_header = 1;
-	optional SuggestedContactGroupHash favorites = 8;
-	optional SuggestedContactGroupHash contacts_you_hangout_with = 9;
-	optional SuggestedContactGroupHash other_contacts_on_hangouts = 10;
-	optional SuggestedContactGroupHash other_contacts = 11;
-	optional SuggestedContactGroupHash dismissed_contacts = 12;
-	optional SuggestedContactGroupHash pinned_favorites = 13;
-}
-
-message GetSuggestedEntitiesResponse {
-	optional ResponseHeader response_header = 1;
-	repeated Entity entity = 2;
-	optional SuggestedContactGroup favorites = 4;
-	optional SuggestedContactGroup contacts_you_hangout_with = 5;
-	optional SuggestedContactGroup other_contacts_on_hangouts = 6;
-	optional SuggestedContactGroup other_contacts = 7;
-	optional SuggestedContactGroup dismissed_contacts = 8;
-	optional SuggestedContactGroup pinned_favorites = 9;
-}
-
-message GetSelfInfoRequest {
-	optional RequestHeader request_header = 1;
-}
-
-message QueryPresenceRequest {
-	optional RequestHeader request_header = 1;
-	repeated ParticipantId participant_id = 2;
-	repeated FieldMask field_mask = 3;
-}
-
-message QueryPresenceResponse {
-	optional ResponseHeader response_header = 1;
-	repeated PresenceResult presence_result = 2;
-}
-
-message RemoveUserRequest {
-	optional RequestHeader request_header = 1;
-	optional EventRequestHeader event_request_header = 5;
-}
-
-message RemoveUserResponse {
-	optional ResponseHeader response_header = 1;
-	optional Event created_event = 4;
-}
-
-message RenameConversationRequest {
-	optional RequestHeader request_header = 1;
-	optional string new_name = 3;
-	optional EventRequestHeader event_request_header = 5;
-}
-
-message RenameConversationResponse {
-	optional ResponseHeader response_header = 1;
-	optional Event created_event = 4;
-}
-
-message SearchEntitiesRequest {
-	optional RequestHeader request_header = 1;
-	optional string query = 3;
-	optional uint64 max_count = 4;
-}
-
-message SearchEntitiesResponse {
-	optional ResponseHeader response_header = 1;
-	repeated Entity entity = 2;
-}
-
-message SendChatMessageRequest {
-	optional RequestHeader request_header = 1;
-	repeated EventAnnotation annotation = 5;
-	optional MessageContent message_content = 6;
-	optional ExistingMedia existing_media = 7;
-	optional EventRequestHeader event_request_header = 8;
-}
-
-message SendChatMessageResponse {
-	optional ResponseHeader response_header = 1;
-	optional Event created_event = 6;
-}
-
-message SetActiveClientRequest {
-	optional RequestHeader request_header = 1;
-	optional bool is_active = 2;
-	optional string full_jid = 3;
-	optional uint64 timeout_secs = 4;
-}
-
-message SetActiveClientResponse {
-	optional ResponseHeader response_header = 1;
-}
-
-message SetConversationLevelRequest {
-	optional RequestHeader request_header = 1;
-}
-
-message SetConversationLevelResponse {
-	optional ResponseHeader response_header = 1;
-}
+@objc(SetActiveClientRequest)
+public class SetActiveClientRequest: Message {
+	public var request_header: RequestHeader?
+	public var is_active: NSNumber?
+	public var full_jid: NSString?
+	public var timeout_secs: NSNumber?
+}
+
+@objc(SetActiveClientResponse)
+public class SetActiveClientResponse: Message {
+	public var response_header: ResponseHeader?
+}
+
+@objc(SetConversationLevelRequest)
+public class SetConversationLevelRequest: Message {
+	public var request_header: RequestHeader?
+}
+
+@objc(SetConversationLevelResponse)
+public class SetConversationLevelResponse: Message {
+	public var response_header: ResponseHeader?
+}
 
-message SetConversationNotificationLevelRequest {
-	optional RequestHeader request_header = 1;
-	optional ConversationId conversation_id = 2;
-	optional NotificationLevel level = 3;
+@objc(SetConversationNotificationLevelRequest)
+public class SetConversationNotificationLevelRequest: Message {
+	public var request_header: RequestHeader?
+	public var conversation_id: ConversationId?
+	public var level: NotificationLevel?
 }
 
-message SetConversationNotificationLevelResponse {
-	optional ResponseHeader response_header = 1;
-	optional uint64 timestamp = 2;
+@objc(SetConversationNotificationLevelResponse)
+public class SetConversationNotificationLevelResponse: Message {
+	public var response_header: ResponseHeader?
+	public var timestamp: NSNumber?
 }
 
-message SetFocusRequest {
-	optional RequestHeader request_header = 1;
-	optional ConversationId conversation_id = 2;
-	optional FocusType type = 3;
-	optional uint32 timeout_secs = 4;
+@objc(SetFocusRequest)
+public class SetFocusRequest: Message {
+	public var request_header: RequestHeader?
+	public var conversation_id: ConversationId?
+	public var type: FocusType?
+	public var timeout_secs: NSNumber?
 }
 
-message SetFocusResponse {
-	optional ResponseHeader response_header = 1;
-	optional uint64 timestamp = 2;
+@objc(SetFocusResponse)
+public class SetFocusResponse: Message {
+	public var response_header: ResponseHeader?
+	public var timestamp: NSNumber?
 }
 
-message SetPresenceRequest {
-	optional RequestHeader request_header = 1;
-	optional PresenceStateSetting presence_state_setting = 2;
-	optional DndSetting dnd_setting = 3;
-	optional DesktopOffSetting desktop_off_setting = 5;
-	optional MoodSetting mood_setting = 8;
+@objc(SetPresenceRequest)
+public class SetPresenceRequest: Message {
+	public var request_header: RequestHeader?
+	public var presence_state_setting: PresenceStateSetting?
+	public var dnd_setting: DndSetting?
+	public var field4: AnyObject?
+	public var desktop_off_setting: DesktopOffSetting?
+	public var field6: AnyObject?
+	public var field7: AnyObject?
+	public var mood_setting: MoodSetting?
 }
 
-message SetPresenceResponse {
-	optional ResponseHeader response_header = 1;
+@objc(SetPresenceResponse)
+public class SetPresenceResponse: Message {
+	public var response_header: ResponseHeader?
 }
 
-message SetTypingRequest {
-	optional RequestHeader request_header = 1;
-	optional ConversationId conversation_id = 2;
-	optional TypingType type = 3;
+@objc(SetTypingRequest)
+public class SetTypingRequest: Message {
+	public var request_header: RequestHeader?
+	public var conversation_id: ConversationId?
+	public var type: TypingType?
 }
 
-message SetTypingResponse {
-	optional ResponseHeader response_header = 1;
-	optional uint64 timestamp = 2;
+@objc(SetTypingResponse)
+public class SetTypingResponse: Message {
+	public var response_header: ResponseHeader?
+	public var timestamp: NSNumber?
 }
 
-message SyncAllNewEventsRequest {
-	optional RequestHeader request_header = 1;
-	optional uint64 last_sync_timestamp = 2;
-	optional uint64 max_response_size_bytes = 8;
+@objc(SyncAllNewEventsRequest)
+public class SyncAllNewEventsRequest: Message {
+	public var request_header: RequestHeader?
+	public var last_sync_timestamp: NSNumber?
+	public var field3: AnyObject?
+	public var field4: AnyObject?
+	public var field5: AnyObject?
+	public var field6: AnyObject?
+	public var field7: AnyObject?
+	public var max_response_size_bytes: NSNumber?
 }
 
-message SyncAllNewEventsResponse {
-	optional ResponseHeader response_header = 1;
-	optional uint64 sync_timestamp = 2;
-	repeated ConversationState conversation_state = 3;
+@objc(SyncAllNewEventsResponse)
+public class SyncAllNewEventsResponse: Message {
+	public var response_header: ResponseHeader?
+	public var sync_timestamp: NSNumber?
+	public var conversation_state = [ConversationState]()
 }
 
-message SyncRecentConversationsRequest {
-	optional RequestHeader request_header = 1;
-	optional uint64 max_conversations = 3;
-	optional uint64 max_events_per_conversation = 4;
-	repeated SyncFilter sync_filter = 5;
+@objc(SyncRecentConversationsRequest)
+public class SyncRecentConversationsRequest: Message {
+	public var request_header: RequestHeader?
+	public var field2: AnyObject?
+	public var max_conversations: NSNumber?
+	public var max_events_per_conversation: NSNumber?
+	public var sync_filter = [SyncFilter]()
 }
 
-message SyncRecentConversationsResponse {
-	optional ResponseHeader response_header = 1;
-	optional uint64 sync_timestamp = 2;
-	repeated ConversationState conversation_state = 3;
+@objc(SyncRecentConversationsResponse)
+public class SyncRecentConversationsResponse: Message {
+	public var response_header: ResponseHeader?
+	public var sync_timestamp: NSNumber?
+	public var conversation_state = [ConversationState]()
 }
 
-message UpdateWatermarkRequest {
-	optional RequestHeader request_header = 1;
-	optional ConversationId conversation_id = 2;
-	optional uint64 last_read_timestamp = 3;
+@objc(UpdateWatermarkRequest)
+public class UpdateWatermarkRequest: Message {
+	public var request_header: RequestHeader?
+	public var conversation_id: ConversationId?
+	public var last_read_timestamp: NSNumber?
 }
 
-message UpdateWatermarkResponse {
-	optional ResponseHeader response_header = 1;
+@objc(UpdateWatermarkResponse)
+public class UpdateWatermarkResponse: Message {
+	public var response_header: ResponseHeader?
 }
-*/
