@@ -116,7 +116,7 @@ public final class Client {
 			// The first time this is called, we need to retrieve the user's email address.
 			if self.email == nil {
 				self.getSelfInfo {
-					self.email = $0!.self_entity!.properties.emails[0] as? String
+					self.email = $0!.self_entity!.properties!.email[0] as? String
 				}
 			}
 			
@@ -236,7 +236,7 @@ public final class Client {
 			for conv_state in conv_states {
 				let participants = conv_state.conversation!.participant_data
 				required_user_ids = required_user_ids.union(Set(participants.map {
-					UserID(chatID: $0.id.chat_id as! String, gaiaID: $0.id.gaia_id as! String)
+					UserID(chatID: $0.id!.chat_id as! String, gaiaID: $0.id!.gaia_id as! String)
 					}))
 			}
 			

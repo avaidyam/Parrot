@@ -44,15 +44,15 @@ public struct User: Hashable, Equatable {
 	// Initialize a User from an Entity.
 	// If selfUser is nil, assume this is the self user.
     public init(entity: ENTITY, selfUser: UserID?) {
-		let userID = UserID(chatID: entity.id.chat_id as! String,
-			gaiaID: entity.id.gaia_id as! String)
+		let userID = UserID(chatID: entity.id!.chat_id as! String,
+			gaiaID: entity.id!.gaia_id as! String)
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
 		
         self.init(userID: userID,
-            fullName: entity.properties.display_name as String?,
-            firstName: entity.properties.first_name as String?,
-            photoURL: entity.properties.photo_url as String?,
-            emails: entity.properties.emails.map { $0 as! String },
+            fullName: entity.properties!.display_name as String?,
+            firstName: entity.properties!.first_name as String?,
+            photoURL: entity.properties!.photo_url as String?,
+            emails: entity.properties!.email.map { $0 as! String },
             isSelf: isSelf
         )
     }
@@ -60,8 +60,8 @@ public struct User: Hashable, Equatable {
 	// Initialize from ClientConversationParticipantData.
 	// If selfUser is nil, assume this is the self user.
     public init(data: CONVERSATION_PARTICIPANT_DATA, selfUser: UserID?) {
-		let userID = UserID(chatID: data.id.chat_id as! String,
-			gaiaID: data.id.gaia_id as! String)
+		let userID = UserID(chatID: data.id!.chat_id as! String,
+			gaiaID: data.id!.gaia_id as! String)
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
 		
         self.init(userID: userID,

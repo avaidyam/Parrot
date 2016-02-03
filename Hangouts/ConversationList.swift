@@ -136,13 +136,13 @@ public class ConversationList {
 	
 	// Receive ClientSetTypingNotification and update the conversation
     public func handle_set_typing_notification(set_typing_notification: SET_TYPING_NOTIFICATION) {
-        let conv_id = set_typing_notification.conversation_id.id
+        let conv_id = set_typing_notification.conversation_id!.id
         if let conv = conv_dict[conv_id as! String] {
             let res = parseTypingStatusMessage(set_typing_notification)
             delegate?.conversationList(self, didChangeTypingStatusTo: res.status)
             let user = user_list[UserID(
-                chatID: set_typing_notification.user_id.chat_id as! String,
-                gaiaID: set_typing_notification.user_id.gaia_id as! String
+                chatID: set_typing_notification.sender_id!.chat_id as! String,
+                gaiaID: set_typing_notification.sender_id!.gaia_id as! String
             )]
             conv.handleTypingStatus(res.status, forUser: user)
         } else {
@@ -203,7 +203,7 @@ public class ConversationList {
             handle_watermark_notification(watermark_notification)
         }
         if let event_notification = update.event_notification {
-            on_client_event(event_notification.event)
+            on_client_event(event_notification.event!)
         }
     }
 }

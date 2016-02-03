@@ -91,9 +91,9 @@ public class PBLiteSerialization {
 	}
 	
 	/* TODO: Use Swift reflection to unwrap [AnyObject]. */
+	/* TODO: Add all Message classes here. */
+	//return Mirror(reflecting: arr).types[0] as! Message.Type
 	public class func getArrayMessageType(arr: Any) -> Message.Type? {
-		//let mirror = Mirror(reflecting: arr)
-		//return mirror.types[0] as! Message.Type
 		if arr is [CONVERSATION_ID] { return CONVERSATION_ID.self }
 		if arr is [CONVERSATION_STATE] { return CONVERSATION_STATE.self }
 		if arr is [PARTICIPANT_ID] { return PARTICIPANT_ID.self }
@@ -110,7 +110,48 @@ public class PBLiteSerialization {
 	
 	/* TODO: Use Swift reflection to unwrap [AnyObject]. */
 	public class func getArrayEnumType(arr: Any) -> Enum.Type? {
+		if arr is [ActiveClientState] { return ConversationView.self }
+		if arr is [FocusType] { return FocusType.self }
+		if arr is [FocusDevice] { return FocusDevice.self }
+		if arr is [TypingType] { return TypingType.self }
+		if arr is [ClientPresenceStateType] { return ClientPresenceStateType.self }
+		if arr is [NotificationLevel] { return NotificationLevel.self }
+		if arr is [SegmentType] { return SegmentType.self }
+		if arr is [ItemType] { return ItemType.self }
+		if arr is [MediaType] { return MediaType.self }
+		if arr is [MembershipChangeType] { return MembershipChangeType.self }
+		if arr is [HangoutEventType] { return HangoutEventType.self }
+		if arr is [OffTheRecordToggle] { return OffTheRecordToggle.self }
+		if arr is [OffTheRecordStatus] { return OffTheRecordStatus.self }
+		if arr is [SourceType] { return SourceType.self }
+		if arr is [EventType] { return EventType.self }
+		if arr is [ConversationType] { return ConversationType.self }
+		if arr is [ConversationStatus] { return ConversationStatus.self }
 		if arr is [ConversationView] { return ConversationView.self }
+		if arr is [DeliveryMediumType] { return DeliveryMediumType.self }
+		if arr is [ParticipantType] { return ParticipantType.self }
+		if arr is [InvitationStatus] { return InvitationStatus.self }
+		if arr is [ForceHistory] { return ForceHistory.self }
+		if arr is [NetworkType] { return NetworkType.self }
+		if arr is [BlockState] { return BlockState.self }
+		if arr is [ReplyToInviteType] { return ReplyToInviteType.self }
+		if arr is [ClientID] { return ClientID.self }
+		if arr is [ClientBuildType] { return ClientBuildType.self }
+		if arr is [ResponseStatus] { return ResponseStatus.self }
+		if arr is [PastHangoutState] { return PastHangoutState.self }
+		if arr is [PhotoURLStatus] { return PhotoURLStatus.self }
+		if arr is [Gender] { return Gender.self }
+		if arr is [ProfileType] { return ProfileType.self }
+		if arr is [ConfigurationBitType] { return ConfigurationBitType.self }
+		if arr is [RichPresenceType] { return RichPresenceType.self }
+		if arr is [FieldMask] { return FieldMask.self }
+		if arr is [DeleteType] { return DeleteType.self }
+		if arr is [SyncFilter] { return SyncFilter.self }
+		if arr is [SoundState] { return SoundState.self }
+		if arr is [CallerIDSettingsMask] { return CallerIDSettingsMask.self }
+		if arr is [PhoneVerificationStatus] { return PhoneVerificationStatus.self }
+		if arr is [PhoneDiscoverabilityStatus] { return PhoneDiscoverabilityStatus.self }
+		if arr is [PhoneValidationResult] { return PhoneValidationResult.self }
 		return nil
 	}
 	
@@ -159,6 +200,7 @@ public class PBLiteSerialization {
 				
 				//  Unwrapping an optional enum
 			} else if let type = _unwrapOptionalType(property) as? Enum.Type {
+				print("TEST \(propertyName): \(type)")
 				let val: (AnyObject?) = type.init(value: (arr[i] as! NSNumber))
 				instance.setValue(val, forKey: propertyName)
 				

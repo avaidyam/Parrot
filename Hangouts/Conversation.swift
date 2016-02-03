@@ -363,8 +363,8 @@ public class Conversation {
         get {
             return conversation.participant_data.map {
                 self.user_list[UserID(
-                    chatID: $0.id.chat_id as! String,
-                    gaiaID: $0.id.gaia_id as! String
+                    chatID: $0.id!.chat_id as! String,
+                    gaiaID: $0.id!.gaia_id as! String
                 )]
             }
         }

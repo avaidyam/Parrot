@@ -232,10 +232,10 @@ public typealias WatermarkNotification = (convID: String, userID: UserID, readTi
 // message is sent the typing status will not change to stopped.
 internal func parseTypingStatusMessage(p: SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
 	return TypingStatusMessage(
-		convID: p.conversation_id.id as! String,
-		userID: UserID(chatID: p.user_id.chat_id as! String, gaiaID: p.user_id.gaia_id as! String),
+		convID: p.conversation_id!.id as! String,
+		userID: UserID(chatID: p.sender_id!.chat_id as! String, gaiaID: p.sender_id!.gaia_id as! String),
 		timestamp: from_timestamp(p.timestamp)!,
-		status: p.status
+		status: p.type!
 	)
 }
 
