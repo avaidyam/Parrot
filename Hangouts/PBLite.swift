@@ -105,6 +105,117 @@ public class PBLiteSerialization {
 		if arr is [CONVERSATION_READ_STATE] { return CONVERSATION_READ_STATE.self }
 		if arr is [ENTITY_GROUP_ENTITY] { return ENTITY_GROUP_ENTITY.self }
 		if arr is [PARTICIPANT_ID] { return PARTICIPANT_ID.self }
+		if arr is [Thumbnail] { return Thumbnail.self }
+		if arr is [PlusPhoto] { return PlusPhoto.self }
+		if arr is [RepresentativeImage] { return RepresentativeImage.self }
+		if arr is [Place] { return Place.self }
+		if arr is [EmbedItem] { return EmbedItem.self }
+		if arr is [EventAnnotation] { return EventAnnotation.self }
+		if arr is [ChatMessage] { return ChatMessage.self }
+		if arr is [MembershipChange] { return MembershipChange.self }
+		if arr is [ConversationRename] { return ConversationRename.self }
+		if arr is [HANGOUT_EVENT] { return HANGOUT_EVENT.self }
+		if arr is [OTRModification] { return OTRModification.self }
+		if arr is [HashModifier] { return HashModifier.self }
+		if arr is [EVENT] { return EVENT.self }
+		if arr is [UserReadState] { return UserReadState.self }
+		if arr is [DeliveryMedium] { return DeliveryMedium.self }
+		if arr is [DeliveryMediumOption] { return DeliveryMediumOption.self }
+		if arr is [UserConversationState] { return UserConversationState.self }
+		if arr is [ConversationParticipantData] { return ConversationParticipantData.self }
+		if arr is [CONVERSATION] { return CONVERSATION.self }
+		if arr is [EasterEgg] { return EasterEgg.self }
+		if arr is [BlockStateChange] { return BlockStateChange.self }
+		if arr is [Photo] { return Photo.self }
+		if arr is [ExistingMedia] { return ExistingMedia.self }
+		if arr is [EventRequestHeader] { return EventRequestHeader.self }
+		if arr is [ClientVersion] { return ClientVersion.self }
+		if arr is [RequestHeader] { return RequestHeader.self }
+		if arr is [Entity] { return Entity.self }
+		if arr is [EntityProperties] { return EntityProperties.self }
+		if arr is [ConversationState] { return ConversationState.self }
+		if arr is [EventContinuationToken] { return EventContinuationToken.self }
+		if arr is [EntityLookupSpec] { return EntityLookupSpec.self }
+		if arr is [RichPresenceState] { return RichPresenceState.self }
+		if arr is [RichPresenceEnabledState] { return RichPresenceEnabledState.self }
+		if arr is [DesktopOffSetting] { return DesktopOffSetting.self }
+		if arr is [DesktopOffState] { return DesktopOffState.self }
+		if arr is [DndSetting] { return DndSetting.self }
+		if arr is [PresenceStateSetting] { return PresenceStateSetting.self }
+		if arr is [MoodMessage] { return MoodMessage.self }
+		if arr is [MoodContent] { return MoodContent.self }
+		if arr is [MoodSetting] { return MoodSetting.self }
+		if arr is [MoodState] { return MoodState.self }
+		if arr is [DeleteAction] { return DeleteAction.self }
+		if arr is [InviteeID] { return InviteeID.self }
+		if arr is [Country] { return Country.self }
+		if arr is [DesktopSoundSetting] { return DesktopSoundSetting.self }
+		if arr is [PhoneData] { return PhoneData.self }
+		if arr is [Phone] { return Phone.self }
+		if arr is [I18nData] { return I18nData.self }
+		if arr is [PhoneNumber] { return PhoneNumber.self }
+		if arr is [SuggestedContactGroupHash] { return SuggestedContactGroupHash.self }
+		if arr is [SuggestedContact] { return SuggestedContact.self }
+		if arr is [SuggestedContactGroup] { return SuggestedContactGroup.self }
+		if arr is [StateUpdateHeader] { return StateUpdateHeader.self }
+		if arr is [BatchUpdate] { return BatchUpdate.self }
+		if arr is [EventNotification] { return EventNotification.self }
+		if arr is [SetFocusNotification] { return SetFocusNotification.self }
+		if arr is [SetTypingNotification] { return SetTypingNotification.self }
+		if arr is [SetConversationNotificationLevelNotification] { return SetConversationNotificationLevelNotification.self }
+		if arr is [ReplyToInviteNotification] { return ReplyToInviteNotification.self }
+		if arr is [ConversationViewModification] { return ConversationViewModification.self }
+		if arr is [EasterEggNotification] { return EasterEggNotification.self }
+		if arr is [SelfPresenceNotification] { return SelfPresenceNotification.self }
+		if arr is [DeleteActionNotification] { return DeleteActionNotification.self }
+		if arr is [PresenceNotification] { return PresenceNotification.self }
+		if arr is [BlockNotification] { return BlockNotification.self }
+		if arr is [SetNotificationSettingNotification] { return SetNotificationSettingNotification.self }
+		if arr is [RichPresenceEnabledStateNotification] { return RichPresenceEnabledStateNotification.self }
+		if arr is [ConversationSpec] { return ConversationSpec.self }
+		if arr is [AddUserRequest] { return AddUserRequest.self }
+		if arr is [AddUserResponse] { return AddUserResponse.self }
+		if arr is [CreateConversationRequest] { return CreateConversationRequest.self }
+		if arr is [CreateConversationResponse] { return CreateConversationResponse.self }
+		if arr is [DeleteConversationRequest] { return DeleteConversationRequest.self }
+		if arr is [DeleteConversationResponse] { return DeleteConversationResponse.self }
+		if arr is [EasterEggRequest] { return EasterEggRequest.self }
+		if arr is [EasterEggResponse] { return EasterEggResponse.self }
+		if arr is [GetConversationRequest] { return GetConversationRequest.self }
+		if arr is [GetConversationResponse] { return GetConversationResponse.self }
+		if arr is [GetEntityByIdRequest] { return GetEntityByIdRequest.self }
+		if arr is [GetEntityByIdResponse] { return GetEntityByIdResponse.self }
+		if arr is [GetSuggestedEntitiesRequest] { return GetSuggestedEntitiesRequest.self }
+		if arr is [GetSuggestedEntitiesResponse] { return GetSuggestedEntitiesResponse.self }
+		if arr is [GetSelfInfoRequest] { return GetSelfInfoRequest.self }
+		if arr is [QueryPresenceRequest] { return QueryPresenceRequest.self }
+		if arr is [QueryPresenceResponse] { return QueryPresenceResponse.self }
+		if arr is [RemoveUserRequest] { return RemoveUserRequest.self }
+		if arr is [RemoveUserResponse] { return RemoveUserResponse.self }
+		if arr is [RenameConversationRequest] { return RenameConversationRequest.self }
+		if arr is [RenameConversationResponse] { return RenameConversationResponse.self }
+		if arr is [SearchEntitiesRequest] { return SearchEntitiesRequest.self }
+		if arr is [SearchEntitiesResponse] { return SearchEntitiesResponse.self }
+		if arr is [SendChatMessageRequest] { return SendChatMessageRequest.self }
+		if arr is [SendChatMessageResponse] { return SendChatMessageResponse.self }
+		if arr is [SetActiveClientRequest] { return SetActiveClientRequest.self }
+		if arr is [SetActiveClientResponse] { return SetActiveClientResponse.self }
+		if arr is [SetConversationLevelRequest] { return SetConversationLevelRequest.self }
+		if arr is [SetConversationLevelResponse] { return SetConversationLevelResponse.self }
+		if arr is [SetConversationNotificationLevelRequest] { return SetConversationNotificationLevelRequest.self }
+		if arr is [SetConversationNotificationLevelResponse] { return SetConversationNotificationLevelResponse.self }
+		if arr is [SetFocusRequest] { return SetFocusRequest.self }
+		if arr is [SetFocusResponse] { return SetFocusResponse.self }
+		if arr is [SetPresenceRequest] { return SetPresenceRequest.self }
+		if arr is [SetPresenceResponse] { return SetPresenceResponse.self }
+		if arr is [SetTypingRequest] { return SetTypingRequest.self }
+		if arr is [SetTypingResponse] { return SetTypingResponse.self }
+		if arr is [SyncAllNewEventsRequest] { return SyncAllNewEventsRequest.self }
+		if arr is [SyncAllNewEventsResponse] { return SyncAllNewEventsResponse.self }
+		if arr is [SyncRecentConversationsRequest] { return SyncRecentConversationsRequest.self }
+		if arr is [SyncRecentConversationsResponse] { return SyncRecentConversationsResponse.self }
+		if arr is [UpdateWatermarkRequest] { return UpdateWatermarkRequest.self }
+		if arr is [UpdateWatermarkResponse] { return UpdateWatermarkResponse.self }
 		return nil
 	}
 	
@@ -200,10 +311,14 @@ public class PBLiteSerialization {
 				
 				//  Unwrapping an optional enum
 			} else if let type = _unwrapOptionalType(property) as? Enum.Type {
-				if !(arr[i] is NSNull) {
-					let val: (AnyObject?) = type.init(value: (arr[i] as! NSNumber))
-					instance.setValue(val, forKey: propertyName)
+				var val: AnyObject?
+				/* TODO: Support NSNull literal conversion. */
+				if arr[i] as? NSNumber == nil {
+					val = type.init(value: 0)
+				} else {
+					val = type.init(value: (arr[i] as! NSNumber))
 				}
+				instance.setValue(val, forKey: propertyName)
 				
 				//  Using a non-optional sub-struct
 			} else if let enumv = property as? Enum {

@@ -5,6 +5,7 @@ import Hangouts
 class ServiceManager: NSObject, NSApplicationDelegate{
 	
 	private var windowController: NSWindowController? = nil
+	private var trans: WindowTransitionAnimator? = nil
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(notification: NSNotification) {
@@ -24,8 +25,15 @@ class ServiceManager: NSObject, NSApplicationDelegate{
 			// Instantiate storyboard and controller and begin the UI from here.
 			Dispatch.main().add {
 				let s = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+				let vc = s.instantiateControllerWithIdentifier("Conversations") as! ConversationsViewController
+				self.trans = WindowTransitionAnimator()
+				self.trans!.displayViewController(vc)
+				
+				/*
+				let s = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
 				self.windowController = s.instantiateControllerWithIdentifier("Main") as? NSWindowController
 				self.windowController?.showWindow(nil)
+				*/
 			}
 		}
 	}

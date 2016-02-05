@@ -728,7 +728,7 @@
         <!--Conversations-->
         <scene sceneID="8u4-p6-XjP">
             <objects>
-                <viewController title="Conversations" id="AA2-4a-jNw" customClass="ConversationsViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Conversations" storyboardIdentifier="Conversations" id="AA2-4a-jNw" customClass="ConversationsViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" customClass="PersonsView" customModule="Parrot" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="270" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -745,7 +745,7 @@
         <!--Conversation-->
         <scene sceneID="RZU-x9-0el">
             <objects>
-                <viewController title="Conversation" id="MHo-xn-Myi" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Conversation" storyboardIdentifier="Conversation" id="MHo-xn-Myi" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="hAN-a4-RD8" customClass="NSVisualEffectView">
                         <rect key="frame" x="0.0" y="0.0" width="568" height="383"/>
                         <autoresizingMask key="autoresizingMask"/>

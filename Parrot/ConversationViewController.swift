@@ -11,18 +11,19 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	
 	var _note: TokenObserver!
 	var popover: NSPopover!
-	var conversation: Conversation? {
-		return representedObject as? Conversation
-	}
-	var window: NSWindow? {
-		return self.view.window
-	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		self.messagesView.insets = NSEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
+		self.messagesView.sizeClass = .Dynamic
         self.messageTextField.delegate = self
+		
+		self.messagesView.dynamicHeightProvider = { (row: Int) -> Double in
+			let a = (self.messagesView.dataSource[row].element as? Message)!.string
+			let b = self.messagesView.frame.width
+			return Double(MessageView.heightForContainerWidth(a, width: b))
+		}
 		
 		self.popover = NSPopover()
 		self.popover.contentViewController = NSViewController()
@@ -47,11 +48,24 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
             self.conversation?.delegate = self
 			self.conversation?.getEvents(conversation?.events.first?.id, max_events: 50)
+			self.title = self.conversation?.name
 			
 			//self.messagesView.removeElements(self._getAllMessages()!)
-			self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
+			if self.messagesView != nil {
+				self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
+			} else {
+				print("Not initialized.")
+			}
         }
-    }
+	}
+	
+	var conversation: Conversation? {
+		return representedObject as? Conversation
+	}
+	
+	var window: NSWindow? {
+		return self.view.window
+	}
 	
     func conversation(conversation: Conversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
         if user.isSelf {
@@ -189,7 +203,6 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			var emojify = Settings()[Parrot.AutoEmoji] as? Bool ?? false
 			emojify = NSEvent.modifierFlags().contains(.AlternateKeyMask) ? false : emojify
 			let txt = ConversationViewController.segmentsForInput(text, emojify: emojify)
-			Swift.print("sending \(txt) to \(conversation)")
 			conversation?.sendMessage(txt)
             messageTextField.stringValue = ""
         }

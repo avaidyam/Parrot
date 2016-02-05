@@ -39,13 +39,14 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
 			
+			/*
 			// Handle collapsed sidebar as best we can...
 			let split = self.parentViewController as? NSSplitViewController
 			let old = !((split?.splitViewItems[0].collapsed)!)
 			let new = Settings()[Parrot.ShowSidebar] as? Bool ?? false
 			if old != new {
 				split?.toggleSidebar(nil)
-			}
+			}*/
 		}
 		
 		NotificationManager.updateAppBadge(conversationList?.unreadEventCount ?? 0)
@@ -104,8 +105,10 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		self.view.window?.appearance = NSAppearance(named: appearance)
 		
 		// Handle collapsed sidebar.
+		/*
 		let split = (self.parentViewController as? NSSplitViewController)?.splitViewItems[0]
 		split?.collapsed = !(Settings()[Parrot.ShowSidebar] as? Bool ?? false)
+		*/
 		
 		let scroll = self.view.subviews[0] as? NSScrollView
 		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
@@ -186,11 +189,16 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		}
     }
 	
-    func selectConversation(conversation: Conversation?) {
+	func selectConversation(conversation: Conversation?) {
+		let s = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+		let vc = s.instantiateControllerWithIdentifier("Conversation") as! ConversationViewController
+		vc.representedObject = conversation
+		self.presentViewController(vc, animator: WindowTransitionAnimator())
+		
+		/*
 		let item = (self.parentViewController as? NSSplitViewController)?.splitViewItems[1]
         if let vc = item?.viewController as? ConversationViewController {
             vc.representedObject = conversation
-        }
+        }*/
     }
 }
-

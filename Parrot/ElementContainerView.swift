@@ -142,6 +142,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		self.dataSource.removeContentsOf(elements)
 	}*/
 	
+	public var dynamicHeightProvider: ((row: Int) -> Double)? = nil
 	public var selectionProvider: ((row: Int) -> Void)? = nil
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
 }
@@ -155,7 +156,8 @@ public extension ElementContainerView {
 	
 	/* TODO: Support size classes. */
 	public func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-		return 64.0//Container.heightForContainerWidth(self.dataSource[row].string, width: self.frame.width)
+		return CGFloat(self.sizeClass != .Dynamic ? self.sizeClass.rawValue :
+			(self.dynamicHeightProvider?(row: row) ?? SizeClass.Medium.rawValue))
 	}
 	
 	public func tableView(tableView: NSTableView, isGroupRow row: Int) -> Bool {
