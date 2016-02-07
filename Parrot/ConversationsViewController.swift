@@ -2,15 +2,6 @@ import Cocoa
 import Hangouts
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
-/* TODO: Use the NSSplitViewController magic to allow docking windows! */
-
-// Existing Parrot Settings keys.
-public class Parrot {
-	public static let AutoEmoji = "Parrot.AutoEmoji"
-	public static let DarkAppearance = "Parrot.DarkAppearance"
-	public static let InvertChatStyle = "Parrot.InvertChatStyle"
-	public static let ShowSidebar = "Parrot.ShowSidebar"
-}
 
 class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	
@@ -26,9 +17,6 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			
 			UI {
 				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-				//self.tableView.reloadData()
-				//self.tableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
-				//self.tableView.scrollRowToVisible(0)
 			}
 		}
 		
@@ -38,15 +26,6 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
-			
-			/*
-			// Handle collapsed sidebar as best we can...
-			let split = self.parentViewController as? NSSplitViewController
-			let old = !((split?.splitViewItems[0].collapsed)!)
-			let new = Settings()[Parrot.ShowSidebar] as? Bool ?? false
-			if old != new {
-				split?.toggleSidebar(nil)
-			}*/
 		}
 		
 		NotificationManager.updateAppBadge(conversationList?.unreadEventCount ?? 0)
@@ -57,7 +36,12 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		
 		self.personsView.insets = NSEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.personsView.selectionProvider = { row in
-			self.selectConversation(row >= 0 ? self.conversationList?.conversations[row] : nil)
+			if row >= 0 {
+				let s = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+				let vc = s.instantiateControllerWithIdentifier("Conversation") as! ConversationViewController
+				vc.representedObject = self.conversationList?.conversations[row]
+				self.presentViewController(vc, animator: WindowTransitionAnimator())
+			}
 		}
 		
 		self.personsView.rowActionProvider = { row, edge in
@@ -96,20 +80,6 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	override func viewWillAppear() {
 		super.viewWillAppear()
 		
-		/* TODO: Should not be set here! Use a special window. */
-		self.view.window?.titleVisibility = .Hidden;
-		self.view.window?.titlebarAppearsTransparent = true;
-		
-		let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
-		let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
-		self.view.window?.appearance = NSAppearance(named: appearance)
-		
-		// Handle collapsed sidebar.
-		/*
-		let split = (self.parentViewController as? NSSplitViewController)?.splitViewItems[0]
-		split?.collapsed = !(Settings()[Parrot.ShowSidebar] as? Bool ?? false)
-		*/
-		
 		let scroll = self.view.subviews[0] as? NSScrollView
 		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
 	}
@@ -124,7 +94,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
         }
     }
 	
-	func _getPerson(conversation: Conversation) -> Person {
+	private func _getPerson(conversation: Conversation) -> Person {
 		
 		// Propogate info for data filling
 		let a = conversation.messages.last?.userID
@@ -157,21 +127,13 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		return Person(photo: img, highlight: ring, indicator: ind, primary: name, secondary: sub, tertiary: time)
 	}
 	
-	func _getAllPersons() -> [Person]? {
+	private func _getAllPersons() -> [Person]? {
 		return self.conversationList?.conversations.map { _getPerson($0) }
 	}
 	
-    func conversationList(list: ConversationList, didReceiveEvent event: Event) {
-
-    }
-
-    func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType) {
-		
-    }
-
-    func conversationList(list: ConversationList, didReceiveWatermarkNotification status: WatermarkNotification) {
-		
-    }
+    func conversationList(list: ConversationList, didReceiveEvent event: Event) {}
+    func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
+    func conversationList(list: ConversationList, didReceiveWatermarkNotification status: WatermarkNotification) {}
 	
 	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: ConversationList) {
@@ -187,18 +149,5 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
-    }
-	
-	func selectConversation(conversation: Conversation?) {
-		let s = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-		let vc = s.instantiateControllerWithIdentifier("Conversation") as! ConversationViewController
-		vc.representedObject = conversation
-		self.presentViewController(vc, animator: WindowTransitionAnimator())
-		
-		/*
-		let item = (self.parentViewController as? NSSplitViewController)?.splitViewItems[1]
-        if let vc = item?.viewController as? ConversationViewController {
-            vc.representedObject = conversation
-        }*/
     }
 }
