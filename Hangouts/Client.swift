@@ -184,7 +184,7 @@ public final class Client {
 			// payload[1] is a list of state updates.
 			if payload[0] as? String == "cbu" {
 				let result = flatMap(payload[1] as! [NSArray]) {
-					PBLiteSerialization.parseArray(STATE_UPDATE.self, input: $0)
+					PBLiteSerialization.parseArray(StateUpdate.self, input: $0)
 				}
 				
 				for state_update in result {
@@ -240,21 +240,21 @@ public final class Client {
 					}))
 			}
 			
-			var required_entities = Array<ENTITY>()
+			var required_entities = Array<Entity>()
 			if required_user_ids.count > 0 {
 				self.getEntitiesByID(required_user_ids.map { $0.chatID }) { resp in
 					required_entities = resp!.entities
 				}
 			}
 			
-			var conv_part_list = Array<CONVERSATION_PARTICIPANT_DATA>()
+			var conv_part_list = Array<ConversationParticipantData>()
 			for conv_state in conv_states {
 				let participants = conv_state.conversation!.participant_data
 				conv_part_list.appendContentsOf(participants)
 			}
 			
 			// Let's request our own entity now.
-			var self_entity = ENTITY()
+			var self_entity = Entity()
 			self.getSelfInfo {
 				self_entity = $0!.self_entity!
 				
@@ -438,7 +438,7 @@ public final class Client {
 		conversation_id: String,
 		event_timestamp: NSDate,
 		max_events: Int = 50,
-		cb: (GET_CONVERSATION_RESPONSE) -> Void)
+		cb: (GetConversationResponse) -> Void)
 	{
 		let data = [
 			self.getRequestHeader(),
@@ -461,12 +461,12 @@ public final class Client {
 		self.request("conversations/getconversation", body: data, use_json: false) { r in
 			let str = (NSString(data: r.data!, encoding: NSUTF8StringEncoding)! as String)
 			let result = evalArray(str) as! NSArray
-			cb(PBLiteSerialization.parseArray(GET_CONVERSATION_RESPONSE.self, input: result)!)
+			cb(PBLiteSerialization.parseArray(GetConversationResponse.self, input: result)!)
 		}
 	}
 	
 	// Return information about a list of contacts.
-	public func getEntitiesByID(chat_id_list: [String], cb: (GET_ENTITY_BY_ID_RESPONSE?) -> Void) {
+	public func getEntitiesByID(chat_id_list: [String], cb: (GetEntityByIdResponse?) -> Void) {
 		let data = [
 			self.getRequestHeader(),
 			None,
@@ -687,7 +687,7 @@ public final class Client {
 	}
 	
 	// List all events occurring at or after a timestamp.
-	public func syncAllNewEvents(timestamp: NSDate, cb: (response: SYNC_ALL_NEW_EVENTS_RESPONSE?) -> Void) {
+	public func syncAllNewEvents(timestamp: NSDate, cb: (response: SyncAllNewEventsResponse?) -> Void) {
 		let data: NSArray = [
 			self.getRequestHeader(),
 			to_timestamp(timestamp),

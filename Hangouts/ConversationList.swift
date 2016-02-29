@@ -19,7 +19,7 @@ public class ConversationList {
 	public var delegate: ConversationListDelegate?
 	private var tokens = [NSObjectProtocol]()
 
-    public init(client: Client, conv_states: [CONVERSATION_STATE], user_list: UserList, sync_timestamp: NSDate?) {
+    public init(client: Client, conv_states: [ConversationState], user_list: UserList, sync_timestamp: NSDate?) {
         self.client = client
         self.sync_timestamp = sync_timestamp ?? NSDate(timeIntervalSince1970: 0)
         self.user_list = user_list
@@ -44,7 +44,7 @@ public class ConversationList {
 			// nothing here
 		}
 		let d = _c.addObserverForName(Client.didUpdateStateNotification, object: client, queue: nil) { note in
-			if let val = (note.userInfo as! [String: AnyObject])[Client.didUpdateStateKey] as? STATE_UPDATE {
+			if let val = (note.userInfo as! [String: AnyObject])[Client.didUpdateStateKey] as? StateUpdate {
 				self.clientDidUpdateState(self.client, update: val)
 			} else {
 				print("Encountered an error! \(note)")
@@ -135,7 +135,7 @@ public class ConversationList {
     }
 	
 	// Receive ClientSetTypingNotification and update the conversation
-    public func handle_set_typing_notification(set_typing_notification: SET_TYPING_NOTIFICATION) {
+    public func handle_set_typing_notification(set_typing_notification: SetTypingNotification) {
         let conv_id = set_typing_notification.conversation_id!.id
         if let conv = conv_dict[conv_id as! String] {
             let res = parseTypingStatusMessage(set_typing_notification)
@@ -192,7 +192,7 @@ public class ConversationList {
 	
 	// Receive a ClientStateUpdate and fan out to Conversations
 	/* TODO: Refactor this to use the Oneof support in Protobuf. */
-    public func clientDidUpdateState(client: Client, update: STATE_UPDATE) {
+    public func clientDidUpdateState(client: Client, update: StateUpdate) {
         if let client_conversation = update.client_conversation {
             handle_client_conversation(client_conversation)
         }

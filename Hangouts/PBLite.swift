@@ -94,17 +94,17 @@ public class PBLiteSerialization {
 	/* TODO: Add all Message classes here. */
 	//return Mirror(reflecting: arr).types[0] as! Message.Type
 	public class func getArrayMessageType(arr: Any) -> Message.Type? {
-		if arr is [CONVERSATION_ID] { return CONVERSATION_ID.self }
-		if arr is [CONVERSATION_STATE] { return CONVERSATION_STATE.self }
-		if arr is [PARTICIPANT_ID] { return PARTICIPANT_ID.self }
+		if arr is [ConversationId] { return ConversationId.self }
+		if arr is [ConversationState] { return ConversationState.self }
+		if arr is [ParticipantId] { return ParticipantId.self }
 		if arr is [EVENT] { return EVENT.self }
-		if arr is [ENTITY] { return ENTITY.self }
-		if arr is [MESSAGE_SEGMENT] { return MESSAGE_SEGMENT.self }
-		if arr is [MESSAGE_ATTACHMENT] { return MESSAGE_ATTACHMENT.self }
-		if arr is [CONVERSATION_PARTICIPANT_DATA] { return CONVERSATION_PARTICIPANT_DATA.self }
-		if arr is [CONVERSATION_READ_STATE] { return CONVERSATION_READ_STATE.self }
-		if arr is [ENTITY_GROUP_ENTITY] { return ENTITY_GROUP_ENTITY.self }
-		if arr is [PARTICIPANT_ID] { return PARTICIPANT_ID.self }
+		if arr is [Entity] { return Entity.self }
+		if arr is [MessageSegment] { return MessageSegment.self }
+		if arr is [MessageAttachment] { return MessageAttachment.self }
+		if arr is [ConversationParticipantData] { return ConversationParticipantData.self }
+		if arr is [ConversationReadState] { return ConversationReadState.self }
+		if arr is [EntityGroupEntity] { return EntityGroupEntity.self }
+		if arr is [ParticipantId] { return ParticipantId.self }
 		if arr is [Thumbnail] { return Thumbnail.self }
 		if arr is [PlusPhoto] { return PlusPhoto.self }
 		if arr is [RepresentativeImage] { return RepresentativeImage.self }

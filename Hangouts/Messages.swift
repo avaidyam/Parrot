@@ -7,28 +7,28 @@ import Foundation
 ****************************************/
 
 @objc(ActiveClientState)
-public class ActiveClientState : Enum {
+public class ActiveClientState: Enum {
 	public static let NO_ACTIVE_CLIENT: ActiveClientState = 0
 	public static let IS_ACTIVE_CLIENT: ActiveClientState = 1
 	public static let OTHER_CLIENT_IS_ACTIVE: ActiveClientState = 2
 }
 
 @objc(FocusType)
-public class FocusType : Enum {
+public class FocusType: Enum {
 	public static let UNKNOWN: FocusType = 0
 	public static let FOCUSED: FocusType = 1
 	public static let UNFOCUSED: FocusType = 2
 }
 
 @objc(FocusDevice)
-public class FocusDevice : Enum {
+public class FocusDevice: Enum {
 	public static let UNSPECIFIED: FocusDevice = 0
 	public static let DESKTOP: FocusDevice = 20
 	public static let MOBILE: FocusDevice = 300
 }
 
 @objc(TypingType)
-public class TypingType : Enum {
+public class TypingType: Enum {
 	public static let UNKNOWN: TypingType = 0
 	public static let STARTED: TypingType = 1
 	public static let PAUSED: TypingType = 2
@@ -36,7 +36,7 @@ public class TypingType : Enum {
 }
 
 @objc(ClientPresenceStateType)
-public class ClientPresenceStateType : Enum {
+public class ClientPresenceStateType: Enum {
 	public static let UNKNOWN: ClientPresenceStateType = 0
 	public static let NONE: ClientPresenceStateType = 1
 	public static let DESKTOP_IDLE: ClientPresenceStateType = 30
@@ -44,21 +44,21 @@ public class ClientPresenceStateType : Enum {
 }
 
 @objc(NotificationLevel)
-public class NotificationLevel : Enum {
+public class NotificationLevel: Enum {
 	public static let UNKNOWN: NotificationLevel = 0
 	public static let QUIET: NotificationLevel = 10
 	public static let RING: NotificationLevel = 30
 }
 
 @objc(SegmentType)
-public class SegmentType : Enum {
+public class SegmentType: Enum {
 	public static let TEXT: SegmentType = 0
 	public static let LINE_BREAK: SegmentType = 1
 	public static let LINK: SegmentType = 2
 }
 
 @objc(ItemType)
-public class ItemType : Enum {
+public class ItemType: Enum {
 	public static let THING: SegmentType = 0
 	public static let PLUS_PHOTO: SegmentType = 249
 	public static let PLACE: SegmentType = 335
@@ -66,20 +66,20 @@ public class ItemType : Enum {
 }
 
 @objc(MediaType)
-public class MediaType : Enum {
+public class MediaType: Enum {
 	public static let UNKNOWN: MediaType = 0
 	public static let PHOTO: MediaType = 1
 	public static let ANIMATED_PHOTO: MediaType = 4
 }
 
 @objc(MembershipChangeType)
-public class MembershipChangeType : Enum {
+public class MembershipChangeType: Enum {
 	public static let JOIN: MembershipChangeType = 1
 	public static let LEAVE: MembershipChangeType = 2
 }
 
 @objc(HangoutEventType)
-public class HangoutEventType : Enum {
+public class HangoutEventType: Enum {
 	public static let UNKNOWN: HangoutEventType = 0
 	public static let START: HangoutEventType = 1
 	public static let END: HangoutEventType = 2
@@ -90,26 +90,26 @@ public class HangoutEventType : Enum {
 }
 
 @objc(OffTheRecordToggle)
-public class OffTheRecordToggle : Enum {
+public class OffTheRecordToggle: Enum {
 	public static let UNKNOWN: OffTheRecordToggle = 0
 	public static let ENABLED: OffTheRecordToggle = 1
 	public static let DISABLED: OffTheRecordToggle = 2
 }
 
 @objc(OffTheRecordStatus)
-public class OffTheRecordStatus : Enum {
+public class OffTheRecordStatus: Enum {
 	public static let UNKNOWN: OffTheRecordStatus = 0
 	public static let OFF_THE_RECORD: OffTheRecordStatus = 1
 	public static let ON_THE_RECORD: OffTheRecordStatus = 2
 }
 
 @objc(SourceType)
-public class SourceType : Enum {
+public class SourceType: Enum {
 	public static let UNKNOWN: SourceType = 0
 }
 
 @objc(EventType)
-public class EventType : Enum {
+public class EventType: Enum {
 	public static let UNKNOWN: SourceType = 0
 	public static let REGULAR_CHAT_MESSAGE: SourceType = 1
 	public static let SMS: SourceType = 2
@@ -126,14 +126,14 @@ public class EventType : Enum {
 }
 
 @objc(ConversationType)
-public class ConversationType : Enum {
+public class ConversationType: Enum {
 	public static let UNKNOWN: ConversationType = 0
 	public static let ONE_TO_ONE: ConversationType = 1
 	public static let GROUP: ConversationType = 2
 }
 
 @objc(ConversationStatus)
-public class ConversationStatus : Enum {
+public class ConversationStatus: Enum {
 	public static let UNKNOWN: ConversationStatus = 0
 	public static let INVITED: ConversationStatus = 1
 	public static let ACTIVE: ConversationStatus = 2
@@ -141,14 +141,14 @@ public class ConversationStatus : Enum {
 }
 
 @objc(ConversationView)
-public class ConversationView : Enum {
+public class ConversationView: Enum {
 	public static let UNKNOWN: ConversationView = 0
 	public static let INBOX: ConversationView = 1
 	public static let ARCHIVED: ConversationView = 2
 }
 
 @objc(DeliveryMediumType)
-public class DeliveryMediumType : Enum {
+public class DeliveryMediumType: Enum {
 	public static let UNKNOWN: DeliveryMediumType = 0
 	public static let BABEL: DeliveryMediumType = 1
 	public static let GOOGLE_VOICE: DeliveryMediumType = 2
@@ -156,47 +156,47 @@ public class DeliveryMediumType : Enum {
 }
 
 @objc(ParticipantType)
-public class ParticipantType : Enum {
+public class ParticipantType: Enum {
 	public static let UNKNOWN: ParticipantType = 0
 	public static let GAIA: ParticipantType = 2
 }
 
 @objc(InvitationStatus)
-public class InvitationStatus : Enum {
+public class InvitationStatus: Enum {
 	public static let UNKNOWN: InvitationStatus = 0
 	public static let PENDING: InvitationStatus = 1
 	public static let ACCEPTED: InvitationStatus = 2
 }
 
 @objc(ForceHistory)
-public class ForceHistory : Enum {
+public class ForceHistory: Enum {
 	public static let UNKNOWN: ForceHistory = 0
 	public static let NO_FORCE_HISTORY: ForceHistory = 1
 }
 
 @objc(NetworkType)
-public class NetworkType : Enum {
+public class NetworkType: Enum {
 	public static let UNKNOWN: NetworkType = 0
 	public static let BABEL: NetworkType = 1
 	public static let GVOICE: NetworkType = 2
 }
 
 @objc(BlockState)
-public class BlockState : Enum {
+public class BlockState: Enum {
 	public static let UNKNOWN: BlockState = 0
 	public static let BLOCK: BlockState = 1
 	public static let UNBLOCK: BlockState = 1
 }
 
 @objc(ReplyToInviteType)
-public class ReplyToInviteType : Enum {
+public class ReplyToInviteType: Enum {
 	public static let UNKNOWN: ReplyToInviteType = 0
 	public static let ACCEPT: ReplyToInviteType = 1
 	public static let DECLINE: ReplyToInviteType = 1
 }
 
 @objc(ClientID)
-public class ClientID : Enum {
+public class ClientID: Enum {
 	public static let UNKNOWN: ClientID = 0
 	public static let ANDROID: ClientID = 1
 	public static let IOS: ClientID = 2
@@ -208,14 +208,14 @@ public class ClientID : Enum {
 public typealias ClientId = ClientID
 
 @objc(ClientBuildType)
-public class ClientBuildType : Enum {
+public class ClientBuildType: Enum {
 	public static let UNKNOWN: ClientBuildType = 0
 	public static let PRODUCTION_WEB: ClientBuildType = 1
 	public static let PRODUCTION_APP: ClientBuildType = 3
 }
 
 @objc(ResponseStatus)
-public class ResponseStatus : Enum {
+public class ResponseStatus: Enum {
 	public static let UNKNOWN: ResponseStatus = 0
 	public static let OK: ResponseStatus = 1
 	public static let UNEXPECTED_ERROR: ResponseStatus = 3
@@ -223,14 +223,14 @@ public class ResponseStatus : Enum {
 }
 
 @objc(PastHangoutState)
-public class PastHangoutState : Enum {
+public class PastHangoutState: Enum {
 	public static let UNKNOWN: PastHangoutState = 0
 	public static let HAD_PAST_HANGOUT: PastHangoutState = 1
 	public static let NO_PAST_HANGOUT: PastHangoutState = 2
 }
 
 @objc(PhotoURLStatus)
-public class PhotoURLStatus : Enum {
+public class PhotoURLStatus: Enum {
 	public static let UNKNOWN: PhotoURLStatus = 0
 	public static let PLACEHOLDER: PhotoURLStatus = 1
 	public static let USER_PHOTO: PhotoURLStatus = 2
@@ -238,26 +238,26 @@ public class PhotoURLStatus : Enum {
 public typealias PhotoUrlStatus = PhotoURLStatus
 
 @objc(Gender)
-public class Gender : Enum {
+public class Gender: Enum {
 	public static let UNKNOWN: Gender = 0
 	public static let MALE: Gender = 1
 	public static let FEMALE: Gender = 2
 }
 
 @objc(ProfileType)
-public class ProfileType : Enum {
+public class ProfileType: Enum {
 	public static let NONE: ProfileType = 0
 	public static let ES_USER: ProfileType = 1
 }
 
 @objc(ConfigurationBitType)
-public class ConfigurationBitType : Enum {
+public class ConfigurationBitType: Enum {
 	public static let UNKNOWN: ConfigurationBitType = 0
 	// TODO, 0 -> 36 bits
 }
 
 @objc(RichPresenceType)
-public class RichPresenceType : Enum {
+public class RichPresenceType: Enum {
 	public static let UNKNOWN: RichPresenceType = 0
 	public static let IN_CALL_STATE: RichPresenceType = 1
 	public static let DEVICE: RichPresenceType = 2
@@ -265,53 +265,53 @@ public class RichPresenceType : Enum {
 }
 
 @objc(FieldMask)
-public class FieldMask : Enum {
+public class FieldMask: Enum {
 	public static let REACHABLE: FieldMask = 1
 	public static let AVAILABLE: FieldMask = 2
 	public static let DEVICE: FieldMask = 7
 }
 
 @objc(DeleteType)
-public class DeleteType : Enum {
+public class DeleteType: Enum {
 	public static let UNKNOWN: DeleteType = 0
 	public static let UPPER_BOUND: DeleteType = 1
 }
 
 @objc(SyncFilter)
-public class SyncFilter : Enum  {
+public class SyncFilter: Enum  {
 	public static let UNKNOWN: SyncFilter = 0;
 	public static let INBOX: SyncFilter = 1;
 	public static let ARCHIVED: SyncFilter = 2;
 }
 
 @objc(SoundState)
-public class SoundState : Enum  {
+public class SoundState: Enum  {
 	public static let UNKNOWN: SoundState = 0;
 	public static let ON: SoundState = 1;
 	public static let OFF: SoundState = 2;
 }
 
 @objc(CallerIDSettingsMask)
-public class CallerIDSettingsMask : Enum  {
+public class CallerIDSettingsMask: Enum  {
 	public static let UNKNOWN: CallerIDSettingsMask = 0;
 	public static let PROVIDED: CallerIDSettingsMask = 1;
 }
 public typealias CallerIdSettingsMask = CallerIDSettingsMask
 
 @objc(PhoneVerificationStatus)
-public class PhoneVerificationStatus : Enum  {
+public class PhoneVerificationStatus: Enum  {
 	public static let UNKNOWN: PhoneVerificationStatus = 0;
 	public static let VERIFIED: PhoneVerificationStatus = 1;
 }
 
 @objc(PhoneDiscoverabilityStatus)
-public class PhoneDiscoverabilityStatus : Enum  {
+public class PhoneDiscoverabilityStatus: Enum  {
 	public static let UNKNOWN: PhoneDiscoverabilityStatus = 0;
 	public static let OPTED_IN_BUT_NOT_DISCOVERABLE: PhoneDiscoverabilityStatus = 2;
 }
 
 @objc(PhoneValidationResult)
-public class PhoneValidationResult : Enum  {
+public class PhoneValidationResult: Enum  {
 	public static let IS_POSSIBLE: PhoneValidationResult = 0;
 }
 
@@ -321,63 +321,58 @@ public class PhoneValidationResult : Enum  {
  *										*
  ****************************************/
 
-@objc(DO_NOT_DISTURB_SETTING)
-public class DO_NOT_DISTURB_SETTING : Message {
+@objc(DoNotDisturbSetting)
+public class DoNotDisturbSetting: Message {
 	public var do_not_disturb: NSNumber?
 	public var expiration_timestamp: NSNumber?
 	public var version: NSNumber?
 }
-public typealias DoNotDisturbSetting = DO_NOT_DISTURB_SETTING
 
-@objc(NOTIFICATION_SETTINGS)
-public class NOTIFICATION_SETTINGS : Message {
-	public var dnd_settings: DO_NOT_DISTURB_SETTING?
+@objc(NotificationSettings)
+public class NotificationSettings: Message {
+	public var dnd_settings: DoNotDisturbSetting?
 }
-public typealias NotificationSettings = NOTIFICATION_SETTINGS
 
-@objc(CONVERSATION_ID)
-public class CONVERSATION_ID : Message {
+@objc(ConversationId)
+public class ConversationId: Message {
     public var id: NSString?
 }
-public typealias ConversationId = CONVERSATION_ID
 
-@objc(PARTICIPANT_ID)
-public class PARTICIPANT_ID : Message {
+@objc(ParticipantId)
+public class ParticipantId: Message {
     public var gaia_id: NSString?
     public var chat_id: NSString?
 }
-public typealias ParticipantId = PARTICIPANT_ID
 
 /* REDECLARATION
-@objc(SET_TYPING_NOTIFICATION)
-public class SET_TYPING_NOTIFICATION : Message {
-    public var conversation_id = CONVERSATION_ID()
-    public var user_id = PARTICIPANT_ID()
+@objc(SetTypingNotification)
+public class SetTypingNotification: Message {
+    public var conversation_id = ConversationId()
+    public var user_id = ParticipantId()
     public var timestamp: NSNumber = 0
     public var status: TypingType = 0
 }
 */
 
 /*
-@objc(SET_FOCUS_NOTIFICATION)
-public class SET_FOCUS_NOTIFICATION : Message {
-    public var conversation_id = CONVERSATION_ID()
-    public var user_id = PARTICIPANT_ID()
+@objc(SetFocusNotification)
+public class SetFocusNotification: Message {
+    public var conversation_id = ConversationId()
+    public var user_id = ParticipantId()
     public var timestamp: NSString = ""
     public var status: FocusType = 0
     public var device: FocusDevice?
 }
 */
 
-@objc(CONVERSATION_READ_STATE)
-public class CONVERSATION_READ_STATE : Message {
-    public var participant_id = PARTICIPANT_ID()
+@objc(ConversationReadState)
+public class ConversationReadState: Message {
+    public var participant_id = ParticipantId()
     public var latest_read_timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
 }
-public typealias ConversationReadState = CONVERSATION_READ_STATE
 
-@objc(CONVERSATION_INTERNAL_STATE)
-public class CONVERSATION_INTERNAL_STATE : Message {
+@objc(ConversationInternalState)
+public class ConversationInternalState: Message {
     public var field1: AnyObject?
     public var field2: AnyObject?
     public var field3: AnyObject?
@@ -385,7 +380,7 @@ public class CONVERSATION_INTERNAL_STATE : Message {
     public var field5: AnyObject?
     public var field6: AnyObject?
 
-    public var self_read_state = CONVERSATION_READ_STATE()
+    public var self_read_state = ConversationReadState()
 
     public var status: ConversationStatus = 0
     public var notification_level: NotificationLevel = 0
@@ -393,7 +388,7 @@ public class CONVERSATION_INTERNAL_STATE : Message {
 	/* TODO: getArrayMessageType() doesn't support enum array types yet. */
     public var view = [ConversationView]()
 
-    public var inviter_id = PARTICIPANT_ID()
+    public var inviter_id = ParticipantId()
     public var invite_timestamp: NSString = ""
     public var sort_timestamp: NSDate?
     public var active_timestamp: NSDate?
@@ -403,12 +398,11 @@ public class CONVERSATION_INTERNAL_STATE : Message {
     public var field9: AnyObject?
     public var field10: AnyObject?
 }
-public typealias ConversationInternalState = CONVERSATION_INTERNAL_STATE
 
 /* REDECLARATION
-@objc(CONVERSATION_PARTICIPANT_DATA)
-public class CONVERSATION_PARTICIPANT_DATA : Message {
-    public var id = PARTICIPANT_ID()
+@objc(ConversationParticipantData)
+public class ConversationParticipantData: Message {
+    public var id = ParticipantId()
     public var fallback_name: NSString?
 	public var field3: AnyObject?
 	public var field4: AnyObject?
@@ -417,21 +411,21 @@ public class CONVERSATION_PARTICIPANT_DATA : Message {
 */
 
 @objc(CONVERSATION)
-public class CONVERSATION : Message {
-	public var conversation_id: CONVERSATION_ID? //FIXME
+public class CONVERSATION: Message {
+	public var conversation_id: ConversationId? //FIXME
     public var type = ConversationType()
     public var name: NSString?
-    public var self_conversation_state = CONVERSATION_INTERNAL_STATE()
+    public var self_conversation_state = ConversationInternalState()
     public var field5: AnyObject?
     public var field6: AnyObject?
     public var field7: AnyObject?
-    public var read_state = [CONVERSATION_READ_STATE]()
+    public var read_state = [ConversationReadState]()
     public var has_active_hangout: NSNumber = 0
     public var otr_status: OffTheRecordStatus = 0
     public var otr_toggle: AnyObject?
     public var conversation_history_supported: AnyObject?
-    public var current_participant = [PARTICIPANT_ID]()
-    public var participant_data = [CONVERSATION_PARTICIPANT_DATA]()
+    public var current_participant = [ParticipantId]()
+    public var participant_data = [ConversationParticipantData]()
     public var field15: AnyObject?
     public var field16: AnyObject?
     public var field17: AnyObject?
@@ -447,69 +441,61 @@ public class CONVERSATION : Message {
 //  uses string-based public class lookup, and nested
 //  public classes have mangled names. So, we need to use
 //  only non-nested public classes here.
-@objc(MESSAGE_SEGMENT_FORMATTING)
-public class MESSAGE_SEGMENT_FORMATTING : Message {
+@objc(MessageSegmentFormatting)
+public class MessageSegmentFormatting: Message {
     public var bold: NSNumber?
     public var italic: NSNumber?
     public var strikethrough: NSNumber?
     public var underline: NSNumber?
 }
-public typealias MessageSegmentFormatting = MESSAGE_SEGMENT_FORMATTING
 
-@objc(MESSAGE_SEGMENT_LINK_DATA)
-public class MESSAGE_SEGMENT_LINK_DATA : Message {
+@objc(MessageSegmentLinkData)
+public class MessageSegmentLinkData: Message {
     public var link_target: NSString?
 }
-public typealias MessageSegmentLinkData = MESSAGE_SEGMENT_LINK_DATA
 
-@objc(MESSAGE_SEGMENT)
-public class MESSAGE_SEGMENT : Message {
+@objc(MessageSegment)
+public class MessageSegment: Message {
     public var type: SegmentType = 0
     public var text: NSString?
-    public var formatting: MESSAGE_SEGMENT_FORMATTING?
-    public var link_data: MESSAGE_SEGMENT_LINK_DATA?
+    public var formatting: MessageSegmentFormatting?
+    public var link_data: MessageSegmentLinkData?
 }
-public typealias MessageSegment = MESSAGE_SEGMENT
 
-@objc(MESSAGE_ATTACHMENT_EMBED_ITEM)
-public class MESSAGE_ATTACHMENT_EMBED_ITEM : Message {
+@objc(MessageAttachmentEmbedItem)
+public class MessageAttachmentEmbedItem: Message {
     public var type = NSArray()
     public var data = NSDictionary()
 }
-public typealias MessageAttachmentEmbedItem = MESSAGE_ATTACHMENT_EMBED_ITEM
 
-@objc(MESSAGE_ATTACHMENT)
-public class MESSAGE_ATTACHMENT : Message {
-	public var embed_item: MESSAGE_ATTACHMENT_EMBED_ITEM?
+@objc(MessageAttachment)
+public class MessageAttachment: Message {
+	public var embed_item: MessageAttachmentEmbedItem?
 }
-public typealias MessageAttachment = MESSAGE_ATTACHMENT
 
-@objc(CHAT_MESSAGE_CONTENT)
-public class CHAT_MESSAGE_CONTENT : Message {
-    public var segment = [MESSAGE_SEGMENT]()
-    public var attachment = [MESSAGE_ATTACHMENT]()
+@objc(ChatMessageContent)
+public class ChatMessageContent: Message {
+    public var segment = [MessageSegment]()
+    public var attachment = [MessageAttachment]()
 }
-public typealias ChatMessageContent = CHAT_MESSAGE_CONTENT
 
-@objc(CHAT_MESSAGE)
-public class CHAT_MESSAGE : Message {
+@objc(ChatMessage)
+public class ChatMessage: Message {
     public var field1: AnyObject?
-    public var annotation = [EventAnnotation]() // NSArray?
-    public var message_content = CHAT_MESSAGE_CONTENT()
+    public var annotation = [EventAnnotation]()
+    public var message_content = ChatMessageContent()
 }
-public typealias ChatMessage = CHAT_MESSAGE
 
-@objc(CONVERSATION_RENAME)
-public class CONVERSATION_RENAME : Message {
+@objc(ConversationRename)
+public class ConversationRename: Message {
     public var new_name: NSString = ""
     public var old_name: NSString = ""
 }
-public typealias ConversationRename = CONVERSATION_RENAME
 
 @objc(HANGOUT_EVENT)
-public class HANGOUT_EVENT : Message {
+public class HANGOUT_EVENT: Message {
     public var event_type: HangoutEventType = 0
-    public var participant_id = [PARTICIPANT_ID]()
+    public var participant_id = [ParticipantId]()
     public var hangout_duration_secs: NSNumber?
     public var transferred_conversation_id: NSString?
     public var refresh_timeout_secs: NSNumber?
@@ -518,48 +504,45 @@ public class HANGOUT_EVENT : Message {
 }
 //public typealias HangoutEvent = HANGOUT_EVENT
 
-@objc(OTR_MODIFICATION)
-public class OTR_MODIFICATION : Message {
+@objc(OTRModification)
+public class OTRModification: Message {
     public var old_otr_status: OffTheRecordStatus?
     public var new_otr_status: OffTheRecordStatus?
     public var old_otr_toggle: OffTheRecordToggle?
     public var new_otr_toggle: OffTheRecordToggle?
 }
-public typealias OTRModification = OTR_MODIFICATION
 
-@objc(MEMBERSHIP_CHANGE)
-public class MEMBERSHIP_CHANGE : Message {
+@objc(MembershipChange)
+public class MembershipChange: Message {
     public var type: MembershipChangeType = 0
     public var field1 = NSArray()
-    public var participant_ids = [PARTICIPANT_ID]()
+    public var participant_ids = [ParticipantId]()
     public var field2: AnyObject?
 }
-public typealias MembershipChange = MEMBERSHIP_CHANGE
 
-@objc(EVENT_STATE)
-public class EVENT_STATE : Message {
-    public var user_id = PARTICIPANT_ID()
+@objc(EventState)
+public class EventState: Message {
+    public var user_id = ParticipantId()
     public var client_generated_id: AnyObject?
     public var notification_level: NotificationLevel = 0
 }
-public typealias EventState = EVENT_STATE
 
 @objc(EVENT)
-public class EVENT : Message {
-    public var conversation_id = CONVERSATION_ID()
-    public var sender_id = PARTICIPANT_ID()
+public class EVENT: Message {
+    public var conversation_id = ConversationId()
+    public var sender_id = ParticipantId()
     public var timestamp: NSDate = NSDate(timeIntervalSince1970: 0)
-	public var self_event_state : EVENT_STATE?
+	public var self_event_state : EventState?
 	public var field5: AnyObject?
     public var source_type: AnyObject?
-	public var chat_message: CHAT_MESSAGE?
+	public var chat_message: ChatMessage?
     public var field8: AnyObject?
-    public var membership_change: MEMBERSHIP_CHANGE?
-    public var conversation_rename: CONVERSATION_RENAME?
+    public var membership_change: MembershipChange?
+    public var conversation_rename: ConversationRename?
     public var hangout_event: HANGOUT_EVENT?
 	public var event_id: NSString?
 	public var expiration_timestamp: AnyObject?
-	public var otr_modification: OTR_MODIFICATION?
+	public var otr_modification: OTRModification?
 	public var advances_sort_timestamp: NSDate?
 	public var otr_status: OffTheRecordStatus = 0
 	public var persisted: AnyObject?
@@ -576,23 +559,23 @@ public class EVENT : Message {
 //public typealias Event = EVENT
 
 /* REDECLARATION
-@objc(EVENT_NOTIFICATION)
-public class EVENT_NOTIFICATION : Message {
+@objc(EventNotification)
+public class EventNotification: Message {
     public var event = EVENT()
 }
 */
 
 @objc(WATERMARK_NOTIFICATION)
-public class WATERMARK_NOTIFICATION : Message {
-    public var participant_id = PARTICIPANT_ID()
-    public var conversation_id = CONVERSATION_ID()
+public class WATERMARK_NOTIFICATION: Message {
+    public var participant_id = ParticipantId()
+    public var conversation_id = ConversationId()
     public var latest_read_timestamp: NSNumber = 0
 }
 //public typealias WatermarkNotification = WATERMARK_NOTIFICATION
 
 /*
-@objc(STATE_UPDATE_HEADER)
-public class STATE_UPDATE_HEADER : Message {
+@objc(StateUpdateHeader)
+public class StateUpdateHeader: Message {
     public var active_client_state: ActiveClientState = 0
     public var field1: AnyObject?
     public var request_trace_id: NSString = ""
@@ -605,13 +588,13 @@ public class STATE_UPDATE_HEADER : Message {
 */
 
 /* TODO: Implement Oneof support here, but how? */
-@objc(STATE_UPDATE)
-public class STATE_UPDATE : Message {
-    public var state_update_header = STATE_UPDATE_HEADER()
+@objc(StateUpdate)
+public class StateUpdate: Message {
+    public var state_update_header = StateUpdateHeader()
     public var conversation_notification: AnyObject?
-    public var event_notification: EVENT_NOTIFICATION?
-	public var focus_notification: SET_FOCUS_NOTIFICATION?
-    public var typing_notification: SET_TYPING_NOTIFICATION?
+    public var event_notification: EventNotification?
+	public var focus_notification: SetFocusNotification?
+    public var typing_notification: SetTypingNotification?
     public var notification_level_notification: AnyObject?
     public var reply_to_invite_notification: AnyObject?
     public var watermark_notification: WATERMARK_NOTIFICATION?
@@ -626,41 +609,38 @@ public class STATE_UPDATE : Message {
     public var block_notification: AnyObject?
     public var invitation_watermark_notification: AnyObject?
 }
-public typealias StateUpdate = STATE_UPDATE
 
-@objc(EVENT_CONTINUATION_TOKEN)
-public class EVENT_CONTINUATION_TOKEN : Message {
+@objc(EventContinuationToken)
+public class EventContinuationToken: Message {
     public var event_id: NSString?
     public var storage_continuation_token: NSString? //bytes
     public var event_timestamp: NSNumber?
 }
-public typealias EventContinuationToken = EVENT_CONTINUATION_TOKEN
 
-@objc(CONVERSATION_STATE)
-public class CONVERSATION_STATE : Message {
-	public var conversation_id: CONVERSATION_ID?
+@objc(ConversationState)
+public class ConversationState: Message {
+	public var conversation_id: ConversationId?
 	public var conversation: CONVERSATION?
     public var event = [EVENT]()
     public var field4: AnyObject?
-    public var event_continuation_token: EVENT_CONTINUATION_TOKEN?
+    public var event_continuation_token: EventContinuationToken?
 }
-public typealias ConversationState = CONVERSATION_STATE
 
 /* REDECLARATION
-@objc(ENTITY_PROPERTIES)
-public class ENTITY_PROPERTIES : Message {
+@objc(EntityProperties)
+public class EntityProperties: Message {
     public var type: NSNumber?
     public var display_name: NSString?
     public var first_name: NSString?
     public var photo_url: NSString?
     public var emails = NSArray()
 }
-public typealias EntityProperties = ENTITY_PROPERTIES
+public typealias EntityProperties = EntityProperties
 */
 
 /* REDECLARATION
-@objc(ENTITY)
-public class ENTITY : Message {
+@objc(Entity)
+public class Entity: Message {
     public var field1: AnyObject?
     public var field2: AnyObject?
     public var field3: AnyObject?
@@ -669,47 +649,44 @@ public class ENTITY : Message {
     public var field6: AnyObject?
     public var field7: AnyObject?
     public var field8: AnyObject?
-    public var id = PARTICIPANT_ID()
+    public var id = ParticipantId()
 
-    public var properties = ENTITY_PROPERTIES()
+    public var properties = EntityProperties()
 }
-public typealias Entity = ENTITY
+public typealias Entity = Entity
 */
 
-@objc(ENTITY_GROUP_ENTITY)
-public class ENTITY_GROUP_ENTITY : Message {
-    public var entity = ENTITY()
+@objc(EntityGroupEntity)
+public class EntityGroupEntity: Message {
+    public var entity = Entity()
     public var field1: AnyObject?
 }
-public typealias EntityGroupEntity = ENTITY_GROUP_ENTITY
 
-@objc(ENTITY_GROUP)
-public class ENTITY_GROUP : Message {
+@objc(EntityGroup)
+public class EntityGroup: Message {
     public var field1: AnyObject?
     public var some_sort_of_id: AnyObject?
 
-    public var entity = [ENTITY_GROUP_ENTITY]()
+    public var entity = [EntityGroupEntity]()
 }
-public typealias EntityGroup = ENTITY_GROUP
 
 /* TODO: This is really a response to some request. */
-@objc(INITIAL_CLIENT_ENTITIES_RESPONSE)
-public class INITIAL_CLIENT_ENTITIES_RESPONSE : Message {
+@objc(InitialClientEntitiesResponse)
+public class InitialClientEntitiesResponse: Message {
     public var cgserp: NSString = ""
     public var header: AnyObject?
-    public var entities = [ENTITY]()
+    public var entities = [Entity]()
     public var field1: AnyObject?
-    public var group1 = ENTITY_GROUP()
-    public var group2 = ENTITY_GROUP()
-    public var group3 = ENTITY_GROUP()
-    public var group4 = ENTITY_GROUP()
-    public var group5 = ENTITY_GROUP()
+    public var group1 = EntityGroup()
+    public var group2 = EntityGroup()
+    public var group3 = EntityGroup()
+    public var group4 = EntityGroup()
+    public var group5 = EntityGroup()
 }
-public typealias InitialClientEntitiesResponse = INITIAL_CLIENT_ENTITIES_RESPONSE
 
 /* REDECLARATION; INCOMPLETE
 @objc(GET_SELF_INFO_RESPONSE)
-public class GET_SELF_INFO_RESPONSE : Message {
+public class GET_SELF_INFO_RESPONSE: Message {
 	
 	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
@@ -718,24 +695,23 @@ public class GET_SELF_INFO_RESPONSE : Message {
 	// that's not part of the protobuf.
 	public var field0: AnyObject?
 	
-    public var response_header = RESPONSE_HEADER()
-    public var self_entity = ENTITY()
+    public var response_header = ResponseHeader()
+    public var self_entity = Entity()
 }
 public typealias GetSelfInfoResponse = GET_SELF_INFO_RESPONSE
 */
 
-@objc(RESPONSE_HEADER)
-public class RESPONSE_HEADER : Message {
+@objc(ResponseHeader)
+public class ResponseHeader: Message {
     public var status: ResponseStatus?
     public var field1: AnyObject?
     public var field2: AnyObject?
     public var request_trace_id: NSString = ""
     public var current_server_time: NSString = ""
 }
-public typealias ResponseHeader = RESPONSE_HEADER
 
-@objc(SYNC_ALL_NEW_EVENTS_RESPONSE)
-public class SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
+@objc(SyncAllNewEventsResponse)
+public class SyncAllNewEventsResponse: Message {
 	
 	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
@@ -744,14 +720,13 @@ public class SYNC_ALL_NEW_EVENTS_RESPONSE : Message {
 	// that's not part of the protobuf.
 	public var field0: AnyObject?
 	
-	public var response_header: ResponseHeader? // RESPONSE_HEADER()
+	public var response_header: ResponseHeader? // ResponseHeader()
     public var sync_timestamp: NSNumber? // NSString = ""
-    public var conversation_state = [CONVERSATION_STATE]()
+    public var conversation_state = [ConversationState]()
 }
-public typealias SyncAllNewEventsResponse = SYNC_ALL_NEW_EVENTS_RESPONSE
 
-@objc(GET_CONVERSATION_RESPONSE)
-public class GET_CONVERSATION_RESPONSE : Message {
+@objc(GetConversationResponse)
+public class GetConversationResponse: Message {
 	
 	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
@@ -760,13 +735,12 @@ public class GET_CONVERSATION_RESPONSE : Message {
 	// that's not part of the protobuf.
 	public var field0: AnyObject?
 	
-    public var response_header = RESPONSE_HEADER()
-    public var conversation_state = CONVERSATION_STATE()
+    public var response_header = ResponseHeader()
+    public var conversation_state = ConversationState()
 }
-public typealias GetConversationResponse = GET_CONVERSATION_RESPONSE
 
-@objc(GET_ENTITY_BY_ID_RESPONSE)
-public class GET_ENTITY_BY_ID_RESPONSE : Message {
+@objc(GetEntityByIdResponse)
+public class GetEntityByIdResponse: Message {
 	
 	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
@@ -775,20 +749,19 @@ public class GET_ENTITY_BY_ID_RESPONSE : Message {
 	// that's not part of the protobuf.
 	public var field0: AnyObject?
 	
-    public var response_header = RESPONSE_HEADER()
-    public var entities = [ENTITY]()
+    public var response_header = ResponseHeader()
+    public var entities = [Entity]()
 }
-public typealias GetEntityByIdResponse = GET_ENTITY_BY_ID_RESPONSE
 
 @objc(DeviceStatus)
-public class DeviceStatus : Message {
+public class DeviceStatus: Message {
 	public var mobile: NSNumber?
 	public var desktop: NSNumber?
 	public var tablet: NSNumber?
 }
 
 @objc(Presence)
-public class Presence : Message {
+public class Presence: Message {
 	public var reachable: NSNumber?
 	public var available: NSNumber?
 	public var field3: AnyObject?
@@ -798,37 +771,36 @@ public class Presence : Message {
 	public var field7: AnyObject?
 	public var field8: AnyObject?
 	public var mood_setting: AnyObject? //MoodSetting?
-	
 }
 
 @objc(PresenceResult)
-public class PresenceResult : Message {
-	public var user_id: PARTICIPANT_ID?
+public class PresenceResult: Message {
+	public var user_id: ParticipantId?
 	public var presence: Presence?
 }
 
 @objc(ClientIdentifier)
-public class ClientIdentifier : Message {
+public class ClientIdentifier: Message {
 	public var resource: NSString?
 	public var header_id: NSString?
 }
 
 @objc(ClientPresenceState)
-public class ClientPresenceState : Message {
+public class ClientPresenceState: Message {
 	public var identifier: ClientIdentifier?
 	public var state: ClientPresenceStateType?
 }
 
 @objc(UserEventState)
-public class UserEventState : Message {
-	public var user_id: PARTICIPANT_ID?
+public class UserEventState: Message {
+	public var user_id: ParticipantId?
 	public var client_generated_id: NSString?
 	public var notification_level: NotificationLevel?
 }
 
 // REORDER!
 @objc(SyncRecentConversationsResponse)
-public class SyncRecentConversationsResponse : Message {
+public class SyncRecentConversationsResponse: Message {
 	
 	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
@@ -837,20 +809,20 @@ public class SyncRecentConversationsResponse : Message {
 	// that's not part of the protobuf.
 	public var field0: AnyObject?
 	
-	public var response_header: RESPONSE_HEADER?
+	public var response_header: ResponseHeader?
 	public var sync_timestamp: NSNumber?
-	public var conversation_state = [CONVERSATION_STATE]()
+	public var conversation_state = [ConversationState]()
 }
 
 @objc(ConfigurationBit)
-public class ConfigurationBit : Message {
+public class ConfigurationBit: Message {
 	public var configuration_bit_type: ConfigurationBitType?
 	public var value: NSNumber?
 }
 
 // REORDER!
 @objc(GetSelfInfoResponse)
-public class GetSelfInfoResponse : Message {
+public class GetSelfInfoResponse: Message {
 	
 	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
@@ -859,11 +831,11 @@ public class GetSelfInfoResponse : Message {
 	// that's not part of the protobuf.
 	public var field0: AnyObject?
 	
-	public var response_header: RESPONSE_HEADER?
-	public var self_entity: ENTITY?
+	public var response_header: ResponseHeader?
+	public var self_entity: Entity?
 	public var is_known_minor: NSNumber?
 	public var client_presence: AnyObject? //??
-	public var dnd_state: DO_NOT_DISTURB_SETTING?
+	public var dnd_state: DoNotDisturbSetting?
 	public var desktop_off_setting: AnyObject?//DESKTOP_OFF_SETTING?
 	public var phone_data: AnyObject?//PHONE_DATA?
 	public var configuration_bit = [AnyObject]() //[ConfigurationBit]?
@@ -1073,7 +1045,6 @@ public class ConversationParticipantData: Message {
 	public var participant_type: ParticipantType?
 	public var new_invitation_status: InvitationStatus?
 }
-public typealias CONVERSATION_PARTICIPANT_DATA = ConversationParticipantData
 
 /* REDECLARATION
 @objc(Conversation)
@@ -1170,7 +1141,6 @@ public class Entity: Message {
 	public var field15: AnyObject?
 	public var had_past_hangout_state: PastHangoutState?
 }
-public typealias ENTITY = Entity
 
 @objc(EntityProperties)
 public class EntityProperties: Message {
@@ -1190,7 +1160,6 @@ public class EntityProperties: Message {
 	public var field14: AnyObject?
 	public var canonical_email: NSString?
 }
-public typealias ENTITY_PROPERTIES = EntityProperties
 
 /* REDECLARATION
 @objc(ConversationState)
@@ -1364,7 +1333,6 @@ public class StateUpdateHeader: Message {
 	public var field7: AnyObject?
 	public var updating_client_id: AnyObject?
 }
-public typealias STATE_UPDATE_HEADER = StateUpdateHeader
 
 @objc(BatchUpdate)
 public class BatchUpdate: Message {
@@ -1375,7 +1343,6 @@ public class BatchUpdate: Message {
 public class EventNotification: Message {
 	public var event: EVENT?
 }
-public typealias EVENT_NOTIFICATION = EventNotification
 
 @objc(SetFocusNotification)
 public class SetFocusNotification: Message {
@@ -1385,7 +1352,6 @@ public class SetFocusNotification: Message {
 	public var type: FocusType?
 	public var device: FocusDevice?
 }
-public typealias SET_FOCUS_NOTIFICATION = SetFocusNotification
 
 @objc(SetTypingNotification)
 public class SetTypingNotification: Message {
@@ -1394,7 +1360,6 @@ public class SetTypingNotification: Message {
 	public var timestamp: NSNumber?
 	public var type: TypingType?
 }
-public typealias SET_TYPING_NOTIFICATION = SetTypingNotification
 
 @objc(SetConversationNotificationLevelNotification)
 public class SetConversationNotificationLevelNotification: Message {

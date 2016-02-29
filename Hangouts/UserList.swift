@@ -27,7 +27,7 @@ public class UserList {
 	// Creates users from the given ClientEntity and
 	// ClientConversationParticipantData instances. The latter is used only as
 	// a fallback, because it doesn't include a real first_name.
-	public init(client: Client, selfEntity: ENTITY, entities: [ENTITY] = [], data: [CONVERSATION_PARTICIPANT_DATA]) {
+	public init(client: Client, selfEntity: Entity, entities: [Entity] = [], data: [ConversationParticipantData]) {
 		self.selfUser = User(entity: selfEntity, selfUser: nil)
 		self.users = [self.selfUser.id: self.selfUser]
 		
@@ -51,7 +51,7 @@ public class UserList {
 			if let userInfo = $0.userInfo,
 				state_update = userInfo[Client.didUpdateStateKey as NSString] {
 				
-				if let conversation = (state_update as! STATE_UPDATE).client_conversation {
+				if let conversation = (state_update as! StateUpdate).client_conversation {
 					for participant in conversation.participant_data {
 						
 						let user = User(data: participant, selfUser: self.selfUser.id)

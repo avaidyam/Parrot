@@ -78,7 +78,7 @@ public class ChatMessageEvent : Event {
 	
 	// Attachments in the message.
     public var attachments: [String] {
-		let raws = self.event.chat_message?.message_content.attachment ?? [MESSAGE_ATTACHMENT]()
+		let raws = self.event.chat_message?.message_content.attachment ?? [MessageAttachment]()
 		var attachments = [String]()
 		
 		for attachment in raws {
@@ -189,9 +189,9 @@ public class ChatMessageSegment {
 		self.linkTarget = linkTarget
 	}
 	
-	// Create a chat message segment from a parsed MESSAGE_SEGMENT.
+	// Create a chat message segment from a parsed MessageSegment.
 	// The formatting options are optional.
-	public init(segment: MESSAGE_SEGMENT) {
+	public init(segment: MessageSegment) {
 		self.text = segment.text as String? ?? ""
 		self.type = segment.type
 		self.bold = segment.formatting?.bold?.boolValue ?? false
@@ -230,7 +230,7 @@ public typealias WatermarkNotification = (convID: String, userID: UserID, readTi
 // Return TypingStatusMessage from ClientSetTypingNotification.
 // The same status may be sent multiple times consecutively, and when a
 // message is sent the typing status will not change to stopped.
-internal func parseTypingStatusMessage(p: SET_TYPING_NOTIFICATION) -> TypingStatusMessage {
+internal func parseTypingStatusMessage(p: SetTypingNotification) -> TypingStatusMessage {
 	return TypingStatusMessage(
 		convID: p.conversation_id!.id as! String,
 		userID: UserID(chatID: p.sender_id!.chat_id as! String, gaiaID: p.sender_id!.gaia_id as! String),
