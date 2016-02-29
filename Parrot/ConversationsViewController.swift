@@ -118,7 +118,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			img = NSImage(data: d)!
 		}
 		
-		let ring = d == NetworkType.GVOICE ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
+		let ring = d == NetworkType.GOOGLE_VOICE ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
 		let ind = conversation.hasUnreadEvents
 		let name = title
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")

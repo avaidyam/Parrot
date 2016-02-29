@@ -142,7 +142,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		var color: NSColor = NSColor.materialBlueGreyColor()
 		if !user.isSelf && network == NetworkType.BABEL {
 			color = NSColor.materialGreenColor()
-		} else if !user.isSelf && network == NetworkType.GVOICE {
+		} else if !user.isSelf && network == NetworkType.GOOGLE_VOICE {
 			color = NSColor.materialBlueColor()
 		}
 		
