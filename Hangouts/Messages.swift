@@ -344,27 +344,6 @@ public class ParticipantId: Message {
     public var chat_id: NSString?
 }
 
-/* REDECLARATION
-@objc(SetTypingNotification)
-public class SetTypingNotification: Message {
-    public var conversation_id = ConversationId()
-    public var user_id = ParticipantId()
-    public var timestamp: NSNumber = 0
-    public var status: TypingType = 0
-}
-*/
-
-/*
-@objc(SetFocusNotification)
-public class SetFocusNotification: Message {
-    public var conversation_id = ConversationId()
-    public var user_id = ParticipantId()
-    public var timestamp: NSString = ""
-    public var status: FocusType = 0
-    public var device: FocusDevice?
-}
-*/
-
 @objc(ConversationReadState)
 public class ConversationReadState: Message {
     public var participant_id = ParticipantId()
@@ -398,17 +377,6 @@ public class ConversationInternalState: Message {
     public var field9: AnyObject?
     public var field10: AnyObject?
 }
-
-/* REDECLARATION
-@objc(ConversationParticipantData)
-public class ConversationParticipantData: Message {
-    public var id = ParticipantId()
-    public var fallback_name: NSString?
-	public var field3: AnyObject?
-	public var field4: AnyObject?
-	public var field5: AnyObject?
-}
-*/
 
 @objc(CONVERSATION)
 public class CONVERSATION: Message {
@@ -558,13 +526,6 @@ public class EVENT: Message {
 }
 //public typealias Event = EVENT
 
-/* REDECLARATION
-@objc(EventNotification)
-public class EventNotification: Message {
-    public var event = EVENT()
-}
-*/
-
 @objc(WATERMARK_NOTIFICATION)
 public class WATERMARK_NOTIFICATION: Message {
     public var participant_id = ParticipantId()
@@ -572,20 +533,6 @@ public class WATERMARK_NOTIFICATION: Message {
     public var latest_read_timestamp: NSNumber = 0
 }
 //public typealias WatermarkNotification = WATERMARK_NOTIFICATION
-
-/*
-@objc(StateUpdateHeader)
-public class StateUpdateHeader: Message {
-    public var active_client_state: ActiveClientState = 0
-    public var field1: AnyObject?
-    public var request_trace_id: NSString = ""
-    public var field2: AnyObject?
-    public var current_server_time: NSString = ""
-    public var field3: AnyObject?
-    public var field4: AnyObject?
-    public var updating_client_id: AnyObject?
-}
-*/
 
 /* TODO: Implement Oneof support here, but how? */
 @objc(StateUpdate)
@@ -626,36 +573,6 @@ public class ConversationState: Message {
     public var event_continuation_token: EventContinuationToken?
 }
 
-/* REDECLARATION
-@objc(EntityProperties)
-public class EntityProperties: Message {
-    public var type: NSNumber?
-    public var display_name: NSString?
-    public var first_name: NSString?
-    public var photo_url: NSString?
-    public var emails = NSArray()
-}
-public typealias EntityProperties = EntityProperties
-*/
-
-/* REDECLARATION
-@objc(Entity)
-public class Entity: Message {
-    public var field1: AnyObject?
-    public var field2: AnyObject?
-    public var field3: AnyObject?
-    public var field4: AnyObject?
-    public var field5: AnyObject?
-    public var field6: AnyObject?
-    public var field7: AnyObject?
-    public var field8: AnyObject?
-    public var id = ParticipantId()
-
-    public var properties = EntityProperties()
-}
-public typealias Entity = Entity
-*/
-
 @objc(EntityGroupEntity)
 public class EntityGroupEntity: Message {
     public var entity = Entity()
@@ -666,15 +583,19 @@ public class EntityGroupEntity: Message {
 public class EntityGroup: Message {
     public var field1: AnyObject?
     public var some_sort_of_id: AnyObject?
-
     public var entity = [EntityGroupEntity]()
 }
 
-/* TODO: This is really a response to some request. */
 @objc(InitialClientEntitiesResponse)
 public class InitialClientEntitiesResponse: Message {
-    public var cgserp: NSString = ""
-    public var header: AnyObject?
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
+    public var response_header: ResponseHeader?
     public var entities = [Entity]()
     public var field1: AnyObject?
     public var group1 = EntityGroup()
@@ -683,23 +604,6 @@ public class InitialClientEntitiesResponse: Message {
     public var group4 = EntityGroup()
     public var group5 = EntityGroup()
 }
-
-/* REDECLARATION; INCOMPLETE
-@objc(GET_SELF_INFO_RESPONSE)
-public class GET_SELF_INFO_RESPONSE: Message {
-	
-	/* TODO: Retrofit PBLiteSerialization for this case: */
-	// The first element of the outer list must often be ignored
-	// because it contains an abbreviation of the name of the
-	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
-	// that's not part of the protobuf.
-	public var field0: AnyObject?
-	
-    public var response_header = ResponseHeader()
-    public var self_entity = Entity()
-}
-public typealias GetSelfInfoResponse = GET_SELF_INFO_RESPONSE
-*/
 
 @objc(ResponseHeader)
 public class ResponseHeader: Message {
@@ -713,7 +617,6 @@ public class ResponseHeader: Message {
 @objc(SyncAllNewEventsResponse)
 public class SyncAllNewEventsResponse: Message {
 	
-	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
 	// because it contains an abbreviation of the name of the
 	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
@@ -728,7 +631,6 @@ public class SyncAllNewEventsResponse: Message {
 @objc(GetConversationResponse)
 public class GetConversationResponse: Message {
 	
-	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
 	// because it contains an abbreviation of the name of the
 	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
@@ -742,7 +644,6 @@ public class GetConversationResponse: Message {
 @objc(GetEntityByIdResponse)
 public class GetEntityByIdResponse: Message {
 	
-	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
 	// because it contains an abbreviation of the name of the
 	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
@@ -798,11 +699,9 @@ public class UserEventState: Message {
 	public var notification_level: NotificationLevel?
 }
 
-// REORDER!
 @objc(SyncRecentConversationsResponse)
 public class SyncRecentConversationsResponse: Message {
 	
-	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
 	// because it contains an abbreviation of the name of the 
 	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
@@ -820,11 +719,9 @@ public class ConfigurationBit: Message {
 	public var value: NSNumber?
 }
 
-// REORDER!
 @objc(GetSelfInfoResponse)
 public class GetSelfInfoResponse: Message {
 	
-	/* TODO: Retrofit PBLiteSerialization for this case: */
 	// The first element of the outer list must often be ignored
 	// because it contains an abbreviation of the name of the
 	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
@@ -915,49 +812,6 @@ public class EventAnnotation: Message {
 	public var value: NSString?
 }
 
-/* REDECLARATION
-@objc(ChatMessage)
-public class ChatMessage: Message {
-	public var annotation = [EventAnnotation]()
-	public var message_content: MessageContent?
-}
-*/
-
-/* REDECLARATION
-@objc(MembershipChange)
-public class MembershipChange: Message {
-	public var type: MembershipChangeType?
-	public var field2: AnyObject?
-	public var participant_ids = [ParticipantId]()
-}
-*/
-
-/* REDECLARATION
-@objc(ConversationRename)
-public class ConversationRename: Message {
-	public var new_name: NSString?
-	public var old_name: NSString?
-}
-*/
-
-/* REDECLARATION
-@objc(HangoutEvent)
-public class HangoutEvent: Message {
-	public var event_type: HangoutEventType?
-	public var participant_id = [ParticipantId]()
-}
-*/
-
-/* REDECLARATION
-@objc(OTRModification)
-public class OTRModification: Message {
-	public var old_otr_status: OffTheRecordStatus?
-	public var new_otr_status: OffTheRecordStatus?
-	public var old_otr_toggle: OffTheRecordToggle?
-	public var new_otr_toggle: OffTheRecordToggle?
-}
-*/
-
 @objc(HashModifier)
 public class HashModifier: Message {
 	public var update_id: NSString?
@@ -965,38 +819,6 @@ public class HashModifier: Message {
 	public var field3: AnyObject?
 	public var version: NSNumber?
 }
-
-/* REDECLARATION
-@objc(Event)
-public class Event: Message {
-	public var conversation_id: ConversationId?
-	public var sender_id: ParticipantId?
-	public var timestamp: NSNumber?
-	public var self_event_state: UserEventState?
-	public var field5: AnyObject?
-	public var source_type: SourceType?
-	public var chat_message: ChatMessage?
-	public var field8: AnyObject?
-	public var membership_change: MembershipChange?
-	public var conversation_rename: ConversationRename?
-	public var hangout_event: HangoutEvent?
-	public var event_id: NSString?
-	public var expiration_timestamp: NSNumber?
-	public var otr_modification: OTRModification?
-	public var advances_sort_timestamp: NSNumber?
-	public var otr_status: OffTheRecordStatus?
-	public var persisted: NSNumber?
-	public var field18: AnyObject?
-	public var field19: AnyObject?
-	public var medium_type: DeliveryMedium?
-	public var field21: AnyObject?
-	public var field22: AnyObject?
-	public var event_type: EventType?
-	public var event_version: NSNumber?
-	public var field25: AnyObject?
-	public var hash_modifier: HashModifier?
-}
-*/
 
 @objc(UserReadState)
 public class UserReadState: Message {
@@ -1045,31 +867,6 @@ public class ConversationParticipantData: Message {
 	public var participant_type: ParticipantType?
 	public var new_invitation_status: InvitationStatus?
 }
-
-/* REDECLARATION
-@objc(Conversation)
-public class Conversation: Message {
-	public var conversation_id: ConversationId?
-	public var type: ConversationType?
-	public var name: NSString?
-	public var self_conversation_state: UserConversationState?
-	public var field5: AnyObject?
-	public var field6: AnyObject?
-	public var field7: AnyObject?
-	public var read_state = [UserReadState]()
-	public var has_active_hangout: NSNumber?
-	public var otr_status: OffTheRecordStatus?
-	public var otr_toggle: OffTheRecordToggle?
-	public var conversation_history_supported: NSNumber?
-	public var current_participant = [ParticipantId]()
-	public var participant_data = [ConversationParticipantData]()
-	public var field15: AnyObject?
-	public var field16: AnyObject?
-	public var field17: AnyObject?
-	public var network_type = [NetworkType]()
-	public var force_history_state: ForceHistory?
-}
-*/
 
 @objc(EasterEgg)
 public class EasterEgg: Message {
@@ -1160,26 +957,6 @@ public class EntityProperties: Message {
 	public var field14: AnyObject?
 	public var canonical_email: NSString?
 }
-
-/* REDECLARATION
-@objc(ConversationState)
-public class ConversationState: Message {
-	public var conversation_id: ConversationId?
-	public var conversation: Conversation?
-	public var event = [Event]()
-	public var field4: AnyObject?
-	public var event_continuation_token: EventContinuationToken?
-}
-*/
-
-/* REDECLARATION
-@objc(EventContinuationToken)
-public class EventContinuationToken: Message {
-	public var event_id: NSString?
-	public var storage_continuation_token: NSString?
-	public var event_timestamp: NSNumber?
-}
-*/
 
 @objc(EntityLookupSpec)
 public class EntityLookupSpec: Message {
@@ -1441,6 +1218,13 @@ public class AddUserRequest: Message {
 
 @objc(AddUserResponse)
 public class AddUserResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var field2: AnyObject?
 	public var field3: AnyObject?
@@ -1459,6 +1243,13 @@ public class CreateConversationRequest: Message {
 
 @objc(CreateConversationResponse)
 public class CreateConversationResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var conversation: Conversation?
 	public var field3: AnyObject?
@@ -1477,6 +1268,13 @@ public class DeleteConversationRequest: Message {
 
 @objc(DeleteConversationResponse)
 public class DeleteConversationResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var delete_action: DeleteAction?
 }
@@ -1490,6 +1288,13 @@ public class EasterEggRequest: Message {
 
 @objc(EasterEggResponse)
 public class EasterEggResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var timestamp: NSNumber?
 }
@@ -1505,28 +1310,12 @@ public class GetConversationRequest: Message {
 	public var event_continuation_token: EventContinuationToken?
 }
 
-/* REDECLARATION
-@objc(GetConversationResponse)
-public class GetConversationResponse: Message {
-	public var response_header: ResponseHeader?
-	public var conversation_state: ConversationState?
-}
-*/
-
 @objc(GetEntityByIdRequest)
 public class GetEntityByIdRequest: Message {
 	public var request_header: RequestHeader?
 	public var field2: AnyObject?
 	public var batch_lookup_spec = [EntityLookupSpec]()
 }
-
-/* REDECLARATION
-@objc(GetEntityByIdResponse)
-public class GetEntityByIdResponse: Message {
-	public var response_header: ResponseHeader?
-	public var entity = [Entity]()
-}
-*/
 
 @objc(GetSuggestedEntitiesRequest)
 public class GetSuggestedEntitiesRequest: Message {
@@ -1547,6 +1336,13 @@ public class GetSuggestedEntitiesRequest: Message {
 
 @objc(GetSuggestedEntitiesResponse)
 public class GetSuggestedEntitiesResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var entity = [Entity]()
 	public var field3: AnyObject?
@@ -1572,6 +1368,13 @@ public class QueryPresenceRequest: Message {
 
 @objc(QueryPresenceResponse)
 public class QueryPresenceResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var presence_result = [PresenceResult]()
 }
@@ -1587,6 +1390,13 @@ public class RemoveUserRequest: Message {
 
 @objc(RemoveUserResponse)
 public class RemoveUserResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var field2: AnyObject?
 	public var field3: AnyObject?
@@ -1604,6 +1414,13 @@ public class RenameConversationRequest: Message {
 
 @objc(RenameConversationResponse)
 public class RenameConversationResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var field2: AnyObject?
 	public var field3: AnyObject?
@@ -1620,6 +1437,13 @@ public class SearchEntitiesRequest: Message {
 
 @objc(SearchEntitiesResponse)
 public class SearchEntitiesResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var entity = [Entity]()
 }
@@ -1638,6 +1462,13 @@ public class SendChatMessageRequest: Message {
 
 @objc(SendChatMessageResponse)
 public class SendChatMessageResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var field2: AnyObject?
 	public var field3: AnyObject?
@@ -1656,6 +1487,13 @@ public class SetActiveClientRequest: Message {
 
 @objc(SetActiveClientResponse)
 public class SetActiveClientResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 }
 
@@ -1666,6 +1504,13 @@ public class SetConversationLevelRequest: Message {
 
 @objc(SetConversationLevelResponse)
 public class SetConversationLevelResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 }
 
@@ -1678,6 +1523,13 @@ public class SetConversationNotificationLevelRequest: Message {
 
 @objc(SetConversationNotificationLevelResponse)
 public class SetConversationNotificationLevelResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var timestamp: NSNumber?
 }
@@ -1692,6 +1544,13 @@ public class SetFocusRequest: Message {
 
 @objc(SetFocusResponse)
 public class SetFocusResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var timestamp: NSNumber?
 }
@@ -1710,6 +1569,13 @@ public class SetPresenceRequest: Message {
 
 @objc(SetPresenceResponse)
 public class SetPresenceResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 }
 
@@ -1722,6 +1588,13 @@ public class SetTypingRequest: Message {
 
 @objc(SetTypingResponse)
 public class SetTypingResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 	public var timestamp: NSNumber?
 }
@@ -1738,15 +1611,6 @@ public class SyncAllNewEventsRequest: Message {
 	public var max_response_size_bytes: NSNumber?
 }
 
-/* REDECLARATION
-@objc(SyncAllNewEventsResponse)
-public class SyncAllNewEventsResponse: Message {
-	public var response_header: ResponseHeader?
-	public var sync_timestamp: NSNumber?
-	public var conversation_state = [ConversationState]()
-}
-*/
-
 @objc(SyncRecentConversationsRequest)
 public class SyncRecentConversationsRequest: Message {
 	public var request_header: RequestHeader?
@@ -1755,15 +1619,6 @@ public class SyncRecentConversationsRequest: Message {
 	public var max_events_per_conversation: NSNumber?
 	public var sync_filter = [SyncFilter]()
 }
-
-/* REDECLARATION
-@objc(SyncRecentConversationsResponse)
-public class SyncRecentConversationsResponse: Message {
-	public var response_header: ResponseHeader?
-	public var sync_timestamp: NSNumber?
-	public var conversation_state = [ConversationState]()
-}
-*/
 
 @objc(UpdateWatermarkRequest)
 public class UpdateWatermarkRequest: Message {
@@ -1774,5 +1629,12 @@ public class UpdateWatermarkRequest: Message {
 
 @objc(UpdateWatermarkResponse)
 public class UpdateWatermarkResponse: Message {
+	
+	// The first element of the outer list must often be ignored
+	// because it contains an abbreviation of the name of the
+	// protobuf message (eg. cscmrp for ClientSendChatMessageResponseP)
+	// that's not part of the protobuf.
+	public var field0: AnyObject?
+	
 	public var response_header: ResponseHeader?
 }
