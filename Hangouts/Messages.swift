@@ -159,6 +159,7 @@ public class DeliveryMediumType: Enum {
 public class ParticipantType: Enum {
 	public static let UNKNOWN: ParticipantType = 0
 	public static let GAIA: ParticipantType = 2
+	public static let GOOGLE_VOICE: ParticipantType = 3
 }
 
 @objc(InvitationStatus)
@@ -178,7 +179,7 @@ public class ForceHistory: Enum {
 public class NetworkType: Enum {
 	public static let UNKNOWN: NetworkType = 0
 	public static let BABEL: NetworkType = 1
-	public static let GVOICE: NetworkType = 2
+	public static let GOOGLE_VOICE: NetworkType = 2
 }
 
 @objc(BlockState)
@@ -268,7 +269,10 @@ public class RichPresenceType: Enum {
 public class FieldMask: Enum {
 	public static let REACHABLE: FieldMask = 1
 	public static let AVAILABLE: FieldMask = 2
+	public static let MOOD: FieldMask = 3
+	public static let IN_CALL: FieldMask = 6
 	public static let DEVICE: FieldMask = 7
+	public static let LAST_SEEN: FieldMask = 10
 }
 
 @objc(DeleteType)
@@ -671,7 +675,8 @@ public class Presence: Message {
 	public var device_status: DeviceStatus?
 	public var field7: AnyObject?
 	public var field8: AnyObject?
-	public var mood_setting: AnyObject? //MoodSetting?
+	public var mood_setting: MoodMessage?
+	public var last_seen: LastSeen?
 }
 
 @objc(PresenceResult)
@@ -820,6 +825,11 @@ public class HashModifier: Message {
 	public var version: NSNumber?
 }
 
+@objc(LastSeen)
+public class LastSeen: Message {
+	public var last_seen_timestamp_usec: NSNumber?
+}
+
 @objc(UserReadState)
 public class UserReadState: Message {
 	public var participant_id: ParticipantId?
@@ -829,7 +839,7 @@ public class UserReadState: Message {
 @objc(DeliveryMedium)
 public class DeliveryMedium: Message {
 	public var medium_type: DeliveryMediumType?
-	public var phone: Phone?
+	public var phone_number: PhoneNumber?
 }
 
 @objc(DeliveryMediumOption)
