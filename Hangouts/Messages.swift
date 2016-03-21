@@ -1332,7 +1332,7 @@ public class GetSuggestedEntitiesRequest: Message {
 	public var request_header: RequestHeader?
 	public var field2: AnyObject?
 	public var field3: AnyObject?
-	public var field4: AnyObject?
+	public var max_count: NSNumber?
 	public var field5: AnyObject?
 	public var field6: AnyObject?
 	public var field7: AnyObject?

@@ -438,7 +438,7 @@ public final class Client {
 		conversation_id: String,
 		event_timestamp: NSDate,
 		max_events: Int = 50,
-		cb: (GetConversationResponse) -> Void)
+		cb: (response: GetConversationResponse?) -> Void)
 	{
 		let data = [
 			self.getRequestHeader(),
@@ -459,21 +459,19 @@ public final class Client {
 		]
 		
 		self.request("conversations/getconversation", body: data, use_json: false) { r in
-			let str = (NSString(data: r.data!, encoding: NSUTF8StringEncoding)! as String)
-			let result = evalArray(str) as! NSArray
-			cb(PBLiteSerialization.parseArray(GetConversationResponse.self, input: result)!)
+			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
 		}
 	}
 	
 	// Return information about a list of contacts.
-	public func getEntitiesByID(chat_id_list: [String], cb: (GetEntityByIdResponse?) -> Void) {
+	public func getEntitiesByID(chat_id_list: [String], cb: (response: GetEntityByIdResponse?) -> Void) {
 		let data = [
 			self.getRequestHeader(),
 			None,
 			chat_id_list.map { [$0] }
 		]
 		self.request("contacts/getentitybyid", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(r.data!))
+			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
 		}
 	}
 	
@@ -482,6 +480,18 @@ public final class Client {
 			self.getRequestHeader()
 		]
 		self.request("contacts/getselfinfo", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
+		}
+	}
+	
+	public func getSuggestedEntities(max_count: Int, cb: ((response: GetSuggestedEntitiesResponse?) -> Void)) {
+		let data = [
+			self.getRequestHeader(),
+			None,
+			None,
+			max_count
+		]
+		self.request("contacts/getsuggestedentities", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
 		}
 	}

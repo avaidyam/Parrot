@@ -1008,6 +1008,7 @@
 					};
 					48DE52C71C1CC12900647C63 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 2754ZHC8VE;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
 								enabled = 1;

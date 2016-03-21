@@ -314,11 +314,11 @@ public class Conversation {
             }
 			
             client.getConversation(id, event_timestamp: conv_event.timestamp, max_events: max_events) { res in
-				if res.response_header.status == ResponseStatus.INVALID_REQUEST {
-					print("Invalid request! \(res.response_header)")
+				if res!.response_header.status == ResponseStatus.INVALID_REQUEST {
+					print("Invalid request! \(res!.response_header)")
 					return
 				}
-				let conv_events = res.conversation_state.event.map { Conversation.wrap_event($0) }
+				let conv_events = res!.conversation_state.event.map { Conversation.wrap_event($0) }
 
                 for conv_event in conv_events {
                     self.events_dict[conv_event.id] = conv_event
