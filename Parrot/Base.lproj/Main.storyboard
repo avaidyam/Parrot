@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -714,7 +714,6 @@
                     <splitView key="splitView" wantsLayer="YES" dividerStyle="thin" vertical="YES" id="S5X-Xo-zDn">
                         <rect key="frame" x="0.0" y="0.0" width="720" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </splitView>
                     <connections>
                         <segue destination="AA2-4a-jNw" kind="relationship" relationship="splitItems" id="J9y-pN-y3K"/>
@@ -732,7 +731,6 @@
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" customClass="PersonsView" customModule="Parrot" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="270" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </view>
                     <connections>
                         <outlet property="personsView" destination="m2S-Jp-Qdl" id="U5U-b0-Yk5"/>
@@ -752,18 +750,15 @@
                         <subviews>
                             <customView wantsLayer="YES" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="L3M-cX-on4" customClass="MessagesView" customModule="Parrot" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="39" width="568" height="344"/>
-                                <animations/>
                             </customView>
                             <box wantsLayer="YES" verticalHuggingPriority="751" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="dpk-F4-2R9">
                                 <rect key="frame" x="0.0" y="36" width="568" height="5"/>
-                                <animations/>
                                 <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                 <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <font key="titleFont" metaFont="system"/>
                             </box>
                             <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ega-D2-ka6">
                                 <rect key="frame" x="8" y="6" width="20" height="25"/>
-                                <animations/>
                                 <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSIconViewTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ds1-BY-kXo">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -774,7 +769,6 @@
                             </button>
                             <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="g2R-XT-xBl">
                                 <rect key="frame" x="541" y="6" width="19" height="25"/>
-                                <animations/>
                                 <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRightFacingTriangleTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pwc-Xx-1Zt">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -785,7 +779,6 @@
                             </button>
                             <textField wantsLayer="YES" focusRingType="exterior" verticalHuggingPriority="751" verticalCompressionResistancePriority="49" translatesAutoresizingMaskIntoConstraints="NO" id="orf-m2-ObS">
                                 <rect key="frame" x="36" y="8" width="497" height="22"/>
-                                <animations/>
                                 <textFieldCell key="cell" selectable="YES" editable="YES" refusesFirstResponder="YES" state="on" borderStyle="bezel" focusRingType="exterior" placeholderString="Send a message..." allowsEditingTextAttributes="YES" bezelStyle="round" id="nRY-lf-Vew">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -819,7 +812,6 @@
                             <constraint firstAttribute="bottom" secondItem="orf-m2-ObS" secondAttribute="bottom" constant="8" id="ui3-QF-p8n"/>
                             <constraint firstItem="dpk-F4-2R9" firstAttribute="top" secondItem="L3M-cX-on4" secondAttribute="bottom" id="vSy-m5-QNb"/>
                         </constraints>
-                        <animations/>
                     </view>
                     <connections>
                         <outlet property="messageTextField" destination="orf-m2-ObS" id="YOa-dN-yi7"/>
@@ -831,7 +823,6 @@
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ojR-cU-VHC">
                     <rect key="frame" x="0.0" y="0.0" width="132" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Status" id="JAC-WH-BFW">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -851,7 +842,6 @@
                         <subviews>
                             <segmentedControl wantsLayer="YES" verticalHuggingPriority="750" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eAE-BG-Zra">
                                 <rect key="frame" x="4" y="30" width="296" height="25"/>
-                                <animations/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="i1S-k2-1dX">
                                     <font key="font" metaFont="system"/>
                                     <segments>
@@ -863,7 +853,6 @@
                             </segmentedControl>
                             <searchField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YRF-vC-Urk">
                                 <rect key="frame" x="4" y="6" width="296" height="22"/>
-                                <animations/>
                                 <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" sendsWholeSearchString="YES" maximumRecents="20" id="7c1-8h-V9J">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -879,7 +868,6 @@
                             <constraint firstItem="YRF-vC-Urk" firstAttribute="leading" secondItem="eAE-BG-Zra" secondAttribute="leading" id="nPj-WX-2pj"/>
                             <constraint firstItem="eAE-BG-Zra" firstAttribute="top" secondItem="WI9-1J-Hmg" secondAttribute="top" constant="4" id="r4a-CV-XpS"/>
                         </constraints>
-                        <animations/>
                     </view>
                 </viewController>
                 <customObject id="zmJ-nd-SwD" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

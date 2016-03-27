@@ -141,9 +141,8 @@ public struct Changeset<T: CollectionType where T.Generator.Element: Equatable, 
 
 /// Returns an array where deletion/insertion pairs of the same element are replaced by `.Move` edits.
 private func reducedEdits<T: Equatable>(edits: [Edit<T>]) -> [Edit<T>] {
-	return edits.reduce([Edit<T>]()) {
-		(var reducedEdits, edit) in
-		
+	return edits.reduce([Edit<T>]()) { (x_reducedEdits, edit) in
+		var reducedEdits = x_reducedEdits
 		if let (move, index) = moveFromEdits(reducedEdits, deletionOrInsertion: edit), case .Move = move.operation {
 			reducedEdits.removeAtIndex(index)
 			reducedEdits.append(move)

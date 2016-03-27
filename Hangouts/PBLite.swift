@@ -295,7 +295,7 @@ public class PBLiteSerialization {
 		let instance = type.init()
 		let reflection = Mirror(reflecting: instance)
 		let children = Array(reflection.children)
-		for var i = 0; i < min(arr.count, children.count); i++ {
+		for i in 0..<min(arr.count, children.count) {
 			let propertyName = children[i].label!
 			let property = children[i].value
 			

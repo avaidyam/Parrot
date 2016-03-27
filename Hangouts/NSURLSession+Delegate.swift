@@ -31,7 +31,8 @@ public class NSURLSessionTaskDelegateProxy: NSObject, NSURLSessionTaskDelegate {
 		completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void))
 	{
 		if let didReceiveChallenge = didReceiveChallenge {
-			completionHandler(didReceiveChallenge(session, task, challenge))
+			let (a, c) = didReceiveChallenge(session, task, challenge)
+			completionHandler(a, c)
 		}
 	}
 	
@@ -253,7 +254,8 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 		completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void))
 	{
 		if let taskDidReceiveChallenge = taskDidReceiveChallenge {
-			completionHandler(taskDidReceiveChallenge(session, task, challenge))
+			let (a, c) = taskDidReceiveChallenge(session, task, challenge)
+			completionHandler(a, c)
 		} else if let delegate = self[task] {
 			delegate.URLSession(
 				session,
@@ -423,15 +425,15 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	
 	public override func respondsToSelector(selector: Selector) -> Bool {
 		switch selector {
-		case "URLSession:didBecomeInvalidWithError:":
+		case #selector(NSURLSessionDelegate.URLSession(_:didBecomeInvalidWithError:)):
 			return sessionDidBecomeInvalidWithError != nil
-		case "URLSession:didReceiveChallenge:completionHandler:":
+		case #selector(NSURLSessionDelegate.URLSession(_:didReceiveChallenge:completionHandler:)):
 			return sessionDidReceiveChallenge != nil
-		case "URLSessionDidFinishEventsForBackgroundURLSession:":
-			return sessionDidFinishEventsForBackgroundURLSession != nil
-		case "URLSession:task:willPerformHTTPRedirection:newRequest:completionHandler:":
+		//case #selector(NSURLSessionDelegate.URLSessionDidFinishEventsForBackgroundURLSession(_:)):
+		//	return sessionDidFinishEventsForBackgroundURLSession != nil
+		case #selector(NSURLSessionTaskDelegate.URLSession(_:task:willPerformHTTPRedirection:newRequest:completionHandler:)):
 			return taskWillPerformHTTPRedirection != nil
-		case "URLSession:dataTask:didReceiveResponse:completionHandler:":
+		case #selector(NSURLSessionDataDelegate.URLSession(_:dataTask:didReceiveResponse:completionHandler:)):
 			return dataTaskDidReceiveResponse != nil
 		default:
 			return self.dynamicType.instancesRespondToSelector(selector)

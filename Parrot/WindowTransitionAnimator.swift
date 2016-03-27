@@ -6,7 +6,7 @@ public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSV
 		super.init(window: nil)
 		let rect = NSRect(x: 0, y: 0, width: size.width, height: size.height)
 		let style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask
-		let window = NSWindow(contentRect: rect, styleMask: style, backing: .Buffered, `defer`: false)
+		let window = NSWindow(contentRect: rect, styleMask: style, backing: .Buffered, defer: false)
 		self.window = window
 		
 		self.window?.delegate = self

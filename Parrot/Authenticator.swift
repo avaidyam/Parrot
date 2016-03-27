@@ -97,10 +97,7 @@ public class Authenticator {
 					}
 					
 					var uberauth = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
-					uberauth.replaceRange(Range<String.Index>(
-						start: uberauth.endIndex.advancedBy(-1),
-						end: uberauth.endIndex
-						), with: "")
+					uberauth.replaceRange(uberauth.endIndex.advancedBy(-1) ..< uberauth.endIndex, with: "")
 					
 					let request = NSMutableURLRequest(URL: NSURL(string: "https://accounts.google.com/MergeSession")!)
 					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
@@ -240,7 +237,7 @@ public class Authenticator {
 		
 		window = NSWindow(contentRect: NSMakeRect(0, 0, 386, 512),
 			styleMask: NSTitledWindowMask | NSClosableWindowMask,
-			backing: .Buffered, `defer`: false)
+			backing: .Buffered, defer: false)
 		window?.title = "Login to Parrot"
 		window?.opaque = false
 		window?.movableByWindowBackground = true

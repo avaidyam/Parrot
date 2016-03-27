@@ -85,7 +85,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 		// If data_bytes cannot be decoded, pop the last byte until it can be or
 		// return an empty string.
 		private func bestEffortDecode(data: NSData) -> String? {
-			for var i = 0; i < data.length; i++ {
+			for i in 0 ..< data.length {
 				if let s = NSString(data: data.subdataWithRange(NSMakeRange(0, data.length - i)), encoding: NSUTF8StringEncoding) {
 					return s as String
 				}

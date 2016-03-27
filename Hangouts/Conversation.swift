@@ -246,7 +246,8 @@ public class Conversation {
 	// Update the timestamp of the latest event which has been read.
 	// By default, the timestamp of the newest event is used.
 	// This method will avoid making an API request if it will have no effect.
-    public func updateReadTimestamp(var read_timestamp: NSDate? = nil, cb: (() -> Void)? = nil) {
+    public func updateReadTimestamp(read_timestamp: NSDate? = nil, cb: (() -> Void)? = nil) {
+		var read_timestamp = read_timestamp
         if read_timestamp == nil {
             read_timestamp = self.events.last!.timestamp
         }

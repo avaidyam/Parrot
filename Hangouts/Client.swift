@@ -116,7 +116,7 @@ public final class Client {
 			// The first time this is called, we need to retrieve the user's email address.
 			if self.email == nil {
 				self.getSelfInfo {
-					self.email = $0!.self_entity!.properties!.email[0] as? String
+					self.email = $0!.self_entity!.properties!.email[0] as String
 				}
 			}
 			

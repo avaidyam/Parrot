@@ -198,7 +198,7 @@ public extension ElementContainerView {
 	}
 	
 	public func tableView(tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 		return proposedSelectionIndexes
 	}
 	
@@ -207,7 +207,7 @@ public extension ElementContainerView {
 	}
 	
 	public func tableViewSelectionIsChanging(notification: NSNotification) {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 	}
 }
 
@@ -215,39 +215,39 @@ public extension ElementContainerView {
 public extension ElementContainerView {
 	
 	public func tableView(tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 		return nil
 	}
 	
 	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 	}
 	
 	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 	}
 	
 	public func tableView(tableView: NSTableView, updateDraggingItemsForDrag draggingInfo: NSDraggingInfo) {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 	}
 	
 	public func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 		return false
 	}
 	
 	public func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 		return .None
 	}
 	
 	public func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 		return false
 	}
 	
 	public func tableView(tableView: NSTableView, namesOfPromisedFilesDroppedAtDestination dropDestination: NSURL, forDraggedRowsWithIndexes indexSet: NSIndexSet) -> [String] {
-		Swift.print("Unimplemented \(__FUNCTION__)")
+		Swift.print("Unimplemented \(#function)")
 		return []
 	}
 }

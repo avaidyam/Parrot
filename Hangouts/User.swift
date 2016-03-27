@@ -52,7 +52,7 @@ public struct User: Hashable, Equatable {
             fullName: entity.properties!.display_name as String?,
             firstName: entity.properties!.first_name as String?,
             photoURL: entity.properties!.photo_url as String?,
-            emails: entity.properties!.email.map { $0 as! String },
+            emails: entity.properties!.email.map { $0 as String },
             isSelf: isSelf
         )
     }

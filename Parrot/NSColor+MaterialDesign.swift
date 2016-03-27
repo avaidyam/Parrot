@@ -5,7 +5,8 @@ public extension NSColor {
 	
 	// Parse an NSColor from a hex string.
 	// from: https://github.com/thii/SwiftHEXColors
-	public convenience init(var hex: String, alpha: Float = 1.0) {
+	public convenience init(hex: String, alpha: Float = 1.0) {
+		var hex = hex
 		
 		// Strip leading # prefix from hex digits.
 		if hex.hasPrefix("#") {
@@ -21,15 +22,15 @@ public extension NSColor {
 		// If it's a short-form (3 character) color, expand it.
 		if hex.characters.count == 3 {
 			let r = hex.substringToIndex(hex.startIndex.advancedBy(1))
-			let g = hex.substringWithRange(Range<String.Index>(start: hex.startIndex.advancedBy(1), end: hex.startIndex.advancedBy(2)))
+			let g = hex.substringWithRange(hex.startIndex.advancedBy(1)..<hex.startIndex.advancedBy(2))
 			let b = hex.substringFromIndex(hex.startIndex.advancedBy(2))
 			hex = r + r + g + g + b + b
 		}
 		
 		// Split the color components out.
 		let rh = hex.substringToIndex(hex.startIndex.advancedBy(2))
-		let gh = hex.substringWithRange(Range<String.Index>(start: hex.startIndex.advancedBy(2), end: hex.startIndex.advancedBy(4)))
-		let bh = hex.substringWithRange(Range<String.Index>(start: hex.startIndex.advancedBy(4), end: hex.startIndex.advancedBy(6)))
+		let gh = hex.substringWithRange(hex.startIndex.advancedBy(2)..<hex.startIndex.advancedBy(4))
+		let bh = hex.substringWithRange(hex.startIndex.advancedBy(4)..<hex.startIndex.advancedBy(6))
 		
 		// Scan the color components into integers.
 		var r: UInt32 = 0, g: UInt32 = 0, b: UInt32 = 0

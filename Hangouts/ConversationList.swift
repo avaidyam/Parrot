@@ -105,7 +105,7 @@ public class ConversationList {
 	// Leave conversation and remove it from ConversationList
     public func leave_conversation(conv_id: String) {
         conv_dict[conv_id]!.leave {
-            conv_dict.removeValueForKey(conv_id)
+            self.conv_dict.removeValueForKey(conv_id)
         }
     }
 	
