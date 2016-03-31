@@ -57,6 +57,17 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	func applicationDockMenu(sender: NSApplication) -> NSMenu? {
 		return nil
 	}
+	
+	@IBAction func logoutSelected(sender: AnyObject) {
+		let cookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+		if let cookies = cookieStorage.cookies {
+			for cookie in cookies {
+				cookieStorage.deleteCookie(cookie)
+			}
+		}
+		Authenticator.clearTokens();
+		NSApplication.sharedApplication().terminate(self)
+	}
 }
 
 // Private service points go here:

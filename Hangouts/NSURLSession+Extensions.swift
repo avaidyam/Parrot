@@ -96,27 +96,7 @@ public func escape(string: String) -> String {
 	let allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet().mutableCopy() as! NSMutableCharacterSet
 	allowedCharacterSet.removeCharactersInString(generalDelimitersToEncode + subDelimitersToEncode)
 	
-	var escaped = ""
-	if #available(iOS 8.3, OSX 10.10, *) {
-		escaped = string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? string
-	} else {
-		let batchSize = 50
-		var index = string.startIndex
-		
-		while index != string.endIndex {
-			let startIndex = index
-			let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
-			let range = Range(start: startIndex, end: endIndex)
-			
-			let substring = string.substringWithRange(range)
-			
-			escaped += substring.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? substring
-			
-			index = endIndex
-		}
-	}
-	
-	return escaped
+	return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? string
 }
 
 public func queryComponents(key: String, _ value: AnyObject) -> [(String, String)] {

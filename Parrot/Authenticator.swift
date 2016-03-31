@@ -5,6 +5,8 @@ import WebKit
 public class Authenticator {
 	
 	private static let DEFAULTS = NSUserDefaults.standardUserDefaults()
+	private static let ACCESS_TOKEN = "access_token"
+	private static let REFRESH_TOKEN = "refresh_token"
 	
 	private static let OAUTH2_SCOPE = "https://www.google.com/accounts/OAuthLogin"
 	private static let OAUTH2_CLIENT_ID = "936475272427.apps.googleusercontent.com"
@@ -41,9 +43,9 @@ public class Authenticator {
 	Load access_token and refresh_token for OAuth2.
 	- returns: Tuple containing tokens, or nil on failure.
 	*/
-	private class func loadTokens() -> (access_token: String, refresh_token: String)? {
-		let at = DEFAULTS.stringForKey("access_token")
-		let rt = DEFAULTS.stringForKey("refresh_token")
+	public class func loadTokens() -> (access_token: String, refresh_token: String)? {
+		let at = DEFAULTS.stringForKey(ACCESS_TOKEN)
+		let rt = DEFAULTS.stringForKey(REFRESH_TOKEN)
 		
 		if let at = at, rt = rt {
 			return (access_token: at, refresh_token: rt)
@@ -58,17 +60,17 @@ public class Authenticator {
 	- parameter access_token the OAuth2 access token
 	- parameter refresh_token the OAuth2 refresh token
 	*/
-	private class func saveTokens(access_token: String, refresh_token: String) {
-		DEFAULTS.setObject(access_token, forKey: "access_token")
-		DEFAULTS.setObject(refresh_token, forKey: "refresh_token")
+	public class func saveTokens(access_token: String, refresh_token: String) {
+		DEFAULTS.setObject(access_token, forKey: ACCESS_TOKEN)
+		DEFAULTS.setObject(refresh_token, forKey: REFRESH_TOKEN)
 	}
 	
 	/**
 	Clear the existing auth_token and refresh_token for OAuth2.
 	*/
-	private class func clearTokens() {
-		DEFAULTS.removeObjectForKey("access_token")
-		DEFAULTS.removeObjectForKey("refresh_token")
+	public class func clearTokens() {
+		DEFAULTS.removeObjectForKey(ACCESS_TOKEN)
+		DEFAULTS.removeObjectForKey(REFRESH_TOKEN)
 	}
 	
 	public class func authenticateClient(cb: (configuration: NSURLSessionConfiguration) -> Void) {
@@ -176,7 +178,7 @@ public class Authenticator {
 			
 			do {
 				let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as! [String: AnyObject]
-				if let access = json["access_token"] as? String, refresh = json["refresh_token"] as? String  {
+				if let access = json[ACCESS_TOKEN] as? String, refresh = json[REFRESH_TOKEN] as? String  {
 					cb(access_token: access, refresh_token: refresh)
 				} else {
 					print("JSON was invalid: \(json)")
@@ -197,8 +199,8 @@ public class Authenticator {
 		let token_request_data = [
 			"client_id": OAUTH2_CLIENT_ID,
 			"client_secret": OAUTH2_CLIENT_SECRET,
-			"grant_type": "refresh_token",
-			"refresh_token": refresh_token,
+			"grant_type": REFRESH_TOKEN,
+			REFRESH_TOKEN: refresh_token,
 		]
 		
 		// Make request first.
@@ -215,7 +217,7 @@ public class Authenticator {
 			
 			do {
 				let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as! [String: AnyObject]
-				if let access = json["access_token"] as? String  {
+				if let access = json[ACCESS_TOKEN] as? String  {
 					cb(access_token: access, refresh_token: refresh_token)
 				} else {
 					print("JSON was invalid: \(json)")
