@@ -35,7 +35,7 @@ public class MessageView : NSTableCellView {
 		self.backgroundView.translatesAutoresizingMaskIntoConstraints = true
 		
 		self.textLabel = NSLabel(true, false)
-		self.textLabel.textColor = NSColor.textColor()
+		self.textLabel.textColor = NSColor.controlTextColor()
 		self.textLabel.lineBreakMode = .ByWordWrapping
 		self.textLabel.font = NSFont.systemFontOfSize(13.0, weight: NSFontWeightMedium)
 		

@@ -3,8 +3,8 @@ import Foundation
 // Quick clone of Alamofire's Result class.
 // Note: instead of isSuccess/isFailure, try: guard let _ = result.data else {}
 public enum Result {
-	case Success(NSData, NSURLResponse)
-	case Failure(NSError, NSURLResponse)
+	case Success(NSData, NSURLResponse?)
+	case Failure(NSError, NSURLResponse?)
 	
 	public var data: NSData? {
 		switch self {
@@ -55,9 +55,9 @@ public extension NSURLSession {
 		dispatch_sync(q) {
 			let cb: (NSData?, NSURLResponse?, NSError?) -> Void = { data, response, error in
 				if let error = error {
-					handler(Result.Failure(error, response!))
+					handler(Result.Failure(error, response))
 				} else {
-					handler(Result.Success(data!, response!))
+					handler(Result.Success(data!, response))
 				}
 			}
 			
