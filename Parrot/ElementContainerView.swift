@@ -92,6 +92,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	
 	public var sizeClass: SizeClass = .Large
 	public var selectionCapability: SelectionCapability = .None
+	public var updateScrollsToBottom = true
 	
 	// Allow accessing the insets from the scroll view.
 	public var insets: NSEdgeInsets {
@@ -111,7 +112,8 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	public var dataSource: [Wrapper<Any>]! {
 		didSet { UI {
 			self.tableView.reloadData()
-			self.tableView.scrollRowToVisible(self.numberOfRowsInTableView(self.tableView) - 1)
+			let row = self.updateScrollsToBottom ? self.numberOfRowsInTableView(self.tableView) - 1 : 0
+			self.tableView.scrollRowToVisible(row)
 		}}
 	}
 	

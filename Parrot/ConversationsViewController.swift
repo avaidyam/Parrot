@@ -10,6 +10,8 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	override func loadView() {
 		super.loadView()
 		
+		personsView.updateScrollsToBottom = false
+		
 		/* TODO: VERY BAD! */
 		_REMOVE.append {
 			self.userList = $0
