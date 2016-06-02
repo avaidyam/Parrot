@@ -38,6 +38,9 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         if self.window?.keyWindow ?? false {
             self.windowDidBecomeKey(nil)
         }
+		
+		// woohoo this is a terrible idea, move this out of here later.
+		self.window?.collectionBehavior = [.FullScreenAuxiliary, .FullScreenAllowsTiling]
     }
 
     override var representedObject: AnyObject? {
@@ -68,7 +71,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	}
 	
     func conversation(conversation: Conversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
-        if user.isSelf {
+        if user.isSelf || self.messageTextField?.window == nil {
             return
         }
 		

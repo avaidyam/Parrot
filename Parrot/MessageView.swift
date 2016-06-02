@@ -35,9 +35,10 @@ public class MessageView : NSTableCellView {
 		self.backgroundView.translatesAutoresizingMaskIntoConstraints = true
 		
 		self.textLabel = NSLabel(true, false)
-		self.textLabel.textColor = NSColor.controlTextColor()
+		self.textLabel.textColor = NSColor.labelColor()
 		self.textLabel.lineBreakMode = .ByWordWrapping
 		self.textLabel.font = NSFont.systemFontOfSize(13.0, weight: NSFontWeightMedium)
+		self.textLabel.cell!.backgroundStyle = .Raised
 		
 		// Swift is funny like this.
 		super.init(frame: frame)
@@ -143,8 +144,8 @@ public class MessageView : NSTableCellView {
         var size = text.boundingRectWithSize(
             NSMakeSize(width, 0),
             options: [
-                NSStringDrawingOptions.UsesLineFragmentOrigin,
-                NSStringDrawingOptions.UsesFontLeading
+                .UsesLineFragmentOrigin,
+                .UsesFontLeading
             ]
         ).size
         size.width += TextPadding.h

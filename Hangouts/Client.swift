@@ -42,24 +42,24 @@ public final class Client {
 		// A notification-based delegate replacement:
 		//
 		
-		let _c = NSNotificationCenter.defaultCenter()
-		let a = _c.addObserverForName(Channel.didConnectNotification, object: self.channel, queue: nil) { _ in
-			NSNotificationCenter.defaultCenter().postNotificationName(Client.didConnectNotification, object: self)
+		let _c = NSNotificationCenter.default()
+		let a = _c.addObserver(forName: Channel.didConnectNotification, object: self.channel, queue: nil) { _ in
+			NSNotificationCenter.default().post(name: Client.didConnectNotification, object: self)
 		}
-		let b = _c.addObserverForName(Channel.didReconnectNotification, object: self.channel, queue: nil) { _ in
-			NSNotificationCenter.defaultCenter().postNotificationName(Client.didReconnectNotification, object: self)
+		let b = _c.addObserver(forName: Channel.didReconnectNotification, object: self.channel, queue: nil) { _ in
+			NSNotificationCenter.default().post(name: Client.didReconnectNotification, object: self)
 		}
-		let c = _c.addObserverForName(Channel.didDisconnectNotification, object: self.channel, queue: nil) { _ in
-			NSNotificationCenter.defaultCenter().postNotificationName(Client.didDisconnectNotification, object: self)
+		let c = _c.addObserver(forName: Channel.didDisconnectNotification, object: self.channel, queue: nil) { _ in
+			NSNotificationCenter.default().post(name: Client.didDisconnectNotification, object: self)
 		}
-		let d = _c.addObserverForName(Channel.didReceiveMessageNotification, object: self.channel, queue: nil) { note in
+		let d = _c.addObserver(forName: Channel.didReceiveMessageNotification, object: self.channel, queue: nil) { note in
 			if let val = (note.userInfo as! [String: AnyObject])[Channel.didReceiveMessageKey] as? [AnyObject] {
-				self.channel(self.channel!, didReceiveMessage: val)
+				self.channel(channel: self.channel!, didReceiveMessage: val)
 			} else {
 				print("Encountered an error! \(note)")
 			}
 		}
-		self.tokens.appendContentsOf([a, b, c, d])
+		self.tokens.append(contentsOf: [a, b, c, d])
     }
 	
 	/* TODO: Can't disconnect a Channel yet. */
@@ -69,7 +69,7 @@ public final class Client {
 		
 		// Remove all the observers so we aren't receiving calls later on.
 		self.tokens.forEach {
-			NSNotificationCenter.defaultCenter().removeObserver($0)
+			NSNotificationCenter.default().removeObserver($0)
 		}
 	}
 	
@@ -120,7 +120,7 @@ public final class Client {
 				}
 			}
 			
-			setActiveClient(true, timeout_secs: Client.ACTIVE_TIMEOUT_SECS)
+			setActiveClient(is_active: true, timeout_secs: Client.ACTIVE_TIMEOUT_SECS)
         }
 	}
 	
@@ -129,24 +129,24 @@ public final class Client {
 	public func uploadImage(data: NSData, filename: String, cb: ((String) -> Void)? = nil) {
 		let json = "{\"protocolVersion\":\"0.8\",\"createSessionRequest\":{\"fields\":[{\"external\":{\"name\":\"file\",\"filename\":\"\(filename)\",\"put\":{},\"size\":\(data.length)}}]}}"
 		
-		self.base_request(Client.IMAGE_UPLOAD_URL,
+		self.base_request(path: Client.IMAGE_UPLOAD_URL,
 			content_type: "application/x-www-form-urlencoded;charset=UTF-8",
-			data: json.dataUsingEncoding(NSUTF8StringEncoding)!) { response in
+			data: json.data(using: NSUTF8StringEncoding)!) { response in
 			
 			// Sift through JSON for a response with the upload URL.
-			let _data: NSDictionary = try! NSJSONSerialization.JSONObjectWithData(response.data!,
-				options: .AllowFragments) as! NSDictionary
+				let _data: NSDictionary = try! NSJSONSerialization.jsonObject(with: response.data!,
+				options: .allowFragments) as! NSDictionary
 			let _a = _data["sessionStatus"] as! NSDictionary
 			let _b = _a["externalFieldTransfers"] as! NSArray
 			let _c = _b[0] as! NSDictionary
 			let _d = _c["putInfo"] as! NSDictionary
 			let upload = (_d["url"] as! NSString) as String
 			
-			self.base_request(upload, content_type: "application/octet-stream", data: data) { resp in
+			self.base_request(path: upload, content_type: "application/octet-stream", data: data) { resp in
 				
 				// Sift through JSON for a response with the photo ID.
-				let _data2: NSDictionary = try! NSJSONSerialization.JSONObjectWithData(resp.data!,
-					options: .AllowFragments) as! NSDictionary
+				let _data2: NSDictionary = try! NSJSONSerialization.jsonObject(with: resp.data!,
+					options: .allowFragments) as! NSDictionary
 				let _a2 = _data2["sessionStatus"] as! NSDictionary
 				let _b2 = _a2["additionalInfo"] as! NSDictionary
 				let _c2 = _b2["uploader_service.GoogleRupioAdditionalInfo"] as! NSDictionary
@@ -177,20 +177,20 @@ public final class Client {
 			self.addChannelServices()
 		}
 		if let cbu = wrapper["2"] as? [String: AnyObject] {
-			let val2 = cbu["2"]!.dataUsingEncoding(NSUTF8StringEncoding)
-			let payload = try! NSJSONSerialization.JSONObjectWithData(val2!, options: .AllowFragments)
+			let val2 = cbu["2"]!.data(using: NSUTF8StringEncoding)
+			let payload = try! NSJSONSerialization.jsonObject(with: val2!, options: .allowFragments)
 			
 			// This is a (Client)BatchUpdate containing StateUpdate messages.
 			// payload[1] is a list of state updates.
 			if payload[0] as? String == "cbu" {
-				let result = flatMap(payload[1] as! [NSArray]) {
-					PBLiteSerialization.parseArray(StateUpdate.self, input: $0)
+				let result = flatMap(x: payload[1] as! [NSArray]) {
+					PBLiteSerialization.parseArray(type: StateUpdate.self, input: $0)
 				}
 				
 				for state_update in result {
 					self.active_client_state = state_update.state_update_header.active_client_state
-					NSNotificationCenter.defaultCenter().postNotificationName(
-						Client.didUpdateStateNotification, object: self,
+					NSNotificationCenter.default().post(
+						name: Client.didUpdateStateNotification, object: self,
 						userInfo: [Client.didUpdateStateKey: state_update])
 				}
 			} else {
@@ -212,10 +212,10 @@ public final class Client {
 	// things work.
 	private func addChannelServices() {
 		let inner = ["3": ["1": ["1": "babel"]]]
-		let dat = try! NSJSONSerialization.dataWithJSONObject(inner, options: [])
+		let dat = try! NSJSONSerialization.data(withJSONObject: inner, options: [])
 		let str = NSString(data: dat, encoding: NSUTF8StringEncoding) as! String
 		
-		self.channel?.sendMaps([["p": str]])
+		self.channel?.sendMaps(mapList: [["p": str]])
 	}
 	
 	public func buildUserConversationList(cb: (UserList, ConversationList) -> Void) {
@@ -230,7 +230,7 @@ public final class Client {
 			// current_server_time instead. use:
 			//
 			// from_timestamp(response!.response_header!.current_server_time)
-			let sync_timestamp = from_timestamp(response!.sync_timestamp)
+			let sync_timestamp = from_timestamp(microsecond_timestamp: response!.sync_timestamp)
 			
 			var required_user_ids = Set<UserID>()
 			for conv_state in conv_states {
@@ -242,7 +242,7 @@ public final class Client {
 			
 			var required_entities = Array<Entity>()
 			if required_user_ids.count > 0 {
-				self.getEntitiesByID(required_user_ids.map { $0.chatID }) { resp in
+				self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
 					required_entities = resp!.entities
 				}
 			}
@@ -250,7 +250,7 @@ public final class Client {
 			var conv_part_list = Array<ConversationParticipantData>()
 			for conv_state in conv_states {
 				let participants = conv_state.conversation!.participant_data
-				conv_part_list.appendContentsOf(participants)
+				conv_part_list.append(contentsOf: participants)
 			}
 			
 			// Let's request our own entity now.
@@ -279,9 +279,9 @@ public final class Client {
         use_json: Bool = true,
         cb: (Result) -> Void
     ) {
-        base_request("https://clients6.google.com/chat/v1/\(endpoint)",
+        base_request(path: "https://clients6.google.com/chat/v1/\(endpoint)",
             content_type: "application/json+protobuf",
-            data: try! NSJSONSerialization.dataWithJSONObject(body, options: []),
+            data: try! NSJSONSerialization.data(withJSONObject: body, options: []),
             use_json: use_json,
             cb: cb
         )
@@ -299,16 +299,16 @@ public final class Client {
     ) {
         let params = ["alt": use_json ? "json" : "protojson"]
         let url = NSURL(string: (path + "?" + params.encodeURL()))!
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
-        request.HTTPBody = data
+        let request = NSMutableURLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = data
 
-        for (k, v) in getAuthorizationHeaders(Channel.getCookieValue("SAPISID")!) {
+        for (k, v) in getAuthorizationHeaders(sapisid_cookie: Channel.getCookieValue(key: "SAPISID")!) {
             request.setValue(v, forHTTPHeaderField: k)
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")
 		
-		self.channel?.session.request(request) {
+		self.channel?.session.request(request: request) {
 			guard let _ = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return
@@ -318,7 +318,7 @@ public final class Client {
     }
 
     private func verifyResponseOK(responseObject: NSData) {
-        let parsedObject = try! NSJSONSerialization.JSONObjectWithData(responseObject, options: []) as? NSDictionary
+		let parsedObject = try! NSJSONSerialization.jsonObject(with: responseObject, options: []) as? NSDictionary
         let status = ((parsedObject?["response_header"] as? NSDictionary) ?? NSDictionary())["status"] as? String
         if status != "OK" {
             print("Unexpected status response: \(parsedObject!)")
@@ -400,12 +400,12 @@ public final class Client {
 			
 			// Not sure what timestamp should be there, last time I have tried
 			// it Hangouts client in GMail sent something like now() - 5 hours
-			to_timestamp(NSDate()), /* TODO: This should be in UTC form. */
+			to_timestamp(date: NSDate()), /* TODO: This should be in UTC form. */
 			None,
 			[]
 		]
-		self.request("conversations/deleteconversation", body: data) { r in
-			self.verifyResponseOK(r.data!); cb?()
+		self.request(endpoint: "conversations/deleteconversation", body: data) { r in
+			self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}
 	
@@ -454,12 +454,12 @@ public final class Client {
 			[
 				None,  // eventId
 				None,  // storageContinuationToken
-				to_timestamp(event_timestamp),  // eventTimestamp
+				to_timestamp(date: event_timestamp),  // eventTimestamp
 			] // eventContinuationToken (specifying timestamp is sufficient)
 		]
 		
-		self.request("conversations/getconversation", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
+		self.request(endpoint: "conversations/getconversation", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -470,8 +470,8 @@ public final class Client {
 			None,
 			chat_id_list.map { [$0] }
 		]
-		self.request("contacts/getentitybyid", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
+		self.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -479,8 +479,8 @@ public final class Client {
 		let data = [
 			self.getRequestHeader()
 		]
-		self.request("contacts/getselfinfo", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
+		self.request(endpoint: "contacts/getselfinfo", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -491,8 +491,8 @@ public final class Client {
 			None,
 			max_count
 		]
-		self.request("contacts/getsuggestedentities", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
+		self.request(endpoint: "contacts/getsuggestedentities", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -507,7 +507,7 @@ public final class Client {
 			[chat_ids],
 			[1, 2, 5, 7, 8] // what are FieldMasks 5 and 8?
 		]
-		self.request("presence/querypresence", body: data) { r in
+		self.request(endpoint: "presence/querypresence", body: data) { r in
 			
 			/* TODO: Does not return data, only calls the callback. */
 			// cb(response: PBLiteSerialization.parseProtoJSON(r.data!)) //PresenceResult
@@ -529,8 +529,8 @@ public final class Client {
 				2
 			],
 		]
-		self.request("conversations/removeuser", body: data) { r in
-			self.verifyResponseOK(r.data!); cb?()
+		self.request(endpoint: "conversations/removeuser", body: data) { r in
+			self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}
 	
@@ -547,8 +547,8 @@ public final class Client {
 				1
 			]
 		]
-		self.request("conversations/renameconversation", body: data) {
-			r in self.verifyResponseOK(r.data!); cb?()
+		self.request(endpoint: "conversations/renameconversation", body: data) {
+			r in self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}
 	
@@ -601,7 +601,7 @@ public final class Client {
 			None,
 			None,
 			[], //EventAnnotation
-			[ //MessageContent
+			[ //ChatMessageContent
 				segments,
 				[]
 			],
@@ -610,18 +610,18 @@ public final class Client {
 				[conversation_id],
 				generateClientID(),
 				otr_status.representation,
-				// delivery medium
-				// event type
+				[DeliveryMediumType.GOOGLE_VOICE.representation, ],
+				EventType.SMS.representation
 			],
-			None,
-			None,
-			None,
-			[]
+			//None,
+			//None,
+			//None,
+			//[]
 		]
 		
 		// sendchatmessage can return 200 but still contain an error
-		self.request("conversations/sendchatmessage", body: data) {
-			r in self.verifyResponseOK(r.data!); cb?()
+		self.request(endpoint: "conversations/sendchatmessage", body: data) {
+			r in self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}
 	
@@ -634,8 +634,8 @@ public final class Client {
 		]
 		
 		// Set the active client.
-		self.request("clients/setactiveclient", body: data, use_json: true) {
-			r in self.verifyResponseOK(r.data!); cb?()
+		self.request(endpoint: "clients/setactiveclient", body: data, use_json: true) {
+			r in self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}
 	
@@ -644,8 +644,8 @@ public final class Client {
 			self.getRequestHeader(),
 			[conversation_id]
 		]
-		self.request("conversations/setconversationnotificationlevel", body: data){ r in
-			self.verifyResponseOK(r.data!); cb?()
+		self.request(endpoint: "conversations/setconversationnotificationlevel", body: data){ r in
+			self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}
 	
@@ -657,8 +657,8 @@ public final class Client {
 			1,
 			20
 		]
-        self.request("conversations/setfocus", body: data) { r in
-			self.verifyResponseOK(r.data!); cb?()
+        self.request(endpoint: "conversations/setfocus", body: data) { r in
+			self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
     }
 	
@@ -680,7 +680,7 @@ public final class Client {
 			[!online], // True if going offline, False if coming online
 			[mood ?? None] // UTF-8 smiley like 0x1f603
 		]
-		self.request("presence/setpresence", body: data) { r in cb?()}
+		self.request(endpoint: "presence/setpresence", body: data) { r in cb?()}
 		// result['response_header']['status']
 	}
 	
@@ -691,8 +691,8 @@ public final class Client {
 			[conversation_id],
 			typing.representation
 		]
-		self.request("conversations/settyping", body: data) {
-			r in self.verifyResponseOK(r.data!); cb?()
+		self.request(endpoint: "conversations/settyping", body: data) {
+			r in self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}
 	
@@ -700,7 +700,7 @@ public final class Client {
 	public func syncAllNewEvents(timestamp: NSDate, cb: (response: SyncAllNewEventsResponse?) -> Void) {
 		let data: NSArray = [
 			self.getRequestHeader(),
-			to_timestamp(timestamp),
+			to_timestamp(date: timestamp),
 			[],
 			None,
 			[],
@@ -708,8 +708,8 @@ public final class Client {
 			[],
 			1048576 // max_response_size_bytes
 		]
-		self.request("conversations/syncallnewevents", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
+		self.request(endpoint: "conversations/syncallnewevents", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 		
 		// This method requests protojson rather than json so we have one chat
@@ -728,8 +728,8 @@ public final class Client {
 			maxEventsPer,
 			[1]
 		]
-		self.request("conversations/syncrecentconversations", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(r.data!))
+		self.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -738,10 +738,10 @@ public final class Client {
 		let data = [
 			self.getRequestHeader(),
 			[conv_id], // conversation_id
-			to_timestamp(read_timestamp), // latest_read_timestamp
+			to_timestamp(date: read_timestamp), // latest_read_timestamp
 		]
-		self.request("conversations/updatewatermark", body: data) { r in
-			self.verifyResponseOK(r.data!); cb?()
+		self.request(endpoint: "conversations/updatewatermark", body: data) { r in
+			self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}
 }

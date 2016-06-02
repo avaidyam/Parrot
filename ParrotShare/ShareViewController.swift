@@ -22,16 +22,16 @@ class ShareViewController: SLComposeServiceViewController {
     
         let outputItems = [outputItem]
     
-        self.extensionContext!.completeRequestReturningItems(outputItems, completionHandler: nil)
+        self.extensionContext!.completeRequest(returningItems: outputItems, completionHandler: nil)
     }
 
     override func didSelectCancel() {
         let cancelError = NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError, userInfo: nil)
-        self.extensionContext!.cancelRequestWithError(cancelError)
+        self.extensionContext!.cancelRequest(withError: cancelError)
     }
 
     override func isContentValid() -> Bool {
-        let messageLength = self.contentText.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
+        let messageLength = self.contentText.trimmingCharacters(in: NSCharacterSet.whitespaces()).lengthOfBytes(using: NSUTF8StringEncoding)
         let charactersRemaining = 140 - messageLength
         self.charactersRemaining = charactersRemaining
         

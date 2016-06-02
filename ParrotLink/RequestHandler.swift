@@ -2,7 +2,7 @@ import Foundation
 
 class RequestHandler: NSObject, NSExtensionRequestHandling {
 
-    func beginRequestWithExtensionContext(context: NSExtensionContext) {
+	func beginRequest(with context: NSExtensionContext) {
         let extensionItem = NSExtensionItem()
         extensionItem.userInfo = [
 			"uniqueIdentifier": "uniqueIdentifierForSampleItem",
@@ -11,7 +11,6 @@ class RequestHandler: NSObject, NSExtensionRequestHandling {
 		]
         extensionItem.attributedTitle = NSAttributedString(string: "Sample title")
         extensionItem.attributedContentText = NSAttributedString(string: "Sample description text")
-        context.completeRequestReturningItems([extensionItem], completionHandler: nil)
+        context.completeRequest(returningItems: [extensionItem], completionHandler: nil)
     }
-
 }

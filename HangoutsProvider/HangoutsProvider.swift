@@ -4,7 +4,7 @@ import Foundation
 
 class HangoutsProvider : NSObject, NSXPCListenerDelegate {
 	func listener(listener: NSXPCListener, connection: NSXPCConnection) -> Bool {
-		connection.exportedInterface = NSXPCInterface(withProtocol: NSCoding.self)
+		connection.exportedInterface = NSXPCInterface(with: NSCoding.self)
 		let exportedObject = NSNull()
 		
 		connection.exportedObject = exportedObject

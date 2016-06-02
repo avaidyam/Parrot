@@ -16,7 +16,7 @@ extension ParrotViewController: NCWidgetProviding {
 	// Sets up the content size and adds the edit view to the controller.
 	override func loadView() {
 		super.loadView()
-		self.preferredContentSize = CGSizeMake(320, 480)
+		self.preferredContentSize = CGSize(width: 320, height: 480)
 		if let editView = self.editView {
 			var f = self.view.bounds
 			f.origin.y = f.size.height
@@ -35,7 +35,7 @@ extension ParrotViewController: NCWidgetProviding {
 	}
 	
 	func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)!) {
-		completionHandler(.NewData)
+		completionHandler(.newData)
 	}
 	
 	var widgetAllowsEditing: Bool {

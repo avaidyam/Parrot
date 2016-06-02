@@ -1,5 +1,5 @@
 import Foundation
 
-let listener = NSXPCListener.serviceListener()
+let listener = NSXPCListener.service()
 listener.delegate = HangoutsProvider();
 listener.resume()

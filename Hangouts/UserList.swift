@@ -45,8 +45,8 @@ public class UserList {
 			}
 		}
 		
-		self.observer = NSNotificationCenter.defaultCenter()
-			.addObserverForName(Client.didUpdateStateNotification, object: client, queue: nil) {
+		self.observer = NSNotificationCenter.default()
+			.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) {
 			
 			if let userInfo = $0.userInfo,
 				state_update = userInfo[Client.didUpdateStateKey as NSString] {
@@ -65,26 +65,26 @@ public class UserList {
 	}
 	
 	deinit {
-		NSNotificationCenter.defaultCenter().removeObserver(self.observer!)
+		NSNotificationCenter.default().removeObserver(self.observer!)
 	}
 }
 
 // UserList CollectionType support.
-extension UserList: CollectionType {
+extension UserList: Collection {
 	public typealias Index = DictionaryIndex<UserID, User>
 	
 	// UserList: CollectionType
-	public var startIndex : UserList.Index {
+	public var startIndex : Index {
 		return self.users.values.startIndex
 	}
 	
 	// UserList: CollectionType
-	public var endIndex : UserList.Index {
+	public var endIndex : Index {
 		return self.users.values.startIndex
 	}
 	
 	// UserList: CollectionType
-	public subscript(index: UserList.Index) -> User {
+	public subscript(index: Index) -> User {
 		return self.users.values[index]
 	}
 }

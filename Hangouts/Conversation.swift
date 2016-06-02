@@ -39,13 +39,13 @@ public class Conversation {
         self.conversationList = conversationList
 
         for event in events {
-            add_event(event)
+            add_event(event: event)
         }
     }
 	
 	// Update the conversations latest_read_timestamp.
     public func on_watermark_notification(notif: WatermarkNotification) {
-        if self.get_user(notif.userID).isSelf {
+        if self.get_user(user_id: notif.userID).isSelf {
             self.conversation.self_conversation_state.self_read_state.latest_read_timestamp = notif.readTimestamp
         }
     }
@@ -69,11 +69,11 @@ public class Conversation {
         let old_timestamp = self.latest_read_timestamp
         self.conversation = conversation
         
-        if to_timestamp(self.latest_read_timestamp) == 0 {
+        if to_timestamp(date: self.latest_read_timestamp) == 0 {
             self.conversation.self_conversation_state.self_read_state.latest_read_timestamp = old_timestamp
         }
 
-        delegate?.conversationDidUpdate(self)
+        delegate?.conversationDidUpdate(conversation: self)
     }
 	
 	// Wrap ClientEvent in Event subclass.
@@ -89,11 +89,11 @@ public class Conversation {
         }
     }
 
-    private var _cachedEvents = [Event]?()
+	private var _cachedEvents: [Event]? = nil
     public var events: [Event] {
         get {
             if _cachedEvents == nil {
-                _cachedEvents = events_dict.values.sort { $0.timestamp < $1.timestamp }
+                _cachedEvents = events_dict.values.sorted { $0.timestamp < $1.timestamp }
             }
             return _cachedEvents!
         }
@@ -102,7 +102,7 @@ public class Conversation {
 	// Add a ClientEvent to the Conversation.
 	// Returns an instance of Event or subclass.
     public func add_event(event: EVENT) -> Event {
-        let conv_event = Conversation.wrap_event(event)
+        let conv_event = Conversation.wrap_event(event: event)
 		/* TODO: Enable this. */
 		/*if !self.events_dict.contains(conv_event.id) {
 			self.events.append(conv_event)
@@ -166,7 +166,7 @@ public class Conversation {
     }
 
     public func setFocus() {
-        self.client.setFocus(id)
+        self.client.setFocus(conversation_id: id)
     }
 	
 	// Send a message to this conversation.
@@ -191,8 +191,8 @@ public class Conversation {
 
 		/* TODO: Fix the conditionality here. */
         if let image_data = image_data, image_name = image_name {
-			client.uploadImage(image_data, filename: image_name) { photoID in
-				self.client.sendChatMessage(self.id,
+			client.uploadImage(data: image_data, filename: image_name) { photoID in
+				self.client.sendChatMessage(conversation_id: self.id,
 					segments: segments.map { $0.serialize() },
 					image_id: image_id,
 					image_user_id: nil,
@@ -203,7 +203,7 @@ public class Conversation {
             return
         }
 
-        client.sendChatMessage(id,
+        client.sendChatMessage(conversation_id: id,
             segments: segments.map { $0.serialize() },
             image_id: image_id,
             otr_status: otr_status,
@@ -215,9 +215,9 @@ public class Conversation {
         switch (self.conversation.type) {
         case ConversationType.GROUP:
             //print("Remove Not Implemented!")
-            client.removeUser(id, cb: cb)
+            client.removeUser(conversation_id: id, cb: cb)
         case ConversationType.ONE_TO_ONE:
-            client.deleteConversation(id, cb: cb)
+            client.deleteConversation(conversation_id: id, cb: cb)
         default:
             break
         }
@@ -228,19 +228,19 @@ public class Conversation {
 	// custom names for one-to-one conversations may or may not appear in all
 	// first party clients.
     public func rename(name: String, cb: (() -> Void)?) {
-        self.client.renameConversation(self.id, name: name, cb: cb)
+        self.client.renameConversation(conversation_id: self.id, name: name, cb: cb)
     }
 	
 	// Set the notification level of the conversation.
 	// Pass .QUIET to disable notifications or .RING to enable them.
 	public func setConversationNotificationLevel(level: NotificationLevel, cb: (() -> Void)?) {
-		self.client.setConversationNotificationLevel(self.id, level: level, cb: cb)
+		self.client.setConversationNotificationLevel(conversation_id: self.id, level: level, cb: cb)
     }
 	
 	// Set typing status.
 	// TODO: Add rate-limiting to avoid unnecessary requests.
     public func setTyping(typing: TypingType = TypingType.STARTED, cb: (() -> Void)? = nil) {
-        client.setTyping(id, typing: typing, cb: cb)
+        client.setTyping(conversation_id: id, typing: typing, cb: cb)
     }
 	
 	// Update the timestamp of the latest event which has been read.
@@ -256,16 +256,16 @@ public class Conversation {
 
                 // Prevent duplicate requests by updating the conversation now.
                 latest_read_timestamp = new_read_timestamp
-                delegate?.conversationDidUpdate(self)
-                conversationList?.conversationDidUpdate(self)
-                client.updateWatermark(id, read_timestamp: new_read_timestamp, cb: cb)
+                delegate?.conversationDidUpdate(conversation: self)
+                conversationList?.conversationDidUpdate(conversation: self)
+                client.updateWatermark(conv_id: id, read_timestamp: new_read_timestamp, cb: cb)
             }
         }
     }
 
     public func handleEvent(event: Event) {
         if let delegate = delegate {
-            delegate.conversation(self, didReceiveEvent: event)
+			delegate.conversation(conversation: self, didReceiveEvent: event)
         } else {
             let user = user_list[event.userID]
             if !user.isSelf {
@@ -278,12 +278,12 @@ public class Conversation {
         let existingTypingStatus = typingStatuses[user.id]
         if existingTypingStatus == nil || existingTypingStatus! != status {
             typingStatuses[user.id] = status
-            delegate?.conversation(self, didChangeTypingStatusForUser: user, toStatus: status)
+            delegate?.conversation(conversation: self, didChangeTypingStatusForUser: user, toStatus: status)
         }
     }
 
     public func handleWatermarkNotification(status: WatermarkNotification) {
-        delegate?.conversation(self, didReceiveWatermarkNotification: status)
+		delegate?.conversation(conversation: self, didReceiveWatermarkNotification: status)
     }
 
     public var messages: [ChatMessageEvent] {
@@ -306,26 +306,26 @@ public class Conversation {
         // If event_id is provided, return the events we have that are
         // older, or request older events if event_id corresponds to the
         // oldest event we have.
-        if let conv_event = self.get_event(event_id) {
+        if let conv_event = self.get_event(event_id: event_id) {
             if events.first!.id != event_id {
-                if let indexOfEvent = self.events.indexOf({ $0 == conv_event }) {
+                if let indexOfEvent = self.events.index(where: { $0 == conv_event }) {
                     cb?(Array(self.events[indexOfEvent...self.events.endIndex]))
                     return
                 }
             }
 			
-            client.getConversation(id, event_timestamp: conv_event.timestamp, max_events: max_events) { res in
+            client.getConversation(conversation_id: id, event_timestamp: conv_event.timestamp, max_events: max_events) { res in
 				if res!.response_header.status == ResponseStatus.INVALID_REQUEST {
 					print("Invalid request! \(res!.response_header)")
 					return
 				}
-				let conv_events = res!.conversation_state.event.map { Conversation.wrap_event($0) }
+				let conv_events = res!.conversation_state.event.map { Conversation.wrap_event(event: $0) }
 
                 for conv_event in conv_events {
                     self.events_dict[conv_event.id] = conv_event
                 }
                 cb?(conv_events)
-                self.delegate?.conversationDidUpdateEvents(self)
+                self.delegate?.conversationDidUpdateEvents(conversation: self)
             }
         } else {
             print("Event not found.")
@@ -376,7 +376,7 @@ public class Conversation {
             if let name = self.conversation.name {
                 return name as String
             } else {
-                return users.filter { !$0.isSelf }.map { $0.fullName }.joinWithSeparator(", ")
+                return users.filter { !$0.isSelf }.map { $0.fullName }.joined(separator: ", ")
             }
         }
     }

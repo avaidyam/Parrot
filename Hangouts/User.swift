@@ -77,7 +77,7 @@ public struct User: Hashable, Equatable {
 	// ["John", "Mark", "Smith"] => "John Mark Smith"
 	// Will return an empty string if there are no name components.
 	public var fullName: String {
-		return self.nameComponents.joinWithSeparator(" ")
+		return self.nameComponents.joined(separator: " ")
 	}
 	
 	// Computes the first name by taking the first of the name components:

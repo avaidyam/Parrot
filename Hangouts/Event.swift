@@ -65,7 +65,7 @@ public class ChatMessageEvent : Event {
         }
 		
         lines += self.attachments
-        return lines.joinWithSeparator("\n")
+        return lines.joined(separator: "\n")
     }()
 	
 	// List of ChatMessageSegments in the message.
@@ -234,7 +234,7 @@ internal func parseTypingStatusMessage(p: SetTypingNotification) -> TypingStatus
 	return TypingStatusMessage(
 		convID: p.conversation_id!.id as! String,
 		userID: UserID(chatID: p.sender_id!.chat_id as! String, gaiaID: p.sender_id!.gaia_id as! String),
-		timestamp: from_timestamp(p.timestamp)!,
+		timestamp: from_timestamp(microsecond_timestamp: p.timestamp)!,
 		status: p.type!
 	)
 }
@@ -247,6 +247,6 @@ internal func parseWatermarkNotification(client_watermark_notification: WATERMAR
 			chatID: client_watermark_notification.participant_id.chat_id as! String,
 			gaiaID: client_watermark_notification.participant_id.gaia_id as! String
 		),
-		readTimestamp: from_timestamp(client_watermark_notification.latest_read_timestamp)!
+		readTimestamp: from_timestamp(microsecond_timestamp: client_watermark_notification.latest_read_timestamp)!
 	)
 }

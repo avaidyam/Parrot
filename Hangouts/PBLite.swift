@@ -64,9 +64,9 @@ public class PBLiteSerialization {
 	/* TODO: Use Swift reflection to unwrap AnyObject?. */
 	public class func _unwrapOptionalType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
-		if dynamicTypeName.containsString("Optional<") {
-			var containedTypeName = dynamicTypeName.stringByReplacingOccurrencesOfString("Optional<", withString: "")
-			containedTypeName = containedTypeName.stringByReplacingOccurrencesOfString(">", withString: "")
+		if dynamicTypeName.contains("Optional<") {
+			var containedTypeName = dynamicTypeName.replacingOccurrences(of: "Optional<", with: "")
+			containedTypeName = containedTypeName.replacingOccurrences(of: ">", with: "")
 			return NSClassFromString(containedTypeName)
 		}
 		return nil
@@ -76,15 +76,15 @@ public class PBLiteSerialization {
 	public class func _unwrapOptionalArrayType(any: Any) -> Any.Type? {
 		let dynamicTypeName = "\(Mirror(reflecting: any).subjectType)"
 		
-		if dynamicTypeName.containsString("Swift.Array") {
+		if dynamicTypeName.contains("Swift.Array") {
 			print("Encountered Swift.Array -> \(dynamicTypeName)!")
 		}
 		
-		if dynamicTypeName.containsString("Optional<Array") {
-			var containedTypeName = dynamicTypeName.stringByReplacingOccurrencesOfString("Optional<", withString: "")
-			containedTypeName = containedTypeName.stringByReplacingOccurrencesOfString("Swift.Array<", withString: "")
-			containedTypeName = containedTypeName.stringByReplacingOccurrencesOfString("Array<", withString: "")
-			containedTypeName = containedTypeName.stringByReplacingOccurrencesOfString(">", withString: "")
+		if dynamicTypeName.contains("Optional<Array") {
+			var containedTypeName = dynamicTypeName.replacingOccurrences(of: "Optional<", with: "")
+			containedTypeName = containedTypeName.replacingOccurrences(of: "Swift.Array<", with: "")
+			containedTypeName = containedTypeName.replacingOccurrences(of: "Array<", with: "")
+			containedTypeName = containedTypeName.replacingOccurrences(of: ">", with: "")
 			return NSClassFromString(containedTypeName)
 		}
 		return nil
@@ -268,9 +268,9 @@ public class PBLiteSerialization {
 	
 	/* TODO: Use Swift reflection to unwrap. */
 	public class func valueWithTypeCoercion(property: Any, value: AnyObject?) -> AnyObject? {
-		if property is NSDate || _unwrapOptionalType(property) is NSDate.Type {
+		if property is NSDate || _unwrapOptionalType(any: property) is NSDate.Type {
 			if let number = value as? NSNumber {
-				let timestampAsDate = from_timestamp(number)
+				let timestampAsDate = from_timestamp(microsecond_timestamp: number)
 				return timestampAsDate
 			}
 		}
@@ -279,8 +279,8 @@ public class PBLiteSerialization {
 	
 	public class func parseProtoJSON<T: Message>(input: NSData) -> T? {
 		let script = (NSString(data: input, encoding: NSUTF8StringEncoding)! as String)
-		if let parsedObject = evalArray(script) as? NSArray {
-			return parseArray(T.self, input: parsedObject)
+		if let parsedObject = evalArray(string: script) as? NSArray {
+			return parseArray(type: T.self, input: parsedObject)
 		}
 		return nil
 	}
@@ -300,17 +300,17 @@ public class PBLiteSerialization {
 			let property = children[i].value
 			
 			//  Unwrapping an optional sub-struct
-			if let type = _unwrapOptionalType(property) as? Message.Type {
-				let val: (AnyObject?) = parseArray(type, input: arr[i] as? NSArray)
+			if let type = _unwrapOptionalType(any: property) as? Message.Type {
+				let val: (AnyObject?) = parseArray(type: type, input: arr[i] as? NSArray)
 				instance.setValue(val, forKey: propertyName)
 				
 				//  Using a non-optional sub-struct
 			} else if let message = property as? Message {
-				let val: (AnyObject?) = parseArray(message.dynamicType, input: arr[i] as? NSArray)
+				let val: (AnyObject?) = parseArray(type: message.dynamicType, input: arr[i] as? NSArray)
 				instance.setValue(val, forKey: propertyName)
 				
 				//  Unwrapping an optional enum
-			} else if let type = _unwrapOptionalType(property) as? Enum.Type {
+			} else if let type = _unwrapOptionalType(any: property) as? Enum.Type {
 				var val: AnyObject?
 				/* TODO: Support NSNull literal conversion. */
 				if arr[i] as? NSNumber == nil {
@@ -336,24 +336,24 @@ public class PBLiteSerialization {
 				if arr[i] is NSNull {
 					instance.setValue(nil, forKey: propertyName)
 				} else {
-					if let elementType = _unwrapOptionalArrayType(property) {
+					if let elementType = _unwrapOptionalArrayType(any: property) {
 						let elementMessageType = elementType as! T.Type
 						let val = (arr[i] as! NSArray).map {
-							parseArray(elementMessageType, input: $0 as? NSArray)!
+							parseArray(type: elementMessageType, input: $0 as? NSArray)!
 						}
 						instance.setValue(val, forKey:propertyName)
-					} else if let elementType = getArrayMessageType(property) {
+					} else if let elementType = getArrayMessageType(arr: property) {
 						let val = (arr[i] as! NSArray).map {
-							parseArray(elementType, input: $0 as? NSArray)!
+							parseArray(type: elementType, input: $0 as? NSArray)!
 						}
 						instance.setValue(val, forKey:propertyName)
-					} else if let elementType = getArrayEnumType(property) {
+					} else if let elementType = getArrayEnumType(arr: property) {
 						let val = (arr[i] as! NSArray).map {
 							elementType.init(value: ($0 as! NSNumber))
 						}
 						instance.setValue(val, forKey:propertyName)
 					} else {
-						instance.setValue(valueWithTypeCoercion(property, value: arr[i]), forKey:propertyName)
+						instance.setValue(valueWithTypeCoercion(property: property, value: arr[i]), forKey:propertyName)
 					}
 				}
 			}
@@ -371,17 +371,17 @@ public class PBLiteSerialization {
 			let value: AnyObject? = obj[propertyName]
 			
 			//  Unwrapping an optional sub-struct
-			if let type = _unwrapOptionalType(property) as? Message.Type {
-				let val: (AnyObject?) = parseDictionary(type, obj: value as! NSDictionary)
+			if let type = _unwrapOptionalType(any: property) as? Message.Type {
+				let val: (AnyObject?) = parseDictionary(type: type, obj: value as! NSDictionary)
 				instance.setValue(val, forKey: propertyName)
 				
 				//  Using a non-optional sub-struct
 			} else if let message = property as? Message {
-				let val: (AnyObject?) = parseDictionary(message.dynamicType, obj: value as! NSDictionary)
+				let val: (AnyObject?) = parseDictionary(type: message.dynamicType, obj: value as! NSDictionary)
 				instance.setValue(val, forKey: propertyName)
 				
 				//  Unwrapping an optional enum
-			} else if let type = _unwrapOptionalType(property) as? Enum.Type {
+			} else if let type = _unwrapOptionalType(any: property) as? Enum.Type {
 				let val: (AnyObject?) = type.init(value: (value as! NSNumber))
 				instance.setValue(val, forKey: propertyName)
 				
@@ -395,18 +395,18 @@ public class PBLiteSerialization {
 				if value is NSNull || value == nil {
 					instance.setValue(nil, forKey: propertyName)
 				} else {
-					if let elementType = getArrayMessageType(property) {
+					if let elementType = getArrayMessageType(arr: property) {
 						let val = (value as! NSArray).map {
-							parseDictionary(elementType, obj: $0 as! NSDictionary)!
+							parseDictionary(type: elementType, obj: $0 as! NSDictionary)!
 						}
 						instance.setValue(val, forKey:propertyName)
-					} else if let elementType = getArrayEnumType(property) {
+					} else if let elementType = getArrayEnumType(arr: property) {
 						let val = (value as! NSArray).map {
 							elementType.init(value: ($0 as! NSNumber))
 						}
 						instance.setValue(val, forKey:propertyName)
 					} else {
-						instance.setValue(valueWithTypeCoercion(property, value: value), forKey: propertyName)
+						instance.setValue(valueWithTypeCoercion(property: property, value: value), forKey: propertyName)
 					}
 				}
 			}
@@ -421,9 +421,9 @@ public class PBLiteSerialization {
 
 extension String {
 	func substring(between start: String, and to: String) -> String? {
-		return (rangeOfString(start)?.endIndex).flatMap { startIdx in
-			(rangeOfString(to, range: startIdx..<endIndex)?.startIndex).map { endIdx in
-				substringWithRange(startIdx..<endIdx)
+		return (range(of: start)?.upperBound).flatMap { startIdx in
+			(range(of: to, range: startIdx..<endIndex)?.lowerBound).map { endIdx in
+				substring(with: startIdx..<endIdx)
 			}
 		}
 	}
@@ -434,13 +434,13 @@ func _translateProtoToSwift(str: String) -> String {
 	let title = str.substring(between: "message ", and: " {")!
 	var scanned = 1
 	let b = str.substring(between: "{", and: "}")?
-		.componentsSeparatedByString(";")
+		.components(separatedBy: ";")
 		.map {
-			$0.stringByTrimmingCharactersInSet(.whitespaceAndNewlineCharacterSet())
+			$0.trimmingCharacters(in: .whitespacesAndNewlines())
 		}.filter {
 			!$0.isEmpty
 		}.map {
-			$0.componentsSeparatedByString(" ").filter { $0 != "=" }
+			$0.components(separatedBy: " ").filter { $0 != "=" }
 		}.map { a -> String in
 			var modifier = a[0], type = a[1], name = a[2], id = Int(a[3])!
 			
@@ -471,11 +471,11 @@ func _translateProtoToSwift(str: String) -> String {
 	let body = b!.reduce("") { $0 + "\n\t" + $1 }
 	
 	let TEMPLATE = "@objc(%NAME%)\npublic class %NAME%: Message {%BODY%\n}"
-	let tmp = TEMPLATE.stringByReplacingOccurrencesOfString("%NAME%", withString: title)
-	return tmp.stringByReplacingOccurrencesOfString("%BODY%", withString: body)
+	let tmp = TEMPLATE.replacingOccurrences(of: "%NAME%", with: title)
+	return tmp.replacingOccurrences(of: "%BODY%", with: body)
 }
 func _translateAllProtoToSwift(str: String) -> String {
-	return str.componentsSeparatedByString("}\n").map { $0 + "}\n" }
+	return str.components(separatedBy: "}\n").map { $0 + "}\n" }
 		.map(_translateProtoToSwift).reduce("") { $0 + "\n\n" + $1 }
 }
 
@@ -486,8 +486,8 @@ func _translateAllProtoToSwift(str: String) -> String {
 //
 
 import JavaScriptCore
-@available(iOS, deprecated=1.0, message="Avoid JSContext!")
-@available(OSX, deprecated=1.0, message="Avoid JSContext!")
+@available(iOS, deprecated: 1.0, message: "Avoid JSContext!")
+@available(OSX, deprecated: 1.0, message: "Avoid JSContext!")
 public func evalArray(string: String) -> AnyObject? {
 	return JSContext().evaluateScript("a = " + string).toArray()
 }
@@ -519,12 +519,12 @@ public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String
 /* String Crypto extensions */
 public extension String {
 	public func SHA1() -> String {
-		let data = self.dataUsingEncoding(NSUTF8StringEncoding)!
-		var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
+		let data = self.data(using: NSUTF8StringEncoding)!
+		var digest = [UInt8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
 		CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
 		let hexBytes = digest.map {
 			String(format: "%02hhx", $0)
 		}
-		return hexBytes.joinWithSeparator("")
+		return hexBytes.joined(separator: "")
 	}
 }
