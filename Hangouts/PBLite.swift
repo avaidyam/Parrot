@@ -339,13 +339,15 @@ public class PBLiteSerialization {
 					if let elementType = _unwrapOptionalArrayType(any: property) {
 						let elementMessageType = elementType as! T.Type
 						let val = (arr[i] as! NSArray).map {
-							parseArray(type: elementMessageType, input: $0 as? NSArray)!
-						}
+							parseArray(type: elementMessageType, input: $0 as? NSArray)
+						}.filter { $0 != nil }.map { $0! }
+						print(val)
 						instance.setValue(val, forKey:propertyName)
 					} else if let elementType = getArrayMessageType(arr: property) {
 						let val = (arr[i] as! NSArray).map {
-							parseArray(type: elementType, input: $0 as? NSArray)!
-						}
+							parseArray(type: elementType, input: $0 as? NSArray)
+						}.filter { $0 != nil }.map { $0! }
+						print(val)
 						instance.setValue(val, forKey:propertyName)
 					} else if let elementType = getArrayEnumType(arr: property) {
 						let val = (arr[i] as! NSArray).map {
