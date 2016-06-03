@@ -58,7 +58,7 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 		return nil
 	}
 	
-	@IBAction func logoutSelected(sender: AnyObject) {
+	@IBAction func logoutSelected(_ sender: AnyObject) {
 		let cookieStorage = NSHTTPCookieStorage.shared()
 		if let cookies = cookieStorage.cookies {
 			for cookie in cookies {

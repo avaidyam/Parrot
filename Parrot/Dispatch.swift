@@ -5,14 +5,6 @@ import Foundation
 public typealias Dispatch = NSOperationQueue
 public extension NSOperationQueue {
 	
-	public class func main() -> NSOperationQueue {
-		return NSOperationQueue.main()
-	}
-	
-	public class func current() -> NSOperationQueue {
-		return NSOperationQueue.current() ?? NSOperationQueue.main()
-	}
-	
 	public func pause() -> Self {
 		self.isSuspended = true
 		return self

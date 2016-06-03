@@ -112,7 +112,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	public var dataSource: [Wrapper<Any>]! {
 		didSet { UI {
 			self.tableView.reloadData()
-			let row = self.updateScrollsToBottom ? self.numberOfRowsInTableView(tableView: self.tableView) - 1 : 0
+			let row = self.updateScrollsToBottom ? self.numberOfRows(in: self.tableView) - 1 : 0
 			self.tableView.scrollRowToVisible(row)
 		}}
 	}
@@ -152,7 +152,8 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 // Essential Support
 public extension ElementContainerView {
 	
-	public func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+	@objc(numberOfRowsInTableView:)
+	public func numberOfRows(in tableView: NSTableView) -> Int {
 		return self.dataSource.count
 	}
 	
