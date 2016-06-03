@@ -69,22 +69,31 @@ public class UserList {
 	}
 }
 
-// UserList CollectionType support.
+// UserList Collection support.
 extension UserList: Collection {
 	public typealias Index = DictionaryIndex<UserID, User>
 	
-	// UserList: CollectionType
 	public var startIndex : Index {
 		return self.users.values.startIndex
 	}
 	
-	// UserList: CollectionType
 	public var endIndex : Index {
 		return self.users.values.startIndex
 	}
 	
-	// UserList: CollectionType
+	public func index(after i: Index) -> Index {
+		return self.users.values.index(after: i)
+	}
+	
+	public func formIndex(after i: inout Index) {
+		return self.users.values.formIndex(after: &i)
+	}
+	
 	public subscript(index: Index) -> User {
 		return self.users.values[index]
+	}
+	
+	public subscript(bounds: Range<Index>) -> [Index] {
+		return [] // FIXME!!!
 	}
 }

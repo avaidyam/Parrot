@@ -8,12 +8,11 @@ public extension NSDate {
 		
 		// Setup for calendar components.
 		let date = self, now = NSDate()
-		let calendar = NSCalendar.currentCalendar()
+		let calendar = NSCalendar.current()
 		let earliest = now.earlierDate(date)
 		let latest = (earliest == now) ? date : now
-		let comps: NSCalendarUnit = [.Second, .Minute, .Hour, .Day, .WeekOfYear, .Month, .Year]
-		let components = calendar.components(comps, fromDate: earliest,
-			toDate: latest, options: NSCalendarOptions())
+		let comps: NSCalendarUnit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
+		let components = calendar.components(comps, from: earliest, to: latest, options: NSCalendarOptions())
 		
 		// Format calendar components into string.
 		if (components.year >= 2) {

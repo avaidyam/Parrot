@@ -7,7 +7,7 @@ private var _cache = Dictionary<String, NSData>()
 private var _notes = Dictionary<String, [String]>()
 
 // Quick alias just for us.
-private let nc = NSUserNotificationCenter.defaultUserNotificationCenter()
+private let nc = NSUserNotificationCenter.default()
 
 // The default user image, when none can be located.
 public let defaultUserImage = NSImage(named: "NSUserGuest")!
@@ -33,7 +33,7 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
         } else {
             _notes[conversationID] = [notificationID]
         }
-        nc.deliverNotification(notification)
+        nc.deliver(notification)
     }
 
     public func clearNotificationsFor(group: String) {
@@ -42,7 +42,7 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
             notification.identifier = notificationID
             nc.removeDeliveredNotification(notification)
         }
-        _notes.removeValueForKey(group)
+        _notes.removeValue(forKey: group)
 	}
 	
 	// Handle NSApp dock badge.
@@ -53,15 +53,15 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
 	
 	// Handle NSUserNotificationCenter delivery.
 	
-    public func userNotificationCenter(center: NSUserNotificationCenter, didDeliverNotification notification: NSUserNotification) {
+    public func userNotificationCenter(_ center: NSUserNotificationCenter, didDeliver notification: NSUserNotification) {
 		
     }
 	
-	public func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
+	public func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
 		
 	}
 
-    public func userNotificationCenter(center: NSUserNotificationCenter, shouldPresentNotification notification: NSUserNotification) -> Bool {
+    public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
         return true
     }
 }
@@ -89,7 +89,7 @@ public func fetchData(id: String?, _ resource: String?, handler: ((NSData?) -> V
 	
 	// Case 4: We can request the resource -> return image.
 	let semaphore = Semaphore(count: 0)
-	NSURLSession.sharedSession().request(NSURLRequest(URL: url)) {
+	NSURLSession.shared().request(request: NSURLRequest(url: url)) {
 		if let data = $0.data {
 			_cache[id] = data
 			handler?(data)

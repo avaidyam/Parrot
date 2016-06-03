@@ -22,25 +22,25 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		self.messagesView.dynamicHeightProvider = { (row: Int) -> Double in
 			let a = (self.messagesView.dataSource[row].element as? Message)!.string
 			let b = self.messagesView.frame.width
-			return Double(MessageView.heightForContainerWidth(a, width: b))
+			return Double(MessageView.heightForContainerWidth(text: a, width: b))
 		}
 		
 		self.popover = NSPopover()
 		self.popover.contentViewController = NSViewController()
 		self.popover.contentViewController!.view = self.statusView
-		self.popover.behavior = .ApplicationDefined
+		self.popover.behavior = .applicationDefined
     }
 
     override func viewWillAppear() {
-		_note = Notifications.subscribe(NSWindowDidBecomeKeyNotification, object: self.window) { a in
-			self.windowDidBecomeKey(nil)
+		_note = Notifications.subscribe(name: NSWindowDidBecomeKeyNotification, object: self.window) { a in
+			self.windowDidBecomeKey(sender: nil)
 		}
-        if self.window?.keyWindow ?? false {
-            self.windowDidBecomeKey(nil)
+        if self.window?.isKeyWindow ?? false {
+            self.windowDidBecomeKey(sender: nil)
         }
 		
 		// woohoo this is a terrible idea, move this out of here later.
-		self.window?.collectionBehavior = [.FullScreenAuxiliary, .FullScreenAllowsTiling]
+		self.window?.collectionBehavior = [.fullScreenAuxiliary, .fullScreenAllowsTiling]
     }
 
     override var representedObject: AnyObject? {
@@ -50,7 +50,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
             }
 
             self.conversation?.delegate = self
-			self.conversation?.getEvents(conversation?.events.first?.id, max_events: 50)
+			self.conversation?.getEvents(event_id: conversation?.events.first?.id, max_events: 50)
 			self.title = self.conversation?.name
 			
 			//self.messagesView.removeElements(self._getAllMessages()!)
@@ -78,7 +78,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		UI {
 			switch (status) {
 			case TypingType.STARTED:
-				self.popover.showRelativeToRect(self.messageTextField!.bounds, ofView: self.messageTextField!, preferredEdge: .MinY)
+				self.popover.showRelative(to: self.messageTextField!.bounds, of: self.messageTextField!, preferredEdge: .minY)
 				self.statusView.stringValue = "Typing..."
 			case TypingType.PAUSED:
 				self.statusView.stringValue = "Entered text."
@@ -96,7 +96,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		//self.messagesView.appendElements(found)
 		//print("got \(msg)")
 		
-        if !(self.window?.keyWindow ?? false) {
+        if !(self.window?.isKeyWindow ?? false) {
             let user = conversation.user_list[event.userID]
             if !user.isSelf {
 				let a = (event.conversation_id as String, event.id as String)
@@ -109,12 +109,12 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				notification.soundName = NSUserNotificationDefaultSoundName
 				
 				var img: NSImage = defaultUserImage
-				if let d = fetchData(user.id.chatID, user.photoURL) {
+				if let d = fetchData(id: user.id.chatID, user.photoURL) {
 					img = NSImage(data: d)!
 				}
 				notification.contentImage = img
 				
-				NotificationManager.sharedInstance.sendNotificationFor(a, notification: notification)
+				NotificationManager.sharedInstance.sendNotificationFor(group: a, notification: notification)
             }
         }
     }
@@ -133,7 +133,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	
 	// get all messages
 	private func _getAllMessages() -> [Message]? {
-		return self.conversation?.messages.map { _getMessage($0) }
+		return self.conversation?.messages.map { _getMessage(ev: $0) }
 	}
 	
 	// get a single message
@@ -149,8 +149,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			color = NSColor.materialBlueColor()
 		}
 		
-		let text = ConversationViewController.attributedStringForText(ev.text)
-		let orientation = (user.isSelf ? NSTextAlignment.Right : .Left)
+		let text = ConversationViewController.attributedStringForText(text: ev.text)
+		let orientation = (user.isSelf ? NSTextAlignment.right : .left)
 		
 		return Message(string: text, orientation: orientation, color: color)
 	}
@@ -159,13 +159,13 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
     func windowDidBecomeKey(sender: AnyObject?) {
         if let conversation = conversation {
-            NotificationManager.sharedInstance.clearNotificationsFor(conversation.id)
+            NotificationManager.sharedInstance.clearNotificationsFor(group: conversation.id)
         }
 
         //  Delay here to ensure that small context switches don't send focus messages.
 		let dt = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
 		dispatch_after(dt, dispatch_get_main_queue()) {
-            if let window = self.window where window.keyWindow {
+            if let window = self.window where window.isKeyWindow {
                 self.conversation?.setFocus()
             }
             self.conversation?.updateReadTimestamp()
@@ -174,7 +174,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
     // MARK: NSTextFieldDelegate
     var lastTypingTimestamp: NSDate?
-    override func controlTextDidChange(obj: NSNotification) {
+    override func controlTextDidChange(_ obj: NSNotification) {
         if messageTextField.stringValue == "" {
             return
         }
@@ -182,31 +182,31 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         let typingTimeout = 0.4
         let now = NSDate()
 
-        if lastTypingTimestamp == nil || NSDate().timeIntervalSinceDate(lastTypingTimestamp!) > typingTimeout {
-            self.conversation?.setTyping(TypingType.STARTED)
+        if lastTypingTimestamp == nil || NSDate().timeIntervalSince(lastTypingTimestamp!) > typingTimeout {
+            self.conversation?.setTyping(typing: TypingType.STARTED)
         }
 
         lastTypingTimestamp = now
 		let dt = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
 		dispatch_after(dt, dispatch_get_main_queue()) {
-            if let ts = self.lastTypingTimestamp where NSDate().timeIntervalSinceDate(ts) > typingTimeout {
-                self.conversation?.setTyping(TypingType.STOPPED)
+            if let ts = self.lastTypingTimestamp where NSDate().timeIntervalSince(ts) > typingTimeout {
+                self.conversation?.setTyping(typing: TypingType.STOPPED)
             }
         }
     }
 
     // MARK: IBActions
     @IBAction func messageTextFieldDidAction(_:AnyObject?) {
-		if NSEvent.modifierFlags().contains(.ShiftKeyMask) {
+		if NSEvent.modifierFlags().contains(.shiftKeyMask) {
 			return
 		}
 		
         let text = messageTextField.stringValue
         if text.characters.count > 0 {
 			var emojify = Settings()[Parrot.AutoEmoji] as? Bool ?? false
-			emojify = NSEvent.modifierFlags().contains(.AlternateKeyMask) ? false : emojify
-			let txt = ConversationViewController.segmentsForInput(text, emojify: emojify)
-			conversation?.sendMessage(txt)
+			emojify = NSEvent.modifierFlags().contains(.alternateKeyMask) ? false : emojify
+			let txt = ConversationViewController.segmentsForInput(text: text, emojify: emojify)
+			conversation?.sendMessage(segments: txt)
             messageTextField.stringValue = ""
         }
     }
@@ -219,15 +219,15 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		let attrString = NSMutableAttributedString(string: text)
 		
 		let style = NSMutableParagraphStyle()
-		style.lineBreakMode = NSLineBreakMode.ByWordWrapping
+		style.lineBreakMode = NSLineBreakMode.byWordWrapping
 		
-		let linkDetector = try! NSDataDetector(types: NSTextCheckingType.Link.rawValue)
-		for match in linkDetector.matchesInString(text, options: [], range: NSMakeRange(0, text.characters.count)) {
-			if let url = match.URL {
+		let linkDetector = try! NSDataDetector(types: NSTextCheckingType.link.rawValue)
+		for match in linkDetector.matches(in: text, options: [], range: NSMakeRange(0, text.characters.count)) {
+			if let url = match.url {
 				attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
 				attrString.addAttribute(
 					NSUnderlineStyleAttributeName,
-					value: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue),
+					value: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue),
 					range: match.range
 				)
 			}
@@ -236,7 +236,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		/* TODO: Move this paragraph style and font stuff to the view. */
 		attrString.addAttribute(
 			NSFontAttributeName,
-			value: NSFont.systemFontOfSize(12),
+			value: NSFont.systemFont(ofSize: 12),
 			range: NSMakeRange(0, attrString.length)
 		)
 		

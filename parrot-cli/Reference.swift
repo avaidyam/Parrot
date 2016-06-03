@@ -43,7 +43,7 @@ typealias RGB = (R: Double, G: Double, B: Double)
 // For Foreground/Background values.
 typealias FB = (F: Color, B: Color)
 
-struct Attribute: OptionSetType {
+struct Attribute: OptionSet {
 	let rawValue: Int32
 	
 	static let Normal = Attribute(rawValue: _NORMAL)
@@ -296,7 +296,8 @@ struct Border {
 	
 	// Creates a Border from an array of 8 elements.
 	// Components must follow the same order as the above variables!
-	static func create(var values: [UInt32]) -> Border {
+	static func create(_ values: [UInt32]) -> Border {
+		var values = values
 		if values.count != 8 {
 			values = [32, 32, 32, 32, 32, 32, 32, 32]
 		}
@@ -308,12 +309,13 @@ struct Border {
 	
 	// Creates a Border from a string of 8 characters.
 	// Components must follow the same order as the above variables!
-	static func create(var string: String) -> Border {
+	static func create(_ string: String) -> Border {
+		var string = string
 		if string.characters.count != 8 {
 			string = "        " // 8 spaces
 		}
 		
-		var values = [UInt32](count: 8, repeatedValue: 0)
+		var values = [UInt32](repeating: 0, count: 8)
 		for i in (0 ... 7) {
 			let str = String(Array(string.characters)[i])
 			values[i] = str.unicodeScalars.first!.value

@@ -6,8 +6,8 @@ public extension NSView {
 	func snapshot() -> NSImage {
 		
 		// First get the bitmap representation of the view.
-		let rep = self.bitmapImageRepForCachingDisplayInRect(self.bounds)!
-		self.cacheDisplayInRect(self.bounds, toBitmapImageRep: rep)
+		let rep = self.bitmapImageRepForCachingDisplay(in: self.bounds)!
+		self.cacheDisplay(in: self.bounds, to: rep)
 		
 		// Stuff the representation into an NSImage.
 		let snapshot = NSImage(size: rep.size)
@@ -19,7 +19,7 @@ public extension NSView {
 	func draggingComponent(key: String) -> NSDraggingImageComponent {
 		let component = NSDraggingImageComponent(key: key)
 		component.contents = self.snapshot()
-		component.frame = self.convertRect(self.bounds, fromView: self)
+		component.frame = self.convert(self.bounds, from: self)
 		return component
 	}
 }

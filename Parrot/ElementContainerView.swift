@@ -62,27 +62,27 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		self.tableView.setDataSource(self)
 		
 		let col = NSTableColumn(identifier: "")
-		col.resizingMask = .AutoresizingMask
+		col.resizingMask = .autoresizingMask
 		self.tableView.addTableColumn(col)
 		self.tableView.headerView = nil
 		
 		self.scrollView.drawsBackground = false
-		self.scrollView.borderType = .NoBorder
+		self.scrollView.borderType = .noBorder
 		self.tableView.allowsEmptySelection = true
-		self.tableView.selectionHighlightStyle = .SourceList
+		self.tableView.selectionHighlightStyle = .sourceList
 		self.tableView.floatsGroupRows = true
-		self.tableView.columnAutoresizingStyle = .UniformColumnAutoresizingStyle
+		self.tableView.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
 		
 		self.scrollView.documentView = self.tableView
 		self.scrollView.hasVerticalScroller = true
 		self.addSubview(self.scrollView)
 		
-		self.scrollView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
+		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.tableView.sizeLastColumnToFit()
 	}
 	
 	internal func createView() -> NSTableCellView {
-		var view = tableView.makeViewWithIdentifier(NSTableCellView.className(), owner: self) as? NSTableCellView
+		var view = tableView.make(withIdentifier: NSTableCellView.className(), owner: self) as? NSTableCellView
 		if view == nil {
 			view = NSTableCellView(frame: NSZeroRect)
 			view!.identifier = NSTableCellView.className()
@@ -112,7 +112,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	public var dataSource: [Wrapper<Any>]! {
 		didSet { UI {
 			self.tableView.reloadData()
-			let row = self.updateScrollsToBottom ? self.numberOfRowsInTableView(self.tableView) - 1 : 0
+			let row = self.updateScrollsToBottom ? self.numberOfRowsInTableView(tableView: self.tableView) - 1 : 0
 			self.tableView.scrollRowToVisible(row)
 		}}
 	}
@@ -184,7 +184,7 @@ public extension ElementContainerView {
 	
 	public func tableView(tableView: NSTableView, didAddRowView rowView: NSTableRowView, forRow row: Int) {
 		//Swift.print("Unimplemented \(__FUNCTION__)")
-		rowView.emphasized = false
+		rowView.isEmphasized = false
 	}
 	
 	public func tableView(tableView: NSTableView, didRemoveRowView rowView: NSTableRowView, forRow row: Int) {
@@ -240,7 +240,7 @@ public extension ElementContainerView {
 	
 	public func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
 		Swift.print("Unimplemented \(#function)")
-		return .None
+		return []
 	}
 	
 	public func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {

@@ -945,20 +945,20 @@ public extension String {
 	// Convert instances of textual Github markdown emoji into UTF Emoji.
 	public func applyGithubEmoji() -> String {
 		let regex = try! NSRegularExpression(pattern: "(:[a-z0-9-+_]+:)",
-			options: NSRegularExpressionOptions.CaseInsensitive)
+			options: NSRegularExpressionOptions.caseInsensitive)
 		var resultText = self
-		let matchingRange = NSMakeRange(0, resultText.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
-		regex.enumerateMatchesInString(resultText,
-			options: .ReportCompletion, range: matchingRange) { result, flags, stop in
-				if ((result != nil) && (result!.resultType == .RegularExpression)) {
+		let matchingRange = NSMakeRange(0, resultText.lengthOfBytes(using: NSUTF8StringEncoding))
+		regex.enumerateMatches(in: resultText,
+			options: .reportCompletion, range: matchingRange) { result, flags, stop in
+				if ((result != nil) && (result!.resultType == .regularExpression)) {
 					let range = result!.range
 					if (range.location != NSNotFound) {
-						let str2 = (self as NSString).substringWithRange(range)
-									.stringByReplacingOccurrencesOfString(":", withString: "")
+						let str2 = (self as NSString).substring(with: range)
+								.replacingOccurrences(of: ":", with: "")
 						let code = str2, unicode = GITHUB_EMOJI[code]
 						if !unicode!.isEmpty {
-							resultText = resultText.stringByReplacingOccurrencesOfString(code,
-								withString:unicode!, options: NSStringCompareOptions(rawValue: 0), range: nil)
+							resultText = resultText.replacingOccurrences(of: code,
+								with:unicode!, options: NSStringCompareOptions(rawValue: 0), range: nil)
 						}
 					}
 				}
@@ -969,7 +969,7 @@ public extension String {
 	// Convert instances of textual Google emoticons into UTF Emoji.
 	public func applyGoogleEmoji() -> String {
 		return GOOGLE_EMOJI.reduce(self) {
-			($0 as NSString).stringByReplacingOccurrencesOfString($1.0, withString: String(UnicodeScalar($1.1)))
+			($0 as NSString).replacingOccurrences(of: $1.0, with: String(UnicodeScalar($1.1)))
 		}
 	}
 }

@@ -32,22 +32,22 @@ public class PersonView : NSTableCellView {
 	
 	public override init(frame: NSRect) {
 		self.photoView = NSImageView(true)
-		self.photoView.imageScaling = .ScaleProportionallyDown
+		self.photoView.imageScaling = .scaleProportionallyDown
 		
 		self.nameLabel = NSLabel(true, false)
-		self.nameLabel.textColor = NSColor.labelColor()
-		self.nameLabel.lineBreakMode = .ByTruncatingTail
-		self.nameLabel.font = NSFont.systemFontOfSize(13.0, weight: NSFontWeightSemibold)
+		self.nameLabel.textColor = NSColor.label()
+		self.nameLabel.lineBreakMode = .byTruncatingTail
+		self.nameLabel.font = NSFont.systemFont(ofSize: 13.0, weight: NSFontWeightSemibold)
 		
 		self.textLabel = NSLabel(true, true)
-		self.textLabel.textColor = NSColor.secondaryLabelColor()
-		self.textLabel.lineBreakMode = .ByWordWrapping
-		self.textLabel.font = NSFont.systemFontOfSize(12.0, weight: NSFontWeightRegular)
+		self.textLabel.textColor = NSColor.secondaryLabel()
+		self.textLabel.lineBreakMode = .byWordWrapping
+		self.textLabel.font = NSFont.systemFont(ofSize: 12.0, weight: NSFontWeightRegular)
 		
 		self.timeLabel = NSLabel(true, false)
-		self.timeLabel.textColor = NSColor.tertiaryLabelColor()
-		self.timeLabel.lineBreakMode = .ByClipping
-		self.timeLabel.font = NSFont.systemFontOfSize(11.0, weight: NSFontWeightRegular)
+		self.timeLabel.textColor = NSColor.tertiaryLabel()
+		self.timeLabel.lineBreakMode = .byClipping
+		self.timeLabel.font = NSFont.systemFont(ofSize: 11.0, weight: NSFontWeightRegular)
 		
 		self.indicator = NSView(true)
 		
@@ -89,13 +89,13 @@ public class PersonView : NSTableCellView {
 			}
 			
 			self.photoView.image = o.photo
-			self.photoView.layer?.borderColor = o.highlight.CGColor
+			self.photoView.layer?.borderColor = o.highlight.cgColor
 			self.nameLabel.stringValue = o.primary
 			self.textLabel.stringValue = o.secondary
 			self.timeLabel.stringValue = o.tertiary
-			self.indicator.hidden = o.indicator
+			self.indicator.isHidden = o.indicator
 			
-			self.textLabel.font = NSFont.systemFontOfSize(self.textLabel.font!.pointSize,
+			self.textLabel.font = NSFont.systemFont(ofSize: self.textLabel.font!.pointSize,
 				weight: o.indicator ? NSFontWeightBold : NSFontWeightRegular)
 		}
 	}
@@ -104,14 +104,14 @@ public class PersonView : NSTableCellView {
 	// NOTE: If the rowView isn't emphasized, the colors will look odd because of blending.
 	public override var backgroundStyle: NSBackgroundStyle {
 		didSet {
-			if self.backgroundStyle == .Light {
-				self.nameLabel.textColor = NSColor.labelColor()
-				self.textLabel.textColor = NSColor.secondaryLabelColor()
-				self.timeLabel.textColor = NSColor.tertiaryLabelColor()
-			} else if self.backgroundStyle == .Dark {
-				self.nameLabel.textColor = NSColor.alternateSelectedControlTextColor()
-				self.textLabel.textColor = NSColor.alternateSelectedControlTextColor()
-				self.timeLabel.textColor = NSColor.alternateSelectedControlTextColor()
+			if self.backgroundStyle == .light {
+				self.nameLabel.textColor = NSColor.label()
+				self.textLabel.textColor = NSColor.secondaryLabel()
+				self.timeLabel.textColor = NSColor.tertiaryLabel()
+			} else if self.backgroundStyle == .dark {
+				self.nameLabel.textColor = NSColor.alternateSelectedControlText()
+				self.textLabel.textColor = NSColor.alternateSelectedControlText()
+				self.timeLabel.textColor = NSColor.alternateSelectedControlText()
 			}
 		}
 	}
@@ -128,10 +128,10 @@ public class PersonView : NSTableCellView {
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
 		get {
 			return [
-				self.photoView.draggingComponent("Photo"),
-				self.nameLabel.draggingComponent("Name"),
-				self.textLabel.draggingComponent("Text"),
-				self.timeLabel.draggingComponent("Time"),
+				self.photoView.draggingComponent(key: "Photo"),
+				self.nameLabel.draggingComponent(key: "Name"),
+				self.textLabel.draggingComponent(key: "Text"),
+				self.timeLabel.draggingComponent(key: "Time"),
 			]
 		}
 	}
@@ -150,7 +150,7 @@ public class PersonView : NSTableCellView {
 // Container-type view for PersonView.
 public class PersonsView: ElementContainerView {
 	internal override func createView() -> PersonView {
-		var view = self.tableView.makeViewWithIdentifier(PersonView.className(), owner: self) as? PersonView
+		var view = self.tableView.make(withIdentifier: PersonView.className(), owner: self) as? PersonView
 		if view == nil {
 			view = PersonView(frame: NSZeroRect)
 			view!.identifier = PersonView.className()

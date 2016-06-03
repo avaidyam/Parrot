@@ -4,7 +4,7 @@ import WebKit
 
 public class Authenticator {
 	
-	private static let DEFAULTS = NSUserDefaults.standardUserDefaults()
+	private static let DEFAULTS = NSUserDefaults.standard()
 	private static let ACCESS_TOKEN = "access_token"
 	private static let REFRESH_TOKEN = "refresh_token"
 	
@@ -21,15 +21,15 @@ public class Authenticator {
 	
 	class WebDelegate: NSObject, WebPolicyDelegate {
 		func webView(
-			webView: WebView!,
+			_ webView: WebView!,
 			decidePolicyForNavigationAction actionInformation: [NSObject : AnyObject]!,
 			request: NSURLRequest!,
 			frame: WebFrame!,
 			decisionListener listener: WebPolicyDecisionListener!) {
-				
-				let url = request.URL!.absoluteString
+			
+				let url = request.url!.absoluteString
 				let val = (validURL?.absoluteString)!
-				if url.containsString(val) {
+				if url.contains(val) {
 					listener.ignore()
 					handler?(request)
 					window?.close()
@@ -44,8 +44,8 @@ public class Authenticator {
 	- returns: Tuple containing tokens, or nil on failure.
 	*/
 	public class func loadTokens() -> (access_token: String, refresh_token: String)? {
-		let at = DEFAULTS.stringForKey(ACCESS_TOKEN)
-		let rt = DEFAULTS.stringForKey(REFRESH_TOKEN)
+		let at = DEFAULTS.string(forKey: ACCESS_TOKEN)
+		let rt = DEFAULTS.string(forKey: REFRESH_TOKEN)
 		
 		if let at = at, rt = rt {
 			return (access_token: at, refresh_token: rt)
@@ -61,60 +61,60 @@ public class Authenticator {
 	- parameter refresh_token the OAuth2 refresh token
 	*/
 	public class func saveTokens(access_token: String, refresh_token: String) {
-		DEFAULTS.setObject(access_token, forKey: ACCESS_TOKEN)
-		DEFAULTS.setObject(refresh_token, forKey: REFRESH_TOKEN)
+		DEFAULTS.set(access_token, forKey: ACCESS_TOKEN)
+		DEFAULTS.set(refresh_token, forKey: REFRESH_TOKEN)
 	}
 	
 	/**
 	Clear the existing auth_token and refresh_token for OAuth2.
 	*/
 	public class func clearTokens() {
-		DEFAULTS.removeObjectForKey(ACCESS_TOKEN)
-		DEFAULTS.removeObjectForKey(REFRESH_TOKEN)
+		DEFAULTS.removeObject(forKey: ACCESS_TOKEN)
+		DEFAULTS.removeObject(forKey: REFRESH_TOKEN)
 	}
 	
 	public class func authenticateClient(cb: (configuration: NSURLSessionConfiguration) -> Void) {
 		
 		// Prepare the manager for any requests.
-		let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
-		cfg.HTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-		cfg.HTTPAdditionalHeaders = _defaultHTTPHeaders
+		let cfg = NSURLSessionConfiguration.default()
+		cfg.httpCookieStorage = NSHTTPCookieStorage.shared()
+		cfg.httpAdditionalHeaders = _defaultHTTPHeaders
 		let session = NSURLSession(configuration: cfg)
 		
 		if let code = loadTokens() {
 			
 			// If we already have the tokens stored, authenticate.
 			//  - second: authenticate(manager, refresh_token)
-			authenticate(session, refresh_token: code.refresh_token) { (access_token: String, refresh_token: String) in
-				saveTokens(access_token, refresh_token: refresh_token)
+			authenticate(session: session, refresh_token: code.refresh_token) { (access_token: String, refresh_token: String) in
+				saveTokens(access_token: access_token, refresh_token: refresh_token)
 				
 				let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"
-				let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+				let request = NSMutableURLRequest(url: NSURL(string: url)!)
 				request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 				
-				session.request(request) {
+				session.request(request: request) {
 					guard let data = $0.data else {
 						print("Request failed with error: \($0.error!)")
 						return
 					}
 					
 					var uberauth = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
-					uberauth.replaceRange(uberauth.endIndex.advancedBy(-1) ..< uberauth.endIndex, with: "")
+					uberauth.replaceSubrange(uberauth.index(uberauth.endIndex, offsetBy: -1) ..< uberauth.endIndex, with: "")
 					
-					let request = NSMutableURLRequest(URL: NSURL(string: "https://accounts.google.com/MergeSession")!)
+					let request = NSMutableURLRequest(url: NSURL(string: "https://accounts.google.com/MergeSession")!)
 					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 					
-					session.request(request) {
+					session.request(request: request) {
 						guard let _ = $0.data else {
 							print("Request failed with error: \($0.error!)")
 							return
 						}
 						
 						let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
-						let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+						let request = NSMutableURLRequest(url: NSURL(string: url)!)
 						request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 						
-						session.request(request) {
+						session.request(request: request) {
 							guard let _ = $0.data else {
 								print("Request failed with error: \($0.error!)")
 								return
@@ -130,19 +130,19 @@ public class Authenticator {
 			let a = NSURL(string: OAUTH2_LOGIN_URL)!
 			let b = NSURL(string: "https://accounts.google.com/o/oauth2/approval")!
 			
-			prompt(a, valid: b) { request in
-				session.request(request) {
+			prompt(url: a, valid: b) { request in
+				session.request(request: request) {
 					guard let data = $0.data else {
 						print("Request failed with error: \($0.error!)")
 						return
 					}
 					
 					let body = NSString(data: data, encoding: NSUTF8StringEncoding)!
-					let auth_code = Regex("value=\"(.+?)\"").match(body as String).first!
+					let auth_code = Regex("value=\"(.+?)\"").match(input: body as String).first!
 					
 					//  - first: authenticate(auth_code)
-					authenticate(auth_code, cb: { (access_token, refresh_token) in
-						saveTokens(access_token, refresh_token: refresh_token)
+					authenticate(auth_code: auth_code, cb: { (access_token, refresh_token) in
+						saveTokens(access_token: access_token, refresh_token: refresh_token)
 						cb(configuration: session.configuration)
 					})
 				}
@@ -165,19 +165,19 @@ public class Authenticator {
 		]
 		
 		// Make request first.
-		let req = NSMutableURLRequest(URL: NSURL(string: OAUTH2_TOKEN_REQUEST_URL)!)
-		req.HTTPMethod = "POST"
+		let req = NSMutableURLRequest(url: NSURL(string: OAUTH2_TOKEN_REQUEST_URL)!)
+		req.httpMethod = "POST"
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
-		req.HTTPBody = query(token_request_data).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+		req.httpBody = query(parameters: token_request_data).data(using: NSUTF8StringEncoding, allowLossyConversion: false)
 		
-		NSURLSession.sharedSession().request(req) {
+		NSURLSession.shared().request(request: req) {
 			guard let data = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return
 			}
 			
 			do {
-				let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as! [String: AnyObject]
+				let json = try NSJSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
 				if let access = json[ACCESS_TOKEN] as? String, refresh = json[REFRESH_TOKEN] as? String  {
 					cb(access_token: access, refresh_token: refresh)
 				} else {
@@ -204,19 +204,19 @@ public class Authenticator {
 		]
 		
 		// Make request first.
-		let req = NSMutableURLRequest(URL: NSURL(string: OAUTH2_TOKEN_REQUEST_URL)!)
-		req.HTTPMethod = "POST"
+		let req = NSMutableURLRequest(url: NSURL(string: OAUTH2_TOKEN_REQUEST_URL)!)
+		req.httpMethod = "POST"
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
-		req.HTTPBody = query(token_request_data).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+		req.httpBody = query(parameters: token_request_data).data(using: NSUTF8StringEncoding, allowLossyConversion: false)
 		
-		session.request(req) {
+		session.request(request: req) {
 			guard let data = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return
 			}
 			
 			do {
-				let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as! [String: AnyObject]
+				let json = try NSJSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
 				if let access = json[ACCESS_TOKEN] as? String  {
 					cb(access_token: access, refresh_token: refresh_token)
 				} else {
@@ -232,17 +232,18 @@ public class Authenticator {
 		validURL = valid
 		handler = cb
 		
+		
 		let webView = WebView(frame: NSMakeRect(0, 0, 386, 512))
-		webView.autoresizingMask = [.ViewHeightSizable, .ViewWidthSizable]
+		webView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		webView.policyDelegate = delegate
-		webView.mainFrame.loadRequest(NSMutableURLRequest(URL: url))
+		webView.mainFrame.load(NSMutableURLRequest(url: url))
 		
 		window = NSWindow(contentRect: NSMakeRect(0, 0, 386, 512),
 			styleMask: NSTitledWindowMask | NSClosableWindowMask,
-			backing: .Buffered, defer: false)
+			backing: .buffered, defer: false)
 		window?.title = "Login to Parrot"
-		window?.opaque = false
-		window?.movableByWindowBackground = true
+		window?.isOpaque = false
+		window?.isMovableByWindowBackground = true
 		window?.contentView = webView
 		window?.center()
 		window?.makeKeyAndOrderFront(nil)

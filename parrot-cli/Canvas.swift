@@ -9,21 +9,21 @@ import Darwin.ncurses
 
 // Finally, matching operations where append*() was applicable, for remove*()
 public extension Array where Element : Equatable {
-	public mutating func remove(newElement: Element) {
-		if let index = self.indexOf(newElement) {
-			self.removeAtIndex(index)
+	public mutating func remove(item: Element) {
+		if let index = self.index(of: item) {
+			self.remove(at: index)
 		}
 	}
 	
-	public mutating func removeContentsOf<S : SequenceType where S.Generator.Element == Element>(newElements: S) {
+	public mutating func removeContentsOf<S : Sequence where S.Iterator.Element == Element>(newElements: S) {
 		for object in newElements {
-			self.remove(object)
+			self.remove(item: object)
 		}
 	}
 	
-	public mutating func removeContentsOf<C : CollectionType where C.Generator.Element == Element>(newElements: C) {
+	public mutating func removeContentsOf<C : Collection where C.Iterator.Element == Element>(newElements: C) {
 		for object in newElements {
-			self.remove(object)
+			self.remove(item: object)
 		}
 	}
 }
@@ -31,7 +31,7 @@ public extension Array where Element : Equatable {
 class Canvas {
 	
 	// Underlying structures that communicate with ncurses.
-	private var window: COpaquePointer
+	private var window: OpaquePointer
 	private var panel: UnsafeMutablePointer<PANEL>
 	private var isRoot = false
 	
@@ -77,7 +77,7 @@ class Canvas {
 			overwrite(self.window, newWindow)
 			replace_panel(self.panel, newWindow)
 			delwin(self.window)
-			self.window = newWindow
+			self.window = newWindow!
 		}
 	}
 	
@@ -93,7 +93,7 @@ class Canvas {
 			overwrite(self.window, newWindow)
 			replace_panel(self.panel, newWindow)
 			delwin(self.window)
-			self.window = newWindow
+			self.window = newWindow!
 		}
 	}
 	
@@ -110,7 +110,7 @@ class Canvas {
 				}
 				
 				curr_parent = self.parent
-				counter++
+				counter += 1
 			}
 			return counter
 		}
@@ -177,7 +177,7 @@ class Canvas {
 	}
 	
 	// The root of the Canvas hierarchy. Cannot be modified.
-	static let root = Canvas(window: stdscr)
+	static let root = Canvas(stdscr)
 	
 	// If frame isn't specified, or given as (0, 0, 0, 0) it'll fill the screen.
 	// If parent isn't specified, the mainWindow will be used as parent.
@@ -195,7 +195,7 @@ class Canvas {
 	}
 	
 	// ONLY for Canvas.root!
-	private init(window: COpaquePointer) {
+	private init(_ window: OpaquePointer) {
 		
 		// Establish underlying ncurses structures.
 		self.window = window

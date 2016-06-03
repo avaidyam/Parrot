@@ -6,20 +6,20 @@ public typealias Dispatch = NSOperationQueue
 public extension NSOperationQueue {
 	
 	public class func main() -> NSOperationQueue {
-		return NSOperationQueue.mainQueue()
+		return NSOperationQueue.main()
 	}
 	
 	public class func current() -> NSOperationQueue {
-		return NSOperationQueue.currentQueue() ?? NSOperationQueue.mainQueue()
+		return NSOperationQueue.current() ?? NSOperationQueue.main()
 	}
 	
 	public func pause() -> Self {
-		self.suspended = true
+		self.isSuspended = true
 		return self
 	}
 	
 	public func resume() -> Self {
-		self.suspended = false
+		self.isSuspended = false
 		return self
 	}
 	
@@ -64,7 +64,7 @@ public struct Semaphore {
 
 // alias for the UI thread
 public func UI(block: () -> Void) {
-	Dispatch.main().add(block)
+	Dispatch.main().add(block: block)
 }
 
 // Provides the old-style @synchronized {} statements from Objective-C.

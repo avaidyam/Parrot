@@ -15,13 +15,13 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	private var trans: WindowTransitionAnimator? = nil
 	
 	// First begin authentication and setup for any services.
-	func applicationWillFinishLaunching(notification: NSNotification) {
+	func applicationWillFinishLaunching(_ notification: NSNotification) {
 		Authenticator.authenticateClient {
 			_hangoutsClient = Client(configuration: $0)
 			_hangoutsClient?.connect()
 			
-			NSNotificationCenter.defaultCenter()
-				.addObserverForName(Client.didConnectNotification, object: _hangoutsClient!, queue: nil) { _ in
+			NSNotificationCenter.default()
+				.addObserver(forName: Client.didConnectNotification, object: _hangoutsClient!, queue: nil) { _ in
 					_hangoutsClient!.buildUserConversationList { (userList, conversationList) in
 						_REMOVE.forEach {
 							$0(userList, conversationList)
@@ -31,12 +31,12 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 			
 			// Instantiate storyboard and controller and begin the UI from here.
 			Dispatch.main().add {
-				let s = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-				let vc = s.instantiateControllerWithIdentifier("Conversations") as! ConversationsViewController
+				let s = NSStoryboard(name: "Main", bundle: NSBundle.main())
+				let vc = s.instantiateController(withIdentifier: "Conversations") as! ConversationsViewController
 				self.trans = WindowTransitionAnimator()
-				self.trans!.displayViewController(vc)
+				self.trans!.displayViewController(viewController: vc)
 				
-				self.trans?.window?.titleVisibility = .Hidden;
+				self.trans?.window?.titleVisibility = .hidden;
 				self.trans?.window?.titlebarAppearsTransparent = true;
 				
 				let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
@@ -54,19 +54,19 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	
 	// We need to provide a useful dock menu.
 	/* TODO: Provide a dock menu for options. */
-	func applicationDockMenu(sender: NSApplication) -> NSMenu? {
+	func applicationDockMenu(_ sender: NSApplication) -> NSMenu? {
 		return nil
 	}
 	
 	@IBAction func logoutSelected(sender: AnyObject) {
-		let cookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+		let cookieStorage = NSHTTPCookieStorage.shared()
 		if let cookies = cookieStorage.cookies {
 			for cookie in cookies {
 				cookieStorage.deleteCookie(cookie)
 			}
 		}
 		Authenticator.clearTokens();
-		NSApplication.sharedApplication().terminate(self)
+		NSApplication.shared().terminate(self)
 	}
 }
 

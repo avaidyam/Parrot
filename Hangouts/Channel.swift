@@ -95,7 +95,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	}
 	
 	// For use in Client:
-	internal let session: NSURLSession
+	internal var session = NSURLSession()
 	
     private var isConnected = false
     private var onConnectCalled = false
@@ -108,8 +108,10 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	//private let manager: Alamofire.Manager
 	
 	public init(configuration: NSURLSessionConfiguration) {
+		super.init()
 		session = NSURLSession(configuration: configuration,
 		                       delegate: self, delegateQueue: nil)
+		
 		//session = NSURLSession(configuration: configuration,
 		//	delegate: Manager.SessionDelegate(), delegateQueue: nil)
 		//self.manager = Manager(session: session,
@@ -238,10 +240,13 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
+		self.session.request(request: request) { r in }
+		
 		/* TODO: Make sure stream{} times out with PUSH_TIMEOUT. */
+		/*
 		manager.request(request)
 			.stream { (data: NSData) in
-				self.onPushData(data)
+				self.onPushData(data: data)
 			}.responseData { response in
 			if response.result.isFailure { // response.response?.statusCode >= 400
 				/* TODO: Sometimes things fail here, not sure why yet. */
@@ -259,7 +264,36 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 				print("Received unknown response code \(response.response?.statusCode)")
 				print(NSString(data: response.result.value!, encoding: 4)! as String)
 			}
-		}
+		}*/
+	}
+	
+	public func urlSession(_ session: NSURLSession, dataTask: NSURLSessionDataTask, didReceive data: NSData) {
+		guard session == self.session else { return }
+		self.onPushData(data: data)
+	}
+	
+	
+	public func urlSession(_ session: NSURLSession, dataTask: NSURLSessionDataTask,
+	                       didReceive response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
+		guard session == self.session else { return }
+		guard response is NSHTTPURLResponse else { return }
+		
+		/*if response.result.isFailure { // response.response?.statusCode >= 400
+			/* TODO: Sometimes things fail here, not sure why yet. */
+			/* TODO: This should be moved out of here later on. */
+			print("Request failed with: \(response.result.error!)")
+			self.needsSID = true
+			self.listen()
+		} else if response.statusCode == 200 {
+			//self.onPushData(response.result.value!) // why is this commented again??
+			self.longPollRequest()
+			
+			// we shouldn't call ourselves; the while loop thing should.
+			// doesn't work right though.
+		} else {
+			print("Received unknown response code \(response.statusCode)")
+			print(NSString(data: response.value!, encoding: 4)! as String)
+		}*/
 	}
 	
 	// Creates a new channel for receiving push data.

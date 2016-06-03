@@ -48,6 +48,7 @@ public extension NSURLSession {
 	// MUCH simpler utilities for working with data requests.
 	// Essentially acts as a "one-size-fits-all" factory method.
 	// By default the request type will be data, and the task is auto-started.
+	@discardableResult
 	public func request(request: NSURLRequest, type: RequestType = .Data,
 						start: Bool = true, handler: (Result) -> Void) -> NSURLSessionTask
 	{

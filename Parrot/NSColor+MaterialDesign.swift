@@ -10,33 +10,33 @@ public extension NSColor {
 		
 		// Strip leading # prefix from hex digits.
 		if hex.hasPrefix("#") {
-			hex = hex.substringFromIndex(hex.startIndex.advancedBy(1))
+			hex = hex.substring(from: hex.index(hex.startIndex, offsetBy: 1))
 		}
 		
 		// Ensure it's actually a color string, otherwise bail.
-		if hex.rangeOfString("(^[0-9A-Fa-f]{6}$)|(^[0-9A-Fa-f]{3}$)", options: .RegularExpressionSearch) == nil {
+		if hex.range(of: "(^[0-9A-Fa-f]{6}$)|(^[0-9A-Fa-f]{3}$)", options: .regularExpressionSearch) == nil {
 			self.init(calibratedRed: 0, green: 0, blue: 0, alpha: 1)
 			return
 		}
 		
 		// If it's a short-form (3 character) color, expand it.
 		if hex.characters.count == 3 {
-			let r = hex.substringToIndex(hex.startIndex.advancedBy(1))
-			let g = hex.substringWithRange(hex.startIndex.advancedBy(1)..<hex.startIndex.advancedBy(2))
-			let b = hex.substringFromIndex(hex.startIndex.advancedBy(2))
+			let r = hex.substring(to: hex.index(hex.startIndex, offsetBy: 1))
+			let g = hex.substring(with: hex.index(hex.startIndex, offsetBy: 1)..<hex.index(hex.startIndex, offsetBy: 2))
+			let b = hex.substring(from: hex.index(hex.startIndex, offsetBy: 2))
 			hex = r + r + g + g + b + b
 		}
 		
 		// Split the color components out.
-		let rh = hex.substringToIndex(hex.startIndex.advancedBy(2))
-		let gh = hex.substringWithRange(hex.startIndex.advancedBy(2)..<hex.startIndex.advancedBy(4))
-		let bh = hex.substringWithRange(hex.startIndex.advancedBy(4)..<hex.startIndex.advancedBy(6))
+		let rh = hex.substring(to: hex.index(hex.startIndex, offsetBy: 2))
+		let gh = hex.substring(with: hex.index(hex.startIndex, offsetBy: 2)..<hex.index(hex.startIndex, offsetBy: 4))
+		let bh = hex.substring(with: hex.index(hex.startIndex, offsetBy: 4)..<hex.index(hex.startIndex, offsetBy: 6))
 		
 		// Scan the color components into integers.
 		var r: UInt32 = 0, g: UInt32 = 0, b: UInt32 = 0
-		NSScanner(string: rh).scanHexInt(&r)
-		NSScanner(string: gh).scanHexInt(&g)
-		NSScanner(string: bh).scanHexInt(&b)
+		NSScanner(string: rh).scanHexInt32(&r)
+		NSScanner(string: gh).scanHexInt32(&g)
+		NSScanner(string: bh).scanHexInt32(&b)
 		
 		// Finally initialize with the calibrated color components.
 		self.init(calibratedRed: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0,

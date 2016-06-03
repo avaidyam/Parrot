@@ -15,10 +15,10 @@ AuthenticatorCLI.authenticateClient {
 	client.buildUserConversationList {
 		userList = $0; conversationList = $1
 		print("Obtained userList \(userList) and conversationList! \(conversationList)")
-		dispatch_semaphore_signal(sem)
+		dispatch_semaphore_signal(sem!)
 	}
 }
-dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER)
+dispatch_semaphore_wait(sem!, DISPATCH_TIME_FOREVER)
 print("Continuing...")
 
 print(conversationList.all_conversations.map { $0.conversation.conversation_id })
@@ -41,13 +41,13 @@ Terminal.interactive {
 	// The second macro does the same after calculating the 2/3 slice of the screen.
 	// The third macro simply provides a single line header at the top.
 	let g: (Void) -> Frame = {
-		return shift(pad(slice((x: 0.33, y: 1.00), Terminal.size()), (2, 0)), (0, 2))
+		return shift(f: pad(frame: slice(s: (x: 0.33, y: 1.00), Terminal.size()), (2, 0)), (0, 2))
 	}
 	let f: (Void) -> Frame = {
-		var r = slice((x: 0.33, y: 1.00), Terminal.size())
-		var q = slice((x: 0.66, y: 1.00), Terminal.size())
+		var r = slice(s: (x: 0.33, y: 1.00), Terminal.size())
+		var q = slice(s: (x: 0.66, y: 1.00), Terminal.size())
 		q.p.x += r.s.w + 1
-		q = shift(q, (0, 2))
+		q = shift(f: q, (0, 2))
 		return q
 	}
 	let t: (Void) -> Frame = {
@@ -66,11 +66,11 @@ Terminal.interactive {
 		c.frame = g()
 		
 		// Redraw all our strings.
-		c.write(str2,
-			point: (center(c.frame.s.w, str2.characters.count), center(c.frame.s.h, 0) + 0),
+		c.write(string: str2,
+			point: (center(item: c.frame.s.w, str2.characters.count), center(item: c.frame.s.h, 0) + 0),
 			colors: ColorPair(2, colors: (.Black, .Blue)))
-		c.write(str3,
-			point: (center(c.frame.s.w, str3.characters.count), center(c.frame.s.h, 0) + 1),
+		c.write(string: str3,
+			point: (center(item: c.frame.s.w, str3.characters.count), center(item: c.frame.s.h, 0) + 1),
 			colors: ColorPair(3, colors: (.Black, .Yellow)))
 	}
 	
@@ -86,11 +86,11 @@ Terminal.interactive {
 		c.frame = f()
 		
 		// Redraw all our strings.
-		c.write(str1,
-			point: (center(c.frame.s.w, str1.characters.count), center(c.frame.s.h, 0) + 0),
+		c.write(string: str1,
+			point: (center(item: c.frame.s.w, str1.characters.count), center(item: c.frame.s.h, 0) + 0),
 			colors: ColorPair(1, colors: (.Black, .Red)))
-		c.write(str3,
-			point: (center(c.frame.s.w, str3.characters.count), center(c.frame.s.h, 0) + 1),
+		c.write(string: str3,
+			point: (center(item: c.frame.s.w, str3.characters.count), center(item: c.frame.s.h, 0) + 1),
 			colors: ColorPair(3, colors: (.Black, .Yellow)))
 	}
 	
@@ -98,12 +98,12 @@ Terminal.interactive {
 	var header = Canvas(t())
 	header.redraw = { c in
 		c.frame = t()
-		c.write(title,
-			point: (center(c.frame.s.w, title.characters.count), center(c.frame.s.h, 0) + 0),
+		c.write(string: title,
+			point: (center(item: c.frame.s.w, title.characters.count), center(item: c.frame.s.h, 0) + 0),
 			colors: ColorPair(6, colors: (.Black, .White)))
 	}
 	
 	// End the program when ESC is pressed.
 	Terminal.bell()
-	Terminal.wait(KeyCode(27))
+	Terminal.wait(key: KeyCode(27))
 }

@@ -28,17 +28,17 @@ public class MessageView : NSTableCellView {
 	
 	var backgroundView: NSView
 	var textLabel: NSLabel
-	var orientation: NSTextAlignment = .Left
+	var orientation: NSTextAlignment = .left
 	
     public override init(frame: NSRect) {
 		self.backgroundView = NSView(true)
 		self.backgroundView.translatesAutoresizingMaskIntoConstraints = true
 		
 		self.textLabel = NSLabel(true, false)
-		self.textLabel.textColor = NSColor.labelColor()
-		self.textLabel.lineBreakMode = .ByWordWrapping
-		self.textLabel.font = NSFont.systemFontOfSize(13.0, weight: NSFontWeightMedium)
-		self.textLabel.cell!.backgroundStyle = .Raised
+		self.textLabel.textColor = NSColor.label()
+		self.textLabel.lineBreakMode = .byWordWrapping
+		self.textLabel.font = NSFont.systemFont(ofSize: 13.0, weight: NSFontWeightMedium)
+		self.textLabel.cell!.backgroundStyle = .raised
 		
 		// Swift is funny like this.
 		super.init(frame: frame)
@@ -68,7 +68,7 @@ public class MessageView : NSTableCellView {
 			}
 			self.orientation = o.orientation
 			self.textLabel.attributedStringValue = o.string
-			self.textLabel.layer?.backgroundColor = o.color.CGColor
+			self.textLabel.layer?.backgroundColor = o.color.cgColor
 		}
 	}
 	
@@ -84,16 +84,16 @@ public class MessageView : NSTableCellView {
 
             let textMaxWidth = MessageView.widthOfText(backgroundWidth: backgroundFrame.size.width)
             let textSize = MessageView.textSizeInWidth(
-                self.textLabel.attributedStringValue,
+                text: self.textLabel.attributedStringValue,
                 width: textMaxWidth
             )
 
             backgroundFrame.size.width = MessageView.widthOfBackground(textWidth: textSize.width)
 
             switch (orientation) {
-            case .Left:
+            case .left:
                 backgroundFrame.origin.x = frame.origin.x
-            case .Right:
+            case .right:
 				backgroundFrame.origin.x = frame.size.width - backgroundFrame.size.width
 			default:
 				backgroundFrame.origin.x = frame.origin.x
@@ -128,24 +128,24 @@ public class MessageView : NSTableCellView {
         }
     }
 	
-    private class func widthOfText(backgroundWidth backgroundWidth: CGFloat) -> CGFloat {
+    private class func widthOfText(backgroundWidth: CGFloat) -> CGFloat {
         return backgroundWidth
             - MessageView.TextBorder.r
             - MessageView.TextBorder.l
     }
 
-    private class func widthOfBackground(textWidth textWidth: CGFloat) -> CGFloat {
+    private class func widthOfBackground(textWidth: CGFloat) -> CGFloat {
         return textWidth
             + MessageView.TextBorder.r
             + MessageView.TextBorder.l
     }
 
     private class func textSizeInWidth(text: NSAttributedString, width: CGFloat) -> CGSize {
-        var size = text.boundingRectWithSize(
-            NSMakeSize(width, 0),
+        var size = text.boundingRect(
+            with: NSMakeSize(width, 0),
             options: [
-                .UsesLineFragmentOrigin,
-                .UsesFontLeading
+                .usesLineFragmentOrigin,
+                .usesFontLeading
             ]
         ).size
         size.width += TextPadding.h
@@ -153,7 +153,7 @@ public class MessageView : NSTableCellView {
     }
 	
 	internal class func heightForContainerWidth(text: NSAttributedString, width: CGFloat) -> CGFloat {
-        let size = textSizeInWidth(text, width: widthOfText(backgroundWidth: (width * FillPercentage.x)))
+        let size = textSizeInWidth(text: text, width: widthOfText(backgroundWidth: (width * FillPercentage.x)))
         let height = size.height + TextBorder.t + TextBorder.b
         return height
     }
@@ -162,7 +162,7 @@ public class MessageView : NSTableCellView {
 // Container-type view for MessageView.
 public class MessagesView: ElementContainerView {
 	internal override func createView() -> MessageView {
-		var view = self.tableView.makeViewWithIdentifier(MessageView.className(), owner: self) as? MessageView
+		var view = self.tableView.make(withIdentifier: MessageView.className(), owner: self) as? MessageView
 		if view == nil {
 			view = MessageView(frame: NSZeroRect)
 			view!.identifier = MessageView.className()

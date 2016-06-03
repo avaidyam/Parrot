@@ -22,7 +22,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			}
 		}
 		
-		Notifications.subscribe(NSUserDefaultsDidChangeNotification) { note in
+		Notifications.subscribe(name: NSUserDefaultsDidChangeNotification) { note in
 			
 			// Handle appearance colors.
 			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
@@ -30,7 +30,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			self.view.window?.appearance = NSAppearance(named: appearance)
 		}
 		
-		NotificationManager.updateAppBadge(conversationList?.unreadEventCount ?? 0)
+		NotificationManager.updateAppBadge(messages: conversationList?.unreadEventCount ?? 0)
 	}
 	
 	override func viewDidLoad() {
@@ -39,21 +39,21 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		self.personsView.insets = NSEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.personsView.selectionProvider = { row in
 			if row >= 0 {
-				let s = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-				let vc = s.instantiateControllerWithIdentifier("Conversation") as! ConversationViewController
+				let s = NSStoryboard(name: "Main", bundle: NSBundle.main())
+				let vc = s.instantiateController(withIdentifier: "Conversation") as! ConversationViewController
 				vc.representedObject = self.conversationList?.conversations[row]
-				self.presentViewController(vc, animator: WindowTransitionAnimator())
+				self.present(vc, animator: WindowTransitionAnimator())
 			}
 		}
 		
 		self.personsView.rowActionProvider = { row, edge in
 			var actions: [NSTableViewRowAction] = []
-			if edge == .Leading { // Swipe Right Actions
+			if edge == .leading { // Swipe Right Actions
 				actions = [
-					NSTableViewRowAction(style: .Regular, title: "Mute", handler: { action, select in
+					NSTableViewRowAction(style: .regular, title: "Mute", handler: { action, select in
 						print("Mute row:\(select)")
 					}),
-					NSTableViewRowAction(style: .Destructive, title: "Block", handler: { action, select in
+					NSTableViewRowAction(style: .destructive, title: "Block", handler: { action, select in
 						print("Block row:\(select)")
 					})
 				]
@@ -61,12 +61,12 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 				// Fix the colors set by the given styles.
 				actions[0].backgroundColor = NSColor.materialBlueColor()
 				actions[1].backgroundColor = NSColor.materialAmberColor()
-			} else if edge == .Trailing { // Swipe Left Actions
+			} else if edge == .trailing { // Swipe Left Actions
 				actions = [
-					NSTableViewRowAction(style: .Destructive, title: "Delete", handler: { action, select in
+					NSTableViewRowAction(style: .destructive, title: "Delete", handler: { action, select in
 						print("Delete row:\(select)")
 					}),
-					NSTableViewRowAction(style: .Regular, title: "Archive", handler: { action, select in
+					NSTableViewRowAction(style: .regular, title: "Archive", handler: { action, select in
 						print("Archive row:\(select)")
 					})
 				]
@@ -116,7 +116,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		
 		// Load all the field values from the conversation.
 		var img: NSImage = defaultUserImage
-		if let d = fetchData(c?.id.gaiaID, c?.photoURL) {
+		if let d = fetchData(id: c?.id.gaiaID, c?.photoURL) {
 			img = NSImage(data: d)!
 		}
 		
@@ -130,7 +130,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	}
 	
 	private func _getAllPersons() -> [Person]? {
-		return self.conversationList?.conversations.map { _getPerson($0) }
+		return self.conversationList?.conversations.map { _getPerson(conversation: $0) }
 	}
 	
     func conversationList(list: ConversationList, didReceiveEvent event: Event) {}
@@ -141,7 +141,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     func conversationList(didUpdate list: ConversationList) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
+			NotificationManager.updateAppBadge(messages: self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 	
@@ -149,7 +149,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
+			NotificationManager.updateAppBadge(messages: self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 }

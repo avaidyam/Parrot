@@ -55,7 +55,7 @@ struct Terminal {
 			Canvas.root.needsRedraw()
 		}
 		signal(SIGWINCH, _redraw)
-		_redraw(Int32(0))
+		_redraw(sig: Int32(0))
 	}
 	
 	// Pause ncurses session to standard terminal.
@@ -73,7 +73,7 @@ struct Terminal {
 		if !_cursesActive {
 			reset_prog_mode();
 			signal(SIGWINCH, _redraw)
-			_redraw(Int32(0))
+			_redraw(sig: Int32(0))
 			_cursesActive = true
 		}
 	}

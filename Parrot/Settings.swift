@@ -13,7 +13,7 @@ public extension NSUserDefaults {
 	}
 	
 	public func get(key: String, domain: String? = nil) -> AnyObject? {
-		return self.valueForKey(key)
+		return self.value(forKey: key)
 	}
 	
 	// Utility for setting multiple settings at a time.
@@ -28,7 +28,7 @@ public extension NSUserDefaults {
 	public func get(keys: [String], domain: String? = nil) -> [String: AnyObject?] {
 		var map = [String: AnyObject?]()
 		for (key) in keys {
-			map[key] = self.valueForKey(key)
+			map[key] = self.value(forKey: key)
 		}
 		return map
 	}
@@ -36,12 +36,10 @@ public extension NSUserDefaults {
 	// Allows shorter syntax, like so: Settings()["Test"] = 42
 	subscript(key: String) -> AnyObject? {
 		get {
-			return self.valueForKey(key)
+			return self.value(forKey: key)
 		}
 		set (value) {
 			self.setValue(value, forKey: key)
 		}
 	}
 }
-
-
