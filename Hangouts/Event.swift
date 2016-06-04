@@ -4,34 +4,34 @@
 
 // An event which becomes part of the permanent record of a conversation.
 // Acts as a base class for the events defined below.
-public class Event : Hashable, Equatable {
-    private let event: EVENT
+public class IEvent : Hashable, Equatable {
+    private let event: Event
 	
-    public init(event: EVENT) {
+    public init(event: Event) {
         self.event = event
     }
 	
 	// A timestamp of when the event occurred.
-    public lazy var timestamp: NSDate = {
-        return self.event.timestamp
+    public lazy var timestamp: UInt64 = {
+		return self.event.timestamp
     }()
 	
 	// A UserID indicating who created the event.
     public lazy var userID: UserID = {
         return UserID(
-            chatID: self.event.sender_id.chat_id as! String,
-            gaiaID: self.event.sender_id.gaia_id as! String
+            chatID: self.event.senderId.chatId,
+            gaiaID: self.event.senderId.gaiaId
         )
     }()
 	
 	// The ID of the conversation the event belongs to.
     public lazy var conversation_id: String = {
-        return (self.event.conversation_id.id! as String)
+        return (self.event.conversationId.id as String)
     }()
 	
 	// The ID of the Event.
-    public lazy var id: Conversation.EventID = {
-        return self.event.event_id! as Conversation.EventID
+    public lazy var id: IConversation.EventID = {
+        return self.event.eventId as IConversation.EventID
     }()
 	
 	// Event: Hashable
@@ -41,26 +41,26 @@ public class Event : Hashable, Equatable {
 }
 
 // Event: Equatable
-public func ==(lhs: Event, rhs: Event) -> Bool {
+public func ==(lhs: IEvent, rhs: IEvent) -> Bool {
     return lhs.event == rhs.event
 }
 
 // An event containing a chat message.
-public class ChatMessageEvent : Event {
+public class IChatMessageEvent : IEvent {
 	
 	// A textual representation of the message.
     public lazy var text: String = {
         var lines = [""]
         for segment in self.segments {
             switch (segment.type) {
-            case SegmentType.TEXT, SegmentType.LINK:
+            case SegmentType.SegmentTypeText, SegmentType.SegmentTypeLink:
                 let replacement = lines.last! + segment.text
                 lines.removeLast()
                 lines.append(replacement)
-            case SegmentType.LINE_BREAK:
+            case SegmentType.SegmentTypeLineBreak:
                 lines.append("")
             default:
-                print("Ignoring unknown chat message segment type: \(segment.type.representation)")
+                print("Ignoring unknown chat message segment type: \(segment.type)")
             }
         }
 		
@@ -69,84 +69,84 @@ public class ChatMessageEvent : Event {
     }()
 	
 	// List of ChatMessageSegments in the message.
-    public lazy var segments: [ChatMessageSegment] = {
-        if let list = self.event.chat_message?.message_content.segment {
-            return list.map { ChatMessageSegment(segment: $0) }
+    public lazy var segments: [IChatMessageSegment] = {
+        if let list = self.event.chatMessage?.messageContent.segment {
+            return list.map { IChatMessageSegment(segment: $0) }
         }
 		return []
     }()
 	
 	// Attachments in the message.
     public var attachments: [String] {
-		let raws = self.event.chat_message?.message_content.attachment ?? [MessageAttachment]()
+		let raws = self.event.chatMessage?.messageContent.attachment ?? [Attachment]()
 		var attachments = [String]()
 		
 		for attachment in raws {
-			if attachment.embed_item!.type == [249] { // PLUS_PHOTO
+			/*if attachment.embedItem!.types == [249] { // PLUS_PHOTO
 				
 				// Try to parse an image message. Image messages contain no
 				// message segments, and thus have no automatic textual fallback.
-				if let data = attachment.embed_item!.data["27639957"] as? [AnyObject],
+				if let data = attachment.embedItem!.data["27639957"] as? [AnyObject],
 					zeroth = data[0] as? [AnyObject],
 					third = zeroth[3] as? String {
 						attachments.append(third)
 				}
-			} else if attachment.embed_item!.type == [438] { // VOICE_PHOTO
+			} else if attachment.embedItem!.types == [438] { // VOICE_PHOTO
 				
 				// Try to parse an image message. Image messages contain no
 				// message segments, and thus have no automatic textual fallback.
-				if let data = attachment.embed_item!.data["62101782"] as? [AnyObject],
+				if let data = attachment.embedItem!.data["62101782"] as? [AnyObject],
 					zeroth = data[0] as? [AnyObject],
 					third = zeroth[3] as? String {
 						attachments.append(third)
 				}
-			} else if attachment.embed_item!.type == [340, 335, 0] {
+			} else if attachment.embedItem!.types == [340, 335, 0] {
 				// Google Maps URL that's already in the text.
 			} else {
 				print("Ignoring unknown chat message attachment: \(attachment)")
-			}
+			}*/
 		}
 		return attachments
     }
 }
 
 // An event that renames a conversation.
-public class RenameEvent : Event {
+public class IRenameEvent : IEvent {
 	
 	// The conversation's new name, or "" if the name was cleared.
     public var newName: String {
-        return self.event.conversation_rename!.new_name as String
+        return self.event.conversationRename!.newName
     }
 	
 	// The conversation's old name, or "" if no previous name.
     public var oldName: String {
-        return self.event.conversation_rename!.old_name as String
+        return self.event.conversationRename!.oldName
     }
 }
 
 // An event that adds or removes a conversation participant.
-public class MembershipChangeEvent : Event {
+public class IMembershipChangeEvent : IEvent {
 	
 	// The membership change type (join, leave).
     public var type: MembershipChangeType {
-        return self.event.membership_change!.type
+        return self.event.membershipChange!.types
     }
 	
 	// Return the UserIDs involved in the membership change.
 	// Multiple users may be added to a conversation at the same time.
     public var participantIDs: [UserID] {
-		return self.event.membership_change!.participant_ids.map {
-			UserID(chatID: $0.chat_id as! String, gaiaID: $0.gaia_id as! String)
+		return self.event.membershipChange!.participantIds.map {
+			UserID(chatID: $0.chatId , gaiaID: $0.gaiaId)
 		}
     }
 }
 
 // An event in a Hangouts voice/video call.
-public class HangoutEvent : Event {
+public class IHangoutEvent : IEvent {
 	
 	// The Hangouts event (start, end, join, leave, etc).
 	public var type: HangoutEventType {
-		return self.event.hangout_event!.event_type
+		return self.event.hangoutEvent!.eventType
 	}
 }
 
@@ -154,7 +154,7 @@ public class HangoutEvent : Event {
 // ChatMessageSegment
 //
 
-public class ChatMessageSegment {
+public class IChatMessageSegment {
 	
 	// Primary: type and text (always applicable).
 	public let type: SegmentType
@@ -176,9 +176,9 @@ public class ChatMessageSegment {
 		if let type = segmentType {
 			self.type = type
 		} else if linkTarget != nil {
-			self.type = SegmentType.LINK
+			self.type = SegmentType.SegmentTypeLink
 		} else {
-			self.type = SegmentType.TEXT
+			self.type = SegmentType.SegmentTypeText
 		}
 		
 		self.text = text
@@ -191,23 +191,24 @@ public class ChatMessageSegment {
 	
 	// Create a chat message segment from a parsed MessageSegment.
 	// The formatting options are optional.
-	public init(segment: MessageSegment) {
+	public init(segment: Segment) {
 		self.text = segment.text as String? ?? ""
-		self.type = segment.type
-		self.bold = segment.formatting?.bold?.boolValue ?? false
-		self.italic = segment.formatting?.italic?.boolValue ?? false
-		self.strikethrough = segment.formatting?.strikethrough?.boolValue ?? false
-		self.underline = segment.formatting?.underline?.boolValue ?? false
-		self.linkTarget = (segment.link_data?.link_target as String?) ?? nil
+		self.type = segment.types
+		self.bold = segment.formatting?.bold.boolValue ?? false
+		self.italic = segment.formatting?.italic.boolValue ?? false
+		self.strikethrough = segment.formatting?.strikethrough.boolValue ?? false
+		self.underline = segment.formatting?.underline.boolValue ?? false
+		self.linkTarget = (segment.linkData?.linkTarget as String?) ?? nil
 	}
 	
 	// Serialize the segment to pblite.
 	public func serialize() -> [AnyObject] {
 		return [
-			self.type.representation,
+			0,//self.type.representation,
 			self.text,
 			[
 				self.bold ? 1 : 0,
+				
 				self.italic ? 1 : 0,
 				self.strikethrough ? 1 : 0,
 				self.underline ? 1 : 0,
@@ -222,31 +223,31 @@ public class ChatMessageSegment {
 //
 
 // Definition of the public TypingStatusMessage.
-public typealias TypingStatusMessage = (convID: String, userID: UserID, timestamp: NSDate, status: TypingType)
+public typealias ITypingStatusMessage = (convID: String, userID: UserID, timestamp: UInt64, status: TypingType)
 
 // Definition of the public WatermarkNotification.
-public typealias WatermarkNotification = (convID: String, userID: UserID, readTimestamp: NSDate)
+public typealias IWatermarkNotification = (convID: String, userID: UserID, readTimestamp: UInt64)
 
 // Return TypingStatusMessage from ClientSetTypingNotification.
 // The same status may be sent multiple times consecutively, and when a
 // message is sent the typing status will not change to stopped.
-internal func parseTypingStatusMessage(p: SetTypingNotification) -> TypingStatusMessage {
-	return TypingStatusMessage(
-		convID: p.conversation_id!.id as! String,
-		userID: UserID(chatID: p.sender_id!.chat_id as! String, gaiaID: p.sender_id!.gaia_id as! String),
-		timestamp: from_timestamp(microsecond_timestamp: p.timestamp)!,
-		status: p.type!
+internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatusMessage {
+	return ITypingStatusMessage(
+		convID: p.conversationId!.id ,
+		userID: UserID(chatID: p.senderId!.chatId , gaiaID: p.senderId!.gaiaId ),
+		timestamp: p.timestamp,//from_timestamp(microsecond_timestamp: )!,
+		status: p.types
 	)
 }
 
 // Return WatermarkNotification from ClientWatermarkNotification.
-internal func parseWatermarkNotification(client_watermark_notification: WATERMARK_NOTIFICATION) -> WatermarkNotification {
-	return WatermarkNotification(
-		convID: client_watermark_notification.conversation_id.id as! String,
+internal func parseWatermarkNotification(client_watermark_notification: WatermarkNotification) -> IWatermarkNotification {
+	return IWatermarkNotification(
+		convID: client_watermark_notification.conversationId.id ,
 		userID: UserID(
-			chatID: client_watermark_notification.participant_id.chat_id as! String,
-			gaiaID: client_watermark_notification.participant_id.gaia_id as! String
+			chatID: client_watermark_notification.senderId.chatId ,
+			gaiaID: client_watermark_notification.senderId.gaiaId
 		),
-		readTimestamp: from_timestamp(microsecond_timestamp: client_watermark_notification.latest_read_timestamp)!
+		readTimestamp: client_watermark_notification.latestReadTimestamp//from_timestamp(microsecond_timestamp: )!
 	)
 }

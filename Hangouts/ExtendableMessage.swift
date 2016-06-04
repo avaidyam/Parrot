@@ -360,7 +360,8 @@ public class ExtendableMessageBuilder:GeneratedMessageBuilder
         message.extensionMap[extensions.fieldNumber] = value
         return self
     }
-    
+	
+	@discardableResult
     public func addExtension<T>(_ extensions:ConcreateExtensionField, value:T) throws -> ExtendableMessageBuilder {
         
         let message = internalGetResult

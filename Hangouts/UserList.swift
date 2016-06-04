@@ -51,8 +51,8 @@ public class UserList {
 			if let userInfo = $0.userInfo,
 				state_update = userInfo[Client.didUpdateStateKey as NSString] {
 				
-				if let conversation = (state_update as! StateUpdate).client_conversation {
-					for participant in conversation.participant_data {
+				if let conversation = (state_update as! StateUpdate).conversation {
+					for participant in conversation.participantData {
 						
 						let user = User(data: participant, selfUser: self.selfUser.id)
 						if self.users[user.id] == nil {

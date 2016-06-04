@@ -1,27 +1,27 @@
 import Foundation // NSDate
 
 public protocol ConversationListDelegate {
-    func conversationList(list: ConversationList, didReceiveEvent event: Event)
+    func conversationList(list: ConversationList, didReceiveEvent event: IEvent)
     func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType)
-    func conversationList(list: ConversationList, didReceiveWatermarkNotification status: WatermarkNotification)
+    func conversationList(list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification)
     func conversationList(didUpdate list: ConversationList)
-    func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation)
+    func conversationList(list: ConversationList, didUpdateConversation conversation: IConversation)
 }
 
 // Wrapper around Client that maintains a list of Conversations
 public class ConversationList {
 	
     public let client: Client
-    private var conv_dict = [String : Conversation]()
-    public var sync_timestamp: NSDate
+    private var conv_dict = [String : IConversation]()
+    public var sync_timestamp: UInt64
     public let user_list: UserList
 	
 	public var delegate: ConversationListDelegate?
 	private var tokens = [NSObjectProtocol]()
 
-    public init(client: Client, conv_states: [ConversationState], user_list: UserList, sync_timestamp: NSDate?) {
+    public init(client: Client, conv_states: [ConversationState], user_list: UserList, sync_timestamp: UInt64?) {
         self.client = client
-        self.sync_timestamp = sync_timestamp ?? NSDate(timeIntervalSince1970: 0)
+        self.sync_timestamp = sync_timestamp ?? 0//NSDate(timeIntervalSince1970: 0)
         self.user_list = user_list
 		
         // Initialize the list of conversations from Client's list of ClientConversationStates.
@@ -61,21 +61,21 @@ public class ConversationList {
 		}
 	}
 
-    public var conversations: [Conversation] {
+    public var conversations: [IConversation] {
         get {
             let all = conv_dict.values.filter { !$0.is_archived }
             return all.sorted { $0.last_modified > $1.last_modified }
         }
     }
 
-    public var all_conversations: [Conversation] {
+    public var all_conversations: [IConversation] {
         get {
             return conv_dict.values.sorted { $0.last_modified > $1.last_modified }
         }
     }
 	
 	// Return a Conversation from its ID.
-    public func get(conv_id: String) -> Conversation? {
+    public func get(conv_id: String) -> IConversation? {
         return conv_dict[conv_id]
     }
 
@@ -87,18 +87,18 @@ public class ConversationList {
 	
 	// Add new conversation from Conversation
     public func add_conversation(
-        client_conversation: CONVERSATION,
-        client_events: [EVENT] = []
-    ) -> Conversation {
-        let conv_id = client_conversation.conversation_id!.id
-        let conv = Conversation(
+        client_conversation: Conversation,
+        client_events: [Event] = []
+    ) -> IConversation {
+        let conv_id = client_conversation.conversationId!.id
+        let conv = IConversation(
             client: client,
             user_list: user_list,
             conversation: client_conversation,
             events: client_events,
             conversationList: self
         )
-        conv_dict[conv_id as! String] = conv
+        conv_dict[conv_id] = conv
         return conv
     }
 	
@@ -110,22 +110,22 @@ public class ConversationList {
     }
 	
 	// Receive a ClientEvent and fan out to Conversations
-    public func on_client_event(event: EVENT) {
+    public func on_client_event(event: Event) {
         sync_timestamp = event.timestamp
-        if let conv = conv_dict[event.conversation_id.id as! String] {
+        if let conv = conv_dict[event.conversationId.id ] {
             let conv_event = conv.add_event(event: event)
 
 			delegate?.conversationList(list: self, didReceiveEvent: conv_event)
             conv.handleEvent(event: conv_event)
         } else {
-            print("Received ClientEvent for unknown conversation \(event.conversation_id.id)")
+            print("Received ClientEvent for unknown conversation \(event.conversationId.id)")
         }
     }
 	
 	// Receive Conversation and create or update the conversation
-    public func handle_client_conversation(client_conversation: CONVERSATION) {
-        let conv_id = client_conversation.conversation_id!.id
-        if let conv = conv_dict[conv_id as! String] {
+    public func handle_client_conversation(client_conversation: Conversation) {
+        let conv_id = client_conversation.conversationId!.id
+        if let conv = conv_dict[conv_id] {
             conv.update_conversation(conversation: client_conversation)
 			delegate?.conversationList(list: self, didUpdateConversation: conv)
         } else {
@@ -136,13 +136,14 @@ public class ConversationList {
 	
 	// Receive ClientSetTypingNotification and update the conversation
     public func handle_set_typing_notification(set_typing_notification: SetTypingNotification) {
-        let conv_id = set_typing_notification.conversation_id!.id
-        if let conv = conv_dict[conv_id as! String] {
+        let conv_id = set_typing_notification.conversationId!.id
+        if let conv = conv_dict[conv_id ] {
             let res = parseTypingStatusMessage(p: set_typing_notification)
 			delegate?.conversationList(list: self, didChangeTypingStatusTo: res.status)
             let user = user_list[UserID(
-                chatID: set_typing_notification.sender_id!.chat_id as! String,
-                gaiaID: set_typing_notification.sender_id!.gaia_id as! String
+				
+                chatID: set_typing_notification.senderId!.chatId ,
+                gaiaID: set_typing_notification.senderId!.gaiaId 
             )]
             conv.handleTypingStatus(status: res.status, forUser: user)
         } else {
@@ -151,9 +152,9 @@ public class ConversationList {
     }
 	
 	// Receive ClientWatermarkNotification and update the conversation
-    public func handle_watermark_notification(watermark_notification: WATERMARK_NOTIFICATION) {
-        let conv_id = watermark_notification.conversation_id.id
-        if let conv = conv_dict[conv_id as! String] {
+    public func handle_watermark_notification(watermark_notification: WatermarkNotification) {
+        let conv_id = watermark_notification.conversationId.id
+        if let conv = conv_dict[conv_id ] {
             let res = parseWatermarkNotification(client_watermark_notification: watermark_notification)
 			delegate?.conversationList(list: self, didReceiveWatermarkNotification: res)
             conv.handleWatermarkNotification(status: res)
@@ -162,12 +163,13 @@ public class ConversationList {
         }
     }
 	
+	
 	// Sync conversation state and events that could have been missed
     public func sync(cb: (() -> Void)? = nil) {
         client.syncAllNewEvents(timestamp: sync_timestamp) { res in
             if let response = res {
-                for conv_state in response.conversation_state {
-                    if let conv = self.conv_dict[conv_state.conversation_id!.id as! String] {
+                for conv_state in response.conversationState {
+                    if let conv = self.conv_dict[conv_state.conversationId!.id as! String] {
                         conv.update_conversation(conversation: conv_state.conversation!)
                         for event in conv_state.event {
                             if event.timestamp > self.sync_timestamp {
@@ -186,23 +188,23 @@ public class ConversationList {
 
     // MARK: Calls from conversations
 	
-    public func conversationDidUpdate(conversation: Conversation) {
+    public func conversationDidUpdate(conversation: IConversation) {
 		delegate?.conversationList(list: self, didUpdateConversation: conversation)
     }
 	
 	// Receive a ClientStateUpdate and fan out to Conversations
 	/* TODO: Refactor this to use the Oneof support in Protobuf. */
     public func clientDidUpdateState(client: Client, update: StateUpdate) {
-        if let client_conversation = update.client_conversation {
+        if let client_conversation = update.conversation {
             handle_client_conversation(client_conversation: client_conversation)
         }
-        if let typing_notification = update.typing_notification {
+        if let typing_notification = update.typingNotification {
             handle_set_typing_notification(set_typing_notification: typing_notification)
         }
-        if let watermark_notification = update.watermark_notification {
+        if let watermark_notification = update.watermarkNotification {
             handle_watermark_notification(watermark_notification: watermark_notification)
         }
-        if let event_notification = update.event_notification {
+        if let event_notification = update.eventNotification {
             on_client_event(event: event_notification.event!)
         }
     }

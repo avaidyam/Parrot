@@ -101,7 +101,7 @@ public final class Client {
 			return
 		}
 		
-		let is_active = (active_client_state == ActiveClientState.IS_ACTIVE_CLIENT)
+		let is_active = (active_client_state == ActiveClientState.ActiveClientStateIsActive)
 		let time_since_active = (NSDate().timeIntervalSince1970 - last_active_secs!.doubleValue)
 		let timed_out = time_since_active > Double(Client.SETACTIVECLIENT_LIMIT_SECS)
 		
@@ -109,14 +109,14 @@ public final class Client {
 			
 			// Update these immediately so if the function is called again
 			// before the API request finishes, we don't start extra requests.
-			active_client_state = ActiveClientState.IS_ACTIVE_CLIENT
+			active_client_state = ActiveClientState.ActiveClientStateIsActive
 			last_active_secs = NSDate().timeIntervalSince1970
 			
 			
 			// The first time this is called, we need to retrieve the user's email address.
 			if self.email == nil {
 				self.getSelfInfo {
-					self.email = $0!.self_entity!.properties!.email[0] as String
+					self.email = $0!.selfEntity!.properties!.email[0] as String
 				}
 			}
 			
@@ -188,7 +188,7 @@ public final class Client {
 				}
 				
 				for state_update in result {
-					self.active_client_state = state_update.state_update_header.active_client_state
+					self.active_client_state = state_update.stateUpdateHeader.activeClientState
 					NSNotificationCenter.default().post(
 						name: Client.didUpdateStateNotification, object: self,
 						userInfo: [Client.didUpdateStateKey: state_update])
@@ -222,7 +222,7 @@ public final class Client {
 		
 		// Retrieve recent conversations so we can preemptively look up their participants.
 		self.syncRecentConversations { response in
-			let conv_states = response!.conversation_state
+			let conv_states = response!.conversationState
 			
 			// syncrecentconversations seems to return a sync_timestamp 4 minutes
 			// before the present. To prevent syncallnewevents later breaking
@@ -230,33 +230,33 @@ public final class Client {
 			// current_server_time instead. use:
 			//
 			// from_timestamp(response!.response_header!.current_server_time)
-			let sync_timestamp = from_timestamp(microsecond_timestamp: response!.sync_timestamp)
+			let sync_timestamp = response!.syncTimestamp//from_timestamp(microsecond_timestamp: )
 			
 			var required_user_ids = Set<UserID>()
 			for conv_state in conv_states {
-				let participants = conv_state.conversation!.participant_data
+				let participants = conv_state.conversation!.participantData
 				required_user_ids = required_user_ids.union(Set(participants.map {
-					UserID(chatID: $0.id!.chat_id as! String, gaiaID: $0.id!.gaia_id as! String)
+					UserID(chatID: $0.id!.chatId , gaiaID: $0.id!.gaiaId)
 					}))
 			}
 			
 			var required_entities = Array<Entity>()
 			if required_user_ids.count > 0 {
 				self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
-					required_entities = resp!.entities
+					required_entities = resp!.entity
 				}
 			}
 			
 			var conv_part_list = Array<ConversationParticipantData>()
 			for conv_state in conv_states {
-				let participants = conv_state.conversation!.participant_data
+				let participants = conv_state.conversation!.participantData
 				conv_part_list.append(contentsOf: participants)
 			}
 			
 			// Let's request our own entity now.
 			var self_entity = Entity()
 			self.getSelfInfo {
-				self_entity = $0!.self_entity!
+				self_entity = $0!.selfEntity!
 				
 				let userList = UserList(client: self, selfEntity: self_entity, entities: required_entities, data: conv_part_list)
 				let conversationList = ConversationList(client: self, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
@@ -580,7 +580,7 @@ public final class Client {
 		segments: [NSArray],
 		image_id: String? = nil,
 		image_user_id: String? = nil,
-		otr_status: OffTheRecordStatus = .ON_THE_RECORD,
+		otr_status: OffTheRecordStatus = .OffTheRecordStatusOnTheRecord,
 		cb: (() -> Void)? = nil)
 	{
 		// Support sending images from other user id's.
@@ -734,11 +734,11 @@ public final class Client {
 	}
 	
 	// Update the watermark (read timestamp) for a conversation.
-	public func updateWatermark(conv_id: String, read_timestamp: NSDate, cb: (() -> Void)? = nil) {
+	public func updateWatermark(conv_id: String, read_timestamp: UInt64, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conv_id], // conversation_id
-			to_timestamp(date: read_timestamp), // latest_read_timestamp
+			read_timestamp//to_timestamp(date: ), // latest_read_timestamp
 		]
 		self.request(endpoint: "conversations/updatewatermark", body: data) { r in
 			self.verifyResponseOK(responseObject: r.data!); cb?()
