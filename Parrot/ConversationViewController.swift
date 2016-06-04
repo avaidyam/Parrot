@@ -45,7 +45,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
     override var representedObject: AnyObject? {
         didSet {
-            if let oldConversation = oldValue as? Conversation {
+            if let oldConversation = oldValue as? IConversation {
                 oldConversation.delegate = nil
             }
 
@@ -62,25 +62,25 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         }
 	}
 	
-	var conversation: Conversation? {
-		return representedObject as? Conversation
+	var conversation: IConversation? {
+		return representedObject as? IConversation
 	}
 	
 	var window: NSWindow? {
 		return self.view.window
 	}
 	
-    func conversation(conversation: Conversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
+    func conversation(conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
         if user.isSelf || self.messageTextField?.window == nil {
             return
         }
 		
 		UI {
 			switch (status) {
-			case TypingType.STARTED:
+			case TypingType.TypingTypeStarted:
 				self.popover.showRelative(to: self.messageTextField!.bounds, of: self.messageTextField!, preferredEdge: .minY)
 				self.statusView.stringValue = "Typing..."
-			case TypingType.PAUSED:
+			case TypingType.TypingTypePaused:
 				self.statusView.stringValue = "Entered text."
 			default: // .STOPPED, .UNKNOWN
 				self.popover.performClose(self)
@@ -89,7 +89,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		}
     }
 
-	func conversation(conversation: Conversation, didReceiveEvent event: Event) {
+	func conversation(conversation: IConversation, didReceiveEvent event: IEvent) {
 		self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
 		
 		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
@@ -100,7 +100,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
             let user = conversation.user_list[event.userID]
             if !user.isSelf {
 				let a = (event.conversation_id as String, event.id as String)
-				let text = (event as? ChatMessageEvent)?.text ?? "Event"
+				let text = (event as? IChatMessageEvent)?.text ?? "Event"
 				
 				let notification = NSUserNotification()
 				notification.title = user.fullName
@@ -119,15 +119,15 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         }
     }
 
-    func conversation(conversation: Conversation, didReceiveWatermarkNotification: WatermarkNotification) {
+    func conversation(conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {
 
     }
 
-	func conversationDidUpdateEvents(conversation: Conversation) {
+	func conversationDidUpdateEvents(conversation: IConversation) {
 		self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
     }
 
-    func conversationDidUpdate(conversation: Conversation) {
+    func conversationDidUpdate(conversation: IConversation) {
         
     }
 	
@@ -137,15 +137,15 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	}
 	
 	// get a single message
-	func _getMessage(ev: ChatMessageEvent) -> Message {
+	func _getMessage(ev: IChatMessageEvent) -> Message {
 		let user = self.conversation!.user_list[ev.userID]
-		let network_ = self.conversation!.conversation.network_type as NSArray
-		let network = NetworkType(value: network_[0] as! NSNumber)
+		let network_ = self.conversation!.conversation.networkType
+		let network = NetworkType(rawValue: network_[0].rawValue) // FIXME weird stuff here
 		
 		var color: NSColor = NSColor.materialBlueGreyColor()
-		if !user.isSelf && network == NetworkType.BABEL {
+		if !user.isSelf && network == NetworkType.NetworkTypeBabel {
 			color = NSColor.materialGreenColor()
-		} else if !user.isSelf && network == NetworkType.GOOGLE_VOICE {
+		} else if !user.isSelf && network == NetworkType.NetworkTypeGoogleVoice {
 			color = NSColor.materialBlueColor()
 		}
 		
@@ -183,14 +183,14 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         let now = NSDate()
 
         if lastTypingTimestamp == nil || NSDate().timeIntervalSince(lastTypingTimestamp!) > typingTimeout {
-            self.conversation?.setTyping(typing: TypingType.STARTED)
+            self.conversation?.setTyping(typing: TypingType.TypingTypeStarted)
         }
 
         lastTypingTimestamp = now
 		let dt = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
 		dispatch_after(dt, dispatch_get_main_queue()) {
             if let ts = self.lastTypingTimestamp where NSDate().timeIntervalSince(ts) > typingTimeout {
-                self.conversation?.setTyping(typing: TypingType.STOPPED)
+                self.conversation?.setTyping(typing: TypingType.TypingTypeStopped)
             }
         }
     }
@@ -211,8 +211,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         }
     }
 	
-	private class func segmentsForInput(text: String, emojify: Bool = true) -> [ChatMessageSegment] {
-		return [ChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
+	private class func segmentsForInput(text: String, emojify: Bool = true) -> [IChatMessageSegment] {
+		return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
 	}
 	
 	private class func attributedStringForText(text: String) -> NSAttributedString {

@@ -96,21 +96,21 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
         }
     }
 	
-	private func _getPerson(conversation: Conversation) -> Person {
+	private func _getPerson(conversation: IConversation) -> Person {
 		
 		// Propogate info for data filling
 		let a = conversation.messages.last?.userID
 		let b = conversation.users.filter { $0.isSelf }.first?.id
 		let c = conversation.users.filter { !$0.isSelf }.first
-		let network_ = conversation.conversation.network_type as NSArray
-		let d = NetworkType(value: network_[0] as! NSNumber)
+		let network_ = conversation.conversation.networkType
+		let d = NetworkType(rawValue: network_[0].rawValue) // FIXME weird stuff here
 		
 		// Patch for Google Voice contacts to show their numbers.
 		// FIXME: Sometimes [1] is actually you, fix that.
 		var title = conversation.name
 		if title == "Unknown" {
-			if let a = conversation.conversation.participant_data[1].fallback_name {
-				title = a as String
+			if conversation.conversation.participantData.count > 0 {
+				title = conversation.conversation.participantData[1].fallbackName as String
 			}
 		}
 		
@@ -120,11 +120,11 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			img = NSImage(data: d)!
 		}
 		
-		let ring = d == NetworkType.GOOGLE_VOICE ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
+		let ring = d == NetworkType.NetworkTypeGoogleVoice ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
 		let ind = conversation.hasUnreadEvents
 		let name = title
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
-		let time = conversation.messages.last?.timestamp.relativeString() ?? ""
+		let time = "\(conversation.messages.last?.timestamp)"//.relativeString() ?? ""
 		
 		return Person(photo: img, highlight: ring, indicator: ind, primary: name, secondary: sub, tertiary: time)
 	}
@@ -133,9 +133,9 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		return self.conversationList?.conversations.map { _getPerson(conversation: $0) }
 	}
 	
-    func conversationList(list: ConversationList, didReceiveEvent event: Event) {}
+    func conversationList(list: ConversationList, didReceiveEvent event: IEvent) {}
     func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
-    func conversationList(list: ConversationList, didReceiveWatermarkNotification status: WatermarkNotification) {}
+    func conversationList(list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
 	
 	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: ConversationList) {
@@ -146,7 +146,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     }
 	
 	/* TODO: Just update the row that is updated. */
-    func conversationList(list: ConversationList, didUpdateConversation conversation: Conversation) {
+    func conversationList(list: ConversationList, didUpdateConversation conversation: IConversation) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 			NotificationManager.updateAppBadge(messages: self.conversationList?.unreadEventCount ?? 0)
