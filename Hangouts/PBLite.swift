@@ -2,60 +2,6 @@ import Foundation
 import CommonCrypto
 
 /* TODO: Remove dependency on CommonCrypto. */
-/* TODO: Revamp PBLite parser with a real Protobuf class set. */
-
-// PBLite Enum Type
-
-public class Enum : NSObject, IntegerLiteralConvertible {
-	public let representation: NSNumber
-	required public init(value: NSNumber) {
-		self.representation = value
-	}
-	
-	convenience override init() {
-		self.init(value: -1)
-	}
-	
-	required public init(integerLiteral value: IntegerLiteralType) {
-		self.representation = value
-	}
-	
-	override public var description: String {
-		return "enum \(self.dynamicType.description()) --> \(self.representation)"
-	}
-}
-
-public func ==(lhs: Enum, rhs: Enum) -> Bool {
-	return lhs.representation == rhs.representation
-}
-
-public func !=(lhs: Enum, rhs: Enum) -> Bool {
-	return !(lhs == rhs)
-}
-
-public func ~=(pattern: Enum, predicate: Enum) -> Bool {
-	return pattern == predicate
-}
-
-// PBLite Message Type
-
-public class Message : NSObject {
-	required override public init() { }
-	public class func isOptional() -> Bool { return false }
-	
-	func serialize(input: AnyObject?) -> AnyObject? {
-		return nil
-	}
-	
-	override public var description: String {
-		let mirror = Mirror(reflecting: self)
-		var string = "message \(self.dynamicType.description()) {\n"
-		for thing in mirror.children {
-			string += "\t\(thing.label!) = \(thing.value);\n"
-		}
-		return string + "}\n"
-	}
-}
 
 // PBLiteSerialization wrapper
 
