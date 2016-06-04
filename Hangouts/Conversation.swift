@@ -46,7 +46,8 @@ public class IConversation {
 	// Update the conversations latest_read_timestamp.
     public func on_watermark_notification(notif: IWatermarkNotification) {
         if self.get_user(user_id: notif.userID).isSelf {
-            self.conversation.selfConversationState.selfReadState.latestReadTimestamp = notif.readTimestamp
+			//FIXME: Oops.
+            //self.conversation.selfConversationState.selfReadState.latestReadTimestamp = notif.readTimestamp
         }
     }
 	
@@ -70,7 +71,8 @@ public class IConversation {
         self.conversation = conversation
         
 		if self.latest_read_timestamp == 0 {//to_timestamp(date: ) == 0 {
-            self.conversation.selfConversationState.selfReadState.latestReadTimestamp = old_timestamp
+			// FIXME: Oops.
+            //self.conversation.selfConversationState.selfReadState.latestReadTimestamp = old_timestamp
         }
 
         delegate?.conversationDidUpdate(conversation: self)
@@ -89,8 +91,8 @@ public class IConversation {
         }
     }
 
-	private var _cachedEvents: [Event]? = nil
-    public var events: [Event] {
+	private var _cachedEvents: [IEvent]? = nil
+    public var events: [IEvent] {
         get {
             if _cachedEvents == nil {
                 _cachedEvents = events_dict.values.sorted { $0.timestamp < $1.timestamp }
@@ -297,7 +299,7 @@ public class IConversation {
 	// This method will make an API request to load historical events if
 	// necessary. If the beginning of the conversation is reached, an empty
 	// list will be returned.
-    public func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([Event]) -> Void)? = nil) {
+    public func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([IEvent]) -> Void)? = nil) {
         guard let event_id = event_id else {
             cb?(events)
             return
@@ -315,11 +317,11 @@ public class IConversation {
             }
 			
             client.getConversation(conversation_id: id, event_timestamp: conv_event.timestamp, max_events: max_events) { res in
-				if res!.response_header.status == ResponseStatus.INVALID_REQUEST {
-					print("Invalid request! \(res!.response_header)")
+				if res!.responseHeader.status == ResponseStatus.ResponseStatusInvalidRequest {
+					print("Invalid request! \(res!.responseHeader)")
 					return
 				}
-				let conv_events = res!.conversation_state.event.map { Conversation.wrap_event(event: $0) }
+				let conv_events = res!.conversationState.event.map { IConversation.wrap_event(event: $0) }
 
                 for conv_event in conv_events {
                     self.events_dict[conv_event.id] = conv_event
@@ -374,7 +376,7 @@ public class IConversation {
     public var name: String {
         get {
 			if self.conversation.hasName {//let name = self.conversation.name {
-                return name
+                return self.conversation.name
             } else {
                 return users.filter { !$0.isSelf }.map { $0.fullName }.joined(separator: ", ")
             }
@@ -394,7 +396,8 @@ public class IConversation {
             return conversation.selfConversationState.selfReadState.latestReadTimestamp
         }
         set(newLatestReadTimestamp) {
-            conversation.selfConversationState.selfReadState.latestReadTimestamp = newLatestReadTimestamp
+			// FIXME: Oops.
+            //conversation.selfConversationState.selfReadState.latestReadTimestamp = newLatestReadTimestamp
         }
     }
 	
@@ -405,7 +408,7 @@ public class IConversation {
 	// return more unread events than these clients will show. There's also a
 	// delay between sending a message and the user's own message being
 	// considered read.
-    public var unread_events: [Event] {
+    public var unread_events: [IEvent] {
         get {
             return events.filter { $0.timestamp > self.latest_read_timestamp }
         }

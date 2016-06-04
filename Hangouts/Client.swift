@@ -184,7 +184,7 @@ public final class Client {
 			// payload[1] is a list of state updates.
 			if payload[0] as? String == "cbu" {
 				let result = flatMap(x: payload[1] as! [NSArray]) {
-					PBLiteSerialization.parseArray(type: StateUpdate.self, input: $0)
+					PBLiteSerialization.decode(message: StateUpdate.self, pblite: $0 as [AnyObject])
 				}
 				
 				for state_update in result {
@@ -436,7 +436,7 @@ public final class Client {
 	// newest.
 	public func getConversation(
 		conversation_id: String,
-		event_timestamp: NSDate,
+		event_timestamp: UInt64,
 		max_events: Int = 50,
 		cb: (response: GetConversationResponse?) -> Void)
 	{
@@ -454,7 +454,7 @@ public final class Client {
 			[
 				None,  // eventId
 				None,  // storageContinuationToken
-				to_timestamp(date: event_timestamp),  // eventTimestamp
+				NSNumber(value: event_timestamp)//to_timestamp(date: event_timestamp),  // eventTimestamp
 			] // eventContinuationToken (specifying timestamp is sufficient)
 		]
 		
@@ -609,9 +609,9 @@ public final class Client {
 			[ //EventRequestHeader
 				[conversation_id],
 				generateClientID(),
-				otr_status.representation,
-				[DeliveryMediumType.GOOGLE_VOICE.representation, ],
-				EventType.SMS.representation
+				NSNumber(value: otr_status.rawValue),
+				[NSNumber(value: DeliveryMediumType.DeliveryMediumGoogleVoice.rawValue), ],
+				NSNumber(value: EventType.EventTypeSms.rawValue)
 			],
 			//None,
 			//None,
@@ -639,7 +639,7 @@ public final class Client {
 		}
 	}
 	
-	public func setConversationNotificationLevel(conversation_id: String, level: NotificationLevel = .RING, cb: (() -> Void)? = nil) {
+	public func setConversationNotificationLevel(conversation_id: String, level: NotificationLevel = .NotificationLevelRing, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id]
@@ -685,11 +685,11 @@ public final class Client {
 	}
 	
 	// Send typing notification.
-	public func setTyping(conversation_id: String, typing: TypingType = TypingType.STARTED, cb: (() -> Void)? = nil) {
+	public func setTyping(conversation_id: String, typing: TypingType = TypingType.TypingTypeStarted, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
-			typing.representation
+			NSNumber(value: typing.rawValue)
 		]
 		self.request(endpoint: "conversations/settyping", body: data) {
 			r in self.verifyResponseOK(responseObject: r.data!); cb?()
@@ -697,10 +697,10 @@ public final class Client {
 	}
 	
 	// List all events occurring at or after a timestamp.
-	public func syncAllNewEvents(timestamp: NSDate, cb: (response: SyncAllNewEventsResponse?) -> Void) {
+	public func syncAllNewEvents(timestamp: UInt64, cb: (response: SyncAllNewEventsResponse?) -> Void) {
 		let data: NSArray = [
 			self.getRequestHeader(),
-			to_timestamp(date: timestamp),
+			NSNumber(value: timestamp),//to_timestamp(date: timestamp),
 			[],
 			None,
 			[],
@@ -738,7 +738,7 @@ public final class Client {
 		let data = [
 			self.getRequestHeader(),
 			[conv_id], // conversation_id
-			read_timestamp//to_timestamp(date: ), // latest_read_timestamp
+			NSNumber(value: read_timestamp)//to_timestamp(date: ), // latest_read_timestamp
 		]
 		self.request(endpoint: "conversations/updatewatermark", body: data) { r in
 			self.verifyResponseOK(responseObject: r.data!); cb?()
