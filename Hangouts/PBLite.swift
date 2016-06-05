@@ -7,8 +7,17 @@ import CommonCrypto
 
 public class PBLiteSerialization {
 	
-	class func decodeField<T: AbstractMessage>(message: T.Type, field: Field, value: AnyObject) {
-		
+	//D ecode optional or required field.
+	class func decodeField<T: AbstractMessage>(message: T.Type, field: ConcreateExtensionField, value: AnyObject) {
+		if field.type == .ExtensionTypeMessage {
+			message.classBuilder()
+			//decode(message: getattr(message, field.nameOfExtension), pblite: value as! [AnyObject])
+		} else if field.type == .ExtensionTypeBytes {
+			//value = base64.b64decode(value)
+			//setattr(message, field.name, value)
+		} else {
+			print("Ignoring field \(field.nameOfExtension)")
+		}
 	}
 	
 	class func decodeRepeatedField<T: AbstractMessage>(message: T.Type, field: Field, value: [AnyObject]) {
@@ -17,14 +26,27 @@ public class PBLiteSerialization {
 	
 	public class func decode<T: AbstractMessage>(message: T.Type, pblite pblite2: [AnyObject], ignoreFirstItem: Bool = false) -> T? {
 		guard pblite2.count > (ignoreFirstItem ? 1 : 0) else { return nil }
-		_ = ignoreFirstItem ? Array(pblite2.dropFirst()) : pblite2
+		var pblite = ignoreFirstItem ? Array(pblite2.dropFirst()) : pblite2
 		
-		print(pblite2)
+		var extra_fields = [:]
+		if pblite.count > 0 && pblite.last is NSDictionary {
+			var dict = pblite.last as? [String: AnyObject]
+			// dict.map { (Int($0), $1) }
+			pblite = Array(pblite.dropLast())
+		}
+		
+		//let fields_values = pblite + extra_fields
+		let fields_values = pblite
+		
+		//FieldMask
+		
+		//print(pblite2)
 		return nil
 	}
 	
 	public class func parseProtoJSON<T: AbstractMessage>(input: NSData) -> T? {
 		let script = (NSString(data: input, encoding: NSUTF8StringEncoding)! as String)
+		print(script)
 		if let parsedObject = evalArray(string: script) as? NSArray {
 			return decode(message: T.self, pblite: parsedObject as [AnyObject], ignoreFirstItem: false)
 		}

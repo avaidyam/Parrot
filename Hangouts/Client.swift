@@ -184,7 +184,9 @@ public final class Client {
 			// payload[1] is a list of state updates.
 			if payload[0] as? String == "cbu" {
 				let result = flatMap(x: payload[1] as! [NSArray]) {
-					PBLiteSerialization.decode(message: StateUpdate.self, pblite: $0 as [AnyObject])
+					PBLiteSerialization.decode(message: StateUpdate.self,
+					                           pblite: $0 as [AnyObject],
+					                           ignoreFirstItem: true)
 				}
 				
 				for state_update in result {
@@ -729,6 +731,7 @@ public final class Client {
 			[1]
 		]
 		self.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
+			print(r.data)
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}

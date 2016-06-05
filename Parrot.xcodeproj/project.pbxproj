@@ -24,21 +24,6 @@
 		4866337E1C5822FA006C094B /* ElementContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4866337D1C5822FA006C094B /* ElementContainerView.swift */; };
 		48682CC81C46F00400E649DE /* NSTextField+AutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48682CC71C46F00400E649DE /* NSTextField+AutoLayout.swift */; };
 		487A0E151C1E6D61007A4696 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A0E141C1E6D61007A4696 /* Notifications.swift */; };
-		487DA8951D0265120050B984 /* AbstractMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA8871D0265120050B984 /* AbstractMessage.swift */; };
-		487DA8961D0265120050B984 /* CodedInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA8881D0265120050B984 /* CodedInputStream.swift */; };
-		487DA8971D0265120050B984 /* CodedOutputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA8891D0265120050B984 /* CodedOutputStream.swift */; };
-		487DA8981D0265120050B984 /* ConcreateExtensionField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA88A1D0265120050B984 /* ConcreateExtensionField.swift */; };
-		487DA8991D0265120050B984 /* ExtendableMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA88B1D0265120050B984 /* ExtendableMessage.swift */; };
-		487DA89A1D0265120050B984 /* ExtensionRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA88C1D0265120050B984 /* ExtensionRegistry.swift */; };
-		487DA89B1D0265120050B984 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA88D1D0265120050B984 /* Field.swift */; };
-		487DA89C1D0265120050B984 /* GeneratedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA88E1D0265120050B984 /* GeneratedMessage.swift */; };
-		487DA89D1D0265120050B984 /* Google.Protobuf.Descriptor.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA88F1D0265120050B984 /* Google.Protobuf.Descriptor.proto.swift */; };
-		487DA89E1D0265120050B984 /* Google.Protobuf.SwiftDescriptor.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA8901D0265120050B984 /* Google.Protobuf.SwiftDescriptor.proto.swift */; };
-		487DA89F1D0265120050B984 /* ProtocolBuffers.h in Headers */ = {isa = PBXBuildFile; fileRef = 487DA8911D0265120050B984 /* ProtocolBuffers.h */; };
-		487DA8A01D0265120050B984 /* RingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA8921D0265120050B984 /* RingBuffer.swift */; };
-		487DA8A11D0265120050B984 /* UnknownFieldSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA8931D0265120050B984 /* UnknownFieldSet.swift */; };
-		487DA8A21D0265120050B984 /* WireFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA8941D0265120050B984 /* WireFormat.swift */; };
-		487DA8A41D0265430050B984 /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487DA8A31D0265430050B984 /* Hangouts.proto.swift */; };
 		48808EDD1C6463DD00236E96 /* WindowTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */; };
 		488239A31C455CED00C5E8EB /* Array+Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488239A21C455CED00C5E8EB /* Array+Remove.swift */; };
 		48834D961C1B3602009BC442 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ServiceManager.swift */; };
@@ -62,7 +47,6 @@
 		48834E411C1B4098009BC442 /* FoundationSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E391C1B4098009BC442 /* FoundationSupport.swift */; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
 		48834E451C1B40A4009BC442 /* PBLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLite.swift */; };
-		48834E481C1B40FA009BC442 /* NSRegularExpression+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */; };
 		48834E4C1C1B4253009BC442 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */; };
 		48834E571C1B490B009BC442 /* CommonCrypto in Resources */ = {isa = PBXBuildFile; fileRef = 48834E561C1B490B009BC442 /* CommonCrypto */; };
 		488997151C4E0EA30034AEF3 /* SwiftAutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488997141C4E0EA30034AEF3 /* SwiftAutoLayout.swift */; };
@@ -87,6 +71,8 @@
 		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
 		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E3C0811C1F363F008B2D1D /* UserList.swift */; };
+		48E9C3381D04DFED0074984D /* hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3371D04DFED0074984D /* hangouts.proto.swift */; };
+		48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3391D04DFF90074984D /* Protobuf.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -256,21 +242,6 @@
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		487A0E141C1E6D61007A4696 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
-		487DA8871D0265120050B984 /* AbstractMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbstractMessage.swift; sourceTree = "<group>"; };
-		487DA8881D0265120050B984 /* CodedInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodedInputStream.swift; sourceTree = "<group>"; };
-		487DA8891D0265120050B984 /* CodedOutputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodedOutputStream.swift; sourceTree = "<group>"; };
-		487DA88A1D0265120050B984 /* ConcreateExtensionField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcreateExtensionField.swift; sourceTree = "<group>"; };
-		487DA88B1D0265120050B984 /* ExtendableMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendableMessage.swift; sourceTree = "<group>"; };
-		487DA88C1D0265120050B984 /* ExtensionRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionRegistry.swift; sourceTree = "<group>"; };
-		487DA88D1D0265120050B984 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
-		487DA88E1D0265120050B984 /* GeneratedMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneratedMessage.swift; sourceTree = "<group>"; };
-		487DA88F1D0265120050B984 /* Google.Protobuf.Descriptor.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Google.Protobuf.Descriptor.proto.swift; sourceTree = "<group>"; };
-		487DA8901D0265120050B984 /* Google.Protobuf.SwiftDescriptor.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Google.Protobuf.SwiftDescriptor.proto.swift; sourceTree = "<group>"; };
-		487DA8911D0265120050B984 /* ProtocolBuffers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtocolBuffers.h; sourceTree = "<group>"; };
-		487DA8921D0265120050B984 /* RingBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RingBuffer.swift; sourceTree = "<group>"; };
-		487DA8931D0265120050B984 /* UnknownFieldSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnknownFieldSet.swift; sourceTree = "<group>"; };
-		487DA8941D0265120050B984 /* WireFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireFormat.swift; sourceTree = "<group>"; };
-		487DA8A31D0265430050B984 /* Hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hangouts.proto.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowTransitionAnimator.swift; sourceTree = "<group>"; };
 		488239A21C455CED00C5E8EB /* Array+Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Remove.swift"; sourceTree = "<group>"; };
 		48834D921C1B3602009BC442 /* Parrot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parrot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -304,7 +275,6 @@
 		48834E391C1B4098009BC442 /* FoundationSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationSupport.swift; sourceTree = "<group>"; };
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		48834E431C1B40A4009BC442 /* PBLite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLite.swift; sourceTree = "<group>"; };
-		48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+Helpers.swift"; sourceTree = "<group>"; };
 		48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		48834E561C1B490B009BC442 /* CommonCrypto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CommonCrypto; path = External/CommonCrypto; sourceTree = SOURCE_ROOT; };
 		488997141C4E0EA30034AEF3 /* SwiftAutoLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftAutoLayout.swift; sourceTree = "<group>"; };
@@ -336,6 +306,8 @@
 		48DE52FB1C1CC28000647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DE52FD1C1CC28000647C63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		48E3C0811C1F363F008B2D1D /* UserList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserList.swift; sourceTree = "<group>"; };
+		48E9C3371D04DFED0074984D /* hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hangouts.proto.swift; sourceTree = "<group>"; };
+		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -487,7 +459,8 @@
 		487A0E101C1E0F6C007A4696 /* PBLite */ = {
 			isa = PBXGroup;
 			children = (
-				487DA8A31D0265430050B984 /* Hangouts.proto.swift */,
+				48E9C3371D04DFED0074984D /* hangouts.proto.swift */,
+				48E9C3391D04DFF90074984D /* Protobuf.swift */,
 				48834E431C1B40A4009BC442 /* PBLite.swift */,
 			);
 			name = PBLite;
@@ -505,27 +478,6 @@
 				48E3C0811C1F363F008B2D1D /* UserList.swift */,
 			);
 			name = API;
-			sourceTree = "<group>";
-		};
-		487DA8861D0265090050B984 /* Protobuf */ = {
-			isa = PBXGroup;
-			children = (
-				487DA8871D0265120050B984 /* AbstractMessage.swift */,
-				487DA8881D0265120050B984 /* CodedInputStream.swift */,
-				487DA8891D0265120050B984 /* CodedOutputStream.swift */,
-				487DA88A1D0265120050B984 /* ConcreateExtensionField.swift */,
-				487DA88B1D0265120050B984 /* ExtendableMessage.swift */,
-				487DA88C1D0265120050B984 /* ExtensionRegistry.swift */,
-				487DA88D1D0265120050B984 /* Field.swift */,
-				487DA88E1D0265120050B984 /* GeneratedMessage.swift */,
-				487DA88F1D0265120050B984 /* Google.Protobuf.Descriptor.proto.swift */,
-				487DA8901D0265120050B984 /* Google.Protobuf.SwiftDescriptor.proto.swift */,
-				487DA8911D0265120050B984 /* ProtocolBuffers.h */,
-				487DA8921D0265120050B984 /* RingBuffer.swift */,
-				487DA8931D0265120050B984 /* UnknownFieldSet.swift */,
-				487DA8941D0265120050B984 /* WireFormat.swift */,
-			);
-			name = Protobuf;
 			sourceTree = "<group>";
 		};
 		48834D891C1B3602009BC442 = {
@@ -622,7 +574,6 @@
 		48834DED1C1B372E009BC442 /* Hangouts */ = {
 			isa = PBXGroup;
 			children = (
-				487DA8861D0265090050B984 /* Protobuf */,
 				487A0E101C1E0F6C007A4696 /* PBLite */,
 				487A0E111C1E0F71007A4696 /* API */,
 				48834E511C1B4380009BC442 /* Extensions */,
@@ -701,7 +652,6 @@
 			isa = PBXGroup;
 			children = (
 				48834E391C1B4098009BC442 /* FoundationSupport.swift */,
-				48834E471C1B40FA009BC442 /* NSRegularExpression+Helpers.swift */,
 				481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */,
 				4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */,
 			);
@@ -803,7 +753,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				487DA89F1D0265120050B984 /* ProtocolBuffers.h in Headers */,
 				48834E281C1B3E03009BC442 /* Hangouts.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1245,32 +1194,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				487DA8981D0265120050B984 /* ConcreateExtensionField.swift in Sources */,
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
 				48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */,
 				4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */,
 				481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */,
-				487DA8A01D0265120050B984 /* RingBuffer.swift in Sources */,
-				487DA8A41D0265430050B984 /* Hangouts.proto.swift in Sources */,
 				48834E411C1B4098009BC442 /* FoundationSupport.swift in Sources */,
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
-				487DA89D1D0265120050B984 /* Google.Protobuf.Descriptor.proto.swift in Sources */,
-				487DA89A1D0265120050B984 /* ExtensionRegistry.swift in Sources */,
+				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
 				48834E451C1B40A4009BC442 /* PBLite.swift in Sources */,
-				487DA89B1D0265120050B984 /* Field.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
 				48834E401C1B4098009BC442 /* ConversationList.swift in Sources */,
-				487DA8951D0265120050B984 /* AbstractMessage.swift in Sources */,
-				487DA8991D0265120050B984 /* ExtendableMessage.swift in Sources */,
+				48E9C3381D04DFED0074984D /* hangouts.proto.swift in Sources */,
 				48834E3D1C1B4098009BC442 /* Client.swift in Sources */,
-				487DA8961D0265120050B984 /* CodedInputStream.swift in Sources */,
-				487DA89C1D0265120050B984 /* GeneratedMessage.swift in Sources */,
-				487DA8A21D0265120050B984 /* WireFormat.swift in Sources */,
-				487DA89E1D0265120050B984 /* Google.Protobuf.SwiftDescriptor.proto.swift in Sources */,
-				487DA8A11D0265120050B984 /* UnknownFieldSet.swift in Sources */,
-				487DA8971D0265120050B984 /* CodedOutputStream.swift in Sources */,
-				48834E481C1B40FA009BC442 /* NSRegularExpression+Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
