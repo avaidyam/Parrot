@@ -8,35 +8,58 @@ import CommonCrypto
 public class PBLiteSerialization {
 	
 	//D ecode optional or required field.
-	class func decodeField<T: ProtoMessage>(message: T.Type, field: ProtoFieldDescriptor, value: AnyObject) {
-		/*if field.type == .ExtensionTypeMessage {
-			message.classBuilder()
+	class func decodeField<T: ProtoMessage>(message: T.Type, field: ProtoFieldDescriptor, value: AnyObject?) {
+		switch field.type {
+		case .prototype(let str): break;
+			//decode(getattr(message, field.name), value)
+			//message.get
+			//decode(message: message._protoFields., pblite: [])
+		case .bytes: print("Ignoring field \(field.name)")
+		default: print("Ignoring field \(field.name)")
+		}
+		
+		/*
+		if field.type == .prototype {
 			//decode(message: getattr(message, field.nameOfExtension), pblite: value as! [AnyObject])
-		} else if field.type == .ExtensionTypeBytes {
-			//value = base64.b64decode(value)
-			//setattr(message, field.name, value)
+		} else if field.type == .bytes {
+			//setattr(message, field.name, base64.b64decode(value))
 		} else {
-			print("Ignoring field \(field.nameOfExtension)")
+			print("Ignoring field \(field.name)")
 		}*/
 	}
 	
-	class func decodeRepeatedField<T: ProtoMessage>(message: T.Type, field: ProtoFieldDescriptor, value: [AnyObject]) {
+	class func decodeRepeatedField<T: ProtoMessage>(message: T.Type, field: ProtoFieldDescriptor, value: [AnyObject?]) {
 		
 	}
 	
-	public class func decode<T: ProtoMessage>(message: T.Type, pblite pblite2: [AnyObject], ignoreFirstItem: Bool = false) -> T? {
+	public class func decode<T: ProtoMessage>(message: T.Type, pblite pblite2: [AnyObject?], ignoreFirstItem: Bool = false) -> T? {
 		guard pblite2.count > (ignoreFirstItem ? 1 : 0) else { return nil }
 		var pblite = ignoreFirstItem ? Array(pblite2.dropFirst()) : pblite2
 		
 		var extra_fields = [:]
 		if pblite.count > 0 && pblite.last is NSDictionary {
-			var dict = pblite.last as? [String: AnyObject]
+			var dict = pblite.last as? [String: AnyObject?]
 			// dict.map { (Int($0), $1) }
 			pblite = Array(pblite.dropLast())
 		}
 		
+		//var msg = message.init()
+		let process = message._protoFields.filter { $0.value.type.prototyped }
+		
+		
 		//let fields_values = pblite + extra_fields
 		let fields_values = pblite
+		for (idx, value) in fields_values.enumerated() {
+			if value == nil { continue }
+			
+			do {
+				
+				//try
+			} catch {
+				
+			}
+		}
+		
 		
 		//FieldMask
 		

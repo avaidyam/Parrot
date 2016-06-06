@@ -13,11 +13,31 @@ public protocol ProtoEnum: Hashable, Equatable {
 }
 
 public protocol ProtoMessage: CustomStringConvertible, CustomDebugStringConvertible, Hashable, Equatable {
-	static var _protoFields: [ProtoFieldDescriptor] { get }
+	static var _protoFields: [Int: ProtoFieldDescriptor] { get }
 	var _unknownFields: [Int: Any] { get }
 	
 	mutating func set(name: String, value: Any?) throws
 	func get(name: String) throws -> Any?
+	
+	init()
+}
+
+// Message: Builder Support
+public extension ProtoMessage {
+	public init(fields: [Int: Any?]) throws {
+		self.init()
+		for (idx, desc) in Self._protoFields {
+			if let val = fields[idx] {
+				try self.set(name: desc.name, value: val)
+			} else if desc.label == .required {
+				throw ProtoError.requiredFieldError
+			}
+		}
+	}
+	public init(test: String, builder: (inout Self) -> Void) {
+		self.init()
+		builder(&self)
+	}
 }
 
 // Message: String & DebugStringConvertible Support
@@ -39,9 +59,9 @@ public extension ProtoMessage /* : CustomStringConvertible, CustomDebugStringCon
 		return "message \(self.messageName) { ... }"
 	}
 	
-	private func _toProto(_ indent: String = "", _ value: Bool = false) -> String {
+	public func _toProto(_ indent: String = "", _ value: Bool = false) -> String {
 		var output = ""
-		for field in Self._protoFields {
+		for (_, field) in Self._protoFields {
 			output += "\(indent)\(field.label) \(field.type) \(field.name) = \(field.id);\n"
 		}
 		return output
@@ -62,11 +82,19 @@ public func ==<T: ProtoMessage>(lhs: T, rhs: T) -> Bool {
 public extension ProtoMessage {
 	
 	mutating func set(id: Int, value: Any?) throws {
-		try set(name: Self._protoFields[id].name, value: value)
+		if let name = Self._protoFields[id]?.name {
+			try set(name: name, value: value)
+		} else {
+			throw ProtoError.fieldNameNotFoundError
+		}
 	}
 	
 	func get(id: Int) throws -> Any? {
-		return try get(name: Self._protoFields[id].name)
+		if let name = Self._protoFields[id]?.name {
+			return try get(name: name)
+		} else {
+			throw ProtoError.fieldNameNotFoundError
+		}
 	}
 }
 
@@ -84,6 +112,13 @@ public struct ProtoFieldDescriptor {
 	public let name: String
 	public let type: ProtoFieldType
 	public let label: ProtoFieldLabel
+	
+	public var camelName: String {
+		let comps = self.name.components(separatedBy: "_")
+		return comps.dropFirst()
+			.map { $0.capitalized }
+			.reduce(comps.first!, combine: +)
+	}
 }
 
 public enum ProtoFieldType: StringLiteralConvertible {
@@ -125,6 +160,13 @@ public enum ProtoFieldType: StringLiteralConvertible {
 		}
 	}
 	
+	public var prototyped: Bool {
+		switch self {
+		case prototype(_): return true
+		default: return false
+		}
+	}
+	
 	public var type: String {
 		switch self {
 		case string: return "String"
@@ -147,10 +189,19 @@ public enum ProtoFieldType: StringLiteralConvertible {
 		case .repeated: return "[\(self.type)]"
 		}
 	}
+	
+	public func container(labeled label: ProtoFieldLabel) -> String {
+		switch label {
+		case .optional: return "\(self.type)?"
+		case .required: return "\(self.type)!"
+		case .repeated: return "[\(self.type)] = []"
+		}
+	}
 }
 
 public enum ProtoError: ErrorProtocol {
 	case typeMismatchError
+	case requiredFieldError
 	case fieldNameNotFoundError
 	case fieldIdNotFoundError
 }
@@ -174,11 +225,11 @@ public struct ProtoEnumDescriptor: ProtoTopLevelDeclaration {
 		
 		let f2 = content.components(separatedBy: ";").map {
 			$0.trimmingCharacters(in: .whitespacesAndNewlines())
-			}.filter { !$0.isEmpty } as [String]
+		}.filter { !$0.isEmpty } as [String]
 		let fields = f2.map {
 			let a = $0.components(separatedBy: " ").filter { $0 != "=" }
 			return (Int(a[1])!, a[0])
-			}.sorted { $0.0 < $1.0 } as [(Int, String)]
+		}.sorted { $0.0 < $1.0 } as [(Int, String)]
 		
 		title = title.trimmingCharacters(in: .whitespacesAndNewlines())
 		return ProtoEnumDescriptor(name: title, values: fields)
@@ -187,11 +238,11 @@ public struct ProtoEnumDescriptor: ProtoTopLevelDeclaration {
 	public func toString() -> String {
 		var output = "public enum \(self.name): Int, ProtoEnum {\n"
 		self.values.forEach { k, v in
-			let name = v
-				.components(separatedBy: "_")
+			let comps = v.components(separatedBy: "_")
+			let name = comps.dropFirst()
 				.map { $0.capitalized }
-				.joined(separator: "")
-				.replacingOccurrences(of: self.name, with: "")
+				.reduce(comps.first!.capitalized, combine: +)
+				.replacingOccurrences(of: self.name, with: "", options: .caseInsensitiveSearch)
 			
 			output += "\tcase \(name) = \(k)\n"
 		}
@@ -228,10 +279,11 @@ public struct ProtoMessageDescriptor: ProtoTopLevelDeclaration {
 	public func toString() -> String {
 		var output = ""
 		output += "public struct \(self.name): ProtoMessage {\n\n"
+		output += "\tpublic init() {}\n"
 		output += "\tpublic let _unknownFields = [Int: Any]()\n"
 		output += "\tpublic static let _protoFields = [\n"
 		for field in self.fields {
-			output += "\t\tProtoFieldDescriptor(id: \(field.id), name: \"\(field.name)\","
+			output += "\t\t\(field.id): ProtoFieldDescriptor(id: \(field.id), name: \"\(field.name)\","
 			output += " type: .\(field.type), label: .\(field.label)),\n"
 		}
 		output += "\t]\n\n"
@@ -241,19 +293,19 @@ public struct ProtoMessageDescriptor: ProtoTopLevelDeclaration {
 			output += "\t\tcase \"\(field.name)\":\n"
 			output += "\t\t\tguard value is \(field.type.type(labeled: field.label))"
 			output += " else { throw ProtoError.typeMismatchError }\n"
-			output += "\t\t\tself.\(field.name) = value as! \(field.type.type(labeled: field.label))\n"
+			output += "\t\t\tself.\(field.camelName) = value as! \(field.type.type(labeled: field.label))\n"
 		}
 		output += "\t\tdefault: throw ProtoError.fieldNameNotFoundError\n"
 		output += "\t\t}\n\t}\n\n"
 		output += "\tpublic func get(name: String) throws -> Any? {\n"
 		output += "\t\tswitch name {\n"
 		for field in self.fields {
-			output += "\t\tcase \"\(field.name)\": return self.\(field.name)\n"
+			output += "\t\tcase \"\(field.name)\": return self.\(field.camelName)\n"
 		}
 		output += "\t\tdefault: throw ProtoError.fieldNameNotFoundError\n"
 		output += "\t\t}\n\t}\n\n"
 		for field in self.fields {
-			output += "\tpublic var \(field.name): \(field.type.type(labeled: field.label))\n"
+			output += "\tpublic var \(field.camelName): \(field.type.container(labeled: field.label))\n"
 		}
 		return output + "}"
 	}
@@ -279,7 +331,7 @@ public struct ProtoFileDescriptor: ProtoTopLevelDeclaration {
 			.map { try? ProtoMessageDescriptor.fromString(string: $0) }
 			.flatMap { $0 } as [ProtoTopLevelDeclaration]
 		
-		return ProtoFileDescriptor(syntax: "proto2", package: "", imports: [], elements: messages + enums)
+		return ProtoFileDescriptor(syntax: "proto2", package: "", imports: [], elements: enums + messages)
 	}
 	
 	public func toString() -> String {
