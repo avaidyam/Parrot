@@ -72,7 +72,7 @@ public class IConversation {
         
 		if self.latest_read_timestamp == 0 {//to_timestamp(date: ) == 0 {
 			// FIXME: Oops.
-            //self.conversation.selfConversationState.selfReadState.latestReadTimestamp = old_timestamp
+            self.conversation.selfConversationState!.selfReadState!.latestReadTimestamp = old_timestamp
         }
 
         delegate?.conversationDidUpdate(conversation: self)
@@ -162,7 +162,7 @@ public class IConversation {
             return self.typingStatuses.filter {
                 (k, v) in !self.user_list[k].isSelf
             }.map {
-                (k, v) in v == TypingType.TypingTypeStarted
+                (k, v) in v == TypingType.Started
             }.first ?? false
         }
     }
@@ -189,7 +189,7 @@ public class IConversation {
 		image_user_id: String? = nil,
         cb: (() -> Void)? = nil
     ) {
-        let otr_status = (is_off_the_record ? OffTheRecordStatus.OffTheRecordStatusOffTheRecord : OffTheRecordStatus.OffTheRecordStatusOnTheRecord)
+        let otr_status = (is_off_the_record ? OffTheRecordStatus.OffTheRecord : OffTheRecordStatus.OnTheRecord)
 
 		/* TODO: Fix the conditionality here. */
         if let image_data = image_data, image_name = image_name {
@@ -214,11 +214,11 @@ public class IConversation {
     }
 
     public func leave(cb: (() -> Void)? = nil) {
-        switch (self.conversation.types) {
-        case ConversationType.ConversationTypeGroup:
+        switch (self.conversation.type!) {
+        case .Group:
             //print("Remove Not Implemented!")
             client.removeUser(conversation_id: id, cb: cb)
-        case ConversationType.ConversationTypeOneToOne:
+        case .OneToOne:
             client.deleteConversation(conversation_id: id, cb: cb)
         default:
             break
@@ -241,7 +241,7 @@ public class IConversation {
 	
 	// Set typing status.
 	// TODO: Add rate-limiting to avoid unnecessary requests.
-    public func setTyping(typing: TypingType = TypingType.TypingTypeStarted, cb: (() -> Void)? = nil) {
+    public func setTyping(typing: TypingType = TypingType.Started, cb: (() -> Void)? = nil) {
         client.setTyping(conversation_id: id, typing: typing, cb: cb)
     }
 	
@@ -317,11 +317,11 @@ public class IConversation {
             }
 			
             client.getConversation(conversation_id: id, event_timestamp: conv_event.timestamp, max_events: max_events) { res in
-				if res!.responseHeader.status == ResponseStatus.ResponseStatusInvalidRequest {
+				if res!.responseHeader!.status == ResponseStatus.InvalidRequest {
 					print("Invalid request! \(res!.responseHeader)")
 					return
 				}
-				let conv_events = res!.conversationState.event.map { IConversation.wrap_event(event: $0) }
+				let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(event: $0) }
 
                 for conv_event in conv_events {
                     self.events_dict[conv_event.id] = conv_event
@@ -358,7 +358,7 @@ public class IConversation {
 	// The conversation's ID.
     public var id: String {
         get {
-            return self.conversation.conversationId!.id 
+            return self.conversation.conversationId!.id!
         }
     }
 
@@ -366,8 +366,8 @@ public class IConversation {
         get {
             return conversation.participantData.map {
                 self.user_list[UserID(
-                    chatID: $0.id!.chatId ,
-                    gaiaID: $0.id!.gaiaId 
+                    chatID: $0.id!.chatId!,
+                    gaiaID: $0.id!.gaiaId!
                 )]
             }
         }
@@ -375,8 +375,8 @@ public class IConversation {
 
     public var name: String {
         get {
-			if self.conversation.hasName {//let name = self.conversation.name {
-                return self.conversation.name
+			if let name = self.conversation.name {
+                return name
             } else {
                 return users.filter { !$0.isSelf }.map { $0.fullName }.joined(separator: ", ")
             }
@@ -385,7 +385,7 @@ public class IConversation {
 
     public var last_modified: UInt64 {
         get {
-			return conversation.selfConversationState.sortTimestamp
+			return conversation.selfConversationState!.sortTimestamp!
 				?? 0//NSDate(timeIntervalSinceReferenceDate: 0)
         }
     }
@@ -393,7 +393,7 @@ public class IConversation {
 	// datetime timestamp of the last read Event.
     public var latest_read_timestamp: UInt64 {
         get {
-            return conversation.selfConversationState.selfReadState.latestReadTimestamp
+            return conversation.selfConversationState!.selfReadState!.latestReadTimestamp!
         }
         set(newLatestReadTimestamp) {
 			// FIXME: Oops.
@@ -426,21 +426,21 @@ public class IConversation {
 	// True if this conversation has been archived.
     public var is_archived: Bool {
         get {
-            return self.conversation.selfConversationState.view.contains(ConversationView.ConversationViewArchived)
+            return self.conversation.selfConversationState!.view.contains(ConversationView.Archived)
         }
     }
 	
 	// True if notification level for this conversation is quiet.
 	public var is_quiet: Bool {
 		get {
-			return self.conversation.selfConversationState.notificationLevel == NotificationLevel.NotificationLevelQuiet
+			return self.conversation.selfConversationState!.notificationLevel == NotificationLevel.Quiet
 		}
 	}
 	
 	// True if conversation is off the record (history is disabled).
     public var is_off_the_record: Bool {
         get {
-            return self.conversation.otrStatus == OffTheRecordStatus.OffTheRecordStatusOffTheRecord
+            return self.conversation.otrStatus == OffTheRecordStatus.OffTheRecord
         }
     }
 }

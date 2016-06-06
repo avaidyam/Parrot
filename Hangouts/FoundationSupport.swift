@@ -216,3 +216,10 @@ public extension NSRegularExpression {
 		}
 	}
 }
+
+class Wrapper<T> {
+	var wrapped: T
+	init(_ value: T) {
+		self.wrapped = value
+	}
+}

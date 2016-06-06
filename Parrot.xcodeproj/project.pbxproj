@@ -70,8 +70,8 @@
 		48DE52FA1C1CC28000647C63 /* ParrotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52F81C1CC28000647C63 /* ParrotViewController.xib */; };
 		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
 		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		48DF84981D04E1F800F39444 /* hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* hangouts.proto.swift */; };
 		48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E3C0811C1F363F008B2D1D /* UserList.swift */; };
-		48E9C3381D04DFED0074984D /* hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3371D04DFED0074984D /* hangouts.proto.swift */; };
 		48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3391D04DFF90074984D /* Protobuf.swift */; };
 /* End PBXBuildFile section */
 
@@ -305,8 +305,8 @@
 		48DE52F91C1CC28000647C63 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ParrotViewController.xib; sourceTree = "<group>"; };
 		48DE52FB1C1CC28000647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DE52FD1C1CC28000647C63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		48DF84971D04E1F800F39444 /* hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hangouts.proto.swift; sourceTree = "<group>"; };
 		48E3C0811C1F363F008B2D1D /* UserList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserList.swift; sourceTree = "<group>"; };
-		48E9C3371D04DFED0074984D /* hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hangouts.proto.swift; sourceTree = "<group>"; };
 		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -459,7 +459,7 @@
 		487A0E101C1E0F6C007A4696 /* PBLite */ = {
 			isa = PBXGroup;
 			children = (
-				48E9C3371D04DFED0074984D /* hangouts.proto.swift */,
+				48DF84971D04E1F800F39444 /* hangouts.proto.swift */,
 				48E9C3391D04DFF90074984D /* Protobuf.swift */,
 				48834E431C1B40A4009BC442 /* PBLite.swift */,
 			);
@@ -1196,6 +1196,7 @@
 			files = (
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
 				48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */,
+				48DF84981D04E1F800F39444 /* hangouts.proto.swift in Sources */,
 				4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */,
 				481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */,
 				48834E411C1B4098009BC442 /* FoundationSupport.swift in Sources */,
@@ -1205,7 +1206,6 @@
 				48834E451C1B40A4009BC442 /* PBLite.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
 				48834E401C1B4098009BC442 /* ConversationList.swift in Sources */,
-				48E9C3381D04DFED0074984D /* hangouts.proto.swift in Sources */,
 				48834E3D1C1B4098009BC442 /* Client.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

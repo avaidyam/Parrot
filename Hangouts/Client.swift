@@ -101,7 +101,7 @@ public final class Client {
 			return
 		}
 		
-		let is_active = (active_client_state == ActiveClientState.ActiveClientStateIsActive)
+		let is_active = (active_client_state == ActiveClientState.IsActive)
 		let time_since_active = (NSDate().timeIntervalSince1970 - last_active_secs!.doubleValue)
 		let timed_out = time_since_active > Double(Client.SETACTIVECLIENT_LIMIT_SECS)
 		
@@ -109,7 +109,7 @@ public final class Client {
 			
 			// Update these immediately so if the function is called again
 			// before the API request finishes, we don't start extra requests.
-			active_client_state = ActiveClientState.ActiveClientStateIsActive
+			active_client_state = ActiveClientState.IsActive
 			last_active_secs = NSDate().timeIntervalSince1970
 			
 			
@@ -190,10 +190,10 @@ public final class Client {
 				}
 				
 				for state_update in result {
-					self.active_client_state = state_update.stateUpdateHeader.activeClientState
+					self.active_client_state = state_update.stateUpdateHeader!.activeClientState!
 					NSNotificationCenter.default().post(
 						name: Client.didUpdateStateNotification, object: self,
-						userInfo: [Client.didUpdateStateKey: state_update])
+						userInfo: [Client.didUpdateStateKey: Wrapper(state_update)])
 				}
 			} else {
 				print("Ignoring message: \(payload[0])")
@@ -238,7 +238,7 @@ public final class Client {
 			for conv_state in conv_states {
 				let participants = conv_state.conversation!.participantData
 				required_user_ids = required_user_ids.union(Set(participants.map {
-					UserID(chatID: $0.id!.chatId , gaiaID: $0.id!.gaiaId)
+					UserID(chatID: $0.id!.chatId!, gaiaID: $0.id!.gaiaId!)
 					}))
 			}
 			
@@ -582,7 +582,7 @@ public final class Client {
 		segments: [NSArray],
 		image_id: String? = nil,
 		image_user_id: String? = nil,
-		otr_status: OffTheRecordStatus = .OffTheRecordStatusOnTheRecord,
+		otr_status: OffTheRecordStatus = .OnTheRecord,
 		cb: (() -> Void)? = nil)
 	{
 		// Support sending images from other user id's.
@@ -613,7 +613,7 @@ public final class Client {
 				generateClientID(),
 				NSNumber(value: otr_status.rawValue),
 				[NSNumber(value: DeliveryMediumType.DeliveryMediumGoogleVoice.rawValue), ],
-				NSNumber(value: EventType.EventTypeSms.rawValue)
+				NSNumber(value: EventType.Sms.rawValue)
 			],
 			//None,
 			//None,
@@ -641,7 +641,7 @@ public final class Client {
 		}
 	}
 	
-	public func setConversationNotificationLevel(conversation_id: String, level: NotificationLevel = .NotificationLevelRing, cb: (() -> Void)? = nil) {
+	public func setConversationNotificationLevel(conversation_id: String, level: NotificationLevel = .Ring, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id]
@@ -687,7 +687,7 @@ public final class Client {
 	}
 	
 	// Send typing notification.
-	public func setTyping(conversation_id: String, typing: TypingType = TypingType.TypingTypeStarted, cb: (() -> Void)? = nil) {
+	public func setTyping(conversation_id: String, typing: TypingType = TypingType.Started, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],

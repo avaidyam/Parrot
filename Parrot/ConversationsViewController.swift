@@ -110,7 +110,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		var title = conversation.name
 		if title == "Unknown" {
 			if conversation.conversation.participantData.count > 0 {
-				title = conversation.conversation.participantData[1].fallbackName as String
+				title = conversation.conversation.participantData[1].fallbackName! as String
 			}
 		}
 		
@@ -120,7 +120,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			img = NSImage(data: d)!
 		}
 		
-		let ring = d == NetworkType.NetworkTypeGoogleVoice ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
+		let ring = d == NetworkType.GoogleVoice ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
 		let ind = conversation.hasUnreadEvents
 		let name = title
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")

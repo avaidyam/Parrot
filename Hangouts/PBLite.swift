@@ -8,8 +8,8 @@ import CommonCrypto
 public class PBLiteSerialization {
 	
 	//D ecode optional or required field.
-	class func decodeField<T: AbstractMessage>(message: T.Type, field: ConcreateExtensionField, value: AnyObject) {
-		if field.type == .ExtensionTypeMessage {
+	class func decodeField<T: ProtoMessage>(message: T.Type, field: ProtoFieldDescriptor, value: AnyObject) {
+		/*if field.type == .ExtensionTypeMessage {
 			message.classBuilder()
 			//decode(message: getattr(message, field.nameOfExtension), pblite: value as! [AnyObject])
 		} else if field.type == .ExtensionTypeBytes {
@@ -17,14 +17,14 @@ public class PBLiteSerialization {
 			//setattr(message, field.name, value)
 		} else {
 			print("Ignoring field \(field.nameOfExtension)")
-		}
+		}*/
 	}
 	
-	class func decodeRepeatedField<T: AbstractMessage>(message: T.Type, field: Field, value: [AnyObject]) {
+	class func decodeRepeatedField<T: ProtoMessage>(message: T.Type, field: ProtoFieldDescriptor, value: [AnyObject]) {
 		
 	}
 	
-	public class func decode<T: AbstractMessage>(message: T.Type, pblite pblite2: [AnyObject], ignoreFirstItem: Bool = false) -> T? {
+	public class func decode<T: ProtoMessage>(message: T.Type, pblite pblite2: [AnyObject], ignoreFirstItem: Bool = false) -> T? {
 		guard pblite2.count > (ignoreFirstItem ? 1 : 0) else { return nil }
 		var pblite = ignoreFirstItem ? Array(pblite2.dropFirst()) : pblite2
 		
@@ -44,7 +44,7 @@ public class PBLiteSerialization {
 		return nil
 	}
 	
-	public class func parseProtoJSON<T: AbstractMessage>(input: NSData) -> T? {
+	public class func parseProtoJSON<T: ProtoMessage>(input: NSData) -> T? {
 		let script = (NSString(data: input, encoding: NSUTF8StringEncoding)! as String)
 		print(script)
 		if let parsedObject = evalArray(string: script) as? NSArray {

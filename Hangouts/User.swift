@@ -44,8 +44,8 @@ public struct User: Hashable, Equatable {
 	// Initialize a User from an Entity.
 	// If selfUser is nil, assume this is the self user.
     public init(entity: Entity, selfUser: UserID?) {
-		let userID = UserID(chatID: entity.id!.chatId ,
-			gaiaID: entity.id!.gaiaId )
+		let userID = UserID(chatID: entity.id!.chatId!,
+			gaiaID: entity.id!.gaiaId! )
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
 		
         self.init(userID: userID,
@@ -60,8 +60,8 @@ public struct User: Hashable, Equatable {
 	// Initialize from ClientConversationParticipantData.
 	// If selfUser is nil, assume this is the self user.
     public init(data: ConversationParticipantData, selfUser: UserID?) {
-		let userID = UserID(chatID: data.id!.chatId ,
-			gaiaID: data.id!.gaiaId )
+		let userID = UserID(chatID: data.id!.chatId!,
+			gaiaID: data.id!.gaiaId!)
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
 		
         self.init(userID: userID,

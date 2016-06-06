@@ -77,10 +77,10 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		
 		UI {
 			switch (status) {
-			case TypingType.TypingTypeStarted:
+			case TypingType.Started:
 				self.popover.showRelative(to: self.messageTextField!.bounds, of: self.messageTextField!, preferredEdge: .minY)
 				self.statusView.stringValue = "Typing..."
-			case TypingType.TypingTypePaused:
+			case TypingType.Paused:
 				self.statusView.stringValue = "Entered text."
 			default: // .STOPPED, .UNKNOWN
 				self.popover.performClose(self)
@@ -143,9 +143,9 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		let network = NetworkType(rawValue: network_[0].rawValue) // FIXME weird stuff here
 		
 		var color: NSColor = NSColor.materialBlueGreyColor()
-		if !user.isSelf && network == NetworkType.NetworkTypeBabel {
+		if !user.isSelf && network == NetworkType.Babel {
 			color = NSColor.materialGreenColor()
-		} else if !user.isSelf && network == NetworkType.NetworkTypeGoogleVoice {
+		} else if !user.isSelf && network == NetworkType.GoogleVoice {
 			color = NSColor.materialBlueColor()
 		}
 		
@@ -183,14 +183,14 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         let now = NSDate()
 
         if lastTypingTimestamp == nil || NSDate().timeIntervalSince(lastTypingTimestamp!) > typingTimeout {
-            self.conversation?.setTyping(typing: TypingType.TypingTypeStarted)
+            self.conversation?.setTyping(typing: TypingType.Started)
         }
 
         lastTypingTimestamp = now
 		let dt = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
 		dispatch_after(dt, dispatch_get_main_queue()) {
             if let ts = self.lastTypingTimestamp where NSDate().timeIntervalSince(ts) > typingTimeout {
-                self.conversation?.setTyping(typing: TypingType.TypingTypeStopped)
+                self.conversation?.setTyping(typing: TypingType.Stopped)
             }
         }
     }
