@@ -315,38 +315,50 @@ public enum OffnetworkAddressType: Int, ProtoEnum {
 	case Email = 1
 }
 
-public struct DoNotDisturbSetting: ProtoMessage {
+public struct DoNotDisturbSetting: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "do_not_disturb", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "expiration_timestamp", type: .uint64, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "version", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DoNotDisturbSetting.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "do_not_disturb":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.doNotDisturb = value as! Bool?
-		case "expiration_timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.expirationTimestamp = value as! UInt64?
-		case "version":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.version = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "do_not_disturb": return self.doNotDisturb
-		case "expiration_timestamp": return self.expirationTimestamp
-		case "version": return self.version
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.doNotDisturb
+		case 2: return self.expirationTimestamp
+		case 3: return self.version
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.doNotDisturb._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.expirationTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.version._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var doNotDisturb: Bool?
@@ -354,125 +366,168 @@ public struct DoNotDisturbSetting: ProtoMessage {
 	public var version: UInt64?
 }
 
-public struct NotificationSettings: ProtoMessage {
+public struct NotificationSettings: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "dnd_settings", type: .prototype("DoNotDisturbSetting"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return NotificationSettings.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "dnd_settings":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is DoNotDisturbSetting? else { throw ProtoError.typeMismatchError }
 			self.dndSettings = value as! DoNotDisturbSetting?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "dnd_settings": return self.dndSettings
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.dndSettings
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.dndSettings._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var dndSettings: DoNotDisturbSetting?
 }
 
-public struct ConversationId: ProtoMessage {
+public struct ConversationId: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "id", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ConversationId.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.id = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "id": return self.id
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.id
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.id._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var id: String?
 }
 
-public struct ParticipantId: ProtoMessage {
+public struct ParticipantId: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "gaia_id", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "chat_id", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ParticipantId.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "gaia_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.gaiaId = value as! String?
-		case "chat_id":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.chatId = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "gaia_id": return self.gaiaId
-		case "chat_id": return self.chatId
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.gaiaId
+		case 2: return self.chatId
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.gaiaId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.chatId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var gaiaId: String?
 	public var chatId: String?
 }
 
-public struct DeviceStatus: ProtoMessage {
+public struct DeviceStatus: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "mobile", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "desktop", type: .bool, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "tablet", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DeviceStatus.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "mobile":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.mobile = value as! Bool?
-		case "desktop":
+		case 2:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.desktop = value as! Bool?
-		case "tablet":
+		case 3:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.tablet = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "mobile": return self.mobile
-		case "desktop": return self.desktop
-		case "tablet": return self.tablet
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.mobile
+		case 2: return self.desktop
+		case 3: return self.tablet
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.mobile._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.desktop._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.tablet._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var mobile: Bool?
@@ -480,75 +535,99 @@ public struct DeviceStatus: ProtoMessage {
 	public var tablet: Bool?
 }
 
-public struct LastSeen: ProtoMessage {
+public struct LastSeen: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "last_seen_timestamp_usec", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return LastSeen.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "last_seen_timestamp_usec":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.lastSeenTimestampUsec = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "last_seen_timestamp_usec": return self.lastSeenTimestampUsec
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.lastSeenTimestampUsec
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.lastSeenTimestampUsec._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var lastSeenTimestampUsec: UInt64?
 }
 
-public struct Presence: ProtoMessage {
+public struct Presence: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "reachable", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "available", type: .bool, label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "device_status", type: .prototype("DeviceStatus"), label: .optional),
 		9: ProtoFieldDescriptor(id: 9, name: "mood_message", type: .prototype("MoodMessage"), label: .optional),
 		10: ProtoFieldDescriptor(id: 10, name: "last_seen", type: .prototype("LastSeen"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Presence.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "reachable":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.reachable = value as! Bool?
-		case "available":
+		case 2:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.available = value as! Bool?
-		case "device_status":
+		case 6:
 			guard value is DeviceStatus? else { throw ProtoError.typeMismatchError }
 			self.deviceStatus = value as! DeviceStatus?
-		case "mood_message":
+		case 9:
 			guard value is MoodMessage? else { throw ProtoError.typeMismatchError }
 			self.moodMessage = value as! MoodMessage?
-		case "last_seen":
+		case 10:
 			guard value is LastSeen? else { throw ProtoError.typeMismatchError }
 			self.lastSeen = value as! LastSeen?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "reachable": return self.reachable
-		case "available": return self.available
-		case "device_status": return self.deviceStatus
-		case "mood_message": return self.moodMessage
-		case "last_seen": return self.lastSeen
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.reachable
+		case 2: return self.available
+		case 6: return self.deviceStatus
+		case 9: return self.moodMessage
+		case 10: return self.lastSeen
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.reachable._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.available._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deviceStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.moodMessage._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.lastSeen._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var reachable: Bool?
@@ -558,137 +637,182 @@ public struct Presence: ProtoMessage {
 	public var lastSeen: LastSeen?
 }
 
-public struct PresenceResult: ProtoMessage {
+public struct PresenceResult: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "user_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "presence", type: .prototype("Presence"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return PresenceResult.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "user_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.userId = value as! ParticipantId?
-		case "presence":
+		case 2:
 			guard value is Presence? else { throw ProtoError.typeMismatchError }
 			self.presence = value as! Presence?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "user_id": return self.userId
-		case "presence": return self.presence
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.userId
+		case 2: return self.presence
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.userId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.presence._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var userId: ParticipantId?
 	public var presence: Presence?
 }
 
-public struct ClientIdentifier: ProtoMessage {
+public struct ClientIdentifier: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "resource", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "header_id", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ClientIdentifier.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "resource":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.resource = value as! String?
-		case "header_id":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.headerId = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "resource": return self.resource
-		case "header_id": return self.headerId
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.resource
+		case 2: return self.headerId
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.resource._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.headerId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var resource: String?
 	public var headerId: String?
 }
 
-public struct ClientPresenceState: ProtoMessage {
+public struct ClientPresenceState: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "identifier", type: .prototype("ClientIdentifier"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "state", type: .prototype("ClientPresenceStateType"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ClientPresenceState.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "identifier":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ClientIdentifier? else { throw ProtoError.typeMismatchError }
 			self.identifier = value as! ClientIdentifier?
-		case "state":
+		case 2:
 			guard value is ClientPresenceStateType? else { throw ProtoError.typeMismatchError }
 			self.state = value as! ClientPresenceStateType?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "identifier": return self.identifier
-		case "state": return self.state
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.identifier
+		case 2: return self.state
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.identifier._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.state._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var identifier: ClientIdentifier?
 	public var state: ClientPresenceStateType?
 }
 
-public struct UserEventState: ProtoMessage {
+public struct UserEventState: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "user_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "client_generated_id", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "notification_level", type: .prototype("NotificationLevel"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return UserEventState.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "user_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.userId = value as! ParticipantId?
-		case "client_generated_id":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.clientGeneratedId = value as! String?
-		case "notification_level":
+		case 3:
 			guard value is NotificationLevel? else { throw ProtoError.typeMismatchError }
 			self.notificationLevel = value as! NotificationLevel?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "user_id": return self.userId
-		case "client_generated_id": return self.clientGeneratedId
-		case "notification_level": return self.notificationLevel
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.userId
+		case 2: return self.clientGeneratedId
+		case 3: return self.notificationLevel
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.userId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.clientGeneratedId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.notificationLevel._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var userId: ParticipantId?
@@ -696,43 +820,56 @@ public struct UserEventState: ProtoMessage {
 	public var notificationLevel: NotificationLevel?
 }
 
-public struct Formatting: ProtoMessage {
+public struct Formatting: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "bold", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "italic", type: .bool, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "strikethrough", type: .bool, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "underline", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Formatting.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "bold":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.bold = value as! Bool?
-		case "italic":
+		case 2:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.italic = value as! Bool?
-		case "strikethrough":
+		case 3:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.strikethrough = value as! Bool?
-		case "underline":
+		case 4:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.underline = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "bold": return self.bold
-		case "italic": return self.italic
-		case "strikethrough": return self.strikethrough
-		case "underline": return self.underline
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.bold
+		case 2: return self.italic
+		case 3: return self.strikethrough
+		case 4: return self.underline
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.bold._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.italic._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.strikethrough._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.underline._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var bold: Bool?
@@ -741,70 +878,93 @@ public struct Formatting: ProtoMessage {
 	public var underline: Bool?
 }
 
-public struct LinkData: ProtoMessage {
+public struct LinkData: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "link_target", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return LinkData.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "link_target":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.linkTarget = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "link_target": return self.linkTarget
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.linkTarget
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.linkTarget._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var linkTarget: String?
 }
 
-public struct Segment: ProtoMessage {
+public struct Segment: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("SegmentType"), label: .required),
 		2: ProtoFieldDescriptor(id: 2, name: "text", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "formatting", type: .prototype("Formatting"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "link_data", type: .prototype("LinkData"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Segment.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is SegmentType else { throw ProtoError.typeMismatchError }
 			self.type = value as! SegmentType
-		case "text":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.text = value as! String?
-		case "formatting":
+		case 3:
 			guard value is Formatting? else { throw ProtoError.typeMismatchError }
 			self.formatting = value as! Formatting?
-		case "link_data":
+		case 4:
 			guard value is LinkData? else { throw ProtoError.typeMismatchError }
 			self.linkData = value as! LinkData?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "type": return self.type
-		case "text": return self.text
-		case "formatting": return self.formatting
-		case "link_data": return self.linkData
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.type
+		case 2: return self.text
+		case 3: return self.formatting
+		case 4: return self.linkData
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		hash = (hash &* 31) &+ self.type.hashValue
+		self.text._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.formatting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.linkData._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var type: SegmentType!
@@ -813,43 +973,56 @@ public struct Segment: ProtoMessage {
 	public var linkData: LinkData?
 }
 
-public struct Thumbnail: ProtoMessage {
+public struct Thumbnail: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "url", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "image_url", type: .string, label: .optional),
 		10: ProtoFieldDescriptor(id: 10, name: "width_px", type: .uint64, label: .optional),
 		11: ProtoFieldDescriptor(id: 11, name: "height_px", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Thumbnail.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "url":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.url = value as! String?
-		case "image_url":
+		case 4:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.imageUrl = value as! String?
-		case "width_px":
+		case 10:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.widthPx = value as! UInt64?
-		case "height_px":
+		case 11:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.heightPx = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "url": return self.url
-		case "image_url": return self.imageUrl
-		case "width_px": return self.widthPx
-		case "height_px": return self.heightPx
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.url
+		case 4: return self.imageUrl
+		case 10: return self.widthPx
+		case 11: return self.heightPx
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.url._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.imageUrl._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.widthPx._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.heightPx._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var url: String?
@@ -858,11 +1031,12 @@ public struct Thumbnail: ProtoMessage {
 	public var heightPx: UInt64?
 }
 
-public struct PlusPhoto: ProtoMessage {
+public struct PlusPhoto: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "thumbnail", type: .prototype("Thumbnail"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "owner_obfuscated_id", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "album_id", type: .string, label: .optional),
@@ -872,49 +1046,65 @@ public struct PlusPhoto: ProtoMessage {
 		13: ProtoFieldDescriptor(id: 13, name: "media_type", type: .prototype("MediaType"), label: .optional),
 		14: ProtoFieldDescriptor(id: 14, name: "stream_id", type: .string, label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return PlusPhoto.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "thumbnail":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Thumbnail? else { throw ProtoError.typeMismatchError }
 			self.thumbnail = value as! Thumbnail?
-		case "owner_obfuscated_id":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.ownerObfuscatedId = value as! String?
-		case "album_id":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.albumId = value as! String?
-		case "photo_id":
+		case 4:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.photoId = value as! String?
-		case "url":
+		case 6:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.url = value as! String?
-		case "original_content_url":
+		case 10:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.originalContentUrl = value as! String?
-		case "media_type":
+		case 13:
 			guard value is MediaType? else { throw ProtoError.typeMismatchError }
 			self.mediaType = value as! MediaType?
-		case "stream_id":
+		case 14:
 			guard value is [String] else { throw ProtoError.typeMismatchError }
 			self.streamId = value as! [String]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "thumbnail": return self.thumbnail
-		case "owner_obfuscated_id": return self.ownerObfuscatedId
-		case "album_id": return self.albumId
-		case "photo_id": return self.photoId
-		case "url": return self.url
-		case "original_content_url": return self.originalContentUrl
-		case "media_type": return self.mediaType
-		case "stream_id": return self.streamId
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.thumbnail
+		case 2: return self.ownerObfuscatedId
+		case 3: return self.albumId
+		case 4: return self.photoId
+		case 6: return self.url
+		case 10: return self.originalContentUrl
+		case 13: return self.mediaType
+		case 14: return self.streamId
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.thumbnail._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.ownerObfuscatedId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.albumId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.photoId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.url._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.originalContentUrl._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.mediaType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.streamId.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var thumbnail: Thumbnail?
@@ -927,65 +1117,87 @@ public struct PlusPhoto: ProtoMessage {
 	public var streamId: [String] = []
 }
 
-public struct RepresentativeImage: ProtoMessage {
+public struct RepresentativeImage: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		2: ProtoFieldDescriptor(id: 2, name: "url", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return RepresentativeImage.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "url":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.url = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "url": return self.url
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 2: return self.url
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.url._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var url: String?
 }
 
-public struct Place: ProtoMessage {
+public struct Place: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "url", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "name", type: .string, label: .optional),
 		185: ProtoFieldDescriptor(id: 185, name: "representative_image", type: .prototype("RepresentativeImage"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Place.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "url":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.url = value as! String?
-		case "name":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.name = value as! String?
-		case "representative_image":
+		case 185:
 			guard value is RepresentativeImage? else { throw ProtoError.typeMismatchError }
 			self.representativeImage = value as! RepresentativeImage?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "url": return self.url
-		case "name": return self.name
-		case "representative_image": return self.representativeImage
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.url
+		case 3: return self.name
+		case 185: return self.representativeImage
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.url._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.name._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.representativeImage._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var url: String?
@@ -993,43 +1205,56 @@ public struct Place: ProtoMessage {
 	public var representativeImage: RepresentativeImage?
 }
 
-public struct EmbedItem: ProtoMessage {
+public struct EmbedItem: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("ItemType"), label: .repeated),
 		2: ProtoFieldDescriptor(id: 2, name: "id", type: .string, label: .optional),
 		27639957: ProtoFieldDescriptor(id: 27639957, name: "plus_photo", type: .prototype("PlusPhoto"), label: .optional),
 		35825640: ProtoFieldDescriptor(id: 35825640, name: "place", type: .prototype("Place"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EmbedItem.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is [ItemType] else { throw ProtoError.typeMismatchError }
 			self.type = value as! [ItemType]
-		case "id":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.id = value as! String?
-		case "plus_photo":
+		case 27639957:
 			guard value is PlusPhoto? else { throw ProtoError.typeMismatchError }
 			self.plusPhoto = value as! PlusPhoto?
-		case "place":
+		case 35825640:
 			guard value is Place? else { throw ProtoError.typeMismatchError }
 			self.place = value as! Place?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "type": return self.type
-		case "id": return self.id
-		case "plus_photo": return self.plusPhoto
-		case "place": return self.place
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.type
+		case 2: return self.id
+		case 27639957: return self.plusPhoto
+		case 35825640: return self.place
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.type.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.id._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.plusPhoto._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.place._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var type: [ItemType] = []
@@ -1038,268 +1263,357 @@ public struct EmbedItem: ProtoMessage {
 	public var place: Place?
 }
 
-public struct Attachment: ProtoMessage {
+public struct Attachment: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "embed_item", type: .prototype("EmbedItem"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Attachment.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "embed_item":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is EmbedItem? else { throw ProtoError.typeMismatchError }
 			self.embedItem = value as! EmbedItem?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "embed_item": return self.embedItem
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.embedItem
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.embedItem._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var embedItem: EmbedItem?
 }
 
-public struct MessageContent: ProtoMessage {
+public struct MessageContent: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "segment", type: .prototype("Segment"), label: .repeated),
 		2: ProtoFieldDescriptor(id: 2, name: "attachment", type: .prototype("Attachment"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return MessageContent.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "segment":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is [Segment] else { throw ProtoError.typeMismatchError }
 			self.segment = value as! [Segment]
-		case "attachment":
+		case 2:
 			guard value is [Attachment] else { throw ProtoError.typeMismatchError }
 			self.attachment = value as! [Attachment]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "segment": return self.segment
-		case "attachment": return self.attachment
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.segment
+		case 2: return self.attachment
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.segment.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.attachment.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var segment: [Segment] = []
 	public var attachment: [Attachment] = []
 }
 
-public struct EventAnnotation: ProtoMessage {
+public struct EventAnnotation: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .int32, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "value", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EventAnnotation.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Int32? else { throw ProtoError.typeMismatchError }
 			self.type = value as! Int32?
-		case "value":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.value = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "type": return self.type
-		case "value": return self.value
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.type
+		case 2: return self.value
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.value._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var type: Int32?
 	public var value: String?
 }
 
-public struct ChatMessage: ProtoMessage {
+public struct ChatMessage: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		2: ProtoFieldDescriptor(id: 2, name: "annotation", type: .prototype("EventAnnotation"), label: .repeated),
 		3: ProtoFieldDescriptor(id: 3, name: "message_content", type: .prototype("MessageContent"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ChatMessage.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "annotation":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 2:
 			guard value is [EventAnnotation] else { throw ProtoError.typeMismatchError }
 			self.annotation = value as! [EventAnnotation]
-		case "message_content":
+		case 3:
 			guard value is MessageContent? else { throw ProtoError.typeMismatchError }
 			self.messageContent = value as! MessageContent?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "annotation": return self.annotation
-		case "message_content": return self.messageContent
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 2: return self.annotation
+		case 3: return self.messageContent
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.annotation.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.messageContent._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var annotation: [EventAnnotation] = []
 	public var messageContent: MessageContent?
 }
 
-public struct MembershipChange: ProtoMessage {
+public struct MembershipChange: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("MembershipChangeType"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "participant_ids", type: .prototype("ParticipantId"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return MembershipChange.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is MembershipChangeType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! MembershipChangeType?
-		case "participant_ids":
+		case 3:
 			guard value is [ParticipantId] else { throw ProtoError.typeMismatchError }
 			self.participantIds = value as! [ParticipantId]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "type": return self.type
-		case "participant_ids": return self.participantIds
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.type
+		case 3: return self.participantIds
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.participantIds.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var type: MembershipChangeType?
 	public var participantIds: [ParticipantId] = []
 }
 
-public struct ConversationRename: ProtoMessage {
+public struct ConversationRename: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "new_name", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "old_name", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ConversationRename.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "new_name":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.newName = value as! String?
-		case "old_name":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.oldName = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "new_name": return self.newName
-		case "old_name": return self.oldName
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.newName
+		case 2: return self.oldName
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.newName._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.oldName._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var newName: String?
 	public var oldName: String?
 }
 
-public struct HangoutEvent: ProtoMessage {
+public struct HangoutEvent: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "event_type", type: .prototype("HangoutEventType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "participant_id", type: .prototype("ParticipantId"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return HangoutEvent.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "event_type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is HangoutEventType? else { throw ProtoError.typeMismatchError }
 			self.eventType = value as! HangoutEventType?
-		case "participant_id":
+		case 2:
 			guard value is [ParticipantId] else { throw ProtoError.typeMismatchError }
 			self.participantId = value as! [ParticipantId]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "event_type": return self.eventType
-		case "participant_id": return self.participantId
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.eventType
+		case 2: return self.participantId
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.eventType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.participantId.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var eventType: HangoutEventType?
 	public var participantId: [ParticipantId] = []
 }
 
-public struct OTRModification: ProtoMessage {
+public struct OTRModification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "old_otr_status", type: .prototype("OffTheRecordStatus"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "new_otr_status", type: .prototype("OffTheRecordStatus"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "old_otr_toggle", type: .prototype("OffTheRecordToggle"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "new_otr_toggle", type: .prototype("OffTheRecordToggle"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return OTRModification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "old_otr_status":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.oldOtrStatus = value as! OffTheRecordStatus?
-		case "new_otr_status":
+		case 2:
 			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.newOtrStatus = value as! OffTheRecordStatus?
-		case "old_otr_toggle":
+		case 3:
 			guard value is OffTheRecordToggle? else { throw ProtoError.typeMismatchError }
 			self.oldOtrToggle = value as! OffTheRecordToggle?
-		case "new_otr_toggle":
+		case 4:
 			guard value is OffTheRecordToggle? else { throw ProtoError.typeMismatchError }
 			self.newOtrToggle = value as! OffTheRecordToggle?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "old_otr_status": return self.oldOtrStatus
-		case "new_otr_status": return self.newOtrStatus
-		case "old_otr_toggle": return self.oldOtrToggle
-		case "new_otr_toggle": return self.newOtrToggle
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.oldOtrStatus
+		case 2: return self.newOtrStatus
+		case 3: return self.oldOtrToggle
+		case 4: return self.newOtrToggle
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.oldOtrStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.newOtrStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.oldOtrToggle._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.newOtrToggle._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var oldOtrStatus: OffTheRecordStatus?
@@ -1308,38 +1622,50 @@ public struct OTRModification: ProtoMessage {
 	public var newOtrToggle: OffTheRecordToggle?
 }
 
-public struct HashModifier: ProtoMessage {
+public struct HashModifier: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "update_id", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "hash_diff", type: .uint64, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "version", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return HashModifier.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "update_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.updateId = value as! String?
-		case "hash_diff":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.hashDiff = value as! UInt64?
-		case "version":
+		case 4:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.version = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "update_id": return self.updateId
-		case "hash_diff": return self.hashDiff
-		case "version": return self.version
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.updateId
+		case 2: return self.hashDiff
+		case 4: return self.version
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.updateId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.hashDiff._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.version._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var updateId: String?
@@ -1347,11 +1673,12 @@ public struct HashModifier: ProtoMessage {
 	public var version: UInt64?
 }
 
-public struct Event: ProtoMessage {
+public struct Event: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "timestamp", type: .uint64, label: .optional),
@@ -1372,93 +1699,120 @@ public struct Event: ProtoMessage {
 		24: ProtoFieldDescriptor(id: 24, name: "event_version", type: .uint64, label: .optional),
 		26: ProtoFieldDescriptor(id: 26, name: "hash_modifier", type: .prototype("HashModifier"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Event.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "sender_id":
+		case 2:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
-		case "timestamp":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
-		case "self_event_state":
+		case 4:
 			guard value is UserEventState? else { throw ProtoError.typeMismatchError }
 			self.selfEventState = value as! UserEventState?
-		case "source_type":
+		case 6:
 			guard value is SourceType? else { throw ProtoError.typeMismatchError }
 			self.sourceType = value as! SourceType?
-		case "chat_message":
+		case 7:
 			guard value is ChatMessage? else { throw ProtoError.typeMismatchError }
 			self.chatMessage = value as! ChatMessage?
-		case "membership_change":
+		case 9:
 			guard value is MembershipChange? else { throw ProtoError.typeMismatchError }
 			self.membershipChange = value as! MembershipChange?
-		case "conversation_rename":
+		case 10:
 			guard value is ConversationRename? else { throw ProtoError.typeMismatchError }
 			self.conversationRename = value as! ConversationRename?
-		case "hangout_event":
+		case 11:
 			guard value is HangoutEvent? else { throw ProtoError.typeMismatchError }
 			self.hangoutEvent = value as! HangoutEvent?
-		case "event_id":
+		case 12:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.eventId = value as! String?
-		case "expiration_timestamp":
+		case 13:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.expirationTimestamp = value as! UInt64?
-		case "otr_modification":
+		case 14:
 			guard value is OTRModification? else { throw ProtoError.typeMismatchError }
 			self.otrModification = value as! OTRModification?
-		case "advances_sort_timestamp":
+		case 15:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.advancesSortTimestamp = value as! Bool?
-		case "otr_status":
+		case 16:
 			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.otrStatus = value as! OffTheRecordStatus?
-		case "persisted":
+		case 17:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.persisted = value as! Bool?
-		case "medium_type":
+		case 20:
 			guard value is DeliveryMedium? else { throw ProtoError.typeMismatchError }
 			self.mediumType = value as! DeliveryMedium?
-		case "event_type":
+		case 23:
 			guard value is EventType? else { throw ProtoError.typeMismatchError }
 			self.eventType = value as! EventType?
-		case "event_version":
+		case 24:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.eventVersion = value as! UInt64?
-		case "hash_modifier":
+		case 26:
 			guard value is HashModifier? else { throw ProtoError.typeMismatchError }
 			self.hashModifier = value as! HashModifier?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "sender_id": return self.senderId
-		case "timestamp": return self.timestamp
-		case "self_event_state": return self.selfEventState
-		case "source_type": return self.sourceType
-		case "chat_message": return self.chatMessage
-		case "membership_change": return self.membershipChange
-		case "conversation_rename": return self.conversationRename
-		case "hangout_event": return self.hangoutEvent
-		case "event_id": return self.eventId
-		case "expiration_timestamp": return self.expirationTimestamp
-		case "otr_modification": return self.otrModification
-		case "advances_sort_timestamp": return self.advancesSortTimestamp
-		case "otr_status": return self.otrStatus
-		case "persisted": return self.persisted
-		case "medium_type": return self.mediumType
-		case "event_type": return self.eventType
-		case "event_version": return self.eventVersion
-		case "hash_modifier": return self.hashModifier
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.senderId
+		case 3: return self.timestamp
+		case 4: return self.selfEventState
+		case 6: return self.sourceType
+		case 7: return self.chatMessage
+		case 9: return self.membershipChange
+		case 10: return self.conversationRename
+		case 11: return self.hangoutEvent
+		case 12: return self.eventId
+		case 13: return self.expirationTimestamp
+		case 14: return self.otrModification
+		case 15: return self.advancesSortTimestamp
+		case 16: return self.otrStatus
+		case 17: return self.persisted
+		case 20: return self.mediumType
+		case 23: return self.eventType
+		case 24: return self.eventVersion
+		case 26: return self.hashModifier
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.senderId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.selfEventState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.sourceType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.chatMessage._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.membershipChange._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationRename._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.hangoutEvent._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.expirationTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.otrModification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.advancesSortTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.otrStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.persisted._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.mediumType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventVersion._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.hashModifier._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
@@ -1482,110 +1836,144 @@ public struct Event: ProtoMessage {
 	public var hashModifier: HashModifier?
 }
 
-public struct UserReadState: ProtoMessage {
+public struct UserReadState: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "participant_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "latest_read_timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return UserReadState.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "participant_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.participantId = value as! ParticipantId?
-		case "latest_read_timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.latestReadTimestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "participant_id": return self.participantId
-		case "latest_read_timestamp": return self.latestReadTimestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.participantId
+		case 2: return self.latestReadTimestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.participantId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.latestReadTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var participantId: ParticipantId?
 	public var latestReadTimestamp: UInt64?
 }
 
-public struct DeliveryMedium: ProtoMessage {
+public struct DeliveryMedium: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "medium_type", type: .prototype("DeliveryMediumType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "phone_number", type: .prototype("PhoneNumber"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DeliveryMedium.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "medium_type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is DeliveryMediumType? else { throw ProtoError.typeMismatchError }
 			self.mediumType = value as! DeliveryMediumType?
-		case "phone_number":
+		case 2:
 			guard value is PhoneNumber? else { throw ProtoError.typeMismatchError }
 			self.phoneNumber = value as! PhoneNumber?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "medium_type": return self.mediumType
-		case "phone_number": return self.phoneNumber
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.mediumType
+		case 2: return self.phoneNumber
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.mediumType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.phoneNumber._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var mediumType: DeliveryMediumType?
 	public var phoneNumber: PhoneNumber?
 }
 
-public struct DeliveryMediumOption: ProtoMessage {
+public struct DeliveryMediumOption: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "delivery_medium", type: .prototype("DeliveryMedium"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "current_default", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DeliveryMediumOption.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "delivery_medium":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is DeliveryMedium? else { throw ProtoError.typeMismatchError }
 			self.deliveryMedium = value as! DeliveryMedium?
-		case "current_default":
+		case 2:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.currentDefault = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "delivery_medium": return self.deliveryMedium
-		case "current_default": return self.currentDefault
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.deliveryMedium
+		case 2: return self.currentDefault
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.deliveryMedium._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.currentDefault._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var deliveryMedium: DeliveryMedium?
 	public var currentDefault: Bool?
 }
 
-public struct UserConversationState: ProtoMessage {
+public struct UserConversationState: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		2: ProtoFieldDescriptor(id: 2, name: "client_generated_id", type: .string, label: .optional),
 		7: ProtoFieldDescriptor(id: 7, name: "self_read_state", type: .prototype("UserReadState"), label: .optional),
 		8: ProtoFieldDescriptor(id: 8, name: "status", type: .prototype("ConversationStatus"), label: .optional),
@@ -1598,61 +1986,80 @@ public struct UserConversationState: ProtoMessage {
 		15: ProtoFieldDescriptor(id: 15, name: "invite_affinity", type: .prototype("InvitationAffinity"), label: .optional),
 		17: ProtoFieldDescriptor(id: 17, name: "delivery_medium_option", type: .prototype("DeliveryMediumOption"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return UserConversationState.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "client_generated_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.clientGeneratedId = value as! String?
-		case "self_read_state":
+		case 7:
 			guard value is UserReadState? else { throw ProtoError.typeMismatchError }
 			self.selfReadState = value as! UserReadState?
-		case "status":
+		case 8:
 			guard value is ConversationStatus? else { throw ProtoError.typeMismatchError }
 			self.status = value as! ConversationStatus?
-		case "notification_level":
+		case 9:
 			guard value is NotificationLevel? else { throw ProtoError.typeMismatchError }
 			self.notificationLevel = value as! NotificationLevel?
-		case "view":
+		case 10:
 			guard value is [ConversationView] else { throw ProtoError.typeMismatchError }
 			self.view = value as! [ConversationView]
-		case "inviter_id":
+		case 11:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.inviterId = value as! ParticipantId?
-		case "invite_timestamp":
+		case 12:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.inviteTimestamp = value as! UInt64?
-		case "sort_timestamp":
+		case 13:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.sortTimestamp = value as! UInt64?
-		case "active_timestamp":
+		case 14:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.activeTimestamp = value as! UInt64?
-		case "invite_affinity":
+		case 15:
 			guard value is InvitationAffinity? else { throw ProtoError.typeMismatchError }
 			self.inviteAffinity = value as! InvitationAffinity?
-		case "delivery_medium_option":
+		case 17:
 			guard value is [DeliveryMediumOption] else { throw ProtoError.typeMismatchError }
 			self.deliveryMediumOption = value as! [DeliveryMediumOption]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "client_generated_id": return self.clientGeneratedId
-		case "self_read_state": return self.selfReadState
-		case "status": return self.status
-		case "notification_level": return self.notificationLevel
-		case "view": return self.view
-		case "inviter_id": return self.inviterId
-		case "invite_timestamp": return self.inviteTimestamp
-		case "sort_timestamp": return self.sortTimestamp
-		case "active_timestamp": return self.activeTimestamp
-		case "invite_affinity": return self.inviteAffinity
-		case "delivery_medium_option": return self.deliveryMediumOption
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 2: return self.clientGeneratedId
+		case 7: return self.selfReadState
+		case 8: return self.status
+		case 9: return self.notificationLevel
+		case 10: return self.view
+		case 11: return self.inviterId
+		case 12: return self.inviteTimestamp
+		case 13: return self.sortTimestamp
+		case 14: return self.activeTimestamp
+		case 15: return self.inviteAffinity
+		case 17: return self.deliveryMediumOption
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.clientGeneratedId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.selfReadState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.status._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.notificationLevel._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.view.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.inviterId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.inviteTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.sortTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.activeTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.inviteAffinity._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deliveryMediumOption.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var clientGeneratedId: String?
@@ -1668,48 +2075,62 @@ public struct UserConversationState: ProtoMessage {
 	public var deliveryMediumOption: [DeliveryMediumOption] = []
 }
 
-public struct ConversationParticipantData: ProtoMessage {
+public struct ConversationParticipantData: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "fallback_name", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "invitation_status", type: .prototype("InvitationStatus"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "participant_type", type: .prototype("ParticipantType"), label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "new_invitation_status", type: .prototype("InvitationStatus"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ConversationParticipantData.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.id = value as! ParticipantId?
-		case "fallback_name":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.fallbackName = value as! String?
-		case "invitation_status":
+		case 3:
 			guard value is InvitationStatus? else { throw ProtoError.typeMismatchError }
 			self.invitationStatus = value as! InvitationStatus?
-		case "participant_type":
+		case 5:
 			guard value is ParticipantType? else { throw ProtoError.typeMismatchError }
 			self.participantType = value as! ParticipantType?
-		case "new_invitation_status":
+		case 6:
 			guard value is InvitationStatus? else { throw ProtoError.typeMismatchError }
 			self.newInvitationStatus = value as! InvitationStatus?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "id": return self.id
-		case "fallback_name": return self.fallbackName
-		case "invitation_status": return self.invitationStatus
-		case "participant_type": return self.participantType
-		case "new_invitation_status": return self.newInvitationStatus
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.id
+		case 2: return self.fallbackName
+		case 3: return self.invitationStatus
+		case 5: return self.participantType
+		case 6: return self.newInvitationStatus
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.id._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.fallbackName._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.invitationStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.participantType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.newInvitationStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var id: ParticipantId?
@@ -1719,11 +2140,12 @@ public struct ConversationParticipantData: ProtoMessage {
 	public var newInvitationStatus: InvitationStatus?
 }
 
-public struct Conversation: ProtoMessage {
+public struct Conversation: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "type", type: .prototype("ConversationType"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "name", type: .string, label: .optional),
@@ -1738,69 +2160,90 @@ public struct Conversation: ProtoMessage {
 		18: ProtoFieldDescriptor(id: 18, name: "network_type", type: .prototype("NetworkType"), label: .repeated),
 		19: ProtoFieldDescriptor(id: 19, name: "force_history_state", type: .prototype("ForceHistory"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Conversation.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "type":
+		case 2:
 			guard value is ConversationType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ConversationType?
-		case "name":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.name = value as! String?
-		case "self_conversation_state":
+		case 4:
 			guard value is UserConversationState? else { throw ProtoError.typeMismatchError }
 			self.selfConversationState = value as! UserConversationState?
-		case "read_state":
+		case 8:
 			guard value is [UserReadState] else { throw ProtoError.typeMismatchError }
 			self.readState = value as! [UserReadState]
-		case "has_active_hangout":
+		case 9:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.hasActiveHangout = value as! Bool?
-		case "otr_status":
+		case 10:
 			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.otrStatus = value as! OffTheRecordStatus?
-		case "otr_toggle":
+		case 11:
 			guard value is OffTheRecordToggle? else { throw ProtoError.typeMismatchError }
 			self.otrToggle = value as! OffTheRecordToggle?
-		case "conversation_history_supported":
+		case 12:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.conversationHistorySupported = value as! Bool?
-		case "current_participant":
+		case 13:
 			guard value is [ParticipantId] else { throw ProtoError.typeMismatchError }
 			self.currentParticipant = value as! [ParticipantId]
-		case "participant_data":
+		case 14:
 			guard value is [ConversationParticipantData] else { throw ProtoError.typeMismatchError }
 			self.participantData = value as! [ConversationParticipantData]
-		case "network_type":
+		case 18:
 			guard value is [NetworkType] else { throw ProtoError.typeMismatchError }
 			self.networkType = value as! [NetworkType]
-		case "force_history_state":
+		case 19:
 			guard value is ForceHistory? else { throw ProtoError.typeMismatchError }
 			self.forceHistoryState = value as! ForceHistory?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "type": return self.type
-		case "name": return self.name
-		case "self_conversation_state": return self.selfConversationState
-		case "read_state": return self.readState
-		case "has_active_hangout": return self.hasActiveHangout
-		case "otr_status": return self.otrStatus
-		case "otr_toggle": return self.otrToggle
-		case "conversation_history_supported": return self.conversationHistorySupported
-		case "current_participant": return self.currentParticipant
-		case "participant_data": return self.participantData
-		case "network_type": return self.networkType
-		case "force_history_state": return self.forceHistoryState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.type
+		case 3: return self.name
+		case 4: return self.selfConversationState
+		case 8: return self.readState
+		case 9: return self.hasActiveHangout
+		case 10: return self.otrStatus
+		case 11: return self.otrToggle
+		case 12: return self.conversationHistorySupported
+		case 13: return self.currentParticipant
+		case 14: return self.participantData
+		case 18: return self.networkType
+		case 19: return self.forceHistoryState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.name._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.selfConversationState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.readState.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.hasActiveHangout._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.otrStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.otrToggle._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationHistorySupported._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.currentParticipant.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.participantData.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.networkType.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.forceHistoryState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
@@ -1818,103 +2261,137 @@ public struct Conversation: ProtoMessage {
 	public var forceHistoryState: ForceHistory?
 }
 
-public struct EasterEgg: ProtoMessage {
+public struct EasterEgg: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "message", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EasterEgg.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "message":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.message = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "message": return self.message
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.message
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.message._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var message: String?
 }
 
-public struct BlockStateChange: ProtoMessage {
+public struct BlockStateChange: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "participant_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "new_block_state", type: .prototype("BlockState"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return BlockStateChange.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "participant_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.participantId = value as! ParticipantId?
-		case "new_block_state":
+		case 2:
 			guard value is BlockState? else { throw ProtoError.typeMismatchError }
 			self.newBlockState = value as! BlockState?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "participant_id": return self.participantId
-		case "new_block_state": return self.newBlockState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.participantId
+		case 2: return self.newBlockState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.participantId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.newBlockState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var participantId: ParticipantId?
 	public var newBlockState: BlockState?
 }
 
-public struct Photo: ProtoMessage {
+public struct Photo: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "photo_id", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "delete_albumless_source_photo", type: .bool, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "user_id", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "is_custom_user_id", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Photo.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "photo_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.photoId = value as! String?
-		case "delete_albumless_source_photo":
+		case 2:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.deleteAlbumlessSourcePhoto = value as! Bool?
-		case "user_id":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.userId = value as! String?
-		case "is_custom_user_id":
+		case 4:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.isCustomUserId = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "photo_id": return self.photoId
-		case "delete_albumless_source_photo": return self.deleteAlbumlessSourcePhoto
-		case "user_id": return self.userId
-		case "is_custom_user_id": return self.isCustomUserId
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.photoId
+		case 2: return self.deleteAlbumlessSourcePhoto
+		case 3: return self.userId
+		case 4: return self.isCustomUserId
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.photoId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deleteAlbumlessSourcePhoto._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.userId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.isCustomUserId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var photoId: String?
@@ -1923,75 +2400,99 @@ public struct Photo: ProtoMessage {
 	public var isCustomUserId: Bool?
 }
 
-public struct ExistingMedia: ProtoMessage {
+public struct ExistingMedia: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "photo", type: .prototype("Photo"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ExistingMedia.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "photo":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Photo? else { throw ProtoError.typeMismatchError }
 			self.photo = value as! Photo?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "photo": return self.photo
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.photo
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.photo._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var photo: Photo?
 }
 
-public struct EventRequestHeader: ProtoMessage {
+public struct EventRequestHeader: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "client_generated_id", type: .uint64, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "expected_otr", type: .prototype("OffTheRecordStatus"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "delivery_medium", type: .prototype("DeliveryMedium"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "event_type", type: .prototype("EventType"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EventRequestHeader.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "client_generated_id":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.clientGeneratedId = value as! UInt64?
-		case "expected_otr":
+		case 3:
 			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.expectedOtr = value as! OffTheRecordStatus?
-		case "delivery_medium":
+		case 4:
 			guard value is DeliveryMedium? else { throw ProtoError.typeMismatchError }
 			self.deliveryMedium = value as! DeliveryMedium?
-		case "event_type":
+		case 5:
 			guard value is EventType? else { throw ProtoError.typeMismatchError }
 			self.eventType = value as! EventType?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "client_generated_id": return self.clientGeneratedId
-		case "expected_otr": return self.expectedOtr
-		case "delivery_medium": return self.deliveryMedium
-		case "event_type": return self.eventType
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.clientGeneratedId
+		case 3: return self.expectedOtr
+		case 4: return self.deliveryMedium
+		case 5: return self.eventType
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.clientGeneratedId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.expectedOtr._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deliveryMedium._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
@@ -2001,11 +2502,12 @@ public struct EventRequestHeader: ProtoMessage {
 	public var eventType: EventType?
 }
 
-public struct ClientVersion: ProtoMessage {
+public struct ClientVersion: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "client_id", type: .prototype("ClientId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "build_type", type: .prototype("ClientBuildType"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "major_version", type: .string, label: .optional),
@@ -2013,41 +2515,55 @@ public struct ClientVersion: ProtoMessage {
 		5: ProtoFieldDescriptor(id: 5, name: "device_os_version", type: .string, label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "device_hardware", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ClientVersion.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "client_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ClientId? else { throw ProtoError.typeMismatchError }
 			self.clientId = value as! ClientId?
-		case "build_type":
+		case 2:
 			guard value is ClientBuildType? else { throw ProtoError.typeMismatchError }
 			self.buildType = value as! ClientBuildType?
-		case "major_version":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.majorVersion = value as! String?
-		case "version_timestamp":
+		case 4:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.versionTimestamp = value as! UInt64?
-		case "device_os_version":
+		case 5:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.deviceOsVersion = value as! String?
-		case "device_hardware":
+		case 6:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.deviceHardware = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "client_id": return self.clientId
-		case "build_type": return self.buildType
-		case "major_version": return self.majorVersion
-		case "version_timestamp": return self.versionTimestamp
-		case "device_os_version": return self.deviceOsVersion
-		case "device_hardware": return self.deviceHardware
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.clientId
+		case 2: return self.buildType
+		case 3: return self.majorVersion
+		case 4: return self.versionTimestamp
+		case 5: return self.deviceOsVersion
+		case 6: return self.deviceHardware
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.clientId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.buildType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.majorVersion._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.versionTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deviceOsVersion._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deviceHardware._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var clientId: ClientId?
@@ -2058,38 +2574,50 @@ public struct ClientVersion: ProtoMessage {
 	public var deviceHardware: String?
 }
 
-public struct RequestHeader: ProtoMessage {
+public struct RequestHeader: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "client_version", type: .prototype("ClientVersion"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "client_identifier", type: .prototype("ClientIdentifier"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "language_code", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return RequestHeader.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "client_version":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ClientVersion? else { throw ProtoError.typeMismatchError }
 			self.clientVersion = value as! ClientVersion?
-		case "client_identifier":
+		case 2:
 			guard value is ClientIdentifier? else { throw ProtoError.typeMismatchError }
 			self.clientIdentifier = value as! ClientIdentifier?
-		case "language_code":
+		case 4:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.languageCode = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "client_version": return self.clientVersion
-		case "client_identifier": return self.clientIdentifier
-		case "language_code": return self.languageCode
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.clientVersion
+		case 2: return self.clientIdentifier
+		case 4: return self.languageCode
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.clientVersion._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.clientIdentifier._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.languageCode._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var clientVersion: ClientVersion?
@@ -2097,48 +2625,62 @@ public struct RequestHeader: ProtoMessage {
 	public var languageCode: String?
 }
 
-public struct ResponseHeader: ProtoMessage {
+public struct ResponseHeader: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "status", type: .prototype("ResponseStatus"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "error_description", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "debug_url", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "request_trace_id", type: .string, label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "current_server_time", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ResponseHeader.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "status":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseStatus? else { throw ProtoError.typeMismatchError }
 			self.status = value as! ResponseStatus?
-		case "error_description":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.errorDescription = value as! String?
-		case "debug_url":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.debugUrl = value as! String?
-		case "request_trace_id":
+		case 4:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.requestTraceId = value as! String?
-		case "current_server_time":
+		case 5:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.currentServerTime = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "status": return self.status
-		case "error_description": return self.errorDescription
-		case "debug_url": return self.debugUrl
-		case "request_trace_id": return self.requestTraceId
-		case "current_server_time": return self.currentServerTime
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.status
+		case 2: return self.errorDescription
+		case 3: return self.debugUrl
+		case 4: return self.requestTraceId
+		case 5: return self.currentServerTime
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.status._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.errorDescription._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.debugUrl._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.requestTraceId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.currentServerTime._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var status: ResponseStatus?
@@ -2148,48 +2690,62 @@ public struct ResponseHeader: ProtoMessage {
 	public var currentServerTime: UInt64?
 }
 
-public struct Entity: ProtoMessage {
+public struct Entity: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		9: ProtoFieldDescriptor(id: 9, name: "id", type: .prototype("ParticipantId"), label: .optional),
 		8: ProtoFieldDescriptor(id: 8, name: "presence", type: .prototype("Presence"), label: .optional),
 		10: ProtoFieldDescriptor(id: 10, name: "properties", type: .prototype("EntityProperties"), label: .optional),
 		13: ProtoFieldDescriptor(id: 13, name: "entity_type", type: .prototype("ParticipantType"), label: .optional),
 		16: ProtoFieldDescriptor(id: 16, name: "had_past_hangout_state", type: .prototype("PastHangoutState"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Entity.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 9:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.id = value as! ParticipantId?
-		case "presence":
+		case 8:
 			guard value is Presence? else { throw ProtoError.typeMismatchError }
 			self.presence = value as! Presence?
-		case "properties":
+		case 10:
 			guard value is EntityProperties? else { throw ProtoError.typeMismatchError }
 			self.properties = value as! EntityProperties?
-		case "entity_type":
+		case 13:
 			guard value is ParticipantType? else { throw ProtoError.typeMismatchError }
 			self.entityType = value as! ParticipantType?
-		case "had_past_hangout_state":
+		case 16:
 			guard value is PastHangoutState? else { throw ProtoError.typeMismatchError }
 			self.hadPastHangoutState = value as! PastHangoutState?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "id": return self.id
-		case "presence": return self.presence
-		case "properties": return self.properties
-		case "entity_type": return self.entityType
-		case "had_past_hangout_state": return self.hadPastHangoutState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 9: return self.id
+		case 8: return self.presence
+		case 10: return self.properties
+		case 13: return self.entityType
+		case 16: return self.hadPastHangoutState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.id._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.presence._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.properties._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.entityType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.hadPastHangoutState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var id: ParticipantId?
@@ -2199,11 +2755,12 @@ public struct Entity: ProtoMessage {
 	public var hadPastHangoutState: PastHangoutState?
 }
 
-public struct EntityProperties: ProtoMessage {
+public struct EntityProperties: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("ProfileType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "display_name", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "first_name", type: .string, label: .optional),
@@ -2215,57 +2772,75 @@ public struct EntityProperties: ProtoMessage {
 		12: ProtoFieldDescriptor(id: 12, name: "photo_url_status", type: .prototype("PhotoUrlStatus"), label: .optional),
 		15: ProtoFieldDescriptor(id: 15, name: "canonical_email", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EntityProperties.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ProfileType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ProfileType?
-		case "display_name":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.displayName = value as! String?
-		case "first_name":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.firstName = value as! String?
-		case "photo_url":
+		case 4:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.photoUrl = value as! String?
-		case "email":
+		case 5:
 			guard value is [String] else { throw ProtoError.typeMismatchError }
 			self.email = value as! [String]
-		case "phone":
+		case 6:
 			guard value is [String] else { throw ProtoError.typeMismatchError }
 			self.phone = value as! [String]
-		case "in_users_domain":
+		case 10:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.inUsersDomain = value as! Bool?
-		case "gender":
+		case 11:
 			guard value is Gender? else { throw ProtoError.typeMismatchError }
 			self.gender = value as! Gender?
-		case "photo_url_status":
+		case 12:
 			guard value is PhotoUrlStatus? else { throw ProtoError.typeMismatchError }
 			self.photoUrlStatus = value as! PhotoUrlStatus?
-		case "canonical_email":
+		case 15:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.canonicalEmail = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "type": return self.type
-		case "display_name": return self.displayName
-		case "first_name": return self.firstName
-		case "photo_url": return self.photoUrl
-		case "email": return self.email
-		case "phone": return self.phone
-		case "in_users_domain": return self.inUsersDomain
-		case "gender": return self.gender
-		case "photo_url_status": return self.photoUrlStatus
-		case "canonical_email": return self.canonicalEmail
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.type
+		case 2: return self.displayName
+		case 3: return self.firstName
+		case 4: return self.photoUrl
+		case 5: return self.email
+		case 6: return self.phone
+		case 10: return self.inUsersDomain
+		case 11: return self.gender
+		case 12: return self.photoUrlStatus
+		case 15: return self.canonicalEmail
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.displayName._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.firstName._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.photoUrl._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.email.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.phone.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.inUsersDomain._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.gender._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.photoUrlStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.canonicalEmail._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var type: ProfileType?
@@ -2280,43 +2855,56 @@ public struct EntityProperties: ProtoMessage {
 	public var canonicalEmail: String?
 }
 
-public struct ConversationState: ProtoMessage {
+public struct ConversationState: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation", type: .prototype("Conversation"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "event", type: .prototype("Event"), label: .repeated),
 		5: ProtoFieldDescriptor(id: 5, name: "event_continuation_token", type: .prototype("EventContinuationToken"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ConversationState.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "conversation":
+		case 2:
 			guard value is Conversation? else { throw ProtoError.typeMismatchError }
 			self.conversation = value as! Conversation?
-		case "event":
+		case 3:
 			guard value is [Event] else { throw ProtoError.typeMismatchError }
 			self.event = value as! [Event]
-		case "event_continuation_token":
+		case 5:
 			guard value is EventContinuationToken? else { throw ProtoError.typeMismatchError }
 			self.eventContinuationToken = value as! EventContinuationToken?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "conversation": return self.conversation
-		case "event": return self.event
-		case "event_continuation_token": return self.eventContinuationToken
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.conversation
+		case 3: return self.event
+		case 5: return self.eventContinuationToken
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversation._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.event.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventContinuationToken._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
@@ -2325,38 +2913,50 @@ public struct ConversationState: ProtoMessage {
 	public var eventContinuationToken: EventContinuationToken?
 }
 
-public struct EventContinuationToken: ProtoMessage {
+public struct EventContinuationToken: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "event_id", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "storage_continuation_token", type: .bytes, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "event_timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EventContinuationToken.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "event_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.eventId = value as! String?
-		case "storage_continuation_token":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.storageContinuationToken = value as! String?
-		case "event_timestamp":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.eventTimestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "event_id": return self.eventId
-		case "storage_continuation_token": return self.storageContinuationToken
-		case "event_timestamp": return self.eventTimestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.eventId
+		case 2: return self.storageContinuationToken
+		case 3: return self.eventTimestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.eventId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.storageContinuationToken._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var eventId: String?
@@ -2364,43 +2964,56 @@ public struct EventContinuationToken: ProtoMessage {
 	public var eventTimestamp: UInt64?
 }
 
-public struct EntityLookupSpec: ProtoMessage {
+public struct EntityLookupSpec: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "gaia_id", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "email", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "phone", type: .string, label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "create_offnetwork_gaia", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EntityLookupSpec.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "gaia_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.gaiaId = value as! String?
-		case "email":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.email = value as! String?
-		case "phone":
+		case 4:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.phone = value as! String?
-		case "create_offnetwork_gaia":
+		case 6:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.createOffnetworkGaia = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "gaia_id": return self.gaiaId
-		case "email": return self.email
-		case "phone": return self.phone
-		case "create_offnetwork_gaia": return self.createOffnetworkGaia
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.gaiaId
+		case 3: return self.email
+		case 4: return self.phone
+		case 6: return self.createOffnetworkGaia
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.gaiaId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.email._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.phone._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.createOffnetworkGaia._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var gaiaId: String?
@@ -2409,365 +3022,492 @@ public struct EntityLookupSpec: ProtoMessage {
 	public var createOffnetworkGaia: Bool?
 }
 
-public struct ConfigurationBit: ProtoMessage {
+public struct ConfigurationBit: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "configuration_bit_type", type: .prototype("ConfigurationBitType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "value", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ConfigurationBit.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "configuration_bit_type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConfigurationBitType? else { throw ProtoError.typeMismatchError }
 			self.configurationBitType = value as! ConfigurationBitType?
-		case "value":
+		case 2:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.value = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "configuration_bit_type": return self.configurationBitType
-		case "value": return self.value
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.configurationBitType
+		case 2: return self.value
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.configurationBitType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.value._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var configurationBitType: ConfigurationBitType?
 	public var value: Bool?
 }
 
-public struct RichPresenceState: ProtoMessage {
+public struct RichPresenceState: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		3: ProtoFieldDescriptor(id: 3, name: "get_rich_presence_enabled_state", type: .prototype("RichPresenceEnabledState"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return RichPresenceState.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "get_rich_presence_enabled_state":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 3:
 			guard value is [RichPresenceEnabledState] else { throw ProtoError.typeMismatchError }
 			self.getRichPresenceEnabledState = value as! [RichPresenceEnabledState]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "get_rich_presence_enabled_state": return self.getRichPresenceEnabledState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 3: return self.getRichPresenceEnabledState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.getRichPresenceEnabledState.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var getRichPresenceEnabledState: [RichPresenceEnabledState] = []
 }
 
-public struct RichPresenceEnabledState: ProtoMessage {
+public struct RichPresenceEnabledState: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("RichPresenceType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "enabled", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return RichPresenceEnabledState.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RichPresenceType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! RichPresenceType?
-		case "enabled":
+		case 2:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.enabled = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "type": return self.type
-		case "enabled": return self.enabled
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.type
+		case 2: return self.enabled
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.enabled._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var type: RichPresenceType?
 	public var enabled: Bool?
 }
 
-public struct DesktopOffSetting: ProtoMessage {
+public struct DesktopOffSetting: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "desktop_off", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DesktopOffSetting.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "desktop_off":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.desktopOff = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "desktop_off": return self.desktopOff
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.desktopOff
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.desktopOff._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var desktopOff: Bool?
 }
 
-public struct DesktopOffState: ProtoMessage {
+public struct DesktopOffState: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "desktop_off", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "version", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DesktopOffState.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "desktop_off":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.desktopOff = value as! Bool?
-		case "version":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.version = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "desktop_off": return self.desktopOff
-		case "version": return self.version
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.desktopOff
+		case 2: return self.version
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.desktopOff._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.version._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var desktopOff: Bool?
 	public var version: UInt64?
 }
 
-public struct DndSetting: ProtoMessage {
+public struct DndSetting: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "do_not_disturb", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timeout_secs", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DndSetting.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "do_not_disturb":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.doNotDisturb = value as! Bool?
-		case "timeout_secs":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timeoutSecs = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "do_not_disturb": return self.doNotDisturb
-		case "timeout_secs": return self.timeoutSecs
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.doNotDisturb
+		case 2: return self.timeoutSecs
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.doNotDisturb._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timeoutSecs._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var doNotDisturb: Bool?
 	public var timeoutSecs: UInt64?
 }
 
-public struct PresenceStateSetting: ProtoMessage {
+public struct PresenceStateSetting: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "timeout_secs", type: .uint64, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "type", type: .prototype("ClientPresenceStateType"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return PresenceStateSetting.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "timeout_secs":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timeoutSecs = value as! UInt64?
-		case "type":
+		case 2:
 			guard value is ClientPresenceStateType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ClientPresenceStateType?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "timeout_secs": return self.timeoutSecs
-		case "type": return self.type
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.timeoutSecs
+		case 2: return self.type
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.timeoutSecs._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var timeoutSecs: UInt64?
 	public var type: ClientPresenceStateType?
 }
 
-public struct MoodMessage: ProtoMessage {
+public struct MoodMessage: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "mood_content", type: .prototype("MoodContent"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return MoodMessage.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "mood_content":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is MoodContent? else { throw ProtoError.typeMismatchError }
 			self.moodContent = value as! MoodContent?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "mood_content": return self.moodContent
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.moodContent
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.moodContent._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var moodContent: MoodContent?
 }
 
-public struct MoodContent: ProtoMessage {
+public struct MoodContent: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "segment", type: .prototype("Segment"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return MoodContent.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "segment":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is [Segment] else { throw ProtoError.typeMismatchError }
 			self.segment = value as! [Segment]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "segment": return self.segment
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.segment
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.segment.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var segment: [Segment] = []
 }
 
-public struct MoodSetting: ProtoMessage {
+public struct MoodSetting: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "mood_message", type: .prototype("MoodMessage"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return MoodSetting.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "mood_message":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is MoodMessage? else { throw ProtoError.typeMismatchError }
 			self.moodMessage = value as! MoodMessage?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "mood_message": return self.moodMessage
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.moodMessage
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.moodMessage._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var moodMessage: MoodMessage?
 }
 
-public struct MoodState: ProtoMessage {
+public struct MoodState: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		4: ProtoFieldDescriptor(id: 4, name: "mood_setting", type: .prototype("MoodSetting"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return MoodState.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "mood_setting":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 4:
 			guard value is MoodSetting? else { throw ProtoError.typeMismatchError }
 			self.moodSetting = value as! MoodSetting?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "mood_setting": return self.moodSetting
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 4: return self.moodSetting
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.moodSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var moodSetting: MoodSetting?
 }
 
-public struct DeleteAction: ProtoMessage {
+public struct DeleteAction: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "delete_action_timestamp", type: .uint64, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "delete_upper_bound_timestamp", type: .uint64, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "delete_type", type: .prototype("DeleteType"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DeleteAction.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "delete_action_timestamp":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.deleteActionTimestamp = value as! UInt64?
-		case "delete_upper_bound_timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.deleteUpperBoundTimestamp = value as! UInt64?
-		case "delete_type":
+		case 3:
 			guard value is DeleteType? else { throw ProtoError.typeMismatchError }
 			self.deleteType = value as! DeleteType?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "delete_action_timestamp": return self.deleteActionTimestamp
-		case "delete_upper_bound_timestamp": return self.deleteUpperBoundTimestamp
-		case "delete_type": return self.deleteType
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.deleteActionTimestamp
+		case 2: return self.deleteUpperBoundTimestamp
+		case 3: return self.deleteType
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.deleteActionTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deleteUpperBoundTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deleteType._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var deleteActionTimestamp: UInt64?
@@ -2775,143 +3515,188 @@ public struct DeleteAction: ProtoMessage {
 	public var deleteType: DeleteType?
 }
 
-public struct InviteeID: ProtoMessage {
+public struct InviteeID: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "gaia_id", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "fallback_name", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return InviteeID.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "gaia_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.gaiaId = value as! String?
-		case "fallback_name":
+		case 4:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.fallbackName = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "gaia_id": return self.gaiaId
-		case "fallback_name": return self.fallbackName
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.gaiaId
+		case 4: return self.fallbackName
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.gaiaId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.fallbackName._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var gaiaId: String?
 	public var fallbackName: String?
 }
 
-public struct Country: ProtoMessage {
+public struct Country: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "region_code", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "country_code", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Country.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "region_code":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.regionCode = value as! String?
-		case "country_code":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.countryCode = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "region_code": return self.regionCode
-		case "country_code": return self.countryCode
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.regionCode
+		case 2: return self.countryCode
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.regionCode._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.countryCode._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var regionCode: String?
 	public var countryCode: UInt64?
 }
 
-public struct DesktopSoundSetting: ProtoMessage {
+public struct DesktopSoundSetting: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "desktop_sound_state", type: .prototype("SoundState"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "desktop_ring_sound_state", type: .prototype("SoundState"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DesktopSoundSetting.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "desktop_sound_state":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is SoundState? else { throw ProtoError.typeMismatchError }
 			self.desktopSoundState = value as! SoundState?
-		case "desktop_ring_sound_state":
+		case 2:
 			guard value is SoundState? else { throw ProtoError.typeMismatchError }
 			self.desktopRingSoundState = value as! SoundState?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "desktop_sound_state": return self.desktopSoundState
-		case "desktop_ring_sound_state": return self.desktopRingSoundState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.desktopSoundState
+		case 2: return self.desktopRingSoundState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.desktopSoundState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.desktopRingSoundState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var desktopSoundState: SoundState?
 	public var desktopRingSoundState: SoundState?
 }
 
-public struct PhoneData: ProtoMessage {
+public struct PhoneData: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "phone", type: .prototype("Phone"), label: .repeated),
 		3: ProtoFieldDescriptor(id: 3, name: "caller_id_settings_mask", type: .prototype("CallerIdSettingsMask"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return PhoneData.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "phone":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is [Phone] else { throw ProtoError.typeMismatchError }
 			self.phone = value as! [Phone]
-		case "caller_id_settings_mask":
+		case 3:
 			guard value is CallerIdSettingsMask? else { throw ProtoError.typeMismatchError }
 			self.callerIdSettingsMask = value as! CallerIdSettingsMask?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "phone": return self.phone
-		case "caller_id_settings_mask": return self.callerIdSettingsMask
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.phone
+		case 3: return self.callerIdSettingsMask
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.phone.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.callerIdSettingsMask._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var phone: [Phone] = []
 	public var callerIdSettingsMask: CallerIdSettingsMask?
 }
 
-public struct Phone: ProtoMessage {
+public struct Phone: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "phone_number", type: .prototype("PhoneNumber"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "google_voice", type: .bool, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "verification_status", type: .prototype("PhoneVerificationStatus"), label: .optional),
@@ -2919,41 +3704,55 @@ public struct Phone: ProtoMessage {
 		5: ProtoFieldDescriptor(id: 5, name: "discoverability_status", type: .prototype("PhoneDiscoverabilityStatus"), label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "primary", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return Phone.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "phone_number":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is PhoneNumber? else { throw ProtoError.typeMismatchError }
 			self.phoneNumber = value as! PhoneNumber?
-		case "google_voice":
+		case 2:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.googleVoice = value as! Bool?
-		case "verification_status":
+		case 3:
 			guard value is PhoneVerificationStatus? else { throw ProtoError.typeMismatchError }
 			self.verificationStatus = value as! PhoneVerificationStatus?
-		case "discoverable":
+		case 4:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.discoverable = value as! Bool?
-		case "discoverability_status":
+		case 5:
 			guard value is PhoneDiscoverabilityStatus? else { throw ProtoError.typeMismatchError }
 			self.discoverabilityStatus = value as! PhoneDiscoverabilityStatus?
-		case "primary":
+		case 6:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.primary = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "phone_number": return self.phoneNumber
-		case "google_voice": return self.googleVoice
-		case "verification_status": return self.verificationStatus
-		case "discoverable": return self.discoverable
-		case "discoverability_status": return self.discoverabilityStatus
-		case "primary": return self.primary
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.phoneNumber
+		case 2: return self.googleVoice
+		case 3: return self.verificationStatus
+		case 4: return self.discoverable
+		case 5: return self.discoverabilityStatus
+		case 6: return self.primary
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.phoneNumber._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.googleVoice._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.verificationStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.discoverable._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.discoverabilityStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.primary._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var phoneNumber: PhoneNumber?
@@ -2964,11 +3763,12 @@ public struct Phone: ProtoMessage {
 	public var primary: Bool?
 }
 
-public struct I18nData: ProtoMessage {
+public struct I18nData: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "national_number", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "international_number", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "country_code", type: .uint64, label: .optional),
@@ -2976,41 +3776,55 @@ public struct I18nData: ProtoMessage {
 		5: ProtoFieldDescriptor(id: 5, name: "is_valid", type: .bool, label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "validation_result", type: .prototype("PhoneValidationResult"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return I18nData.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "national_number":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.nationalNumber = value as! String?
-		case "international_number":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.internationalNumber = value as! String?
-		case "country_code":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.countryCode = value as! UInt64?
-		case "region_code":
+		case 4:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.regionCode = value as! String?
-		case "is_valid":
+		case 5:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.isValid = value as! Bool?
-		case "validation_result":
+		case 6:
 			guard value is PhoneValidationResult? else { throw ProtoError.typeMismatchError }
 			self.validationResult = value as! PhoneValidationResult?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "national_number": return self.nationalNumber
-		case "international_number": return self.internationalNumber
-		case "country_code": return self.countryCode
-		case "region_code": return self.regionCode
-		case "is_valid": return self.isValid
-		case "validation_result": return self.validationResult
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.nationalNumber
+		case 2: return self.internationalNumber
+		case 3: return self.countryCode
+		case 4: return self.regionCode
+		case 5: return self.isValid
+		case 6: return self.validationResult
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.nationalNumber._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.internationalNumber._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.countryCode._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.regionCode._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.isValid._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.validationResult._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var nationalNumber: String?
@@ -3021,137 +3835,182 @@ public struct I18nData: ProtoMessage {
 	public var validationResult: PhoneValidationResult?
 }
 
-public struct PhoneNumber: ProtoMessage {
+public struct PhoneNumber: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "e164", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "i18n_data", type: .prototype("I18nData"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return PhoneNumber.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "e164":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.e164 = value as! String?
-		case "i18n_data":
+		case 2:
 			guard value is I18nData? else { throw ProtoError.typeMismatchError }
 			self.i18nData = value as! I18nData?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "e164": return self.e164
-		case "i18n_data": return self.i18nData
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.e164
+		case 2: return self.i18nData
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.e164._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.i18nData._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var e164: String?
 	public var i18nData: I18nData?
 }
 
-public struct SuggestedContactGroupHash: ProtoMessage {
+public struct SuggestedContactGroupHash: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "max_results", type: .uint64, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "hash", type: .bytes, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SuggestedContactGroupHash.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "max_results":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxResults = value as! UInt64?
-		case "hash":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.hash = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "max_results": return self.maxResults
-		case "hash": return self.hash
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.maxResults
+		case 2: return self.hash
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.maxResults._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.hash._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var maxResults: UInt64?
 	public var hash: String?
 }
 
-public struct SuggestedContact: ProtoMessage {
+public struct SuggestedContact: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "entity", type: .prototype("Entity"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "invitation_status", type: .prototype("InvitationStatus"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SuggestedContact.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "entity":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Entity? else { throw ProtoError.typeMismatchError }
 			self.entity = value as! Entity?
-		case "invitation_status":
+		case 2:
 			guard value is InvitationStatus? else { throw ProtoError.typeMismatchError }
 			self.invitationStatus = value as! InvitationStatus?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "entity": return self.entity
-		case "invitation_status": return self.invitationStatus
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.entity
+		case 2: return self.invitationStatus
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.entity._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.invitationStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var entity: Entity?
 	public var invitationStatus: InvitationStatus?
 }
 
-public struct SuggestedContactGroup: ProtoMessage {
+public struct SuggestedContactGroup: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "hash_matched", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "hash", type: .bytes, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "contact", type: .prototype("SuggestedContact"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SuggestedContactGroup.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "hash_matched":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.hashMatched = value as! Bool?
-		case "hash":
+		case 2:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.hash = value as! String?
-		case "contact":
+		case 3:
 			guard value is [SuggestedContact] else { throw ProtoError.typeMismatchError }
 			self.contact = value as! [SuggestedContact]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "hash_matched": return self.hashMatched
-		case "hash": return self.hash
-		case "contact": return self.contact
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.hashMatched
+		case 2: return self.hash
+		case 3: return self.contact
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.hashMatched._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.hash._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.contact.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var hashMatched: Bool?
@@ -3159,11 +4018,12 @@ public struct SuggestedContactGroup: ProtoMessage {
 	public var contact: [SuggestedContact] = []
 }
 
-public struct StateUpdate: ProtoMessage {
+public struct StateUpdate: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "state_update_header", type: .prototype("StateUpdateHeader"), label: .optional),
 		13: ProtoFieldDescriptor(id: 13, name: "conversation", type: .prototype("Conversation"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_notification", type: .prototype("ConversationNotification"), label: .optional),
@@ -3182,85 +4042,110 @@ public struct StateUpdate: ProtoMessage {
 		19: ProtoFieldDescriptor(id: 19, name: "notification_setting_notification", type: .prototype("SetNotificationSettingNotification"), label: .optional),
 		20: ProtoFieldDescriptor(id: 20, name: "rich_presence_enabled_state_notification", type: .prototype("RichPresenceEnabledStateNotification"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return StateUpdate.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "state_update_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is StateUpdateHeader? else { throw ProtoError.typeMismatchError }
 			self.stateUpdateHeader = value as! StateUpdateHeader?
-		case "conversation":
+		case 13:
 			guard value is Conversation? else { throw ProtoError.typeMismatchError }
 			self.conversation = value as! Conversation?
-		case "conversation_notification":
+		case 2:
 			guard value is ConversationNotification? else { throw ProtoError.typeMismatchError }
 			self.conversationNotification = value as! ConversationNotification?
-		case "event_notification":
+		case 3:
 			guard value is EventNotification? else { throw ProtoError.typeMismatchError }
 			self.eventNotification = value as! EventNotification?
-		case "focus_notification":
+		case 4:
 			guard value is SetFocusNotification? else { throw ProtoError.typeMismatchError }
 			self.focusNotification = value as! SetFocusNotification?
-		case "typing_notification":
+		case 5:
 			guard value is SetTypingNotification? else { throw ProtoError.typeMismatchError }
 			self.typingNotification = value as! SetTypingNotification?
-		case "notification_level_notification":
+		case 6:
 			guard value is SetConversationNotificationLevelNotification? else { throw ProtoError.typeMismatchError }
 			self.notificationLevelNotification = value as! SetConversationNotificationLevelNotification?
-		case "reply_to_invite_notification":
+		case 7:
 			guard value is ReplyToInviteNotification? else { throw ProtoError.typeMismatchError }
 			self.replyToInviteNotification = value as! ReplyToInviteNotification?
-		case "watermark_notification":
+		case 8:
 			guard value is WatermarkNotification? else { throw ProtoError.typeMismatchError }
 			self.watermarkNotification = value as! WatermarkNotification?
-		case "view_modification":
+		case 11:
 			guard value is ConversationViewModification? else { throw ProtoError.typeMismatchError }
 			self.viewModification = value as! ConversationViewModification?
-		case "easter_egg_notification":
+		case 12:
 			guard value is EasterEggNotification? else { throw ProtoError.typeMismatchError }
 			self.easterEggNotification = value as! EasterEggNotification?
-		case "self_presence_notification":
+		case 14:
 			guard value is SelfPresenceNotification? else { throw ProtoError.typeMismatchError }
 			self.selfPresenceNotification = value as! SelfPresenceNotification?
-		case "delete_notification":
+		case 15:
 			guard value is DeleteActionNotification? else { throw ProtoError.typeMismatchError }
 			self.deleteNotification = value as! DeleteActionNotification?
-		case "presence_notification":
+		case 16:
 			guard value is PresenceNotification? else { throw ProtoError.typeMismatchError }
 			self.presenceNotification = value as! PresenceNotification?
-		case "block_notification":
+		case 17:
 			guard value is BlockNotification? else { throw ProtoError.typeMismatchError }
 			self.blockNotification = value as! BlockNotification?
-		case "notification_setting_notification":
+		case 19:
 			guard value is SetNotificationSettingNotification? else { throw ProtoError.typeMismatchError }
 			self.notificationSettingNotification = value as! SetNotificationSettingNotification?
-		case "rich_presence_enabled_state_notification":
+		case 20:
 			guard value is RichPresenceEnabledStateNotification? else { throw ProtoError.typeMismatchError }
 			self.richPresenceEnabledStateNotification = value as! RichPresenceEnabledStateNotification?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "state_update_header": return self.stateUpdateHeader
-		case "conversation": return self.conversation
-		case "conversation_notification": return self.conversationNotification
-		case "event_notification": return self.eventNotification
-		case "focus_notification": return self.focusNotification
-		case "typing_notification": return self.typingNotification
-		case "notification_level_notification": return self.notificationLevelNotification
-		case "reply_to_invite_notification": return self.replyToInviteNotification
-		case "watermark_notification": return self.watermarkNotification
-		case "view_modification": return self.viewModification
-		case "easter_egg_notification": return self.easterEggNotification
-		case "self_presence_notification": return self.selfPresenceNotification
-		case "delete_notification": return self.deleteNotification
-		case "presence_notification": return self.presenceNotification
-		case "block_notification": return self.blockNotification
-		case "notification_setting_notification": return self.notificationSettingNotification
-		case "rich_presence_enabled_state_notification": return self.richPresenceEnabledStateNotification
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.stateUpdateHeader
+		case 13: return self.conversation
+		case 2: return self.conversationNotification
+		case 3: return self.eventNotification
+		case 4: return self.focusNotification
+		case 5: return self.typingNotification
+		case 6: return self.notificationLevelNotification
+		case 7: return self.replyToInviteNotification
+		case 8: return self.watermarkNotification
+		case 11: return self.viewModification
+		case 12: return self.easterEggNotification
+		case 14: return self.selfPresenceNotification
+		case 15: return self.deleteNotification
+		case 16: return self.presenceNotification
+		case 17: return self.blockNotification
+		case 19: return self.notificationSettingNotification
+		case 20: return self.richPresenceEnabledStateNotification
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.stateUpdateHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversation._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.focusNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.typingNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.notificationLevelNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.replyToInviteNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.watermarkNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.viewModification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.easterEggNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.selfPresenceNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deleteNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.presenceNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.blockNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.notificationSettingNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.richPresenceEnabledStateNotification._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var stateUpdateHeader: StateUpdateHeader?
@@ -3282,43 +4167,56 @@ public struct StateUpdate: ProtoMessage {
 	public var richPresenceEnabledStateNotification: RichPresenceEnabledStateNotification?
 }
 
-public struct StateUpdateHeader: ProtoMessage {
+public struct StateUpdateHeader: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "active_client_state", type: .prototype("ActiveClientState"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "request_trace_id", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "notification_settings", type: .prototype("NotificationSettings"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "current_server_time", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return StateUpdateHeader.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "active_client_state":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ActiveClientState? else { throw ProtoError.typeMismatchError }
 			self.activeClientState = value as! ActiveClientState?
-		case "request_trace_id":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.requestTraceId = value as! String?
-		case "notification_settings":
+		case 4:
 			guard value is NotificationSettings? else { throw ProtoError.typeMismatchError }
 			self.notificationSettings = value as! NotificationSettings?
-		case "current_server_time":
+		case 5:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.currentServerTime = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "active_client_state": return self.activeClientState
-		case "request_trace_id": return self.requestTraceId
-		case "notification_settings": return self.notificationSettings
-		case "current_server_time": return self.currentServerTime
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.activeClientState
+		case 3: return self.requestTraceId
+		case 4: return self.notificationSettings
+		case 5: return self.currentServerTime
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.activeClientState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.requestTraceId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.notificationSettings._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.currentServerTime._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var activeClientState: ActiveClientState?
@@ -3327,129 +4225,173 @@ public struct StateUpdateHeader: ProtoMessage {
 	public var currentServerTime: UInt64?
 }
 
-public struct BatchUpdate: ProtoMessage {
+public struct BatchUpdate: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "state_update", type: .prototype("StateUpdate"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return BatchUpdate.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "state_update":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is [StateUpdate] else { throw ProtoError.typeMismatchError }
 			self.stateUpdate = value as! [StateUpdate]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "state_update": return self.stateUpdate
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.stateUpdate
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.stateUpdate.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var stateUpdate: [StateUpdate] = []
 }
 
-public struct ConversationNotification: ProtoMessage {
+public struct ConversationNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation", type: .prototype("Conversation"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ConversationNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Conversation? else { throw ProtoError.typeMismatchError }
 			self.conversation = value as! Conversation?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation": return self.conversation
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversation
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversation._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversation: Conversation?
 }
 
-public struct EventNotification: ProtoMessage {
+public struct EventNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "event", type: .prototype("Event"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EventNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "event":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is Event? else { throw ProtoError.typeMismatchError }
 			self.event = value as! Event?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "event": return self.event
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.event
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.event._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var event: Event?
 }
 
-public struct SetFocusNotification: ProtoMessage {
+public struct SetFocusNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "timestamp", type: .uint64, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "type", type: .prototype("FocusType"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "device", type: .prototype("FocusDevice"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetFocusNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "sender_id":
+		case 2:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
-		case "timestamp":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
-		case "type":
+		case 4:
 			guard value is FocusType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! FocusType?
-		case "device":
+		case 5:
 			guard value is FocusDevice? else { throw ProtoError.typeMismatchError }
 			self.device = value as! FocusDevice?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "sender_id": return self.senderId
-		case "timestamp": return self.timestamp
-		case "type": return self.type
-		case "device": return self.device
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.senderId
+		case 3: return self.timestamp
+		case 4: return self.type
+		case 5: return self.device
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.senderId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.device._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
@@ -3459,43 +4401,56 @@ public struct SetFocusNotification: ProtoMessage {
 	public var device: FocusDevice?
 }
 
-public struct SetTypingNotification: ProtoMessage {
+public struct SetTypingNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "timestamp", type: .uint64, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "type", type: .prototype("TypingType"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetTypingNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "sender_id":
+		case 2:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
-		case "timestamp":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
-		case "type":
+		case 4:
 			guard value is TypingType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! TypingType?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "sender_id": return self.senderId
-		case "timestamp": return self.timestamp
-		case "type": return self.type
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.senderId
+		case 3: return self.timestamp
+		case 4: return self.type
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.senderId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
@@ -3504,38 +4459,50 @@ public struct SetTypingNotification: ProtoMessage {
 	public var type: TypingType?
 }
 
-public struct SetConversationNotificationLevelNotification: ProtoMessage {
+public struct SetConversationNotificationLevelNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "level", type: .prototype("NotificationLevel"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetConversationNotificationLevelNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "level":
+		case 2:
 			guard value is NotificationLevel? else { throw ProtoError.typeMismatchError }
 			self.level = value as! NotificationLevel?
-		case "timestamp":
+		case 4:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "level": return self.level
-		case "timestamp": return self.timestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.level
+		case 4: return self.timestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.level._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
@@ -3543,71 +4510,94 @@ public struct SetConversationNotificationLevelNotification: ProtoMessage {
 	public var timestamp: UInt64?
 }
 
-public struct ReplyToInviteNotification: ProtoMessage {
+public struct ReplyToInviteNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "type", type: .prototype("ReplyToInviteType"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ReplyToInviteNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "type":
+		case 2:
 			guard value is ReplyToInviteType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ReplyToInviteType?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "type": return self.type
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.type
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
 	public var type: ReplyToInviteType?
 }
 
-public struct WatermarkNotification: ProtoMessage {
+public struct WatermarkNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "latest_read_timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return WatermarkNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "sender_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
-		case "conversation_id":
+		case 2:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "latest_read_timestamp":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.latestReadTimestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "sender_id": return self.senderId
-		case "conversation_id": return self.conversationId
-		case "latest_read_timestamp": return self.latestReadTimestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.senderId
+		case 2: return self.conversationId
+		case 3: return self.latestReadTimestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.senderId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.latestReadTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var senderId: ParticipantId?
@@ -3615,38 +4605,50 @@ public struct WatermarkNotification: ProtoMessage {
 	public var latestReadTimestamp: UInt64?
 }
 
-public struct ConversationViewModification: ProtoMessage {
+public struct ConversationViewModification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "old_view", type: .prototype("ConversationView"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "new_view", type: .prototype("ConversationView"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ConversationViewModification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "old_view":
+		case 2:
 			guard value is ConversationView? else { throw ProtoError.typeMismatchError }
 			self.oldView = value as! ConversationView?
-		case "new_view":
+		case 3:
 			guard value is ConversationView? else { throw ProtoError.typeMismatchError }
 			self.newView = value as! ConversationView?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "old_view": return self.oldView
-		case "new_view": return self.newView
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.oldView
+		case 3: return self.newView
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.oldView._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.newView._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
@@ -3654,38 +4656,50 @@ public struct ConversationViewModification: ProtoMessage {
 	public var newView: ConversationView?
 }
 
-public struct EasterEggNotification: ProtoMessage {
+public struct EasterEggNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "easter_egg", type: .prototype("EasterEgg"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EasterEggNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "sender_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
-		case "conversation_id":
+		case 2:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "easter_egg":
+		case 3:
 			guard value is EasterEgg? else { throw ProtoError.typeMismatchError }
 			self.easterEgg = value as! EasterEgg?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "sender_id": return self.senderId
-		case "conversation_id": return self.conversationId
-		case "easter_egg": return self.easterEgg
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.senderId
+		case 2: return self.conversationId
+		case 3: return self.easterEgg
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.senderId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.easterEgg._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var senderId: ParticipantId?
@@ -3693,48 +4707,62 @@ public struct EasterEggNotification: ProtoMessage {
 	public var easterEgg: EasterEgg?
 }
 
-public struct SelfPresenceNotification: ProtoMessage {
+public struct SelfPresenceNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "client_presence_state", type: .prototype("ClientPresenceState"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "do_not_disturb_setting", type: .prototype("DoNotDisturbSetting"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "desktop_off_setting", type: .prototype("DesktopOffSetting"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "desktop_off_state", type: .prototype("DesktopOffState"), label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "mood_state", type: .prototype("MoodState"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SelfPresenceNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "client_presence_state":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ClientPresenceState? else { throw ProtoError.typeMismatchError }
 			self.clientPresenceState = value as! ClientPresenceState?
-		case "do_not_disturb_setting":
+		case 3:
 			guard value is DoNotDisturbSetting? else { throw ProtoError.typeMismatchError }
 			self.doNotDisturbSetting = value as! DoNotDisturbSetting?
-		case "desktop_off_setting":
+		case 4:
 			guard value is DesktopOffSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopOffSetting = value as! DesktopOffSetting?
-		case "desktop_off_state":
+		case 5:
 			guard value is DesktopOffState? else { throw ProtoError.typeMismatchError }
 			self.desktopOffState = value as! DesktopOffState?
-		case "mood_state":
+		case 6:
 			guard value is MoodState? else { throw ProtoError.typeMismatchError }
 			self.moodState = value as! MoodState?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "client_presence_state": return self.clientPresenceState
-		case "do_not_disturb_setting": return self.doNotDisturbSetting
-		case "desktop_off_setting": return self.desktopOffSetting
-		case "desktop_off_state": return self.desktopOffState
-		case "mood_state": return self.moodState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.clientPresenceState
+		case 3: return self.doNotDisturbSetting
+		case 4: return self.desktopOffSetting
+		case 5: return self.desktopOffState
+		case 6: return self.moodState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.clientPresenceState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.doNotDisturbSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.desktopOffSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.desktopOffState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.moodState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var clientPresenceState: ClientPresenceState?
@@ -3744,272 +4772,367 @@ public struct SelfPresenceNotification: ProtoMessage {
 	public var moodState: MoodState?
 }
 
-public struct DeleteActionNotification: ProtoMessage {
+public struct DeleteActionNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "delete_action", type: .prototype("DeleteAction"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DeleteActionNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "delete_action":
+		case 2:
 			guard value is DeleteAction? else { throw ProtoError.typeMismatchError }
 			self.deleteAction = value as! DeleteAction?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
-		case "delete_action": return self.deleteAction
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
+		case 2: return self.deleteAction
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deleteAction._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
 	public var deleteAction: DeleteAction?
 }
 
-public struct PresenceNotification: ProtoMessage {
+public struct PresenceNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "presence", type: .prototype("PresenceResult"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return PresenceNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "presence":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is [PresenceResult] else { throw ProtoError.typeMismatchError }
 			self.presence = value as! [PresenceResult]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "presence": return self.presence
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.presence
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.presence.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var presence: [PresenceResult] = []
 }
 
-public struct BlockNotification: ProtoMessage {
+public struct BlockNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "block_state_change", type: .prototype("BlockStateChange"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return BlockNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "block_state_change":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is [BlockStateChange] else { throw ProtoError.typeMismatchError }
 			self.blockStateChange = value as! [BlockStateChange]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "block_state_change": return self.blockStateChange
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.blockStateChange
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.blockStateChange.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var blockStateChange: [BlockStateChange] = []
 }
 
-public struct SetNotificationSettingNotification: ProtoMessage {
+public struct SetNotificationSettingNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		2: ProtoFieldDescriptor(id: 2, name: "desktop_sound_setting", type: .prototype("DesktopSoundSetting"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetNotificationSettingNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "desktop_sound_setting":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 2:
 			guard value is DesktopSoundSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopSoundSetting = value as! DesktopSoundSetting?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "desktop_sound_setting": return self.desktopSoundSetting
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 2: return self.desktopSoundSetting
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.desktopSoundSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var desktopSoundSetting: DesktopSoundSetting?
 }
 
-public struct RichPresenceEnabledStateNotification: ProtoMessage {
+public struct RichPresenceEnabledStateNotification: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "rich_presence_enabled_state", type: .prototype("RichPresenceEnabledState"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return RichPresenceEnabledStateNotification.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "rich_presence_enabled_state":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is [RichPresenceEnabledState] else { throw ProtoError.typeMismatchError }
 			self.richPresenceEnabledState = value as! [RichPresenceEnabledState]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "rich_presence_enabled_state": return self.richPresenceEnabledState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.richPresenceEnabledState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.richPresenceEnabledState.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var richPresenceEnabledState: [RichPresenceEnabledState] = []
 }
 
-public struct ConversationSpec: ProtoMessage {
+public struct ConversationSpec: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return ConversationSpec.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "conversation_id":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "conversation_id": return self.conversationId
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.conversationId
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var conversationId: ConversationId?
 }
 
-public struct OffnetworkAddress: ProtoMessage {
+public struct OffnetworkAddress: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("OffnetworkAddressType"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "email", type: .string, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return OffnetworkAddress.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "type":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is OffnetworkAddressType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! OffnetworkAddressType?
-		case "email":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.email = value as! String?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "type": return self.type
-		case "email": return self.email
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.type
+		case 3: return self.email
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.email._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var type: OffnetworkAddressType?
 	public var email: String?
 }
 
-public struct EntityResult: ProtoMessage {
+public struct EntityResult: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "lookup_spec", type: .prototype("EntityLookupSpec"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "entity", type: .prototype("Entity"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EntityResult.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "lookup_spec":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is EntityLookupSpec? else { throw ProtoError.typeMismatchError }
 			self.lookupSpec = value as! EntityLookupSpec?
-		case "entity":
+		case 2:
 			guard value is [Entity] else { throw ProtoError.typeMismatchError }
 			self.entity = value as! [Entity]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "lookup_spec": return self.lookupSpec
-		case "entity": return self.entity
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.lookupSpec
+		case 2: return self.entity
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.lookupSpec._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.entity.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var lookupSpec: EntityLookupSpec?
 	public var entity: [Entity] = []
 }
 
-public struct AddUserRequest: ProtoMessage {
+public struct AddUserRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "invitee_id", type: .prototype("InviteeID"), label: .repeated),
 		5: ProtoFieldDescriptor(id: 5, name: "event_request_header", type: .prototype("EventRequestHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return AddUserRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "invitee_id":
+		case 3:
 			guard value is [InviteeID] else { throw ProtoError.typeMismatchError }
 			self.inviteeId = value as! [InviteeID]
-		case "event_request_header":
+		case 5:
 			guard value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
 			self.eventRequestHeader = value as! EventRequestHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "invitee_id": return self.inviteeId
-		case "event_request_header": return self.eventRequestHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 3: return self.inviteeId
+		case 5: return self.eventRequestHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.inviteeId.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventRequestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -4017,81 +5140,106 @@ public struct AddUserRequest: ProtoMessage {
 	public var eventRequestHeader: EventRequestHeader?
 }
 
-public struct AddUserResponse: ProtoMessage {
+public struct AddUserResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "created_event", type: .prototype("Event"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return AddUserResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "created_event":
+		case 5:
 			guard value is Event? else { throw ProtoError.typeMismatchError }
 			self.createdEvent = value as! Event?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "created_event": return self.createdEvent
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 5: return self.createdEvent
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.createdEvent._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var createdEvent: Event?
 }
 
-public struct CreateConversationRequest: ProtoMessage {
+public struct CreateConversationRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "type", type: .prototype("ConversationType"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "client_generated_id", type: .uint64, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "name", type: .string, label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "invitee_id", type: .prototype("InviteeID"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return CreateConversationRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "type":
+		case 2:
 			guard value is ConversationType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ConversationType?
-		case "client_generated_id":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.clientGeneratedId = value as! UInt64?
-		case "name":
+		case 4:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.name = value as! String?
-		case "invitee_id":
+		case 5:
 			guard value is [InviteeID] else { throw ProtoError.typeMismatchError }
 			self.inviteeId = value as! [InviteeID]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "type": return self.type
-		case "client_generated_id": return self.clientGeneratedId
-		case "name": return self.name
-		case "invitee_id": return self.inviteeId
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.type
+		case 3: return self.clientGeneratedId
+		case 4: return self.name
+		case 5: return self.inviteeId
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.clientGeneratedId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.name._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.inviteeId.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -4101,38 +5249,50 @@ public struct CreateConversationRequest: ProtoMessage {
 	public var inviteeId: [InviteeID] = []
 }
 
-public struct CreateConversationResponse: ProtoMessage {
+public struct CreateConversationResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation", type: .prototype("Conversation"), label: .optional),
 		7: ProtoFieldDescriptor(id: 7, name: "new_conversation_created", type: .bool, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return CreateConversationResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "conversation":
+		case 2:
 			guard value is Conversation? else { throw ProtoError.typeMismatchError }
 			self.conversation = value as! Conversation?
-		case "new_conversation_created":
+		case 7:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.newConversationCreated = value as! Bool?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "conversation": return self.conversation
-		case "new_conversation_created": return self.newConversationCreated
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.conversation
+		case 7: return self.newConversationCreated
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversation._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.newConversationCreated._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
@@ -4140,38 +5300,50 @@ public struct CreateConversationResponse: ProtoMessage {
 	public var newConversationCreated: Bool?
 }
 
-public struct DeleteConversationRequest: ProtoMessage {
+public struct DeleteConversationRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "delete_upper_bound_timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DeleteConversationRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "conversation_id":
+		case 2:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "delete_upper_bound_timestamp":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.deleteUpperBoundTimestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "conversation_id": return self.conversationId
-		case "delete_upper_bound_timestamp": return self.deleteUpperBoundTimestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.conversationId
+		case 3: return self.deleteUpperBoundTimestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deleteUpperBoundTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -4179,71 +5351,94 @@ public struct DeleteConversationRequest: ProtoMessage {
 	public var deleteUpperBoundTimestamp: UInt64?
 }
 
-public struct DeleteConversationResponse: ProtoMessage {
+public struct DeleteConversationResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "delete_action", type: .prototype("DeleteAction"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return DeleteConversationResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "delete_action":
+		case 2:
 			guard value is DeleteAction? else { throw ProtoError.typeMismatchError }
 			self.deleteAction = value as! DeleteAction?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "delete_action": return self.deleteAction
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.deleteAction
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.deleteAction._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var deleteAction: DeleteAction?
 }
 
-public struct EasterEggRequest: ProtoMessage {
+public struct EasterEggRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "easter_egg", type: .prototype("EasterEgg"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EasterEggRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "conversation_id":
+		case 2:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "easter_egg":
+		case 3:
 			guard value is EasterEgg? else { throw ProtoError.typeMismatchError }
 			self.easterEgg = value as! EasterEgg?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "conversation_id": return self.conversationId
-		case "easter_egg": return self.easterEgg
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.conversationId
+		case 3: return self.easterEgg
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.easterEgg._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -4251,81 +5446,106 @@ public struct EasterEggRequest: ProtoMessage {
 	public var easterEgg: EasterEgg?
 }
 
-public struct EasterEggResponse: ProtoMessage {
+public struct EasterEggResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return EasterEggResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "timestamp": return self.timestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.timestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var timestamp: UInt64?
 }
 
-public struct GetConversationRequest: ProtoMessage {
+public struct GetConversationRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_spec", type: .prototype("ConversationSpec"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "include_event", type: .bool, label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "max_events_per_conversation", type: .uint64, label: .optional),
 		7: ProtoFieldDescriptor(id: 7, name: "event_continuation_token", type: .prototype("EventContinuationToken"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return GetConversationRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "conversation_spec":
+		case 2:
 			guard value is ConversationSpec? else { throw ProtoError.typeMismatchError }
 			self.conversationSpec = value as! ConversationSpec?
-		case "include_event":
+		case 4:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.includeEvent = value as! Bool?
-		case "max_events_per_conversation":
+		case 6:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxEventsPerConversation = value as! UInt64?
-		case "event_continuation_token":
+		case 7:
 			guard value is EventContinuationToken? else { throw ProtoError.typeMismatchError }
 			self.eventContinuationToken = value as! EventContinuationToken?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "conversation_spec": return self.conversationSpec
-		case "include_event": return self.includeEvent
-		case "max_events_per_conversation": return self.maxEventsPerConversation
-		case "event_continuation_token": return self.eventContinuationToken
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.conversationSpec
+		case 4: return self.includeEvent
+		case 6: return self.maxEventsPerConversation
+		case 7: return self.eventContinuationToken
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationSpec._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.includeEvent._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.maxEventsPerConversation._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventContinuationToken._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -4335,104 +5555,138 @@ public struct GetConversationRequest: ProtoMessage {
 	public var eventContinuationToken: EventContinuationToken?
 }
 
-public struct GetConversationResponse: ProtoMessage {
+public struct GetConversationResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_state", type: .prototype("ConversationState"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return GetConversationResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "conversation_state":
+		case 2:
 			guard value is ConversationState? else { throw ProtoError.typeMismatchError }
 			self.conversationState = value as! ConversationState?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "conversation_state": return self.conversationState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.conversationState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var conversationState: ConversationState?
 }
 
-public struct GetEntityByIdRequest: ProtoMessage {
+public struct GetEntityByIdRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "batch_lookup_spec", type: .prototype("EntityLookupSpec"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return GetEntityByIdRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "batch_lookup_spec":
+		case 3:
 			guard value is [EntityLookupSpec] else { throw ProtoError.typeMismatchError }
 			self.batchLookupSpec = value as! [EntityLookupSpec]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "batch_lookup_spec": return self.batchLookupSpec
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 3: return self.batchLookupSpec
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.batchLookupSpec.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
 	public var batchLookupSpec: [EntityLookupSpec] = []
 }
 
-public struct GetEntityByIdResponse: ProtoMessage {
+public struct GetEntityByIdResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "entity", type: .prototype("Entity"), label: .repeated),
 		3: ProtoFieldDescriptor(id: 3, name: "entity_result", type: .prototype("EntityResult"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return GetEntityByIdResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "entity":
+		case 2:
 			guard value is [Entity] else { throw ProtoError.typeMismatchError }
 			self.entity = value as! [Entity]
-		case "entity_result":
+		case 3:
 			guard value is [EntityResult] else { throw ProtoError.typeMismatchError }
 			self.entityResult = value as! [EntityResult]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "entity": return self.entity
-		case "entity_result": return self.entityResult
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.entity
+		case 3: return self.entityResult
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.entity.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.entityResult.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
@@ -4440,11 +5694,12 @@ public struct GetEntityByIdResponse: ProtoMessage {
 	public var entityResult: [EntityResult] = []
 }
 
-public struct GetSuggestedEntitiesRequest: ProtoMessage {
+public struct GetSuggestedEntitiesRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "max_count", type: .uint64, label: .optional),
 		8: ProtoFieldDescriptor(id: 8, name: "favorites", type: .prototype("SuggestedContactGroupHash"), label: .optional),
@@ -4454,49 +5709,65 @@ public struct GetSuggestedEntitiesRequest: ProtoMessage {
 		12: ProtoFieldDescriptor(id: 12, name: "dismissed_contacts", type: .prototype("SuggestedContactGroupHash"), label: .optional),
 		13: ProtoFieldDescriptor(id: 13, name: "pinned_favorites", type: .prototype("SuggestedContactGroupHash"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return GetSuggestedEntitiesRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "max_count":
+		case 4:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxCount = value as! UInt64?
-		case "favorites":
+		case 8:
 			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.favorites = value as! SuggestedContactGroupHash?
-		case "contacts_you_hangout_with":
+		case 9:
 			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.contactsYouHangoutWith = value as! SuggestedContactGroupHash?
-		case "other_contacts_on_hangouts":
+		case 10:
 			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.otherContactsOnHangouts = value as! SuggestedContactGroupHash?
-		case "other_contacts":
+		case 11:
 			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.otherContacts = value as! SuggestedContactGroupHash?
-		case "dismissed_contacts":
+		case 12:
 			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.dismissedContacts = value as! SuggestedContactGroupHash?
-		case "pinned_favorites":
+		case 13:
 			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.pinnedFavorites = value as! SuggestedContactGroupHash?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "max_count": return self.maxCount
-		case "favorites": return self.favorites
-		case "contacts_you_hangout_with": return self.contactsYouHangoutWith
-		case "other_contacts_on_hangouts": return self.otherContactsOnHangouts
-		case "other_contacts": return self.otherContacts
-		case "dismissed_contacts": return self.dismissedContacts
-		case "pinned_favorites": return self.pinnedFavorites
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 4: return self.maxCount
+		case 8: return self.favorites
+		case 9: return self.contactsYouHangoutWith
+		case 10: return self.otherContactsOnHangouts
+		case 11: return self.otherContacts
+		case 12: return self.dismissedContacts
+		case 13: return self.pinnedFavorites
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.maxCount._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.favorites._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.contactsYouHangoutWith._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.otherContactsOnHangouts._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.otherContacts._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.dismissedContacts._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.pinnedFavorites._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -4509,11 +5780,12 @@ public struct GetSuggestedEntitiesRequest: ProtoMessage {
 	public var pinnedFavorites: SuggestedContactGroupHash?
 }
 
-public struct GetSuggestedEntitiesResponse: ProtoMessage {
+public struct GetSuggestedEntitiesResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "entity", type: .prototype("Entity"), label: .repeated),
 		4: ProtoFieldDescriptor(id: 4, name: "favorites", type: .prototype("SuggestedContactGroup"), label: .optional),
@@ -4523,49 +5795,65 @@ public struct GetSuggestedEntitiesResponse: ProtoMessage {
 		8: ProtoFieldDescriptor(id: 8, name: "dismissed_contacts", type: .prototype("SuggestedContactGroup"), label: .optional),
 		9: ProtoFieldDescriptor(id: 9, name: "pinned_favorites", type: .prototype("SuggestedContactGroup"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return GetSuggestedEntitiesResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "entity":
+		case 2:
 			guard value is [Entity] else { throw ProtoError.typeMismatchError }
 			self.entity = value as! [Entity]
-		case "favorites":
+		case 4:
 			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.favorites = value as! SuggestedContactGroup?
-		case "contacts_you_hangout_with":
+		case 5:
 			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.contactsYouHangoutWith = value as! SuggestedContactGroup?
-		case "other_contacts_on_hangouts":
+		case 6:
 			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.otherContactsOnHangouts = value as! SuggestedContactGroup?
-		case "other_contacts":
+		case 7:
 			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.otherContacts = value as! SuggestedContactGroup?
-		case "dismissed_contacts":
+		case 8:
 			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.dismissedContacts = value as! SuggestedContactGroup?
-		case "pinned_favorites":
+		case 9:
 			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.pinnedFavorites = value as! SuggestedContactGroup?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "entity": return self.entity
-		case "favorites": return self.favorites
-		case "contacts_you_hangout_with": return self.contactsYouHangoutWith
-		case "other_contacts_on_hangouts": return self.otherContactsOnHangouts
-		case "other_contacts": return self.otherContacts
-		case "dismissed_contacts": return self.dismissedContacts
-		case "pinned_favorites": return self.pinnedFavorites
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.entity
+		case 4: return self.favorites
+		case 5: return self.contactsYouHangoutWith
+		case 6: return self.otherContactsOnHangouts
+		case 7: return self.otherContacts
+		case 8: return self.dismissedContacts
+		case 9: return self.pinnedFavorites
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.entity.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.favorites._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.contactsYouHangoutWith._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.otherContactsOnHangouts._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.otherContacts._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.dismissedContacts._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.pinnedFavorites._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
@@ -4578,38 +5866,49 @@ public struct GetSuggestedEntitiesResponse: ProtoMessage {
 	public var pinnedFavorites: SuggestedContactGroup?
 }
 
-public struct GetSelfInfoRequest: ProtoMessage {
+public struct GetSelfInfoRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return GetSelfInfoRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
 }
 
-public struct GetSelfInfoResponse: ProtoMessage {
+public struct GetSelfInfoResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "self_entity", type: .prototype("Entity"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "is_known_minor", type: .bool, label: .optional),
@@ -4623,65 +5922,85 @@ public struct GetSelfInfoResponse: ProtoMessage {
 		12: ProtoFieldDescriptor(id: 12, name: "rich_presence_state", type: .prototype("RichPresenceState"), label: .optional),
 		19: ProtoFieldDescriptor(id: 19, name: "default_country", type: .prototype("Country"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return GetSelfInfoResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "self_entity":
+		case 2:
 			guard value is Entity? else { throw ProtoError.typeMismatchError }
 			self.selfEntity = value as! Entity?
-		case "is_known_minor":
+		case 3:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.isKnownMinor = value as! Bool?
-		case "dnd_state":
+		case 5:
 			guard value is DoNotDisturbSetting? else { throw ProtoError.typeMismatchError }
 			self.dndState = value as! DoNotDisturbSetting?
-		case "desktop_off_setting":
+		case 6:
 			guard value is DesktopOffSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopOffSetting = value as! DesktopOffSetting?
-		case "phone_data":
+		case 7:
 			guard value is PhoneData? else { throw ProtoError.typeMismatchError }
 			self.phoneData = value as! PhoneData?
-		case "configuration_bit":
+		case 8:
 			guard value is [ConfigurationBit] else { throw ProtoError.typeMismatchError }
 			self.configurationBit = value as! [ConfigurationBit]
-		case "desktop_off_state":
+		case 9:
 			guard value is DesktopOffState? else { throw ProtoError.typeMismatchError }
 			self.desktopOffState = value as! DesktopOffState?
-		case "google_plus_user":
+		case 10:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.googlePlusUser = value as! Bool?
-		case "desktop_sound_setting":
+		case 11:
 			guard value is DesktopSoundSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopSoundSetting = value as! DesktopSoundSetting?
-		case "rich_presence_state":
+		case 12:
 			guard value is RichPresenceState? else { throw ProtoError.typeMismatchError }
 			self.richPresenceState = value as! RichPresenceState?
-		case "default_country":
+		case 19:
 			guard value is Country? else { throw ProtoError.typeMismatchError }
 			self.defaultCountry = value as! Country?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "self_entity": return self.selfEntity
-		case "is_known_minor": return self.isKnownMinor
-		case "dnd_state": return self.dndState
-		case "desktop_off_setting": return self.desktopOffSetting
-		case "phone_data": return self.phoneData
-		case "configuration_bit": return self.configurationBit
-		case "desktop_off_state": return self.desktopOffState
-		case "google_plus_user": return self.googlePlusUser
-		case "desktop_sound_setting": return self.desktopSoundSetting
-		case "rich_presence_state": return self.richPresenceState
-		case "default_country": return self.defaultCountry
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.selfEntity
+		case 3: return self.isKnownMinor
+		case 5: return self.dndState
+		case 6: return self.desktopOffSetting
+		case 7: return self.phoneData
+		case 8: return self.configurationBit
+		case 9: return self.desktopOffState
+		case 10: return self.googlePlusUser
+		case 11: return self.desktopSoundSetting
+		case 12: return self.richPresenceState
+		case 19: return self.defaultCountry
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.selfEntity._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.isKnownMinor._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.dndState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.desktopOffSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.phoneData._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.configurationBit.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.desktopOffState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.googlePlusUser._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.desktopSoundSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.richPresenceState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.defaultCountry._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
@@ -4698,38 +6017,50 @@ public struct GetSelfInfoResponse: ProtoMessage {
 	public var defaultCountry: Country?
 }
 
-public struct QueryPresenceRequest: ProtoMessage {
+public struct QueryPresenceRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "participant_id", type: .prototype("ParticipantId"), label: .repeated),
 		3: ProtoFieldDescriptor(id: 3, name: "field_mask", type: .prototype("FieldMask"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return QueryPresenceRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "participant_id":
+		case 2:
 			guard value is [ParticipantId] else { throw ProtoError.typeMismatchError }
 			self.participantId = value as! [ParticipantId]
-		case "field_mask":
+		case 3:
 			guard value is [FieldMask] else { throw ProtoError.typeMismatchError }
 			self.fieldMask = value as! [FieldMask]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "participant_id": return self.participantId
-		case "field_mask": return self.fieldMask
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.participantId
+		case 3: return self.fieldMask
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.participantId.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.fieldMask.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -4737,137 +6068,182 @@ public struct QueryPresenceRequest: ProtoMessage {
 	public var fieldMask: [FieldMask] = []
 }
 
-public struct QueryPresenceResponse: ProtoMessage {
+public struct QueryPresenceResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "presence_result", type: .prototype("PresenceResult"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return QueryPresenceResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "presence_result":
+		case 2:
 			guard value is [PresenceResult] else { throw ProtoError.typeMismatchError }
 			self.presenceResult = value as! [PresenceResult]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "presence_result": return self.presenceResult
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.presenceResult
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.presenceResult.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var presenceResult: [PresenceResult] = []
 }
 
-public struct RemoveUserRequest: ProtoMessage {
+public struct RemoveUserRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "event_request_header", type: .prototype("EventRequestHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return RemoveUserRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "event_request_header":
+		case 5:
 			guard value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
 			self.eventRequestHeader = value as! EventRequestHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "event_request_header": return self.eventRequestHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 5: return self.eventRequestHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventRequestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
 	public var eventRequestHeader: EventRequestHeader?
 }
 
-public struct RemoveUserResponse: ProtoMessage {
+public struct RemoveUserResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "created_event", type: .prototype("Event"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return RemoveUserResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "created_event":
+		case 4:
 			guard value is Event? else { throw ProtoError.typeMismatchError }
 			self.createdEvent = value as! Event?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "created_event": return self.createdEvent
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 4: return self.createdEvent
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.createdEvent._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var createdEvent: Event?
 }
 
-public struct RenameConversationRequest: ProtoMessage {
+public struct RenameConversationRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "new_name", type: .string, label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "event_request_header", type: .prototype("EventRequestHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return RenameConversationRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "new_name":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.newName = value as! String?
-		case "event_request_header":
+		case 5:
 			guard value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
 			self.eventRequestHeader = value as! EventRequestHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "new_name": return self.newName
-		case "event_request_header": return self.eventRequestHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 3: return self.newName
+		case 5: return self.eventRequestHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.newName._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventRequestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -4875,71 +6251,94 @@ public struct RenameConversationRequest: ProtoMessage {
 	public var eventRequestHeader: EventRequestHeader?
 }
 
-public struct RenameConversationResponse: ProtoMessage {
+public struct RenameConversationResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "created_event", type: .prototype("Event"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return RenameConversationResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "created_event":
+		case 4:
 			guard value is Event? else { throw ProtoError.typeMismatchError }
 			self.createdEvent = value as! Event?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "created_event": return self.createdEvent
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 4: return self.createdEvent
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.createdEvent._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var createdEvent: Event?
 }
 
-public struct SearchEntitiesRequest: ProtoMessage {
+public struct SearchEntitiesRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "query", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "max_count", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SearchEntitiesRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "query":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.query = value as! String?
-		case "max_count":
+		case 4:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxCount = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "query": return self.query
-		case "max_count": return self.maxCount
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 3: return self.query
+		case 4: return self.maxCount
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.query._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.maxCount._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -4947,81 +6346,106 @@ public struct SearchEntitiesRequest: ProtoMessage {
 	public var maxCount: UInt64?
 }
 
-public struct SearchEntitiesResponse: ProtoMessage {
+public struct SearchEntitiesResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "entity", type: .prototype("Entity"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SearchEntitiesResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "entity":
+		case 2:
 			guard value is [Entity] else { throw ProtoError.typeMismatchError }
 			self.entity = value as! [Entity]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "entity": return self.entity
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.entity
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.entity.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var entity: [Entity] = []
 }
 
-public struct SendChatMessageRequest: ProtoMessage {
+public struct SendChatMessageRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "annotation", type: .prototype("EventAnnotation"), label: .repeated),
 		6: ProtoFieldDescriptor(id: 6, name: "message_content", type: .prototype("MessageContent"), label: .optional),
 		7: ProtoFieldDescriptor(id: 7, name: "existing_media", type: .prototype("ExistingMedia"), label: .optional),
 		8: ProtoFieldDescriptor(id: 8, name: "event_request_header", type: .prototype("EventRequestHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SendChatMessageRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "annotation":
+		case 5:
 			guard value is [EventAnnotation] else { throw ProtoError.typeMismatchError }
 			self.annotation = value as! [EventAnnotation]
-		case "message_content":
+		case 6:
 			guard value is MessageContent? else { throw ProtoError.typeMismatchError }
 			self.messageContent = value as! MessageContent?
-		case "existing_media":
+		case 7:
 			guard value is ExistingMedia? else { throw ProtoError.typeMismatchError }
 			self.existingMedia = value as! ExistingMedia?
-		case "event_request_header":
+		case 8:
 			guard value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
 			self.eventRequestHeader = value as! EventRequestHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "annotation": return self.annotation
-		case "message_content": return self.messageContent
-		case "existing_media": return self.existingMedia
-		case "event_request_header": return self.eventRequestHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 5: return self.annotation
+		case 6: return self.messageContent
+		case 7: return self.existingMedia
+		case 8: return self.eventRequestHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.annotation.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		self.messageContent._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.existingMedia._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.eventRequestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -5031,136 +6455,181 @@ public struct SendChatMessageRequest: ProtoMessage {
 	public var eventRequestHeader: EventRequestHeader?
 }
 
-public struct SendChatMessageResponse: ProtoMessage {
+public struct SendChatMessageResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "created_event", type: .prototype("Event"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SendChatMessageResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "created_event":
+		case 6:
 			guard value is Event? else { throw ProtoError.typeMismatchError }
 			self.createdEvent = value as! Event?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "created_event": return self.createdEvent
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 6: return self.createdEvent
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.createdEvent._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var createdEvent: Event?
 }
 
-public struct SendOffnetworkInvitationRequest: ProtoMessage {
+public struct SendOffnetworkInvitationRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "invitee_address", type: .prototype("OffnetworkAddress"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SendOffnetworkInvitationRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "invitee_address":
+		case 2:
 			guard value is OffnetworkAddress? else { throw ProtoError.typeMismatchError }
 			self.inviteeAddress = value as! OffnetworkAddress?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "invitee_address": return self.inviteeAddress
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.inviteeAddress
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.inviteeAddress._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
 	public var inviteeAddress: OffnetworkAddress?
 }
 
-public struct SendOffnetworkInvitationResponse: ProtoMessage {
+public struct SendOffnetworkInvitationResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SendOffnetworkInvitationResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 }
 
-public struct SetActiveClientRequest: ProtoMessage {
+public struct SetActiveClientRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "is_active", type: .bool, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "full_jid", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "timeout_secs", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetActiveClientRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "is_active":
+		case 2:
 			guard value is Bool? else { throw ProtoError.typeMismatchError }
 			self.isActive = value as! Bool?
-		case "full_jid":
+		case 3:
 			guard value is String? else { throw ProtoError.typeMismatchError }
 			self.fullJid = value as! String?
-		case "timeout_secs":
+		case 4:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timeoutSecs = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "is_active": return self.isActive
-		case "full_jid": return self.fullJid
-		case "timeout_secs": return self.timeoutSecs
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.isActive
+		case 3: return self.fullJid
+		case 4: return self.timeoutSecs
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.isActive._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.fullJid._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timeoutSecs._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -5169,119 +6638,161 @@ public struct SetActiveClientRequest: ProtoMessage {
 	public var timeoutSecs: UInt64?
 }
 
-public struct SetActiveClientResponse: ProtoMessage {
+public struct SetActiveClientResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetActiveClientResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 }
 
-public struct SetConversationLevelRequest: ProtoMessage {
+public struct SetConversationLevelRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetConversationLevelRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
 }
 
-public struct SetConversationLevelResponse: ProtoMessage {
+public struct SetConversationLevelResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetConversationLevelResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 }
 
-public struct SetConversationNotificationLevelRequest: ProtoMessage {
+public struct SetConversationNotificationLevelRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "level", type: .prototype("NotificationLevel"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetConversationNotificationLevelRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "conversation_id":
+		case 2:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "level":
+		case 3:
 			guard value is NotificationLevel? else { throw ProtoError.typeMismatchError }
 			self.level = value as! NotificationLevel?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "conversation_id": return self.conversationId
-		case "level": return self.level
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.conversationId
+		case 3: return self.level
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.level._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -5289,76 +6800,100 @@ public struct SetConversationNotificationLevelRequest: ProtoMessage {
 	public var level: NotificationLevel?
 }
 
-public struct SetConversationNotificationLevelResponse: ProtoMessage {
+public struct SetConversationNotificationLevelResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetConversationNotificationLevelResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "timestamp": return self.timestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.timestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var timestamp: UInt64?
 }
 
-public struct SetFocusRequest: ProtoMessage {
+public struct SetFocusRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "type", type: .prototype("FocusType"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "timeout_secs", type: .uint32, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetFocusRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "conversation_id":
+		case 2:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "type":
+		case 3:
 			guard value is FocusType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! FocusType?
-		case "timeout_secs":
+		case 4:
 			guard value is UInt32? else { throw ProtoError.typeMismatchError }
 			self.timeoutSecs = value as! UInt32?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "conversation_id": return self.conversationId
-		case "type": return self.type
-		case "timeout_secs": return self.timeoutSecs
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.conversationId
+		case 3: return self.type
+		case 4: return self.timeoutSecs
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timeoutSecs._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -5367,81 +6902,106 @@ public struct SetFocusRequest: ProtoMessage {
 	public var timeoutSecs: UInt32?
 }
 
-public struct SetFocusResponse: ProtoMessage {
+public struct SetFocusResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetFocusResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "timestamp": return self.timestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.timestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var timestamp: UInt64?
 }
 
-public struct SetPresenceRequest: ProtoMessage {
+public struct SetPresenceRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "presence_state_setting", type: .prototype("PresenceStateSetting"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "dnd_setting", type: .prototype("DndSetting"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "desktop_off_setting", type: .prototype("DesktopOffSetting"), label: .optional),
 		8: ProtoFieldDescriptor(id: 8, name: "mood_setting", type: .prototype("MoodSetting"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetPresenceRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "presence_state_setting":
+		case 2:
 			guard value is PresenceStateSetting? else { throw ProtoError.typeMismatchError }
 			self.presenceStateSetting = value as! PresenceStateSetting?
-		case "dnd_setting":
+		case 3:
 			guard value is DndSetting? else { throw ProtoError.typeMismatchError }
 			self.dndSetting = value as! DndSetting?
-		case "desktop_off_setting":
+		case 5:
 			guard value is DesktopOffSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopOffSetting = value as! DesktopOffSetting?
-		case "mood_setting":
+		case 8:
 			guard value is MoodSetting? else { throw ProtoError.typeMismatchError }
 			self.moodSetting = value as! MoodSetting?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "presence_state_setting": return self.presenceStateSetting
-		case "dnd_setting": return self.dndSetting
-		case "desktop_off_setting": return self.desktopOffSetting
-		case "mood_setting": return self.moodSetting
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.presenceStateSetting
+		case 3: return self.dndSetting
+		case 5: return self.desktopOffSetting
+		case 8: return self.moodSetting
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.presenceStateSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.dndSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.desktopOffSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.moodSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -5451,65 +7011,87 @@ public struct SetPresenceRequest: ProtoMessage {
 	public var moodSetting: MoodSetting?
 }
 
-public struct SetPresenceResponse: ProtoMessage {
+public struct SetPresenceResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetPresenceResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 }
 
-public struct SetTypingRequest: ProtoMessage {
+public struct SetTypingRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "type", type: .prototype("TypingType"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetTypingRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "conversation_id":
+		case 2:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "type":
+		case 3:
 			guard value is TypingType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! TypingType?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "conversation_id": return self.conversationId
-		case "type": return self.type
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.conversationId
+		case 3: return self.type
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.type._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -5517,71 +7099,94 @@ public struct SetTypingRequest: ProtoMessage {
 	public var type: TypingType?
 }
 
-public struct SetTypingResponse: ProtoMessage {
+public struct SetTypingResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SetTypingResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "timestamp": return self.timestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.timestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.timestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 	public var timestamp: UInt64?
 }
 
-public struct SyncAllNewEventsRequest: ProtoMessage {
+public struct SyncAllNewEventsRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "last_sync_timestamp", type: .uint64, label: .optional),
 		8: ProtoFieldDescriptor(id: 8, name: "max_response_size_bytes", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SyncAllNewEventsRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "last_sync_timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.lastSyncTimestamp = value as! UInt64?
-		case "max_response_size_bytes":
+		case 8:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxResponseSizeBytes = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "last_sync_timestamp": return self.lastSyncTimestamp
-		case "max_response_size_bytes": return self.maxResponseSizeBytes
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.lastSyncTimestamp
+		case 8: return self.maxResponseSizeBytes
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.lastSyncTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.maxResponseSizeBytes._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -5589,38 +7194,50 @@ public struct SyncAllNewEventsRequest: ProtoMessage {
 	public var maxResponseSizeBytes: UInt64?
 }
 
-public struct SyncAllNewEventsResponse: ProtoMessage {
+public struct SyncAllNewEventsResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sync_timestamp", type: .uint64, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "conversation_state", type: .prototype("ConversationState"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SyncAllNewEventsResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "sync_timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.syncTimestamp = value as! UInt64?
-		case "conversation_state":
+		case 3:
 			guard value is [ConversationState] else { throw ProtoError.typeMismatchError }
 			self.conversationState = value as! [ConversationState]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "sync_timestamp": return self.syncTimestamp
-		case "conversation_state": return self.conversationState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.syncTimestamp
+		case 3: return self.conversationState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.syncTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationState.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
@@ -5628,43 +7245,56 @@ public struct SyncAllNewEventsResponse: ProtoMessage {
 	public var conversationState: [ConversationState] = []
 }
 
-public struct SyncRecentConversationsRequest: ProtoMessage {
+public struct SyncRecentConversationsRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "max_conversations", type: .uint64, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "max_events_per_conversation", type: .uint64, label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "sync_filter", type: .prototype("SyncFilter"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SyncRecentConversationsRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "max_conversations":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxConversations = value as! UInt64?
-		case "max_events_per_conversation":
+		case 4:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxEventsPerConversation = value as! UInt64?
-		case "sync_filter":
+		case 5:
 			guard value is [SyncFilter] else { throw ProtoError.typeMismatchError }
 			self.syncFilter = value as! [SyncFilter]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "max_conversations": return self.maxConversations
-		case "max_events_per_conversation": return self.maxEventsPerConversation
-		case "sync_filter": return self.syncFilter
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 3: return self.maxConversations
+		case 4: return self.maxEventsPerConversation
+		case 5: return self.syncFilter
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.maxConversations._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.maxEventsPerConversation._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.syncFilter.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -5673,38 +7303,50 @@ public struct SyncRecentConversationsRequest: ProtoMessage {
 	public var syncFilter: [SyncFilter] = []
 }
 
-public struct SyncRecentConversationsResponse: ProtoMessage {
+public struct SyncRecentConversationsResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sync_timestamp", type: .uint64, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "conversation_state", type: .prototype("ConversationState"), label: .repeated),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return SyncRecentConversationsResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
-		case "sync_timestamp":
+		case 2:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.syncTimestamp = value as! UInt64?
-		case "conversation_state":
+		case 3:
 			guard value is [ConversationState] else { throw ProtoError.typeMismatchError }
 			self.conversationState = value as! [ConversationState]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
-		case "sync_timestamp": return self.syncTimestamp
-		case "conversation_state": return self.conversationState
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
+		case 2: return self.syncTimestamp
+		case 3: return self.conversationState
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.syncTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationState.forEach { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
@@ -5712,38 +7354,50 @@ public struct SyncRecentConversationsResponse: ProtoMessage {
 	public var conversationState: [ConversationState] = []
 }
 
-public struct UpdateWatermarkRequest: ProtoMessage {
+public struct UpdateWatermarkRequest: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "last_read_timestamp", type: .uint64, label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return UpdateWatermarkRequest.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "request_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
-		case "conversation_id":
+		case 2:
 			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
-		case "last_read_timestamp":
+		case 3:
 			guard value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.lastReadTimestamp = value as! UInt64?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "request_header": return self.requestHeader
-		case "conversation_id": return self.conversationId
-		case "last_read_timestamp": return self.lastReadTimestamp
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.requestHeader
+		case 2: return self.conversationId
+		case 3: return self.lastReadTimestamp
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.requestHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.conversationId._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.lastReadTimestamp._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var requestHeader: RequestHeader?
@@ -5751,34 +7405,44 @@ public struct UpdateWatermarkRequest: ProtoMessage {
 	public var lastReadTimestamp: UInt64?
 }
 
-public struct UpdateWatermarkResponse: ProtoMessage {
+public struct UpdateWatermarkResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
-	public static let _protoFields = [
+
+	public static let __declaredFields: [Int: ProtoFieldDescriptor] = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
+	public var _declaredFields: [Int: ProtoFieldDescriptor] {
+		return UpdateWatermarkResponse.__declaredFields
+	}
 
-	public mutating func set(name: String, value: Any?) throws {
-		switch name {
-		case "response_header":
+	public mutating func set(id: Int, value: Any?) throws {
+		switch id {
+		case 1:
 			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
 
-	public func get(name: String) throws -> Any? {
-		switch name {
-		case "response_header": return self.responseHeader
+	public func get(id: Int) throws -> Any? {
+		switch id {
+		case 1: return self.responseHeader
 		default: throw ProtoError.fieldNameNotFoundError
 		}
+	}
+
+	public var hashValue: Int {
+		var hash = 7
+		self.responseHeader._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		return hash
 	}
 
 	public var responseHeader: ResponseHeader?
 }
 
-public let _protoMessages: [String: Initializable.Type] = [
+let _protoMessages: [String: ProtoMessage.Type] = [
 	"DoNotDisturbSetting": DoNotDisturbSetting.self,
 	"NotificationSettings": NotificationSettings.self,
 	"ConversationId": ConversationId.self,

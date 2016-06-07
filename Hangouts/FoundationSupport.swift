@@ -12,6 +12,14 @@ internal func findFirst<S : Sequence> (s: S, condition: (S.Iterator.Element) -> 
 	return nil
 }
 
+// Because warnings are bad.
+public extension Optional {
+	@discardableResult
+	public func _flatMap<U>(_ f: @noescape (Wrapped) throws -> U?) rethrows -> U? {
+		return try flatMap(f)
+	}
+}
+
 public extension Mirror {
 	
 	/// Labels of properties.

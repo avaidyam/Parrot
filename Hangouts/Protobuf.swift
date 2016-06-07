@@ -8,52 +8,33 @@ private let MESSAGE_REGEX = "(?:message)(?:[\\s\\S]*?)(?:\\{)(?:[\\s\\S]*?)(?:\\
 private let ENUM_REGEX = "(?:enum)(?:[\\s\\S]*?)(?:\\{)(?:[\\s\\S]*?)(?:\\})"
 private let FIELD_REGEX = "(?:(required|optional|repeated))(?:.*)(?:\\;)"
 
-// Because Swift. :D
-public protocol Initializable {
-	init()
-}
-
 public protocol ProtoEnum: RawRepresentable, Hashable, Equatable {
 	// nothing here, just a dummy!
 }
 
-public protocol ProtoMessage: Initializable, CustomStringConvertible, CustomDebugStringConvertible, Hashable, Equatable {
-	static var _protoFields: [Int: ProtoFieldDescriptor] { get }
+public protocol ProtoMessage {
+	static var __declaredFields: [Int: ProtoFieldDescriptor] { get }
+	var _declaredFields: [Int: ProtoFieldDescriptor] { get }
 	var _unknownFields: [Int: Any] { get set }
 	
-	mutating func set(name: String, value: Any?) throws
-	func get(name: String) throws -> Any?
+	mutating func set(id: Int, value: Any?) throws
+	func get(id: Int) throws -> Any?
+	
+	init()
 }
 
 // Message: Builder Support
 public extension ProtoMessage {
 	public init(fields: [Int: Any?]) throws {
 		self.init()
-		for (idx, desc) in Self._protoFields {
-			if let val = fields[idx] {
-				try self.set(name: desc.name, value: val)
-			} else if desc.label == .required {
-				throw ProtoError.requiredFieldError
-			}
+		for (id, value) in fields {
+			try self.set(id: id, value: value)
 		}
-	}
-	public init(test: String, builder: (inout Self) -> Void) {
-		self.init()
-		builder(&self)
 	}
 }
 
-// Message: String & DebugStringConvertible Support
-public extension ProtoMessage /* : CustomStringConvertible, CustomDebugStringConvertible */{
-	
-	var description: String {
-		return "message \(_typeName(self.dynamicType)) { ... }"
-	}
-	
-	public var debugDescription: String {
-		return "message \(_typeName(self.dynamicType)) { ... }"
-	}
-	
+// Message: String Conversion Support
+/*public extension ProtoMessage {
 	public func _toProto(_ indent: String = "", _ value: Bool = false) -> String {
 		var output = ""
 		for (_, field) in Self._protoFields {
@@ -61,37 +42,15 @@ public extension ProtoMessage /* : CustomStringConvertible, CustomDebugStringCon
 		}
 		return output
 	}
-}
+}*/
 
 // Message: Hashable & Equatable Support
-public extension ProtoMessage /* : Hashable, Equatable */ {
-	public var hashValue: Int {
-		return 0
-	}
-}
-public func ==<T: ProtoMessage>(lhs: T, rhs: T) -> Bool {
+public protocol ProtoMessageExtensor: Hashable, Equatable { }
+public func ==<T: ProtoMessageExtensor>(lhs: T, rhs: T) -> Bool {
 	return lhs.hashValue == rhs.hashValue
 }
 
-// Message: Convenience id -> property mapping
-public extension ProtoMessage {
-	
-	mutating func set(id: Int, value: Any?) throws {
-		if let name = Self._protoFields[id]?.name {
-			try set(name: name, value: value)
-		} else {
-			throw ProtoError.fieldNameNotFoundError
-		}
-	}
-	
-	func get(id: Int) throws -> Any? {
-		if let name = Self._protoFields[id]?.name {
-			return try get(name: name)
-		} else {
-			throw ProtoError.fieldNameNotFoundError
-		}
-	}
-}
+//
 
 public enum ProtoImportDescriptor {
 	case weak(String)
@@ -199,6 +158,7 @@ public enum ProtoError: ErrorProtocol {
 	case requiredFieldError
 	case fieldNameNotFoundError
 	case fieldIdNotFoundError
+	case unknownError
 }
 
 public struct ProtoEnumDescriptor {
@@ -207,10 +167,10 @@ public struct ProtoEnumDescriptor {
 	
 	public static func fromString(string: String) throws -> ProtoEnumDescriptor {
 		guard var title = string.substring(between: "enum ", and: " {") else {
-			throw NSError()
+			throw ProtoError.unknownError
 		}
 		guard let content = string.substring(between: "{", and: "}") else {
-			throw NSError()
+			throw ProtoError.unknownError
 		}
 		
 		let f2 = content.components(separatedBy: ";").map {
@@ -246,10 +206,10 @@ public struct ProtoMessageDescriptor {
 	
 	public static func fromString(string: String) throws -> ProtoMessageDescriptor {
 		guard var title = string.substring(between: "message ", and: " {") else {
-			throw NSError()
+			throw ProtoError.unknownError
 		}
 		guard let content = string.substring(between: "{", and: "}") else {
-			throw NSError()
+			throw ProtoError.unknownError
 		}
 		
 		let f2 = content.components(separatedBy: ";").map {
@@ -268,32 +228,49 @@ public struct ProtoMessageDescriptor {
 	
 	public func toString() -> String {
 		var output = ""
-		output += "public struct \(self.name): ProtoMessage {\n\n"
+		output += "public struct \(self.name): ProtoMessage, ProtoMessageExtensor {\n\n"
 		output += "\tpublic init() {}\n"
-		output += "\tpublic var _unknownFields = [Int: Any]()\n"
-		output += "\tpublic static let _protoFields = [\n"
+		output += "\tpublic var _unknownFields = [Int: Any]()\n\n"
+		output += "\tpublic static let __declaredFields: [Int: ProtoFieldDescriptor] = [\n"
 		for field in self.fields {
 			output += "\t\t\(field.id): ProtoFieldDescriptor(id: \(field.id), name: \"\(field.name)\","
 			output += " type: .\(field.type), label: .\(field.label)),\n"
 		}
-		output += "\t]\n\n"
-		output += "\tpublic mutating func set(name: String, value: Any?) throws {\n"
-		output += "\t\tswitch name {\n"
+		output += "\t]\n"
+		output += "\tpublic var _declaredFields: [Int: ProtoFieldDescriptor] {\n"
+		output += "\t\treturn \(self.name).__declaredFields\n"
+		output += "\t}\n\n"
+		output += "\tpublic mutating func set(id: Int, value: Any?) throws {\n"
+		output += "\t\tswitch id {\n"
 		for field in self.fields {
-			output += "\t\tcase \"\(field.name)\":\n"
+			output += "\t\tcase \(field.id):\n"
 			output += "\t\t\tguard value is \(field.type.type(labeled: field.label))"
 			output += " else { throw ProtoError.typeMismatchError }\n"
 			output += "\t\t\tself.\(field.camelName) = value as! \(field.type.type(labeled: field.label))\n"
 		}
 		output += "\t\tdefault: throw ProtoError.fieldNameNotFoundError\n"
 		output += "\t\t}\n\t}\n\n"
-		output += "\tpublic func get(name: String) throws -> Any? {\n"
-		output += "\t\tswitch name {\n"
+		output += "\tpublic func get(id: Int) throws -> Any? {\n"
+		output += "\t\tswitch id {\n"
 		for field in self.fields {
-			output += "\t\tcase \"\(field.name)\": return self.\(field.camelName)\n"
+			output += "\t\tcase \(field.id): return self.\(field.camelName)\n"
 		}
 		output += "\t\tdefault: throw ProtoError.fieldNameNotFoundError\n"
 		output += "\t\t}\n\t}\n\n"
+		output += "\tpublic var hashValue: Int {\n"
+		output += "\t\tvar hash = 7\n"
+		for field in self.fields {
+			switch field.label {
+			case .required:
+				output += "\t\thash = (hash &* 31) &+ self.\(field.camelName).hashValue\n"
+			case .optional:
+				output += "\t\tself.\(field.camelName)._flatMap { hash = (hash &* 31) &+ $0.hashValue }\n"
+			case .repeated:
+				output += "\t\tself.\(field.camelName).forEach { hash = (hash &* 31) &+ $0.hashValue }\n"
+			}
+		}
+		output += "\t\treturn hash\n"
+		output += "\t}\n\n"
 		for field in self.fields {
 			output += "\tpublic var \(field.camelName): \(field.type.container(labeled: field.label))\n"
 		}
@@ -302,7 +279,6 @@ public struct ProtoMessageDescriptor {
 }
 
 public struct ProtoFileDescriptor {
-	public let name: String = "" // filename
 	public let syntax: String // [proto2, proto3]
 	public let package: String
 	public let imports: [ProtoImportDescriptor]
@@ -331,7 +307,7 @@ public struct ProtoFileDescriptor {
 		var output = ""
 		output += self.enums.map { $0.toString() + "\n\n" }.reduce("", combine: +)
 		output += self.messages.map { $0.toString() + "\n\n" }.reduce("", combine: +)
-		output += "let _protoMessages: [String: Initializable.Type] = [\n"
+		output += "let _protoMessages: [String: ProtoMessage.Type] = [\n"
 		for e in self.messages {
 			output += "\t\"\(e.name)\": \(e.name).self,\n"
 		}

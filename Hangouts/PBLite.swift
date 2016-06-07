@@ -6,9 +6,9 @@ import CommonCrypto
 // PBLiteSerialization wrapper
 public class PBLiteSerialization {
 	
-	private class func _setField<T: ProtoMessage>(message: inout T, field: ProtoFieldDescriptor, value: Any?) {
+	private class func _setField(message: inout ProtoMessage, field: ProtoFieldDescriptor, value: Any?) {
 		do {
-			try message.set(name: field.name, value: value)
+			try message.set(id: field.id, value: value)
 		} catch {
 			print("Ignoring field \(field.name)")
 		}
@@ -97,7 +97,7 @@ public class PBLiteSerialization {
 		let field_values = ((pblite.enumerated().map { ($0.0 + 1, $0.1) }) + extra_fields)
 		for (tag, subdata) in field_values {
 			if subdata == nil { continue }
-			if let field = message.dynamicType._protoFields[tag] {
+			if let field = message._declaredFields[tag] {
 				if field.label == .repeated {
 					print("repeated field \(field) being ignored with subdata.")
 					//decodeRepeatedField(message: &message, field: field, value: subdata as! [Any?])
