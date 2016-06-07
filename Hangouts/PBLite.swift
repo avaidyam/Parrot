@@ -4,19 +4,69 @@ import CommonCrypto
 /* TODO: Remove dependency on CommonCrypto. */
 
 // PBLiteSerialization wrapper
-
 public class PBLiteSerialization {
 	
-	//D ecode optional or required field.
-	class func decodeField<T: ProtoMessage>(message: T.Type, field: ProtoFieldDescriptor, value: AnyObject?) {
-		switch field.type {
-		case .prototype(let str): break;
-			//decode(getattr(message, field.name), value)
-			//message.get
-			//decode(message: message._protoFields., pblite: [])
-		case .bytes: print("Ignoring field \(field.name)")
-		default: print("Ignoring field \(field.name)")
+	private class func _setField<T: ProtoMessage>(message: inout T, field: ProtoFieldDescriptor, value: Any?) {
+		do {
+			try message.set(name: field.name, value: value)
+		} catch {
+			print("Ignoring field \(field.name)")
 		}
+	}
+	
+	//Decode optional or required field.
+	private class func decodeField<T: ProtoMessage>(message: inout T, field: ProtoFieldDescriptor, value: Any?) {
+		print("got \(field.camelName)")
+		switch field.type {
+		case .prototype(let str):
+			if let t = _protoMessages[str] {
+				var q = t.init()
+				switch q {
+				case var tt as ProtoMessage:
+					print("DECODE: \(field.name) = \(t)")
+					//decode(message: &tt, pblite: value as! [AnyObject])
+					_setField(message: &message, field: field, value: tt)
+				default: break;
+				}
+			} else {
+				
+			}
+			
+			/*
+			switch t {
+			case let tt as ProtoMessage.Type:
+				print("DECODE: \(field.name) = \(tt)")
+				var m = tt.init()
+				print("DECODE: \(field.name) = \(m)")
+				//decode(message: &m, pblite: value as! [AnyObject])
+				//_setField(message: &message, field: field, value: m)
+			case let tt as ProtoEnum.Type:
+				// FIXME: Use rawValue init here.
+				//let e = tt.init(rawValue: value)
+				print("DECODE: \(field.name) = \(value)")
+				//_setField(message: &message, field: field, value: e)
+			default: print("FAILED \(field.name)")
+				break
+			}*/
+			
+			
+			/*
+			let t = _typeByName(str)! as! ProtoMessage.Type
+			if var t = t as? ProtoMessage {
+				let m = decode(message: t, pblite: value as! [AnyObject])
+				_setField(message: &message, field: field, value: m)
+			} else if t is ProtoEnum {
+				// FIXME: Use rawValue init here.
+				let e = ProtoEnum(rawValue: value)
+				_setField(message: &message, field: field, value: e)
+			}
+			*/
+		default: _setField(message: &message, field: field, value: value)
+		}
+		
+		//decode(getattr(message, field.name), value)
+		//message.get
+		//decode(message: message._protoFields., pblite: [])
 		
 		/*
 		if field.type == .prototype {
@@ -28,50 +78,45 @@ public class PBLiteSerialization {
 		}*/
 	}
 	
-	class func decodeRepeatedField<T: ProtoMessage>(message: T.Type, field: ProtoFieldDescriptor, value: [AnyObject?]) {
+	private class func decodeRepeatedField<T: ProtoMessage>(message: inout T, field: ProtoFieldDescriptor, value: Any?) {
 		
 	}
 	
-	public class func decode<T: ProtoMessage>(message: T.Type, pblite pblite2: [AnyObject?], ignoreFirstItem: Bool = false) -> T? {
-		guard pblite2.count > (ignoreFirstItem ? 1 : 0) else { return nil }
+	public class func decode<T: ProtoMessage>(message: inout T, pblite pblite2: [AnyObject], ignoreFirstItem: Bool = false) {
+		guard pblite2.count > (ignoreFirstItem ? 1 : 0) else { return }
 		var pblite = ignoreFirstItem ? Array(pblite2.dropFirst()) : pblite2
 		
-		var extra_fields = [:]
+		// Extract
+		var extra_fields = [(Int, Any?)]()
 		if pblite.count > 0 && pblite.last is NSDictionary {
-			var dict = pblite.last as? [String: AnyObject?]
-			// dict.map { (Int($0), $1) }
+			let dict = pblite.last as? [String: Any?]
+			extra_fields = dict!.map { (Int($0)!, $1) }
 			pblite = Array(pblite.dropLast())
 		}
 		
-		//var msg = message.init()
-		let process = message._protoFields.filter { $0.value.type.prototyped }
-		
-		
-		//let fields_values = pblite + extra_fields
-		let fields_values = pblite
-		for (idx, value) in fields_values.enumerated() {
-			if value == nil { continue }
-			
-			do {
-				
-				//try
-			} catch {
-				
+		let field_values = ((pblite.enumerated().map { ($0.0 + 1, $0.1) }) + extra_fields)
+		for (tag, subdata) in field_values {
+			if subdata == nil { continue }
+			if let field = message.dynamicType._protoFields[tag] {
+				if field.label == .repeated {
+					print("repeated field \(field) being ignored with subdata.")
+					//decodeRepeatedField(message: &message, field: field, value: subdata as! [Any?])
+				} else {
+					decodeField(message: &message, field: field, value: subdata)
+				}
+			} else {
+				print("Message \(message) contains unknown field \(tag); storing...")
+				message._unknownFields[tag] = subdata
 			}
 		}
-		
-		
-		//FieldMask
-		
-		//print(pblite2)
-		return nil
 	}
 	
 	public class func parseProtoJSON<T: ProtoMessage>(input: NSData) -> T? {
 		let script = (NSString(data: input, encoding: NSUTF8StringEncoding)! as String)
-		print(script)
-		if let parsedObject = evalArray(string: script) as? NSArray {
-			return decode(message: T.self, pblite: parsedObject as [AnyObject], ignoreFirstItem: false)
+		if let parsedObject = evalArray(string: script) as? [AnyObject] {
+			var msg = T.init()
+			decode(message: &msg, pblite: parsedObject, ignoreFirstItem: true)
+			return msg
 		}
 		return nil
 	}
@@ -84,12 +129,12 @@ public class PBLiteSerialization {
 import JavaScriptCore
 @available(iOS, deprecated: 1.0, message: "Avoid JSContext!")
 @available(OSX, deprecated: 1.0, message: "Avoid JSContext!")
-public func evalArray(string: String) -> AnyObject? {
+public func evalArray(string: String) -> NSArray? {
 	return JSContext().evaluateScript("a = " + string).toArray()
 }
-public func evalDict(string: String) -> AnyObject? {
+/*public func evalDict<T: Hashable>(string: String) -> [T: Any?] {
 	return JSContext().evaluateScript("a = " + string).toDictionary()
-}
+}*/
 
 
 //

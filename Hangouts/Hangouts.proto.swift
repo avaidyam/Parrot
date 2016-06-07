@@ -318,7 +318,7 @@ public enum OffnetworkAddressType: Int, ProtoEnum {
 public struct DoNotDisturbSetting: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "do_not_disturb", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "expiration_timestamp", type: .uint64, label: .optional),
@@ -357,7 +357,7 @@ public struct DoNotDisturbSetting: ProtoMessage {
 public struct NotificationSettings: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "dnd_settings", type: .prototype("DoNotDisturbSetting"), label: .optional),
 	]
@@ -384,7 +384,7 @@ public struct NotificationSettings: ProtoMessage {
 public struct ConversationId: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "id", type: .string, label: .optional),
 	]
@@ -411,7 +411,7 @@ public struct ConversationId: ProtoMessage {
 public struct ParticipantId: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "gaia_id", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "chat_id", type: .string, label: .optional),
@@ -444,7 +444,7 @@ public struct ParticipantId: ProtoMessage {
 public struct DeviceStatus: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "mobile", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "desktop", type: .bool, label: .optional),
@@ -483,7 +483,7 @@ public struct DeviceStatus: ProtoMessage {
 public struct LastSeen: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "last_seen_timestamp_usec", type: .uint64, label: .optional),
 	]
@@ -510,7 +510,7 @@ public struct LastSeen: ProtoMessage {
 public struct Presence: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "reachable", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "available", type: .bool, label: .optional),
@@ -561,7 +561,7 @@ public struct Presence: ProtoMessage {
 public struct PresenceResult: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "user_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "presence", type: .prototype("Presence"), label: .optional),
@@ -594,7 +594,7 @@ public struct PresenceResult: ProtoMessage {
 public struct ClientIdentifier: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "resource", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "header_id", type: .string, label: .optional),
@@ -627,7 +627,7 @@ public struct ClientIdentifier: ProtoMessage {
 public struct ClientPresenceState: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "identifier", type: .prototype("ClientIdentifier"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "state", type: .prototype("ClientPresenceStateType"), label: .optional),
@@ -660,7 +660,7 @@ public struct ClientPresenceState: ProtoMessage {
 public struct UserEventState: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "user_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "client_generated_id", type: .string, label: .optional),
@@ -699,7 +699,7 @@ public struct UserEventState: ProtoMessage {
 public struct Formatting: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "bold", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "italic", type: .bool, label: .optional),
@@ -744,7 +744,7 @@ public struct Formatting: ProtoMessage {
 public struct LinkData: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "link_target", type: .string, label: .optional),
 	]
@@ -771,7 +771,7 @@ public struct LinkData: ProtoMessage {
 public struct Segment: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("SegmentType"), label: .required),
 		2: ProtoFieldDescriptor(id: 2, name: "text", type: .string, label: .optional),
@@ -816,7 +816,7 @@ public struct Segment: ProtoMessage {
 public struct Thumbnail: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "url", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "image_url", type: .string, label: .optional),
@@ -861,7 +861,7 @@ public struct Thumbnail: ProtoMessage {
 public struct PlusPhoto: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "thumbnail", type: .prototype("Thumbnail"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "owner_obfuscated_id", type: .string, label: .optional),
@@ -930,7 +930,7 @@ public struct PlusPhoto: ProtoMessage {
 public struct RepresentativeImage: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		2: ProtoFieldDescriptor(id: 2, name: "url", type: .string, label: .optional),
 	]
@@ -957,7 +957,7 @@ public struct RepresentativeImage: ProtoMessage {
 public struct Place: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "url", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "name", type: .string, label: .optional),
@@ -996,7 +996,7 @@ public struct Place: ProtoMessage {
 public struct EmbedItem: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("ItemType"), label: .repeated),
 		2: ProtoFieldDescriptor(id: 2, name: "id", type: .string, label: .optional),
@@ -1041,7 +1041,7 @@ public struct EmbedItem: ProtoMessage {
 public struct Attachment: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "embed_item", type: .prototype("EmbedItem"), label: .optional),
 	]
@@ -1068,7 +1068,7 @@ public struct Attachment: ProtoMessage {
 public struct MessageContent: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "segment", type: .prototype("Segment"), label: .repeated),
 		2: ProtoFieldDescriptor(id: 2, name: "attachment", type: .prototype("Attachment"), label: .repeated),
@@ -1101,7 +1101,7 @@ public struct MessageContent: ProtoMessage {
 public struct EventAnnotation: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .int32, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "value", type: .string, label: .optional),
@@ -1134,7 +1134,7 @@ public struct EventAnnotation: ProtoMessage {
 public struct ChatMessage: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		2: ProtoFieldDescriptor(id: 2, name: "annotation", type: .prototype("EventAnnotation"), label: .repeated),
 		3: ProtoFieldDescriptor(id: 3, name: "message_content", type: .prototype("MessageContent"), label: .optional),
@@ -1167,7 +1167,7 @@ public struct ChatMessage: ProtoMessage {
 public struct MembershipChange: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("MembershipChangeType"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "participant_ids", type: .prototype("ParticipantId"), label: .repeated),
@@ -1200,7 +1200,7 @@ public struct MembershipChange: ProtoMessage {
 public struct ConversationRename: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "new_name", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "old_name", type: .string, label: .optional),
@@ -1233,7 +1233,7 @@ public struct ConversationRename: ProtoMessage {
 public struct HangoutEvent: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "event_type", type: .prototype("HangoutEventType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "participant_id", type: .prototype("ParticipantId"), label: .repeated),
@@ -1266,7 +1266,7 @@ public struct HangoutEvent: ProtoMessage {
 public struct OTRModification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "old_otr_status", type: .prototype("OffTheRecordStatus"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "new_otr_status", type: .prototype("OffTheRecordStatus"), label: .optional),
@@ -1311,7 +1311,7 @@ public struct OTRModification: ProtoMessage {
 public struct HashModifier: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "update_id", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "hash_diff", type: .uint64, label: .optional),
@@ -1350,7 +1350,7 @@ public struct HashModifier: ProtoMessage {
 public struct Event: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
@@ -1485,7 +1485,7 @@ public struct Event: ProtoMessage {
 public struct UserReadState: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "participant_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "latest_read_timestamp", type: .uint64, label: .optional),
@@ -1518,7 +1518,7 @@ public struct UserReadState: ProtoMessage {
 public struct DeliveryMedium: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "medium_type", type: .prototype("DeliveryMediumType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "phone_number", type: .prototype("PhoneNumber"), label: .optional),
@@ -1551,7 +1551,7 @@ public struct DeliveryMedium: ProtoMessage {
 public struct DeliveryMediumOption: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "delivery_medium", type: .prototype("DeliveryMedium"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "current_default", type: .bool, label: .optional),
@@ -1584,7 +1584,7 @@ public struct DeliveryMediumOption: ProtoMessage {
 public struct UserConversationState: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		2: ProtoFieldDescriptor(id: 2, name: "client_generated_id", type: .string, label: .optional),
 		7: ProtoFieldDescriptor(id: 7, name: "self_read_state", type: .prototype("UserReadState"), label: .optional),
@@ -1671,7 +1671,7 @@ public struct UserConversationState: ProtoMessage {
 public struct ConversationParticipantData: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "fallback_name", type: .string, label: .optional),
@@ -1722,7 +1722,7 @@ public struct ConversationParticipantData: ProtoMessage {
 public struct Conversation: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "type", type: .prototype("ConversationType"), label: .optional),
@@ -1821,7 +1821,7 @@ public struct Conversation: ProtoMessage {
 public struct EasterEgg: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "message", type: .string, label: .optional),
 	]
@@ -1848,7 +1848,7 @@ public struct EasterEgg: ProtoMessage {
 public struct BlockStateChange: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "participant_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "new_block_state", type: .prototype("BlockState"), label: .optional),
@@ -1881,7 +1881,7 @@ public struct BlockStateChange: ProtoMessage {
 public struct Photo: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "photo_id", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "delete_albumless_source_photo", type: .bool, label: .optional),
@@ -1926,7 +1926,7 @@ public struct Photo: ProtoMessage {
 public struct ExistingMedia: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "photo", type: .prototype("Photo"), label: .optional),
 	]
@@ -1953,7 +1953,7 @@ public struct ExistingMedia: ProtoMessage {
 public struct EventRequestHeader: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "client_generated_id", type: .uint64, label: .optional),
@@ -2004,7 +2004,7 @@ public struct EventRequestHeader: ProtoMessage {
 public struct ClientVersion: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "client_id", type: .prototype("ClientId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "build_type", type: .prototype("ClientBuildType"), label: .optional),
@@ -2061,7 +2061,7 @@ public struct ClientVersion: ProtoMessage {
 public struct RequestHeader: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "client_version", type: .prototype("ClientVersion"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "client_identifier", type: .prototype("ClientIdentifier"), label: .optional),
@@ -2100,7 +2100,7 @@ public struct RequestHeader: ProtoMessage {
 public struct ResponseHeader: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "status", type: .prototype("ResponseStatus"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "error_description", type: .string, label: .optional),
@@ -2151,7 +2151,7 @@ public struct ResponseHeader: ProtoMessage {
 public struct Entity: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		9: ProtoFieldDescriptor(id: 9, name: "id", type: .prototype("ParticipantId"), label: .optional),
 		8: ProtoFieldDescriptor(id: 8, name: "presence", type: .prototype("Presence"), label: .optional),
@@ -2202,7 +2202,7 @@ public struct Entity: ProtoMessage {
 public struct EntityProperties: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("ProfileType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "display_name", type: .string, label: .optional),
@@ -2283,7 +2283,7 @@ public struct EntityProperties: ProtoMessage {
 public struct ConversationState: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation", type: .prototype("Conversation"), label: .optional),
@@ -2328,7 +2328,7 @@ public struct ConversationState: ProtoMessage {
 public struct EventContinuationToken: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "event_id", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "storage_continuation_token", type: .bytes, label: .optional),
@@ -2367,7 +2367,7 @@ public struct EventContinuationToken: ProtoMessage {
 public struct EntityLookupSpec: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "gaia_id", type: .string, label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "email", type: .string, label: .optional),
@@ -2412,7 +2412,7 @@ public struct EntityLookupSpec: ProtoMessage {
 public struct ConfigurationBit: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "configuration_bit_type", type: .prototype("ConfigurationBitType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "value", type: .bool, label: .optional),
@@ -2445,7 +2445,7 @@ public struct ConfigurationBit: ProtoMessage {
 public struct RichPresenceState: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		3: ProtoFieldDescriptor(id: 3, name: "get_rich_presence_enabled_state", type: .prototype("RichPresenceEnabledState"), label: .repeated),
 	]
@@ -2472,7 +2472,7 @@ public struct RichPresenceState: ProtoMessage {
 public struct RichPresenceEnabledState: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("RichPresenceType"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "enabled", type: .bool, label: .optional),
@@ -2505,7 +2505,7 @@ public struct RichPresenceEnabledState: ProtoMessage {
 public struct DesktopOffSetting: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "desktop_off", type: .bool, label: .optional),
 	]
@@ -2532,7 +2532,7 @@ public struct DesktopOffSetting: ProtoMessage {
 public struct DesktopOffState: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "desktop_off", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "version", type: .uint64, label: .optional),
@@ -2565,7 +2565,7 @@ public struct DesktopOffState: ProtoMessage {
 public struct DndSetting: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "do_not_disturb", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timeout_secs", type: .uint64, label: .optional),
@@ -2598,7 +2598,7 @@ public struct DndSetting: ProtoMessage {
 public struct PresenceStateSetting: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "timeout_secs", type: .uint64, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "type", type: .prototype("ClientPresenceStateType"), label: .optional),
@@ -2631,7 +2631,7 @@ public struct PresenceStateSetting: ProtoMessage {
 public struct MoodMessage: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "mood_content", type: .prototype("MoodContent"), label: .optional),
 	]
@@ -2658,7 +2658,7 @@ public struct MoodMessage: ProtoMessage {
 public struct MoodContent: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "segment", type: .prototype("Segment"), label: .repeated),
 	]
@@ -2685,7 +2685,7 @@ public struct MoodContent: ProtoMessage {
 public struct MoodSetting: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "mood_message", type: .prototype("MoodMessage"), label: .optional),
 	]
@@ -2712,7 +2712,7 @@ public struct MoodSetting: ProtoMessage {
 public struct MoodState: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		4: ProtoFieldDescriptor(id: 4, name: "mood_setting", type: .prototype("MoodSetting"), label: .optional),
 	]
@@ -2739,7 +2739,7 @@ public struct MoodState: ProtoMessage {
 public struct DeleteAction: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "delete_action_timestamp", type: .uint64, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "delete_upper_bound_timestamp", type: .uint64, label: .optional),
@@ -2778,7 +2778,7 @@ public struct DeleteAction: ProtoMessage {
 public struct InviteeID: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "gaia_id", type: .string, label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "fallback_name", type: .string, label: .optional),
@@ -2811,7 +2811,7 @@ public struct InviteeID: ProtoMessage {
 public struct Country: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "region_code", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "country_code", type: .uint64, label: .optional),
@@ -2844,7 +2844,7 @@ public struct Country: ProtoMessage {
 public struct DesktopSoundSetting: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "desktop_sound_state", type: .prototype("SoundState"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "desktop_ring_sound_state", type: .prototype("SoundState"), label: .optional),
@@ -2877,7 +2877,7 @@ public struct DesktopSoundSetting: ProtoMessage {
 public struct PhoneData: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "phone", type: .prototype("Phone"), label: .repeated),
 		3: ProtoFieldDescriptor(id: 3, name: "caller_id_settings_mask", type: .prototype("CallerIdSettingsMask"), label: .optional),
@@ -2910,7 +2910,7 @@ public struct PhoneData: ProtoMessage {
 public struct Phone: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "phone_number", type: .prototype("PhoneNumber"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "google_voice", type: .bool, label: .optional),
@@ -2967,7 +2967,7 @@ public struct Phone: ProtoMessage {
 public struct I18nData: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "national_number", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "international_number", type: .string, label: .optional),
@@ -3024,7 +3024,7 @@ public struct I18nData: ProtoMessage {
 public struct PhoneNumber: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "e164", type: .string, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "i18n_data", type: .prototype("I18nData"), label: .optional),
@@ -3057,7 +3057,7 @@ public struct PhoneNumber: ProtoMessage {
 public struct SuggestedContactGroupHash: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "max_results", type: .uint64, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "hash", type: .bytes, label: .optional),
@@ -3090,7 +3090,7 @@ public struct SuggestedContactGroupHash: ProtoMessage {
 public struct SuggestedContact: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "entity", type: .prototype("Entity"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "invitation_status", type: .prototype("InvitationStatus"), label: .optional),
@@ -3123,7 +3123,7 @@ public struct SuggestedContact: ProtoMessage {
 public struct SuggestedContactGroup: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "hash_matched", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "hash", type: .bytes, label: .optional),
@@ -3162,7 +3162,7 @@ public struct SuggestedContactGroup: ProtoMessage {
 public struct StateUpdate: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "state_update_header", type: .prototype("StateUpdateHeader"), label: .optional),
 		13: ProtoFieldDescriptor(id: 13, name: "conversation", type: .prototype("Conversation"), label: .optional),
@@ -3285,7 +3285,7 @@ public struct StateUpdate: ProtoMessage {
 public struct StateUpdateHeader: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "active_client_state", type: .prototype("ActiveClientState"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "request_trace_id", type: .string, label: .optional),
@@ -3330,7 +3330,7 @@ public struct StateUpdateHeader: ProtoMessage {
 public struct BatchUpdate: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "state_update", type: .prototype("StateUpdate"), label: .repeated),
 	]
@@ -3357,7 +3357,7 @@ public struct BatchUpdate: ProtoMessage {
 public struct ConversationNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation", type: .prototype("Conversation"), label: .optional),
 	]
@@ -3384,7 +3384,7 @@ public struct ConversationNotification: ProtoMessage {
 public struct EventNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "event", type: .prototype("Event"), label: .optional),
 	]
@@ -3411,7 +3411,7 @@ public struct EventNotification: ProtoMessage {
 public struct SetFocusNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
@@ -3462,7 +3462,7 @@ public struct SetFocusNotification: ProtoMessage {
 public struct SetTypingNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
@@ -3507,7 +3507,7 @@ public struct SetTypingNotification: ProtoMessage {
 public struct SetConversationNotificationLevelNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "level", type: .prototype("NotificationLevel"), label: .optional),
@@ -3546,7 +3546,7 @@ public struct SetConversationNotificationLevelNotification: ProtoMessage {
 public struct ReplyToInviteNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "type", type: .prototype("ReplyToInviteType"), label: .optional),
@@ -3579,7 +3579,7 @@ public struct ReplyToInviteNotification: ProtoMessage {
 public struct WatermarkNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
@@ -3618,7 +3618,7 @@ public struct WatermarkNotification: ProtoMessage {
 public struct ConversationViewModification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "old_view", type: .prototype("ConversationView"), label: .optional),
@@ -3657,7 +3657,7 @@ public struct ConversationViewModification: ProtoMessage {
 public struct EasterEggNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "sender_id", type: .prototype("ParticipantId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
@@ -3696,7 +3696,7 @@ public struct EasterEggNotification: ProtoMessage {
 public struct SelfPresenceNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "client_presence_state", type: .prototype("ClientPresenceState"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "do_not_disturb_setting", type: .prototype("DoNotDisturbSetting"), label: .optional),
@@ -3747,7 +3747,7 @@ public struct SelfPresenceNotification: ProtoMessage {
 public struct DeleteActionNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "delete_action", type: .prototype("DeleteAction"), label: .optional),
@@ -3780,7 +3780,7 @@ public struct DeleteActionNotification: ProtoMessage {
 public struct PresenceNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "presence", type: .prototype("PresenceResult"), label: .repeated),
 	]
@@ -3807,7 +3807,7 @@ public struct PresenceNotification: ProtoMessage {
 public struct BlockNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "block_state_change", type: .prototype("BlockStateChange"), label: .repeated),
 	]
@@ -3834,7 +3834,7 @@ public struct BlockNotification: ProtoMessage {
 public struct SetNotificationSettingNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		2: ProtoFieldDescriptor(id: 2, name: "desktop_sound_setting", type: .prototype("DesktopSoundSetting"), label: .optional),
 	]
@@ -3861,7 +3861,7 @@ public struct SetNotificationSettingNotification: ProtoMessage {
 public struct RichPresenceEnabledStateNotification: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "rich_presence_enabled_state", type: .prototype("RichPresenceEnabledState"), label: .repeated),
 	]
@@ -3888,7 +3888,7 @@ public struct RichPresenceEnabledStateNotification: ProtoMessage {
 public struct ConversationSpec: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
 	]
@@ -3915,7 +3915,7 @@ public struct ConversationSpec: ProtoMessage {
 public struct OffnetworkAddress: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "type", type: .prototype("OffnetworkAddressType"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "email", type: .string, label: .optional),
@@ -3948,7 +3948,7 @@ public struct OffnetworkAddress: ProtoMessage {
 public struct EntityResult: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "lookup_spec", type: .prototype("EntityLookupSpec"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "entity", type: .prototype("Entity"), label: .repeated),
@@ -3981,7 +3981,7 @@ public struct EntityResult: ProtoMessage {
 public struct AddUserRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "invitee_id", type: .prototype("InviteeID"), label: .repeated),
@@ -4020,7 +4020,7 @@ public struct AddUserRequest: ProtoMessage {
 public struct AddUserResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "created_event", type: .prototype("Event"), label: .optional),
@@ -4053,7 +4053,7 @@ public struct AddUserResponse: ProtoMessage {
 public struct CreateConversationRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "type", type: .prototype("ConversationType"), label: .optional),
@@ -4104,7 +4104,7 @@ public struct CreateConversationRequest: ProtoMessage {
 public struct CreateConversationResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation", type: .prototype("Conversation"), label: .optional),
@@ -4143,7 +4143,7 @@ public struct CreateConversationResponse: ProtoMessage {
 public struct DeleteConversationRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
@@ -4182,7 +4182,7 @@ public struct DeleteConversationRequest: ProtoMessage {
 public struct DeleteConversationResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "delete_action", type: .prototype("DeleteAction"), label: .optional),
@@ -4215,7 +4215,7 @@ public struct DeleteConversationResponse: ProtoMessage {
 public struct EasterEggRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
@@ -4254,7 +4254,7 @@ public struct EasterEggRequest: ProtoMessage {
 public struct EasterEggResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timestamp", type: .uint64, label: .optional),
@@ -4287,7 +4287,7 @@ public struct EasterEggResponse: ProtoMessage {
 public struct GetConversationRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_spec", type: .prototype("ConversationSpec"), label: .optional),
@@ -4338,7 +4338,7 @@ public struct GetConversationRequest: ProtoMessage {
 public struct GetConversationResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_state", type: .prototype("ConversationState"), label: .optional),
@@ -4371,7 +4371,7 @@ public struct GetConversationResponse: ProtoMessage {
 public struct GetEntityByIdRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "batch_lookup_spec", type: .prototype("EntityLookupSpec"), label: .repeated),
@@ -4404,7 +4404,7 @@ public struct GetEntityByIdRequest: ProtoMessage {
 public struct GetEntityByIdResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "entity", type: .prototype("Entity"), label: .repeated),
@@ -4443,7 +4443,7 @@ public struct GetEntityByIdResponse: ProtoMessage {
 public struct GetSuggestedEntitiesRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "max_count", type: .uint64, label: .optional),
@@ -4512,7 +4512,7 @@ public struct GetSuggestedEntitiesRequest: ProtoMessage {
 public struct GetSuggestedEntitiesResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "entity", type: .prototype("Entity"), label: .repeated),
@@ -4581,7 +4581,7 @@ public struct GetSuggestedEntitiesResponse: ProtoMessage {
 public struct GetSelfInfoRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 	]
@@ -4608,7 +4608,7 @@ public struct GetSelfInfoRequest: ProtoMessage {
 public struct GetSelfInfoResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "self_entity", type: .prototype("Entity"), label: .optional),
@@ -4701,7 +4701,7 @@ public struct GetSelfInfoResponse: ProtoMessage {
 public struct QueryPresenceRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "participant_id", type: .prototype("ParticipantId"), label: .repeated),
@@ -4740,7 +4740,7 @@ public struct QueryPresenceRequest: ProtoMessage {
 public struct QueryPresenceResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "presence_result", type: .prototype("PresenceResult"), label: .repeated),
@@ -4773,7 +4773,7 @@ public struct QueryPresenceResponse: ProtoMessage {
 public struct RemoveUserRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "event_request_header", type: .prototype("EventRequestHeader"), label: .optional),
@@ -4806,7 +4806,7 @@ public struct RemoveUserRequest: ProtoMessage {
 public struct RemoveUserResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "created_event", type: .prototype("Event"), label: .optional),
@@ -4839,7 +4839,7 @@ public struct RemoveUserResponse: ProtoMessage {
 public struct RenameConversationRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "new_name", type: .string, label: .optional),
@@ -4878,7 +4878,7 @@ public struct RenameConversationRequest: ProtoMessage {
 public struct RenameConversationResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		4: ProtoFieldDescriptor(id: 4, name: "created_event", type: .prototype("Event"), label: .optional),
@@ -4911,7 +4911,7 @@ public struct RenameConversationResponse: ProtoMessage {
 public struct SearchEntitiesRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "query", type: .string, label: .optional),
@@ -4950,7 +4950,7 @@ public struct SearchEntitiesRequest: ProtoMessage {
 public struct SearchEntitiesResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "entity", type: .prototype("Entity"), label: .repeated),
@@ -4983,7 +4983,7 @@ public struct SearchEntitiesResponse: ProtoMessage {
 public struct SendChatMessageRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		5: ProtoFieldDescriptor(id: 5, name: "annotation", type: .prototype("EventAnnotation"), label: .repeated),
@@ -5034,7 +5034,7 @@ public struct SendChatMessageRequest: ProtoMessage {
 public struct SendChatMessageResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "created_event", type: .prototype("Event"), label: .optional),
@@ -5067,7 +5067,7 @@ public struct SendChatMessageResponse: ProtoMessage {
 public struct SendOffnetworkInvitationRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "invitee_address", type: .prototype("OffnetworkAddress"), label: .optional),
@@ -5100,7 +5100,7 @@ public struct SendOffnetworkInvitationRequest: ProtoMessage {
 public struct SendOffnetworkInvitationResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
@@ -5127,7 +5127,7 @@ public struct SendOffnetworkInvitationResponse: ProtoMessage {
 public struct SetActiveClientRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "is_active", type: .bool, label: .optional),
@@ -5172,7 +5172,7 @@ public struct SetActiveClientRequest: ProtoMessage {
 public struct SetActiveClientResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
@@ -5199,7 +5199,7 @@ public struct SetActiveClientResponse: ProtoMessage {
 public struct SetConversationLevelRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 	]
@@ -5226,7 +5226,7 @@ public struct SetConversationLevelRequest: ProtoMessage {
 public struct SetConversationLevelResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
@@ -5253,7 +5253,7 @@ public struct SetConversationLevelResponse: ProtoMessage {
 public struct SetConversationNotificationLevelRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
@@ -5292,7 +5292,7 @@ public struct SetConversationNotificationLevelRequest: ProtoMessage {
 public struct SetConversationNotificationLevelResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timestamp", type: .uint64, label: .optional),
@@ -5325,7 +5325,7 @@ public struct SetConversationNotificationLevelResponse: ProtoMessage {
 public struct SetFocusRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
@@ -5370,7 +5370,7 @@ public struct SetFocusRequest: ProtoMessage {
 public struct SetFocusResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timestamp", type: .uint64, label: .optional),
@@ -5403,7 +5403,7 @@ public struct SetFocusResponse: ProtoMessage {
 public struct SetPresenceRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "presence_state_setting", type: .prototype("PresenceStateSetting"), label: .optional),
@@ -5454,7 +5454,7 @@ public struct SetPresenceRequest: ProtoMessage {
 public struct SetPresenceResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
@@ -5481,7 +5481,7 @@ public struct SetPresenceResponse: ProtoMessage {
 public struct SetTypingRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
@@ -5520,7 +5520,7 @@ public struct SetTypingRequest: ProtoMessage {
 public struct SetTypingResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "timestamp", type: .uint64, label: .optional),
@@ -5553,7 +5553,7 @@ public struct SetTypingResponse: ProtoMessage {
 public struct SyncAllNewEventsRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "last_sync_timestamp", type: .uint64, label: .optional),
@@ -5592,7 +5592,7 @@ public struct SyncAllNewEventsRequest: ProtoMessage {
 public struct SyncAllNewEventsResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sync_timestamp", type: .uint64, label: .optional),
@@ -5631,7 +5631,7 @@ public struct SyncAllNewEventsResponse: ProtoMessage {
 public struct SyncRecentConversationsRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		3: ProtoFieldDescriptor(id: 3, name: "max_conversations", type: .uint64, label: .optional),
@@ -5676,7 +5676,7 @@ public struct SyncRecentConversationsRequest: ProtoMessage {
 public struct SyncRecentConversationsResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "sync_timestamp", type: .uint64, label: .optional),
@@ -5715,7 +5715,7 @@ public struct SyncRecentConversationsResponse: ProtoMessage {
 public struct UpdateWatermarkRequest: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "request_header", type: .prototype("RequestHeader"), label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "conversation_id", type: .prototype("ConversationId"), label: .optional),
@@ -5754,7 +5754,7 @@ public struct UpdateWatermarkRequest: ProtoMessage {
 public struct UpdateWatermarkResponse: ProtoMessage {
 
 	public init() {}
-	public let _unknownFields = [Int: Any]()
+	public var _unknownFields = [Int: Any]()
 	public static let _protoFields = [
 		1: ProtoFieldDescriptor(id: 1, name: "response_header", type: .prototype("ResponseHeader"), label: .optional),
 	]
@@ -5778,3 +5778,142 @@ public struct UpdateWatermarkResponse: ProtoMessage {
 	public var responseHeader: ResponseHeader?
 }
 
+public let _protoMessages: [String: Initializable.Type] = [
+	"DoNotDisturbSetting": DoNotDisturbSetting.self,
+	"NotificationSettings": NotificationSettings.self,
+	"ConversationId": ConversationId.self,
+	"ParticipantId": ParticipantId.self,
+	"DeviceStatus": DeviceStatus.self,
+	"LastSeen": LastSeen.self,
+	"Presence": Presence.self,
+	"PresenceResult": PresenceResult.self,
+	"ClientIdentifier": ClientIdentifier.self,
+	"ClientPresenceState": ClientPresenceState.self,
+	"UserEventState": UserEventState.self,
+	"Formatting": Formatting.self,
+	"LinkData": LinkData.self,
+	"Segment": Segment.self,
+	"Thumbnail": Thumbnail.self,
+	"PlusPhoto": PlusPhoto.self,
+	"RepresentativeImage": RepresentativeImage.self,
+	"Place": Place.self,
+	"EmbedItem": EmbedItem.self,
+	"Attachment": Attachment.self,
+	"MessageContent": MessageContent.self,
+	"EventAnnotation": EventAnnotation.self,
+	"ChatMessage": ChatMessage.self,
+	"MembershipChange": MembershipChange.self,
+	"ConversationRename": ConversationRename.self,
+	"HangoutEvent": HangoutEvent.self,
+	"OTRModification": OTRModification.self,
+	"HashModifier": HashModifier.self,
+	"Event": Event.self,
+	"UserReadState": UserReadState.self,
+	"DeliveryMedium": DeliveryMedium.self,
+	"DeliveryMediumOption": DeliveryMediumOption.self,
+	"UserConversationState": UserConversationState.self,
+	"ConversationParticipantData": ConversationParticipantData.self,
+	"Conversation": Conversation.self,
+	"EasterEgg": EasterEgg.self,
+	"BlockStateChange": BlockStateChange.self,
+	"Photo": Photo.self,
+	"ExistingMedia": ExistingMedia.self,
+	"EventRequestHeader": EventRequestHeader.self,
+	"ClientVersion": ClientVersion.self,
+	"RequestHeader": RequestHeader.self,
+	"ResponseHeader": ResponseHeader.self,
+	"Entity": Entity.self,
+	"EntityProperties": EntityProperties.self,
+	"ConversationState": ConversationState.self,
+	"EventContinuationToken": EventContinuationToken.self,
+	"EntityLookupSpec": EntityLookupSpec.self,
+	"ConfigurationBit": ConfigurationBit.self,
+	"RichPresenceState": RichPresenceState.self,
+	"RichPresenceEnabledState": RichPresenceEnabledState.self,
+	"DesktopOffSetting": DesktopOffSetting.self,
+	"DesktopOffState": DesktopOffState.self,
+	"DndSetting": DndSetting.self,
+	"PresenceStateSetting": PresenceStateSetting.self,
+	"MoodMessage": MoodMessage.self,
+	"MoodContent": MoodContent.self,
+	"MoodSetting": MoodSetting.self,
+	"MoodState": MoodState.self,
+	"DeleteAction": DeleteAction.self,
+	"InviteeID": InviteeID.self,
+	"Country": Country.self,
+	"DesktopSoundSetting": DesktopSoundSetting.self,
+	"PhoneData": PhoneData.self,
+	"Phone": Phone.self,
+	"I18nData": I18nData.self,
+	"PhoneNumber": PhoneNumber.self,
+	"SuggestedContactGroupHash": SuggestedContactGroupHash.self,
+	"SuggestedContact": SuggestedContact.self,
+	"SuggestedContactGroup": SuggestedContactGroup.self,
+	"StateUpdate": StateUpdate.self,
+	"StateUpdateHeader": StateUpdateHeader.self,
+	"BatchUpdate": BatchUpdate.self,
+	"ConversationNotification": ConversationNotification.self,
+	"EventNotification": EventNotification.self,
+	"SetFocusNotification": SetFocusNotification.self,
+	"SetTypingNotification": SetTypingNotification.self,
+	"SetConversationNotificationLevelNotification": SetConversationNotificationLevelNotification.self,
+	"ReplyToInviteNotification": ReplyToInviteNotification.self,
+	"WatermarkNotification": WatermarkNotification.self,
+	"ConversationViewModification": ConversationViewModification.self,
+	"EasterEggNotification": EasterEggNotification.self,
+	"SelfPresenceNotification": SelfPresenceNotification.self,
+	"DeleteActionNotification": DeleteActionNotification.self,
+	"PresenceNotification": PresenceNotification.self,
+	"BlockNotification": BlockNotification.self,
+	"SetNotificationSettingNotification": SetNotificationSettingNotification.self,
+	"RichPresenceEnabledStateNotification": RichPresenceEnabledStateNotification.self,
+	"ConversationSpec": ConversationSpec.self,
+	"OffnetworkAddress": OffnetworkAddress.self,
+	"EntityResult": EntityResult.self,
+	"AddUserRequest": AddUserRequest.self,
+	"AddUserResponse": AddUserResponse.self,
+	"CreateConversationRequest": CreateConversationRequest.self,
+	"CreateConversationResponse": CreateConversationResponse.self,
+	"DeleteConversationRequest": DeleteConversationRequest.self,
+	"DeleteConversationResponse": DeleteConversationResponse.self,
+	"EasterEggRequest": EasterEggRequest.self,
+	"EasterEggResponse": EasterEggResponse.self,
+	"GetConversationRequest": GetConversationRequest.self,
+	"GetConversationResponse": GetConversationResponse.self,
+	"GetEntityByIdRequest": GetEntityByIdRequest.self,
+	"GetEntityByIdResponse": GetEntityByIdResponse.self,
+	"GetSuggestedEntitiesRequest": GetSuggestedEntitiesRequest.self,
+	"GetSuggestedEntitiesResponse": GetSuggestedEntitiesResponse.self,
+	"GetSelfInfoRequest": GetSelfInfoRequest.self,
+	"GetSelfInfoResponse": GetSelfInfoResponse.self,
+	"QueryPresenceRequest": QueryPresenceRequest.self,
+	"QueryPresenceResponse": QueryPresenceResponse.self,
+	"RemoveUserRequest": RemoveUserRequest.self,
+	"RemoveUserResponse": RemoveUserResponse.self,
+	"RenameConversationRequest": RenameConversationRequest.self,
+	"RenameConversationResponse": RenameConversationResponse.self,
+	"SearchEntitiesRequest": SearchEntitiesRequest.self,
+	"SearchEntitiesResponse": SearchEntitiesResponse.self,
+	"SendChatMessageRequest": SendChatMessageRequest.self,
+	"SendChatMessageResponse": SendChatMessageResponse.self,
+	"SendOffnetworkInvitationRequest": SendOffnetworkInvitationRequest.self,
+	"SendOffnetworkInvitationResponse": SendOffnetworkInvitationResponse.self,
+	"SetActiveClientRequest": SetActiveClientRequest.self,
+	"SetActiveClientResponse": SetActiveClientResponse.self,
+	"SetConversationLevelRequest": SetConversationLevelRequest.self,
+	"SetConversationLevelResponse": SetConversationLevelResponse.self,
+	"SetConversationNotificationLevelRequest": SetConversationNotificationLevelRequest.self,
+	"SetConversationNotificationLevelResponse": SetConversationNotificationLevelResponse.self,
+	"SetFocusRequest": SetFocusRequest.self,
+	"SetFocusResponse": SetFocusResponse.self,
+	"SetPresenceRequest": SetPresenceRequest.self,
+	"SetPresenceResponse": SetPresenceResponse.self,
+	"SetTypingRequest": SetTypingRequest.self,
+	"SetTypingResponse": SetTypingResponse.self,
+	"SyncAllNewEventsRequest": SyncAllNewEventsRequest.self,
+	"SyncAllNewEventsResponse": SyncAllNewEventsResponse.self,
+	"SyncRecentConversationsRequest": SyncRecentConversationsRequest.self,
+	"SyncRecentConversationsResponse": SyncRecentConversationsResponse.self,
+	"UpdateWatermarkRequest": UpdateWatermarkRequest.self,
+	"UpdateWatermarkResponse": UpdateWatermarkResponse.self,
+]

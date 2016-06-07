@@ -183,10 +183,12 @@ public final class Client {
 			// This is a (Client)BatchUpdate containing StateUpdate messages.
 			// payload[1] is a list of state updates.
 			if payload[0] as? String == "cbu" {
-				let result = flatMap(x: payload[1] as! [NSArray]) {
-					PBLiteSerialization.decode(message: StateUpdate.self,
+				/*let result = flatMap(x: payload[1] as! [NSArray]) {
+					var msg = StateUpdate()
+					PBLiteSerialization.decode(message: msg,
 					                           pblite: $0 as [AnyObject],
 					                           ignoreFirstItem: true)
+					return msg
 				}
 				
 				for state_update in result {
@@ -194,7 +196,7 @@ public final class Client {
 					NSNotificationCenter.default().post(
 						name: Client.didUpdateStateNotification, object: self,
 						userInfo: [Client.didUpdateStateKey: Wrapper(state_update)])
-				}
+				}*/
 			} else {
 				print("Ignoring message: \(payload[0])")
 			}

@@ -8,18 +8,21 @@ private let MESSAGE_REGEX = "(?:message)(?:[\\s\\S]*?)(?:\\{)(?:[\\s\\S]*?)(?:\\
 private let ENUM_REGEX = "(?:enum)(?:[\\s\\S]*?)(?:\\{)(?:[\\s\\S]*?)(?:\\})"
 private let FIELD_REGEX = "(?:(required|optional|repeated))(?:.*)(?:\\;)"
 
-public protocol ProtoEnum: Hashable, Equatable {
+// Because Swift. :D
+public protocol Initializable {
+	init()
+}
+
+public protocol ProtoEnum: RawRepresentable, Hashable, Equatable {
 	// nothing here, just a dummy!
 }
 
-public protocol ProtoMessage: CustomStringConvertible, CustomDebugStringConvertible, Hashable, Equatable {
+public protocol ProtoMessage: Initializable, CustomStringConvertible, CustomDebugStringConvertible, Hashable, Equatable {
 	static var _protoFields: [Int: ProtoFieldDescriptor] { get }
-	var _unknownFields: [Int: Any] { get }
+	var _unknownFields: [Int: Any] { get set }
 	
 	mutating func set(name: String, value: Any?) throws
 	func get(name: String) throws -> Any?
-	
-	init()
 }
 
 // Message: Builder Support
@@ -43,20 +46,12 @@ public extension ProtoMessage {
 // Message: String & DebugStringConvertible Support
 public extension ProtoMessage /* : CustomStringConvertible, CustomDebugStringConvertible */{
 	
-	static var messageName: String {
-		return _typeName(self)
-	}
-	
-	var messageName: String {
-		return _typeName(self.dynamicType)
-	}
-	
 	var description: String {
-		return "message \(self.messageName) { ... }"
+		return "message \(_typeName(self.dynamicType)) { ... }"
 	}
 	
 	public var debugDescription: String {
-		return "message \(self.messageName) { ... }"
+		return "message \(_typeName(self.dynamicType)) { ... }"
 	}
 	
 	public func _toProto(_ indent: String = "", _ value: Bool = false) -> String {
@@ -121,7 +116,7 @@ public struct ProtoFieldDescriptor {
 	}
 }
 
-public enum ProtoFieldType: StringLiteralConvertible {
+public enum ProtoFieldType {
 	case string
 	case bytes
 	case bool
@@ -206,12 +201,7 @@ public enum ProtoError: ErrorProtocol {
 	case fieldIdNotFoundError
 }
 
-public protocol ProtoTopLevelDeclaration {
-	static func fromString(string: String) throws -> Self
-	func toString() -> String
-}
-
-public struct ProtoEnumDescriptor: ProtoTopLevelDeclaration {
+public struct ProtoEnumDescriptor {
 	public let name: String
 	public let values: [(Int, String)]
 	
@@ -250,7 +240,7 @@ public struct ProtoEnumDescriptor: ProtoTopLevelDeclaration {
 	}
 }
 
-public struct ProtoMessageDescriptor: ProtoTopLevelDeclaration {
+public struct ProtoMessageDescriptor {
 	public let name: String
 	public let fields: [ProtoFieldDescriptor]
 	
@@ -280,7 +270,7 @@ public struct ProtoMessageDescriptor: ProtoTopLevelDeclaration {
 		var output = ""
 		output += "public struct \(self.name): ProtoMessage {\n\n"
 		output += "\tpublic init() {}\n"
-		output += "\tpublic let _unknownFields = [Int: Any]()\n"
+		output += "\tpublic var _unknownFields = [Int: Any]()\n"
 		output += "\tpublic static let _protoFields = [\n"
 		for field in self.fields {
 			output += "\t\t\(field.id): ProtoFieldDescriptor(id: \(field.id), name: \"\(field.name)\","
@@ -311,11 +301,13 @@ public struct ProtoMessageDescriptor: ProtoTopLevelDeclaration {
 	}
 }
 
-public struct ProtoFileDescriptor: ProtoTopLevelDeclaration {
+public struct ProtoFileDescriptor {
+	public let name: String = "" // filename
 	public let syntax: String // [proto2, proto3]
 	public let package: String
 	public let imports: [ProtoImportDescriptor]
-	public let elements: [ProtoTopLevelDeclaration]
+	public let enums: [ProtoEnumDescriptor]
+	public let messages: [ProtoMessageDescriptor]
 	
 	public static func fromString(string: String) throws -> ProtoFileDescriptor {
 		var string = string
@@ -324,18 +316,26 @@ public struct ProtoFileDescriptor: ProtoTopLevelDeclaration {
 		let enums = string
 			.findAllOccurrences(matching: ENUM_REGEX, all: true)
 			.map { try? ProtoEnumDescriptor.fromString(string: $0) }
-			.flatMap { $0 } as [ProtoTopLevelDeclaration]
+			.flatMap { $0 }
 		
 		let messages = string
 			.findAllOccurrences(matching: MESSAGE_REGEX, all: true)
 			.map { try? ProtoMessageDescriptor.fromString(string: $0) }
-			.flatMap { $0 } as [ProtoTopLevelDeclaration]
+			.flatMap { $0 }
 		
-		return ProtoFileDescriptor(syntax: "proto2", package: "", imports: [], elements: enums + messages)
+		return ProtoFileDescriptor(syntax: "proto2", package: "",
+		                           imports: [], enums: enums, messages: messages)
 	}
 	
 	public func toString() -> String {
-		return self.elements.map { $0.toString() + "\n\n" }.reduce("", combine: +)
+		var output = ""
+		output += self.enums.map { $0.toString() + "\n\n" }.reduce("", combine: +)
+		output += self.messages.map { $0.toString() + "\n\n" }.reduce("", combine: +)
+		output += "let _protoMessages: [String: Initializable.Type] = [\n"
+		for e in self.messages {
+			output += "\t\"\(e.name)\": \(e.name).self,\n"
+		}
+		return output + "]"
 	}
 }
 
