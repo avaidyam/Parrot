@@ -240,8 +240,6 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
-		self.session.request(request: request) { r in }
-		
 		/* TODO: Make sure stream{} times out with PUSH_TIMEOUT. */
 		
 		manager.request(URLRequest: request)
