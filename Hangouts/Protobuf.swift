@@ -34,6 +34,9 @@ public protocol ProtoMessage {
 	mutating func set(id: Int, value: Any?) throws
 	func get(id: Int) throws -> Any?
 	
+	mutating func set(id: Int, value: Any?, at index: Int) throws
+	func get(id: Int, at index: Int) throws -> Any?
+	
 	init()
 }
 
@@ -59,7 +62,12 @@ public extension ProtoMessage {
 }*/
 
 // Message: Hashable & Equatable Support
-public protocol ProtoMessageExtensor: ProtoMessage, Hashable, Equatable { }
+public protocol ProtoMessageExtensor: ProtoMessage, Hashable, Equatable {}
+public extension ProtoMessageExtensor {
+	public mutating func with(closure: ((inout Self) -> Void)) {
+		closure(&self)
+	}
+}
 public func ==<T: ProtoMessageExtensor>(lhs: T, rhs: T) -> Bool {
 	return lhs.hashValue == rhs.hashValue
 }
@@ -128,41 +136,48 @@ public enum ProtoFieldType {
 		}
 	}
 	
-	public var prototyped: Bool {
+	public var type: (String, Any.Type) {
 		switch self {
-		case prototype(_): return true
-		default: return false
+		case string: return ("String", String.self)
+		case bytes: return ("String", String.self)
+		case bool: return ("Bool", Bool.self)
+		case double: return ("Double", Double.self)
+		case float: return ("Float", Float.self)
+		case uint32, fixed32: return ("UInt32", UInt32.self)
+		case uint64, fixed64: return ("UInt64", UInt64.self)
+		case int32, sint32, sfixed32: return ("Int32", Int32.self)
+		case int64, sint64, sfixed64: return ("Int64", Int64.self)
+		case prototype(let name): return (name, Any.self)
 		}
 	}
 	
-	public var type: String {
+	// FIXME: this is a really really terrible idea...
+	// FIXME: sins were committed here
+	// FIXME: no seriously dear god this is horrifying
+	// FIXME: pls save me, lawd pls
+	// TODO: Use a protocol like `AnyInstantiable` and conform types.
+	public func _cast(value value2: Any?) -> Any? {
+		guard value2 != nil else { return value2 }
+		let value = "\(value2)"
 		switch self {
-		case string: return "String"
-		case bytes: return "String"
-		case bool: return "Bool"
-		case double: return "Double"
-		case float: return "Float"
-		case uint32: return "UInt32"
-		case uint64: return "UInt64"
-		case int32, sint32, fixed32, sfixed32: return "Int32"
-		case int64, sint64, fixed64, sfixed64: return "Int64"
-		case prototype(let name): return name
+		case string: return value
+		case bytes: return value
+		case bool: return value2 /* CANNOT CAST */
+		case double: return Double(value)
+		case float: return Float(value)
+		case uint32, fixed32: return UInt32(value)
+		case uint64, fixed64: return UInt64(value)
+		case int32, sint32, sfixed32: return Int32(value)
+		case int64, sint64, sfixed64: return Int64(value)
+		case prototype(_): return value2 /* CANNOT CAST */
 		}
 	}
 	
-	public func type(labeled label: ProtoFieldLabel) -> String {
+	public func typed(labeled label: ProtoFieldLabel, container: Bool = false) -> String {
 		switch label {
-		case .optional: return "\(self.type)?"
-		case .required: return "\(self.type)"
-		case .repeated: return "[\(self.type)]"
-		}
-	}
-	
-	public func container(labeled label: ProtoFieldLabel) -> String {
-		switch label {
-		case .optional: return "\(self.type)?"
-		case .required: return "\(self.type)!"
-		case .repeated: return "[\(self.type)] = []"
+		case .optional: return "\(self.type.0)?"
+		case .required: return "\(self.type.0)" + (container ? "!" : "")
+		case .repeated: return "[\(self.type.0)]" + (container ? " = []" : "")
 		}
 	}
 }
@@ -261,9 +276,25 @@ public struct ProtoMessageDescriptor {
 		output += "\t\tswitch id {\n"
 		for field in self.fields {
 			output += "\t\tcase \(field.id):\n"
-			output += "\t\t\tguard value is \(field.type.type(labeled: field.label))"
+			let mod = (field.label == .repeated ? "" : "value == nil || ")
+			output += "\t\t\tguard " + mod + "value is \(field.type.typed(labeled: field.label))"
 			output += " else { throw ProtoError.typeMismatchError }\n"
-			output += "\t\t\tself.\(field.camelName) = value as! \(field.type.type(labeled: field.label))\n"
+			output += "\t\t\tself.\(field.camelName) = value as! \(field.type.typed(labeled: field.label))\n"
+		}
+		output += "\t\tdefault: throw ProtoError.fieldNameNotFoundError\n"
+		output += "\t\t}\n\t}\n\n"
+		output += "\tpublic mutating func set(id: Int, value: Any?, at index: Int) throws {\n"
+		output += "\t\tswitch id {\n"
+		for field in self.fields {
+			guard field.label == .repeated else { continue }
+			output += "\t\tcase \(field.id):\n"
+			output += "\t\t\tif value is \(field.type.typed(labeled: field.label)) {\n"
+			output += "\t\t\t\tself.\(field.camelName).insert(contentsOf: value as! \(field.type.typed(labeled: field.label))"
+			output += ", at: index > 0 ? index : self.\(field.camelName).endIndex)\n"
+			output += "\t\t\t} else if value is \(field.type.type.0) {\n"
+			output += "\t\t\t\tself.\(field.camelName).insert(value as! \(field.type.type.0)"
+			output += ", at: index > 0 ? index : self.\(field.camelName).endIndex)\n"
+			output += "\t\t\t} else {\n\t\t\t\tthrow ProtoError.typeMismatchError\n\t\t\t}\n"
 		}
 		output += "\t\tdefault: throw ProtoError.fieldNameNotFoundError\n"
 		output += "\t\t}\n\t}\n\n"
@@ -271,6 +302,16 @@ public struct ProtoMessageDescriptor {
 		output += "\t\tswitch id {\n"
 		for field in self.fields {
 			output += "\t\tcase \(field.id): return self.\(field.camelName)\n"
+		}
+		output += "\t\tdefault: throw ProtoError.fieldNameNotFoundError\n"
+		output += "\t\t}\n\t}\n\n"
+		output += "\tpublic func get(id: Int, at index: Int) throws -> Any? {\n"
+		output += "\t\tswitch id {\n"
+		for field in self.fields {
+			guard field.label == .repeated else { continue }
+			output += "\t\tcase \(field.id):\n"
+			output += "\t\t\tguard index > 0 && index < self.\(field.camelName).endIndex else { throw ProtoError.unknownError }\n"
+			output += "\t\t\treturn self.\(field.camelName)[index]\n"
 		}
 		output += "\t\tdefault: throw ProtoError.fieldNameNotFoundError\n"
 		output += "\t\t}\n\t}\n\n"
@@ -289,7 +330,7 @@ public struct ProtoMessageDescriptor {
 		output += "\t\treturn hash\n"
 		output += "\t}\n\n"
 		for field in self.fields {
-			output += "\tpublic var \(field.camelName): \(field.type.container(labeled: field.label))\n"
+			output += "\tpublic var \(field.camelName): \(field.type.typed(labeled: field.label, container: true))\n"
 		}
 		return output + "}"
 	}

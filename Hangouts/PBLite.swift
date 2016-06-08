@@ -6,11 +6,22 @@ import CommonCrypto
 // PBLiteSerialization wrapper
 public class PBLiteSerialization {
 	
-	private class func _setField(message: inout ProtoMessage, field: ProtoFieldDescriptor, value: Any?) {
+	private class func _setField(message: inout ProtoMessage, field: ProtoFieldDescriptor, value: Any?, _cast: Bool = false) {
 		do {
-			try message.set(id: field.id, value: value)
+			let val = !_cast ? value : field.type._cast(value: value)
+			try message.set(id: field.id, value: val)
 		} catch let error {
-			print("Failed to set \(field.id):\(field.name) due to \(error)")
+			print("Failed to set \(field.id):\(field.name) of \(_typeName(message.dynamicType)) due to \(error)")
+			message._unknownFields[field.id] = value // store it anyway
+		}
+	}
+	
+	private class func _setField(message: inout ProtoMessage, field: ProtoFieldDescriptor, value: Any?, index: Int, _cast: Bool = false) {
+		do {
+			let val = !_cast ? value : field.type._cast(value: value)
+			try message.set(id: field.id, value: val, at: index)
+		} catch let error {
+			print("Failed to set \(field.id):\(field.name) of \(_typeName(message.dynamicType)) due to \(error)")
 			message._unknownFields[field.id] = value // store it anyway
 		}
 	}
@@ -40,12 +51,40 @@ public class PBLiteSerialization {
 				print("non-prototype field \(field.id):\(field.name) ignored!")
 			}
 		default:
-			_setField(message: &message, field: field, value: value)
+			_setField(message: &message, field: field, value: value, _cast: true)
 		}
 	}
 	
 	private class func decodeRepeatedField(message: inout ProtoMessage, field: ProtoFieldDescriptor, value: Any?) {
+		guard field.label == .repeated else { return }
+		guard value != nil && !(value is NSNull) else { return }
 		
+		let val = value! as! [AnyObject]
+		for x in val {
+			switch field.type {
+			case .prototype(let str):
+				if let t = _protoMessages[str] {
+					if let x = x as? [AnyObject] {
+						var q = t.init()
+						decode(message: &q, pblite: x)
+						_setField(message: &message, field: field, value: q, index: -1)
+					} else {
+						print("message \(t) expected [Any] values but got \(x.dynamicType) instead.")
+					}
+				} else if let e = _protoEnums[str] {
+					if let x = x as? Int {
+						_setField(message: &message, field: field, value: e.init(x), index: -1)
+					} else {
+						print("enum \(e) expected Int but got \(x.dynamicType) instead.")
+					}
+				} else {
+					// nil case
+					print("non-prototype field \(field.id):\(field.name) ignored!")
+				}
+			default:
+				_setField(message: &message, field: field, value: x, index: -1, _cast: true)
+			}
+		}
 	}
 	
 	public class func decode(message: inout ProtoMessage, pblite pblite2: [AnyObject], ignoreFirstItem: Bool = false) {
@@ -54,9 +93,8 @@ public class PBLiteSerialization {
 		
 		// Extract
 		var extra_fields = [(Int, Any?)]()
-		if pblite.count > 0 && pblite.last is NSDictionary {
-			let dict = pblite.last as? [String: Any?]
-			extra_fields = dict!.map { (Int($0)!, $1) }
+		if let dict = pblite.last as? NSDictionary where pblite.count > 0 {
+			extra_fields = dict.map { (Int($0.key as! String)!, $0.value) }
 			pblite = Array(pblite.dropLast())
 		}
 		
@@ -65,13 +103,13 @@ public class PBLiteSerialization {
 			if subdata == nil { continue }
 			if let field = message._declaredFields[tag] {
 				if field.label == .repeated {
-					print("repeated field \(field) being ignored with subdata.")
-					//decodeRepeatedField(message: &message, field: field, value: subdata as! [Any?])
+					//print("repeated field \(field) being ignored with subdata.")
+					decodeRepeatedField(message: &message, field: field, value: subdata)
 				} else {
 					decodeField(message: &message, field: field, value: subdata)
 				}
 			} else {
-				print("Message \(_typeName(message.dynamicType)) contains unknown field \(tag); storing...")
+				//print("Message \(_typeName(message.dynamicType)) contains unknown field \(tag); storing...")
 				message._unknownFields[tag] = subdata
 			}
 		}

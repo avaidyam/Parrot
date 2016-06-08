@@ -552,14 +552,20 @@ public struct DoNotDisturbSetting: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.doNotDisturb = value as! Bool?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.expirationTimestamp = value as! UInt64?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.version = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -569,6 +575,12 @@ public struct DoNotDisturbSetting: ProtoMessageExtensor {
 		case 1: return self.doNotDisturb
 		case 2: return self.expirationTimestamp
 		case 3: return self.version
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -601,8 +613,14 @@ public struct NotificationSettings: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is DoNotDisturbSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DoNotDisturbSetting? else { throw ProtoError.typeMismatchError }
 			self.dndSettings = value as! DoNotDisturbSetting?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -610,6 +628,12 @@ public struct NotificationSettings: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.dndSettings
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -638,8 +662,14 @@ public struct ConversationId: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.id = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -647,6 +677,12 @@ public struct ConversationId: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.id
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -676,11 +712,17 @@ public struct ParticipantId: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.gaiaId = value as! String?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.chatId = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -689,6 +731,12 @@ public struct ParticipantId: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.gaiaId
 		case 2: return self.chatId
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -721,14 +769,20 @@ public struct DeviceStatus: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.mobile = value as! Bool?
 		case 2:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.desktop = value as! Bool?
 		case 3:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.tablet = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -738,6 +792,12 @@ public struct DeviceStatus: ProtoMessageExtensor {
 		case 1: return self.mobile
 		case 2: return self.desktop
 		case 3: return self.tablet
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -770,8 +830,14 @@ public struct LastSeen: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.lastSeenTimestampUsec = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -779,6 +845,12 @@ public struct LastSeen: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.lastSeenTimestampUsec
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -811,20 +883,26 @@ public struct Presence: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.reachable = value as! Bool?
 		case 2:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.available = value as! Bool?
 		case 6:
-			guard value is DeviceStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DeviceStatus? else { throw ProtoError.typeMismatchError }
 			self.deviceStatus = value as! DeviceStatus?
 		case 9:
-			guard value is MoodMessage? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MoodMessage? else { throw ProtoError.typeMismatchError }
 			self.moodMessage = value as! MoodMessage?
 		case 10:
-			guard value is LastSeen? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is LastSeen? else { throw ProtoError.typeMismatchError }
 			self.lastSeen = value as! LastSeen?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -836,6 +914,12 @@ public struct Presence: ProtoMessageExtensor {
 		case 6: return self.deviceStatus
 		case 9: return self.moodMessage
 		case 10: return self.lastSeen
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -873,11 +957,17 @@ public struct PresenceResult: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.userId = value as! ParticipantId?
 		case 2:
-			guard value is Presence? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Presence? else { throw ProtoError.typeMismatchError }
 			self.presence = value as! Presence?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -886,6 +976,12 @@ public struct PresenceResult: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.userId
 		case 2: return self.presence
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -917,11 +1013,17 @@ public struct ClientIdentifier: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.resource = value as! String?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.headerId = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -930,6 +1032,12 @@ public struct ClientIdentifier: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.resource
 		case 2: return self.headerId
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -961,11 +1069,17 @@ public struct ClientPresenceState: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ClientIdentifier? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ClientIdentifier? else { throw ProtoError.typeMismatchError }
 			self.identifier = value as! ClientIdentifier?
 		case 2:
-			guard value is ClientPresenceStateType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ClientPresenceStateType? else { throw ProtoError.typeMismatchError }
 			self.state = value as! ClientPresenceStateType?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -974,6 +1088,12 @@ public struct ClientPresenceState: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.identifier
 		case 2: return self.state
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1006,14 +1126,20 @@ public struct UserEventState: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.userId = value as! ParticipantId?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.clientGeneratedId = value as! String?
 		case 3:
-			guard value is NotificationLevel? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is NotificationLevel? else { throw ProtoError.typeMismatchError }
 			self.notificationLevel = value as! NotificationLevel?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1023,6 +1149,12 @@ public struct UserEventState: ProtoMessageExtensor {
 		case 1: return self.userId
 		case 2: return self.clientGeneratedId
 		case 3: return self.notificationLevel
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1058,17 +1190,23 @@ public struct Formatting: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.bold = value as! Bool?
 		case 2:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.italic = value as! Bool?
 		case 3:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.strikethrough = value as! Bool?
 		case 4:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.underline = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1079,6 +1217,12 @@ public struct Formatting: ProtoMessageExtensor {
 		case 2: return self.italic
 		case 3: return self.strikethrough
 		case 4: return self.underline
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1113,8 +1257,14 @@ public struct LinkData: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.linkTarget = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1122,6 +1272,12 @@ public struct LinkData: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.linkTarget
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1153,17 +1309,23 @@ public struct Segment: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is SegmentType else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SegmentType else { throw ProtoError.typeMismatchError }
 			self.type = value as! SegmentType
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.text = value as! String?
 		case 3:
-			guard value is Formatting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Formatting? else { throw ProtoError.typeMismatchError }
 			self.formatting = value as! Formatting?
 		case 4:
-			guard value is LinkData? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is LinkData? else { throw ProtoError.typeMismatchError }
 			self.linkData = value as! LinkData?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1174,6 +1336,12 @@ public struct Segment: ProtoMessageExtensor {
 		case 2: return self.text
 		case 3: return self.formatting
 		case 4: return self.linkData
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1211,17 +1379,23 @@ public struct Thumbnail: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.url = value as! String?
 		case 4:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.imageUrl = value as! String?
 		case 10:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.widthPx = value as! UInt64?
 		case 11:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.heightPx = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1232,6 +1406,12 @@ public struct Thumbnail: ProtoMessageExtensor {
 		case 4: return self.imageUrl
 		case 10: return self.widthPx
 		case 11: return self.heightPx
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1273,29 +1453,43 @@ public struct PlusPhoto: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Thumbnail? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Thumbnail? else { throw ProtoError.typeMismatchError }
 			self.thumbnail = value as! Thumbnail?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.ownerObfuscatedId = value as! String?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.albumId = value as! String?
 		case 4:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.photoId = value as! String?
 		case 6:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.url = value as! String?
 		case 10:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.originalContentUrl = value as! String?
 		case 13:
-			guard value is MediaType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MediaType? else { throw ProtoError.typeMismatchError }
 			self.mediaType = value as! MediaType?
 		case 14:
 			guard value is [String] else { throw ProtoError.typeMismatchError }
 			self.streamId = value as! [String]
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 14:
+			if value is [String] {
+				self.streamId.insert(contentsOf: value as! [String], at: index > 0 ? index : self.streamId.endIndex)
+			} else if value is String {
+				self.streamId.insert(value as! String, at: index > 0 ? index : self.streamId.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1310,6 +1504,15 @@ public struct PlusPhoto: ProtoMessageExtensor {
 		case 10: return self.originalContentUrl
 		case 13: return self.mediaType
 		case 14: return self.streamId
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 14:
+			guard index > 0 && index < self.streamId.endIndex else { throw ProtoError.unknownError }
+			return self.streamId[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1352,8 +1555,14 @@ public struct RepresentativeImage: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.url = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1361,6 +1570,12 @@ public struct RepresentativeImage: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 2: return self.url
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1391,14 +1606,20 @@ public struct Place: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.url = value as! String?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.name = value as! String?
 		case 185:
-			guard value is RepresentativeImage? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RepresentativeImage? else { throw ProtoError.typeMismatchError }
 			self.representativeImage = value as! RepresentativeImage?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1408,6 +1629,12 @@ public struct Place: ProtoMessageExtensor {
 		case 1: return self.url
 		case 3: return self.name
 		case 185: return self.representativeImage
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1446,14 +1673,28 @@ public struct EmbedItem: ProtoMessageExtensor {
 			guard value is [ItemType] else { throw ProtoError.typeMismatchError }
 			self.type = value as! [ItemType]
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.id = value as! String?
 		case 27639957:
-			guard value is PlusPhoto? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PlusPhoto? else { throw ProtoError.typeMismatchError }
 			self.plusPhoto = value as! PlusPhoto?
 		case 35825640:
-			guard value is Place? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Place? else { throw ProtoError.typeMismatchError }
 			self.place = value as! Place?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 1:
+			if value is [ItemType] {
+				self.type.insert(contentsOf: value as! [ItemType], at: index > 0 ? index : self.type.endIndex)
+			} else if value is ItemType {
+				self.type.insert(value as! ItemType, at: index > 0 ? index : self.type.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1464,6 +1705,15 @@ public struct EmbedItem: ProtoMessageExtensor {
 		case 2: return self.id
 		case 27639957: return self.plusPhoto
 		case 35825640: return self.place
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 1:
+			guard index > 0 && index < self.type.endIndex else { throw ProtoError.unknownError }
+			return self.type[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1498,8 +1748,14 @@ public struct Attachment: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is EmbedItem? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EmbedItem? else { throw ProtoError.typeMismatchError }
 			self.embedItem = value as! EmbedItem?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1507,6 +1763,12 @@ public struct Attachment: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.embedItem
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1545,10 +1807,44 @@ public struct MessageContent: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 1:
+			if value is [Segment] {
+				self.segment.insert(contentsOf: value as! [Segment], at: index > 0 ? index : self.segment.endIndex)
+			} else if value is Segment {
+				self.segment.insert(value as! Segment, at: index > 0 ? index : self.segment.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		case 2:
+			if value is [Attachment] {
+				self.attachment.insert(contentsOf: value as! [Attachment], at: index > 0 ? index : self.attachment.endIndex)
+			} else if value is Attachment {
+				self.attachment.insert(value as! Attachment, at: index > 0 ? index : self.attachment.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.segment
 		case 2: return self.attachment
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 1:
+			guard index > 0 && index < self.segment.endIndex else { throw ProtoError.unknownError }
+			return self.segment[index]
+		case 2:
+			guard index > 0 && index < self.attachment.endIndex else { throw ProtoError.unknownError }
+			return self.attachment[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1580,11 +1876,17 @@ public struct EventAnnotation: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Int32? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Int32? else { throw ProtoError.typeMismatchError }
 			self.type = value as! Int32?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.value = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1593,6 +1895,12 @@ public struct EventAnnotation: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.type
 		case 2: return self.value
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1627,8 +1935,22 @@ public struct ChatMessage: ProtoMessageExtensor {
 			guard value is [EventAnnotation] else { throw ProtoError.typeMismatchError }
 			self.annotation = value as! [EventAnnotation]
 		case 3:
-			guard value is MessageContent? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MessageContent? else { throw ProtoError.typeMismatchError }
 			self.messageContent = value as! MessageContent?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 2:
+			if value is [EventAnnotation] {
+				self.annotation.insert(contentsOf: value as! [EventAnnotation], at: index > 0 ? index : self.annotation.endIndex)
+			} else if value is EventAnnotation {
+				self.annotation.insert(value as! EventAnnotation, at: index > 0 ? index : self.annotation.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1637,6 +1959,15 @@ public struct ChatMessage: ProtoMessageExtensor {
 		switch id {
 		case 2: return self.annotation
 		case 3: return self.messageContent
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 2:
+			guard index > 0 && index < self.annotation.endIndex else { throw ProtoError.unknownError }
+			return self.annotation[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1668,7 +1999,7 @@ public struct MembershipChange: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is MembershipChangeType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MembershipChangeType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! MembershipChangeType?
 		case 3:
 			guard value is [ParticipantId] else { throw ProtoError.typeMismatchError }
@@ -1677,10 +2008,33 @@ public struct MembershipChange: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 3:
+			if value is [ParticipantId] {
+				self.participantIds.insert(contentsOf: value as! [ParticipantId], at: index > 0 ? index : self.participantIds.endIndex)
+			} else if value is ParticipantId {
+				self.participantIds.insert(value as! ParticipantId, at: index > 0 ? index : self.participantIds.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.type
 		case 3: return self.participantIds
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 3:
+			guard index > 0 && index < self.participantIds.endIndex else { throw ProtoError.unknownError }
+			return self.participantIds[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1712,11 +2066,17 @@ public struct ConversationRename: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.newName = value as! String?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.oldName = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1725,6 +2085,12 @@ public struct ConversationRename: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.newName
 		case 2: return self.oldName
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1756,7 +2122,7 @@ public struct HangoutEvent: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is HangoutEventType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is HangoutEventType? else { throw ProtoError.typeMismatchError }
 			self.eventType = value as! HangoutEventType?
 		case 2:
 			guard value is [ParticipantId] else { throw ProtoError.typeMismatchError }
@@ -1765,10 +2131,33 @@ public struct HangoutEvent: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 2:
+			if value is [ParticipantId] {
+				self.participantId.insert(contentsOf: value as! [ParticipantId], at: index > 0 ? index : self.participantId.endIndex)
+			} else if value is ParticipantId {
+				self.participantId.insert(value as! ParticipantId, at: index > 0 ? index : self.participantId.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.eventType
 		case 2: return self.participantId
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 2:
+			guard index > 0 && index < self.participantId.endIndex else { throw ProtoError.unknownError }
+			return self.participantId[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1802,17 +2191,23 @@ public struct OTRModification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.oldOtrStatus = value as! OffTheRecordStatus?
 		case 2:
-			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.newOtrStatus = value as! OffTheRecordStatus?
 		case 3:
-			guard value is OffTheRecordToggle? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffTheRecordToggle? else { throw ProtoError.typeMismatchError }
 			self.oldOtrToggle = value as! OffTheRecordToggle?
 		case 4:
-			guard value is OffTheRecordToggle? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffTheRecordToggle? else { throw ProtoError.typeMismatchError }
 			self.newOtrToggle = value as! OffTheRecordToggle?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1823,6 +2218,12 @@ public struct OTRModification: ProtoMessageExtensor {
 		case 2: return self.newOtrStatus
 		case 3: return self.oldOtrToggle
 		case 4: return self.newOtrToggle
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1859,14 +2260,20 @@ public struct HashModifier: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.updateId = value as! String?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.hashDiff = value as! UInt64?
 		case 4:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.version = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1876,6 +2283,12 @@ public struct HashModifier: ProtoMessageExtensor {
 		case 1: return self.updateId
 		case 2: return self.hashDiff
 		case 4: return self.version
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -1926,62 +2339,68 @@ public struct Event: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
 		case 4:
-			guard value is UserEventState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UserEventState? else { throw ProtoError.typeMismatchError }
 			self.selfEventState = value as! UserEventState?
 		case 6:
-			guard value is SourceType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SourceType? else { throw ProtoError.typeMismatchError }
 			self.sourceType = value as! SourceType?
 		case 7:
-			guard value is ChatMessage? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ChatMessage? else { throw ProtoError.typeMismatchError }
 			self.chatMessage = value as! ChatMessage?
 		case 9:
-			guard value is MembershipChange? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MembershipChange? else { throw ProtoError.typeMismatchError }
 			self.membershipChange = value as! MembershipChange?
 		case 10:
-			guard value is ConversationRename? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationRename? else { throw ProtoError.typeMismatchError }
 			self.conversationRename = value as! ConversationRename?
 		case 11:
-			guard value is HangoutEvent? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is HangoutEvent? else { throw ProtoError.typeMismatchError }
 			self.hangoutEvent = value as! HangoutEvent?
 		case 12:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.eventId = value as! String?
 		case 13:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.expirationTimestamp = value as! UInt64?
 		case 14:
-			guard value is OTRModification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OTRModification? else { throw ProtoError.typeMismatchError }
 			self.otrModification = value as! OTRModification?
 		case 15:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.advancesSortTimestamp = value as! Bool?
 		case 16:
-			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.otrStatus = value as! OffTheRecordStatus?
 		case 17:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.persisted = value as! Bool?
 		case 20:
-			guard value is DeliveryMedium? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DeliveryMedium? else { throw ProtoError.typeMismatchError }
 			self.mediumType = value as! DeliveryMedium?
 		case 23:
-			guard value is EventType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EventType? else { throw ProtoError.typeMismatchError }
 			self.eventType = value as! EventType?
 		case 24:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.eventVersion = value as! UInt64?
 		case 26:
-			guard value is HashModifier? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is HashModifier? else { throw ProtoError.typeMismatchError }
 			self.hashModifier = value as! HashModifier?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2007,6 +2426,12 @@ public struct Event: ProtoMessageExtensor {
 		case 23: return self.eventType
 		case 24: return self.eventVersion
 		case 26: return self.hashModifier
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2072,11 +2497,17 @@ public struct UserReadState: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.participantId = value as! ParticipantId?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.latestReadTimestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2085,6 +2516,12 @@ public struct UserReadState: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.participantId
 		case 2: return self.latestReadTimestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2116,11 +2553,17 @@ public struct DeliveryMedium: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is DeliveryMediumType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DeliveryMediumType? else { throw ProtoError.typeMismatchError }
 			self.mediumType = value as! DeliveryMediumType?
 		case 2:
-			guard value is PhoneNumber? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PhoneNumber? else { throw ProtoError.typeMismatchError }
 			self.phoneNumber = value as! PhoneNumber?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2129,6 +2572,12 @@ public struct DeliveryMedium: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.mediumType
 		case 2: return self.phoneNumber
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2160,11 +2609,17 @@ public struct DeliveryMediumOption: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is DeliveryMedium? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DeliveryMedium? else { throw ProtoError.typeMismatchError }
 			self.deliveryMedium = value as! DeliveryMedium?
 		case 2:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.currentDefault = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2173,6 +2628,12 @@ public struct DeliveryMediumOption: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.deliveryMedium
 		case 2: return self.currentDefault
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2213,38 +2674,60 @@ public struct UserConversationState: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.clientGeneratedId = value as! String?
 		case 7:
-			guard value is UserReadState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UserReadState? else { throw ProtoError.typeMismatchError }
 			self.selfReadState = value as! UserReadState?
 		case 8:
-			guard value is ConversationStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationStatus? else { throw ProtoError.typeMismatchError }
 			self.status = value as! ConversationStatus?
 		case 9:
-			guard value is NotificationLevel? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is NotificationLevel? else { throw ProtoError.typeMismatchError }
 			self.notificationLevel = value as! NotificationLevel?
 		case 10:
 			guard value is [ConversationView] else { throw ProtoError.typeMismatchError }
 			self.view = value as! [ConversationView]
 		case 11:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.inviterId = value as! ParticipantId?
 		case 12:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.inviteTimestamp = value as! UInt64?
 		case 13:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.sortTimestamp = value as! UInt64?
 		case 14:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.activeTimestamp = value as! UInt64?
 		case 15:
-			guard value is InvitationAffinity? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is InvitationAffinity? else { throw ProtoError.typeMismatchError }
 			self.inviteAffinity = value as! InvitationAffinity?
 		case 17:
 			guard value is [DeliveryMediumOption] else { throw ProtoError.typeMismatchError }
 			self.deliveryMediumOption = value as! [DeliveryMediumOption]
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 10:
+			if value is [ConversationView] {
+				self.view.insert(contentsOf: value as! [ConversationView], at: index > 0 ? index : self.view.endIndex)
+			} else if value is ConversationView {
+				self.view.insert(value as! ConversationView, at: index > 0 ? index : self.view.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		case 17:
+			if value is [DeliveryMediumOption] {
+				self.deliveryMediumOption.insert(contentsOf: value as! [DeliveryMediumOption], at: index > 0 ? index : self.deliveryMediumOption.endIndex)
+			} else if value is DeliveryMediumOption {
+				self.deliveryMediumOption.insert(value as! DeliveryMediumOption, at: index > 0 ? index : self.deliveryMediumOption.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2262,6 +2745,18 @@ public struct UserConversationState: ProtoMessageExtensor {
 		case 14: return self.activeTimestamp
 		case 15: return self.inviteAffinity
 		case 17: return self.deliveryMediumOption
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 10:
+			guard index > 0 && index < self.view.endIndex else { throw ProtoError.unknownError }
+			return self.view[index]
+		case 17:
+			guard index > 0 && index < self.deliveryMediumOption.endIndex else { throw ProtoError.unknownError }
+			return self.deliveryMediumOption[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2314,20 +2809,26 @@ public struct ConversationParticipantData: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.id = value as! ParticipantId?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.fallbackName = value as! String?
 		case 3:
-			guard value is InvitationStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is InvitationStatus? else { throw ProtoError.typeMismatchError }
 			self.invitationStatus = value as! InvitationStatus?
 		case 5:
-			guard value is ParticipantType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantType? else { throw ProtoError.typeMismatchError }
 			self.participantType = value as! ParticipantType?
 		case 6:
-			guard value is InvitationStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is InvitationStatus? else { throw ProtoError.typeMismatchError }
 			self.newInvitationStatus = value as! InvitationStatus?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2339,6 +2840,12 @@ public struct ConversationParticipantData: ProtoMessageExtensor {
 		case 3: return self.invitationStatus
 		case 5: return self.participantType
 		case 6: return self.newInvitationStatus
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2387,31 +2894,31 @@ public struct Conversation: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is ConversationType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ConversationType?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.name = value as! String?
 		case 4:
-			guard value is UserConversationState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UserConversationState? else { throw ProtoError.typeMismatchError }
 			self.selfConversationState = value as! UserConversationState?
 		case 8:
 			guard value is [UserReadState] else { throw ProtoError.typeMismatchError }
 			self.readState = value as! [UserReadState]
 		case 9:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.hasActiveHangout = value as! Bool?
 		case 10:
-			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.otrStatus = value as! OffTheRecordStatus?
 		case 11:
-			guard value is OffTheRecordToggle? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffTheRecordToggle? else { throw ProtoError.typeMismatchError }
 			self.otrToggle = value as! OffTheRecordToggle?
 		case 12:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.conversationHistorySupported = value as! Bool?
 		case 13:
 			guard value is [ParticipantId] else { throw ProtoError.typeMismatchError }
@@ -2423,8 +2930,46 @@ public struct Conversation: ProtoMessageExtensor {
 			guard value is [NetworkType] else { throw ProtoError.typeMismatchError }
 			self.networkType = value as! [NetworkType]
 		case 19:
-			guard value is ForceHistory? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ForceHistory? else { throw ProtoError.typeMismatchError }
 			self.forceHistoryState = value as! ForceHistory?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 8:
+			if value is [UserReadState] {
+				self.readState.insert(contentsOf: value as! [UserReadState], at: index > 0 ? index : self.readState.endIndex)
+			} else if value is UserReadState {
+				self.readState.insert(value as! UserReadState, at: index > 0 ? index : self.readState.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		case 13:
+			if value is [ParticipantId] {
+				self.currentParticipant.insert(contentsOf: value as! [ParticipantId], at: index > 0 ? index : self.currentParticipant.endIndex)
+			} else if value is ParticipantId {
+				self.currentParticipant.insert(value as! ParticipantId, at: index > 0 ? index : self.currentParticipant.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		case 14:
+			if value is [ConversationParticipantData] {
+				self.participantData.insert(contentsOf: value as! [ConversationParticipantData], at: index > 0 ? index : self.participantData.endIndex)
+			} else if value is ConversationParticipantData {
+				self.participantData.insert(value as! ConversationParticipantData, at: index > 0 ? index : self.participantData.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		case 18:
+			if value is [NetworkType] {
+				self.networkType.insert(contentsOf: value as! [NetworkType], at: index > 0 ? index : self.networkType.endIndex)
+			} else if value is NetworkType {
+				self.networkType.insert(value as! NetworkType, at: index > 0 ? index : self.networkType.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2444,6 +2989,24 @@ public struct Conversation: ProtoMessageExtensor {
 		case 14: return self.participantData
 		case 18: return self.networkType
 		case 19: return self.forceHistoryState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 8:
+			guard index > 0 && index < self.readState.endIndex else { throw ProtoError.unknownError }
+			return self.readState[index]
+		case 13:
+			guard index > 0 && index < self.currentParticipant.endIndex else { throw ProtoError.unknownError }
+			return self.currentParticipant[index]
+		case 14:
+			guard index > 0 && index < self.participantData.endIndex else { throw ProtoError.unknownError }
+			return self.participantData[index]
+		case 18:
+			guard index > 0 && index < self.networkType.endIndex else { throw ProtoError.unknownError }
+			return self.networkType[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2496,8 +3059,14 @@ public struct EasterEgg: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.message = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2505,6 +3074,12 @@ public struct EasterEgg: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.message
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2534,11 +3109,17 @@ public struct BlockStateChange: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.participantId = value as! ParticipantId?
 		case 2:
-			guard value is BlockState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is BlockState? else { throw ProtoError.typeMismatchError }
 			self.newBlockState = value as! BlockState?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2547,6 +3128,12 @@ public struct BlockStateChange: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.participantId
 		case 2: return self.newBlockState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2580,17 +3167,23 @@ public struct Photo: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.photoId = value as! String?
 		case 2:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.deleteAlbumlessSourcePhoto = value as! Bool?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.userId = value as! String?
 		case 4:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.isCustomUserId = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2601,6 +3194,12 @@ public struct Photo: ProtoMessageExtensor {
 		case 2: return self.deleteAlbumlessSourcePhoto
 		case 3: return self.userId
 		case 4: return self.isCustomUserId
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2635,8 +3234,14 @@ public struct ExistingMedia: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Photo? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Photo? else { throw ProtoError.typeMismatchError }
 			self.photo = value as! Photo?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2644,6 +3249,12 @@ public struct ExistingMedia: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.photo
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2676,20 +3287,26 @@ public struct EventRequestHeader: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.clientGeneratedId = value as! UInt64?
 		case 3:
-			guard value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffTheRecordStatus? else { throw ProtoError.typeMismatchError }
 			self.expectedOtr = value as! OffTheRecordStatus?
 		case 4:
-			guard value is DeliveryMedium? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DeliveryMedium? else { throw ProtoError.typeMismatchError }
 			self.deliveryMedium = value as! DeliveryMedium?
 		case 5:
-			guard value is EventType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EventType? else { throw ProtoError.typeMismatchError }
 			self.eventType = value as! EventType?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2701,6 +3318,12 @@ public struct EventRequestHeader: ProtoMessageExtensor {
 		case 3: return self.expectedOtr
 		case 4: return self.deliveryMedium
 		case 5: return self.eventType
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2742,23 +3365,29 @@ public struct ClientVersion: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ClientId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ClientId? else { throw ProtoError.typeMismatchError }
 			self.clientId = value as! ClientId?
 		case 2:
-			guard value is ClientBuildType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ClientBuildType? else { throw ProtoError.typeMismatchError }
 			self.buildType = value as! ClientBuildType?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.majorVersion = value as! String?
 		case 4:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.versionTimestamp = value as! UInt64?
 		case 5:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.deviceOsVersion = value as! String?
 		case 6:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.deviceHardware = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2771,6 +3400,12 @@ public struct ClientVersion: ProtoMessageExtensor {
 		case 4: return self.versionTimestamp
 		case 5: return self.deviceOsVersion
 		case 6: return self.deviceHardware
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2811,14 +3446,20 @@ public struct RequestHeader: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ClientVersion? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ClientVersion? else { throw ProtoError.typeMismatchError }
 			self.clientVersion = value as! ClientVersion?
 		case 2:
-			guard value is ClientIdentifier? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ClientIdentifier? else { throw ProtoError.typeMismatchError }
 			self.clientIdentifier = value as! ClientIdentifier?
 		case 4:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.languageCode = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2828,6 +3469,12 @@ public struct RequestHeader: ProtoMessageExtensor {
 		case 1: return self.clientVersion
 		case 2: return self.clientIdentifier
 		case 4: return self.languageCode
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2864,20 +3511,26 @@ public struct ResponseHeader: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseStatus? else { throw ProtoError.typeMismatchError }
 			self.status = value as! ResponseStatus?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.errorDescription = value as! String?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.debugUrl = value as! String?
 		case 4:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.requestTraceId = value as! String?
 		case 5:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.currentServerTime = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2889,6 +3542,12 @@ public struct ResponseHeader: ProtoMessageExtensor {
 		case 3: return self.debugUrl
 		case 4: return self.requestTraceId
 		case 5: return self.currentServerTime
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2929,20 +3588,26 @@ public struct Entity: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 9:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.id = value as! ParticipantId?
 		case 8:
-			guard value is Presence? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Presence? else { throw ProtoError.typeMismatchError }
 			self.presence = value as! Presence?
 		case 10:
-			guard value is EntityProperties? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EntityProperties? else { throw ProtoError.typeMismatchError }
 			self.properties = value as! EntityProperties?
 		case 13:
-			guard value is ParticipantType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantType? else { throw ProtoError.typeMismatchError }
 			self.entityType = value as! ParticipantType?
 		case 16:
-			guard value is PastHangoutState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PastHangoutState? else { throw ProtoError.typeMismatchError }
 			self.hadPastHangoutState = value as! PastHangoutState?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2954,6 +3619,12 @@ public struct Entity: ProtoMessageExtensor {
 		case 10: return self.properties
 		case 13: return self.entityType
 		case 16: return self.hadPastHangoutState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -2999,16 +3670,16 @@ public struct EntityProperties: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ProfileType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ProfileType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ProfileType?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.displayName = value as! String?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.firstName = value as! String?
 		case 4:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.photoUrl = value as! String?
 		case 5:
 			guard value is [String] else { throw ProtoError.typeMismatchError }
@@ -3017,17 +3688,39 @@ public struct EntityProperties: ProtoMessageExtensor {
 			guard value is [String] else { throw ProtoError.typeMismatchError }
 			self.phone = value as! [String]
 		case 10:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.inUsersDomain = value as! Bool?
 		case 11:
-			guard value is Gender? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Gender? else { throw ProtoError.typeMismatchError }
 			self.gender = value as! Gender?
 		case 12:
-			guard value is PhotoUrlStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PhotoUrlStatus? else { throw ProtoError.typeMismatchError }
 			self.photoUrlStatus = value as! PhotoUrlStatus?
 		case 15:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.canonicalEmail = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 5:
+			if value is [String] {
+				self.email.insert(contentsOf: value as! [String], at: index > 0 ? index : self.email.endIndex)
+			} else if value is String {
+				self.email.insert(value as! String, at: index > 0 ? index : self.email.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		case 6:
+			if value is [String] {
+				self.phone.insert(contentsOf: value as! [String], at: index > 0 ? index : self.phone.endIndex)
+			} else if value is String {
+				self.phone.insert(value as! String, at: index > 0 ? index : self.phone.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3044,6 +3737,18 @@ public struct EntityProperties: ProtoMessageExtensor {
 		case 11: return self.gender
 		case 12: return self.photoUrlStatus
 		case 15: return self.canonicalEmail
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 5:
+			guard index > 0 && index < self.email.endIndex else { throw ProtoError.unknownError }
+			return self.email[index]
+		case 6:
+			guard index > 0 && index < self.phone.endIndex else { throw ProtoError.unknownError }
+			return self.phone[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3093,17 +3798,31 @@ public struct ConversationState: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is Conversation? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Conversation? else { throw ProtoError.typeMismatchError }
 			self.conversation = value as! Conversation?
 		case 3:
 			guard value is [Event] else { throw ProtoError.typeMismatchError }
 			self.event = value as! [Event]
 		case 5:
-			guard value is EventContinuationToken? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EventContinuationToken? else { throw ProtoError.typeMismatchError }
 			self.eventContinuationToken = value as! EventContinuationToken?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 3:
+			if value is [Event] {
+				self.event.insert(contentsOf: value as! [Event], at: index > 0 ? index : self.event.endIndex)
+			} else if value is Event {
+				self.event.insert(value as! Event, at: index > 0 ? index : self.event.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3114,6 +3833,15 @@ public struct ConversationState: ProtoMessageExtensor {
 		case 2: return self.conversation
 		case 3: return self.event
 		case 5: return self.eventContinuationToken
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 3:
+			guard index > 0 && index < self.event.endIndex else { throw ProtoError.unknownError }
+			return self.event[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3150,14 +3878,20 @@ public struct EventContinuationToken: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.eventId = value as! String?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.storageContinuationToken = value as! String?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.eventTimestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3167,6 +3901,12 @@ public struct EventContinuationToken: ProtoMessageExtensor {
 		case 1: return self.eventId
 		case 2: return self.storageContinuationToken
 		case 3: return self.eventTimestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3202,17 +3942,23 @@ public struct EntityLookupSpec: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.gaiaId = value as! String?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.email = value as! String?
 		case 4:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.phone = value as! String?
 		case 6:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.createOffnetworkGaia = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3223,6 +3969,12 @@ public struct EntityLookupSpec: ProtoMessageExtensor {
 		case 3: return self.email
 		case 4: return self.phone
 		case 6: return self.createOffnetworkGaia
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3258,11 +4010,17 @@ public struct ConfigurationBit: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConfigurationBitType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConfigurationBitType? else { throw ProtoError.typeMismatchError }
 			self.configurationBitType = value as! ConfigurationBitType?
 		case 2:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.value = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3271,6 +4029,12 @@ public struct ConfigurationBit: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.configurationBitType
 		case 2: return self.value
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3307,9 +4071,32 @@ public struct RichPresenceState: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 3:
+			if value is [RichPresenceEnabledState] {
+				self.getRichPresenceEnabledState.insert(contentsOf: value as! [RichPresenceEnabledState], at: index > 0 ? index : self.getRichPresenceEnabledState.endIndex)
+			} else if value is RichPresenceEnabledState {
+				self.getRichPresenceEnabledState.insert(value as! RichPresenceEnabledState, at: index > 0 ? index : self.getRichPresenceEnabledState.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 3: return self.getRichPresenceEnabledState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 3:
+			guard index > 0 && index < self.getRichPresenceEnabledState.endIndex else { throw ProtoError.unknownError }
+			return self.getRichPresenceEnabledState[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3339,11 +4126,17 @@ public struct RichPresenceEnabledState: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RichPresenceType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RichPresenceType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! RichPresenceType?
 		case 2:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.enabled = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3352,6 +4145,12 @@ public struct RichPresenceEnabledState: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.type
 		case 2: return self.enabled
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3382,8 +4181,14 @@ public struct DesktopOffSetting: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.desktopOff = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3391,6 +4196,12 @@ public struct DesktopOffSetting: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.desktopOff
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3420,11 +4231,17 @@ public struct DesktopOffState: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.desktopOff = value as! Bool?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.version = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3433,6 +4250,12 @@ public struct DesktopOffState: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.desktopOff
 		case 2: return self.version
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3464,11 +4287,17 @@ public struct DndSetting: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.doNotDisturb = value as! Bool?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timeoutSecs = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3477,6 +4306,12 @@ public struct DndSetting: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.doNotDisturb
 		case 2: return self.timeoutSecs
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3508,11 +4343,17 @@ public struct PresenceStateSetting: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timeoutSecs = value as! UInt64?
 		case 2:
-			guard value is ClientPresenceStateType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ClientPresenceStateType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ClientPresenceStateType?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3521,6 +4362,12 @@ public struct PresenceStateSetting: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.timeoutSecs
 		case 2: return self.type
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3551,8 +4398,14 @@ public struct MoodMessage: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is MoodContent? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MoodContent? else { throw ProtoError.typeMismatchError }
 			self.moodContent = value as! MoodContent?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3560,6 +4413,12 @@ public struct MoodMessage: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.moodContent
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3594,9 +4453,32 @@ public struct MoodContent: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 1:
+			if value is [Segment] {
+				self.segment.insert(contentsOf: value as! [Segment], at: index > 0 ? index : self.segment.endIndex)
+			} else if value is Segment {
+				self.segment.insert(value as! Segment, at: index > 0 ? index : self.segment.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.segment
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 1:
+			guard index > 0 && index < self.segment.endIndex else { throw ProtoError.unknownError }
+			return self.segment[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3625,8 +4507,14 @@ public struct MoodSetting: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is MoodMessage? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MoodMessage? else { throw ProtoError.typeMismatchError }
 			self.moodMessage = value as! MoodMessage?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3634,6 +4522,12 @@ public struct MoodSetting: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.moodMessage
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3662,8 +4556,14 @@ public struct MoodState: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 4:
-			guard value is MoodSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MoodSetting? else { throw ProtoError.typeMismatchError }
 			self.moodSetting = value as! MoodSetting?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3671,6 +4571,12 @@ public struct MoodState: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 4: return self.moodSetting
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3701,14 +4607,20 @@ public struct DeleteAction: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.deleteActionTimestamp = value as! UInt64?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.deleteUpperBoundTimestamp = value as! UInt64?
 		case 3:
-			guard value is DeleteType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DeleteType? else { throw ProtoError.typeMismatchError }
 			self.deleteType = value as! DeleteType?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3718,6 +4630,12 @@ public struct DeleteAction: ProtoMessageExtensor {
 		case 1: return self.deleteActionTimestamp
 		case 2: return self.deleteUpperBoundTimestamp
 		case 3: return self.deleteType
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3751,11 +4669,17 @@ public struct InviteeID: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.gaiaId = value as! String?
 		case 4:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.fallbackName = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3764,6 +4688,12 @@ public struct InviteeID: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.gaiaId
 		case 4: return self.fallbackName
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3795,11 +4725,17 @@ public struct Country: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.regionCode = value as! String?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.countryCode = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3808,6 +4744,12 @@ public struct Country: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.regionCode
 		case 2: return self.countryCode
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3839,11 +4781,17 @@ public struct DesktopSoundSetting: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is SoundState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SoundState? else { throw ProtoError.typeMismatchError }
 			self.desktopSoundState = value as! SoundState?
 		case 2:
-			guard value is SoundState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SoundState? else { throw ProtoError.typeMismatchError }
 			self.desktopRingSoundState = value as! SoundState?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3852,6 +4800,12 @@ public struct DesktopSoundSetting: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.desktopSoundState
 		case 2: return self.desktopRingSoundState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3886,8 +4840,22 @@ public struct PhoneData: ProtoMessageExtensor {
 			guard value is [Phone] else { throw ProtoError.typeMismatchError }
 			self.phone = value as! [Phone]
 		case 3:
-			guard value is CallerIdSettingsMask? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is CallerIdSettingsMask? else { throw ProtoError.typeMismatchError }
 			self.callerIdSettingsMask = value as! CallerIdSettingsMask?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 1:
+			if value is [Phone] {
+				self.phone.insert(contentsOf: value as! [Phone], at: index > 0 ? index : self.phone.endIndex)
+			} else if value is Phone {
+				self.phone.insert(value as! Phone, at: index > 0 ? index : self.phone.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3896,6 +4864,15 @@ public struct PhoneData: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.phone
 		case 3: return self.callerIdSettingsMask
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 1:
+			guard index > 0 && index < self.phone.endIndex else { throw ProtoError.unknownError }
+			return self.phone[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3931,23 +4908,29 @@ public struct Phone: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is PhoneNumber? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PhoneNumber? else { throw ProtoError.typeMismatchError }
 			self.phoneNumber = value as! PhoneNumber?
 		case 2:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.googleVoice = value as! Bool?
 		case 3:
-			guard value is PhoneVerificationStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PhoneVerificationStatus? else { throw ProtoError.typeMismatchError }
 			self.verificationStatus = value as! PhoneVerificationStatus?
 		case 4:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.discoverable = value as! Bool?
 		case 5:
-			guard value is PhoneDiscoverabilityStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PhoneDiscoverabilityStatus? else { throw ProtoError.typeMismatchError }
 			self.discoverabilityStatus = value as! PhoneDiscoverabilityStatus?
 		case 6:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.primary = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -3960,6 +4943,12 @@ public struct Phone: ProtoMessageExtensor {
 		case 4: return self.discoverable
 		case 5: return self.discoverabilityStatus
 		case 6: return self.primary
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4003,23 +4992,29 @@ public struct I18nData: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.nationalNumber = value as! String?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.internationalNumber = value as! String?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.countryCode = value as! UInt64?
 		case 4:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.regionCode = value as! String?
 		case 5:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.isValid = value as! Bool?
 		case 6:
-			guard value is PhoneValidationResult? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PhoneValidationResult? else { throw ProtoError.typeMismatchError }
 			self.validationResult = value as! PhoneValidationResult?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4032,6 +5027,12 @@ public struct I18nData: ProtoMessageExtensor {
 		case 4: return self.regionCode
 		case 5: return self.isValid
 		case 6: return self.validationResult
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4071,11 +5072,17 @@ public struct PhoneNumber: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.e164 = value as! String?
 		case 2:
-			guard value is I18nData? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is I18nData? else { throw ProtoError.typeMismatchError }
 			self.i18nData = value as! I18nData?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4084,6 +5091,12 @@ public struct PhoneNumber: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.e164
 		case 2: return self.i18nData
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4115,11 +5128,17 @@ public struct SuggestedContactGroupHash: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxResults = value as! UInt64?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.hash = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4128,6 +5147,12 @@ public struct SuggestedContactGroupHash: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.maxResults
 		case 2: return self.hash
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4159,11 +5184,17 @@ public struct SuggestedContact: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Entity? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Entity? else { throw ProtoError.typeMismatchError }
 			self.entity = value as! Entity?
 		case 2:
-			guard value is InvitationStatus? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is InvitationStatus? else { throw ProtoError.typeMismatchError }
 			self.invitationStatus = value as! InvitationStatus?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4172,6 +5203,12 @@ public struct SuggestedContact: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.entity
 		case 2: return self.invitationStatus
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4204,14 +5241,28 @@ public struct SuggestedContactGroup: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.hashMatched = value as! Bool?
 		case 2:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.hash = value as! String?
 		case 3:
 			guard value is [SuggestedContact] else { throw ProtoError.typeMismatchError }
 			self.contact = value as! [SuggestedContact]
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 3:
+			if value is [SuggestedContact] {
+				self.contact.insert(contentsOf: value as! [SuggestedContact], at: index > 0 ? index : self.contact.endIndex)
+			} else if value is SuggestedContact {
+				self.contact.insert(value as! SuggestedContact, at: index > 0 ? index : self.contact.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4221,6 +5272,15 @@ public struct SuggestedContactGroup: ProtoMessageExtensor {
 		case 1: return self.hashMatched
 		case 2: return self.hash
 		case 3: return self.contact
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 3:
+			guard index > 0 && index < self.contact.endIndex else { throw ProtoError.unknownError }
+			return self.contact[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4269,56 +5329,62 @@ public struct StateUpdate: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is StateUpdateHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is StateUpdateHeader? else { throw ProtoError.typeMismatchError }
 			self.stateUpdateHeader = value as! StateUpdateHeader?
 		case 13:
-			guard value is Conversation? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Conversation? else { throw ProtoError.typeMismatchError }
 			self.conversation = value as! Conversation?
 		case 2:
-			guard value is ConversationNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationNotification? else { throw ProtoError.typeMismatchError }
 			self.conversationNotification = value as! ConversationNotification?
 		case 3:
-			guard value is EventNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EventNotification? else { throw ProtoError.typeMismatchError }
 			self.eventNotification = value as! EventNotification?
 		case 4:
-			guard value is SetFocusNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SetFocusNotification? else { throw ProtoError.typeMismatchError }
 			self.focusNotification = value as! SetFocusNotification?
 		case 5:
-			guard value is SetTypingNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SetTypingNotification? else { throw ProtoError.typeMismatchError }
 			self.typingNotification = value as! SetTypingNotification?
 		case 6:
-			guard value is SetConversationNotificationLevelNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SetConversationNotificationLevelNotification? else { throw ProtoError.typeMismatchError }
 			self.notificationLevelNotification = value as! SetConversationNotificationLevelNotification?
 		case 7:
-			guard value is ReplyToInviteNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ReplyToInviteNotification? else { throw ProtoError.typeMismatchError }
 			self.replyToInviteNotification = value as! ReplyToInviteNotification?
 		case 8:
-			guard value is WatermarkNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is WatermarkNotification? else { throw ProtoError.typeMismatchError }
 			self.watermarkNotification = value as! WatermarkNotification?
 		case 11:
-			guard value is ConversationViewModification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationViewModification? else { throw ProtoError.typeMismatchError }
 			self.viewModification = value as! ConversationViewModification?
 		case 12:
-			guard value is EasterEggNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EasterEggNotification? else { throw ProtoError.typeMismatchError }
 			self.easterEggNotification = value as! EasterEggNotification?
 		case 14:
-			guard value is SelfPresenceNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SelfPresenceNotification? else { throw ProtoError.typeMismatchError }
 			self.selfPresenceNotification = value as! SelfPresenceNotification?
 		case 15:
-			guard value is DeleteActionNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DeleteActionNotification? else { throw ProtoError.typeMismatchError }
 			self.deleteNotification = value as! DeleteActionNotification?
 		case 16:
-			guard value is PresenceNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PresenceNotification? else { throw ProtoError.typeMismatchError }
 			self.presenceNotification = value as! PresenceNotification?
 		case 17:
-			guard value is BlockNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is BlockNotification? else { throw ProtoError.typeMismatchError }
 			self.blockNotification = value as! BlockNotification?
 		case 19:
-			guard value is SetNotificationSettingNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SetNotificationSettingNotification? else { throw ProtoError.typeMismatchError }
 			self.notificationSettingNotification = value as! SetNotificationSettingNotification?
 		case 20:
-			guard value is RichPresenceEnabledStateNotification? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RichPresenceEnabledStateNotification? else { throw ProtoError.typeMismatchError }
 			self.richPresenceEnabledStateNotification = value as! RichPresenceEnabledStateNotification?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4342,6 +5408,12 @@ public struct StateUpdate: ProtoMessageExtensor {
 		case 17: return self.blockNotification
 		case 19: return self.notificationSettingNotification
 		case 20: return self.richPresenceEnabledStateNotification
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4405,17 +5477,23 @@ public struct StateUpdateHeader: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ActiveClientState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ActiveClientState? else { throw ProtoError.typeMismatchError }
 			self.activeClientState = value as! ActiveClientState?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.requestTraceId = value as! String?
 		case 4:
-			guard value is NotificationSettings? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is NotificationSettings? else { throw ProtoError.typeMismatchError }
 			self.notificationSettings = value as! NotificationSettings?
 		case 5:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.currentServerTime = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4426,6 +5504,12 @@ public struct StateUpdateHeader: ProtoMessageExtensor {
 		case 3: return self.requestTraceId
 		case 4: return self.notificationSettings
 		case 5: return self.currentServerTime
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4466,9 +5550,32 @@ public struct BatchUpdate: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 1:
+			if value is [StateUpdate] {
+				self.stateUpdate.insert(contentsOf: value as! [StateUpdate], at: index > 0 ? index : self.stateUpdate.endIndex)
+			} else if value is StateUpdate {
+				self.stateUpdate.insert(value as! StateUpdate, at: index > 0 ? index : self.stateUpdate.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.stateUpdate
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 1:
+			guard index > 0 && index < self.stateUpdate.endIndex else { throw ProtoError.unknownError }
+			return self.stateUpdate[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4497,8 +5604,14 @@ public struct ConversationNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Conversation? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Conversation? else { throw ProtoError.typeMismatchError }
 			self.conversation = value as! Conversation?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4506,6 +5619,12 @@ public struct ConversationNotification: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.conversation
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4534,8 +5653,14 @@ public struct EventNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is Event? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Event? else { throw ProtoError.typeMismatchError }
 			self.event = value as! Event?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4543,6 +5668,12 @@ public struct EventNotification: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.event
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4575,20 +5706,26 @@ public struct SetFocusNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
 		case 4:
-			guard value is FocusType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is FocusType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! FocusType?
 		case 5:
-			guard value is FocusDevice? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is FocusDevice? else { throw ProtoError.typeMismatchError }
 			self.device = value as! FocusDevice?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4600,6 +5737,12 @@ public struct SetFocusNotification: ProtoMessageExtensor {
 		case 3: return self.timestamp
 		case 4: return self.type
 		case 5: return self.device
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4639,17 +5782,23 @@ public struct SetTypingNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
 		case 4:
-			guard value is TypingType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is TypingType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! TypingType?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4660,6 +5809,12 @@ public struct SetTypingNotification: ProtoMessageExtensor {
 		case 2: return self.senderId
 		case 3: return self.timestamp
 		case 4: return self.type
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4696,14 +5851,20 @@ public struct SetConversationNotificationLevelNotification: ProtoMessageExtensor
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is NotificationLevel? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is NotificationLevel? else { throw ProtoError.typeMismatchError }
 			self.level = value as! NotificationLevel?
 		case 4:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4713,6 +5874,12 @@ public struct SetConversationNotificationLevelNotification: ProtoMessageExtensor
 		case 1: return self.conversationId
 		case 2: return self.level
 		case 4: return self.timestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4746,11 +5913,17 @@ public struct ReplyToInviteNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is ReplyToInviteType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ReplyToInviteType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ReplyToInviteType?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4759,6 +5932,12 @@ public struct ReplyToInviteNotification: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.conversationId
 		case 2: return self.type
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4791,14 +5970,20 @@ public struct WatermarkNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
 		case 2:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.latestReadTimestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4808,6 +5993,12 @@ public struct WatermarkNotification: ProtoMessageExtensor {
 		case 1: return self.senderId
 		case 2: return self.conversationId
 		case 3: return self.latestReadTimestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4842,14 +6033,20 @@ public struct ConversationViewModification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is ConversationView? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationView? else { throw ProtoError.typeMismatchError }
 			self.oldView = value as! ConversationView?
 		case 3:
-			guard value is ConversationView? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationView? else { throw ProtoError.typeMismatchError }
 			self.newView = value as! ConversationView?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4859,6 +6056,12 @@ public struct ConversationViewModification: ProtoMessageExtensor {
 		case 1: return self.conversationId
 		case 2: return self.oldView
 		case 3: return self.newView
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4893,14 +6096,20 @@ public struct EasterEggNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ParticipantId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ParticipantId? else { throw ProtoError.typeMismatchError }
 			self.senderId = value as! ParticipantId?
 		case 2:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 3:
-			guard value is EasterEgg? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EasterEgg? else { throw ProtoError.typeMismatchError }
 			self.easterEgg = value as! EasterEgg?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4910,6 +6119,12 @@ public struct EasterEggNotification: ProtoMessageExtensor {
 		case 1: return self.senderId
 		case 2: return self.conversationId
 		case 3: return self.easterEgg
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4946,20 +6161,26 @@ public struct SelfPresenceNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ClientPresenceState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ClientPresenceState? else { throw ProtoError.typeMismatchError }
 			self.clientPresenceState = value as! ClientPresenceState?
 		case 3:
-			guard value is DoNotDisturbSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DoNotDisturbSetting? else { throw ProtoError.typeMismatchError }
 			self.doNotDisturbSetting = value as! DoNotDisturbSetting?
 		case 4:
-			guard value is DesktopOffSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DesktopOffSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopOffSetting = value as! DesktopOffSetting?
 		case 5:
-			guard value is DesktopOffState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DesktopOffState? else { throw ProtoError.typeMismatchError }
 			self.desktopOffState = value as! DesktopOffState?
 		case 6:
-			guard value is MoodState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MoodState? else { throw ProtoError.typeMismatchError }
 			self.moodState = value as! MoodState?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -4971,6 +6192,12 @@ public struct SelfPresenceNotification: ProtoMessageExtensor {
 		case 4: return self.desktopOffSetting
 		case 5: return self.desktopOffState
 		case 6: return self.moodState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5008,11 +6235,17 @@ public struct DeleteActionNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 2:
-			guard value is DeleteAction? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DeleteAction? else { throw ProtoError.typeMismatchError }
 			self.deleteAction = value as! DeleteAction?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5021,6 +6254,12 @@ public struct DeleteActionNotification: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.conversationId
 		case 2: return self.deleteAction
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5057,9 +6296,32 @@ public struct PresenceNotification: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 1:
+			if value is [PresenceResult] {
+				self.presence.insert(contentsOf: value as! [PresenceResult], at: index > 0 ? index : self.presence.endIndex)
+			} else if value is PresenceResult {
+				self.presence.insert(value as! PresenceResult, at: index > 0 ? index : self.presence.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.presence
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 1:
+			guard index > 0 && index < self.presence.endIndex else { throw ProtoError.unknownError }
+			return self.presence[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5094,9 +6356,32 @@ public struct BlockNotification: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 1:
+			if value is [BlockStateChange] {
+				self.blockStateChange.insert(contentsOf: value as! [BlockStateChange], at: index > 0 ? index : self.blockStateChange.endIndex)
+			} else if value is BlockStateChange {
+				self.blockStateChange.insert(value as! BlockStateChange, at: index > 0 ? index : self.blockStateChange.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.blockStateChange
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 1:
+			guard index > 0 && index < self.blockStateChange.endIndex else { throw ProtoError.unknownError }
+			return self.blockStateChange[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5125,8 +6410,14 @@ public struct SetNotificationSettingNotification: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 2:
-			guard value is DesktopSoundSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DesktopSoundSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopSoundSetting = value as! DesktopSoundSetting?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5134,6 +6425,12 @@ public struct SetNotificationSettingNotification: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 2: return self.desktopSoundSetting
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5168,9 +6465,32 @@ public struct RichPresenceEnabledStateNotification: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 1:
+			if value is [RichPresenceEnabledState] {
+				self.richPresenceEnabledState.insert(contentsOf: value as! [RichPresenceEnabledState], at: index > 0 ? index : self.richPresenceEnabledState.endIndex)
+			} else if value is RichPresenceEnabledState {
+				self.richPresenceEnabledState.insert(value as! RichPresenceEnabledState, at: index > 0 ? index : self.richPresenceEnabledState.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.richPresenceEnabledState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 1:
+			guard index > 0 && index < self.richPresenceEnabledState.endIndex else { throw ProtoError.unknownError }
+			return self.richPresenceEnabledState[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5199,8 +6519,14 @@ public struct ConversationSpec: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5208,6 +6534,12 @@ public struct ConversationSpec: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.conversationId
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5237,11 +6569,17 @@ public struct OffnetworkAddress: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is OffnetworkAddressType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffnetworkAddressType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! OffnetworkAddressType?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.email = value as! String?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5250,6 +6588,12 @@ public struct OffnetworkAddress: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.type
 		case 3: return self.email
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5281,7 +6625,7 @@ public struct EntityResult: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is EntityLookupSpec? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EntityLookupSpec? else { throw ProtoError.typeMismatchError }
 			self.lookupSpec = value as! EntityLookupSpec?
 		case 2:
 			guard value is [Entity] else { throw ProtoError.typeMismatchError }
@@ -5290,10 +6634,33 @@ public struct EntityResult: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 2:
+			if value is [Entity] {
+				self.entity.insert(contentsOf: value as! [Entity], at: index > 0 ? index : self.entity.endIndex)
+			} else if value is Entity {
+				self.entity.insert(value as! Entity, at: index > 0 ? index : self.entity.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.lookupSpec
 		case 2: return self.entity
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 2:
+			guard index > 0 && index < self.entity.endIndex else { throw ProtoError.unknownError }
+			return self.entity[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5326,14 +6693,28 @@ public struct AddUserRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 3:
 			guard value is [InviteeID] else { throw ProtoError.typeMismatchError }
 			self.inviteeId = value as! [InviteeID]
 		case 5:
-			guard value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
 			self.eventRequestHeader = value as! EventRequestHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 3:
+			if value is [InviteeID] {
+				self.inviteeId.insert(contentsOf: value as! [InviteeID], at: index > 0 ? index : self.inviteeId.endIndex)
+			} else if value is InviteeID {
+				self.inviteeId.insert(value as! InviteeID, at: index > 0 ? index : self.inviteeId.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5343,6 +6724,15 @@ public struct AddUserRequest: ProtoMessageExtensor {
 		case 1: return self.requestHeader
 		case 3: return self.inviteeId
 		case 5: return self.eventRequestHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 3:
+			guard index > 0 && index < self.inviteeId.endIndex else { throw ProtoError.unknownError }
+			return self.inviteeId[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5376,11 +6766,17 @@ public struct AddUserResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 5:
-			guard value is Event? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Event? else { throw ProtoError.typeMismatchError }
 			self.createdEvent = value as! Event?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5389,6 +6785,12 @@ public struct AddUserResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 5: return self.createdEvent
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5423,20 +6825,34 @@ public struct CreateConversationRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is ConversationType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! ConversationType?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.clientGeneratedId = value as! UInt64?
 		case 4:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.name = value as! String?
 		case 5:
 			guard value is [InviteeID] else { throw ProtoError.typeMismatchError }
 			self.inviteeId = value as! [InviteeID]
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 5:
+			if value is [InviteeID] {
+				self.inviteeId.insert(contentsOf: value as! [InviteeID], at: index > 0 ? index : self.inviteeId.endIndex)
+			} else if value is InviteeID {
+				self.inviteeId.insert(value as! InviteeID, at: index > 0 ? index : self.inviteeId.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5448,6 +6864,15 @@ public struct CreateConversationRequest: ProtoMessageExtensor {
 		case 3: return self.clientGeneratedId
 		case 4: return self.name
 		case 5: return self.inviteeId
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 5:
+			guard index > 0 && index < self.inviteeId.endIndex else { throw ProtoError.unknownError }
+			return self.inviteeId[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5486,14 +6911,20 @@ public struct CreateConversationResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is Conversation? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Conversation? else { throw ProtoError.typeMismatchError }
 			self.conversation = value as! Conversation?
 		case 7:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.newConversationCreated = value as! Bool?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5503,6 +6934,12 @@ public struct CreateConversationResponse: ProtoMessageExtensor {
 		case 1: return self.responseHeader
 		case 2: return self.conversation
 		case 7: return self.newConversationCreated
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5537,14 +6974,20 @@ public struct DeleteConversationRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.deleteUpperBoundTimestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5554,6 +6997,12 @@ public struct DeleteConversationRequest: ProtoMessageExtensor {
 		case 1: return self.requestHeader
 		case 2: return self.conversationId
 		case 3: return self.deleteUpperBoundTimestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5587,11 +7036,17 @@ public struct DeleteConversationResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is DeleteAction? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DeleteAction? else { throw ProtoError.typeMismatchError }
 			self.deleteAction = value as! DeleteAction?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5600,6 +7055,12 @@ public struct DeleteConversationResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 2: return self.deleteAction
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5632,14 +7093,20 @@ public struct EasterEggRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 3:
-			guard value is EasterEgg? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EasterEgg? else { throw ProtoError.typeMismatchError }
 			self.easterEgg = value as! EasterEgg?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5649,6 +7116,12 @@ public struct EasterEggRequest: ProtoMessageExtensor {
 		case 1: return self.requestHeader
 		case 2: return self.conversationId
 		case 3: return self.easterEgg
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5682,11 +7155,17 @@ public struct EasterEggResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5695,6 +7174,12 @@ public struct EasterEggResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 2: return self.timestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5729,20 +7214,26 @@ public struct GetConversationRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is ConversationSpec? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationSpec? else { throw ProtoError.typeMismatchError }
 			self.conversationSpec = value as! ConversationSpec?
 		case 4:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.includeEvent = value as! Bool?
 		case 6:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxEventsPerConversation = value as! UInt64?
 		case 7:
-			guard value is EventContinuationToken? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EventContinuationToken? else { throw ProtoError.typeMismatchError }
 			self.eventContinuationToken = value as! EventContinuationToken?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5754,6 +7245,12 @@ public struct GetConversationRequest: ProtoMessageExtensor {
 		case 4: return self.includeEvent
 		case 6: return self.maxEventsPerConversation
 		case 7: return self.eventContinuationToken
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5791,11 +7288,17 @@ public struct GetConversationResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is ConversationState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationState? else { throw ProtoError.typeMismatchError }
 			self.conversationState = value as! ConversationState?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5804,6 +7307,12 @@ public struct GetConversationResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 2: return self.conversationState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5835,7 +7344,7 @@ public struct GetEntityByIdRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 3:
 			guard value is [EntityLookupSpec] else { throw ProtoError.typeMismatchError }
@@ -5844,10 +7353,33 @@ public struct GetEntityByIdRequest: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 3:
+			if value is [EntityLookupSpec] {
+				self.batchLookupSpec.insert(contentsOf: value as! [EntityLookupSpec], at: index > 0 ? index : self.batchLookupSpec.endIndex)
+			} else if value is EntityLookupSpec {
+				self.batchLookupSpec.insert(value as! EntityLookupSpec, at: index > 0 ? index : self.batchLookupSpec.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.requestHeader
 		case 3: return self.batchLookupSpec
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 3:
+			guard index > 0 && index < self.batchLookupSpec.endIndex else { throw ProtoError.unknownError }
+			return self.batchLookupSpec[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5880,7 +7412,7 @@ public struct GetEntityByIdResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
 			guard value is [Entity] else { throw ProtoError.typeMismatchError }
@@ -5892,11 +7424,45 @@ public struct GetEntityByIdResponse: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 2:
+			if value is [Entity] {
+				self.entity.insert(contentsOf: value as! [Entity], at: index > 0 ? index : self.entity.endIndex)
+			} else if value is Entity {
+				self.entity.insert(value as! Entity, at: index > 0 ? index : self.entity.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		case 3:
+			if value is [EntityResult] {
+				self.entityResult.insert(contentsOf: value as! [EntityResult], at: index > 0 ? index : self.entityResult.endIndex)
+			} else if value is EntityResult {
+				self.entityResult.insert(value as! EntityResult, at: index > 0 ? index : self.entityResult.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.responseHeader
 		case 2: return self.entity
 		case 3: return self.entityResult
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 2:
+			guard index > 0 && index < self.entity.endIndex else { throw ProtoError.unknownError }
+			return self.entity[index]
+		case 3:
+			guard index > 0 && index < self.entityResult.endIndex else { throw ProtoError.unknownError }
+			return self.entityResult[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5936,29 +7502,35 @@ public struct GetSuggestedEntitiesRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 4:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxCount = value as! UInt64?
 		case 8:
-			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.favorites = value as! SuggestedContactGroupHash?
 		case 9:
-			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.contactsYouHangoutWith = value as! SuggestedContactGroupHash?
 		case 10:
-			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.otherContactsOnHangouts = value as! SuggestedContactGroupHash?
 		case 11:
-			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.otherContacts = value as! SuggestedContactGroupHash?
 		case 12:
-			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.dismissedContacts = value as! SuggestedContactGroupHash?
 		case 13:
-			guard value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroupHash? else { throw ProtoError.typeMismatchError }
 			self.pinnedFavorites = value as! SuggestedContactGroupHash?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -5973,6 +7545,12 @@ public struct GetSuggestedEntitiesRequest: ProtoMessageExtensor {
 		case 11: return self.otherContacts
 		case 12: return self.dismissedContacts
 		case 13: return self.pinnedFavorites
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6022,29 +7600,43 @@ public struct GetSuggestedEntitiesResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
 			guard value is [Entity] else { throw ProtoError.typeMismatchError }
 			self.entity = value as! [Entity]
 		case 4:
-			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.favorites = value as! SuggestedContactGroup?
 		case 5:
-			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.contactsYouHangoutWith = value as! SuggestedContactGroup?
 		case 6:
-			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.otherContactsOnHangouts = value as! SuggestedContactGroup?
 		case 7:
-			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.otherContacts = value as! SuggestedContactGroup?
 		case 8:
-			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.dismissedContacts = value as! SuggestedContactGroup?
 		case 9:
-			guard value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is SuggestedContactGroup? else { throw ProtoError.typeMismatchError }
 			self.pinnedFavorites = value as! SuggestedContactGroup?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 2:
+			if value is [Entity] {
+				self.entity.insert(contentsOf: value as! [Entity], at: index > 0 ? index : self.entity.endIndex)
+			} else if value is Entity {
+				self.entity.insert(value as! Entity, at: index > 0 ? index : self.entity.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6059,6 +7651,15 @@ public struct GetSuggestedEntitiesResponse: ProtoMessageExtensor {
 		case 7: return self.otherContacts
 		case 8: return self.dismissedContacts
 		case 9: return self.pinnedFavorites
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 2:
+			guard index > 0 && index < self.entity.endIndex else { throw ProtoError.unknownError }
+			return self.entity[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6101,8 +7702,14 @@ public struct GetSelfInfoRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6110,6 +7717,12 @@ public struct GetSelfInfoRequest: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.requestHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6149,41 +7762,55 @@ public struct GetSelfInfoResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is Entity? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Entity? else { throw ProtoError.typeMismatchError }
 			self.selfEntity = value as! Entity?
 		case 3:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.isKnownMinor = value as! Bool?
 		case 5:
-			guard value is DoNotDisturbSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DoNotDisturbSetting? else { throw ProtoError.typeMismatchError }
 			self.dndState = value as! DoNotDisturbSetting?
 		case 6:
-			guard value is DesktopOffSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DesktopOffSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopOffSetting = value as! DesktopOffSetting?
 		case 7:
-			guard value is PhoneData? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PhoneData? else { throw ProtoError.typeMismatchError }
 			self.phoneData = value as! PhoneData?
 		case 8:
 			guard value is [ConfigurationBit] else { throw ProtoError.typeMismatchError }
 			self.configurationBit = value as! [ConfigurationBit]
 		case 9:
-			guard value is DesktopOffState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DesktopOffState? else { throw ProtoError.typeMismatchError }
 			self.desktopOffState = value as! DesktopOffState?
 		case 10:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.googlePlusUser = value as! Bool?
 		case 11:
-			guard value is DesktopSoundSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DesktopSoundSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopSoundSetting = value as! DesktopSoundSetting?
 		case 12:
-			guard value is RichPresenceState? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RichPresenceState? else { throw ProtoError.typeMismatchError }
 			self.richPresenceState = value as! RichPresenceState?
 		case 19:
-			guard value is Country? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Country? else { throw ProtoError.typeMismatchError }
 			self.defaultCountry = value as! Country?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 8:
+			if value is [ConfigurationBit] {
+				self.configurationBit.insert(contentsOf: value as! [ConfigurationBit], at: index > 0 ? index : self.configurationBit.endIndex)
+			} else if value is ConfigurationBit {
+				self.configurationBit.insert(value as! ConfigurationBit, at: index > 0 ? index : self.configurationBit.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6202,6 +7829,15 @@ public struct GetSelfInfoResponse: ProtoMessageExtensor {
 		case 11: return self.desktopSoundSetting
 		case 12: return self.richPresenceState
 		case 19: return self.defaultCountry
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 8:
+			guard index > 0 && index < self.configurationBit.endIndex else { throw ProtoError.unknownError }
+			return self.configurationBit[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6254,7 +7890,7 @@ public struct QueryPresenceRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
 			guard value is [ParticipantId] else { throw ProtoError.typeMismatchError }
@@ -6266,11 +7902,45 @@ public struct QueryPresenceRequest: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 2:
+			if value is [ParticipantId] {
+				self.participantId.insert(contentsOf: value as! [ParticipantId], at: index > 0 ? index : self.participantId.endIndex)
+			} else if value is ParticipantId {
+				self.participantId.insert(value as! ParticipantId, at: index > 0 ? index : self.participantId.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		case 3:
+			if value is [FieldMask] {
+				self.fieldMask.insert(contentsOf: value as! [FieldMask], at: index > 0 ? index : self.fieldMask.endIndex)
+			} else if value is FieldMask {
+				self.fieldMask.insert(value as! FieldMask, at: index > 0 ? index : self.fieldMask.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.requestHeader
 		case 2: return self.participantId
 		case 3: return self.fieldMask
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 2:
+			guard index > 0 && index < self.participantId.endIndex else { throw ProtoError.unknownError }
+			return self.participantId[index]
+		case 3:
+			guard index > 0 && index < self.fieldMask.endIndex else { throw ProtoError.unknownError }
+			return self.fieldMask[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6304,7 +7974,7 @@ public struct QueryPresenceResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
 			guard value is [PresenceResult] else { throw ProtoError.typeMismatchError }
@@ -6313,10 +7983,33 @@ public struct QueryPresenceResponse: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 2:
+			if value is [PresenceResult] {
+				self.presenceResult.insert(contentsOf: value as! [PresenceResult], at: index > 0 ? index : self.presenceResult.endIndex)
+			} else if value is PresenceResult {
+				self.presenceResult.insert(value as! PresenceResult, at: index > 0 ? index : self.presenceResult.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.responseHeader
 		case 2: return self.presenceResult
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 2:
+			guard index > 0 && index < self.presenceResult.endIndex else { throw ProtoError.unknownError }
+			return self.presenceResult[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6348,11 +8041,17 @@ public struct RemoveUserRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 5:
-			guard value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
 			self.eventRequestHeader = value as! EventRequestHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6361,6 +8060,12 @@ public struct RemoveUserRequest: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.requestHeader
 		case 5: return self.eventRequestHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6392,11 +8097,17 @@ public struct RemoveUserResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 4:
-			guard value is Event? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Event? else { throw ProtoError.typeMismatchError }
 			self.createdEvent = value as! Event?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6405,6 +8116,12 @@ public struct RemoveUserResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 4: return self.createdEvent
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6437,14 +8154,20 @@ public struct RenameConversationRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.newName = value as! String?
 		case 5:
-			guard value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
 			self.eventRequestHeader = value as! EventRequestHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6454,6 +8177,12 @@ public struct RenameConversationRequest: ProtoMessageExtensor {
 		case 1: return self.requestHeader
 		case 3: return self.newName
 		case 5: return self.eventRequestHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6487,11 +8216,17 @@ public struct RenameConversationResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 4:
-			guard value is Event? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Event? else { throw ProtoError.typeMismatchError }
 			self.createdEvent = value as! Event?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6500,6 +8235,12 @@ public struct RenameConversationResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 4: return self.createdEvent
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6532,14 +8273,20 @@ public struct SearchEntitiesRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.query = value as! String?
 		case 4:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxCount = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6549,6 +8296,12 @@ public struct SearchEntitiesRequest: ProtoMessageExtensor {
 		case 1: return self.requestHeader
 		case 3: return self.query
 		case 4: return self.maxCount
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6582,7 +8335,7 @@ public struct SearchEntitiesResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
 			guard value is [Entity] else { throw ProtoError.typeMismatchError }
@@ -6591,10 +8344,33 @@ public struct SearchEntitiesResponse: ProtoMessageExtensor {
 		}
 	}
 
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 2:
+			if value is [Entity] {
+				self.entity.insert(contentsOf: value as! [Entity], at: index > 0 ? index : self.entity.endIndex)
+			} else if value is Entity {
+				self.entity.insert(value as! Entity, at: index > 0 ? index : self.entity.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.responseHeader
 		case 2: return self.entity
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 2:
+			guard index > 0 && index < self.entity.endIndex else { throw ProtoError.unknownError }
+			return self.entity[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6629,20 +8405,34 @@ public struct SendChatMessageRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 5:
 			guard value is [EventAnnotation] else { throw ProtoError.typeMismatchError }
 			self.annotation = value as! [EventAnnotation]
 		case 6:
-			guard value is MessageContent? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MessageContent? else { throw ProtoError.typeMismatchError }
 			self.messageContent = value as! MessageContent?
 		case 7:
-			guard value is ExistingMedia? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ExistingMedia? else { throw ProtoError.typeMismatchError }
 			self.existingMedia = value as! ExistingMedia?
 		case 8:
-			guard value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is EventRequestHeader? else { throw ProtoError.typeMismatchError }
 			self.eventRequestHeader = value as! EventRequestHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 5:
+			if value is [EventAnnotation] {
+				self.annotation.insert(contentsOf: value as! [EventAnnotation], at: index > 0 ? index : self.annotation.endIndex)
+			} else if value is EventAnnotation {
+				self.annotation.insert(value as! EventAnnotation, at: index > 0 ? index : self.annotation.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6654,6 +8444,15 @@ public struct SendChatMessageRequest: ProtoMessageExtensor {
 		case 6: return self.messageContent
 		case 7: return self.existingMedia
 		case 8: return self.eventRequestHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 5:
+			guard index > 0 && index < self.annotation.endIndex else { throw ProtoError.unknownError }
+			return self.annotation[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6691,11 +8490,17 @@ public struct SendChatMessageResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 6:
-			guard value is Event? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Event? else { throw ProtoError.typeMismatchError }
 			self.createdEvent = value as! Event?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6704,6 +8509,12 @@ public struct SendChatMessageResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 6: return self.createdEvent
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6735,11 +8546,17 @@ public struct SendOffnetworkInvitationRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is OffnetworkAddress? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is OffnetworkAddress? else { throw ProtoError.typeMismatchError }
 			self.inviteeAddress = value as! OffnetworkAddress?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6748,6 +8565,12 @@ public struct SendOffnetworkInvitationRequest: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.requestHeader
 		case 2: return self.inviteeAddress
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6778,8 +8601,14 @@ public struct SendOffnetworkInvitationResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6787,6 +8616,12 @@ public struct SendOffnetworkInvitationResponse: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.responseHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6818,17 +8653,23 @@ public struct SetActiveClientRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is Bool? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is Bool? else { throw ProtoError.typeMismatchError }
 			self.isActive = value as! Bool?
 		case 3:
-			guard value is String? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is String? else { throw ProtoError.typeMismatchError }
 			self.fullJid = value as! String?
 		case 4:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timeoutSecs = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6839,6 +8680,12 @@ public struct SetActiveClientRequest: ProtoMessageExtensor {
 		case 2: return self.isActive
 		case 3: return self.fullJid
 		case 4: return self.timeoutSecs
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6873,8 +8720,14 @@ public struct SetActiveClientResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6882,6 +8735,12 @@ public struct SetActiveClientResponse: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.responseHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6910,8 +8769,14 @@ public struct SetConversationLevelRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6919,6 +8784,12 @@ public struct SetConversationLevelRequest: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.requestHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6947,8 +8818,14 @@ public struct SetConversationLevelResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6956,6 +8833,12 @@ public struct SetConversationLevelResponse: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.responseHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -6986,14 +8869,20 @@ public struct SetConversationNotificationLevelRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 3:
-			guard value is NotificationLevel? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is NotificationLevel? else { throw ProtoError.typeMismatchError }
 			self.level = value as! NotificationLevel?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7003,6 +8892,12 @@ public struct SetConversationNotificationLevelRequest: ProtoMessageExtensor {
 		case 1: return self.requestHeader
 		case 2: return self.conversationId
 		case 3: return self.level
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7036,11 +8931,17 @@ public struct SetConversationNotificationLevelResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7049,6 +8950,12 @@ public struct SetConversationNotificationLevelResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 2: return self.timestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7082,17 +8989,23 @@ public struct SetFocusRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 3:
-			guard value is FocusType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is FocusType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! FocusType?
 		case 4:
-			guard value is UInt32? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt32? else { throw ProtoError.typeMismatchError }
 			self.timeoutSecs = value as! UInt32?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7103,6 +9016,12 @@ public struct SetFocusRequest: ProtoMessageExtensor {
 		case 2: return self.conversationId
 		case 3: return self.type
 		case 4: return self.timeoutSecs
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7138,11 +9057,17 @@ public struct SetFocusResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7151,6 +9076,12 @@ public struct SetFocusResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 2: return self.timestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7185,20 +9116,26 @@ public struct SetPresenceRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is PresenceStateSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is PresenceStateSetting? else { throw ProtoError.typeMismatchError }
 			self.presenceStateSetting = value as! PresenceStateSetting?
 		case 3:
-			guard value is DndSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DndSetting? else { throw ProtoError.typeMismatchError }
 			self.dndSetting = value as! DndSetting?
 		case 5:
-			guard value is DesktopOffSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is DesktopOffSetting? else { throw ProtoError.typeMismatchError }
 			self.desktopOffSetting = value as! DesktopOffSetting?
 		case 8:
-			guard value is MoodSetting? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is MoodSetting? else { throw ProtoError.typeMismatchError }
 			self.moodSetting = value as! MoodSetting?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7210,6 +9147,12 @@ public struct SetPresenceRequest: ProtoMessageExtensor {
 		case 3: return self.dndSetting
 		case 5: return self.desktopOffSetting
 		case 8: return self.moodSetting
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7246,8 +9189,14 @@ public struct SetPresenceResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7255,6 +9204,12 @@ public struct SetPresenceResponse: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.responseHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7285,14 +9240,20 @@ public struct SetTypingRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 3:
-			guard value is TypingType? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is TypingType? else { throw ProtoError.typeMismatchError }
 			self.type = value as! TypingType?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7302,6 +9263,12 @@ public struct SetTypingRequest: ProtoMessageExtensor {
 		case 1: return self.requestHeader
 		case 2: return self.conversationId
 		case 3: return self.type
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7335,11 +9302,17 @@ public struct SetTypingResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.timestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7348,6 +9321,12 @@ public struct SetTypingResponse: ProtoMessageExtensor {
 		switch id {
 		case 1: return self.responseHeader
 		case 2: return self.timestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7380,14 +9359,20 @@ public struct SyncAllNewEventsRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.lastSyncTimestamp = value as! UInt64?
 		case 8:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxResponseSizeBytes = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7397,6 +9382,12 @@ public struct SyncAllNewEventsRequest: ProtoMessageExtensor {
 		case 1: return self.requestHeader
 		case 2: return self.lastSyncTimestamp
 		case 8: return self.maxResponseSizeBytes
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7431,14 +9422,28 @@ public struct SyncAllNewEventsResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.syncTimestamp = value as! UInt64?
 		case 3:
 			guard value is [ConversationState] else { throw ProtoError.typeMismatchError }
 			self.conversationState = value as! [ConversationState]
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 3:
+			if value is [ConversationState] {
+				self.conversationState.insert(contentsOf: value as! [ConversationState], at: index > 0 ? index : self.conversationState.endIndex)
+			} else if value is ConversationState {
+				self.conversationState.insert(value as! ConversationState, at: index > 0 ? index : self.conversationState.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7448,6 +9453,15 @@ public struct SyncAllNewEventsResponse: ProtoMessageExtensor {
 		case 1: return self.responseHeader
 		case 2: return self.syncTimestamp
 		case 3: return self.conversationState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 3:
+			guard index > 0 && index < self.conversationState.endIndex else { throw ProtoError.unknownError }
+			return self.conversationState[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7483,17 +9497,31 @@ public struct SyncRecentConversationsRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxConversations = value as! UInt64?
 		case 4:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.maxEventsPerConversation = value as! UInt64?
 		case 5:
 			guard value is [SyncFilter] else { throw ProtoError.typeMismatchError }
 			self.syncFilter = value as! [SyncFilter]
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 5:
+			if value is [SyncFilter] {
+				self.syncFilter.insert(contentsOf: value as! [SyncFilter], at: index > 0 ? index : self.syncFilter.endIndex)
+			} else if value is SyncFilter {
+				self.syncFilter.insert(value as! SyncFilter, at: index > 0 ? index : self.syncFilter.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7504,6 +9532,15 @@ public struct SyncRecentConversationsRequest: ProtoMessageExtensor {
 		case 3: return self.maxConversations
 		case 4: return self.maxEventsPerConversation
 		case 5: return self.syncFilter
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 5:
+			guard index > 0 && index < self.syncFilter.endIndex else { throw ProtoError.unknownError }
+			return self.syncFilter[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7540,14 +9577,28 @@ public struct SyncRecentConversationsResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
 		case 2:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.syncTimestamp = value as! UInt64?
 		case 3:
 			guard value is [ConversationState] else { throw ProtoError.typeMismatchError }
 			self.conversationState = value as! [ConversationState]
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
+		case 3:
+			if value is [ConversationState] {
+				self.conversationState.insert(contentsOf: value as! [ConversationState], at: index > 0 ? index : self.conversationState.endIndex)
+			} else if value is ConversationState {
+				self.conversationState.insert(value as! ConversationState, at: index > 0 ? index : self.conversationState.endIndex)
+			} else {
+				throw ProtoError.typeMismatchError
+			}
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7557,6 +9608,15 @@ public struct SyncRecentConversationsResponse: ProtoMessageExtensor {
 		case 1: return self.responseHeader
 		case 2: return self.syncTimestamp
 		case 3: return self.conversationState
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
+		case 3:
+			guard index > 0 && index < self.conversationState.endIndex else { throw ProtoError.unknownError }
+			return self.conversationState[index]
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7591,14 +9651,20 @@ public struct UpdateWatermarkRequest: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is RequestHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is RequestHeader? else { throw ProtoError.typeMismatchError }
 			self.requestHeader = value as! RequestHeader?
 		case 2:
-			guard value is ConversationId? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ConversationId? else { throw ProtoError.typeMismatchError }
 			self.conversationId = value as! ConversationId?
 		case 3:
-			guard value is UInt64? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is UInt64? else { throw ProtoError.typeMismatchError }
 			self.lastReadTimestamp = value as! UInt64?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7608,6 +9674,12 @@ public struct UpdateWatermarkRequest: ProtoMessageExtensor {
 		case 1: return self.requestHeader
 		case 2: return self.conversationId
 		case 3: return self.lastReadTimestamp
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7640,8 +9712,14 @@ public struct UpdateWatermarkResponse: ProtoMessageExtensor {
 	public mutating func set(id: Int, value: Any?) throws {
 		switch id {
 		case 1:
-			guard value is ResponseHeader? else { throw ProtoError.typeMismatchError }
+			guard value == nil || value is ResponseHeader? else { throw ProtoError.typeMismatchError }
 			self.responseHeader = value as! ResponseHeader?
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public mutating func set(id: Int, value: Any?, at index: Int) throws {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
@@ -7649,6 +9727,12 @@ public struct UpdateWatermarkResponse: ProtoMessageExtensor {
 	public func get(id: Int) throws -> Any? {
 		switch id {
 		case 1: return self.responseHeader
+		default: throw ProtoError.fieldNameNotFoundError
+		}
+	}
+
+	public func get(id: Int, at index: Int) throws -> Any? {
+		switch id {
 		default: throw ProtoError.fieldNameNotFoundError
 		}
 	}
