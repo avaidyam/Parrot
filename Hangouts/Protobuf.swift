@@ -158,18 +158,15 @@ public enum ProtoFieldType {
 	// TODO: Use a protocol like `AnyInstantiable` and conform types.
 	public func _cast(value value2: Any?) -> Any? {
 		guard value2 != nil else { return value2 }
-		let value = "\(value2)"
+		let value = "\(value2!)"
 		switch self {
-		case string: return value2 /* CANNOT CAST */
-		case bytes: return value2 /* CANNOT CAST */
-		case bool: return value2 /* CANNOT CAST */
-		case double: return Double(value)
-		case float: return Float(value)
-		case uint32, fixed32: return UInt32(value)
-		case uint64, fixed64: return UInt64(value)
-		case int32, sint32, sfixed32: return Int32(value)
-		case int64, sint64, sfixed64: return Int64(value)
-		case prototype(_): return value2 /* CANNOT CAST */
+		case double: return Double(value)!
+		case float: return Float(value)!
+		case uint32, fixed32: return UInt32(value)!
+		case uint64, fixed64: return UInt64(value)!
+		case int32, sint32, sfixed32: return Int32(value)!
+		case int64, sint64, sfixed64: return Int64(value)!
+		default: return value2 /* CANNOT CAST */
 		}
 	}
 	

@@ -158,17 +158,17 @@ public extension ElementContainerView {
 	}
 	
 	/* TODO: Support size classes. */
-	public func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return CGFloat(self.sizeClass != .Dynamic ? self.sizeClass.rawValue :
 			(self.dynamicHeightProvider?(row: row) ?? SizeClass.Medium.rawValue))
 	}
 	
-	public func tableView(tableView: NSTableView, isGroupRow row: Int) -> Bool {
+	public func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {
 		//Swift.print("Unimplemented \(__FUNCTION__)")
 		return false
 	}
 	
-	public func tableView(tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
+	public func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
 		return self.rowActionProvider?(row: row, edge: edge) ?? []
 	}
 	
@@ -179,17 +179,19 @@ public extension ElementContainerView {
 		return view
 	}
 	
-	public func tableView(tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+	public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
 		//Swift.print("Unimplemented \(__FUNCTION__)")
 		return nil // no default row yet
 	}
 	
-	public func tableView(tableView: NSTableView, didAddRowView rowView: NSTableRowView, forRow row: Int) {
+	@objc(tableView:didAddRowView:forRow:)
+	public func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int) {
 		//Swift.print("Unimplemented \(__FUNCTION__)")
 		rowView.isEmphasized = false
 	}
 	
-	public func tableView(tableView: NSTableView, didRemoveRowView rowView: NSTableRowView, forRow row: Int) {
+	@objc(tableView:didRemoveRowView:forRow:)
+	public func tableView(_ tableView: NSTableView, didRemove rowView: NSTableRowView, forRow row: Int) {
 		//Swift.print("Unimplemented \(__FUNCTION__)")
 	}
 }
@@ -197,20 +199,21 @@ public extension ElementContainerView {
 // Selection Support
 public extension ElementContainerView {
 	
-	public func selectionShouldChangeInTableView(tableView: NSTableView) -> Bool {
+	@objc(selectionShouldChangeInTableView:)
+	public func selectionShouldChange(in tableView: NSTableView) -> Bool {
 		return self.selectionProvider != nil
 	}
 	
-	public func tableView(tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet {
+	public func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet {
 		Swift.print("Unimplemented \(#function)")
 		return proposedSelectionIndexes
 	}
 	
-	public func tableViewSelectionDidChange(notification: NSNotification) {
+	public func tableViewSelectionDidChange(_ notification: NSNotification) {
 		self.selectionProvider?(row: self.tableView.selectedRow)
 	}
 	
-	public func tableViewSelectionIsChanging(notification: NSNotification) {
+	public func tableViewSelectionIsChanging(_ notification: NSNotification) {
 		Swift.print("Unimplemented \(#function)")
 	}
 }
@@ -218,39 +221,43 @@ public extension ElementContainerView {
 // Drag & Drop Support
 public extension ElementContainerView {
 	
-	public func tableView(tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+	public func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
 		Swift.print("Unimplemented \(#function)")
 		return nil
 	}
 	
-	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
+	@objc(tableView:draggingSession:willBeginAtPoint:forRowIndexes:)
+	public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
 		Swift.print("Unimplemented \(#function)")
 	}
 	
-	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
+	@objc(tableView:draggingSession:endedAtPoint:operation:)
+	public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
 		Swift.print("Unimplemented \(#function)")
 	}
 	
-	public func tableView(tableView: NSTableView, updateDraggingItemsForDrag draggingInfo: NSDraggingInfo) {
+	public func tableView(_ tableView: NSTableView, updateDraggingItemsForDrag draggingInfo: NSDraggingInfo) {
 		Swift.print("Unimplemented \(#function)")
 	}
 	
-	public func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
+	@objc(tableView:writeRowsWithIndexes:toPasteboard:)
+	public func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: NSIndexSet, to pboard: NSPasteboard) -> Bool {
 		Swift.print("Unimplemented \(#function)")
 		return false
 	}
 	
-	public func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+	public func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
 		Swift.print("Unimplemented \(#function)")
 		return []
 	}
 	
-	public func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+	public func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
 		Swift.print("Unimplemented \(#function)")
 		return false
 	}
 	
-	public func tableView(tableView: NSTableView, namesOfPromisedFilesDroppedAtDestination dropDestination: NSURL, forDraggedRowsWithIndexes indexSet: NSIndexSet) -> [String] {
+	@objc(tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:)
+	public func tableView(_ tableView: NSTableView, namesOfPromisedFilesDroppedAtDestination dropDestination: NSURL, forDraggedRowsWith indexSet: NSIndexSet) -> [String] {
 		Swift.print("Unimplemented \(#function)")
 		return []
 	}
