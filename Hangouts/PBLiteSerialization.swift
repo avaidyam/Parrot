@@ -103,7 +103,6 @@ public class PBLiteSerialization {
 			if subdata == nil { continue }
 			if let field = message._declaredFields[tag] {
 				if field.label == .repeated {
-					//print("repeated field \(field) being ignored with subdata.")
 					decodeRepeatedField(message: &message, field: field, value: subdata)
 				} else {
 					decodeField(message: &message, field: field, value: subdata)

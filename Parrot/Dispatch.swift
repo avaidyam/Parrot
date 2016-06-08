@@ -44,11 +44,13 @@ public struct Semaphore {
 		self.rawValue = dispatch_semaphore_create(count)
 	}
 	
+	@discardableResult
 	public func signal() -> Int {
 		return dispatch_semaphore_signal(self.rawValue)
 	}
 	
 	/* TODO: Use dispatch_time_t until we replace it nicely. */
+	@discardableResult
 	public func wait(timeout: dispatch_time_t = DISPATCH_TIME_FOREVER) -> Int {
 		return dispatch_semaphore_wait(self.rawValue, timeout)
 	}

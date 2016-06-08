@@ -183,11 +183,9 @@ public final class Client {
 			// This is a (Client)BatchUpdate containing StateUpdate messages.
 			// payload[1] is a list of state updates.
 			if payload[0] as? String == "cbu" {
-				let result = flatMap(payload[1] as! [NSArray]) {
-					PBLiteSerialization._parse(StateUpdate.self, input: $0 as [AnyObject])
-				}
-				
-				for state_update in result {
+				var b = BatchUpdate() as ProtoMessage
+				PBLiteSerialization.decode(message: &b, pblite: payload as! [AnyObject], ignoreFirstItem: true)
+				for state_update in (b as! BatchUpdate).stateUpdate {
 					self.active_client_state = state_update.stateUpdateHeader!.activeClientState!
 					NSNotificationCenter.default().post(
 						name: Client.didUpdateStateNotification, object: self,
@@ -240,27 +238,26 @@ public final class Client {
 				}))
 			}
 			
-			var required_entities = Array<Entity>()
-			if required_user_ids.count > 0 {
-				self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
-					required_entities = resp!.entity
-				}
-			}
-			
-			var conv_part_list = Array<ConversationParticipantData>()
-			for conv_state in conv_states {
-				let participants = conv_state.conversation!.participantData
-				conv_part_list.append(contentsOf: participants)
-			}
-			
-			// Let's request our own entity now.
-			var self_entity = Entity()
-			self.getSelfInfo {
-				self_entity = $0!.selfEntity!
+			var required_entities = [Entity]()
+			self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
+				required_entities = resp?.entity ?? []
+				print(required_entities)
 				
-				let userList = UserList(client: self, selfEntity: self_entity, entities: required_entities, data: conv_part_list)
-				let conversationList = ConversationList(client: self, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
-				cb(userList, conversationList)
+				var conv_part_list = Array<ConversationParticipantData>()
+				for conv_state in conv_states {
+					let participants = conv_state.conversation!.participantData
+					conv_part_list.append(contentsOf: participants)
+				}
+				
+				// Let's request our own entity now.
+				var self_entity = Entity()
+				self.getSelfInfo {
+					self_entity = $0!.selfEntity!
+					
+					let userList = UserList(client: self, selfEntity: self_entity, entities: required_entities, data: conv_part_list)
+					let conversationList = ConversationList(client: self, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
+					cb(userList, conversationList)
+				}
 			}
 		}
 	}
@@ -465,6 +462,7 @@ public final class Client {
 	
 	// Return information about a list of contacts.
 	public func getEntitiesByID(chat_id_list: [String], cb: (response: GetEntityByIdResponse?) -> Void) {
+		guard chat_id_list.count > 0 else { cb(response: nil); return }
 		let data = [
 			self.getRequestHeader(),
 			None,
@@ -634,7 +632,7 @@ public final class Client {
 		]
 		
 		// Set the active client.
-		self.request(endpoint: "clients/setactiveclient", body: data, use_json: true) {
+		self.request(endpoint: "clients/setactiveclient", body: data) {
 			r in self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}
@@ -644,7 +642,7 @@ public final class Client {
 			self.getRequestHeader(),
 			[conversation_id]
 		]
-		self.request(endpoint: "conversations/setconversationnotificationlevel", body: data){ r in
+		self.request(endpoint: "conversations/setconversationnotificationlevel", body: data) { r in
 			self.verifyResponseOK(responseObject: r.data!); cb?()
 		}
 	}

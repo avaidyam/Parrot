@@ -46,7 +46,7 @@
 		48834E401C1B4098009BC442 /* ConversationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E381C1B4098009BC442 /* ConversationList.swift */; };
 		48834E411C1B4098009BC442 /* FoundationSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E391C1B4098009BC442 /* FoundationSupport.swift */; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
-		48834E451C1B40A4009BC442 /* PBLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLite.swift */; };
+		48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */; };
 		48834E4C1C1B4253009BC442 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */; };
 		48834E571C1B490B009BC442 /* CommonCrypto in Resources */ = {isa = PBXBuildFile; fileRef = 48834E561C1B490B009BC442 /* CommonCrypto */; };
 		488997151C4E0EA30034AEF3 /* SwiftAutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488997141C4E0EA30034AEF3 /* SwiftAutoLayout.swift */; };
@@ -274,7 +274,7 @@
 		48834E381C1B4098009BC442 /* ConversationList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationList.swift; sourceTree = "<group>"; };
 		48834E391C1B4098009BC442 /* FoundationSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationSupport.swift; sourceTree = "<group>"; };
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		48834E431C1B40A4009BC442 /* PBLite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLite.swift; sourceTree = "<group>"; };
+		48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLiteSerialization.swift; sourceTree = "<group>"; };
 		48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		48834E561C1B490B009BC442 /* CommonCrypto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CommonCrypto; path = External/CommonCrypto; sourceTree = SOURCE_ROOT; };
 		488997141C4E0EA30034AEF3 /* SwiftAutoLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftAutoLayout.swift; sourceTree = "<group>"; };
@@ -461,7 +461,7 @@
 			children = (
 				48DF84971D04E1F800F39444 /* hangouts.proto.swift */,
 				48E9C3391D04DFF90074984D /* Protobuf.swift */,
-				48834E431C1B40A4009BC442 /* PBLite.swift */,
+				48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */,
 			);
 			name = PBLite;
 			sourceTree = "<group>";
@@ -1203,7 +1203,7 @@
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
-				48834E451C1B40A4009BC442 /* PBLite.swift in Sources */,
+				48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
 				48834E401C1B4098009BC442 /* ConversationList.swift in Sources */,
 				48834E3D1C1B4098009BC442 /* Client.swift in Sources */,
