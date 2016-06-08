@@ -115,6 +115,12 @@ public class PBLiteSerialization {
 		}
 	}
 	
+	public class func _parse<T: ProtoMessage>(_ class: T.Type, input: [AnyObject]) -> T? {
+		var msg = T.init() as ProtoMessage
+		decode(message: &msg, pblite: input, ignoreFirstItem: false)
+		return msg as? T
+	}
+	
 	public class func parseProtoJSON<T: ProtoMessage>(input: NSData) -> T? {
 		let script = (NSString(data: input, encoding: NSUTF8StringEncoding)! as String)
 		if let parsedObject = evalArray(string: script) as? [AnyObject] {

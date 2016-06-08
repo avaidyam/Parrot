@@ -385,15 +385,15 @@ public class IConversation {
 
     public var last_modified: UInt64 {
         get {
-			return conversation.selfConversationState!.sortTimestamp!
-				?? 0//NSDate(timeIntervalSinceReferenceDate: 0)
+			return conversation.selfConversationState?.sortTimestamp ?? 0
+			//NSDate(timeIntervalSinceReferenceDate: 0)
         }
     }
 	
 	// datetime timestamp of the last read Event.
     public var latest_read_timestamp: UInt64 {
         get {
-            return conversation.selfConversationState!.selfReadState!.latestReadTimestamp!
+            return conversation.selfConversationState?.selfReadState?.latestReadTimestamp ?? 0
         }
         set(newLatestReadTimestamp) {
 			// FIXME: Oops.

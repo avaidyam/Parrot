@@ -13,7 +13,7 @@ public class IEvent : Hashable, Equatable {
 	
 	// A timestamp of when the event occurred.
     public lazy var timestamp: UInt64 = {
-		return self.event.timestamp!
+		return self.event.timestamp ?? 0
     }()
 	
 	// A UserID indicating who created the event.

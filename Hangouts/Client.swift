@@ -183,12 +183,8 @@ public final class Client {
 			// This is a (Client)BatchUpdate containing StateUpdate messages.
 			// payload[1] is a list of state updates.
 			if payload[0] as? String == "cbu" {
-				/*let result = flatMap(x: payload[1] as! [NSArray]) {
-					var msg = StateUpdate()
-					PBLiteSerialization.decode(message: msg,
-					                           pblite: $0 as [AnyObject],
-					                           ignoreFirstItem: true)
-					return msg
+				let result = flatMap(payload[1] as! [NSArray]) {
+					PBLiteSerialization._parse(StateUpdate.self, input: $0 as [AnyObject])
 				}
 				
 				for state_update in result {
@@ -196,7 +192,7 @@ public final class Client {
 					NSNotificationCenter.default().post(
 						name: Client.didUpdateStateNotification, object: self,
 						userInfo: [Client.didUpdateStateKey: Wrapper(state_update)])
-				}*/
+				}
 			} else {
 				print("Ignoring message: \(payload[0])")
 			}
@@ -241,7 +237,7 @@ public final class Client {
 				let participants = conv_state.conversation!.participantData
 				required_user_ids = required_user_ids.union(Set(participants.map {
 					UserID(chatID: $0.id!.chatId!, gaiaID: $0.id!.gaiaId!)
-					}))
+				}))
 			}
 			
 			var required_entities = Array<Entity>()
@@ -260,7 +256,6 @@ public final class Client {
 			// Let's request our own entity now.
 			var self_entity = Entity()
 			self.getSelfInfo {
-				print($0)
 				self_entity = $0!.selfEntity!
 				
 				let userList = UserList(client: self, selfEntity: self_entity, entities: required_entities, data: conv_part_list)

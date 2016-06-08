@@ -160,8 +160,8 @@ public enum ProtoFieldType {
 		guard value2 != nil else { return value2 }
 		let value = "\(value2)"
 		switch self {
-		case string: return value
-		case bytes: return value
+		case string: return value2 /* CANNOT CAST */
+		case bytes: return value2 /* CANNOT CAST */
 		case bool: return value2 /* CANNOT CAST */
 		case double: return Double(value)
 		case float: return Float(value)

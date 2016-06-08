@@ -1,7 +1,7 @@
 import Foundation
 
 // Flatmaps an array of type A to that of type B if element exits.
-internal func flatMap<A,B>(x: [A], y: (A) -> B?) -> [B] {
+internal func flatMap<A,B>(_ x: [A], _ y: (A) -> B?) -> [B] {
 	return x.map { y($0) }.filter { $0 != nil }.map { $0! }
 }
 

@@ -172,7 +172,8 @@ public extension ElementContainerView {
 		return self.rowActionProvider?(row: row, edge: edge) ?? []
 	}
 	
-	public func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+	@objc(tableView:viewForTableColumn:row:)
+	public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		let view = createView()
 		view.objectValue = self.dataSource[row]
 		return view
