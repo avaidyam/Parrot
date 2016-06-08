@@ -86,21 +86,21 @@ public class IChatMessageEvent : IEvent {
 				
 				// Try to parse an image message. Image messages contain no
 				// message segments, and thus have no automatic textual fallback.
-				/*if let data = attachment.embedItem!.data["27639957"] as? [AnyObject],
+				if let data = attachment.embedItem!._unknownFields[27639957] as? [AnyObject],
 					zeroth = data[0] as? [AnyObject],
 					third = zeroth[3] as? String {
 						attachments.append(third)
-				}*/
-			} /*else if attachment.embedItem!.type == [438] { // VOICE_PHOTO
+				}
+			} else if attachment.embedItem!.type == [438] { // VOICE_PHOTO
 				
 				// Try to parse an image message. Image messages contain no
 				// message segments, and thus have no automatic textual fallback.
-				/*if let data = attachment.embedItem!.data["62101782"] as? [AnyObject],
+				if let data = attachment.embedItem!._unknownFields[62101782] as? [AnyObject],
 					zeroth = data[0] as? [AnyObject],
 					third = zeroth[3] as? String {
 						attachments.append(third)
-				}*/
-			}*/ else if attachment.embedItem!.type == [.Place, .PlaceV2, .Thing] {
+				}
+			} else if attachment.embedItem!.type == [.Place, .PlaceV2, .Thing] {
 				// Google Maps URL that's already in the text.
 			} else {
 				print("Ignoring unknown chat message attachment: \(attachment)")

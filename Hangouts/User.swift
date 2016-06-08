@@ -44,7 +44,6 @@ public struct User: Hashable, Equatable {
 	// Initialize a User from an Entity.
 	// If selfUser is nil, assume this is the self user.
     public init(entity: Entity, selfUser: UserID?) {
-		print("ABC123 GOT \(entity)")
 		let userID = UserID(chatID: entity.id!.chatId!,
 			gaiaID: entity.id!.gaiaId! )
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
