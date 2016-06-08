@@ -260,6 +260,7 @@ public final class Client {
 			// Let's request our own entity now.
 			var self_entity = Entity()
 			self.getSelfInfo {
+				print($0)
 				self_entity = $0!.selfEntity!
 				
 				let userList = UserList(client: self, selfEntity: self_entity, entities: required_entities, data: conv_part_list)
@@ -733,7 +734,6 @@ public final class Client {
 			[1]
 		]
 		self.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
-			print(r.data)
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}

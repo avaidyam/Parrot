@@ -215,10 +215,10 @@ public class IConversation {
 
     public func leave(cb: (() -> Void)? = nil) {
         switch (self.conversation.type!) {
-        case .Group:
+        case ConversationType.Group:
             //print("Remove Not Implemented!")
             client.removeUser(conversation_id: id, cb: cb)
-        case .OneToOne:
+        case ConversationType.OneToOne:
             client.deleteConversation(conversation_id: id, cb: cb)
         default:
             break

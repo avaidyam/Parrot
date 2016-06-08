@@ -1,321 +1,541 @@
-public enum ActiveClientState: Int, ProtoEnum {
-	case NoActive = 0
-	case IsActive = 1
-	case OtherActive = 2
+public struct ActiveClientState: ProtoEnumExtensor {
+	public static let NoActive: ActiveClientState = 0
+	public static let IsActive: ActiveClientState = 1
+	public static let OtherActive: ActiveClientState = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum FocusType: Int, ProtoEnum {
-	case Unknown = 0
-	case Focused = 1
-	case Unfocused = 2
+public struct FocusType: ProtoEnumExtensor {
+	public static let Unknown: FocusType = 0
+	public static let Focused: FocusType = 1
+	public static let Unfocused: FocusType = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum FocusDevice: Int, ProtoEnum {
-	case Unspecified = 0
-	case Desktop = 20
-	case Mobile = 300
+public struct FocusDevice: ProtoEnumExtensor {
+	public static let Unspecified: FocusDevice = 0
+	public static let Desktop: FocusDevice = 20
+	public static let Mobile: FocusDevice = 300
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum TypingType: Int, ProtoEnum {
-	case Unknown = 0
-	case Started = 1
-	case Paused = 2
-	case Stopped = 3
+public struct TypingType: ProtoEnumExtensor {
+	public static let Unknown: TypingType = 0
+	public static let Started: TypingType = 1
+	public static let Paused: TypingType = 2
+	public static let Stopped: TypingType = 3
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ClientPresenceStateType: Int, ProtoEnum {
-	case ClientPresenceStateUnknown = 0
-	case ClientPresenceStateNone = 1
-	case ClientPresenceStateDesktopIdle = 30
-	case ClientPresenceStateDesktopActive = 40
+public struct ClientPresenceStateType: ProtoEnumExtensor {
+	public static let ClientPresenceStateUnknown: ClientPresenceStateType = 0
+	public static let ClientPresenceStateNone: ClientPresenceStateType = 1
+	public static let ClientPresenceStateDesktopIdle: ClientPresenceStateType = 30
+	public static let ClientPresenceStateDesktopActive: ClientPresenceStateType = 40
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum NotificationLevel: Int, ProtoEnum {
-	case Unknown = 0
-	case Quiet = 10
-	case Ring = 30
+public struct NotificationLevel: ProtoEnumExtensor {
+	public static let Unknown: NotificationLevel = 0
+	public static let Quiet: NotificationLevel = 10
+	public static let Ring: NotificationLevel = 30
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum SegmentType: Int, ProtoEnum {
-	case Text = 0
-	case LineBreak = 1
-	case Link = 2
+public struct SegmentType: ProtoEnumExtensor {
+	public static let Text: SegmentType = 0
+	public static let LineBreak: SegmentType = 1
+	public static let Link: SegmentType = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ItemType: Int, ProtoEnum {
-	case Thing = 0
-	case PlusPhoto = 249
-	case Place = 335
-	case PlaceV2 = 340
+public struct ItemType: ProtoEnumExtensor {
+	public static let Thing: ItemType = 0
+	public static let PlusPhoto: ItemType = 249
+	public static let Place: ItemType = 335
+	public static let PlaceV2: ItemType = 340
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum MediaType: Int, ProtoEnum {
-	case Unknown = 0
-	case Photo = 1
-	case AnimatedPhoto = 4
+public struct MediaType: ProtoEnumExtensor {
+	public static let Unknown: MediaType = 0
+	public static let Photo: MediaType = 1
+	public static let AnimatedPhoto: MediaType = 4
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum MembershipChangeType: Int, ProtoEnum {
-	case Join = 1
-	case Leave = 2
+public struct MembershipChangeType: ProtoEnumExtensor {
+	public static let Join: MembershipChangeType = 1
+	public static let Leave: MembershipChangeType = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum HangoutEventType: Int, ProtoEnum {
-	case Unknown = 0
-	case Start = 1
-	case End = 2
-	case Join = 3
-	case Leave = 4
-	case ComingSoon = 5
-	case Ongoing = 6
+public struct HangoutEventType: ProtoEnumExtensor {
+	public static let Unknown: HangoutEventType = 0
+	public static let Start: HangoutEventType = 1
+	public static let End: HangoutEventType = 2
+	public static let Join: HangoutEventType = 3
+	public static let Leave: HangoutEventType = 4
+	public static let ComingSoon: HangoutEventType = 5
+	public static let Ongoing: HangoutEventType = 6
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum OffTheRecordToggle: Int, ProtoEnum {
-	case Unknown = 0
-	case Enabled = 1
-	case Disabled = 2
+public struct OffTheRecordToggle: ProtoEnumExtensor {
+	public static let Unknown: OffTheRecordToggle = 0
+	public static let Enabled: OffTheRecordToggle = 1
+	public static let Disabled: OffTheRecordToggle = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum OffTheRecordStatus: Int, ProtoEnum {
-	case Unknown = 0
-	case OffTheRecord = 1
-	case OnTheRecord = 2
+public struct OffTheRecordStatus: ProtoEnumExtensor {
+	public static let Unknown: OffTheRecordStatus = 0
+	public static let OffTheRecord: OffTheRecordStatus = 1
+	public static let OnTheRecord: OffTheRecordStatus = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum SourceType: Int, ProtoEnum {
-	case Unknown = 0
+public struct SourceType: ProtoEnumExtensor {
+	public static let Unknown: SourceType = 0
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum EventType: Int, ProtoEnum {
-	case Unknown = 0
-	case RegularChatMessage = 1
-	case Sms = 2
-	case Voicemail = 3
-	case AddUser = 4
-	case RemoveUser = 5
-	case ConversationRename = 6
-	case Hangout = 7
-	case PhoneCall = 8
-	case OtrModification = 9
-	case PlanMutation = 10
-	case Mms = 11
-	case Deprecated12 = 12
+public struct EventType: ProtoEnumExtensor {
+	public static let Unknown: EventType = 0
+	public static let RegularChatMessage: EventType = 1
+	public static let Sms: EventType = 2
+	public static let Voicemail: EventType = 3
+	public static let AddUser: EventType = 4
+	public static let RemoveUser: EventType = 5
+	public static let ConversationRename: EventType = 6
+	public static let Hangout: EventType = 7
+	public static let PhoneCall: EventType = 8
+	public static let OtrModification: EventType = 9
+	public static let PlanMutation: EventType = 10
+	public static let Mms: EventType = 11
+	public static let Deprecated12: EventType = 12
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ConversationType: Int, ProtoEnum {
-	case Unknown = 0
-	case OneToOne = 1
-	case Group = 2
+public struct ConversationType: ProtoEnumExtensor {
+	public static let Unknown: ConversationType = 0
+	public static let OneToOne: ConversationType = 1
+	public static let Group: ConversationType = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ConversationStatus: Int, ProtoEnum {
-	case Unknown = 0
-	case Invited = 1
-	case Active = 2
-	case Left = 3
+public struct ConversationStatus: ProtoEnumExtensor {
+	public static let Unknown: ConversationStatus = 0
+	public static let Invited: ConversationStatus = 1
+	public static let Active: ConversationStatus = 2
+	public static let Left: ConversationStatus = 3
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ConversationView: Int, ProtoEnum {
-	case Unknown = 0
-	case Inbox = 1
-	case Archived = 2
+public struct ConversationView: ProtoEnumExtensor {
+	public static let Unknown: ConversationView = 0
+	public static let Inbox: ConversationView = 1
+	public static let Archived: ConversationView = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum DeliveryMediumType: Int, ProtoEnum {
-	case DeliveryMediumUnknown = 0
-	case DeliveryMediumBabel = 1
-	case DeliveryMediumGoogleVoice = 2
-	case DeliveryMediumLocalSms = 3
+public struct DeliveryMediumType: ProtoEnumExtensor {
+	public static let DeliveryMediumUnknown: DeliveryMediumType = 0
+	public static let DeliveryMediumBabel: DeliveryMediumType = 1
+	public static let DeliveryMediumGoogleVoice: DeliveryMediumType = 2
+	public static let DeliveryMediumLocalSms: DeliveryMediumType = 3
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum InvitationAffinity: Int, ProtoEnum {
-	case InviteAffinityUnknown = 0
-	case InviteAffinityHigh = 1
-	case InviteAffinityLow = 2
+public struct InvitationAffinity: ProtoEnumExtensor {
+	public static let InviteAffinityUnknown: InvitationAffinity = 0
+	public static let InviteAffinityHigh: InvitationAffinity = 1
+	public static let InviteAffinityLow: InvitationAffinity = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ParticipantType: Int, ProtoEnum {
-	case Unknown = 0
-	case Gaia = 2
-	case GoogleVoice = 3
+public struct ParticipantType: ProtoEnumExtensor {
+	public static let Unknown: ParticipantType = 0
+	public static let Gaia: ParticipantType = 2
+	public static let GoogleVoice: ParticipantType = 3
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum InvitationStatus: Int, ProtoEnum {
-	case Unknown = 0
-	case Pending = 1
-	case Accepted = 2
+public struct InvitationStatus: ProtoEnumExtensor {
+	public static let Unknown: InvitationStatus = 0
+	public static let Pending: InvitationStatus = 1
+	public static let Accepted: InvitationStatus = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ForceHistory: Int, ProtoEnum {
-	case Unknown = 0
-	case No = 1
+public struct ForceHistory: ProtoEnumExtensor {
+	public static let Unknown: ForceHistory = 0
+	public static let No: ForceHistory = 1
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum NetworkType: Int, ProtoEnum {
-	case Unknown = 0
-	case Babel = 1
-	case GoogleVoice = 2
+public struct NetworkType: ProtoEnumExtensor {
+	public static let Unknown: NetworkType = 0
+	public static let Babel: NetworkType = 1
+	public static let GoogleVoice: NetworkType = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum BlockState: Int, ProtoEnum {
-	case Unknown = 0
-	case Block = 1
-	case Unblock = 2
+public struct BlockState: ProtoEnumExtensor {
+	public static let Unknown: BlockState = 0
+	public static let Block: BlockState = 1
+	public static let Unblock: BlockState = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ReplyToInviteType: Int, ProtoEnum {
-	case Unknown = 0
-	case Accept = 1
-	case Decline = 2
+public struct ReplyToInviteType: ProtoEnumExtensor {
+	public static let Unknown: ReplyToInviteType = 0
+	public static let Accept: ReplyToInviteType = 1
+	public static let Decline: ReplyToInviteType = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ClientId: Int, ProtoEnum {
-	case Unknown = 0
-	case Android = 1
-	case Ios = 2
-	case Chrome = 3
-	case WebGplus = 5
-	case WebGmail = 6
-	case Ultraviolet = 13
+public struct ClientId: ProtoEnumExtensor {
+	public static let Unknown: ClientId = 0
+	public static let Android: ClientId = 1
+	public static let Ios: ClientId = 2
+	public static let Chrome: ClientId = 3
+	public static let WebGplus: ClientId = 5
+	public static let WebGmail: ClientId = 6
+	public static let Ultraviolet: ClientId = 13
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ClientBuildType: Int, ProtoEnum {
-	case BuildTypeUnknown = 0
-	case BuildTypeProductionWeb = 1
-	case BuildTypeProductionApp = 3
+public struct ClientBuildType: ProtoEnumExtensor {
+	public static let BuildTypeUnknown: ClientBuildType = 0
+	public static let BuildTypeProductionWeb: ClientBuildType = 1
+	public static let BuildTypeProductionApp: ClientBuildType = 3
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ResponseStatus: Int, ProtoEnum {
-	case Unknown = 0
-	case Ok = 1
-	case UnexpectedError = 3
-	case InvalidRequest = 4
+public struct ResponseStatus: ProtoEnumExtensor {
+	public static let Unknown: ResponseStatus = 0
+	public static let Ok: ResponseStatus = 1
+	public static let UnexpectedError: ResponseStatus = 3
+	public static let InvalidRequest: ResponseStatus = 4
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum PastHangoutState: Int, ProtoEnum {
-	case Unknown = 0
-	case HadPastHangout = 1
-	case NoPastHangout = 2
+public struct PastHangoutState: ProtoEnumExtensor {
+	public static let Unknown: PastHangoutState = 0
+	public static let HadPastHangout: PastHangoutState = 1
+	public static let NoPastHangout: PastHangoutState = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum PhotoUrlStatus: Int, ProtoEnum {
-	case Unknown = 0
-	case Placeholder = 1
-	case UserPhoto = 2
+public struct PhotoUrlStatus: ProtoEnumExtensor {
+	public static let Unknown: PhotoUrlStatus = 0
+	public static let Placeholder: PhotoUrlStatus = 1
+	public static let UserPhoto: PhotoUrlStatus = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum Gender: Int, ProtoEnum {
-	case Unknown = 0
-	case Male = 1
-	case Female = 2
+public struct Gender: ProtoEnumExtensor {
+	public static let Unknown: Gender = 0
+	public static let Male: Gender = 1
+	public static let Female: Gender = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ProfileType: Int, ProtoEnum {
-	case None = 0
-	case EsUser = 1
+public struct ProfileType: ProtoEnumExtensor {
+	public static let None: ProfileType = 0
+	public static let EsUser: ProfileType = 1
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum ConfigurationBitType: Int, ProtoEnum {
-	case Unknown = 0
-	case Unknown1 = 1
-	case Unknown2 = 2
-	case Unknown3 = 3
-	case Unknown4 = 4
-	case Unknown5 = 5
-	case Unknown6 = 6
-	case Unknown7 = 7
-	case Unknown8 = 8
-	case Unknown9 = 9
-	case Unknown10 = 10
-	case Unknown11 = 11
-	case Unknown12 = 12
-	case Unknown13 = 13
-	case Unknown14 = 14
-	case Unknown15 = 15
-	case Unknown16 = 16
-	case Unknown17 = 17
-	case Unknown18 = 18
-	case Unknown19 = 19
-	case Unknown20 = 20
-	case Unknown21 = 21
-	case Unknown22 = 22
-	case Unknown23 = 23
-	case Unknown24 = 24
-	case Unknown25 = 25
-	case Unknown26 = 26
-	case Unknown27 = 27
-	case Unknown28 = 28
-	case Unknown29 = 29
-	case Unknown30 = 30
-	case Unknown31 = 31
-	case Unknown32 = 32
-	case Unknown33 = 33
-	case Unknown34 = 34
-	case Unknown35 = 35
-	case Unknown36 = 36
+public struct ConfigurationBitType: ProtoEnumExtensor {
+	public static let Unknown: ConfigurationBitType = 0
+	public static let Unknown1: ConfigurationBitType = 1
+	public static let Unknown2: ConfigurationBitType = 2
+	public static let Unknown3: ConfigurationBitType = 3
+	public static let Unknown4: ConfigurationBitType = 4
+	public static let Unknown5: ConfigurationBitType = 5
+	public static let Unknown6: ConfigurationBitType = 6
+	public static let Unknown7: ConfigurationBitType = 7
+	public static let Unknown8: ConfigurationBitType = 8
+	public static let Unknown9: ConfigurationBitType = 9
+	public static let Unknown10: ConfigurationBitType = 10
+	public static let Unknown11: ConfigurationBitType = 11
+	public static let Unknown12: ConfigurationBitType = 12
+	public static let Unknown13: ConfigurationBitType = 13
+	public static let Unknown14: ConfigurationBitType = 14
+	public static let Unknown15: ConfigurationBitType = 15
+	public static let Unknown16: ConfigurationBitType = 16
+	public static let Unknown17: ConfigurationBitType = 17
+	public static let Unknown18: ConfigurationBitType = 18
+	public static let Unknown19: ConfigurationBitType = 19
+	public static let Unknown20: ConfigurationBitType = 20
+	public static let Unknown21: ConfigurationBitType = 21
+	public static let Unknown22: ConfigurationBitType = 22
+	public static let Unknown23: ConfigurationBitType = 23
+	public static let Unknown24: ConfigurationBitType = 24
+	public static let Unknown25: ConfigurationBitType = 25
+	public static let Unknown26: ConfigurationBitType = 26
+	public static let Unknown27: ConfigurationBitType = 27
+	public static let Unknown28: ConfigurationBitType = 28
+	public static let Unknown29: ConfigurationBitType = 29
+	public static let Unknown30: ConfigurationBitType = 30
+	public static let Unknown31: ConfigurationBitType = 31
+	public static let Unknown32: ConfigurationBitType = 32
+	public static let Unknown33: ConfigurationBitType = 33
+	public static let Unknown34: ConfigurationBitType = 34
+	public static let Unknown35: ConfigurationBitType = 35
+	public static let Unknown36: ConfigurationBitType = 36
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum RichPresenceType: Int, ProtoEnum {
-	case Unknown = 0
-	case InCallState = 1
-	case Device = 2
-	case Unknown3 = 3
-	case Unknown4 = 4
-	case Unknown5 = 5
-	case LastSeen = 6
+public struct RichPresenceType: ProtoEnumExtensor {
+	public static let Unknown: RichPresenceType = 0
+	public static let InCallState: RichPresenceType = 1
+	public static let Device: RichPresenceType = 2
+	public static let Unknown3: RichPresenceType = 3
+	public static let Unknown4: RichPresenceType = 4
+	public static let Unknown5: RichPresenceType = 5
+	public static let LastSeen: RichPresenceType = 6
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum FieldMask: Int, ProtoEnum {
-	case Reachable = 1
-	case Available = 2
-	case Mood = 3
-	case InCall = 6
-	case Device = 7
-	case LastSeen = 10
+public struct FieldMask: ProtoEnumExtensor {
+	public static let Reachable: FieldMask = 1
+	public static let Available: FieldMask = 2
+	public static let Mood: FieldMask = 3
+	public static let InCall: FieldMask = 6
+	public static let Device: FieldMask = 7
+	public static let LastSeen: FieldMask = 10
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum DeleteType: Int, ProtoEnum {
-	case Unknown = 0
-	case UpperBound = 1
+public struct DeleteType: ProtoEnumExtensor {
+	public static let Unknown: DeleteType = 0
+	public static let UpperBound: DeleteType = 1
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum SyncFilter: Int, ProtoEnum {
-	case Unknown = 0
-	case Inbox = 1
-	case Archived = 2
+public struct SyncFilter: ProtoEnumExtensor {
+	public static let Unknown: SyncFilter = 0
+	public static let Inbox: SyncFilter = 1
+	public static let Archived: SyncFilter = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum SoundState: Int, ProtoEnum {
-	case Unknown = 0
-	case On = 1
-	case Off = 2
+public struct SoundState: ProtoEnumExtensor {
+	public static let Unknown: SoundState = 0
+	public static let On: SoundState = 1
+	public static let Off: SoundState = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum CallerIdSettingsMask: Int, ProtoEnum {
-	case Unknown = 0
-	case Provided = 1
+public struct CallerIdSettingsMask: ProtoEnumExtensor {
+	public static let Unknown: CallerIdSettingsMask = 0
+	public static let Provided: CallerIdSettingsMask = 1
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum PhoneVerificationStatus: Int, ProtoEnum {
-	case Unknown = 0
-	case Verified = 1
+public struct PhoneVerificationStatus: ProtoEnumExtensor {
+	public static let Unknown: PhoneVerificationStatus = 0
+	public static let Verified: PhoneVerificationStatus = 1
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum PhoneDiscoverabilityStatus: Int, ProtoEnum {
-	case Unknown = 0
-	case OptedInButNotDiscoverable = 2
+public struct PhoneDiscoverabilityStatus: ProtoEnumExtensor {
+	public static let Unknown: PhoneDiscoverabilityStatus = 0
+	public static let OptedInButNotDiscoverable: PhoneDiscoverabilityStatus = 2
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum PhoneValidationResult: Int, ProtoEnum {
-	case IsPossible = 0
+public struct PhoneValidationResult: ProtoEnumExtensor {
+	public static let IsPossible: PhoneValidationResult = 0
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public enum OffnetworkAddressType: Int, ProtoEnum {
-	case Unknown = 0
-	case Email = 1
+public struct OffnetworkAddressType: ProtoEnumExtensor {
+	public static let Unknown: OffnetworkAddressType = 0
+	public static let Email: OffnetworkAddressType = 1
+
+	public let rawValue: Int
+	public init(_ rawValue: Int) {
+		self.rawValue = rawValue
+	}
 }
 
-public struct DoNotDisturbSetting: ProtoMessage, ProtoMessageExtensor {
+public struct DoNotDisturbSetting: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -366,7 +586,7 @@ public struct DoNotDisturbSetting: ProtoMessage, ProtoMessageExtensor {
 	public var version: UInt64?
 }
 
-public struct NotificationSettings: ProtoMessage, ProtoMessageExtensor {
+public struct NotificationSettings: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -403,7 +623,7 @@ public struct NotificationSettings: ProtoMessage, ProtoMessageExtensor {
 	public var dndSettings: DoNotDisturbSetting?
 }
 
-public struct ConversationId: ProtoMessage, ProtoMessageExtensor {
+public struct ConversationId: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -440,7 +660,7 @@ public struct ConversationId: ProtoMessage, ProtoMessageExtensor {
 	public var id: String?
 }
 
-public struct ParticipantId: ProtoMessage, ProtoMessageExtensor {
+public struct ParticipantId: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -484,7 +704,7 @@ public struct ParticipantId: ProtoMessage, ProtoMessageExtensor {
 	public var chatId: String?
 }
 
-public struct DeviceStatus: ProtoMessage, ProtoMessageExtensor {
+public struct DeviceStatus: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -535,7 +755,7 @@ public struct DeviceStatus: ProtoMessage, ProtoMessageExtensor {
 	public var tablet: Bool?
 }
 
-public struct LastSeen: ProtoMessage, ProtoMessageExtensor {
+public struct LastSeen: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -572,7 +792,7 @@ public struct LastSeen: ProtoMessage, ProtoMessageExtensor {
 	public var lastSeenTimestampUsec: UInt64?
 }
 
-public struct Presence: ProtoMessage, ProtoMessageExtensor {
+public struct Presence: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -637,7 +857,7 @@ public struct Presence: ProtoMessage, ProtoMessageExtensor {
 	public var lastSeen: LastSeen?
 }
 
-public struct PresenceResult: ProtoMessage, ProtoMessageExtensor {
+public struct PresenceResult: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -681,7 +901,7 @@ public struct PresenceResult: ProtoMessage, ProtoMessageExtensor {
 	public var presence: Presence?
 }
 
-public struct ClientIdentifier: ProtoMessage, ProtoMessageExtensor {
+public struct ClientIdentifier: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -725,7 +945,7 @@ public struct ClientIdentifier: ProtoMessage, ProtoMessageExtensor {
 	public var headerId: String?
 }
 
-public struct ClientPresenceState: ProtoMessage, ProtoMessageExtensor {
+public struct ClientPresenceState: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -769,7 +989,7 @@ public struct ClientPresenceState: ProtoMessage, ProtoMessageExtensor {
 	public var state: ClientPresenceStateType?
 }
 
-public struct UserEventState: ProtoMessage, ProtoMessageExtensor {
+public struct UserEventState: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -820,7 +1040,7 @@ public struct UserEventState: ProtoMessage, ProtoMessageExtensor {
 	public var notificationLevel: NotificationLevel?
 }
 
-public struct Formatting: ProtoMessage, ProtoMessageExtensor {
+public struct Formatting: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -878,7 +1098,7 @@ public struct Formatting: ProtoMessage, ProtoMessageExtensor {
 	public var underline: Bool?
 }
 
-public struct LinkData: ProtoMessage, ProtoMessageExtensor {
+public struct LinkData: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -915,7 +1135,7 @@ public struct LinkData: ProtoMessage, ProtoMessageExtensor {
 	public var linkTarget: String?
 }
 
-public struct Segment: ProtoMessage, ProtoMessageExtensor {
+public struct Segment: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -973,7 +1193,7 @@ public struct Segment: ProtoMessage, ProtoMessageExtensor {
 	public var linkData: LinkData?
 }
 
-public struct Thumbnail: ProtoMessage, ProtoMessageExtensor {
+public struct Thumbnail: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1031,7 +1251,7 @@ public struct Thumbnail: ProtoMessage, ProtoMessageExtensor {
 	public var heightPx: UInt64?
 }
 
-public struct PlusPhoto: ProtoMessage, ProtoMessageExtensor {
+public struct PlusPhoto: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1117,7 +1337,7 @@ public struct PlusPhoto: ProtoMessage, ProtoMessageExtensor {
 	public var streamId: [String] = []
 }
 
-public struct RepresentativeImage: ProtoMessage, ProtoMessageExtensor {
+public struct RepresentativeImage: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1154,7 +1374,7 @@ public struct RepresentativeImage: ProtoMessage, ProtoMessageExtensor {
 	public var url: String?
 }
 
-public struct Place: ProtoMessage, ProtoMessageExtensor {
+public struct Place: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1205,7 +1425,7 @@ public struct Place: ProtoMessage, ProtoMessageExtensor {
 	public var representativeImage: RepresentativeImage?
 }
 
-public struct EmbedItem: ProtoMessage, ProtoMessageExtensor {
+public struct EmbedItem: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1263,7 +1483,7 @@ public struct EmbedItem: ProtoMessage, ProtoMessageExtensor {
 	public var place: Place?
 }
 
-public struct Attachment: ProtoMessage, ProtoMessageExtensor {
+public struct Attachment: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1300,7 +1520,7 @@ public struct Attachment: ProtoMessage, ProtoMessageExtensor {
 	public var embedItem: EmbedItem?
 }
 
-public struct MessageContent: ProtoMessage, ProtoMessageExtensor {
+public struct MessageContent: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1344,7 +1564,7 @@ public struct MessageContent: ProtoMessage, ProtoMessageExtensor {
 	public var attachment: [Attachment] = []
 }
 
-public struct EventAnnotation: ProtoMessage, ProtoMessageExtensor {
+public struct EventAnnotation: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1388,7 +1608,7 @@ public struct EventAnnotation: ProtoMessage, ProtoMessageExtensor {
 	public var value: String?
 }
 
-public struct ChatMessage: ProtoMessage, ProtoMessageExtensor {
+public struct ChatMessage: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1432,7 +1652,7 @@ public struct ChatMessage: ProtoMessage, ProtoMessageExtensor {
 	public var messageContent: MessageContent?
 }
 
-public struct MembershipChange: ProtoMessage, ProtoMessageExtensor {
+public struct MembershipChange: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1476,7 +1696,7 @@ public struct MembershipChange: ProtoMessage, ProtoMessageExtensor {
 	public var participantIds: [ParticipantId] = []
 }
 
-public struct ConversationRename: ProtoMessage, ProtoMessageExtensor {
+public struct ConversationRename: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1520,7 +1740,7 @@ public struct ConversationRename: ProtoMessage, ProtoMessageExtensor {
 	public var oldName: String?
 }
 
-public struct HangoutEvent: ProtoMessage, ProtoMessageExtensor {
+public struct HangoutEvent: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1564,7 +1784,7 @@ public struct HangoutEvent: ProtoMessage, ProtoMessageExtensor {
 	public var participantId: [ParticipantId] = []
 }
 
-public struct OTRModification: ProtoMessage, ProtoMessageExtensor {
+public struct OTRModification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1622,7 +1842,7 @@ public struct OTRModification: ProtoMessage, ProtoMessageExtensor {
 	public var newOtrToggle: OffTheRecordToggle?
 }
 
-public struct HashModifier: ProtoMessage, ProtoMessageExtensor {
+public struct HashModifier: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1673,7 +1893,7 @@ public struct HashModifier: ProtoMessage, ProtoMessageExtensor {
 	public var version: UInt64?
 }
 
-public struct Event: ProtoMessage, ProtoMessageExtensor {
+public struct Event: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1836,7 +2056,7 @@ public struct Event: ProtoMessage, ProtoMessageExtensor {
 	public var hashModifier: HashModifier?
 }
 
-public struct UserReadState: ProtoMessage, ProtoMessageExtensor {
+public struct UserReadState: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1880,7 +2100,7 @@ public struct UserReadState: ProtoMessage, ProtoMessageExtensor {
 	public var latestReadTimestamp: UInt64?
 }
 
-public struct DeliveryMedium: ProtoMessage, ProtoMessageExtensor {
+public struct DeliveryMedium: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1924,7 +2144,7 @@ public struct DeliveryMedium: ProtoMessage, ProtoMessageExtensor {
 	public var phoneNumber: PhoneNumber?
 }
 
-public struct DeliveryMediumOption: ProtoMessage, ProtoMessageExtensor {
+public struct DeliveryMediumOption: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -1968,7 +2188,7 @@ public struct DeliveryMediumOption: ProtoMessage, ProtoMessageExtensor {
 	public var currentDefault: Bool?
 }
 
-public struct UserConversationState: ProtoMessage, ProtoMessageExtensor {
+public struct UserConversationState: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2075,7 +2295,7 @@ public struct UserConversationState: ProtoMessage, ProtoMessageExtensor {
 	public var deliveryMediumOption: [DeliveryMediumOption] = []
 }
 
-public struct ConversationParticipantData: ProtoMessage, ProtoMessageExtensor {
+public struct ConversationParticipantData: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2140,7 +2360,7 @@ public struct ConversationParticipantData: ProtoMessage, ProtoMessageExtensor {
 	public var newInvitationStatus: InvitationStatus?
 }
 
-public struct Conversation: ProtoMessage, ProtoMessageExtensor {
+public struct Conversation: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2261,7 +2481,7 @@ public struct Conversation: ProtoMessage, ProtoMessageExtensor {
 	public var forceHistoryState: ForceHistory?
 }
 
-public struct EasterEgg: ProtoMessage, ProtoMessageExtensor {
+public struct EasterEgg: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2298,7 +2518,7 @@ public struct EasterEgg: ProtoMessage, ProtoMessageExtensor {
 	public var message: String?
 }
 
-public struct BlockStateChange: ProtoMessage, ProtoMessageExtensor {
+public struct BlockStateChange: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2342,7 +2562,7 @@ public struct BlockStateChange: ProtoMessage, ProtoMessageExtensor {
 	public var newBlockState: BlockState?
 }
 
-public struct Photo: ProtoMessage, ProtoMessageExtensor {
+public struct Photo: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2400,7 +2620,7 @@ public struct Photo: ProtoMessage, ProtoMessageExtensor {
 	public var isCustomUserId: Bool?
 }
 
-public struct ExistingMedia: ProtoMessage, ProtoMessageExtensor {
+public struct ExistingMedia: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2437,7 +2657,7 @@ public struct ExistingMedia: ProtoMessage, ProtoMessageExtensor {
 	public var photo: Photo?
 }
 
-public struct EventRequestHeader: ProtoMessage, ProtoMessageExtensor {
+public struct EventRequestHeader: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2502,7 +2722,7 @@ public struct EventRequestHeader: ProtoMessage, ProtoMessageExtensor {
 	public var eventType: EventType?
 }
 
-public struct ClientVersion: ProtoMessage, ProtoMessageExtensor {
+public struct ClientVersion: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2574,7 +2794,7 @@ public struct ClientVersion: ProtoMessage, ProtoMessageExtensor {
 	public var deviceHardware: String?
 }
 
-public struct RequestHeader: ProtoMessage, ProtoMessageExtensor {
+public struct RequestHeader: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2625,7 +2845,7 @@ public struct RequestHeader: ProtoMessage, ProtoMessageExtensor {
 	public var languageCode: String?
 }
 
-public struct ResponseHeader: ProtoMessage, ProtoMessageExtensor {
+public struct ResponseHeader: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2690,7 +2910,7 @@ public struct ResponseHeader: ProtoMessage, ProtoMessageExtensor {
 	public var currentServerTime: UInt64?
 }
 
-public struct Entity: ProtoMessage, ProtoMessageExtensor {
+public struct Entity: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2755,7 +2975,7 @@ public struct Entity: ProtoMessage, ProtoMessageExtensor {
 	public var hadPastHangoutState: PastHangoutState?
 }
 
-public struct EntityProperties: ProtoMessage, ProtoMessageExtensor {
+public struct EntityProperties: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2855,7 +3075,7 @@ public struct EntityProperties: ProtoMessage, ProtoMessageExtensor {
 	public var canonicalEmail: String?
 }
 
-public struct ConversationState: ProtoMessage, ProtoMessageExtensor {
+public struct ConversationState: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2913,7 +3133,7 @@ public struct ConversationState: ProtoMessage, ProtoMessageExtensor {
 	public var eventContinuationToken: EventContinuationToken?
 }
 
-public struct EventContinuationToken: ProtoMessage, ProtoMessageExtensor {
+public struct EventContinuationToken: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -2964,7 +3184,7 @@ public struct EventContinuationToken: ProtoMessage, ProtoMessageExtensor {
 	public var eventTimestamp: UInt64?
 }
 
-public struct EntityLookupSpec: ProtoMessage, ProtoMessageExtensor {
+public struct EntityLookupSpec: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3022,7 +3242,7 @@ public struct EntityLookupSpec: ProtoMessage, ProtoMessageExtensor {
 	public var createOffnetworkGaia: Bool?
 }
 
-public struct ConfigurationBit: ProtoMessage, ProtoMessageExtensor {
+public struct ConfigurationBit: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3066,7 +3286,7 @@ public struct ConfigurationBit: ProtoMessage, ProtoMessageExtensor {
 	public var value: Bool?
 }
 
-public struct RichPresenceState: ProtoMessage, ProtoMessageExtensor {
+public struct RichPresenceState: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3103,7 +3323,7 @@ public struct RichPresenceState: ProtoMessage, ProtoMessageExtensor {
 	public var getRichPresenceEnabledState: [RichPresenceEnabledState] = []
 }
 
-public struct RichPresenceEnabledState: ProtoMessage, ProtoMessageExtensor {
+public struct RichPresenceEnabledState: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3147,7 +3367,7 @@ public struct RichPresenceEnabledState: ProtoMessage, ProtoMessageExtensor {
 	public var enabled: Bool?
 }
 
-public struct DesktopOffSetting: ProtoMessage, ProtoMessageExtensor {
+public struct DesktopOffSetting: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3184,7 +3404,7 @@ public struct DesktopOffSetting: ProtoMessage, ProtoMessageExtensor {
 	public var desktopOff: Bool?
 }
 
-public struct DesktopOffState: ProtoMessage, ProtoMessageExtensor {
+public struct DesktopOffState: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3228,7 +3448,7 @@ public struct DesktopOffState: ProtoMessage, ProtoMessageExtensor {
 	public var version: UInt64?
 }
 
-public struct DndSetting: ProtoMessage, ProtoMessageExtensor {
+public struct DndSetting: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3272,7 +3492,7 @@ public struct DndSetting: ProtoMessage, ProtoMessageExtensor {
 	public var timeoutSecs: UInt64?
 }
 
-public struct PresenceStateSetting: ProtoMessage, ProtoMessageExtensor {
+public struct PresenceStateSetting: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3316,7 +3536,7 @@ public struct PresenceStateSetting: ProtoMessage, ProtoMessageExtensor {
 	public var type: ClientPresenceStateType?
 }
 
-public struct MoodMessage: ProtoMessage, ProtoMessageExtensor {
+public struct MoodMessage: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3353,7 +3573,7 @@ public struct MoodMessage: ProtoMessage, ProtoMessageExtensor {
 	public var moodContent: MoodContent?
 }
 
-public struct MoodContent: ProtoMessage, ProtoMessageExtensor {
+public struct MoodContent: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3390,7 +3610,7 @@ public struct MoodContent: ProtoMessage, ProtoMessageExtensor {
 	public var segment: [Segment] = []
 }
 
-public struct MoodSetting: ProtoMessage, ProtoMessageExtensor {
+public struct MoodSetting: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3427,7 +3647,7 @@ public struct MoodSetting: ProtoMessage, ProtoMessageExtensor {
 	public var moodMessage: MoodMessage?
 }
 
-public struct MoodState: ProtoMessage, ProtoMessageExtensor {
+public struct MoodState: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3464,7 +3684,7 @@ public struct MoodState: ProtoMessage, ProtoMessageExtensor {
 	public var moodSetting: MoodSetting?
 }
 
-public struct DeleteAction: ProtoMessage, ProtoMessageExtensor {
+public struct DeleteAction: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3515,7 +3735,7 @@ public struct DeleteAction: ProtoMessage, ProtoMessageExtensor {
 	public var deleteType: DeleteType?
 }
 
-public struct InviteeID: ProtoMessage, ProtoMessageExtensor {
+public struct InviteeID: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3559,7 +3779,7 @@ public struct InviteeID: ProtoMessage, ProtoMessageExtensor {
 	public var fallbackName: String?
 }
 
-public struct Country: ProtoMessage, ProtoMessageExtensor {
+public struct Country: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3603,7 +3823,7 @@ public struct Country: ProtoMessage, ProtoMessageExtensor {
 	public var countryCode: UInt64?
 }
 
-public struct DesktopSoundSetting: ProtoMessage, ProtoMessageExtensor {
+public struct DesktopSoundSetting: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3647,7 +3867,7 @@ public struct DesktopSoundSetting: ProtoMessage, ProtoMessageExtensor {
 	public var desktopRingSoundState: SoundState?
 }
 
-public struct PhoneData: ProtoMessage, ProtoMessageExtensor {
+public struct PhoneData: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3691,7 +3911,7 @@ public struct PhoneData: ProtoMessage, ProtoMessageExtensor {
 	public var callerIdSettingsMask: CallerIdSettingsMask?
 }
 
-public struct Phone: ProtoMessage, ProtoMessageExtensor {
+public struct Phone: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3763,7 +3983,7 @@ public struct Phone: ProtoMessage, ProtoMessageExtensor {
 	public var primary: Bool?
 }
 
-public struct I18nData: ProtoMessage, ProtoMessageExtensor {
+public struct I18nData: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3835,7 +4055,7 @@ public struct I18nData: ProtoMessage, ProtoMessageExtensor {
 	public var validationResult: PhoneValidationResult?
 }
 
-public struct PhoneNumber: ProtoMessage, ProtoMessageExtensor {
+public struct PhoneNumber: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3879,7 +4099,7 @@ public struct PhoneNumber: ProtoMessage, ProtoMessageExtensor {
 	public var i18nData: I18nData?
 }
 
-public struct SuggestedContactGroupHash: ProtoMessage, ProtoMessageExtensor {
+public struct SuggestedContactGroupHash: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3923,7 +4143,7 @@ public struct SuggestedContactGroupHash: ProtoMessage, ProtoMessageExtensor {
 	public var hash: String?
 }
 
-public struct SuggestedContact: ProtoMessage, ProtoMessageExtensor {
+public struct SuggestedContact: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -3967,7 +4187,7 @@ public struct SuggestedContact: ProtoMessage, ProtoMessageExtensor {
 	public var invitationStatus: InvitationStatus?
 }
 
-public struct SuggestedContactGroup: ProtoMessage, ProtoMessageExtensor {
+public struct SuggestedContactGroup: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4018,7 +4238,7 @@ public struct SuggestedContactGroup: ProtoMessage, ProtoMessageExtensor {
 	public var contact: [SuggestedContact] = []
 }
 
-public struct StateUpdate: ProtoMessage, ProtoMessageExtensor {
+public struct StateUpdate: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4167,7 +4387,7 @@ public struct StateUpdate: ProtoMessage, ProtoMessageExtensor {
 	public var richPresenceEnabledStateNotification: RichPresenceEnabledStateNotification?
 }
 
-public struct StateUpdateHeader: ProtoMessage, ProtoMessageExtensor {
+public struct StateUpdateHeader: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4225,7 +4445,7 @@ public struct StateUpdateHeader: ProtoMessage, ProtoMessageExtensor {
 	public var currentServerTime: UInt64?
 }
 
-public struct BatchUpdate: ProtoMessage, ProtoMessageExtensor {
+public struct BatchUpdate: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4262,7 +4482,7 @@ public struct BatchUpdate: ProtoMessage, ProtoMessageExtensor {
 	public var stateUpdate: [StateUpdate] = []
 }
 
-public struct ConversationNotification: ProtoMessage, ProtoMessageExtensor {
+public struct ConversationNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4299,7 +4519,7 @@ public struct ConversationNotification: ProtoMessage, ProtoMessageExtensor {
 	public var conversation: Conversation?
 }
 
-public struct EventNotification: ProtoMessage, ProtoMessageExtensor {
+public struct EventNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4336,7 +4556,7 @@ public struct EventNotification: ProtoMessage, ProtoMessageExtensor {
 	public var event: Event?
 }
 
-public struct SetFocusNotification: ProtoMessage, ProtoMessageExtensor {
+public struct SetFocusNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4401,7 +4621,7 @@ public struct SetFocusNotification: ProtoMessage, ProtoMessageExtensor {
 	public var device: FocusDevice?
 }
 
-public struct SetTypingNotification: ProtoMessage, ProtoMessageExtensor {
+public struct SetTypingNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4459,7 +4679,7 @@ public struct SetTypingNotification: ProtoMessage, ProtoMessageExtensor {
 	public var type: TypingType?
 }
 
-public struct SetConversationNotificationLevelNotification: ProtoMessage, ProtoMessageExtensor {
+public struct SetConversationNotificationLevelNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4510,7 +4730,7 @@ public struct SetConversationNotificationLevelNotification: ProtoMessage, ProtoM
 	public var timestamp: UInt64?
 }
 
-public struct ReplyToInviteNotification: ProtoMessage, ProtoMessageExtensor {
+public struct ReplyToInviteNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4554,7 +4774,7 @@ public struct ReplyToInviteNotification: ProtoMessage, ProtoMessageExtensor {
 	public var type: ReplyToInviteType?
 }
 
-public struct WatermarkNotification: ProtoMessage, ProtoMessageExtensor {
+public struct WatermarkNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4605,7 +4825,7 @@ public struct WatermarkNotification: ProtoMessage, ProtoMessageExtensor {
 	public var latestReadTimestamp: UInt64?
 }
 
-public struct ConversationViewModification: ProtoMessage, ProtoMessageExtensor {
+public struct ConversationViewModification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4656,7 +4876,7 @@ public struct ConversationViewModification: ProtoMessage, ProtoMessageExtensor {
 	public var newView: ConversationView?
 }
 
-public struct EasterEggNotification: ProtoMessage, ProtoMessageExtensor {
+public struct EasterEggNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4707,7 +4927,7 @@ public struct EasterEggNotification: ProtoMessage, ProtoMessageExtensor {
 	public var easterEgg: EasterEgg?
 }
 
-public struct SelfPresenceNotification: ProtoMessage, ProtoMessageExtensor {
+public struct SelfPresenceNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4772,7 +4992,7 @@ public struct SelfPresenceNotification: ProtoMessage, ProtoMessageExtensor {
 	public var moodState: MoodState?
 }
 
-public struct DeleteActionNotification: ProtoMessage, ProtoMessageExtensor {
+public struct DeleteActionNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4816,7 +5036,7 @@ public struct DeleteActionNotification: ProtoMessage, ProtoMessageExtensor {
 	public var deleteAction: DeleteAction?
 }
 
-public struct PresenceNotification: ProtoMessage, ProtoMessageExtensor {
+public struct PresenceNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4853,7 +5073,7 @@ public struct PresenceNotification: ProtoMessage, ProtoMessageExtensor {
 	public var presence: [PresenceResult] = []
 }
 
-public struct BlockNotification: ProtoMessage, ProtoMessageExtensor {
+public struct BlockNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4890,7 +5110,7 @@ public struct BlockNotification: ProtoMessage, ProtoMessageExtensor {
 	public var blockStateChange: [BlockStateChange] = []
 }
 
-public struct SetNotificationSettingNotification: ProtoMessage, ProtoMessageExtensor {
+public struct SetNotificationSettingNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4927,7 +5147,7 @@ public struct SetNotificationSettingNotification: ProtoMessage, ProtoMessageExte
 	public var desktopSoundSetting: DesktopSoundSetting?
 }
 
-public struct RichPresenceEnabledStateNotification: ProtoMessage, ProtoMessageExtensor {
+public struct RichPresenceEnabledStateNotification: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -4964,7 +5184,7 @@ public struct RichPresenceEnabledStateNotification: ProtoMessage, ProtoMessageEx
 	public var richPresenceEnabledState: [RichPresenceEnabledState] = []
 }
 
-public struct ConversationSpec: ProtoMessage, ProtoMessageExtensor {
+public struct ConversationSpec: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5001,7 +5221,7 @@ public struct ConversationSpec: ProtoMessage, ProtoMessageExtensor {
 	public var conversationId: ConversationId?
 }
 
-public struct OffnetworkAddress: ProtoMessage, ProtoMessageExtensor {
+public struct OffnetworkAddress: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5045,7 +5265,7 @@ public struct OffnetworkAddress: ProtoMessage, ProtoMessageExtensor {
 	public var email: String?
 }
 
-public struct EntityResult: ProtoMessage, ProtoMessageExtensor {
+public struct EntityResult: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5089,7 +5309,7 @@ public struct EntityResult: ProtoMessage, ProtoMessageExtensor {
 	public var entity: [Entity] = []
 }
 
-public struct AddUserRequest: ProtoMessage, ProtoMessageExtensor {
+public struct AddUserRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5140,7 +5360,7 @@ public struct AddUserRequest: ProtoMessage, ProtoMessageExtensor {
 	public var eventRequestHeader: EventRequestHeader?
 }
 
-public struct AddUserResponse: ProtoMessage, ProtoMessageExtensor {
+public struct AddUserResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5184,7 +5404,7 @@ public struct AddUserResponse: ProtoMessage, ProtoMessageExtensor {
 	public var createdEvent: Event?
 }
 
-public struct CreateConversationRequest: ProtoMessage, ProtoMessageExtensor {
+public struct CreateConversationRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5249,7 +5469,7 @@ public struct CreateConversationRequest: ProtoMessage, ProtoMessageExtensor {
 	public var inviteeId: [InviteeID] = []
 }
 
-public struct CreateConversationResponse: ProtoMessage, ProtoMessageExtensor {
+public struct CreateConversationResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5300,7 +5520,7 @@ public struct CreateConversationResponse: ProtoMessage, ProtoMessageExtensor {
 	public var newConversationCreated: Bool?
 }
 
-public struct DeleteConversationRequest: ProtoMessage, ProtoMessageExtensor {
+public struct DeleteConversationRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5351,7 +5571,7 @@ public struct DeleteConversationRequest: ProtoMessage, ProtoMessageExtensor {
 	public var deleteUpperBoundTimestamp: UInt64?
 }
 
-public struct DeleteConversationResponse: ProtoMessage, ProtoMessageExtensor {
+public struct DeleteConversationResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5395,7 +5615,7 @@ public struct DeleteConversationResponse: ProtoMessage, ProtoMessageExtensor {
 	public var deleteAction: DeleteAction?
 }
 
-public struct EasterEggRequest: ProtoMessage, ProtoMessageExtensor {
+public struct EasterEggRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5446,7 +5666,7 @@ public struct EasterEggRequest: ProtoMessage, ProtoMessageExtensor {
 	public var easterEgg: EasterEgg?
 }
 
-public struct EasterEggResponse: ProtoMessage, ProtoMessageExtensor {
+public struct EasterEggResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5490,7 +5710,7 @@ public struct EasterEggResponse: ProtoMessage, ProtoMessageExtensor {
 	public var timestamp: UInt64?
 }
 
-public struct GetConversationRequest: ProtoMessage, ProtoMessageExtensor {
+public struct GetConversationRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5555,7 +5775,7 @@ public struct GetConversationRequest: ProtoMessage, ProtoMessageExtensor {
 	public var eventContinuationToken: EventContinuationToken?
 }
 
-public struct GetConversationResponse: ProtoMessage, ProtoMessageExtensor {
+public struct GetConversationResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5599,7 +5819,7 @@ public struct GetConversationResponse: ProtoMessage, ProtoMessageExtensor {
 	public var conversationState: ConversationState?
 }
 
-public struct GetEntityByIdRequest: ProtoMessage, ProtoMessageExtensor {
+public struct GetEntityByIdRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5643,7 +5863,7 @@ public struct GetEntityByIdRequest: ProtoMessage, ProtoMessageExtensor {
 	public var batchLookupSpec: [EntityLookupSpec] = []
 }
 
-public struct GetEntityByIdResponse: ProtoMessage, ProtoMessageExtensor {
+public struct GetEntityByIdResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5694,7 +5914,7 @@ public struct GetEntityByIdResponse: ProtoMessage, ProtoMessageExtensor {
 	public var entityResult: [EntityResult] = []
 }
 
-public struct GetSuggestedEntitiesRequest: ProtoMessage, ProtoMessageExtensor {
+public struct GetSuggestedEntitiesRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5780,7 +6000,7 @@ public struct GetSuggestedEntitiesRequest: ProtoMessage, ProtoMessageExtensor {
 	public var pinnedFavorites: SuggestedContactGroupHash?
 }
 
-public struct GetSuggestedEntitiesResponse: ProtoMessage, ProtoMessageExtensor {
+public struct GetSuggestedEntitiesResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5866,7 +6086,7 @@ public struct GetSuggestedEntitiesResponse: ProtoMessage, ProtoMessageExtensor {
 	public var pinnedFavorites: SuggestedContactGroup?
 }
 
-public struct GetSelfInfoRequest: ProtoMessage, ProtoMessageExtensor {
+public struct GetSelfInfoRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -5903,7 +6123,7 @@ public struct GetSelfInfoRequest: ProtoMessage, ProtoMessageExtensor {
 	public var requestHeader: RequestHeader?
 }
 
-public struct GetSelfInfoResponse: ProtoMessage, ProtoMessageExtensor {
+public struct GetSelfInfoResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6017,7 +6237,7 @@ public struct GetSelfInfoResponse: ProtoMessage, ProtoMessageExtensor {
 	public var defaultCountry: Country?
 }
 
-public struct QueryPresenceRequest: ProtoMessage, ProtoMessageExtensor {
+public struct QueryPresenceRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6068,7 +6288,7 @@ public struct QueryPresenceRequest: ProtoMessage, ProtoMessageExtensor {
 	public var fieldMask: [FieldMask] = []
 }
 
-public struct QueryPresenceResponse: ProtoMessage, ProtoMessageExtensor {
+public struct QueryPresenceResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6112,7 +6332,7 @@ public struct QueryPresenceResponse: ProtoMessage, ProtoMessageExtensor {
 	public var presenceResult: [PresenceResult] = []
 }
 
-public struct RemoveUserRequest: ProtoMessage, ProtoMessageExtensor {
+public struct RemoveUserRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6156,7 +6376,7 @@ public struct RemoveUserRequest: ProtoMessage, ProtoMessageExtensor {
 	public var eventRequestHeader: EventRequestHeader?
 }
 
-public struct RemoveUserResponse: ProtoMessage, ProtoMessageExtensor {
+public struct RemoveUserResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6200,7 +6420,7 @@ public struct RemoveUserResponse: ProtoMessage, ProtoMessageExtensor {
 	public var createdEvent: Event?
 }
 
-public struct RenameConversationRequest: ProtoMessage, ProtoMessageExtensor {
+public struct RenameConversationRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6251,7 +6471,7 @@ public struct RenameConversationRequest: ProtoMessage, ProtoMessageExtensor {
 	public var eventRequestHeader: EventRequestHeader?
 }
 
-public struct RenameConversationResponse: ProtoMessage, ProtoMessageExtensor {
+public struct RenameConversationResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6295,7 +6515,7 @@ public struct RenameConversationResponse: ProtoMessage, ProtoMessageExtensor {
 	public var createdEvent: Event?
 }
 
-public struct SearchEntitiesRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SearchEntitiesRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6346,7 +6566,7 @@ public struct SearchEntitiesRequest: ProtoMessage, ProtoMessageExtensor {
 	public var maxCount: UInt64?
 }
 
-public struct SearchEntitiesResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SearchEntitiesResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6390,7 +6610,7 @@ public struct SearchEntitiesResponse: ProtoMessage, ProtoMessageExtensor {
 	public var entity: [Entity] = []
 }
 
-public struct SendChatMessageRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SendChatMessageRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6455,7 +6675,7 @@ public struct SendChatMessageRequest: ProtoMessage, ProtoMessageExtensor {
 	public var eventRequestHeader: EventRequestHeader?
 }
 
-public struct SendChatMessageResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SendChatMessageResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6499,7 +6719,7 @@ public struct SendChatMessageResponse: ProtoMessage, ProtoMessageExtensor {
 	public var createdEvent: Event?
 }
 
-public struct SendOffnetworkInvitationRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SendOffnetworkInvitationRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6543,7 +6763,7 @@ public struct SendOffnetworkInvitationRequest: ProtoMessage, ProtoMessageExtenso
 	public var inviteeAddress: OffnetworkAddress?
 }
 
-public struct SendOffnetworkInvitationResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SendOffnetworkInvitationResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6580,7 +6800,7 @@ public struct SendOffnetworkInvitationResponse: ProtoMessage, ProtoMessageExtens
 	public var responseHeader: ResponseHeader?
 }
 
-public struct SetActiveClientRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SetActiveClientRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6638,7 +6858,7 @@ public struct SetActiveClientRequest: ProtoMessage, ProtoMessageExtensor {
 	public var timeoutSecs: UInt64?
 }
 
-public struct SetActiveClientResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SetActiveClientResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6675,7 +6895,7 @@ public struct SetActiveClientResponse: ProtoMessage, ProtoMessageExtensor {
 	public var responseHeader: ResponseHeader?
 }
 
-public struct SetConversationLevelRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SetConversationLevelRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6712,7 +6932,7 @@ public struct SetConversationLevelRequest: ProtoMessage, ProtoMessageExtensor {
 	public var requestHeader: RequestHeader?
 }
 
-public struct SetConversationLevelResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SetConversationLevelResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6749,7 +6969,7 @@ public struct SetConversationLevelResponse: ProtoMessage, ProtoMessageExtensor {
 	public var responseHeader: ResponseHeader?
 }
 
-public struct SetConversationNotificationLevelRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SetConversationNotificationLevelRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6800,7 +7020,7 @@ public struct SetConversationNotificationLevelRequest: ProtoMessage, ProtoMessag
 	public var level: NotificationLevel?
 }
 
-public struct SetConversationNotificationLevelResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SetConversationNotificationLevelResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6844,7 +7064,7 @@ public struct SetConversationNotificationLevelResponse: ProtoMessage, ProtoMessa
 	public var timestamp: UInt64?
 }
 
-public struct SetFocusRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SetFocusRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6902,7 +7122,7 @@ public struct SetFocusRequest: ProtoMessage, ProtoMessageExtensor {
 	public var timeoutSecs: UInt32?
 }
 
-public struct SetFocusResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SetFocusResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -6946,7 +7166,7 @@ public struct SetFocusResponse: ProtoMessage, ProtoMessageExtensor {
 	public var timestamp: UInt64?
 }
 
-public struct SetPresenceRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SetPresenceRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7011,7 +7231,7 @@ public struct SetPresenceRequest: ProtoMessage, ProtoMessageExtensor {
 	public var moodSetting: MoodSetting?
 }
 
-public struct SetPresenceResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SetPresenceResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7048,7 +7268,7 @@ public struct SetPresenceResponse: ProtoMessage, ProtoMessageExtensor {
 	public var responseHeader: ResponseHeader?
 }
 
-public struct SetTypingRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SetTypingRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7099,7 +7319,7 @@ public struct SetTypingRequest: ProtoMessage, ProtoMessageExtensor {
 	public var type: TypingType?
 }
 
-public struct SetTypingResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SetTypingResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7143,7 +7363,7 @@ public struct SetTypingResponse: ProtoMessage, ProtoMessageExtensor {
 	public var timestamp: UInt64?
 }
 
-public struct SyncAllNewEventsRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SyncAllNewEventsRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7194,7 +7414,7 @@ public struct SyncAllNewEventsRequest: ProtoMessage, ProtoMessageExtensor {
 	public var maxResponseSizeBytes: UInt64?
 }
 
-public struct SyncAllNewEventsResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SyncAllNewEventsResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7245,7 +7465,7 @@ public struct SyncAllNewEventsResponse: ProtoMessage, ProtoMessageExtensor {
 	public var conversationState: [ConversationState] = []
 }
 
-public struct SyncRecentConversationsRequest: ProtoMessage, ProtoMessageExtensor {
+public struct SyncRecentConversationsRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7303,7 +7523,7 @@ public struct SyncRecentConversationsRequest: ProtoMessage, ProtoMessageExtensor
 	public var syncFilter: [SyncFilter] = []
 }
 
-public struct SyncRecentConversationsResponse: ProtoMessage, ProtoMessageExtensor {
+public struct SyncRecentConversationsResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7354,7 +7574,7 @@ public struct SyncRecentConversationsResponse: ProtoMessage, ProtoMessageExtenso
 	public var conversationState: [ConversationState] = []
 }
 
-public struct UpdateWatermarkRequest: ProtoMessage, ProtoMessageExtensor {
+public struct UpdateWatermarkRequest: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7405,7 +7625,7 @@ public struct UpdateWatermarkRequest: ProtoMessage, ProtoMessageExtensor {
 	public var lastReadTimestamp: UInt64?
 }
 
-public struct UpdateWatermarkResponse: ProtoMessage, ProtoMessageExtensor {
+public struct UpdateWatermarkResponse: ProtoMessageExtensor {
 
 	public init() {}
 	public var _unknownFields = [Int: Any]()
@@ -7441,6 +7661,53 @@ public struct UpdateWatermarkResponse: ProtoMessage, ProtoMessageExtensor {
 
 	public var responseHeader: ResponseHeader?
 }
+
+let _protoEnums: [String: ProtoEnum.Type] = [
+	"ActiveClientState": ActiveClientState.self,
+	"FocusType": FocusType.self,
+	"FocusDevice": FocusDevice.self,
+	"TypingType": TypingType.self,
+	"ClientPresenceStateType": ClientPresenceStateType.self,
+	"NotificationLevel": NotificationLevel.self,
+	"SegmentType": SegmentType.self,
+	"ItemType": ItemType.self,
+	"MediaType": MediaType.self,
+	"MembershipChangeType": MembershipChangeType.self,
+	"HangoutEventType": HangoutEventType.self,
+	"OffTheRecordToggle": OffTheRecordToggle.self,
+	"OffTheRecordStatus": OffTheRecordStatus.self,
+	"SourceType": SourceType.self,
+	"EventType": EventType.self,
+	"ConversationType": ConversationType.self,
+	"ConversationStatus": ConversationStatus.self,
+	"ConversationView": ConversationView.self,
+	"DeliveryMediumType": DeliveryMediumType.self,
+	"InvitationAffinity": InvitationAffinity.self,
+	"ParticipantType": ParticipantType.self,
+	"InvitationStatus": InvitationStatus.self,
+	"ForceHistory": ForceHistory.self,
+	"NetworkType": NetworkType.self,
+	"BlockState": BlockState.self,
+	"ReplyToInviteType": ReplyToInviteType.self,
+	"ClientId": ClientId.self,
+	"ClientBuildType": ClientBuildType.self,
+	"ResponseStatus": ResponseStatus.self,
+	"PastHangoutState": PastHangoutState.self,
+	"PhotoUrlStatus": PhotoUrlStatus.self,
+	"Gender": Gender.self,
+	"ProfileType": ProfileType.self,
+	"ConfigurationBitType": ConfigurationBitType.self,
+	"RichPresenceType": RichPresenceType.self,
+	"FieldMask": FieldMask.self,
+	"DeleteType": DeleteType.self,
+	"SyncFilter": SyncFilter.self,
+	"SoundState": SoundState.self,
+	"CallerIdSettingsMask": CallerIdSettingsMask.self,
+	"PhoneVerificationStatus": PhoneVerificationStatus.self,
+	"PhoneDiscoverabilityStatus": PhoneDiscoverabilityStatus.self,
+	"PhoneValidationResult": PhoneValidationResult.self,
+	"OffnetworkAddressType": OffnetworkAddressType.self,
+]
 
 let _protoMessages: [String: ProtoMessage.Type] = [
 	"DoNotDisturbSetting": DoNotDisturbSetting.self,

@@ -8,8 +8,22 @@ private let MESSAGE_REGEX = "(?:message)(?:[\\s\\S]*?)(?:\\{)(?:[\\s\\S]*?)(?:\\
 private let ENUM_REGEX = "(?:enum)(?:[\\s\\S]*?)(?:\\{)(?:[\\s\\S]*?)(?:\\})"
 private let FIELD_REGEX = "(?:(required|optional|repeated))(?:.*)(?:\\;)"
 
-public protocol ProtoEnum: RawRepresentable, Hashable, Equatable {
-	// nothing here, just a dummy!
+public protocol ProtoEnum {
+	var rawValue: Int { get }
+	init(_ rawValue: Int)
+}
+
+public protocol ProtoEnumExtensor: ProtoEnum, IntegerLiteralConvertible, RawRepresentable, Hashable, Equatable {}
+public extension ProtoEnumExtensor {
+	public init(integerLiteral value: Int) {
+		self.init(value)
+	}
+	public init?(rawValue value: Int) {
+		self.init(value)
+	}
+	public var hashValue: Int {
+		return self.rawValue.hashValue
+	}
 }
 
 public protocol ProtoMessage {
@@ -45,7 +59,7 @@ public extension ProtoMessage {
 }*/
 
 // Message: Hashable & Equatable Support
-public protocol ProtoMessageExtensor: Hashable, Equatable { }
+public protocol ProtoMessageExtensor: ProtoMessage, Hashable, Equatable { }
 public func ==<T: ProtoMessageExtensor>(lhs: T, rhs: T) -> Bool {
 	return lhs.hashValue == rhs.hashValue
 }
@@ -186,7 +200,7 @@ public struct ProtoEnumDescriptor {
 	}
 	
 	public func toString() -> String {
-		var output = "public enum \(self.name): Int, ProtoEnum {\n"
+		var output = "public struct \(self.name): ProtoEnumExtensor {\n"
 		self.values.forEach { k, v in
 			let comps = v.components(separatedBy: "_")
 			let name = comps.dropFirst()
@@ -194,8 +208,11 @@ public struct ProtoEnumDescriptor {
 				.reduce(comps.first!.capitalized, combine: +)
 				.replacingOccurrences(of: self.name, with: "", options: .caseInsensitiveSearch)
 			
-			output += "\tcase \(name) = \(k)\n"
+			output += "\tpublic static let \(name): \(self.name) = \(k)\n"
 		}
+		output += "\n\tpublic let rawValue: Int\n"
+		output += "\tpublic init(_ rawValue: Int) {\n"
+		output += "\t\tself.rawValue = rawValue\n\t}\n"
 		return output + "}"
 	}
 }
@@ -228,7 +245,7 @@ public struct ProtoMessageDescriptor {
 	
 	public func toString() -> String {
 		var output = ""
-		output += "public struct \(self.name): ProtoMessage, ProtoMessageExtensor {\n\n"
+		output += "public struct \(self.name): ProtoMessageExtensor {\n\n"
 		output += "\tpublic init() {}\n"
 		output += "\tpublic var _unknownFields = [Int: Any]()\n\n"
 		output += "\tpublic static let __declaredFields: [Int: ProtoFieldDescriptor] = [\n"
@@ -307,6 +324,11 @@ public struct ProtoFileDescriptor {
 		var output = ""
 		output += self.enums.map { $0.toString() + "\n\n" }.reduce("", combine: +)
 		output += self.messages.map { $0.toString() + "\n\n" }.reduce("", combine: +)
+		output += "let _protoEnums: [String: ProtoEnum.Type] = [\n"
+		for e in self.enums {
+			output += "\t\"\(e.name)\": \(e.name).self,\n"
+		}
+		output += "]\n\n"
 		output += "let _protoMessages: [String: ProtoMessage.Type] = [\n"
 		for e in self.messages {
 			output += "\t\"\(e.name)\": \(e.name).self,\n"
