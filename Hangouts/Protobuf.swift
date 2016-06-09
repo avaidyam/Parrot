@@ -375,6 +375,14 @@ public struct ProtoFileDescriptor {
 	}
 }
 
+// Because warnings are bad.
+public extension Optional {
+	@discardableResult
+	public func _flatMap<U>(_ f: @noescape (Wrapped) throws -> U?) rethrows -> U? {
+		return try flatMap(f)
+	}
+}
+
 public func translateProtoFile(filename: String) {
 	func _convert(_ file: String) -> String {
 		let components = file.components(separatedBy: "/")

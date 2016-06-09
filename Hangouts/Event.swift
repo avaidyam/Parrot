@@ -12,8 +12,8 @@ public class IEvent : Hashable, Equatable {
     }
 	
 	// A timestamp of when the event occurred.
-    public lazy var timestamp: UInt64 = {
-		return self.event.timestamp ?? 0
+    public lazy var timestamp: NSDate = {
+		return NSDate.from(UTC: Double(self.event.timestamp ?? 0))
     }()
 	
 	// A UserID indicating who created the event.
@@ -223,10 +223,10 @@ public class IChatMessageSegment {
 //
 
 // Definition of the public TypingStatusMessage.
-public typealias ITypingStatusMessage = (convID: String, userID: UserID, timestamp: UInt64, status: TypingType)
+public typealias ITypingStatusMessage = (convID: String, userID: UserID, timestamp: NSDate, status: TypingType)
 
 // Definition of the public WatermarkNotification.
-public typealias IWatermarkNotification = (convID: String, userID: UserID, readTimestamp: UInt64)
+public typealias IWatermarkNotification = (convID: String, userID: UserID, readTimestamp: NSDate)
 
 // Return TypingStatusMessage from ClientSetTypingNotification.
 // The same status may be sent multiple times consecutively, and when a
@@ -235,7 +235,7 @@ internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatu
 	return ITypingStatusMessage(
 		convID: p.conversationId!.id! ,
 		userID: UserID(chatID: p.senderId!.chatId! , gaiaID: p.senderId!.gaiaId! ),
-		timestamp: p.timestamp!,//from_timestamp(microsecond_timestamp: )!,
+		timestamp: NSDate.from(UTC: Double(p.timestamp ?? 0)),//from_timestamp(microsecond_timestamp: )!,
 		status: p.type!
 	)
 }
@@ -248,6 +248,6 @@ internal func parseWatermarkNotification(client_watermark_notification: Watermar
 			chatID: client_watermark_notification.senderId!.chatId! ,
 			gaiaID: client_watermark_notification.senderId!.gaiaId!
 		),
-		readTimestamp: client_watermark_notification.latestReadTimestamp!//from_timestamp(microsecond_timestamp: )!
+		readTimestamp: NSDate.from(UTC: Double(client_watermark_notification.latestReadTimestamp ?? 0)) //from_timestamp(microsecond_timestamp: )!
 	)
 }

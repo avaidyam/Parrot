@@ -1,55 +1,5 @@
 import Foundation
 
-// Flatmaps an array of type A to that of type B if element exits.
-internal func flatMap<A,B>(_ x: [A], _ y: (A) -> B?) -> [B] {
-	return x.map { y($0) }.filter { $0 != nil }.map { $0! }
-}
-
-internal func findFirst<S : Sequence> (s: S, condition: (S.Iterator.Element) -> Bool) -> S.Iterator.Element? {
-	for value in s where condition(value) {
-		return value
-	}
-	return nil
-}
-
-// Because warnings are bad.
-public extension Optional {
-	@discardableResult
-	public func _flatMap<U>(_ f: @noescape (Wrapped) throws -> U?) rethrows -> U? {
-		return try flatMap(f)
-	}
-}
-
-public extension Mirror {
-	
-	/// Labels of properties.
-	public var labels: [String?] {
-		return self.children.map { $0.label }
-	}
-	
-	/// Values of properties.
-	public var values: [Any] {
-		return self.children.map { $0.value }
-	}
-	
-	/// Types of properties.
-	public var types: [Any.Type] {
-		return self.children.map { $0.value.dynamicType }
-	}
-	
-	/// Returns a property value for a property name.
-	public subscript(key: String) -> Any? {
-		let res = findFirst(s: self.children) { $0.label == key }
-		return res.map { $0.value }
-	}
-	
-	/// Returns a value for a property name with a generic type.
-	public func getValue<U>(forKey key: String) -> U? {
-		let res = findFirst(s: self.children) { $0.label == key }
-		return res.flatMap { $0.value as? U }
-	}
-}
-
 // Needs to be fixed somehow to not use NSString stuff.
 internal extension String {
 	internal func encodeURL() -> String {
@@ -169,23 +119,16 @@ public func ==(lhs: NSDate, rhs: NSDate) -> Bool {
 }
 
 // Microseconds
-public let MicrosecondsPerSecond = 1000000.0
-public func from_timestamp(microsecond_timestamp: NSNumber?) -> NSDate? {
-	if microsecond_timestamp == nil {
-		return nil
-	}
-	let date = from_timestamp(microsecond_timestamp: microsecond_timestamp!)
-	return date
-}
-
 // Convert a microsecond timestamp to an NSDate instance.
-public func from_timestamp(microsecond_timestamp: NSNumber) -> NSDate {
-	return NSDate(timeIntervalSince1970: microsecond_timestamp.doubleValue / MicrosecondsPerSecond)
-}
-
 // Convert UTC datetime to microsecond timestamp used by Hangouts.
-public func to_timestamp(date: NSDate) -> NSNumber {
-	return date.timeIntervalSince1970 * MicrosecondsPerSecond
+private let MicrosecondsPerSecond: Double = 1000000.0
+public extension NSDate {
+	public static func from(UTC: Double) -> NSDate {
+		return NSDate(timeIntervalSince1970: (UTC / MicrosecondsPerSecond))
+	}
+	public func toUTC() -> Double {
+		return self.timeIntervalSince1970 * MicrosecondsPerSecond
+	}
 }
 
 // Converts an NSRange to a Range for String indices.

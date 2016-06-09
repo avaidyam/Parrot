@@ -72,7 +72,7 @@ public class IConversation {
         
 		if self.latest_read_timestamp == 0 {//to_timestamp(date: ) == 0 {
 			// FIXME: Oops.
-            self.conversation.selfConversationState!.selfReadState!.latestReadTimestamp = old_timestamp
+            //self.conversation.selfConversationState!.selfReadState!.latestReadTimestamp = old_timestamp
         }
 
         delegate?.conversationDidUpdate(conversation: self)
@@ -248,7 +248,7 @@ public class IConversation {
 	// Update the timestamp of the latest event which has been read.
 	// By default, the timestamp of the newest event is used.
 	// This method will avoid making an API request if it will have no effect.
-    public func updateReadTimestamp(read_timestamp: UInt64? = nil, cb: (() -> Void)? = nil) {
+    public func updateReadTimestamp(read_timestamp: NSDate? = nil, cb: (() -> Void)? = nil) {
 		var read_timestamp = read_timestamp
         if read_timestamp == nil {
             read_timestamp = self.events.last!.timestamp
@@ -383,17 +383,17 @@ public class IConversation {
         }
     }
 
-    public var last_modified: UInt64 {
+    public var last_modified: NSDate {
         get {
-			return conversation.selfConversationState?.sortTimestamp ?? 0
+			return NSDate.from(UTC: Double(conversation.selfConversationState?.sortTimestamp ?? 0))
 			//NSDate(timeIntervalSinceReferenceDate: 0)
         }
     }
 	
 	// datetime timestamp of the last read Event.
-    public var latest_read_timestamp: UInt64 {
+    public var latest_read_timestamp: NSDate {
         get {
-            return conversation.selfConversationState?.selfReadState?.latestReadTimestamp ?? 0
+			return NSDate.from(UTC: Double(conversation.selfConversationState?.selfReadState?.latestReadTimestamp ?? 0))
         }
         set(newLatestReadTimestamp) {
 			// FIXME: Oops.

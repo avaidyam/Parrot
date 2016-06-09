@@ -13,7 +13,7 @@ public class ConversationList {
 	
     public let client: Client
     private var conv_dict = [String : IConversation]()
-    public var sync_timestamp: UInt64
+    public var sync_timestamp: NSDate
     public let user_list: UserList
 	
 	public var delegate: ConversationListDelegate?
@@ -21,7 +21,7 @@ public class ConversationList {
 
     public init(client: Client, conv_states: [ConversationState], user_list: UserList, sync_timestamp: UInt64?) {
         self.client = client
-        self.sync_timestamp = sync_timestamp ?? 0//NSDate(timeIntervalSince1970: 0)
+		self.sync_timestamp = NSDate.from(UTC: Double(sync_timestamp ?? 0))//NSDate(timeIntervalSince1970: 0)
         self.user_list = user_list
 		
         // Initialize the list of conversations from Client's list of ClientConversationStates.
@@ -112,7 +112,7 @@ public class ConversationList {
 	
 	// Receive a ClientEvent and fan out to Conversations
     public func on_client_event(event: Event) {
-        sync_timestamp = event.timestamp!
+        sync_timestamp = NSDate.from(UTC: Double(event.timestamp ?? 0))
         if let conv = conv_dict[event.conversationId!.id!] {
             let conv_event = conv.add_event(event: event)
 
@@ -173,7 +173,7 @@ public class ConversationList {
                     if let conv = self.conv_dict[conv_state.conversationId!.id!] {
                         conv.update_conversation(conversation: conv_state.conversation!)
                         for event in conv_state.event {
-                            if event.timestamp > self.sync_timestamp {
+                            if event.timestamp > UInt64(self.sync_timestamp.toUTC()) {
 								
                                 // This updates the sync_timestamp for us, as well as triggering events.
                                 self.on_client_event(event: event)

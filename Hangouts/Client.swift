@@ -396,7 +396,7 @@ public final class Client {
 			
 			// Not sure what timestamp should be there, last time I have tried
 			// it Hangouts client in GMail sent something like now() - 5 hours
-			to_timestamp(date: NSDate()), /* TODO: This should be in UTC form. */
+			NSNumber(value: UInt64(NSDate().toUTC())), /* TODO: This should be in UTC form. */
 			None,
 			[]
 		]
@@ -432,7 +432,7 @@ public final class Client {
 	// newest.
 	public func getConversation(
 		conversation_id: String,
-		event_timestamp: UInt64,
+		event_timestamp: NSDate,
 		max_events: Int = 50,
 		cb: (response: GetConversationResponse?) -> Void)
 	{
@@ -450,7 +450,7 @@ public final class Client {
 			[
 				None,  // eventId
 				None,  // storageContinuationToken
-				NSNumber(value: event_timestamp)//to_timestamp(date: event_timestamp),  // eventTimestamp
+				NSNumber(value: UInt64(event_timestamp.toUTC()))//to_timestamp(date: event_timestamp),  // eventTimestamp
 			] // eventContinuationToken (specifying timestamp is sufficient)
 		]
 		
@@ -694,10 +694,10 @@ public final class Client {
 	}
 	
 	// List all events occurring at or after a timestamp.
-	public func syncAllNewEvents(timestamp: UInt64, cb: (response: SyncAllNewEventsResponse?) -> Void) {
+	public func syncAllNewEvents(timestamp: NSDate, cb: (response: SyncAllNewEventsResponse?) -> Void) {
 		let data: NSArray = [
 			self.getRequestHeader(),
-			NSNumber(value: timestamp),//to_timestamp(date: timestamp),
+			NSNumber(value: UInt64(timestamp.toUTC())),//to_timestamp(date: timestamp),
 			[],
 			None,
 			[],
@@ -731,11 +731,11 @@ public final class Client {
 	}
 	
 	// Update the watermark (read timestamp) for a conversation.
-	public func updateWatermark(conv_id: String, read_timestamp: UInt64, cb: (() -> Void)? = nil) {
+	public func updateWatermark(conv_id: String, read_timestamp: NSDate, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conv_id], // conversation_id
-			NSNumber(value: read_timestamp)//to_timestamp(date: ), // latest_read_timestamp
+			NSNumber(value: UInt64(read_timestamp.toUTC()))//to_timestamp(date: ), // latest_read_timestamp
 		]
 		self.request(endpoint: "conversations/updatewatermark", body: data) { r in
 			self.verifyResponseOK(responseObject: r.data!); cb?()
