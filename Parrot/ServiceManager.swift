@@ -33,6 +33,11 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 			Dispatch.main().add {
 				let s = NSStoryboard(name: "Main", bundle: NSBundle.main())
 				let vc = s.instantiateController(withIdentifier: "Conversations") as! ConversationsViewController
+				vc.selectionProvider = { row in
+					let vc2 = s.instantiateController(withIdentifier: "Conversation") as! ConversationViewController
+					vc2.representedObject = vc.conversationList?.conversations[row]
+					vc.present(vc2, animator: WindowTransitionAnimator())
+				}
 				self.trans = WindowTransitionAnimator()
 				self.trans!.displayViewController(viewController: vc)
 				

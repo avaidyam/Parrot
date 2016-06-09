@@ -27,14 +27,14 @@ public class MessageView : NSTableCellView {
 	internal static var TextPadding = (v: CGFloat(4), h: CGFloat(4))
 	
 	var backgroundView: NSView
-	var textLabel: NSLabel
+	var textLabel: NSTextField
 	var orientation: NSTextAlignment = .left
 	
     public override init(frame: NSRect) {
 		self.backgroundView = NSView(true)
 		self.backgroundView.translatesAutoresizingMaskIntoConstraints = true
 		
-		self.textLabel = NSLabel(true, false)
+		self.textLabel = NSTextField(true, false)
 		self.textLabel.textColor = NSColor.label()
 		self.textLabel.lineBreakMode = .byWordWrapping
 		self.textLabel.font = NSFont.systemFont(ofSize: 13.0, weight: NSFontWeightMedium)
@@ -46,10 +46,10 @@ public class MessageView : NSTableCellView {
         self.backgroundView.addSubview(self.textLabel)
 		
 		// Add constraints so we only mess with backgroundView.
-		(textLabel.top == backgroundView.top + MessageView.TextPadding.v)%
-		(textLabel.bottom == backgroundView.bottom + (MessageView.TextPadding.v * 2))%
-		(textLabel.left == backgroundView.left + MessageView.TextPadding.h)%
-		(textLabel.right == backgroundView.right + (MessageView.TextPadding.h * 2))%
+		((textLabel as! LayoutRegion).top == backgroundView.top + MessageView.TextPadding.v)%
+		((textLabel as! LayoutRegion).bottom == backgroundView.bottom + (MessageView.TextPadding.v * 2))%
+		((textLabel as! LayoutRegion).left == backgroundView.left + MessageView.TextPadding.h)%
+		((textLabel as! LayoutRegion).right == backgroundView.right + (MessageView.TextPadding.h * 2))%
 		
 		// Now we can set the layer style.
 		self.textLabel.layer?.cornerRadius = 4.0

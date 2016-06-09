@@ -25,26 +25,26 @@ public func ==(lhs: Person, rhs: Person) -> Bool {
 public class PersonView : NSTableCellView {
 	
 	var photoView: NSImageView
-	var nameLabel: NSLabel
-	var textLabel: NSLabel
-	var timeLabel: NSLabel
+	var nameLabel: NSTextField
+	var textLabel: NSTextField
+	var timeLabel: NSTextField
 	var indicator: NSView
 	
 	public override init(frame: NSRect) {
 		self.photoView = NSImageView(true)
 		self.photoView.imageScaling = .scaleProportionallyDown
 		
-		self.nameLabel = NSLabel(true, false)
+		self.nameLabel = NSTextField(true, false)
 		self.nameLabel.textColor = NSColor.label()
 		self.nameLabel.lineBreakMode = .byTruncatingTail
 		self.nameLabel.font = NSFont.systemFont(ofSize: 13.0, weight: NSFontWeightSemibold)
 		
-		self.textLabel = NSLabel(true, true)
+		self.textLabel = NSTextField(true, true)
 		self.textLabel.textColor = NSColor.secondaryLabel()
 		self.textLabel.lineBreakMode = .byWordWrapping
 		self.textLabel.font = NSFont.systemFont(ofSize: 12.0, weight: NSFontWeightRegular)
 		
-		self.timeLabel = NSLabel(true, false)
+		self.timeLabel = NSTextField(true, false)
 		self.timeLabel.textColor = NSColor.tertiaryLabel()
 		self.timeLabel.lineBreakMode = .byClipping
 		self.timeLabel.font = NSFont.systemFont(ofSize: 11.0, weight: NSFontWeightRegular)
@@ -64,16 +64,16 @@ public class PersonView : NSTableCellView {
 		(self.bottom == photoView.bottom + 4.0)%
 		(photoView.centerY == self.centerY)%
 		(photoView.top == self.top + 4.0)%
-		(nameLabel.leading == photoView.trailing + 4.0)%
-		(nameLabel.top == self.top + 4.0)%
-		(textLabel.top == timeLabel.bottom + 4.0)%
-		(textLabel.leading == photoView.trailing + 4.0)%
-		(textLabel.top == nameLabel.bottom + 4.0)%
-		(self.trailing == textLabel.trailing + 4.0)%
-		(self.bottom == textLabel.bottom + 4.0)%
-		(self.trailing == timeLabel.trailing + 4.0)%
-		(timeLabel.leading == nameLabel.trailing + 4.0)%
-		(timeLabel.top == self.top + 4.0)%
+		((nameLabel as! LayoutRegion).leading == photoView.trailing + 4.0)%
+		((nameLabel as! LayoutRegion).top == self.top + 4.0)%
+		((textLabel as! LayoutRegion).top == (timeLabel as! LayoutRegion).bottom + 4.0)%
+		((textLabel as! LayoutRegion).leading == photoView.trailing + 4.0)%
+		((textLabel as! LayoutRegion).top == (nameLabel as! LayoutRegion).bottom + 4.0)%
+		(self.trailing == (textLabel as! LayoutRegion).trailing + 4.0)%
+		(self.bottom == (textLabel as! LayoutRegion).bottom + 4.0)%
+		(self.trailing == (timeLabel as! LayoutRegion).trailing + 4.0)%
+		((timeLabel as! LayoutRegion).leading == (nameLabel as! LayoutRegion).trailing + 4.0)%
+		((timeLabel as! LayoutRegion).top == self.top + 4.0)%
 		(photoView.width == photoView.height * 1.0 ~ 1000)%
 	}
 

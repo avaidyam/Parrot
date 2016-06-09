@@ -8,7 +8,6 @@ import AppKit
 
 public protocol LayoutRegion: AnyObject {}
 extension NSView: LayoutRegion {}
-extension NSLabel: LayoutRegion {} // FIXME?
 
 @available(OSX 10.11, *)
 extension NSLayoutGuide: LayoutRegion {}

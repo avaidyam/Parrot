@@ -7,6 +7,8 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	
 	@IBOutlet var personsView: PersonsView!
 	
+	var selectionProvider: ((Int) -> Void)? = nil
+	
 	override func loadView() {
 		super.loadView()
 		
@@ -39,10 +41,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		self.personsView.insets = NSEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.personsView.selectionProvider = { row in
 			if row >= 0 {
-				let s = NSStoryboard(name: "Main", bundle: NSBundle.main())
-				let vc = s.instantiateController(withIdentifier: "Conversation") as! ConversationViewController
-				vc.representedObject = self.conversationList?.conversations[row]
-				self.present(vc, animator: WindowTransitionAnimator())
+				self.selectionProvider?(row)
 			}
 		}
 		

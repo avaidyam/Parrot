@@ -5,31 +5,37 @@ import Foundation
 public typealias Dispatch = NSOperationQueue
 public extension NSOperationQueue {
 	
+	@discardableResult
 	public func pause() -> Self {
 		self.isSuspended = true
 		return self
 	}
 	
+	@discardableResult
 	public func resume() -> Self {
 		self.isSuspended = false
 		return self
 	}
 	
+	@discardableResult
 	public func stop() -> Self {
 		self.cancelAllOperations()
 		return self
 	}
 	
+	@discardableResult
 	public func wait() -> Self {
 		self.waitUntilAllOperationsAreFinished()
 		return self
 	}
 	
+	@discardableResult
 	public func quality(quality: NSQualityOfService) -> Self {
 		self.qualityOfService = quality
 		return self
 	}
 	
+	@discardableResult
 	public func add(block: () -> Void) -> Self {
 		self.addOperation(NSBlockOperation(block: block))
 		return self

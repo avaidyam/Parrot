@@ -4,7 +4,7 @@ import WebKit
 
 public class Authenticator {
 	
-	private static let DEFAULTS = NSUserDefaults.standard()
+	private static let DEFAULTS = NSUserDefaults.init(suiteName: "group.com.avaidyam.Parrot")!
 	private static let ACCESS_TOKEN = "access_token"
 	private static let REFRESH_TOKEN = "refresh_token"
 	

@@ -1,8 +1,5 @@
 import Cocoa
 
-// Extensions to easily create labels and views without a frame.
-public typealias NSLabel = NSTextField
-
 public extension NSView {
 	public convenience init(_ layerBacked: Bool) {
 		self.init(frame: NSZeroRect)

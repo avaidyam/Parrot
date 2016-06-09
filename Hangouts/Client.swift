@@ -241,7 +241,6 @@ public final class Client {
 			var required_entities = [Entity]()
 			self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
 				required_entities = resp?.entity ?? []
-				print(required_entities)
 				
 				var conv_part_list = Array<ConversationParticipantData>()
 				for conv_state in conv_states {
