@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target">
+            <connections>
+                <outlet property="messageTextField" destination="7qX-gn-YRY" id="Ccm-Kk-j1g"/>
+                <outlet property="messagesView" destination="yMT-fg-2gH" id="SNf-Rj-7x7"/>
+                <outlet property="statusView" destination="eNL-fW-1Cx" id="gX1-VY-R6C"/>
+                <outlet property="view" destination="V7l-JF-KwK" id="WZe-eL-oG4"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <view wantsLayer="YES" id="V7l-JF-KwK" customClass="NSVisualEffectView">
+            <rect key="frame" x="0.0" y="0.0" width="568" height="383"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <customView wantsLayer="YES" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="MessagesView" customModule="Parrot" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="39" width="568" height="344"/>
+                </customView>
+                <box wantsLayer="YES" verticalHuggingPriority="751" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="MlJ-gQ-qkl">
+                    <rect key="frame" x="0.0" y="36" width="568" height="5"/>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <font key="titleFont" metaFont="system"/>
+                </box>
+                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GG6-O2-ffU">
+                    <rect key="frame" x="8" y="6" width="20" height="25"/>
+                    <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSIconViewTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="lhg-yZ-Rwd">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sXA-Lz-wpm">
+                    <rect key="frame" x="541" y="6" width="19" height="25"/>
+                    <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRightFacingTriangleTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gDM-fa-dLS">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="messageTextFieldDidAction:" target="-2" id="GpF-ya-Qv1"/>
+                    </connections>
+                </button>
+                <textField wantsLayer="YES" focusRingType="exterior" verticalHuggingPriority="751" verticalCompressionResistancePriority="49" translatesAutoresizingMaskIntoConstraints="NO" id="7qX-gn-YRY">
+                    <rect key="frame" x="36" y="8" width="497" height="22"/>
+                    <textFieldCell key="cell" selectable="YES" editable="YES" refusesFirstResponder="YES" state="on" borderStyle="bezel" focusRingType="exterior" placeholderString="Send a message..." allowsEditingTextAttributes="YES" bezelStyle="round" id="x2q-TS-PN1">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
+                    </textFieldCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="drawsBackground" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="messageTextFieldDidAction:" target="-2" id="MVN-FX-awN"/>
+                    </connections>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="7qX-gn-YRY" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="7Lq-ll-Iiy"/>
+                <constraint firstItem="yMT-fg-2gH" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" id="9so-cq-mbb"/>
+                <constraint firstItem="yMT-fg-2gH" firstAttribute="width" secondItem="V7l-JF-KwK" secondAttribute="width" id="Co0-LE-wqU"/>
+                <constraint firstAttribute="bottom" secondItem="sXA-Lz-wpm" secondAttribute="bottom" constant="8" id="Ds9-uq-aEo"/>
+                <constraint firstItem="sXA-Lz-wpm" firstAttribute="centerY" secondItem="7qX-gn-YRY" secondAttribute="centerY" id="Fnb-1P-F6A"/>
+                <constraint firstItem="MlJ-gQ-qkl" firstAttribute="top" secondItem="yMT-fg-2gH" secondAttribute="bottom" id="MM7-Nx-baP"/>
+                <constraint firstAttribute="bottom" secondItem="GG6-O2-ffU" secondAttribute="bottom" constant="8" id="Mwv-4s-zi6"/>
+                <constraint firstItem="GG6-O2-ffU" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="NHu-cc-m84"/>
+                <constraint firstItem="MlJ-gQ-qkl" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" id="OLQ-lg-8aB"/>
+                <constraint firstItem="sXA-Lz-wpm" firstAttribute="leading" secondItem="7qX-gn-YRY" secondAttribute="trailing" constant="8" id="VEv-bD-qzz"/>
+                <constraint firstAttribute="trailing" secondItem="sXA-Lz-wpm" secondAttribute="trailing" constant="8" id="XRI-wh-Hno"/>
+                <constraint firstAttribute="bottom" secondItem="7qX-gn-YRY" secondAttribute="bottom" constant="8" id="Yol-fc-GMo"/>
+                <constraint firstItem="sXA-Lz-wpm" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="alm-Wt-Kqv"/>
+                <constraint firstItem="GG6-O2-ffU" firstAttribute="centerY" secondItem="7qX-gn-YRY" secondAttribute="centerY" id="dbP-qG-Qh5"/>
+                <constraint firstItem="yMT-fg-2gH" firstAttribute="top" secondItem="V7l-JF-KwK" secondAttribute="top" id="iOd-dt-igW"/>
+                <constraint firstItem="7qX-gn-YRY" firstAttribute="leading" secondItem="GG6-O2-ffU" secondAttribute="trailing" constant="8" id="ivt-OX-RoL"/>
+                <constraint firstItem="GG6-O2-ffU" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" constant="8" id="jDH-gw-qGg"/>
+                <constraint firstAttribute="trailing" secondItem="MlJ-gQ-qkl" secondAttribute="trailing" id="tfK-yG-qdb"/>
+            </constraints>
+        </view>
+        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
+            <rect key="frame" x="0.0" y="0.0" width="132" height="22"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Status" id="0ys-h0-cm2">
+                <font key="font" metaFont="system"/>
+                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+            </textFieldCell>
+            <point key="canvasLocation" x="477" y="409"/>
+        </textField>
+        <view wantsLayer="YES" focusRingType="none" id="NtL-HB-vJs">
+            <rect key="frame" x="0.0" y="0.0" width="304" height="58"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <segmentedControl wantsLayer="YES" verticalHuggingPriority="750" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tvh-FQ-tna">
+                    <rect key="frame" x="4" y="30" width="296" height="25"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="rL6-Dw-gZy">
+                        <font key="font" metaFont="system"/>
+                        <segments>
+                            <segment label="Photo" image="NSFlowViewTemplate" width="101"/>
+                            <segment label="Sticker" image="NSQuickLookTemplate" selected="YES" tag="1"/>
+                            <segment label="Camera" image="NSIChatTheaterTemplate" width="101"/>
+                        </segments>
+                    </segmentedCell>
+                </segmentedControl>
+                <searchField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Swj-Tf-yJb">
+                    <rect key="frame" x="4" y="6" width="296" height="22"/>
+                    <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" sendsWholeSearchString="YES" maximumRecents="20" id="nyM-2C-ByS">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </searchFieldCell>
+                </searchField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="Swj-Tf-yJb" firstAttribute="leading" secondItem="Tvh-FQ-tna" secondAttribute="leading" id="2dr-eW-ADl"/>
+                <constraint firstItem="Tvh-FQ-tna" firstAttribute="leading" secondItem="NtL-HB-vJs" secondAttribute="leading" constant="4" id="72U-UA-idy"/>
+                <constraint firstItem="Swj-Tf-yJb" firstAttribute="top" secondItem="Tvh-FQ-tna" secondAttribute="bottom" constant="4" id="8tm-ta-jfW"/>
+                <constraint firstItem="Tvh-FQ-tna" firstAttribute="centerY" secondItem="NtL-HB-vJs" secondAttribute="centerY" constant="-14" id="EUC-VE-6pr"/>
+                <constraint firstItem="Swj-Tf-yJb" firstAttribute="trailing" secondItem="Tvh-FQ-tna" secondAttribute="trailing" id="Ojw-ba-39e"/>
+                <constraint firstItem="Tvh-FQ-tna" firstAttribute="top" secondItem="NtL-HB-vJs" secondAttribute="top" constant="4" id="jwg-gJ-Ho0"/>
+            </constraints>
+            <point key="canvasLocation" x="377" y="760"/>
+        </view>
+        <viewController id="H32-H4-UYo" userLabel="Popover View Controller">
+            <connections>
+                <outlet property="view" destination="NtL-HB-vJs" id="0QS-JY-evw"/>
+            </connections>
+        </viewController>
+        <popover behavior="t" id="Lof-n5-PGH">
+            <connections>
+                <outlet property="contentViewController" destination="H32-H4-UYo" id="q8B-R7-vC5"/>
+            </connections>
+        </popover>
+    </objects>
+    <resources>
+        <image name="NSFlowViewTemplate" width="18" height="10"/>
+        <image name="NSIChatTheaterTemplate" width="15" height="13"/>
+        <image name="NSIconViewTemplate" width="10" height="10"/>
+        <image name="NSQuickLookTemplate" width="19" height="12"/>
+        <image name="NSRightFacingTriangleTemplate" width="9" height="12"/>
+    </resources>
+</document>

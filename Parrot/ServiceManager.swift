@@ -10,8 +10,8 @@ public class Parrot {
 }
 
 // for later:
-public let PHONE_REGEX = "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b"
-public let LINK_REGEX = "(https?:\\/\\/(?:www\\.|(?!www))[^\\s\\.]+\\.[^\\s]{2,}|www\\.[^\\s]+\\.[^\\s]{2,})"
+//public let PHONE_REGEX = "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b"
+//public let LINK_REGEX = "(https?:\\/\\/(?:www\\.|(?!www))[^\\s\\.]+\\.[^\\s]{2,}|www\\.[^\\s]+\\.[^\\s]{2,})"
 // public let ADDRESS_REGEX = ""
 // public let CALENDAR_REGEX = ""
 
@@ -37,15 +37,14 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 			
 			// Instantiate storyboard and controller and begin the UI from here.
 			Dispatch.main().add {
-				let s = NSStoryboard(name: "Main", bundle: NSBundle.main())
-				let vc = s.instantiateController(withIdentifier: "Conversations") as! ConversationsViewController
-				vc.selectionProvider = { row in
-					let vc2 = s.instantiateController(withIdentifier: "Conversation") as! ConversationViewController
-					vc2.representedObject = vc.conversationList?.conversations[row]
-					vc.present(vc2, animator: WindowTransitionAnimator())
+				let vc = ConversationsViewController(nibName: "ConversationsViewController", bundle: nil)
+				vc?.selectionProvider = { row in
+					let vc2 = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
+					vc2?.representedObject = vc?.conversationList?.conversations[row]
+					vc?.present(vc2!, animator: WindowTransitionAnimator())
 				}
 				self.trans = WindowTransitionAnimator()
-				self.trans!.displayViewController(viewController: vc)
+				self.trans!.displayViewController(viewController: vc!)
 				
 				self.trans?.window?.titleVisibility = .hidden;
 				self.trans?.window?.titlebarAppearsTransparent = true;

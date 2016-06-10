@@ -55,8 +55,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 				
 				// Instantiate storyboard and controller and begin the UI from here.
 				Dispatch.main().add {
-					let s = NSStoryboard(name: "Main", bundle: NSBundle.main())
-					self.viewingVC = s.instantiateController(withIdentifier: "Conversation") as? ConversationViewController
+					self.viewingVC = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
 					self.viewingVC?.preferredContentSize = CGSize(width: 320, height: 480)
 					
 					self.selectionProvider = { row in
