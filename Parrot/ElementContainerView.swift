@@ -6,14 +6,33 @@ import Cocoa
 /// Any of the provided classes have an associated size.
 /// However, .Dynamic implies that the size class will be computed
 /// at runtime based on the runtime size of the list elements.
-public enum SizeClass: Double {
-	case XSmall = 16.0
-	case Small = 32.0
-	case Medium = 48.0
-	case Large = 64.0
-	case XLarge = 96.0
+public enum SizeClass {
+	case XSmall// = 16.0
+	case Small// = 32.0
+	case Medium// = 48.0
+	case Large// = 64.0
+	case XLarge// = 96.0
+	case Custom(Double)
+	case Dynamic
 	
-	case Dynamic = -9000.0
+	var size: Double {
+		switch self {
+		case .XSmall: return 16.0
+		case .Small: return 32.0
+		case .Medium: return 48.0
+		case .Large: return 64.0
+		case .XLarge: return 96.0
+		case .Custom(let value): return value
+		case .Dynamic: return 0.0
+		}
+	}
+	
+	func calculate(_ dynamic: (() -> Double)?) -> Double {
+		switch self {
+		case .Dynamic where dynamic != nil: return dynamic!()
+		default: return self.size
+		}
+	}
 }
 
 /// Provides selection capabilities for selectable elements of a list.
@@ -159,8 +178,9 @@ public extension ElementContainerView {
 	
 	/* TODO: Support size classes. */
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-		return CGFloat(self.sizeClass != .Dynamic ? self.sizeClass.rawValue :
-			(self.dynamicHeightProvider?(row: row) ?? SizeClass.Medium.rawValue))
+		return CGFloat(self.sizeClass.calculate {
+			self.dynamicHeightProvider?(row: row) ?? 0
+		})
 	}
 	
 	public func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {

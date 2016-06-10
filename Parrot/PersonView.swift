@@ -30,61 +30,12 @@ public class PersonView : NSTableCellView {
 	@IBOutlet var timeLabel: NSTextField?
 	@IBOutlet var indicator: NSView?
 	
-	
 	public override init(frame: NSRect) {
 		super.init(frame: frame)
 	}
 	
-	/*
-	public override init(frame: NSRect) {
-		self.photoView = NSImageView(true)
-		self.photoView.imageScaling = .scaleProportionallyDown
-		
-		self.nameLabel = NSTextField(true, false)
-		self.nameLabel.textColor = NSColor.label()
-		self.nameLabel.lineBreakMode = .byTruncatingTail
-		self.nameLabel.font = NSFont.systemFont(ofSize: 13.0, weight: NSFontWeightSemibold)
-		
-		self.textLabel = NSTextField(true, true)
-		self.textLabel.textColor = NSColor.secondaryLabel()
-		self.textLabel.lineBreakMode = .byWordWrapping
-		self.textLabel.font = NSFont.systemFont(ofSize: 12.0, weight: NSFontWeightRegular)
-		
-		self.timeLabel = NSTextField(true, false)
-		self.timeLabel.textColor = NSColor.tertiaryLabel()
-		self.timeLabel.lineBreakMode = .byClipping
-		self.timeLabel.font = NSFont.systemFont(ofSize: 11.0, weight: NSFontWeightRegular)
-		
-		self.indicator = NSView(true)
-		
-		// Swift is funny like this.
-		super.init(frame: frame)
-		self.addSubview(self.photoView)
-		self.addSubview(self.nameLabel)
-		self.addSubview(self.textLabel)
-		self.addSubview(self.timeLabel)
-		self.addSubview(self.indicator)
-		
-		// Setup layout constraints.
-		(photoView.leading == self.leading + 4.0)%
-		(self.bottom == photoView.bottom + 4.0)%
-		(photoView.centerY == self.centerY)%
-		(photoView.top == self.top + 4.0)%
-		((nameLabel as! LayoutRegion).leading == photoView.trailing + 4.0)%
-		((nameLabel as! LayoutRegion).top == self.top + 4.0)%
-		((textLabel as! LayoutRegion).top == (timeLabel as! LayoutRegion).bottom + 4.0)%
-		((textLabel as! LayoutRegion).leading == photoView.trailing + 4.0)%
-		((textLabel as! LayoutRegion).top == (nameLabel as! LayoutRegion).bottom + 4.0)%
-		(self.trailing == (textLabel as! LayoutRegion).trailing + 4.0)%
-		(self.bottom == (textLabel as! LayoutRegion).bottom + 4.0)%
-		(self.trailing == (timeLabel as! LayoutRegion).trailing + 4.0)%
-		((timeLabel as! LayoutRegion).leading == (nameLabel as! LayoutRegion).trailing + 4.0)%
-		((timeLabel as! LayoutRegion).top == self.top + 4.0)%
-		(photoView.width == photoView.height * 1.0 ~ 1000)%
-	}*/
-
 	public required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+		super.init(coder: coder)
 	}
 	
 	// Upon assignment of the represented object, configure the subview contents.
@@ -158,7 +109,7 @@ public class PersonView : NSTableCellView {
 // Container-type view for PersonView.
 public class PersonsView: ElementContainerView {
 	internal override func createView() -> PersonView {
-		var view = self.tableView.make(withIdentifier: PersonView.className(), owner: self) as? PersonView
+		var view = self.tableView.make(withIdentifier: PersonView.className(), owner: nil) as? PersonView
 		if view == nil {
 			view = PersonView(frame: NSZeroRect)
 			view!.identifier = PersonView.className()
