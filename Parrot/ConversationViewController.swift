@@ -3,14 +3,30 @@ import Hangouts
 
 /* TODO: Use NSWindow occlusion API to fully support focus. */
 
-class ConversationViewController: NSViewController, ConversationDelegate, NSTextFieldDelegate {
+class ConversationViewController: NSViewController, ConversationDelegate, NSTextViewDelegate {
 	
 	@IBOutlet var messagesView: MessagesView!
-    @IBOutlet weak var messageTextField: NSTextField!
+    @IBOutlet var messageTextField: NSTextView!
 	@IBOutlet var statusView: NSTextField!
 	
 	var _note: TokenObserver!
 	var popover: NSPopover!
+	
+	private var _textBack: NSColor {
+		if self.view.effectiveAppearance.name == NSAppearanceNameVibrantDark {
+			return NSColor(calibratedWhite: 1.00, alpha: 0.2)
+		} else {
+			return NSColor(calibratedWhite: 0.00, alpha: 0.1)
+		}
+	}
+	
+	private var _textFront: NSColor {
+		if self.view.effectiveAppearance.name == NSAppearanceNameVibrantDark {
+			return NSColor(calibratedWhite: 1.00, alpha: 0.5)
+		} else {
+			return NSColor(calibratedWhite: 0.00, alpha: 0.6)
+		}
+	}
 	
 	override func loadView() {
 		super.loadView()
@@ -24,6 +40,24 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
+			
+			if let text = self.messageTextField, let layer = text.enclosingScrollView?.layer {
+				layer.masksToBounds = true
+				layer.cornerRadius = 2.0
+				layer.backgroundColor = self._textBack.cgColor
+				
+				// NSTextView doesn't automatically change its text color when the
+				// backing view's appearance changes, so we need to set it each time.
+				// In addition, make sure links aren't blue as usual.
+				text.textColor = NSColor.label()
+				text.linkTextAttributes = [
+					NSCursorAttributeName: NSColor.label()
+				]
+				text.selectedTextAttributes = [
+					NSBackgroundColorAttributeName: self._textFront,
+					NSForegroundColorAttributeName: NSColor.label(),
+				]
+			}
 		}
 	}
 
@@ -195,8 +229,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
     // MARK: NSTextFieldDelegate
     var lastTypingTimestamp: NSDate?
-    override func controlTextDidChange(_ obj: NSNotification) {
-        if messageTextField.stringValue == "" {
+	func textDidChange(_ obj: NSNotification) {
+        if messageTextField.string == "" {
             return
         }
 
@@ -222,13 +256,13 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			return
 		}
 		
-        let text = messageTextField.stringValue
-        if text.characters.count > 0 {
+        let text = messageTextField.string
+        if text?.characters.count > 0 {
 			var emojify = Settings()[Parrot.AutoEmoji] as? Bool ?? false
 			emojify = NSEvent.modifierFlags().contains(.alternateKeyMask) ? false : emojify
-			let txt = ConversationViewController.segmentsForInput(text: text, emojify: emojify)
+			let txt = ConversationViewController.segmentsForInput(text: text!, emojify: emojify)
 			conversation?.sendMessage(segments: txt)
-            messageTextField.stringValue = ""
+            messageTextField.string = ""
         }
     }
 	

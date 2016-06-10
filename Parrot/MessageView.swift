@@ -40,11 +40,19 @@ public class MessageView : NSTableCellView {
 		super.init(coder: coder)
 	}
 	
-	private var _textBacking: CGColor {
+	private var _textBack: NSColor {
 		if self.effectiveAppearance.name == NSAppearanceNameVibrantDark {
-			return NSColor(calibratedWhite: 1.00, alpha: 0.2).cgColor
+			return NSColor(calibratedWhite: 1.00, alpha: 0.2)
 		} else {
-			return NSColor(calibratedWhite: 0.00, alpha: 0.1).cgColor
+			return NSColor(calibratedWhite: 0.00, alpha: 0.1)
+		}
+	}
+	
+	private var _textFront: NSColor {
+		if self.effectiveAppearance.name == NSAppearanceNameVibrantDark {
+			return NSColor(calibratedWhite: 1.00, alpha: 0.5)
+		} else {
+			return NSColor(calibratedWhite: 0.00, alpha: 0.6)
 		}
 	}
 	
@@ -71,13 +79,19 @@ public class MessageView : NSTableCellView {
 		if let text = self.textLabel, let layer = text.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = 2.0
-			layer.backgroundColor = self._textBacking
+			layer.backgroundColor = self._textBack.cgColor
 			
 			// NSTextView doesn't automatically change its text color when the 
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.
 			text.textColor = NSColor.label()
-			text.linkTextAttributes = [NSCursorAttributeName: NSColor.label()]
+			text.linkTextAttributes = [
+				NSCursorAttributeName: NSColor.label()
+			]
+			text.selectedTextAttributes = [
+				NSBackgroundColorAttributeName: self._textFront,
+				NSForegroundColorAttributeName: NSColor.label(),
+			]
 		}
 	}
 	

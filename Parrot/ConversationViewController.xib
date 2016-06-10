@@ -7,7 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target">
             <connections>
-                <outlet property="messageTextField" destination="7qX-gn-YRY" id="Ccm-Kk-j1g"/>
+                <outlet property="messageTextField" destination="A58-4G-SjV" id="S7h-hF-amm"/>
                 <outlet property="messagesView" destination="yMT-fg-2gH" id="SNf-Rj-7x7"/>
                 <outlet property="statusView" destination="eNL-fW-1Cx" id="gX1-VY-R6C"/>
                 <outlet property="view" destination="V7l-JF-KwK" id="WZe-eL-oG4"/>
@@ -45,40 +45,62 @@
                         <action selector="messageTextFieldDidAction:" target="-2" id="GpF-ya-Qv1"/>
                     </connections>
                 </button>
-                <textField wantsLayer="YES" focusRingType="exterior" verticalHuggingPriority="751" verticalCompressionResistancePriority="49" translatesAutoresizingMaskIntoConstraints="NO" id="7qX-gn-YRY">
+                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
                     <rect key="frame" x="36" y="8" width="497" height="22"/>
-                    <textFieldCell key="cell" selectable="YES" editable="YES" refusesFirstResponder="YES" state="on" borderStyle="bezel" focusRingType="exterior" placeholderString="Send a message..." allowsEditingTextAttributes="YES" bezelStyle="round" id="x2q-TS-PN1">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
-                    </textFieldCell>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="drawsBackground" value="YES"/>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="messageTextFieldDidAction:" target="-2" id="MVN-FX-awN"/>
-                    </connections>
-                </textField>
+                    <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
+                        <rect key="frame" x="0.0" y="0.0" width="497" height="22"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView drawsBackground="NO" findStyle="bar" incrementalSearchingEnabled="YES" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV">
+                                <rect key="frame" x="0.0" y="0.0" width="497" height="22"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <size key="minSize" width="497" height="22"/>
+                                <size key="maxSize" width="497" height="10000000"/>
+                                <attributedString key="textStorage">
+                                    <fragment content="Cheers, love! The cavalry's here!">
+                                        <attributes>
+                                            <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <font key="NSFont" metaFont="systemMedium" size="13"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <size key="minSize" width="497" height="22"/>
+                                <size key="maxSize" width="497" height="10000000"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </clipView>
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="fv6-Li-TQq">
+                        <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="glu-WV-IDk">
+                        <rect key="frame" x="481" y="0.0" width="16" height="22"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
             </subviews>
             <constraints>
-                <constraint firstItem="7qX-gn-YRY" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="7Lq-ll-Iiy"/>
+                <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="38s-F8-Xds"/>
                 <constraint firstItem="yMT-fg-2gH" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" id="9so-cq-mbb"/>
                 <constraint firstItem="yMT-fg-2gH" firstAttribute="width" secondItem="V7l-JF-KwK" secondAttribute="width" id="Co0-LE-wqU"/>
                 <constraint firstAttribute="bottom" secondItem="sXA-Lz-wpm" secondAttribute="bottom" constant="8" id="Ds9-uq-aEo"/>
-                <constraint firstItem="sXA-Lz-wpm" firstAttribute="centerY" secondItem="7qX-gn-YRY" secondAttribute="centerY" id="Fnb-1P-F6A"/>
                 <constraint firstItem="MlJ-gQ-qkl" firstAttribute="top" secondItem="yMT-fg-2gH" secondAttribute="bottom" id="MM7-Nx-baP"/>
                 <constraint firstAttribute="bottom" secondItem="GG6-O2-ffU" secondAttribute="bottom" constant="8" id="Mwv-4s-zi6"/>
                 <constraint firstItem="GG6-O2-ffU" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="NHu-cc-m84"/>
                 <constraint firstItem="MlJ-gQ-qkl" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" id="OLQ-lg-8aB"/>
-                <constraint firstItem="sXA-Lz-wpm" firstAttribute="leading" secondItem="7qX-gn-YRY" secondAttribute="trailing" constant="8" id="VEv-bD-qzz"/>
                 <constraint firstAttribute="trailing" secondItem="sXA-Lz-wpm" secondAttribute="trailing" constant="8" id="XRI-wh-Hno"/>
-                <constraint firstAttribute="bottom" secondItem="7qX-gn-YRY" secondAttribute="bottom" constant="8" id="Yol-fc-GMo"/>
+                <constraint firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" constant="8" id="XSb-KR-Pbe"/>
                 <constraint firstItem="sXA-Lz-wpm" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="alm-Wt-Kqv"/>
-                <constraint firstItem="GG6-O2-ffU" firstAttribute="centerY" secondItem="7qX-gn-YRY" secondAttribute="centerY" id="dbP-qG-Qh5"/>
+                <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="GG6-O2-ffU" secondAttribute="trailing" constant="8" id="g40-Q4-wRg"/>
                 <constraint firstItem="yMT-fg-2gH" firstAttribute="top" secondItem="V7l-JF-KwK" secondAttribute="top" id="iOd-dt-igW"/>
-                <constraint firstItem="7qX-gn-YRY" firstAttribute="leading" secondItem="GG6-O2-ffU" secondAttribute="trailing" constant="8" id="ivt-OX-RoL"/>
                 <constraint firstItem="GG6-O2-ffU" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" constant="8" id="jDH-gw-qGg"/>
                 <constraint firstAttribute="trailing" secondItem="MlJ-gQ-qkl" secondAttribute="trailing" id="tfK-yG-qdb"/>
+                <constraint firstItem="sXA-Lz-wpm" firstAttribute="leading" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="y92-UJ-H5l"/>
             </constraints>
         </view>
         <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">

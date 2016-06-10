@@ -433,9 +433,9 @@
 			isa = PBXGroup;
 			children = (
 				4835ECAC1C1C620E00193EBC /* ConversationsViewController.swift */,
-				488492751D0B3A010003D522 /* ConversationViewController.xib */,
-				4835ECAD1C1C620E00193EBC /* ConversationViewController.swift */,
 				488492731D0B392A0003D522 /* ConversationsViewController.xib */,
+				4835ECAD1C1C620E00193EBC /* ConversationViewController.swift */,
+				488492751D0B3A010003D522 /* ConversationViewController.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
