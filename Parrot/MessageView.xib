@@ -13,14 +13,6 @@
             <rect key="frame" x="0.0" y="0.0" width="270" height="40"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="oxy-ap-937">
-                    <rect key="frame" x="38" y="8" width="226" height="24"/>
-                    <textFieldCell key="cell" controlSize="mini" selectable="YES" sendsActionOnEndEditing="YES" title="Multiline Label" allowsEditingTextAttributes="YES" id="9P8-XX-2Tl">
-                        <font key="font" metaFont="systemMedium" size="13"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="wEL-KW-aRK">
                     <rect key="frame" x="8" y="8" width="24" height="24"/>
                     <constraints>
@@ -29,19 +21,58 @@
                     </constraints>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="pE0-nd-e80"/>
                 </imageView>
+                <scrollView wantsLayer="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="QLh-pw-ow3">
+                    <rect key="frame" x="36" y="8" width="226" height="24"/>
+                    <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="ISP-1s-HMH">
+                        <rect key="frame" x="0.0" y="0.0" width="226" height="24"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView wantsLayer="YES" editable="NO" drawsBackground="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" smartInsertDelete="YES" id="1dL-oQ-fiX">
+                                <rect key="frame" x="0.0" y="0.0" width="347" height="24"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <size key="minSize" width="226" height="24"/>
+                                <size key="maxSize" width="463" height="10000000"/>
+                                <attributedString key="textStorage">
+                                    <fragment content="Cheers, love! The cavalry's here!">
+                                        <attributes>
+                                            <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <font key="NSFont" metaFont="smallSystem"/>
+                                            <font key="NSOriginalFont" metaFont="smallSystem"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <size key="minSize" width="226" height="24"/>
+                                <size key="maxSize" width="463" height="10000000"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </clipView>
+                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="ROC-aq-PBt">
+                        <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="7Ov-BR-5e3">
+                        <rect key="frame" x="-100" y="-100" width="16" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
             </subviews>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="oxy-ap-937" secondAttribute="bottom" constant="8" id="6fA-qV-3m9"/>
-                <constraint firstItem="oxy-ap-937" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="7bj-kk-XmZ"/>
                 <constraint firstItem="wEL-KW-aRK" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="9WJ-fl-DvS"/>
-                <constraint firstItem="oxy-ap-937" firstAttribute="leading" secondItem="wEL-KW-aRK" secondAttribute="trailing" constant="8" id="ALw-gH-loA"/>
+                <constraint firstAttribute="bottom" secondItem="QLh-pw-ow3" secondAttribute="bottom" constant="8" id="Bfh-a9-OJk"/>
                 <constraint firstAttribute="height" relation="greaterThanOrEqual" secondItem="wEL-KW-aRK" secondAttribute="height" constant="16" id="G46-KN-q2L"/>
-                <constraint firstAttribute="trailing" secondItem="oxy-ap-937" secondAttribute="trailing" constant="8" id="Nts-HA-3Pk"/>
                 <constraint firstItem="wEL-KW-aRK" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="TZv-Sn-TS0"/>
+                <constraint firstItem="QLh-pw-ow3" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="f5u-NF-wdi"/>
+                <constraint firstItem="QLh-pw-ow3" firstAttribute="leading" secondItem="wEL-KW-aRK" secondAttribute="trailing" constant="4" id="t4n-ew-vjE"/>
+                <constraint firstAttribute="trailing" secondItem="QLh-pw-ow3" secondAttribute="trailing" constant="8" id="wv9-pT-7Ot"/>
             </constraints>
             <connections>
                 <outlet property="photoView" destination="wEL-KW-aRK" id="CDZ-Os-RaC"/>
-                <outlet property="textLabel" destination="oxy-ap-937" id="RIf-dy-Jr8"/>
+                <outlet property="textLabel" destination="1dL-oQ-fiX" id="FEM-Gg-mvy"/>
             </connections>
             <point key="canvasLocation" x="285" y="149.5"/>
         </customView>

@@ -29,7 +29,7 @@ public class MessageView : NSTableCellView {
 	internal static var TextPadding = (v: CGFloat(8), h: CGFloat(8))
 	
 	@IBOutlet var photoView: NSImageView?
-	@IBOutlet var textLabel: NSTextField?
+	@IBOutlet var textLabel: NSTextView?
 	var orientation: NSUserInterfaceLayoutDirection = .leftToRight
 	
 	public override init(frame: NSRect) {
@@ -55,9 +55,8 @@ public class MessageView : NSTableCellView {
 				return
 			}
 			self.orientation = o.orientation
-			self.textLabel?.attributedStringValue = o.string
+			self.textLabel?.textStorage?.setAttributedString(o.string)
 			self.photoView?.image = o.photo
-			//self.textLabel.layer?.backgroundColor = o.color.cgColor
 		}
 	}
 	
@@ -73,6 +72,12 @@ public class MessageView : NSTableCellView {
 			layer.masksToBounds = true
 			layer.cornerRadius = 2.0
 			layer.backgroundColor = self._textBacking
+			
+			// NSTextView doesn't automatically change its text color when the 
+			// backing view's appearance changes, so we need to set it each time.
+			// In addition, make sure links aren't blue as usual.
+			text.textColor = NSColor.label()
+			text.linkTextAttributes = [NSCursorAttributeName: NSColor.label()]
 		}
 	}
 	
