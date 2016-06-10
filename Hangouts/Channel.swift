@@ -54,7 +54,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 					let bufUTF16 = decoded.data(using: NSUTF16BigEndianStringEncoding)!
 					let decodedUtf16LengthInChars = bufUTF16.length / 2
 					
-					let lengths = Regex("([0-9]+)\n").match(input: decoded, all: true)
+					let lengths = decoded.findAllOccurrences(matching: "([0-9]+)\n", all: true)
 					if let length_str = lengths.first { //length_str.endIndex.advancedBy(n: -1)
 						let length_str_without_newline = length_str.substring(to: length_str.index(length_str.endIndex, offsetBy: -1))
 						if let length = Int(length_str_without_newline) {

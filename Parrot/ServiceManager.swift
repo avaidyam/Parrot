@@ -9,6 +9,12 @@ public class Parrot {
 	public static let ShowSidebar = "Parrot.ShowSidebar"
 }
 
+// for later:
+public let PHONE_REGEX = "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b"
+public let LINK_REGEX = "(https?:\\/\\/(?:www\\.|(?!www))[^\\s\\.]+\\.[^\\s]{2,}|www\\.[^\\s]+\\.[^\\s]{2,})"
+// public let ADDRESS_REGEX = ""
+// public let CALENDAR_REGEX = ""
+
 @NSApplicationMain
 class ServiceManager: NSObject, NSApplicationDelegate {
 	

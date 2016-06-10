@@ -5,7 +5,7 @@
 // An event which becomes part of the permanent record of a conversation.
 // Acts as a base class for the events defined below.
 public class IEvent : Hashable, Equatable {
-    private let event: Event
+    public let event: Event
 	
     public init(event: Event) {
         self.event = event

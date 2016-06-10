@@ -47,79 +47,79 @@ public extension NSColor {
 	// Material Design colors follow:
 	//
 	
-	public class func materialRedColor() -> NSColor {
+	public class func materialRed() -> NSColor {
 		return NSColor(hex: "#F44336")
 	}
 	
-	public class func materialPinkColor() -> NSColor {
+	public class func materialPink() -> NSColor {
 		return NSColor(hex: "#E91E63")
 	}
 	
-	public class func materialPurpleColor() -> NSColor {
+	public class func materialPurple() -> NSColor {
 		return NSColor(hex: "#9C27B0")
 	}
 	
-	public class func materialDeepPurpleColor() -> NSColor {
+	public class func materialDeepPurple() -> NSColor {
 		return NSColor(hex: "#673AB7")
 	}
 	
-	public class func materialIndigoColor() -> NSColor {
+	public class func materialIndigo() -> NSColor {
 		return NSColor(hex: "#3F51B5")
 	}
 	
-	public class func materialBlueColor() -> NSColor {
+	public class func materialBlue() -> NSColor {
 		return NSColor(hex: "#2196F3")
 	}
 	
-	public class func materialLightBlueColor() -> NSColor {
+	public class func materialLightBlue() -> NSColor {
 		return NSColor(hex: "#03A9F4")
 	}
 	
-	public class func materialCyanColor() -> NSColor {
+	public class func materialCyan() -> NSColor {
 		return NSColor(hex: "#00BCD4")
 	}
 	
-	public class func materialTealColor() -> NSColor {
+	public class func materialTeal() -> NSColor {
 		return NSColor(hex: "#009688")
 	}
 	
-	public class func materialGreenColor() -> NSColor {
+	public class func materialGreen() -> NSColor {
 		return NSColor(hex: "#4CAF50")
 	}
 	
-	public class func materialLightGreenColor() -> NSColor {
+	public class func materialLightGreen() -> NSColor {
 		return NSColor(hex: "#8BC34A")
 	}
 	
-	public class func materialLimeColor() -> NSColor {
+	public class func materialLime() -> NSColor {
 		return NSColor(hex: "#CDDC39")
 	}
 	
-	public class func materialYellowColor() -> NSColor {
+	public class func materialYellow() -> NSColor {
 		return NSColor(hex: "#FFEB3B")
 	}
 	
-	public class func materialAmberColor() -> NSColor {
+	public class func materialAmber() -> NSColor {
 		return NSColor(hex: "#FFC107")
 	}
 	
-	public class func materialOrangeColor() -> NSColor {
+	public class func materialOrange() -> NSColor {
 		return NSColor(hex: "#FF9800")
 	}
 	
-	public class func materialDeepOrangeColor() -> NSColor {
+	public class func materialDeepOrange() -> NSColor {
 		return NSColor(hex: "#FF5722")
 	}
 	
-	public class func materialBrownColor() -> NSColor {
+	public class func materialBrown() -> NSColor {
 		return NSColor(hex: "#795548")
 	}
 	
-	public class func materialGreyColor() -> NSColor {
+	public class func materialGrey() -> NSColor {
 		return NSColor(hex: "#9E9E9E")
 	}
 	
-	public class func materialBlueGreyColor() -> NSColor {
+	public class func materialBlueGrey() -> NSColor {
 		return NSColor(hex: "#607D8B")
 	}
 }

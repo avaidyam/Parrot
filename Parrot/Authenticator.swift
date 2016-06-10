@@ -137,8 +137,8 @@ public class Authenticator {
 						return
 					}
 					
-					let body = NSString(data: data, encoding: NSUTF8StringEncoding)!
-					let auth_code = Regex("value=\"(.+?)\"").match(input: body as String).first!
+					let body = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+					let auth_code = body.findAllOccurrences(matching: "value=\"(.+?)\"").first!
 					
 					//  - first: authenticate(auth_code)
 					authenticate(auth_code: auth_code, cb: { (access_token, refresh_token) in

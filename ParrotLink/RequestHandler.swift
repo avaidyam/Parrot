@@ -1,7 +1,6 @@
 import Foundation
 
 class RequestHandler: NSObject, NSExtensionRequestHandling {
-
 	func beginRequest(with context: NSExtensionContext) {
         let extensionItem = NSExtensionItem()
         extensionItem.userInfo = [

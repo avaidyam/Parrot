@@ -3,7 +3,7 @@ import Foundation // lots of things here
 public final class Client {
 	
 	// URL for uploading any URL to Photos
-	public static let IMAGE_UPLOAD_URL = "http://docs.google.com/upload/photos/resumable"
+	public static let IMAGE_UPLOAD_URL = "https://docs.google.com/upload/photos/resumable"
 	
 	// NotificationCenter notification and userInfo keys.
 	public static let didConnectNotification = "Hangouts.Client.DidConnect"

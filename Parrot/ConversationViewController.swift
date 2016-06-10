@@ -142,11 +142,11 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		let network_ = self.conversation!.conversation.networkType
 		let network = NetworkType(rawValue: network_[0].rawValue) // FIXME weird stuff here
 		
-		var color: NSColor = NSColor.materialBlueGreyColor()
+		var color: NSColor = NSColor.materialBlueGrey()
 		if !user.isSelf && network == NetworkType.Babel {
-			color = NSColor.materialGreenColor()
+			color = NSColor.materialGreen()
 		} else if !user.isSelf && network == NetworkType.GoogleVoice {
-			color = NSColor.materialBlueColor()
+			color = NSColor.materialBlue()
 		}
 		
 		let text = ConversationViewController.attributedStringForText(text: ev.text)

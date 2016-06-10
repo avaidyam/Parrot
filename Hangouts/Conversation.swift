@@ -289,8 +289,8 @@ public class IConversation {
     }
 
     public var messages: [IChatMessageEvent] {
-        get {
-            return events.flatMap { $0 as? IChatMessageEvent }
+		get {
+			return events.flatMap { $0 as? IChatMessageEvent }
         }
     }
 	

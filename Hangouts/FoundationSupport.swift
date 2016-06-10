@@ -43,8 +43,8 @@ internal extension String {
 	}
 }
 
-extension String {
-	func substring(between start: String, and to: String) -> String? {
+public extension String {
+	public func substring(between start: String, and to: String) -> String? {
 		return (range(of: start)?.upperBound).flatMap { startIdx in
 			(range(of: to, range: startIdx..<endIndex)?.lowerBound).map { endIdx in
 				substring(with: startIdx..<endIdx)
@@ -52,13 +52,13 @@ extension String {
 		}
 	}
 	
-	mutating func replaceAllOccurrences(matching regex: String, with: String) {
+	public mutating func replaceAllOccurrences(matching regex: String, with: String) {
 		while let range = self.range(of: regex, options: .regularExpressionSearch) {
 			self = self.replacingCharacters(in: range, with: with)
 		}
 	}
 	
-	func findAllOccurrences(matching regex: String, all: Bool = false) -> [String] {
+	public func findAllOccurrences(matching regex: String, all: Bool = false) -> [String] {
 		let nsregex = try! NSRegularExpression(pattern: regex, options: .caseInsensitive)
 		let results = nsregex.matches(in: self, options:[],
 		                              range:NSMakeRange(0, self.characters.count))
@@ -143,7 +143,7 @@ internal func NSRangeToRange(s: String, r: NSRange) -> Range<String.Index> {
 	return Range<String.Index>(uncheckedBounds: (lower: i1, upper: i2))
 }
 
-public typealias Regex = NSRegularExpression
+/*public typealias Regex = NSRegularExpression
 public extension NSRegularExpression {
 	
 	// Easier/more convenient initializer.
@@ -166,7 +166,7 @@ public extension NSRegularExpression {
 			}
 		}
 	}
-}
+}*/
 
 class Wrapper<T> {
 	var wrapped: T

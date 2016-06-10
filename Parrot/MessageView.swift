@@ -38,7 +38,8 @@ public class MessageView : NSTableCellView {
 		self.textLabel.textColor = NSColor.label()
 		self.textLabel.lineBreakMode = .byWordWrapping
 		self.textLabel.font = NSFont.systemFont(ofSize: 13.0, weight: NSFontWeightMedium)
-		self.textLabel.cell!.backgroundStyle = .raised
+		let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
+		self.textLabel.cell!.backgroundStyle = dark ? .lowered : .raised
 		
 		// Swift is funny like this.
 		super.init(frame: frame)
@@ -68,7 +69,7 @@ public class MessageView : NSTableCellView {
 			}
 			self.orientation = o.orientation
 			self.textLabel.attributedStringValue = o.string
-			self.textLabel.layer?.backgroundColor = o.color.cgColor
+			//self.textLabel.layer?.backgroundColor = o.color.cgColor
 		}
 	}
 	

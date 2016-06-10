@@ -58,8 +58,8 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 				]
 				
 				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = NSColor.materialBlueColor()
-				actions[1].backgroundColor = NSColor.materialAmberColor()
+				actions[0].backgroundColor = NSColor.materialBlue()
+				actions[1].backgroundColor = NSColor.materialAmber()
 			} else if edge == .trailing { // Swipe Left Actions
 				actions = [
 					NSTableViewRowAction(style: .destructive, title: "Delete", handler: { action, select in
@@ -71,8 +71,8 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 				]
 				
 				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = NSColor.materialAmberColor()
-				actions[1].backgroundColor = NSColor.materialRedColor()
+				actions[0].backgroundColor = NSColor.materialAmber()
+				actions[1].backgroundColor = NSColor.materialRed()
 			}
 			return actions
 		}
@@ -119,9 +119,10 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			img = NSImage(data: d)!
 		}
 		
-		let ring = d == NetworkType.GoogleVoice ? NSColor.materialBlueColor() : NSColor.materialGreenColor()
+		let ring = d == NetworkType.GoogleVoice ? NSColor.materialBlue() : NSColor.materialGreen()
 		let ind = conversation.hasUnreadEvents
 		let name = title
+		// FIXME: Sometimes, the messages will be empty if there was a hangouts call as the last event.
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp.relativeString() ?? ""
 		

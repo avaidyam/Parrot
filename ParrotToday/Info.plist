@@ -31,7 +31,7 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).ParrotViewController</string>
 		<key>com.apple.notificationcenter.widget.description</key>
-		<string>ParrotToday</string>
+		<string>Parrot</string>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2015 Aditya Vaidyam. All rights reserved.</string>
