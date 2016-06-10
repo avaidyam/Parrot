@@ -5,14 +5,16 @@ import Cocoa
 // Serves as the "model" behind the view. Technically speaking, this is a translation
 // layer between the application model and decouples it from the view.
 public struct Message: Equatable {
+	var photo: NSImage
 	var string: NSAttributedString
-	var orientation: NSTextAlignment
+	var orientation: NSUserInterfaceLayoutDirection
 	var color: NSColor
 }
 
 // Message: Equatable
 public func ==(lhs: Message, rhs: Message) -> Bool {
-	return lhs.string == rhs.string &&
+	return lhs.photo == rhs.photo &&
+		lhs.string == rhs.string &&
 		lhs.orientation == rhs.orientation &&
 		lhs.color == rhs.color
 }
@@ -24,41 +26,26 @@ public class MessageView : NSTableCellView {
 	// decorators, etc. (anything NSView or CALayer can support!)
 	internal static var FillPercentage = (x: CGFloat(0.75), y: CGFloat(1.00))
 	internal static var TextBorder = (l: CGFloat(4), r: CGFloat(4), t: CGFloat(4), b: CGFloat(4))
-	internal static var TextPadding = (v: CGFloat(4), h: CGFloat(4))
+	internal static var TextPadding = (v: CGFloat(8), h: CGFloat(8))
 	
-	var backgroundView: NSView
-	var textLabel: NSTextField
-	var orientation: NSTextAlignment = .left
+	@IBOutlet var photoView: NSImageView?
+	@IBOutlet var textLabel: NSTextField?
+	var orientation: NSUserInterfaceLayoutDirection = .leftToRight
 	
-    public override init(frame: NSRect) {
-		self.backgroundView = NSView(true)
-		self.backgroundView.translatesAutoresizingMaskIntoConstraints = true
-		
-		self.textLabel = NSTextField(true, false)
-		self.textLabel.textColor = NSColor.label()
-		self.textLabel.lineBreakMode = .byWordWrapping
-		self.textLabel.font = NSFont.systemFont(ofSize: 13.0, weight: NSFontWeightMedium)
-		let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
-		self.textLabel.cell!.backgroundStyle = dark ? .lowered : .raised
-		
-		// Swift is funny like this.
+	public override init(frame: NSRect) {
 		super.init(frame: frame)
-		self.addSubview(self.backgroundView)
-        self.backgroundView.addSubview(self.textLabel)
-		
-		// Add constraints so we only mess with backgroundView.
-		((textLabel as! LayoutRegion).top == backgroundView.top + MessageView.TextPadding.v)%
-		((textLabel as! LayoutRegion).bottom == backgroundView.bottom + (MessageView.TextPadding.v * 2))%
-		((textLabel as! LayoutRegion).left == backgroundView.left + MessageView.TextPadding.h)%
-		((textLabel as! LayoutRegion).right == backgroundView.right + (MessageView.TextPadding.h * 2))%
-		
-		// Now we can set the layer style.
-		self.textLabel.layer?.cornerRadius = 4.0
-		self.textLabel.layer?.masksToBounds = true
 	}
 	
 	public required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+		super.init(coder: coder)
+	}
+	
+	private var _textBacking: CGColor {
+		if self.effectiveAppearance.name == NSAppearanceNameVibrantDark {
+			return NSColor(calibratedWhite: 1.00, alpha: 0.2).cgColor
+		} else {
+			return NSColor(calibratedWhite: 0.00, alpha: 0.1).cgColor
+		}
 	}
 	
 	// Upon assignment of the represented object, configure the subview contents.
@@ -68,8 +55,24 @@ public class MessageView : NSTableCellView {
 				return
 			}
 			self.orientation = o.orientation
-			self.textLabel.attributedStringValue = o.string
+			self.textLabel?.attributedStringValue = o.string
+			self.photoView?.image = o.photo
 			//self.textLabel.layer?.backgroundColor = o.color.cgColor
+		}
+	}
+	
+	// Allows the circle crop to dynamically change.
+	public override func layout() {
+		super.layout()
+		self.userInterfaceLayoutDirection = self.orientation
+		if let photo = self.photoView, let layer = photo.layer {
+			layer.masksToBounds = true
+			layer.cornerRadius = photo.bounds.width / 2.0
+		}
+		if let text = self.textLabel, let layer = text.layer {
+			layer.masksToBounds = true
+			layer.cornerRadius = 2.0
+			layer.backgroundColor = self._textBacking
 		}
 	}
 	
@@ -77,7 +80,7 @@ public class MessageView : NSTableCellView {
 	// FRAME ADJUSTMENT
 	//
 
-    public override var frame: NSRect {
+    /*public override var frame: NSRect {
         didSet {
             var backgroundFrame = frame
 
@@ -85,7 +88,7 @@ public class MessageView : NSTableCellView {
 
             let textMaxWidth = MessageView.widthOfText(backgroundWidth: backgroundFrame.size.width)
             let textSize = MessageView.textSizeInWidth(
-                text: self.textLabel.attributedStringValue,
+                text: self.textLabel!.attributedStringValue,
                 width: textMaxWidth
             )
 
@@ -99,8 +102,6 @@ public class MessageView : NSTableCellView {
 			default:
 				backgroundFrame.origin.x = frame.origin.x
             }
-
-            self.backgroundView.frame = backgroundFrame
 
 			/*
             switch (orientation) {
@@ -127,7 +128,7 @@ public class MessageView : NSTableCellView {
 				)
             }*/
         }
-    }
+    }*/
 	
     private class func widthOfText(backgroundWidth: CGFloat) -> CGFloat {
         return backgroundWidth
@@ -139,25 +140,25 @@ public class MessageView : NSTableCellView {
         return textWidth
             + MessageView.TextBorder.r
             + MessageView.TextBorder.l
-    }
-
-    private class func textSizeInWidth(text: NSAttributedString, width: CGFloat) -> CGSize {
-        var size = text.boundingRect(
-            with: NSMakeSize(width, 0),
-            options: [
-                .usesLineFragmentOrigin,
-                .usesFontLeading
-            ]
-        ).size
-        size.width += TextPadding.h
-        return size
-    }
+	}
+	
+	private class func textSizeInWidth(text: NSAttributedString, width: CGFloat) -> CGSize {
+		var size = text.boundingRect(
+			with: NSMakeSize(width, 0),
+			options: [
+				.usesLineFragmentOrigin,
+				.usesFontLeading
+			]
+			).size
+		size.width += TextPadding.h
+		return size
+	}
 	
 	internal class func heightForContainerWidth(text: NSAttributedString, width: CGFloat) -> CGFloat {
-        let size = textSizeInWidth(text: text, width: widthOfText(backgroundWidth: (width * FillPercentage.x)))
-        let height = size.height + TextBorder.t + TextBorder.b
-        return height
-    }
+		let size = textSizeInWidth(text: text, width: widthOfText(backgroundWidth: (width * FillPercentage.x)))
+		let height = size.height + TextBorder.t + TextBorder.b
+		return height
+	}
 }
 
 // Container-type view for MessageView.

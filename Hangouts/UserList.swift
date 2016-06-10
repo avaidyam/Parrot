@@ -51,7 +51,7 @@ public class UserList {
 			if let userInfo = $0.userInfo,
 				state_update = userInfo[Client.didUpdateStateKey as NSString] {
 				
-				if let conversation = ((state_update as! Wrapper<StateUpdate>).wrapped).conversation {
+				if let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
 					for participant in conversation.participantData {
 						
 						let user = User(data: participant, selfUser: self.selfUser.id)

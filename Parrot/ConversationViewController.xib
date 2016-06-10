@@ -81,7 +81,7 @@
                 <constraint firstAttribute="trailing" secondItem="MlJ-gQ-qkl" secondAttribute="trailing" id="tfK-yG-qdb"/>
             </constraints>
         </view>
-        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
+        <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
             <rect key="frame" x="0.0" y="0.0" width="132" height="22"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Status" id="0ys-h0-cm2">
@@ -89,7 +89,7 @@
                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
             </textFieldCell>
-            <point key="canvasLocation" x="477" y="409"/>
+            <point key="canvasLocation" x="667" y="537"/>
         </textField>
         <view wantsLayer="YES" focusRingType="none" id="NtL-HB-vJs">
             <rect key="frame" x="0.0" y="0.0" width="304" height="58"/>
@@ -123,7 +123,7 @@
                 <constraint firstItem="Swj-Tf-yJb" firstAttribute="trailing" secondItem="Tvh-FQ-tna" secondAttribute="trailing" id="Ojw-ba-39e"/>
                 <constraint firstItem="Tvh-FQ-tna" firstAttribute="top" secondItem="NtL-HB-vJs" secondAttribute="top" constant="4" id="jwg-gJ-Ho0"/>
             </constraints>
-            <point key="canvasLocation" x="377" y="760"/>
+            <point key="canvasLocation" x="354" y="555"/>
         </view>
         <viewController id="H32-H4-UYo" userLabel="Popover View Controller">
             <connections>

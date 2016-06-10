@@ -24,7 +24,7 @@
                 <textField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bul-Yb-hpg">
                     <rect key="frame" x="58" y="39" width="215" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="John Smith" placeholderString="First Last" id="KKh-aC-jq2">
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="systemMedium" size="13"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>

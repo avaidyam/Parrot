@@ -143,34 +143,10 @@ internal func NSRangeToRange(s: String, r: NSRange) -> Range<String.Index> {
 	return Range<String.Index>(uncheckedBounds: (lower: i1, upper: i2))
 }
 
-/*public typealias Regex = NSRegularExpression
-public extension NSRegularExpression {
-	
-	// Easier/more convenient initializer.
-	public convenience init(_ pattern: String, options: NSRegularExpressionOptions = .caseInsensitive) {
-		try! self.init(pattern: pattern, options: options)
-	}
-	
-	// Match the given input string, and optionally find ALL matches.
-	public func match(input: String, all: Bool = false) -> [String] {
-		let results = self.matches(in: input, options:[],
-		                           range:NSMakeRange(0, input.characters.count))
-		
-		if all {
-			return results.map {
-				input.substring(with: NSRangeToRange(s: input, r: $0.range))
-			}
-		} else {
-			return results.map {
-				input.substring(with: NSRangeToRange(s: input, r: $0.range(at: 1)))
-			}
-		}
-	}
-}*/
-
-class Wrapper<T> {
-	var wrapped: T
-	init(_ value: T) {
-		self.wrapped = value
+/// Can hold any (including non-object) type as an object type.
+public class Wrapper<T> {
+	public let element: T
+	public init(_ value: T) {
+		self.element = value
 	}
 }

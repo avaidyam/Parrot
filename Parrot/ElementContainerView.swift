@@ -45,15 +45,6 @@ public enum SelectionCapability {
 	case Any
 }
 
-/// Can hold any (including non-object) type as an object type.
-public class Wrapper<T> {
-	let element: T
-	
-	init(_ element: T) {
-		self.element = element
-	}
-}
-
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.

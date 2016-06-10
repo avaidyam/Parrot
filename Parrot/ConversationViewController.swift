@@ -11,6 +11,21 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	
 	var _note: TokenObserver!
 	var popover: NSPopover!
+	
+	override func loadView() {
+		super.loadView()
+		
+		let nib = NSNib(nibNamed: "MessageView", bundle: nil)
+		messagesView.tableView.register(nib, forIdentifier: MessageView.className())
+		
+		Notifications.subscribe(name: NSUserDefaultsDidChangeNotification) { note in
+			
+			// Handle appearance colors.
+			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
+			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
+			self.view.window?.appearance = NSAppearance(named: appearance)
+		}
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +37,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		self.messagesView.dynamicHeightProvider = { (row: Int) -> Double in
 			let a = (self.messagesView.dataSource[row].element as? Message)!.string
 			let b = self.messagesView.frame.width
-			return Double(MessageView.heightForContainerWidth(text: a, width: b))
+			return Double(MessageView.heightForContainerWidth(text: a, width: b)) + 20.0
 		}
 		
 		self.popover = NSPopover()
@@ -150,9 +165,15 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		}
 		
 		let text = ConversationViewController.attributedStringForText(text: ev.text)
-		let orientation = (user.isSelf ? NSTextAlignment.right : .left)
+		let orientation = (user.isSelf ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
 		
-		return Message(string: text, orientation: orientation, color: color)
+		// Load all the field values from the conversation.
+		var img: NSImage = defaultUserImage
+		if let d = fetchData(id: user.id.gaiaID, user.photoURL) {
+			img = NSImage(data: d)!
+		}
+		
+		return Message(photo: img, string: text, orientation: orientation, color: color)
 	}
 	
     // MARK: Window notifications

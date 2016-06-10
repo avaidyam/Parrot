@@ -33,7 +33,6 @@ public class PersonView : NSTableCellView {
 	public override init(frame: NSRect) {
 		super.init(frame: frame)
 	}
-	
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
@@ -55,22 +54,6 @@ public class PersonView : NSTableCellView {
 			if let t = self.textLabel {
 				t.font = NSFont.systemFont(ofSize: t.font!.pointSize,
 						weight: o.indicator ? NSFontWeightBold : NSFontWeightRegular)
-			}
-		}
-	}
-	
-	// Upon selection, make all the text visible, and restore it when unselected.
-	// NOTE: If the rowView isn't emphasized, the colors will look odd because of blending.
-	public override var backgroundStyle: NSBackgroundStyle {
-		didSet {
-			if self.backgroundStyle == .light {
-				self.nameLabel?.textColor = NSColor.label()
-				self.textLabel?.textColor = NSColor.secondaryLabel()
-				self.timeLabel?.textColor = NSColor.tertiaryLabel()
-			} else if self.backgroundStyle == .dark {
-				self.nameLabel?.textColor = NSColor.alternateSelectedControlText()
-				self.textLabel?.textColor = NSColor.alternateSelectedControlText()
-				self.timeLabel?.textColor = NSColor.alternateSelectedControlText()
 			}
 		}
 	}

@@ -20,3 +20,11 @@ public extension Array where Element : Equatable {
 		}
 	}
 }
+
+/// Can hold any (including non-object) type as an object type.
+public class Wrapper<T> {
+	public let element: T
+	public init(_ value: T) {
+		self.element = value
+	}
+}
