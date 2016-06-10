@@ -624,6 +624,17 @@
                                                 </binding>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Vibrate Force Touch" id="1mp-kZ-0FF">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.VibrateForceTouch" id="FcP-JF-9RI">
+                                                    <dictionary key="options">
+                                                        <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                        <bool key="NSValidatesImmediately" value="YES"/>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Show Sidebar" keyEquivalent="t" id="ISI-Dd-ffs">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>

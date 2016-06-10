@@ -25,7 +25,7 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
         let conversationID = group.0
         let notificationID = group.1
         notification.identifier = notificationID
-
+		
         var notificationIDs = _notes[conversationID]
         if notificationIDs != nil {
             notificationIDs!.append(notificationID)
@@ -34,6 +34,18 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
             _notes[conversationID] = [notificationID]
         }
         nc.deliver(notification)
+		
+		let vibrate = Settings()[Parrot.VibrateForceTouch] as? Bool ?? false
+		if vibrate {
+			let length = 1000
+			let interval = 10
+			
+			let hp = NSHapticFeedbackManager.defaultPerformer()
+			for _ in 1...(length/interval) {
+				hp.perform(.generic, performanceTime: .now)
+				usleep(10 * 1000)
+			}
+		}
     }
 
     public func clearNotificationsFor(group: String) {
