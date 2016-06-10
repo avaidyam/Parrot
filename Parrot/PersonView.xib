@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PersonView" customModule="Parrot" customModuleProvider="target">
+            <connections>
+                <outlet property="nameLabel" destination="Bul-Yb-hpg" id="18g-tC-oIb"/>
+                <outlet property="photoView" destination="N7p-DV-XCL" id="3eR-uB-N7V"/>
+                <outlet property="textLabel" destination="Nw5-Um-35D" id="QE8-5h-9kz"/>
+                <outlet property="timeLabel" destination="98f-We-Vvp" id="wzI-8C-9yi"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe">
+            <rect key="frame" x="0.0" y="0.0" width="327" height="80"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="N7p-DV-XCL">
+                    <rect key="frame" x="8" y="8" width="64" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="64" id="2ML-un-cZY"/>
+                        <constraint firstAttribute="width" secondItem="N7p-DV-XCL" secondAttribute="height" multiplier="1:1" id="qS7-Td-1wo"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="NSUser" id="pyV-Ol-A2T"/>
+                </imageView>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bul-Yb-hpg">
+                    <rect key="frame" x="78" y="55" width="202" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="KKh-aC-jq2">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="98f-We-Vvp">
+                    <rect key="frame" x="284" y="55" width="37" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="0ne-BI-seh">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Nw5-Um-35D">
+                    <rect key="frame" x="78" y="8" width="243" height="39"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Multiline Label" id="FpG-OA-Cag">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="98f-We-Vvp" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="614-Mt-nc3"/>
+                <constraint firstItem="N7p-DV-XCL" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="Fb2-9Y-vG3"/>
+                <constraint firstItem="N7p-DV-XCL" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="Iun-f5-LWp"/>
+                <constraint firstAttribute="bottom" secondItem="N7p-DV-XCL" secondAttribute="bottom" constant="8" id="KV4-WH-4rg"/>
+                <constraint firstItem="Bul-Yb-hpg" firstAttribute="top" secondItem="N7p-DV-XCL" secondAttribute="top" id="OS3-t0-zr9"/>
+                <constraint firstItem="98f-We-Vvp" firstAttribute="leading" secondItem="Bul-Yb-hpg" secondAttribute="trailing" constant="8" id="b4Q-j2-cQm"/>
+                <constraint firstItem="98f-We-Vvp" firstAttribute="top" secondItem="N7p-DV-XCL" secondAttribute="top" id="bI7-Sa-Y5t"/>
+                <constraint firstItem="Nw5-Um-35D" firstAttribute="top" secondItem="Bul-Yb-hpg" secondAttribute="bottom" constant="8" id="cNz-zg-drJ"/>
+                <constraint firstItem="Nw5-Um-35D" firstAttribute="top" secondItem="98f-We-Vvp" secondAttribute="bottom" constant="8" id="ce9-fP-ntK"/>
+                <constraint firstItem="Bul-Yb-hpg" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="8" id="ekM-qu-jmL"/>
+                <constraint firstAttribute="trailing" secondItem="Nw5-Um-35D" secondAttribute="trailing" constant="8" id="fjT-em-1Qa"/>
+                <constraint firstItem="Nw5-Um-35D" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="8" id="n6G-VK-XVZ"/>
+                <constraint firstItem="Nw5-Um-35D" firstAttribute="bottom" secondItem="N7p-DV-XCL" secondAttribute="bottom" id="u0h-2y-JCN"/>
+                <constraint firstItem="98f-We-Vvp" firstAttribute="trailing" secondItem="Nw5-Um-35D" secondAttribute="trailing" id="vSx-TA-5Vu"/>
+                <constraint firstAttribute="trailing" secondItem="98f-We-Vvp" secondAttribute="trailing" constant="8" id="z2B-Pf-zoF"/>
+            </constraints>
+            <point key="canvasLocation" x="-32.5" y="-8"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="NSUser" width="32" height="32"/>
+    </resources>
+</document>

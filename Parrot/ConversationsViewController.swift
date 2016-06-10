@@ -12,6 +12,9 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	override func loadView() {
 		super.loadView()
 		
+		let nib = NSNib(nibNamed: "PersonView", bundle: nil)
+		personsView.tableView.register(nib, forIdentifier: PersonView.className())
+		
 		personsView.updateScrollsToBottom = false
 		
 		/* TODO: VERY BAD! */

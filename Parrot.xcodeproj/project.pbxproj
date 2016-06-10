@@ -51,6 +51,8 @@
 		488492741D0B392A0003D522 /* ConversationsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492731D0B392A0003D522 /* ConversationsViewController.xib */; };
 		488492761D0B3A010003D522 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* ConversationViewController.xib */; };
 		488492771D0B3CA60003D522 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* ConversationViewController.xib */; };
+		488492791D0B3F370003D522 /* PersonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492781D0B3F370003D522 /* PersonView.xib */; };
+		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
 		488997151C4E0EA30034AEF3 /* SwiftAutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488997141C4E0EA30034AEF3 /* SwiftAutoLayout.swift */; };
 		488C65B01C3A8EA600D792C6 /* NSColor+MaterialDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */; };
 		48AD01DF1C1EC8A90031FDD7 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* Settings.swift */; };
@@ -300,6 +302,8 @@
 		48834E561C1B490B009BC442 /* CommonCrypto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CommonCrypto; path = External/CommonCrypto; sourceTree = SOURCE_ROOT; };
 		488492731D0B392A0003D522 /* ConversationsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationsViewController.xib; sourceTree = "<group>"; };
 		488492751D0B3A010003D522 /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationViewController.xib; sourceTree = "<group>"; };
+		488492781D0B3F370003D522 /* PersonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonView.xib; sourceTree = "<group>"; };
+		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		488997141C4E0EA30034AEF3 /* SwiftAutoLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftAutoLayout.swift; sourceTree = "<group>"; };
 		488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+MaterialDesign.swift"; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -461,6 +465,7 @@
 				4866337D1C5822FA006C094B /* ElementContainerView.swift */,
 				4835ECA61C1C620000193EBC /* MessageView.swift */,
 				4835ECA81C1C620000193EBC /* PersonView.swift */,
+				488492781D0B3F370003D522 /* PersonView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -572,6 +577,7 @@
 		48834DC11C1B36D1009BC442 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4884927C1D0B46BB0003D522 /* Main.storyboard */,
 				48834DC01C1B3686009BC442 /* Parrot.entitlements */,
 				48834D991C1B3602009BC442 /* Assets.xcassets */,
 				48834D9E1C1B3602009BC442 /* Info.plist */,
@@ -1092,6 +1098,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				488492741D0B392A0003D522 /* ConversationsViewController.xib in Resources */,
+				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
+				488492791D0B3F370003D522 /* PersonView.xib in Resources */,
 				488492761D0B3A010003D522 /* ConversationViewController.xib in Resources */,
 				48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */,
 			);
@@ -1358,6 +1366,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		4884927C1D0B46BB0003D522 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4884927D1D0B46BB0003D522 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		48DE52F81C1CC28000647C63 /* ParrotViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

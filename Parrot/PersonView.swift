@@ -24,12 +24,18 @@ public func ==(lhs: Person, rhs: Person) -> Bool {
 // A general person view
 public class PersonView : NSTableCellView {
 	
-	var photoView: NSImageView
-	var nameLabel: NSTextField
-	var textLabel: NSTextField
-	var timeLabel: NSTextField
-	var indicator: NSView
+	@IBOutlet var photoView: NSImageView?
+	@IBOutlet var nameLabel: NSTextField?
+	@IBOutlet var textLabel: NSTextField?
+	@IBOutlet var timeLabel: NSTextField?
+	@IBOutlet var indicator: NSView?
 	
+	
+	public override init(frame: NSRect) {
+		super.init(frame: frame)
+	}
+	
+	/*
 	public override init(frame: NSRect) {
 		self.photoView = NSImageView(true)
 		self.photoView.imageScaling = .scaleProportionallyDown
@@ -75,7 +81,7 @@ public class PersonView : NSTableCellView {
 		((timeLabel as! LayoutRegion).leading == (nameLabel as! LayoutRegion).trailing + 4.0)%
 		((timeLabel as! LayoutRegion).top == self.top + 4.0)%
 		(photoView.width == photoView.height * 1.0 ~ 1000)%
-	}
+	}*/
 
 	public required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
@@ -88,15 +94,17 @@ public class PersonView : NSTableCellView {
 				return
 			}
 			
-			self.photoView.image = o.photo
-			self.photoView.layer?.borderColor = o.highlight.cgColor
-			self.nameLabel.stringValue = o.primary
-			self.textLabel.stringValue = o.secondary
-			self.timeLabel.stringValue = o.tertiary
-			self.indicator.isHidden = o.indicator
+			self.photoView?.image = o.photo
+			self.photoView?.layer?.borderColor = o.highlight.cgColor
+			self.nameLabel?.stringValue = o.primary
+			self.textLabel?.stringValue = o.secondary
+			self.timeLabel?.stringValue = o.tertiary
+			self.indicator?.isHidden = o.indicator
 			
-			self.textLabel.font = NSFont.systemFont(ofSize: self.textLabel.font!.pointSize,
-				weight: o.indicator ? NSFontWeightBold : NSFontWeightRegular)
+			if let t = self.textLabel {
+				t.font = NSFont.systemFont(ofSize: t.font!.pointSize,
+						weight: o.indicator ? NSFontWeightBold : NSFontWeightRegular)
+			}
 		}
 	}
 	
@@ -105,13 +113,13 @@ public class PersonView : NSTableCellView {
 	public override var backgroundStyle: NSBackgroundStyle {
 		didSet {
 			if self.backgroundStyle == .light {
-				self.nameLabel.textColor = NSColor.label()
-				self.textLabel.textColor = NSColor.secondaryLabel()
-				self.timeLabel.textColor = NSColor.tertiaryLabel()
+				self.nameLabel?.textColor = NSColor.label()
+				self.textLabel?.textColor = NSColor.secondaryLabel()
+				self.timeLabel?.textColor = NSColor.tertiaryLabel()
 			} else if self.backgroundStyle == .dark {
-				self.nameLabel.textColor = NSColor.alternateSelectedControlText()
-				self.textLabel.textColor = NSColor.alternateSelectedControlText()
-				self.timeLabel.textColor = NSColor.alternateSelectedControlText()
+				self.nameLabel?.textColor = NSColor.alternateSelectedControlText()
+				self.textLabel?.textColor = NSColor.alternateSelectedControlText()
+				self.timeLabel?.textColor = NSColor.alternateSelectedControlText()
 			}
 		}
 	}
@@ -128,21 +136,21 @@ public class PersonView : NSTableCellView {
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
 		get {
 			return [
-				self.photoView.draggingComponent(key: "Photo"),
-				self.nameLabel.draggingComponent(key: "Name"),
-				self.textLabel.draggingComponent(key: "Text"),
-				self.timeLabel.draggingComponent(key: "Time"),
-			]
+				self.photoView?.draggingComponent(key: "Photo"),
+				self.nameLabel?.draggingComponent(key: "Name"),
+				self.textLabel?.draggingComponent(key: "Text"),
+				self.timeLabel?.draggingComponent(key: "Time"),
+			].flatMap { $0 }
 		}
 	}
 	
 	// Allows the circle crop to dynamically change.
 	public override func layout() {
 		super.layout()
-		if let layer = self.photoView.layer {
+		if let photo = self.photoView, let layer = photo.layer {
 			layer.masksToBounds = true
 			layer.borderWidth = 2.0
-			layer.cornerRadius = self.photoView.bounds.width / 2.0
+			layer.cornerRadius = photo.bounds.width / 2.0
 		}
 	}
 }
