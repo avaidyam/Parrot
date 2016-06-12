@@ -2,6 +2,19 @@ import Foundation
 
 // Needs to be fixed somehow to not use NSString stuff.
 internal extension String {
+	
+	// Converts an NSRange to a Range for String indices.
+	// FIXME: Weird Range/Index mess happened here.
+	internal func NSRangeToRange(s: String, r: NSRange) -> Range<String.Index> {
+		let a  = (s as NSString).substring(to: r.location)
+		let b  = (s as NSString).substring(with: r)
+		let n1 = a.distance(from: a.startIndex, to: a.endIndex)
+		let n2 = b.distance(from: b.startIndex, to: b.endIndex)
+		let i1 = s.index(s.startIndex, offsetBy: n1)
+		let i2 = s.index(i1, offsetBy: n2)
+		return Range<String.Index>(uncheckedBounds: (lower: i1, upper: i2))
+	}
+	
 	internal func encodeURL() -> String {
 		return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed())!
 	}
@@ -129,18 +142,6 @@ public extension NSDate {
 	public func toUTC() -> Double {
 		return self.timeIntervalSince1970 * MicrosecondsPerSecond
 	}
-}
-
-// Converts an NSRange to a Range for String indices.
-// FIXME: Weird Range/Index mess happened here.
-internal func NSRangeToRange(s: String, r: NSRange) -> Range<String.Index> {
-	let a  = (s as NSString).substring(to: r.location)
-	let b  = (s as NSString).substring(with: r)
-	let n1 = a.distance(from: a.startIndex, to: a.endIndex)
-	let n2 = b.distance(from: b.startIndex, to: b.endIndex)
-	let i1 = s.index(s.startIndex, offsetBy: n1)
-	let i2 = s.index(i1, offsetBy: n2)
-	return Range<String.Index>(uncheckedBounds: (lower: i1, upper: i2))
 }
 
 /// Can hold any (including non-object) type as an object type.

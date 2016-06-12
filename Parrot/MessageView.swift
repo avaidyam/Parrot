@@ -6,7 +6,7 @@ import Cocoa
 // layer between the application model and decouples it from the view.
 public struct Message: Equatable {
 	var photo: NSImage
-	var string: NSAttributedString
+	var string: NSString
 	var orientation: NSUserInterfaceLayoutDirection
 	var color: NSColor
 }
@@ -56,6 +56,22 @@ public class MessageView : NSTableCellView {
 		}
 	}
 	
+	private class func attributedStringForText(_ text: String) -> NSAttributedString {
+		let attrString = NSMutableAttributedString(string: text)
+		let linkDetector = try! NSDataDetector(types: NSTextCheckingType.link.rawValue)
+		for match in linkDetector.matches(in: text, options: [], range: NSMakeRange(0, text.characters.count)) {
+			if let url = match.url {
+				attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
+				attrString.addAttribute(
+					NSUnderlineStyleAttributeName,
+					value: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue),
+					range: match.range
+				)
+			}
+		}
+		return attrString
+	}
+	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
@@ -63,7 +79,7 @@ public class MessageView : NSTableCellView {
 				return
 			}
 			self.orientation = o.orientation
-			self.textLabel?.textStorage?.setAttributedString(o.string)
+			self.textLabel?.textStorage?.setAttributedString(MessageView.attributedStringForText(o.string as String))
 			self.photoView?.image = o.photo
 		}
 	}
@@ -161,7 +177,7 @@ public class MessageView : NSTableCellView {
             + MessageView.TextBorder.l
 	}
 	
-	private class func textSizeInWidth(text: NSAttributedString, width: CGFloat) -> CGSize {
+	private class func textSizeInWidth(text: NSString, width: CGFloat) -> CGSize {
 		var size = text.boundingRect(
 			with: NSMakeSize(width, 0),
 			options: [
@@ -173,7 +189,7 @@ public class MessageView : NSTableCellView {
 		return size
 	}
 	
-	internal class func heightForContainerWidth(text: NSAttributedString, width: CGFloat) -> CGFloat {
+	internal class func heightForContainerWidth(text: NSString, width: CGFloat) -> CGFloat {
 		let size = textSizeInWidth(text: text, width: widthOfText(backgroundWidth: (width * FillPercentage.x)))
 		let height = size.height + TextBorder.t + TextBorder.b
 		return height

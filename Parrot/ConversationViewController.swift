@@ -199,7 +199,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			color = NSColor.materialBlue()
 		}
 		
-		let text = ConversationViewController.attributedStringForText(text: ev.text)
+		let text = ev.text
 		let orientation = (user.isSelf ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
 		
 		// Load all the field values from the conversation.
@@ -269,39 +269,5 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	
 	private class func segmentsForInput(text: String, emojify: Bool = true) -> [IChatMessageSegment] {
 		return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
-	}
-	
-	private class func attributedStringForText(text: String) -> NSAttributedString {
-		let attrString = NSMutableAttributedString(string: text)
-		
-		let style = NSMutableParagraphStyle()
-		style.lineBreakMode = NSLineBreakMode.byWordWrapping
-		
-		let linkDetector = try! NSDataDetector(types: NSTextCheckingType.link.rawValue)
-		for match in linkDetector.matches(in: text, options: [], range: NSMakeRange(0, text.characters.count)) {
-			if let url = match.url {
-				attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
-				attrString.addAttribute(
-					NSUnderlineStyleAttributeName,
-					value: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue),
-					range: match.range
-				)
-			}
-		}
-		
-		/* TODO: Move this paragraph style and font stuff to the view. */
-		attrString.addAttribute(
-			NSFontAttributeName,
-			value: NSFont.systemFont(ofSize: 12),
-			range: NSMakeRange(0, attrString.length)
-		)
-		
-		attrString.addAttribute(
-			NSParagraphStyleAttributeName,
-			value: style,
-			range: NSMakeRange(0, attrString.length)
-		)
-		
-		return attrString
 	}
 }
