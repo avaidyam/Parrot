@@ -68,8 +68,10 @@ public class MessageView : NSTableCellView {
 					range: match.range
 				)
 				
-				let q = try? LinkPreviewParser.parse(link: url.absoluteString)
-				Swift.print(q)
+				let start = mach_absolute_time()
+				_ = try? LinkPreviewParser.parse(link: url.absoluteString)
+				let final = mach_absolute_time() - start
+				Swift.print("took \(final / 1000000)ms to parse url.")
 			}
 		}
 		return attrString
