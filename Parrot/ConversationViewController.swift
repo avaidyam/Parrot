@@ -12,6 +12,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	var _note: TokenObserver!
 	var popover: NSPopover!
 	
+	var _measure: MessageView? = nil
+	
 	private var _textBack: NSColor {
 		if self.view.effectiveAppearance.name == NSAppearanceNameVibrantDark {
 			return NSColor(calibratedWhite: 1.00, alpha: 0.2)
@@ -31,9 +33,13 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	override func loadView() {
 		super.loadView()
 		
+		// Set up the measurement view.
 		let nib = NSNib(nibNamed: "MessageView", bundle: nil)
 		messagesView.tableView.register(nib, forIdentifier: MessageView.className())
+		let stuff = nib?.instantiate(owner: nil)
+		_measure = stuff?.filter { $0 is MessageView }.first as? MessageView// stuff[0]: NSApplication
 		
+		// Set up dark/light notifications.
 		Notifications.subscribe(name: NSUserDefaultsDidChangeNotification) { note in
 			
 			// Handle appearance colors.
@@ -61,7 +67,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			}
 		}
 	}
-
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
@@ -70,7 +76,13 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         self.messageTextField.delegate = self
 		
 		self.messagesView.dynamicHeightProvider = { (row: Int) -> Double in
+			
+			// TODO: Use the cached measurement sample and grab its frame after layout.
 			let a = (self.messagesView.dataSource[row].element as? Message)!.string
+			//self._measure?.textLabel?.string = a as String
+			//self._measure?.layout()
+			//print(self._measure?.frame.size.height)
+			
 			let b = self.messagesView.frame.width
 			return Double(MessageView.heightForContainerWidth(text: a, width: b)) + 20.0
 		}
@@ -198,6 +210,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		} else if !user.isSelf && network == NetworkType.GoogleVoice {
 			color = NSColor.materialBlue()
 		}
+		let cap = network == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
 		
 		let text = ev.text
 		let orientation = (user.isSelf ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
@@ -208,7 +221,9 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			img = NSImage(data: d)!
 		}
 		
-		return Message(photo: img, string: text, orientation: orientation, color: color)
+		let time = ev.timestamp ?? NSDate(timeIntervalSince1970: 0)
+		return Message(photo: img, caption: cap, string: text,
+		               orientation: orientation, color: color, time: time)
 	}
 	
     // MARK: Window notifications

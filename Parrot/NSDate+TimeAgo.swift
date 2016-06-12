@@ -3,16 +3,16 @@ import Foundation
 /* TODO: Localization support for timeAgo. */
 
 /// from @jack205: https://gist.github.com/jacks205/4a77fb1703632eb9ae79
+private let _units: NSCalendarUnit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
 public extension NSDate {
-	func relativeString(numeric: Bool = false) -> String {
+	public func relativeString(numeric: Bool = false) -> String {
 		
 		// Setup for calendar components.
 		let date = self, now = NSDate()
 		let calendar = NSCalendar.current()
 		let earliest = now.earlierDate(date)
 		let latest = (earliest == now) ? date : now
-		let comps: NSCalendarUnit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
-		let components = calendar.components(comps, from: earliest, to: latest, options: NSCalendarOptions())
+		let components = calendar.components(_units, from: earliest, to: latest, options: NSCalendarOptions())
 		
 		// Format calendar components into string.
 		if (components.year >= 2) {
@@ -39,10 +39,24 @@ public extension NSDate {
 			return "\(components.minute) minutes ago"
 		} else if (components.minute >= 1) {
 			return numeric ? "1 minute ago" : "a minute ago"
-		} else if (components.second >= 3) {
-			return "\(components.second) seconds ago"
+		//} else if (components.second >= 3) {
+		//	return "\(components.second) seconds ago"
 		} else {
 			return "just now"
 		}
+	}
+}
+
+public extension NSTimer {
+	
+	/// Trigger a notification every minute, starting from the next minute.
+	public class func scheduledWallclock(target: AnyObject, selector: Selector) -> NSTimer {
+		let comps = NSCalendar.current().components(_units, from: NSDate())
+		comps.minute += 1; comps.second = 0
+		let date = NSCalendar.current().date(from: comps)!
+		let timer = NSTimer(fireAt: date, interval: 60, target: target,
+		                    selector: selector, userInfo: nil, repeats: true)
+		NSRunLoop.main().add(timer, forMode: NSDefaultRunLoopMode)
+		return timer
 	}
 }

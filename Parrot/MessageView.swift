@@ -6,9 +6,11 @@ import Cocoa
 // layer between the application model and decouples it from the view.
 public struct Message: Equatable {
 	var photo: NSImage
+	var caption: String
 	var string: NSString
 	var orientation: NSUserInterfaceLayoutDirection
 	var color: NSColor
+	var time: NSDate
 }
 
 // Message: Equatable
@@ -30,6 +32,7 @@ public class MessageView : NSTableCellView {
 	
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
+	var color: NSColor = NSColor.black()
 	var orientation: NSUserInterfaceLayoutDirection = .leftToRight
 	
 	public override init(frame: NSRect) {
@@ -68,10 +71,8 @@ public class MessageView : NSTableCellView {
 					range: match.range
 				)
 				
-				let start = mach_absolute_time()
+				// TESTING:
 				_ = try? LinkPreviewParser.parse(link: url.absoluteString)
-				let final = mach_absolute_time() - start
-				Swift.print("took \(final / 1000000)ms to parse url.")
 			}
 		}
 		return attrString
@@ -83,10 +84,18 @@ public class MessageView : NSTableCellView {
 			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Message else {
 				return
 			}
+			
+			let f = NSDateFormatter()
+			f.dateStyle = .fullStyle
+			f.timeStyle = .longStyle
+			
 			self.orientation = o.orientation
+			self.color = o.color
 			let str = MessageView.attributedStringForText(o.string as String)
 			self.textLabel?.textStorage?.setAttributedString(str)
+			self.textLabel?.toolTip = "\(f.string(from: o.time))"
 			self.photoView?.image = o.photo
+			self.photoView?.toolTip = o.caption
 		}
 	}
 	
@@ -97,6 +106,8 @@ public class MessageView : NSTableCellView {
 		if let photo = self.photoView, let layer = photo.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = photo.bounds.width / 2.0
+			layer.borderWidth = 1.0
+			layer.borderColor = self.color.cgColor
 		}
 		if let text = self.textLabel, let layer = text.layer {
 			layer.masksToBounds = true

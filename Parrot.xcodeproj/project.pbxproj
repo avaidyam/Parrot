@@ -98,6 +98,7 @@
 		48DF84B01D08EEB800F39444 /* LinkPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreview.swift */; };
 		48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E3C0811C1F363F008B2D1D /* UserList.swift */; };
 		48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3391D04DFF90074984D /* Protobuf.swift */; };
+		48F84D451D0DEC1E00E77AD9 /* LinkPreviews.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48F84D441D0DEC1E00E77AD9 /* LinkPreviews.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -337,6 +338,7 @@
 		48DF84971D04E1F800F39444 /* hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hangouts.proto.swift; sourceTree = "<group>"; };
 		48E3C0811C1F363F008B2D1D /* UserList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserList.swift; sourceTree = "<group>"; };
 		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
+		48F84D441D0DEC1E00E77AD9 /* LinkPreviews.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LinkPreviews.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -465,10 +467,11 @@
 		4835ECA51C1C61F300193EBC /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4835ECA61C1C620000193EBC /* MessageView.swift */,
-				4884929A1D0B59370003D522 /* MessageView.xib */,
 				4835ECA81C1C620000193EBC /* PersonView.swift */,
 				488492781D0B3F370003D522 /* PersonView.xib */,
+				4835ECA61C1C620000193EBC /* MessageView.swift */,
+				4884929A1D0B59370003D522 /* MessageView.xib */,
+				48F84D441D0DEC1E00E77AD9 /* LinkPreviews.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1102,6 +1105,7 @@
 			files = (
 				4884929B1D0B59370003D522 /* MessageView.xib in Resources */,
 				488492741D0B392A0003D522 /* ConversationsViewController.xib in Resources */,
+				48F84D451D0DEC1E00E77AD9 /* LinkPreviews.xib in Resources */,
 				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
 				488492791D0B3F370003D522 /* PersonView.xib in Resources */,
 				488492761D0B3A010003D522 /* ConversationViewController.xib in Resources */,

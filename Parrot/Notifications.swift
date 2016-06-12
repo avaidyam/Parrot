@@ -17,6 +17,7 @@ public let Notifications = NSNotificationCenter.default()
 
 public extension NSNotificationCenter {
 	
+	@discardableResult
 	public func subscribe(name: String, object: AnyObject? = nil, block: ((Notification) -> Void)) -> TokenObserver {
 		return self.addObserver(forName: name, object: object, queue: nil) { n in
 			block((n.name, n.object, n.userInfo))
@@ -28,6 +29,7 @@ public extension NSNotificationCenter {
 	}
 	
 	// Utility for subscribing multiple notifications at a time.
+	@discardableResult
 	public func subscribe(notifications: [String: ((Notification) -> Void)]) -> [TokenObserver] {
 		return notifications.map {
 			self.subscribe(name: $0, block: $1)

@@ -23,3 +23,24 @@ public extension NSView {
 		return component
 	}
 }
+
+public extension NSNib {
+	public func instantiate(owner: AnyObject?) -> [AnyObject] {
+		var stuff: NSArray = []
+		if self.instantiate(withOwner: nil, topLevel: &stuff) {
+			return stuff as [AnyObject]
+		}
+		return []
+	}
+}
+
+public class NSAutoLayoutTextView: NSTextView {
+	public override var intrinsicContentSize: NSSize {
+		self.layoutManager?.ensureLayout(for: self.textContainer!)
+		return (self.layoutManager?.usedRect(for: self.textContainer!).size)!
+	}
+	public override func didChangeText() {
+		super.didChangeText()
+		self.invalidateIntrinsicContentSize()
+	}
+}

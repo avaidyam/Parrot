@@ -8,6 +8,11 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	@IBOutlet var personsView: PersonsView!
 	
 	var selectionProvider: ((Int) -> Void)? = nil
+	var wallclock: NSTimer!
+	
+	deinit {
+		self.wallclock?.invalidate()
+	}
 	
 	override func loadView() {
 		super.loadView()
@@ -86,6 +91,13 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		
 		let scroll = self.view.subviews[0] as? NSScrollView
 		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
+		//self.timeLabel?.stringValue = self.time.relativeString()
+		
+		self.wallclock = NSTimer.scheduledWallclock(target: self, selector: #selector(_updateWallclock(_:)))
+	}
+	
+	func _updateWallclock(_ timer: NSTimer) {
+		Notifications.post(name: "PersonView.UpdateTime", object: self)
 	}
 	
 	var userList: UserList? // FIXME
@@ -123,13 +135,15 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		}
 		
 		let ring = d == NetworkType.GoogleVoice ? NSColor.materialBlue() : NSColor.materialGreen()
+		let cap = d == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
 		let ind = conversation.hasUnreadEvents
 		let name = title
 		// FIXME: Sometimes, the messages will be empty if there was a hangouts call as the last event.
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
-		let time = conversation.messages.last?.timestamp.relativeString() ?? ""
+		let time = conversation.messages.last?.timestamp ?? NSDate(timeIntervalSince1970: 0)
 		
-		return Person(photo: img, highlight: ring, indicator: ind, primary: name, secondary: sub, tertiary: time)
+		return Person(photo: img, caption: cap, highlight: ring,
+		              indicator: ind, primary: name, secondary: sub, time: time)
 	}
 	
 	private func _getAllPersons() -> [Person]? {

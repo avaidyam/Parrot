@@ -151,6 +151,8 @@ public struct LinkPreviewParser {
 	
 	public static func parse(link: String) throws -> LinkPreviewType {
 		
+		let start = mach_absolute_time()
+		
 		// Step 1: Verify valid URL
 		guard let url = NSURL(string: link) else {
 			throw LinkPreviewError.invalidUrl(link)
@@ -170,6 +172,9 @@ public struct LinkPreviewParser {
 		guard headers.statusCode == 200 else {
 			throw LinkPreviewError.invalidHeaders(url, headers.statusCode)
 		}
+		
+		let final = mach_absolute_time() - start
+		Swift.print("took \(final / 1000000)ms to parse url.")
 		
 		// Step 4: Verify URL content type
 		let type = headers.mimeType ?? ""

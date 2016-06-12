@@ -6,19 +6,19 @@ import Cocoa
 // layer between the application model and decouples it from the view.
 public struct Person: Equatable {
 	var photo: NSImage
+	var caption: String
 	var highlight: NSColor
 	var indicator: Bool
-	
 	var primary: String
 	var secondary: String
-	var tertiary: String
+	var time: NSDate
 }
 
 // Person: Equatable
 public func ==(lhs: Person, rhs: Person) -> Bool {
 	return lhs.primary == rhs.primary &&
 		lhs.secondary == rhs.secondary &&
-		lhs.tertiary == rhs.tertiary
+		lhs.time == rhs.time
 }
 
 // A general person view
@@ -29,6 +29,8 @@ public class PersonView : NSTableCellView {
 	@IBOutlet var textLabel: NSTextField?
 	@IBOutlet var timeLabel: NSTextField?
 	@IBOutlet var indicator: NSView?
+	
+	var time: NSDate!
 	
 	public override init(frame: NSRect) {
 		super.init(frame: frame)
@@ -44,16 +46,30 @@ public class PersonView : NSTableCellView {
 				return
 			}
 			
+			let f = NSDateFormatter()
+			f.dateStyle = .fullStyle
+			f.timeStyle = .longStyle
+			self.time = o.time
+			
 			self.photoView?.image = o.photo
+			self.photoView?.toolTip = o.caption
 			self.photoView?.layer?.borderColor = o.highlight.cgColor
 			self.nameLabel?.stringValue = o.primary
+			self.nameLabel?.toolTip = o.primary
 			self.textLabel?.stringValue = o.secondary
-			self.timeLabel?.stringValue = o.tertiary
+			self.textLabel?.toolTip = o.secondary
+			self.timeLabel?.stringValue = o.time.relativeString()
+			self.timeLabel?.toolTip = "\(f.string(from: o.time))"
 			self.indicator?.isHidden = o.indicator
 			
 			if let t = self.textLabel {
 				t.font = NSFont.systemFont(ofSize: t.font!.pointSize,
 						weight: o.indicator ? NSFontWeightBold : NSFontWeightRegular)
+			}
+			
+			// Update the time label in realtime!
+			Notifications.subscribe(name: "PersonView.UpdateTime") { n in
+				self.timeLabel?.stringValue = self.time.relativeString()
 			}
 		}
 	}
