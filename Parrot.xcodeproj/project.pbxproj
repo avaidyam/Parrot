@@ -12,6 +12,7 @@
 		481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */; };
 		4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */; };
 		482E21391C23F5F500A4C7B3 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482E21381C23F5F500A4C7B3 /* ChatModel.swift */; };
+		4835E5221D0CDE5300E33103 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835E5211D0CDE5300E33103 /* LinkPreviewParser.swift */; };
 		4835ECA91C1C620000193EBC /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageView.swift */; };
 		4835ECAB1C1C620000193EBC /* PersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA81C1C620000193EBC /* PersonView.swift */; };
 		4835ECAF1C1C620E00193EBC /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAC1C1C620E00193EBC /* ConversationsViewController.swift */; };
@@ -254,6 +255,7 @@
 		481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLSession+Extensions.swift"; sourceTree = "<group>"; };
 		4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLSession+Delegate.swift"; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* ChatModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
+		4835E5211D0CDE5300E33103 /* LinkPreviewParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPreviewParser.swift; sourceTree = "<group>"; };
 		4835ECA61C1C620000193EBC /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		4835ECA81C1C620000193EBC /* PersonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonView.swift; sourceTree = "<group>"; };
 		4835ECAC1C1C620E00193EBC /* ConversationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
@@ -449,6 +451,7 @@
 				4835ECB31C1C672900193EBC /* NotificationManager.swift */,
 				488997141C4E0EA30034AEF3 /* SwiftAutoLayout.swift */,
 				48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */,
+				4835E5211D0CDE5300E33103 /* LinkPreviewParser.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -1203,6 +1206,7 @@
 				4835ECB01C1C620E00193EBC /* ConversationViewController.swift in Sources */,
 				481687251C39DA900070EEF6 /* NSView+Snapshot.swift in Sources */,
 				488997151C4E0EA30034AEF3 /* SwiftAutoLayout.swift in Sources */,
+				4835E5221D0CDE5300E33103 /* LinkPreviewParser.swift in Sources */,
 				488239A31C455CED00C5E8EB /* Array+Remove.swift in Sources */,
 				48834D961C1B3602009BC442 /* ServiceManager.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* PersonView.swift in Sources */,

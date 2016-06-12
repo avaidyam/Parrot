@@ -45,6 +45,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				layer.masksToBounds = true
 				layer.cornerRadius = 2.0
 				layer.backgroundColor = self._textBack.cgColor
+				// FIXME: If the appearance changes, the layer disappears...
 				
 				// NSTextView doesn't automatically change its text color when the
 				// backing view's appearance changes, so we need to set it each time.
