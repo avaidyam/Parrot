@@ -12,7 +12,9 @@ public enum LinkPreviewError: ErrorProtocol {
 public struct LinkMeta {
 	/// og:title, twitter:title, <title />
 	let title: [String]
-	/// og:image, twitter:image, `favicon.ico`
+	/// `favicon.ico`
+	let icon: [String]
+	/// og:image, twitter:image
 	let image: [String]
 	/// og:description, twitter:description, <meta name="description" ... />
 	let description: [String]
@@ -122,10 +124,11 @@ public struct LinkPreviewParser {
 		if let x = m["og:title"] { title.append(x) }
 		if let x = m["twitter:title"] { title.append(x) }
 		title.append(_extractTitle(from: str))
+		var icon: [String] = []
+		icon.append(contentsOf: _extractIcon(from: str))
 		var image: [String] = []
 		if let x = m["og:image"] { image.append(x) }
 		if let x = m["twitter:image"] { image.append(x) }
-		image.append(contentsOf: _extractIcon(from: str))
 		var description: [String] = []
 		if let x = m["og:description"] { description.append(x) }
 		if let x = m["twitter:description"] { description.append(x) }
@@ -142,7 +145,7 @@ public struct LinkPreviewParser {
 		if let x = m["og:video"] { video.append(x) }
 		if let x = m["twitter:player"] { video.append(x) }
 		
-		return .link(LinkMeta(title: title, image: image, description: description,
+		return .link(LinkMeta(title: title, icon: icon, image: image, description: description,
 		                      type: type, source: source, audio: audio, video: video))
 	}
 	
