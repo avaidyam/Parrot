@@ -1,8 +1,5 @@
 import Foundation
 
-// TODO: Support oEmbed, and twitterCard labelN/dataN format.
-// FIXME: Duplicate tags may get lost in dictionaries!
-
 public enum LinkPreviewError: ErrorProtocol {
 	case invalidUrl(String)
 	case unsafeUrl(NSURL)
@@ -44,7 +41,7 @@ public enum LinkPreviewType {
 	case link(LinkMeta)
 }
 
-public final class LinkPreviewParser {
+public struct LinkPreviewParser {
 	private static let SBKEY = "AIzaSyCE0A8INTc8KQLIaotaHiWvqUkit5-_sTE"
 	private static let SBURL = "https://sb-ssl.google.com/safebrowsing/api/lookup?client=parrot&key=\(SBKEY)&appver=1.0.0&pver=3.1&url="
 	
@@ -54,6 +51,8 @@ public final class LinkPreviewParser {
 	
 	private static let _validIcons = ["icon", "apple-touch-icon", "apple-touch-icon-precomposed"]
 	private static let _YTDomains = ["youtu.be", "www.youtube.com", "youtube.com"]
+	
+	private init() { }
 	
 	private static func _tag(_ str: String) -> String {
 		return "(?<=\(str)=\\\")[\\s\\S]+?(?=\\\")"

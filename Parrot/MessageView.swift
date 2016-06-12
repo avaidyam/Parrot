@@ -67,6 +67,9 @@ public class MessageView : NSTableCellView {
 					value: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue),
 					range: match.range
 				)
+				
+				let q = try? LinkPreviewParser.parse(link: url.absoluteString)
+				Swift.print(q)
 			}
 		}
 		return attrString
@@ -79,7 +82,8 @@ public class MessageView : NSTableCellView {
 				return
 			}
 			self.orientation = o.orientation
-			self.textLabel?.textStorage?.setAttributedString(MessageView.attributedStringForText(o.string as String))
+			let str = MessageView.attributedStringForText(o.string as String)
+			self.textLabel?.textStorage?.setAttributedString(str)
 			self.photoView?.image = o.photo
 		}
 	}
