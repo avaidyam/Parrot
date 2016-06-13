@@ -34,6 +34,7 @@ public extension NSNib {
 	}
 }
 
+@IBDesignable
 public class NSAutoLayoutTextView: NSTextView {
 	public override var intrinsicContentSize: NSSize {
 		self.layoutManager?.ensureLayout(for: self.textContainer!)

@@ -48,7 +48,7 @@ public enum SelectionCapability {
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
-public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDelegate {
+public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSTableViewContextMenuDelegate {
 	internal var scrollView: NSScrollView!
 	internal var tableView: NSTableView!
 	
@@ -75,6 +75,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		col.resizingMask = .autoresizingMask
 		self.tableView.addTableColumn(col)
 		self.tableView.headerView = nil
+		self.tableView.menu = NSMenu(title: "")
 		
 		self.scrollView.drawsBackground = false
 		self.scrollView.borderType = .noBorder
@@ -154,9 +155,14 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		self.dataSource.removeContentsOf(elements)
 	}*/
 	
+	public var selection: [Int] {
+		return self.tableView.selectedRowIndexes.map { $0 }
+	}
+	
 	public var dynamicHeightProvider: ((row: Int) -> Double)? = nil
 	public var selectionProvider: ((row: Int) -> Void)? = nil
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
+	public var menuProvider: ((row: Int) -> NSMenu?)? = nil
 }
 
 // Essential Support
@@ -227,6 +233,14 @@ public extension ElementContainerView {
 	public func tableViewSelectionIsChanging(_ notification: NSNotification) {
 		Swift.print("Unimplemented \(#function)")
 	}
+	
+	public func tableView(_ tableView: NSTableView, menuForRows rows: NSIndexSet) -> NSMenu? {
+		let i = rows.map { $0 }
+		Swift.print("menu opened! \(i)")
+		let menu = NSMenu(title: "Items")
+		menu.addItem(withTitle: "Got \(i)", action: nil, keyEquivalent: "")
+		return menu
+	}
 }
 
 // Drag & Drop Support
@@ -251,12 +265,6 @@ public extension ElementContainerView {
 		Swift.print("Unimplemented \(#function)")
 	}
 	
-	@objc(tableView:writeRowsWithIndexes:toPasteboard:)
-	public func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: NSIndexSet, to pboard: NSPasteboard) -> Bool {
-		Swift.print("Unimplemented \(#function)")
-		return false
-	}
-	
 	public func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
 		Swift.print("Unimplemented \(#function)")
 		return []
@@ -271,5 +279,33 @@ public extension ElementContainerView {
 	public func tableView(_ tableView: NSTableView, namesOfPromisedFilesDroppedAtDestination dropDestination: NSURL, forDraggedRowsWith indexSet: NSIndexSet) -> [String] {
 		Swift.print("Unimplemented \(#function)")
 		return []
+	}
+}
+
+// Support for per-row and multi-select menus.
+@objc public protocol NSTableViewContextMenuDelegate {
+	@objc(tableView:menuForRows:)
+	func tableView(_: NSTableView, menuForRows: NSIndexSet) -> NSMenu?
+}
+public extension NSTableView {
+	
+	// Support for per-row and multi-select menus.
+	public override func menu(for event: NSEvent) -> NSMenu? {
+		let loc = self.convert(event.locationInWindow, from: nil)
+		let row = self.row(at: loc)
+		guard row >= 0 && event.type == .rightMouseDown else {
+			return super.menu(for: event)
+		}
+		
+		var selected = self.selectedRowIndexes
+		if !selected.contains(row) {
+			selected = NSIndexSet(index: row)
+			self.selectRowIndexes(selected, byExtendingSelection: false)
+		}
+		
+		if let d = self.delegate() as? NSTableViewContextMenuDelegate {
+			return d.tableView(self, menuForRows: selected)
+		}
+		return super.menu(for: event)
 	}
 }

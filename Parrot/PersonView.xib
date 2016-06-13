@@ -40,7 +40,7 @@
                 <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Nw5-Um-35D">
                     <rect key="frame" x="58" y="8" width="263" height="27"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="You: What's up today?" placeholderString="[⚠️ No message.]" id="FpG-OA-Cag">
-                        <font key="font" metaFont="system" size="11"/>
+                        <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
