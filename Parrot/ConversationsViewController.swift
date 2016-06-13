@@ -136,7 +136,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		
 		let ring = d == NetworkType.GoogleVoice ? NSColor.materialBlue() : NSColor.materialGreen()
 		let cap = d == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
-		let ind = conversation.hasUnreadEvents
+		let ind = conversation.unread_events.count
 		let name = title
 		// FIXME: Sometimes, the messages will be empty if there was a hangouts call as the last event.
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")

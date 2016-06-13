@@ -38,28 +38,41 @@
                     </textFieldCell>
                 </textField>
                 <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Nw5-Um-35D">
-                    <rect key="frame" x="58" y="8" width="263" height="27"/>
+                    <rect key="frame" x="58" y="8" width="251" height="27"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="You: What's up today?" placeholderString="[⚠️ No message.]" id="FpG-OA-Cag">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0YA-kj-arM" userLabel="Unread Label">
+                    <rect key="frame" x="309" y="13" width="12" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="7" id="lyQ-8L-pM4">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
+                    </textFieldCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hidden" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                </textField>
             </subviews>
             <constraints>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="614-Mt-nc3"/>
                 <constraint firstItem="Bul-Yb-hpg" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="8kk-Tz-SAE"/>
                 <constraint firstItem="N7p-DV-XCL" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="Fb2-9Y-vG3"/>
+                <constraint firstAttribute="trailing" secondItem="0YA-kj-arM" secondAttribute="trailing" constant="8" id="RSL-OV-orj"/>
                 <constraint firstItem="N7p-DV-XCL" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="WT8-Yq-ee6"/>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="leading" secondItem="Bul-Yb-hpg" secondAttribute="trailing" constant="4" id="b4Q-j2-cQm"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="top" secondItem="Bul-Yb-hpg" secondAttribute="bottom" constant="4" id="cNz-zg-drJ"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="top" secondItem="98f-We-Vvp" secondAttribute="bottom" constant="4" id="ce9-fP-ntK"/>
                 <constraint firstItem="Bul-Yb-hpg" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="4" id="ekM-qu-jmL"/>
-                <constraint firstAttribute="trailing" secondItem="Nw5-Um-35D" secondAttribute="trailing" constant="8" id="fjT-em-1Qa"/>
+                <constraint firstItem="0YA-kj-arM" firstAttribute="centerY" secondItem="Nw5-Um-35D" secondAttribute="centerY" id="gr3-c9-hbe"/>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="centerY" secondItem="Bul-Yb-hpg" secondAttribute="centerY" id="hfP-e9-RCT"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="4" id="n6G-VK-XVZ"/>
+                <constraint firstItem="0YA-kj-arM" firstAttribute="leading" secondItem="Nw5-Um-35D" secondAttribute="trailing" constant="4" identifier="UnreadEventSpacing" id="qWG-Tm-9b7"/>
+                <constraint firstItem="0YA-kj-arM" firstAttribute="trailing" secondItem="98f-We-Vvp" secondAttribute="trailing" id="r3u-hs-21t"/>
                 <constraint firstAttribute="bottom" secondItem="Nw5-Um-35D" secondAttribute="bottom" constant="8" id="tvp-gd-SXn"/>
-                <constraint firstItem="98f-We-Vvp" firstAttribute="trailing" secondItem="Nw5-Um-35D" secondAttribute="trailing" id="vSx-TA-5Vu"/>
                 <constraint firstAttribute="height" relation="greaterThanOrEqual" secondItem="N7p-DV-XCL" secondAttribute="height" constant="16" id="wd1-jU-Oqk"/>
                 <constraint firstAttribute="trailing" secondItem="98f-We-Vvp" secondAttribute="trailing" constant="8" id="z2B-Pf-zoF"/>
             </constraints>
@@ -68,8 +81,9 @@
                 <outlet property="photoView" destination="N7p-DV-XCL" id="6Pw-6n-SCK"/>
                 <outlet property="textLabel" destination="Nw5-Um-35D" id="b9L-cF-4Cb"/>
                 <outlet property="timeLabel" destination="98f-We-Vvp" id="Mw8-Ct-2Fw"/>
+                <outlet property="unreadLabel" destination="0YA-kj-arM" id="xRy-Nd-wW5"/>
             </connections>
-            <point key="canvasLocation" x="-32.5" y="-23"/>
+            <point key="canvasLocation" x="17.5" y="-257"/>
         </customView>
     </objects>
     <resources>

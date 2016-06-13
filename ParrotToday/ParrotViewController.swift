@@ -148,7 +148,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 		
 		let ring = d == NetworkType.GoogleVoice ? NSColor.materialBlue() : NSColor.materialGreen()
 		let cap = d == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
-		let ind = conversation.hasUnreadEvents
+		let ind = conversation.unread_events.count
 		let name = title
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp ?? NSDate(timeIntervalSince1970: 0)

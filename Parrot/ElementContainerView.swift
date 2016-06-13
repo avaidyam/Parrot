@@ -162,7 +162,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	public var dynamicHeightProvider: ((row: Int) -> Double)? = nil
 	public var selectionProvider: ((row: Int) -> Void)? = nil
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
-	public var menuProvider: ((row: Int) -> NSMenu?)? = nil
+	public var menuProvider: ((rows: [Int]) -> NSMenu?)? = nil
 }
 
 // Essential Support
@@ -235,11 +235,7 @@ public extension ElementContainerView {
 	}
 	
 	public func tableView(_ tableView: NSTableView, menuForRows rows: NSIndexSet) -> NSMenu? {
-		let i = rows.map { $0 }
-		Swift.print("menu opened! \(i)")
-		let menu = NSMenu(title: "Items")
-		menu.addItem(withTitle: "Got \(i)", action: nil, keyEquivalent: "")
-		return menu
+		return self.menuProvider?(rows: rows.map { $0 })
 	}
 }
 
@@ -300,7 +296,8 @@ public extension NSTableView {
 		var selected = self.selectedRowIndexes
 		if !selected.contains(row) {
 			selected = NSIndexSet(index: row)
-			self.selectRowIndexes(selected, byExtendingSelection: false)
+			// Enable this to select the row upon menu-click.
+			//self.selectRowIndexes(selected, byExtendingSelection: false)
 		}
 		
 		if let d = self.delegate() as? NSTableViewContextMenuDelegate {

@@ -8,7 +8,7 @@ public struct Person: Equatable {
 	var photo: NSImage
 	var caption: String
 	var highlight: NSColor
-	var indicator: Bool
+	var indicator: Int
 	var primary: String
 	var secondary: String
 	var time: NSDate
@@ -28,7 +28,7 @@ public class PersonView : NSTableCellView {
 	@IBOutlet var nameLabel: NSTextField?
 	@IBOutlet var textLabel: NSTextField?
 	@IBOutlet var timeLabel: NSTextField?
-	@IBOutlet var indicator: NSView?
+	@IBOutlet var unreadLabel: NSTextField?
 	
 	var time: NSDate!
 	
@@ -60,11 +60,21 @@ public class PersonView : NSTableCellView {
 			self.textLabel?.toolTip = o.secondary
 			self.timeLabel?.stringValue = o.time.relativeString()
 			self.timeLabel?.toolTip = "\(f.string(from: o.time))"
-			self.indicator?.isHidden = o.indicator
+			self.unreadLabel?.stringValue = "\(o.indicator)"
+			//self.unreadLabel?.layer?.backgroundColor = o.highlight.cgColor
+			
+			// Set the unread label and its spacing constraint visibility.
+			self.unreadLabel?.isHidden = o.indicator <= 0
+			let c = self.unreadLabel?.constraints.filter { $0.identifier == "UnreadEventSpacing" }
+			if o.indicator <= 0 {
+				NSLayoutConstraint.deactivate(c ?? [])
+			} else {
+				NSLayoutConstraint.activate(c ?? [])
+			}
 			
 			if let t = self.textLabel {
 				t.font = NSFont.systemFont(ofSize: t.font!.pointSize,
-						weight: o.indicator ? NSFontWeightBold : NSFontWeightRegular)
+						weight: o.indicator <= 0 ? NSFontWeightBold : NSFontWeightRegular)
 			}
 			
 			// Update the time label in realtime!
@@ -101,6 +111,10 @@ public class PersonView : NSTableCellView {
 			layer.masksToBounds = true
 			layer.borderWidth = 2.0
 			layer.cornerRadius = photo.bounds.width / 2.0
+		}
+		if let unread = self.unreadLabel, let layer = unread.layer {
+			layer.masksToBounds = true
+			layer.cornerRadius = unread.bounds.width / 2.0
 		}
 	}
 }
