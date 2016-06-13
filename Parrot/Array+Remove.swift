@@ -102,3 +102,32 @@ public func Synchronized(lock: AnyObject, closure: () -> ()) {
 	closure()
 	objc_sync_exit(lock)
 }
+
+/// A proxy for NSProcessInfo's NSActivity API.
+/// Simplified for internal use only.
+public struct NSActivity {
+	public static var activities = [String: NSObjectProtocol]()
+	public static let mode: NSActivityOptions = [
+		.userInitiated, // every Parrot action MUST be user-initiated
+		.suddenTerminationDisabled, // prevent termination during action
+		.automaticTerminationDisabled, // prevent termination during action
+		//.userInitiatedAllowingIdleSystemSleep, // prevent idle sleep
+		//.idleSystemSleepDisabled, // prevent idle sleep
+		//.idleDisplaySleepDisabled, // prevent display sleep
+		//.background, // for background notifications
+		//.latencyCritical // for audio/video streaming
+	]
+	
+	public static func begin(_ string: String) {
+		let holder = NSProcessInfo.processInfo().beginActivity(mode, reason: string)
+		activities[string] = holder
+	}
+	
+	public static func end(_ string: String) {
+		if let act = activities[string] {
+			NSProcessInfo.processInfo().endActivity(act)
+		}
+	}
+}
+
+

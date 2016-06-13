@@ -17,13 +17,17 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: NSNotification) {
+		NSActivity.begin("Authenticate")
 		Authenticator.authenticateClient {
 			_hangoutsClient = Client(configuration: $0)
 			_hangoutsClient?.connect()
+			NSActivity.end("Authenticate")
 			
 			NSNotificationCenter.default()
 				.addObserver(forName: Client.didConnectNotification, object: _hangoutsClient!, queue: nil) { _ in
+					NSActivity.begin("Setup")
 					_hangoutsClient!.buildUserConversationList { (userList, conversationList) in
+						NSActivity.begin("Setup")
 						_REMOVE.forEach {
 							$0(userList, conversationList)
 						}
