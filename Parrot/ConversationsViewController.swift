@@ -52,7 +52,6 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 				self.selectionProvider?(row)
 			}
 		}
-		
 		self.personsView.rowActionProvider = { row, edge in
 			var actions: [NSTableViewRowAction] = []
 			if edge == .leading { // Swipe Right Actions
@@ -83,6 +82,16 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 				actions[1].backgroundColor = NSColor.materialRed()
 			}
 			return actions
+		}
+		self.personsView.menuProvider = { rows in
+			return NSMenu(title: "")
+		}
+		self.personsView.pasteboardProvider = { row in
+			let pb = NSPasteboardItem()
+			//NSPasteboardTypeRTF, NSPasteboardTypeString, NSPasteboardTypeTabularText
+			print("pb for row \(row)")
+			pb.setString("TEST", forType: "public.utf8-plain-text")
+			return pb
 		}
 	}
 	

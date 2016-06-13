@@ -47,6 +47,24 @@ public extension NSDate {
 	}
 }
 
+// TODO: not used yet, needs a bit more API work.
+public extension NSDateComponentsFormatter {
+	public class func localizedRelativeString(from interval: NSTimeInterval) -> String? {
+		let formatter = NSDateComponentsFormatter()
+		formatter.unitsStyle = .full
+		formatter.allowedUnits = [.year, .month, .weekOfMonth, .day, .hour, .minute]
+		formatter.maximumUnitCount = 1
+		
+		if interval < 60.0 {
+			return "just now" // TODO: localize!
+		}
+		guard let str = formatter.string(from: interval) else {
+			return nil
+		}
+		return str + " ago" // TODO: localize!
+	}
+}
+
 public extension NSTimer {
 	
 	/// Trigger a notification every minute, starting from the next minute.

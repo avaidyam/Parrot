@@ -94,14 +94,7 @@ public class PersonView : NSTableCellView {
 	
 	// Return an array of all dragging components corresponding to our subviews.
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
-		get {
-			return [
-				self.photoView?.draggingComponent(key: "Photo"),
-				self.nameLabel?.draggingComponent(key: "Name"),
-				self.textLabel?.draggingComponent(key: "Text"),
-				self.timeLabel?.draggingComponent(key: "Time"),
-			].flatMap { $0 }
-		}
+		return [self.draggingComponent(key: "Person")]
 	}
 	
 	// Allows the circle crop to dynamically change.

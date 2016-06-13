@@ -163,6 +163,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	public var selectionProvider: ((row: Int) -> Void)? = nil
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
 	public var menuProvider: ((rows: [Int]) -> NSMenu?)? = nil
+	public var pasteboardProvider: ((row: Int) -> NSPasteboardItem?)? = nil
 }
 
 // Essential Support
@@ -243,38 +244,35 @@ public extension ElementContainerView {
 public extension ElementContainerView {
 	
 	public func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-		Swift.print("Unimplemented \(#function)")
-		return nil
+		return self.pasteboardProvider?(row: row)
 	}
 	
 	@objc(tableView:draggingSession:willBeginAtPoint:forRowIndexes:)
-	public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
-		Swift.print("Unimplemented \(#function)")
+	public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession,
+	                      willBeginAt screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
+		// BEGIN DRAG
 	}
 	
 	@objc(tableView:draggingSession:endedAtPoint:operation:)
-	public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
-		Swift.print("Unimplemented \(#function)")
+	public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession,
+	                      endedAt screenPoint: NSPoint, operation: NSDragOperation) {
+		// END DRAG
 	}
 	
 	public func tableView(_ tableView: NSTableView, updateDraggingItemsForDrag draggingInfo: NSDraggingInfo) {
-		Swift.print("Unimplemented \(#function)")
+		// Rely on the NSTableCellView's implementation
 	}
 	
-	public func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+	public func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int,
+	                      proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
 		Swift.print("Unimplemented \(#function)")
-		return []
+		return [.copy]
 	}
 	
-	public func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+	public func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo,
+	                      row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
 		Swift.print("Unimplemented \(#function)")
-		return false
-	}
-	
-	@objc(tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:)
-	public func tableView(_ tableView: NSTableView, namesOfPromisedFilesDroppedAtDestination dropDestination: NSURL, forDraggedRowsWith indexSet: NSIndexSet) -> [String] {
-		Swift.print("Unimplemented \(#function)")
-		return []
+		return true
 	}
 }
 
@@ -299,6 +297,9 @@ public extension NSTableView {
 			// Enable this to select the row upon menu-click.
 			//self.selectRowIndexes(selected, byExtendingSelection: false)
 		}
+		
+		// As a last resort, if the row was selected alone, ask the view.
+		//let view = self.view(atColumn: 0, row: row, makeIfNecessary: false)
 		
 		if let d = self.delegate() as? NSTableViewContextMenuDelegate {
 			return d.tableView(self, menuForRows: selected)

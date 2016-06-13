@@ -1,5 +1,7 @@
 import Foundation
 
+/* TODO: Use NSLinguisticTagger to identify nouns and search them and provide data. */
+
 public enum LinkPreviewError: ErrorProtocol {
 	case invalidUrl(String)
 	case unsafeUrl(NSURL)

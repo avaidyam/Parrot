@@ -944,7 +944,7 @@ public extension String {
 	
 	// Convert instances of textual Github markdown emoji into UTF Emoji.
 	public func applyGithubEmoji() -> String {
-		let regex = try! NSRegularExpression(pattern: "(:[a-z0-9-+_]+:)",
+		let regex = try! NSRegularExpression(pattern: "(?<=[\\s]|^)(:[a-z0-9-+_]+:)(?=[\\s]|$)",
 			options: NSRegularExpressionOptions.caseInsensitive)
 		var resultText = self
 		let matchingRange = NSMakeRange(0, resultText.lengthOfBytes(using: NSUTF8StringEncoding))
