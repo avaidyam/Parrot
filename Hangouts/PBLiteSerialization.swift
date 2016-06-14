@@ -120,8 +120,8 @@ public class PBLiteSerialization {
 		return msg as? T
 	}
 	
-	public class func parseProtoJSON<T: ProtoMessage>(input: NSData) -> T? {
-		let script = (NSString(data: input, encoding: NSUTF8StringEncoding)! as String)
+	public class func parseProtoJSON<T: ProtoMessage>(input: Data) -> T? {
+		let script = (NSString(data: input, encoding: String.Encoding.utf8.rawValue)! as String)
 		if let parsedObject = evalArray(string: script) as? [AnyObject] {
 			var msg = T.init() as ProtoMessage
 			decode(message: &msg, pblite: parsedObject, ignoreFirstItem: true)
@@ -155,7 +155,7 @@ public let ORIGIN_URL = "https://talkgadget.google.com"
 // Return authorization headers for API request. It doesn't seem to matter
 // what the url and time are as long as they are consistent.
 public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
-	let time_msec = Int(NSDate().timeIntervalSince1970 * 1000)
+	let time_msec = Int(Date().timeIntervalSince1970 * 1000)
 	let auth_string = "\(time_msec) \(sapisid_cookie) \(ORIGIN_URL)"
 	let auth_hash = auth_string.SHA1()
 	let sapisidhash = "SAPISIDHASH \(time_msec)_\(auth_hash)"
@@ -169,7 +169,7 @@ public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String
 /* String Crypto extensions */
 public extension String {
 	public func SHA1() -> String {
-		let data = self.data(using: NSUTF8StringEncoding)!
+		let data = self.data(using: String.Encoding.utf8)! as NSData
 		var digest = [UInt8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
 		CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
 		let hexBytes = digest.map {

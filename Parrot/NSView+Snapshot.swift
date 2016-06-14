@@ -16,7 +16,7 @@ public extension NSView {
 	}
 	
 	// Automatically translate a view into a NSDraggingImageComponent
-	func draggingComponent(key: String) -> NSDraggingImageComponent {
+	func draggingComponent(_ key: String) -> NSDraggingImageComponent {
 		let component = NSDraggingImageComponent(key: key)
 		component.contents = self.snapshot()
 		component.frame = self.convert(self.bounds, from: self)
@@ -25,9 +25,9 @@ public extension NSView {
 }
 
 public extension NSNib {
-	public func instantiate(owner: AnyObject?) -> [AnyObject] {
+	public func instantiate(_ owner: AnyObject?) -> [AnyObject] {
 		var stuff: NSArray = []
-		if self.instantiate(withOwner: nil, topLevel: &stuff) {
+		if self.instantiate(withOwner: nil, topLevelObjects: &stuff) {
 			return stuff as [AnyObject]
 		}
 		return []

@@ -6,11 +6,11 @@ public final class Client {
 	public static let IMAGE_UPLOAD_URL = "https://docs.google.com/upload/photos/resumable"
 	
 	// NotificationCenter notification and userInfo keys.
-	public static let didConnectNotification = "Hangouts.Client.DidConnect"
-	public static let didReconnectNotification = "Hangouts.Client.DidReconnect"
-	public static let didDisconnectNotification = "Hangouts.Client.DidDisconnect"
-	public static let didUpdateStateNotification = "Hangouts.Client.UpdateState"
-	public static let didUpdateStateKey = "Hangouts.Client.UpdateState.Key"
+	public static let didConnectNotification = NSNotification.Name(rawValue: "Hangouts.Client.DidConnect")
+	public static let didReconnectNotification = NSNotification.Name(rawValue: "Hangouts.Client.DidReconnect")
+	public static let didDisconnectNotification = NSNotification.Name(rawValue: "Hangouts.Client.DidDisconnect")
+	public static let didUpdateStateNotification = NSNotification.Name(rawValue: "Hangouts.Client.UpdateState")
+	public static let didUpdateStateKey = NSNotification.Name(rawValue: "Hangouts.Client.UpdateState.Key")
 	
 	// Timeout to send for setactiveclient requests:
 	public static let ACTIVE_TIMEOUT_SECS = 120
@@ -18,7 +18,7 @@ public final class Client {
 	// Minimum timeout between subsequent setactiveclient requests:
 	public static let SETACTIVECLIENT_LIMIT_SECS = 60
 	
-	public let config: NSURLSessionConfiguration
+	public let config: URLSessionConfiguration
 	public var channel: Channel?
 	
 	public var email: String?
@@ -26,7 +26,7 @@ public final class Client {
 	public var last_active_secs: NSNumber? = 0
 	public var active_client_state: ActiveClientState?
 	
-	public init(configuration: NSURLSessionConfiguration) {
+	public init(configuration: URLSessionConfiguration) {
 		self.config = configuration
     }
 	
@@ -42,18 +42,18 @@ public final class Client {
 		// A notification-based delegate replacement:
 		//
 		
-		let _c = NSNotificationCenter.default()
+		let _c = NotificationCenter.default()
 		let a = _c.addObserver(forName: Channel.didConnectNotification, object: self.channel, queue: nil) { _ in
-			NSNotificationCenter.default().post(name: Client.didConnectNotification, object: self)
+			NotificationCenter.default().post(name: Client.didConnectNotification, object: self)
 		}
 		let b = _c.addObserver(forName: Channel.didReconnectNotification, object: self.channel, queue: nil) { _ in
-			NSNotificationCenter.default().post(name: Client.didReconnectNotification, object: self)
+			NotificationCenter.default().post(name: Client.didReconnectNotification, object: self)
 		}
 		let c = _c.addObserver(forName: Channel.didDisconnectNotification, object: self.channel, queue: nil) { _ in
-			NSNotificationCenter.default().post(name: Client.didDisconnectNotification, object: self)
+			NotificationCenter.default().post(name: Client.didDisconnectNotification, object: self)
 		}
 		let d = _c.addObserver(forName: Channel.didReceiveMessageNotification, object: self.channel, queue: nil) { note in
-			if let val = (note.userInfo as! [String: AnyObject])[Channel.didReceiveMessageKey] as? [AnyObject] {
+			if let val = (note.userInfo)?[Channel.didReceiveMessageKey.rawValue] as? [AnyObject] {
 				self.channel(channel: self.channel!, didReceiveMessage: val)
 			} else {
 				print("Encountered an error! \(note)")
@@ -69,7 +69,7 @@ public final class Client {
 		
 		// Remove all the observers so we aren't receiving calls later on.
 		self.tokens.forEach {
-			NSNotificationCenter.default().removeObserver($0)
+			NotificationCenter.default().removeObserver($0)
 		}
 	}
 	
@@ -102,7 +102,7 @@ public final class Client {
 		}
 		
 		let is_active = (active_client_state == ActiveClientState.IsActive)
-		let time_since_active = (NSDate().timeIntervalSince1970 - last_active_secs!.doubleValue)
+		let time_since_active = (Date().timeIntervalSince1970 - last_active_secs!.doubleValue)
 		let timed_out = time_since_active > Double(Client.SETACTIVECLIENT_LIMIT_SECS)
 		
 		if !is_active || timed_out {
@@ -110,7 +110,7 @@ public final class Client {
 			// Update these immediately so if the function is called again
 			// before the API request finishes, we don't start extra requests.
 			active_client_state = ActiveClientState.IsActive
-			last_active_secs = NSDate().timeIntervalSince1970
+			last_active_secs = Date().timeIntervalSince1970
 			
 			
 			// The first time this is called, we need to retrieve the user's email address.
@@ -126,15 +126,15 @@ public final class Client {
 	
 	// Upload an image that can be later attached to a chat message.
 	// The name of the uploaded file may be changed by specifying the filename argument.
-	public func uploadImage(data: NSData, filename: String, cb: ((String) -> Void)? = nil) {
-		let json = "{\"protocolVersion\":\"0.8\",\"createSessionRequest\":{\"fields\":[{\"external\":{\"name\":\"file\",\"filename\":\"\(filename)\",\"put\":{},\"size\":\(data.length)}}]}}"
+	public func uploadImage(data: Data, filename: String, cb: ((String) -> Void)? = nil) {
+		let json = "{\"protocolVersion\":\"0.8\",\"createSessionRequest\":{\"fields\":[{\"external\":{\"name\":\"file\",\"filename\":\"\(filename)\",\"put\":{},\"size\":\(data.count)}}]}}"
 		
 		self.base_request(path: Client.IMAGE_UPLOAD_URL,
 			content_type: "application/x-www-form-urlencoded;charset=UTF-8",
-			data: json.data(using: NSUTF8StringEncoding)!) { response in
+			data: json.data(using: String.Encoding.utf8)!) { response in
 			
 			// Sift through JSON for a response with the upload URL.
-				let _data: NSDictionary = try! NSJSONSerialization.jsonObject(with: response.data!,
+				let _data: NSDictionary = try! JSONSerialization.jsonObject(with: response.data!,
 				options: .allowFragments) as! NSDictionary
 			let _a = _data["sessionStatus"] as! NSDictionary
 			let _b = _a["externalFieldTransfers"] as! NSArray
@@ -145,7 +145,7 @@ public final class Client {
 			self.base_request(path: upload, content_type: "application/octet-stream", data: data) { resp in
 				
 				// Sift through JSON for a response with the photo ID.
-				let _data2: NSDictionary = try! NSJSONSerialization.jsonObject(with: resp.data!,
+				let _data2: NSDictionary = try! JSONSerialization.jsonObject(with: resp.data!,
 					options: .allowFragments) as! NSDictionary
 				let _a2 = _data2["sessionStatus"] as! NSDictionary
 				let _b2 = _a2["additionalInfo"] as! NSDictionary
@@ -177,8 +177,8 @@ public final class Client {
 			self.addChannelServices()
 		}
 		if let cbu = wrapper["2"] as? [String: AnyObject] {
-			let val2 = cbu["2"]!.data(using: NSUTF8StringEncoding)
-			let payload = try! NSJSONSerialization.jsonObject(with: val2!, options: .allowFragments)
+			let val2 = (cbu["2"]! as! String).data(using: String.Encoding.utf8)
+			let payload = try! JSONSerialization.jsonObject(with: val2!, options: .allowFragments)
 			
 			// This is a (Client)BatchUpdate containing StateUpdate messages.
 			// payload[1] is a list of state updates.
@@ -187,7 +187,7 @@ public final class Client {
 				PBLiteSerialization.decode(message: &b, pblite: payload as! [AnyObject], ignoreFirstItem: true)
 				for state_update in (b as! BatchUpdate).stateUpdate {
 					self.active_client_state = state_update.stateUpdateHeader!.activeClientState!
-					NSNotificationCenter.default().post(
+					NotificationCenter.default().post(
 						name: Client.didUpdateStateNotification, object: self,
 						userInfo: [Client.didUpdateStateKey: Wrapper(state_update)])
 				}
@@ -210,8 +210,8 @@ public final class Client {
 	// things work.
 	private func addChannelServices() {
 		let inner = ["3": ["1": ["1": "babel"]]]
-		let dat = try! NSJSONSerialization.data(withJSONObject: inner, options: [])
-		let str = NSString(data: dat, encoding: NSUTF8StringEncoding) as! String
+		let dat = try! JSONSerialization.data(withJSONObject: inner, options: [])
+		let str = NSString(data: dat, encoding: String.Encoding.utf8.rawValue) as! String
 		
 		self.channel?.sendMaps(mapList: [["p": str]])
 	}
@@ -277,7 +277,7 @@ public final class Client {
     ) {
         base_request(path: "https://clients6.google.com/chat/v1/\(endpoint)",
             content_type: "application/json+protobuf",
-            data: try! NSJSONSerialization.data(withJSONObject: body, options: []),
+            data: try! JSONSerialization.data(withJSONObject: body, options: []),
             use_json: use_json,
             cb: cb
         )
@@ -289,12 +289,12 @@ public final class Client {
     private func base_request(
         path: String,
         content_type: String,
-        data: NSData,
+        data: Data,
         use_json: Bool = true,
         cb: (Result) -> Void
     ) {
         let params = ["alt": use_json ? "json" : "protojson"]
-        let url = NSURL(string: (path + "?" + params.encodeURL()))!
+        let url = URL(string: (path + "?" + params.encodeURL()))!
         let request = NSMutableURLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = data
@@ -304,7 +304,7 @@ public final class Client {
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")
 		
-		self.channel?.session.request(request: request) {
+		self.channel?.session.request(request: request as URLRequest) {
 			guard let _ = $0.data else {
 				print("Request failed with error: \($0.error!)")
 				return
@@ -313,8 +313,8 @@ public final class Client {
 		}
     }
 
-    private func verifyResponseOK(responseObject: NSData) {
-		let parsedObject = try! NSJSONSerialization.jsonObject(with: responseObject, options: []) as? NSDictionary
+    private func verifyResponseOK(responseObject: Data) {
+		let parsedObject = try! JSONSerialization.jsonObject(with: responseObject, options: []) as? NSDictionary
         let status = ((parsedObject?["response_header"] as? NSDictionary) ?? NSDictionary())["status"] as? String
         if status != "OK" {
             print("Unexpected status response: \(parsedObject!)")
@@ -396,7 +396,7 @@ public final class Client {
 			
 			// Not sure what timestamp should be there, last time I have tried
 			// it Hangouts client in GMail sent something like now() - 5 hours
-			NSNumber(value: UInt64(NSDate().toUTC())), /* TODO: This should be in UTC form. */
+			NSNumber(value: UInt64(Date().toUTC())), /* TODO: This should be in UTC form. */
 			None,
 			[]
 		]
@@ -432,7 +432,7 @@ public final class Client {
 	// newest.
 	public func getConversation(
 		conversation_id: String,
-		event_timestamp: NSDate,
+		event_timestamp: Date,
 		max_events: Int = 50,
 		cb: (response: GetConversationResponse?) -> Void)
 	{
@@ -694,7 +694,7 @@ public final class Client {
 	}
 	
 	// List all events occurring at or after a timestamp.
-	public func syncAllNewEvents(timestamp: NSDate, cb: (response: SyncAllNewEventsResponse?) -> Void) {
+	public func syncAllNewEvents(timestamp: Date, cb: (response: SyncAllNewEventsResponse?) -> Void) {
 		let data: NSArray = [
 			self.getRequestHeader(),
 			NSNumber(value: UInt64(timestamp.toUTC())),//to_timestamp(date: timestamp),
@@ -731,7 +731,7 @@ public final class Client {
 	}
 	
 	// Update the watermark (read timestamp) for a conversation.
-	public func updateWatermark(conv_id: String, read_timestamp: NSDate, cb: (() -> Void)? = nil) {
+	public func updateWatermark(conv_id: String, read_timestamp: Date, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conv_id], // conversation_id

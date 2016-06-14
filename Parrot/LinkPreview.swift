@@ -4,11 +4,11 @@ import Foundation
 
 public enum LinkPreviewError: ErrorProtocol {
 	case invalidUrl(String)
-	case unsafeUrl(NSURL)
-	case invalidHeaders(NSURL, Int)
-	case documentTooLarge(NSURL, Double)
-	case unhandleableUrl(NSURL, String)
-	case invalidDocument(NSURL)
+	case unsafeUrl(URL)
+	case invalidHeaders(URL, Int)
+	case documentTooLarge(URL, Double)
+	case unhandleableUrl(URL, String)
+	case invalidDocument(URL)
 }
 
 public struct LinkMeta {
@@ -36,7 +36,7 @@ public enum LinkPreviewType {
 	/// MIME: video/*
 	case video
 	/// MIME: image/*
-	case image(NSData)
+	case image(Data)
 	/// MIME: text/plain
 	case snippet(String)
 	/// URL: youtu.be or youtube.com
@@ -62,18 +62,18 @@ public struct LinkPreviewParser {
 		return "(?<=\(str)=\\\")[\\s\\S]+?(?=\\\")"
 	}
 	
-	private static func _get(url: NSURL, method: String = "GET") -> (NSData?, NSURLResponse?, NSError?) {
-		var data: NSData?, response: NSURLResponse?, error: NSError?
-		let semaphore = dispatch_semaphore_create(0)
+	private static func _get(_ url: URL, method: String = "GET") -> (Data?, URLResponse?, NSError?) {
+		var data: Data?, response: URLResponse?, error: NSError?
+		let semaphore = DispatchSemaphore(value: 0)
 		
 		let request = NSMutableURLRequest(url: url)
 		request.httpMethod = method
-		NSURLSession.shared().dataTask(with: request) {
+		URLSession.shared().dataTask(with: request) {
 			data = $0; response = $1; error = $2
 			dispatch_semaphore_signal(semaphore!)
 			}.resume()
 		
-		dispatch_semaphore_wait(semaphore!, DISPATCH_TIME_FOREVER)
+		semaphore.wait(timeout: DispatchTime.distantFuture)
 		return (data, response, error)
 	}
 	
@@ -112,10 +112,10 @@ public struct LinkPreviewParser {
 		return icons
 	}
 	
-	private static func _verifyLink(_ url: NSURL) -> (safe: Bool, error: Bool) {
-		let url2 = NSURL(string: SBURL + url.absoluteString)!
-		let out = _get(url: url2, method: "HEAD")
-		let resp = (out.1 as? NSHTTPURLResponse)?.statusCode ?? 0
+	private static func _verifyLink(_ url: URL) -> (safe: Bool, error: Bool) {
+		let url2 = URL(string: SBURL + url.absoluteString!)!
+		let out = _get(url 2, method: "HEAD")
+		let resp = (out.1 as? HTTPURLResponse)?.statusCode ?? 0
 		return (safe: (resp == 204), error: !(resp == 200 || resp == 204))
 	}
 	
@@ -151,12 +151,12 @@ public struct LinkPreviewParser {
 		                      type: type, source: source, audio: audio, video: video))
 	}
 	
-	public static func parse(link: String) throws -> LinkPreviewType {
+	public static func parse(_ link: String) throws -> LinkPreviewType {
 		
 		let start = mach_absolute_time()
 		
 		// Step 1: Verify valid URL
-		guard let url = NSURL(string: link) else {
+		guard let url = URL(string: link) else {
 			throw LinkPreviewError.invalidUrl(link)
 		}
 		
@@ -167,8 +167,8 @@ public struct LinkPreviewParser {
 		}
 		
 		// Step 3: Verify URL headers
-		let _headers = _get(url: url, method: "HEAD")
-		guard let headers = _headers.1 as? NSHTTPURLResponse else {
+		let _headers = _get(url, method: "HEAD")
+		guard let headers = _headers.1 as? HTTPURLResponse else {
 			throw LinkPreviewError.invalidHeaders(url, 0)
 		}
 		guard headers.statusCode == 200 else {
@@ -182,10 +182,10 @@ public struct LinkPreviewParser {
 		let type = headers.mimeType ?? ""
 		if _YTDomains.contains(url.host ?? "") {
 			var id = ""
-			if let loc = url.absoluteString.range(of: "youtu.be/") {
-				id = url.absoluteString.substring(from: loc.upperBound)
-			} else if let loc = url.absoluteString.range(of: "youtube.com/watch?v=") {
-				id = url.absoluteString.substring(from: loc.upperBound)
+			if let loc = url.absoluteString?.range(of: "youtu.be/") {
+				id = (url.absoluteString?.substring(from: loc.upperBound))!
+			} else if let loc = url.absoluteString?.range(of: "youtube.com/watch?v=") {
+				id = (url.absoluteString?.substring(from: loc.upperBound))!
 			} else { throw LinkPreviewError.unhandleableUrl(url, id) }
 			
 			// domain-specialized case (not MIME type)
@@ -195,7 +195,7 @@ public struct LinkPreviewParser {
 			guard size < 4 else {
 				throw LinkPreviewError.documentTooLarge(url, size)
 			}
-			guard let dl = _get(url: url).0 else {
+			guard let dl = _get(url).0 else {
 				throw LinkPreviewError.invalidDocument(url)
 			}
 			
@@ -205,8 +205,8 @@ public struct LinkPreviewParser {
 		} else if type.hasPrefix("video/") {
 			return .video
 		} else if type.hasPrefix("text/html") {
-			guard	let dl = _get(url: url).0,
-				let content = NSString(data: dl, encoding: NSUTF8StringEncoding) else {
+			guard	let dl = _get(url).0,
+				let content = NSString(data: dl, encoding: String.Encoding.utf8.rawValue) else {
 					throw LinkPreviewError.invalidDocument(url)
 			}
 			
@@ -221,8 +221,8 @@ public struct LinkPreviewParser {
 			guard size < 4 else {
 				throw LinkPreviewError.documentTooLarge(url, size)
 			}
-			guard	let dl = _get(url: url).0,
-				let content = NSString(data: dl, encoding: NSUTF8StringEncoding) else {
+			guard	let dl = _get(url).0,
+				let content = NSString(data: dl, encoding: String.Encoding.utf8.rawValue) else {
 					throw LinkPreviewError.invalidDocument(url)
 			}
 			

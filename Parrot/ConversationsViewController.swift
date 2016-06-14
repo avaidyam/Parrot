@@ -8,7 +8,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	@IBOutlet var personsView: PersonsView!
 	
 	var selectionProvider: ((Int) -> Void)? = nil
-	var wallclock: NSTimer!
+	var wallclock: Timer!
 	
 	deinit {
 		self.wallclock?.invalidate()
@@ -32,7 +32,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			}
 		}
 		
-		Notifications.subscribe(name: NSUserDefaultsDidChangeNotification) { note in
+		Notifications.subscribe(name: UserDefaults.didChangeNotification) { note in
 			
 			// Handle appearance colors.
 			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
@@ -46,7 +46,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.personsView.insets = NSEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
+		self.personsView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.personsView.selectionProvider = { row in
 			if row >= 0 {
 				self.selectionProvider?(row)
@@ -99,13 +99,13 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		super.viewWillAppear()
 		
 		let scroll = self.view.subviews[0] as? NSScrollView
-		scroll!.scrollerInsets = NSEdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
+		scroll!.scrollerInsets = EdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
 		//self.timeLabel?.stringValue = self.time.relativeString()
 		
-		self.wallclock = NSTimer.scheduledWallclock(target: self, selector: #selector(_updateWallclock(_:)))
+		self.wallclock = Timer.scheduledWallclock(target: self, selector: #selector(_updateWallclock(_:)))
 	}
 	
-	func _updateWallclock(_ timer: NSTimer) {
+	func _updateWallclock(_ timer: Timer) {
 		Notifications.post(name: "PersonView.UpdateTime", object: self)
 	}
 	
@@ -119,7 +119,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
         }
     }
 	
-	private func _getPerson(conversation: IConversation) -> Person {
+	private func _getPerson(_ conversation: IConversation) -> Person {
 		
 		// Propogate info for data filling
 		let a = conversation.messages.last?.userID
@@ -149,7 +149,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		let name = title
 		// FIXME: Sometimes, the messages will be empty if there was a hangouts call as the last event.
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
-		let time = conversation.messages.last?.timestamp ?? NSDate(timeIntervalSince1970: 0)
+		let time = conversation.messages.last?.timestamp ?? Date(timeIntervalSince1970: 0)
 		
 		return Person(photo: img, caption: cap, highlight: ring,
 		              indicator: ind, primary: name, secondary: sub, time: time)
@@ -159,9 +159,9 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		return self.conversationList?.conversations.map { _getPerson(conversation: $0) }
 	}
 	
-    func conversationList(list: ConversationList, didReceiveEvent event: IEvent) {}
-    func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
-    func conversationList(list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
+    func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent) {}
+    func conversationList(_ list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
+    func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
 	
 	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: ConversationList) {
@@ -172,7 +172,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     }
 	
 	/* TODO: Just update the row that is updated. */
-    func conversationList(list: ConversationList, didUpdateConversation conversation: IConversation) {
+    func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 			NotificationManager.updateAppBadge(messages: self.conversationList?.unreadEventCount ?? 0)

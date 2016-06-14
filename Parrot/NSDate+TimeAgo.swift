@@ -3,16 +3,16 @@ import Foundation
 /* TODO: Localization support for timeAgo. */
 
 /// from @jack205: https://gist.github.com/jacks205/4a77fb1703632eb9ae79
-private let _units: NSCalendarUnit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
-public extension NSDate {
-	public func relativeString(numeric: Bool = false) -> String {
+private let _units: Calendar.Unit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
+public extension Date {
+	public func relativeString(_ numeric: Bool = false) -> String {
 		
 		// Setup for calendar components.
-		let date = self, now = NSDate()
-		let calendar = NSCalendar.current()
-		let earliest = now.earlierDate(date)
+		let date = self, now = Date()
+		let calendar = Calendar.current()
+		let earliest = (now as Date).earlierDate(date)
 		let latest = (earliest == now) ? date : now
-		let components = calendar.components(_units, from: earliest, to: latest, options: NSCalendarOptions())
+		let components = calendar.components(_units, from: earliest, to: latest, options: Calendar.Options())
 		
 		// Format calendar components into string.
 		if (components.year >= 2) {
@@ -48,9 +48,9 @@ public extension NSDate {
 }
 
 // TODO: not used yet, needs a bit more API work.
-public extension NSDateComponentsFormatter {
-	public class func localizedRelativeString(from interval: NSTimeInterval) -> String? {
-		let formatter = NSDateComponentsFormatter()
+public extension DateComponentsFormatter {
+	public class func localizedRelativeString(from interval: TimeInterval) -> String? {
+		let formatter = DateComponentsFormatter()
 		formatter.unitsStyle = .full
 		formatter.allowedUnits = [.year, .month, .weekOfMonth, .day, .hour, .minute]
 		formatter.maximumUnitCount = 1
@@ -65,16 +65,16 @@ public extension NSDateComponentsFormatter {
 	}
 }
 
-public extension NSTimer {
+public extension Timer {
 	
 	/// Trigger a notification every minute, starting from the next minute.
-	public class func scheduledWallclock(target: AnyObject, selector: Selector) -> NSTimer {
-		let comps = NSCalendar.current().components(_units, from: NSDate())
+	public class func scheduledWallclock(_ target: AnyObject, selector: Selector) -> Timer {
+		var comps = Calendar.current().components(_units, from: Date())
 		comps.minute += 1; comps.second = 0
-		let date = NSCalendar.current().date(from: comps)!
-		let timer = NSTimer(fireAt: date, interval: 60, target: target,
+		let date = Calendar.current().date(from: comps)!
+		let timer = Timer(fireAt: date, interval: 60, target: target,
 		                    selector: selector, userInfo: nil, repeats: true)
-		NSRunLoop.main().add(timer, forMode: NSDefaultRunLoopMode)
+		RunLoop.main().add(timer, forMode: RunLoopMode.defaultRunLoopMode)
 		return timer
 	}
 }

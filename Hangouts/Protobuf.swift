@@ -200,14 +200,14 @@ public struct ProtoEnumDescriptor {
 		}
 		
 		let f2 = content.components(separatedBy: ";").map {
-			$0.trimmingCharacters(in: .whitespacesAndNewlines())
+			$0.trimmingCharacters(in: .whitespacesAndNewlines)
 		}.filter { !$0.isEmpty } as [String]
 		let fields = f2.map {
 			let a = $0.components(separatedBy: " ").filter { $0 != "=" }
 			return (Int(a[1])!, a[0])
 		}.sorted { $0.0 < $1.0 } as [(Int, String)]
 		
-		title = title.trimmingCharacters(in: .whitespacesAndNewlines())
+		title = title.trimmingCharacters(in: .whitespacesAndNewlines)
 		return ProtoEnumDescriptor(name: title, values: fields)
 	}
 	
@@ -242,7 +242,7 @@ public struct ProtoMessageDescriptor {
 		}
 		
 		let f2 = content.components(separatedBy: ";").map {
-			$0.trimmingCharacters(in: .whitespacesAndNewlines())
+			$0.trimmingCharacters(in: .whitespacesAndNewlines)
 			}.filter { !$0.isEmpty } as [String]
 		let fields = f2.map {
 			let a = $0.components(separatedBy: " ").filter { $0 != "=" }.filter { !$0.isEmpty }
@@ -251,7 +251,7 @@ public struct ProtoMessageDescriptor {
 			                       label: ProtoFieldLabel(rawValue: a[0])!)
 			} as [ProtoFieldDescriptor]
 		
-		title = title.trimmingCharacters(in: .whitespacesAndNewlines())
+		title = title.trimmingCharacters(in: .whitespacesAndNewlines)
 		return ProtoMessageDescriptor(name: title, fields: fields)
 	}
 	
@@ -391,12 +391,12 @@ public func translateProtoFile(filename: String) {
 	}
 	
 	do {
-		let content = try String(contentsOfFile: Process.arguments[1], encoding: NSUTF8StringEncoding)
+		let content = try String(contentsOfFile: Process.arguments[1], encoding: String.Encoding.utf8)
 		let output = try! ProtoFileDescriptor.fromString(string: content).toString()
 		
 		do {
 			let outputFilename = _convert(filename)
-			try output.write(toFile: outputFilename, atomically: true, encoding: NSUTF8StringEncoding)
+			try output.write(toFile: outputFilename, atomically: true, encoding: String.Encoding.utf8)
 			print("\(filename) written successfully.")
 			
 		} catch {

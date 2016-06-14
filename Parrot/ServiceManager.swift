@@ -16,7 +16,7 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	private var trans: WindowTransitionAnimator? = nil
 	
 	// First begin authentication and setup for any services.
-	func applicationWillFinishLaunching(_ notification: NSNotification) {
+	func applicationWillFinishLaunching(_ notification: Notification) {
 		NSActivity.begin("Authenticate")
 		Authenticator.authenticateClient {
 			_hangoutsClient = Client(configuration: $0)
@@ -68,7 +68,7 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	}
 	
 	@IBAction func logoutSelected(_ sender: AnyObject) {
-		let cookieStorage = NSHTTPCookieStorage.shared()
+		let cookieStorage = HTTPCookieStorage.shared()
 		if let cookies = cookieStorage.cookies {
 			for cookie in cookies {
 				cookieStorage.deleteCookie(cookie)

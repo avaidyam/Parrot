@@ -7,29 +7,29 @@ import Cocoa
 /// However, .Dynamic implies that the size class will be computed
 /// at runtime based on the runtime size of the list elements.
 public enum SizeClass {
-	case XSmall// = 16.0
-	case Small// = 32.0
-	case Medium// = 48.0
-	case Large// = 64.0
-	case XLarge// = 96.0
-	case Custom(Double)
-	case Dynamic
+	case xSmall// = 16.0
+	case small// = 32.0
+	case medium// = 48.0
+	case large// = 64.0
+	case xLarge// = 96.0
+	case custom(Double)
+	case dynamic
 	
 	var size: Double {
 		switch self {
-		case .XSmall: return 16.0
-		case .Small: return 32.0
-		case .Medium: return 48.0
-		case .Large: return 64.0
-		case .XLarge: return 96.0
-		case .Custom(let value): return value
-		case .Dynamic: return 0.0
+		case .xSmall: return 16.0
+		case .small: return 32.0
+		case .medium: return 48.0
+		case .large: return 64.0
+		case .xLarge: return 96.0
+		case .custom(let value): return value
+		case .dynamic: return 0.0
 		}
 	}
 	
 	func calculate(_ dynamic: (() -> Double)?) -> Double {
 		switch self {
-		case .Dynamic where dynamic != nil: return dynamic!()
+		case .dynamic where dynamic != nil: return dynamic!()
 		default: return self.size
 		}
 	}
@@ -40,14 +40,15 @@ public enum SizeClass {
 /// .One implies single element user selection capability.
 /// .Any implies multiple element user selection capability.
 public enum SelectionCapability {
-	case None
-	case One
-	case Any
+	case none
+	case one
+	case any
 }
 
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
+@IBDesignable
 public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSTableViewContextMenuDelegate {
 	internal var scrollView: NSScrollView!
 	internal var tableView: NSTableView!
@@ -68,8 +69,8 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		self.scrollView = NSScrollView(frame: self.bounds)
 		self.tableView = NSTableView(frame: self.scrollView.bounds)
 		
-		self.tableView.setDelegate(self)
-		self.tableView.setDataSource(self)
+		self.tableView.delegate = self
+		self.tableView.dataSource = self
 		
 		let col = NSTableColumn(identifier: "")
 		col.resizingMask = .autoresizingMask
@@ -101,12 +102,12 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		return view!
 	}
 	
-	public var sizeClass: SizeClass = .Large
-	public var selectionCapability: SelectionCapability = .None
+	public var sizeClass: SizeClass = .large
+	public var selectionCapability: SelectionCapability = .none
 	public var updateScrollsToBottom = true
 	
 	// Allow accessing the insets from the scroll view.
-	public var insets: NSEdgeInsets {
+	public var insets: EdgeInsets {
 		get { return self.scrollView.contentInsets }
 		set { self.scrollView.contentInsets = newValue }
 	}
@@ -222,20 +223,20 @@ public extension ElementContainerView {
 		return self.selectionProvider != nil
 	}
 	
-	public func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet {
+	public func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: IndexSet) -> IndexSet {
 		Swift.print("Unimplemented \(#function)")
 		return proposedSelectionIndexes
 	}
 	
-	public func tableViewSelectionDidChange(_ notification: NSNotification) {
+	public func tableViewSelectionDidChange(_ notification: Notification) {
 		self.selectionProvider?(row: self.tableView.selectedRow)
 	}
 	
-	public func tableViewSelectionIsChanging(_ notification: NSNotification) {
+	public func tableViewSelectionIsChanging(_ notification: Notification) {
 		Swift.print("Unimplemented \(#function)")
 	}
 	
-	public func tableView(_ tableView: NSTableView, menuForRows rows: NSIndexSet) -> NSMenu? {
+	public func tableView(_ tableView: NSTableView, menuForRows rows: IndexSet) -> NSMenu? {
 		return self.menuProvider?(rows: rows.map { $0 })
 	}
 }
@@ -249,7 +250,7 @@ public extension ElementContainerView {
 	
 	@objc(tableView:draggingSession:willBeginAtPoint:forRowIndexes:)
 	public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession,
-	                      willBeginAt screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
+	                      willBeginAt screenPoint: NSPoint, forRowIndexes rowIndexes: IndexSet) {
 		// BEGIN DRAG
 	}
 	
@@ -279,7 +280,7 @@ public extension ElementContainerView {
 // Support for per-row and multi-select menus.
 @objc public protocol NSTableViewContextMenuDelegate {
 	@objc(tableView:menuForRows:)
-	func tableView(_: NSTableView, menuForRows: NSIndexSet) -> NSMenu?
+	func tableView(_: NSTableView, menuForRows: IndexSet) -> NSMenu?
 }
 public extension NSTableView {
 	
@@ -293,7 +294,7 @@ public extension NSTableView {
 		
 		var selected = self.selectedRowIndexes
 		if !selected.contains(row) {
-			selected = NSIndexSet(index: row)
+			selected = IndexSet(index: row)
 			// Enable this to select the row upon menu-click.
 			//self.selectRowIndexes(selected, byExtendingSelection: false)
 		}
@@ -301,7 +302,7 @@ public extension NSTableView {
 		// As a last resort, if the row was selected alone, ask the view.
 		//let view = self.view(atColumn: 0, row: row, makeIfNecessary: false)
 		
-		if let d = self.delegate() as? NSTableViewContextMenuDelegate {
+		if let d = self.delegate as? NSTableViewContextMenuDelegate {
 			return d.tableView(self, menuForRows: selected)
 		}
 		return super.menu(for: event)

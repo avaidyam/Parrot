@@ -16,21 +16,21 @@ internal extension String {
 	}
 	
 	internal func encodeURL() -> String {
-		return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed())!
+		return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
 	}
 	
 	// Will return any JSON object, array, number, or string.
 	// If there is an error, the error will be presented instead.
 	// Allows fragments, and always returns mutable object types.
 	internal func decodeJSON() throws -> AnyObject {
-		let _str = (self as NSString).data(using: NSUTF8StringEncoding)
+		let _str = (self as NSString).data(using: String.Encoding.utf8.rawValue)
 		guard let _ = _str else {
-			throw NSError(domain: NSStringEncodingErrorKey, code: Int(NSUTF8StringEncoding), userInfo: nil)
+			throw NSError(domain: NSStringEncodingErrorKey, code: Int(String.Encoding.utf8.rawValue), userInfo: nil)
 		}
 		
-		let options: NSJSONReadingOptions = [.allowFragments, .mutableContainers, .mutableLeaves]
+		let options: JSONSerialization.ReadingOptions = [.allowFragments, .mutableContainers, .mutableLeaves]
 		do {
-			let obj = try NSJSONSerialization.jsonObject(with: _str!, options: options)
+			let obj = try JSONSerialization.jsonObject(with: _str!, options: options)
 			return obj
 		} catch {
 			throw error
@@ -41,13 +41,13 @@ internal extension String {
 	// If there is an error, the error will be presented instead.
 	// Allows fragments and can optionally return a pretty-printed string.
 	internal static func encodeJSON(object: AnyObject, pretty: Bool = false) throws -> String {
-		let options: NSJSONWritingOptions = pretty ? [.prettyPrinted] : []
+		let options: JSONSerialization.WritingOptions = pretty ? [.prettyPrinted] : []
 		do {
-			let obj = try NSJSONSerialization.data(withJSONObject: object, options: options)
-			let str = NSString(data: obj, encoding: NSUTF8StringEncoding) as? String
+			let obj = try JSONSerialization.data(withJSONObject: object, options: options)
+			let str = NSString(data: obj, encoding: String.Encoding.utf8.rawValue) as? String
 			
 			guard let _ = str else {
-				throw NSError(domain: NSStringEncodingErrorKey, code: Int(NSUTF8StringEncoding), userInfo: nil)
+				throw NSError(domain: NSStringEncodingErrorKey, code: Int(String.Encoding.utf8.rawValue), userInfo: nil)
 			}
 			return str!
 		} catch {
@@ -72,7 +72,7 @@ public extension String {
 	}
 	
 	public func findAllOccurrences(matching regex: String, all: Bool = false) -> [String] {
-		let nsregex = try! NSRegularExpression(pattern: regex, options: .caseInsensitive)
+		let nsregex = try! RegularExpression(pattern: regex, options: .caseInsensitive)
 		let results = nsregex.matches(in: self, options:[],
 		                              range:NSMakeRange(0, self.characters.count))
 		
@@ -94,7 +94,7 @@ internal extension Dictionary {
 	// "%63%74%79%70%65=%68%61%6E%67%6F%75%74%73&%56%45%52=%38&%52%49%44=%38%31%31%38%38"
 	// instead of "ctype=hangouts&VER=8&RID=81188"
 	internal func encodeURL() -> String {
-		let set = NSCharacterSet(charactersIn: ":/?&=;+!@#$()',*")
+		let set = CharacterSet(charactersIn: ":/?&=;+!@#$()',*")
 		
 		var parts = [String]()
 		for (key, value) in self {
@@ -112,32 +112,32 @@ internal extension Dictionary {
 // Since we can't use nil in JSON arrays due to the parser.
 internal let None = NSNull()
 
-// Provides equality and comparison operators for NSDate
-public func <=(lhs: NSDate, rhs: NSDate) -> Bool {
+// Provides equality and comparison operators for Date
+public func <=(lhs: Date, rhs: Date) -> Bool {
 	let res = lhs.compare(rhs)
 	return res == .orderedAscending || res == .orderedSame
 }
-public func >=(lhs: NSDate, rhs: NSDate) -> Bool {
+public func >=(lhs: Date, rhs: Date) -> Bool {
 	let res = lhs.compare(rhs)
 	return res == .orderedDescending || res == .orderedSame
 }
-public func >(lhs: NSDate, rhs: NSDate) -> Bool {
+public func >(lhs: Date, rhs: Date) -> Bool {
 	return lhs.compare(rhs) == .orderedDescending
 }
-public func <(lhs: NSDate, rhs: NSDate) -> Bool {
+public func <(lhs: Date, rhs: Date) -> Bool {
 	return lhs.compare(rhs) == .orderedAscending
 }
-public func ==(lhs: NSDate, rhs: NSDate) -> Bool {
+public func ==(lhs: Date, rhs: Date) -> Bool {
 	return lhs.compare(rhs) == .orderedSame
 }
 
 // Microseconds
-// Convert a microsecond timestamp to an NSDate instance.
+// Convert a microsecond timestamp to an Date instance.
 // Convert UTC datetime to microsecond timestamp used by Hangouts.
 private let MicrosecondsPerSecond: Double = 1000000.0
-public extension NSDate {
-	public static func from(UTC: Double) -> NSDate {
-		return NSDate(timeIntervalSince1970: (UTC / MicrosecondsPerSecond))
+public extension Date {
+	public static func from(UTC: Double) -> Date {
+		return Date(timeIntervalSince1970: (UTC / MicrosecondsPerSecond))
 	}
 	public func toUTC() -> Double {
 		return self.timeIntervalSince1970 * MicrosecondsPerSecond

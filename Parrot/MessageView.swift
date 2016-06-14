@@ -10,7 +10,7 @@ public struct Message: Equatable {
 	var string: NSString
 	var orientation: NSUserInterfaceLayoutDirection
 	var color: NSColor
-	var time: NSDate
+	var time: Date
 }
 
 // Message: Equatable
@@ -59,9 +59,9 @@ public class MessageView : NSTableCellView {
 		}
 	}
 	
-	private class func attributedStringForText(_ text: String) -> NSAttributedString {
+	private class func attributedStringForText(_ text: String) -> AttributedString {
 		let attrString = NSMutableAttributedString(string: text)
-		let linkDetector = try! NSDataDetector(types: NSTextCheckingType.link.rawValue)
+		let linkDetector = try! DataDetector(types: TextCheckingResult.CheckingType.link.rawValue)
 		for match in linkDetector.matches(in: text, options: [], range: NSMakeRange(0, text.characters.count)) {
 			if let url = match.url {
 				attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
@@ -72,7 +72,7 @@ public class MessageView : NSTableCellView {
 				)
 				
 				// TESTING:
-				_ = try? LinkPreviewParser.parse(link: url.absoluteString)
+				_ = try? LinkPreviewParser.parse(link: url.absoluteString!)
 			}
 		}
 		return attrString
@@ -85,7 +85,7 @@ public class MessageView : NSTableCellView {
 				return
 			}
 			
-			let f = NSDateFormatter()
+			let f = DateFormatter()
 			f.dateStyle = .fullStyle
 			f.timeStyle = .longStyle
 			
@@ -182,19 +182,19 @@ public class MessageView : NSTableCellView {
         }
     }*/
 	
-    private class func widthOfText(backgroundWidth: CGFloat) -> CGFloat {
+    private class func widthOfText(_ backgroundWidth: CGFloat) -> CGFloat {
         return backgroundWidth
             - MessageView.TextBorder.r
             - MessageView.TextBorder.l
     }
 
-    private class func widthOfBackground(textWidth: CGFloat) -> CGFloat {
+    private class func widthOfBackground(_ textWidth: CGFloat) -> CGFloat {
         return textWidth
             + MessageView.TextBorder.r
             + MessageView.TextBorder.l
 	}
 	
-	private class func textSizeInWidth(text: NSString, width: CGFloat) -> CGSize {
+	private class func textSizeInWidth(_ text: NSString, width: CGFloat) -> CGSize {
 		var size = text.boundingRect(
 			with: NSMakeSize(width, 0),
 			options: [
@@ -206,8 +206,8 @@ public class MessageView : NSTableCellView {
 		return size
 	}
 	
-	internal class func heightForContainerWidth(text: NSString, width: CGFloat) -> CGFloat {
-		let size = textSizeInWidth(text: text, width: widthOfText(backgroundWidth: (width * FillPercentage.x)))
+	internal class func heightForContainerWidth(_ text: NSString, width: CGFloat) -> CGFloat {
+		let size = textSizeInWidth(text, width: widthOfText((width * FillPercentage.x)))
 		let height = size.height + TextBorder.t + TextBorder.b
 		return height
 	}

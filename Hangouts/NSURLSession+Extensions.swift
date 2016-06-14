@@ -3,10 +3,10 @@ import Foundation
 // Quick clone of Alamofire's Result class.
 // Note: instead of isSuccess/isFailure, try: guard let _ = result.data else {}
 public enum Result {
-	case Success(NSData, NSURLResponse?)
-	case Failure(NSError, NSURLResponse?)
+	case Success(Data, URLResponse?)
+	case Failure(NSError, URLResponse?)
 	
-	public var data: NSData? {
+	public var data: Data? {
 		switch self {
 		case .Success(let (data, _)):
 			return data
@@ -24,7 +24,7 @@ public enum Result {
 		}
 	}
 	
-	public var response: NSURLResponse? {
+	public var response: URLResponse? {
 		switch self {
 		case .Success(let (_, response)):
 			return response
@@ -35,26 +35,26 @@ public enum Result {
 }
 
 // For creating tasks off the main thread but still one-by-one.
-private var q = dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT)
+private var q = DispatchQueue(label: "", attributes: .concurrent, target: nil)
 
-public extension NSURLSession {
+public extension URLSession {
 	
 	/* TODO: Many different session task types are not supported yet. */
 	public enum RequestType {
-		case Data, UploadData(NSData), UploadFile(NSURL)
-		//case Stream(NSInputStream), Download, DownloadResume(NSData)
+		case Data, UploadData(Foundation.Data), UploadFile(URL)
+		//case Stream(NSInputStream), Download, DownloadResume(Data)
 	}
 	
 	// MUCH simpler utilities for working with data requests.
 	// Essentially acts as a "one-size-fits-all" factory method.
 	// By default the request type will be data, and the task is auto-started.
 	@discardableResult
-	public func request(request: NSURLRequest, type: RequestType = .Data,
-						start: Bool = true, handler: (Result) -> Void) -> NSURLSessionTask
+	public func request(request: URLRequest, type: RequestType = .Data,
+						start: Bool = true, handler: (Result) -> Void) -> URLSessionTask
 	{
-		var task: NSURLSessionTask? = nil
-		dispatch_sync(q!) {
-			let cb: (NSData?, NSURLResponse?, NSError?) -> Void = { data, response, error in
+		var task: URLSessionTask? = nil
+		q.sync {
+			let cb: (Data?, URLResponse?, NSError?) -> Void = { data, response, error in
 				if let error = error {
 					handler(Result.Failure(error, response))
 				} else {
@@ -94,8 +94,8 @@ public func escape(string: String) -> String {
 	let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
 	let subDelimitersToEncode = "!$&'()*+,;="
 	
-	let allowedCharacterSet = NSCharacterSet.urlQueryAllowed().mutableCopy() as! NSMutableCharacterSet
-	allowedCharacterSet.removeCharacters(in: generalDelimitersToEncode + subDelimitersToEncode)
+	var allowedCharacterSet = CharacterSet.urlQueryAllowed
+	allowedCharacterSet.remove(charactersIn: generalDelimitersToEncode + subDelimitersToEncode)
 	
 	return string.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? string
 }
@@ -135,18 +135,18 @@ public let _defaultHTTPHeaders: [String: String] = {
 	let acceptEncoding: String = "gzip;q=1.0, compress;q=0.5"
 	
 	// Accept-Language HTTP Header; see https://tools.ietf.org/html/rfc7231#section-5.3.5
-	let acceptLanguage = NSLocale.preferredLanguages().prefix(6).enumerated().map { index, languageCode in
+	let acceptLanguage = Locale.preferredLanguages().prefix(6).enumerated().map { index, languageCode in
 		let quality = 1.0 - (Double(index) * 0.1)
 		return "\(languageCode);q=\(quality)"
 	}.joined(separator: ", ")
 	
 	// User-Agent Header; see https://tools.ietf.org/html/rfc7231#section-5.5.3
 	let userAgent: String = {
-		if let info = NSBundle.main().infoDictionary {
+		if let info = Bundle.main().infoDictionary {
 			let executable: AnyObject = info[kCFBundleExecutableKey as String] ?? "Unknown"
 			let bundle: AnyObject = info[kCFBundleIdentifierKey as String] ?? "Unknown"
 			let version: AnyObject = info[kCFBundleVersionKey as String] ?? "Unknown"
-			let os: AnyObject = NSProcessInfo.processInfo().operatingSystemVersionString ?? "Unknown"
+			let os: AnyObject = ProcessInfo.processInfo().operatingSystemVersionString ?? "Unknown"
 			
 			var mutableUserAgent = NSMutableString(string: "\(executable)/\(bundle) (\(version); OS \(os))") as CFMutableString
 			let transform = NSString(string: "Any-Latin; Latin-ASCII; [:^ASCII:] Remove") as CFString

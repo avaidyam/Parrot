@@ -5,7 +5,7 @@ import Alamofire
 /* TODO: Auto-turn a callback into a blocking using semaphores. */
 /* TODO: Remove Alamofire dependency - stream{}. */
 
-public final class Channel : NSObject, NSURLSessionDataDelegate {
+public final class Channel : NSObject, URLSessionDataDelegate {
 	
 	// The prefix for any BrowserChannel endpoint.
 	private static let URLPrefix = "https://0.client-channel.google.com/client-channel"
@@ -18,11 +18,11 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	private static let maxRetries = 5
 	
 	// NotificationCenter notification and userInfo keys.
-	public static let didConnectNotification = "Hangouts.Channel.DidConnect"
-	public static let didReconnectNotification = "Hangouts.Channel.DidReconnect"
-	public static let didDisconnectNotification = "Hangouts.Channel.DidDisconnect"
-	public static let didReceiveMessageNotification = "Hangouts.Channel.ReceiveMessage"
-	public static let didReceiveMessageKey = "Hangouts.Channel.ReceiveMessage.Key"
+	public static let didConnectNotification = NSNotification.Name(rawValue: "Hangouts.Channel.DidConnect")
+	public static let didReconnectNotification = NSNotification.Name(rawValue: "Hangouts.Channel.DidReconnect")
+	public static let didDisconnectNotification = NSNotification.Name(rawValue: "Hangouts.Channel.DidDisconnect")
+	public static let didReceiveMessageNotification = NSNotification.Name(rawValue: "Hangouts.Channel.ReceiveMessage")
+	public static let didReceiveMessageKey = NSNotification.Name(rawValue: "Hangouts.Channel.ReceiveMessage.Key")
 	
 	// Parse data from the backward channel into chunks.
 	// Responses from the backward channel consist of a sequence of chunks which
@@ -31,7 +31,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	// entire chunk has been received.
 	internal class ChunkParser {
 		
-		internal var buf = NSMutableData()
+		internal var buf = Data()
 		
 		// Yield submissions generated from received data.
 		// Responses from the push endpoint consist of a sequence of submissions.
@@ -45,14 +45,14 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 		// encoding everything in UTF-16 and multipling the reported length by 2.
 		// Note that when encoding a string in UTF-16, Python will prepend a
 		// byte-order character, so we need to remove the first two bytes.
-		internal func getChunks(newBytes: NSData) -> [String] {
+		internal func getChunks(newBytes: Data) -> [String] {
 			buf.append(newBytes)
 			var submissions = [String]()
 			
-			while buf.length > 0 {
+			while buf.count > 0 {
 				if let decoded = bestEffortDecode(data: buf) {
-					let bufUTF16 = decoded.data(using: NSUTF16BigEndianStringEncoding)!
-					let decodedUtf16LengthInChars = bufUTF16.length / 2
+					let bufUTF16 = decoded.data(using: String.Encoding.utf16BigEndian)!
+					let decodedUtf16LengthInChars = bufUTF16.count / 2
 					
 					let lengths = decoded.findAllOccurrences(matching: "([0-9]+)\n", all: true)
 					if let length_str = lengths.first { //length_str.endIndex.advancedBy(n: -1)
@@ -62,14 +62,14 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 								break
 							}
 							
-							let subData = bufUTF16.subdata(with: NSMakeRange(length_str.characters.count * 2, length * 2))
-							let submission = NSString(data: subData, encoding: NSUTF16BigEndianStringEncoding)! as String
+							let subData = bufUTF16.subdata(in: length_str.characters.count * 2..<length * 2)
+							let submission = NSString(data: subData, encoding: String.Encoding.utf16BigEndian.rawValue)! as String
 							submissions.append(submission)
 							
-							let submissionAsUTF8 = submission.data(using: NSUTF8StringEncoding)!
+							let submissionAsUTF8 = submission.data(using: String.Encoding.utf8)!
 							
-							let removeRange = NSMakeRange(0, length_str.characters.count + submissionAsUTF8.length)
-							buf.replaceBytes(in: removeRange, withBytes: nil, length: 0)
+							let removeRange: Range<Int> = 0..<(length_str.characters.count + submissionAsUTF8.count)
+							buf.resetBytes(in: removeRange)
 						} else {
 							break
 						}
@@ -84,9 +84,9 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 		// Decode data_bytes into a string using UTF-8.
 		// If data_bytes cannot be decoded, pop the last byte until it can be or
 		// return an empty string.
-		private func bestEffortDecode(data: NSData) -> String? {
-			for i in 0 ..< data.length {
-				if let s = NSString(data: data.subdata(with: NSMakeRange(0, data.length - i)), encoding: NSUTF8StringEncoding) {
+		private func bestEffortDecode(data: Data) -> String? {
+			for i in 0 ..< data.count {
+				if let s = NSString(data: data.subdata(in: 0..<(data.count - i)), encoding: String.Encoding.utf8.rawValue) {
 					return s as String
 				}
 			}
@@ -95,7 +95,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	}
 	
 	// For use in Client:
-	internal var session = NSURLSession()
+	internal var session = URLSession()
 	
     private var isConnected = false
     private var onConnectCalled = false
@@ -107,12 +107,12 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	
 	private let manager: Alamofire.Manager
 	
-	public init(configuration: NSURLSessionConfiguration) {
+	public init(configuration: URLSessionConfiguration) {
 		//super.init()
-		//session = NSURLSession(configuration: configuration,
+		//session = URLSession(configuration: configuration,
 		//                       delegate: self, delegateQueue: nil)
 		
-		session = NSURLSession(configuration: configuration,
+		session = URLSession(configuration: configuration,
 			delegate: Manager.SessionDelegate(), delegateQueue: nil)
 		self.manager = Manager(session: session,
 			delegate: (session.delegate as! Manager.SessionDelegate))!
@@ -136,14 +136,14 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
             // became invalid.
             if self.needsSID {
 				
-				let s = dispatch_semaphore_create(0)
+				let s = DispatchSemaphore(value: 0)
 				
 				self.fetchChannelSID {
-					dispatch_semaphore_signal(s!)
+					s.signal()
 				}
 				
 				// FIXME: Deadlocks here after network disconnection.
-				dispatch_semaphore_wait(s!, DISPATCH_TIME_FOREVER)
+				s.wait(timeout: DispatchTime.distantFuture)
 				self.needsSID = false
             }
 
@@ -173,7 +173,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	}
 	
 	// Sends a request to the server containing maps (dicts).
-	public func sendMaps(mapList: [[String: AnyObject]]? = nil, cb: ((NSData) -> Void)? = nil) {
+	public func sendMaps(mapList: [[String: AnyObject]]? = nil, cb: ((Data) -> Void)? = nil) {
 		var params = [
 			"VER":		8,			// channel protocol version
 			"RID":		81188,		// request identifier
@@ -200,10 +200,10 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 		}
 		
 		let url = "\(Channel.URLPrefix)/channel/bind?\(params.encodeURL())"
-		let request = NSMutableURLRequest(url: NSURL(string: url)!)
+		var request = URLRequest(url: URL(string: url)!)
 		request.httpMethod = "POST"
 		/* TODO: Clearly, we shouldn't call encodeURL(), but what do we do? */
-		request.httpBody = data_dict.encodeURL().data(using: NSUTF8StringEncoding,
+		request.httpBody = data_dict.encodeURL().data(using: String.Encoding.utf8,
 			allowLossyConversion: false)!
 		for (k, v) in getAuthorizationHeaders(sapisid_cookie: Channel.getCookieValue(key: "SAPISID")!) {
 			request.setValue(v, forHTTPHeaderField: k)
@@ -234,7 +234,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 		]
 		
 		let url = "\(Channel.URLPrefix)/channel/bind?\(params.encodeURL())"
-		let request = NSMutableURLRequest(url: NSURL(string: url)!)
+		var request = URLRequest(url: URL(string: url)!)
 		request.timeoutInterval = Double(Channel.connectTimeout)
 		for (k, v) in getAuthorizationHeaders(sapisid_cookie: Channel.getCookieValue(key: "SAPISID")!) {
 			request.setValue(v, forHTTPHeaderField: k)
@@ -242,9 +242,9 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 		
 		/* TODO: Make sure stream{} times out with PUSH_TIMEOUT. */
 		
-		manager.request(URLRequest: request)
+		manager.request(urlRequest: request)
 			.stream { (data: NSData) in
-				self.onPushData(data: data)
+				self.onPushData(data: data as Data)
 			}.responseData { response in
 			if response.result.isFailure { // response.response?.statusCode >= 400
 				/* TODO: Sometimes things fail here, not sure why yet. */
@@ -260,7 +260,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 				// doesn't work right though.
 			} else {
 				print("Received unknown response code \(response.response?.statusCode)")
-				print(NSString(data: response.result.value!, encoding: 4)! as String)
+				print(NSString(data: response.result.value! as Data, encoding: 4)! as String)
 			}
 		}
 	}
@@ -282,7 +282,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	
 	// Delay subscribing until first byte is received prevent "channel not
 	// ready" errors that appear to be caused by a race condition on the server.
-    private func onPushData(data: NSData) {
+    private func onPushData(data: Data) {
 		for chunk in (self.chunkParser?.getChunks(newBytes: data))! {
 			
 			// This method is only called when the long-polling request was
@@ -290,12 +290,12 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 			if !self.isConnected {
 				if self.onConnectCalled {
 					self.isConnected = true
-					NSNotificationCenter.default()
+					NotificationCenter.default()
 						.post(name: Channel.didReconnectNotification, object: self)
 				} else {
 					self.onConnectCalled = true
 					self.isConnected = true
-					NSNotificationCenter.default()
+					NotificationCenter.default()
 						.post(name: Channel.didConnectNotification, object: self)
 				}
 			}
@@ -304,7 +304,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 				for inner in container {
 					//let array_id = inner[0]
 					if let array = inner[1] as? [AnyObject] {
-						NSNotificationCenter.default()
+						NotificationCenter.default()
 							.post(name: Channel.didReceiveMessageNotification, object: self,
 								userInfo: [Channel.didReceiveMessageKey: array])
 					}
@@ -315,10 +315,10 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	
 	// Get the cookie value of the key given from the NSHTTPCookieStorage.
 	internal class func getCookieValue(key: String) -> String? {
-		if let c = NSHTTPCookieStorage.shared().cookies {
+		if let c = HTTPCookieStorage.shared().cookies {
 			if let match = (c.filter {
-				($0 as NSHTTPCookie).name == key &&
-					($0 as NSHTTPCookie).domain == ".google.com"
+				($0 as HTTPCookie).name == key &&
+					($0 as HTTPCookie).domain == ".google.com"
 				}).first {
 					return match.value
 			}
@@ -330,7 +330,7 @@ public final class Channel : NSObject, NSURLSessionDataDelegate {
 	//  Example format (after parsing JS):
 	//  [   [0,["c","SID_HERE","",8]],
 	//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
-	internal class func parseSIDResponse(res: NSData) -> (sid: String, gSessionID: String) {
+	internal class func parseSIDResponse(res: Data) -> (sid: String, gSessionID: String) {
 		if let firstSubmission = Channel.ChunkParser().getChunks(newBytes: res).first {
 			let val = evalArray(string: firstSubmission)!
 			let sid = ((val[0] as! NSArray)[1] as! NSArray)[1] as! String

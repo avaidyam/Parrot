@@ -2,19 +2,19 @@ import Foundation
 
 // Finally, matching operations where append*() was applicable, for remove*()
 public extension Array where Element : Equatable {
-	public mutating func remove(item: Element) {
+	public mutating func remove(_ item: Element) {
 		if let index = self.index(of: item) {
 			self.remove(at: index)
 		}
 	}
 	
-	public mutating func removeContentsOf<S : Sequence where S.Iterator.Element == Element>(newElements: S) {
+	public mutating func removeContentsOf<S : Sequence where S.Iterator.Element == Element>(_ newElements: S) {
 		for object in newElements {
 			self.remove(item: object)
 		}
 	}
 	
-	public mutating func removeContentsOf<C : Collection where C.Iterator.Element == Element>(newElements: C) {
+	public mutating func removeContentsOf<C : Collection where C.Iterator.Element == Element>(_ newElements: C) {
 		for object in newElements {
 			self.remove(item: object)
 		}
@@ -31,8 +31,8 @@ public class Wrapper<T> {
 
 // A nifty wrapper around NSOperationQueue (which is itself, a wrapper
 // of dispatch_queue_t) to provide simple chaining and whatnot.
-public typealias Dispatch = NSOperationQueue
-public extension NSOperationQueue {
+public typealias Dispatch = OperationQueue
+public extension OperationQueue {
 	
 	@discardableResult
 	public func pause() -> Self {
@@ -59,45 +59,45 @@ public extension NSOperationQueue {
 	}
 	
 	@discardableResult
-	public func quality(quality: NSQualityOfService) -> Self {
+	public func quality(_ quality: QualityOfService) -> Self {
 		self.qualityOfService = quality
 		return self
 	}
 	
 	@discardableResult
-	public func add(block: () -> Void) -> Self {
-		self.addOperation(NSBlockOperation(block: block))
+	public func add(_ block: () -> Void) -> Self {
+		self.addOperation(BlockOperation(block: block))
 		return self
 	}
 }
 
 // Wrap a Dispatch Semaphore in a nice struct.
 public struct Semaphore {
-	let rawValue: dispatch_semaphore_t
+	let rawValue: DispatchSemaphore
 	
 	init(count: Int = 0) {
-		self.rawValue = dispatch_semaphore_create(count)
+		self.rawValue = DispatchSemaphore(value: count)
 	}
 	
 	@discardableResult
 	public func signal() -> Int {
-		return dispatch_semaphore_signal(self.rawValue)
+		return self.rawValue.signal()
 	}
 	
 	/* TODO: Use dispatch_time_t until we replace it nicely. */
 	@discardableResult
-	public func wait(timeout: dispatch_time_t = DISPATCH_TIME_FOREVER) -> Int {
-		return dispatch_semaphore_wait(self.rawValue, timeout)
+	public func wait(_ timeout: DispatchTime = DispatchTime.distantFuture) -> Int {
+		return self.rawValue.wait(timeout: timeout)
 	}
 }
 
 // alias for the UI thread
-public func UI(block: () -> Void) {
-	Dispatch.main().add(block: block)
+public func UI(_ block: () -> Void) {
+	Dispatch.main().add(block)
 }
 
 // Provides the old-style @synchronized {} statements from Objective-C.
-public func Synchronized(lock: AnyObject, closure: () -> ()) {
+public func Synchronized(_ lock: AnyObject, closure: () -> ()) {
 	objc_sync_enter(lock)
 	closure()
 	objc_sync_exit(lock)
@@ -107,7 +107,7 @@ public func Synchronized(lock: AnyObject, closure: () -> ()) {
 /// Simplified for internal use only.
 public struct NSActivity {
 	public static var activities = [String: NSObjectProtocol]()
-	public static let mode: NSActivityOptions = [
+	public static let mode: ProcessInfo.ActivityOptions = [
 		.userInitiated, // every Parrot action MUST be user-initiated
 		.suddenTerminationDisabled, // prevent termination during action
 		.automaticTerminationDisabled, // prevent termination during action
@@ -119,13 +119,13 @@ public struct NSActivity {
 	]
 	
 	public static func begin(_ string: String) {
-		let holder = NSProcessInfo.processInfo().beginActivity(mode, reason: string)
+		let holder = ProcessInfo.processInfo().beginActivity(mode, reason: string)
 		activities[string] = holder
 	}
 	
 	public static func end(_ string: String) {
 		if let act = activities[string] {
-			NSProcessInfo.processInfo().endActivity(act)
+			ProcessInfo.processInfo().endActivity(act)
 		}
 	}
 }

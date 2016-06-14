@@ -109,7 +109,7 @@ public extension LayoutRegion {
 
 infix operator ~ { associativity left precedence 120 }
 public func ~ (lhs: NSLayoutConstraint, rhs: NSLayoutPriority) -> NSLayoutConstraint {
-	let newConstraint = NSLayoutConstraint(item: lhs.firstItem, attribute: lhs.firstAttribute,
+	let newConstraint = NSLayoutConstraint(item: lhs.firstItem!, attribute: lhs.firstAttribute,
 		relatedBy: lhs.relation, toItem: lhs.secondItem, attribute: lhs.secondAttribute,
 		multiplier: lhs.multiplier, constant: lhs.constant)
 	newConstraint.priority = rhs

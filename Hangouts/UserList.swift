@@ -45,11 +45,11 @@ public class UserList {
 			}
 		}
 		
-		self.observer = NSNotificationCenter.default()
+		self.observer = NotificationCenter.default()
 			.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) {
 			
 			if let userInfo = $0.userInfo,
-				state_update = userInfo[Client.didUpdateStateKey as NSString] {
+				state_update = userInfo[Client.didUpdateStateKey.rawValue] {
 				
 				if let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
 					for participant in conversation.participantData {
@@ -65,20 +65,21 @@ public class UserList {
 	}
 	
 	deinit {
-		NSNotificationCenter.default().removeObserver(self.observer!)
+		NotificationCenter.default().removeObserver(self.observer!)
 	}
 }
 
 // UserList Collection support.
 extension UserList: Collection {
 	public typealias Index = DictionaryIndex<UserID, User>
+	public typealias SubSequence = Slice<LazyMapCollection<Dictionary<UserID, User>, User>>
 	
 	public var startIndex : Index {
 		return self.users.values.startIndex
 	}
 	
 	public var endIndex : Index {
-		return self.users.values.startIndex
+		return self.users.values.endIndex
 	}
 	
 	public func index(after i: Index) -> Index {
@@ -93,7 +94,7 @@ extension UserList: Collection {
 		return self.users.values[index]
 	}
 	
-	public subscript(bounds: Range<Index>) -> [Index] {
-		return [] // FIXME!!!
+	public subscript(bounds: Range<Index>) -> SubSequence {
+		return self.users.values[bounds]
 	}
 }

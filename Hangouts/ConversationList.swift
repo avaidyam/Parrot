@@ -1,4 +1,4 @@
-import Foundation // NSDate
+import Foundation // Date
 
 public protocol ConversationListDelegate {
     func conversationList(list: ConversationList, didReceiveEvent event: IEvent)
@@ -13,7 +13,7 @@ public class ConversationList {
 	
     public let client: Client
     private var conv_dict = [String : IConversation]()
-    public var sync_timestamp: NSDate
+    public var sync_timestamp: Date
     public let user_list: UserList
 	
 	public var delegate: ConversationListDelegate?
@@ -21,7 +21,7 @@ public class ConversationList {
 
     public init(client: Client, conv_states: [ConversationState], user_list: UserList, sync_timestamp: UInt64?) {
         self.client = client
-		self.sync_timestamp = NSDate.from(UTC: Double(sync_timestamp ?? 0))//NSDate(timeIntervalSince1970: 0)
+		self.sync_timestamp = Date.from(UTC: Double(sync_timestamp ?? 0))//Date(timeIntervalSince1970: 0)
         self.user_list = user_list
 		
         // Initialize the list of conversations from Client's list of ClientConversationStates.
@@ -33,7 +33,7 @@ public class ConversationList {
 		// A notification-based delegate replacement:
 		//
 		
-		let _c = NSNotificationCenter.default()
+		let _c = NotificationCenter.default()
 		let a = _c.addObserver(forName: Client.didConnectNotification, object: client, queue: nil) { _ in
 			self.sync()
 		}
@@ -44,7 +44,7 @@ public class ConversationList {
 			// nothing here
 		}
 		let d = _c.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) { note in
-			if let val = (note.userInfo as! [String: AnyObject])[Client.didUpdateStateKey] as? Wrapper<StateUpdate> {
+			if let val = (note.userInfo)?[Client.didUpdateStateKey.rawValue] as? Wrapper<StateUpdate> {
 				self.clientDidUpdateState(client: self.client, update: val.element)
 			} else {
 				print("Encountered an error! \(note)")
@@ -57,7 +57,7 @@ public class ConversationList {
 		
 		// Remove all the observers so we aren't receiving calls later on.
 		self.tokens.forEach {
-			NSNotificationCenter.default().removeObserver($0)
+			NotificationCenter.default().removeObserver($0)
 		}
 	}
 
@@ -112,7 +112,7 @@ public class ConversationList {
 	
 	// Receive a ClientEvent and fan out to Conversations
     public func on_client_event(event: Event) {
-        sync_timestamp = NSDate.from(UTC: Double(event.timestamp ?? 0))
+        sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
         if let conv = conv_dict[event.conversationId!.id!] {
             let conv_event = conv.add_event(event: event)
 

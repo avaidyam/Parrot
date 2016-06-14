@@ -6,10 +6,10 @@ class RequestHandler: NSObject, NSExtensionRequestHandling {
         extensionItem.userInfo = [
 			"uniqueIdentifier": "uniqueIdentifierForSampleItem",
 			"urlString": "http://apple.com",
-			"date": NSDate()
+			"date": Date()
 		]
-        extensionItem.attributedTitle = NSAttributedString(string: "Sample title")
-        extensionItem.attributedContentText = NSAttributedString(string: "Sample description text")
+        extensionItem.attributedTitle = AttributedString(string: "Sample title")
+        extensionItem.attributedContentText = AttributedString(string: "Sample description text")
         context.completeRequest(returningItems: [extensionItem], completionHandler: nil)
     }
 }

@@ -34,9 +34,9 @@ public extension NSColor {
 		
 		// Scan the color components into integers.
 		var r: UInt32 = 0, g: UInt32 = 0, b: UInt32 = 0
-		NSScanner(string: rh).scanHexInt32(&r)
-		NSScanner(string: gh).scanHexInt32(&g)
-		NSScanner(string: bh).scanHexInt32(&b)
+		Scanner(string: rh).scanHexInt32(&r)
+		Scanner(string: gh).scanHexInt32(&g)
+		Scanner(string: bh).scanHexInt32(&b)
 		
 		// Finally initialize with the calibrated color components.
 		self.init(calibratedRed: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0,

@@ -17,7 +17,7 @@ class ShareViewController: SLComposeServiceViewController {
         let inputItem = self.extensionContext!.inputItems[0] as! NSExtensionItem
     
         let outputItem = inputItem.copy() as! NSExtensionItem
-        outputItem.attributedContentText = NSAttributedString(string: self.contentText)
+        outputItem.attributedContentText = AttributedString(string: self.contentText)
         // Complete implementation by setting the appropriate value on the output item
     
         let outputItems = [outputItem]
@@ -31,7 +31,7 @@ class ShareViewController: SLComposeServiceViewController {
     }
 
     override func isContentValid() -> Bool {
-        let messageLength = self.contentText.trimmingCharacters(in: NSCharacterSet.whitespaces()).lengthOfBytes(using: NSUTF8StringEncoding)
+        let messageLength = self.contentText.trimmingCharacters(in: CharacterSet.whitespaces()).lengthOfBytes(using: String.Encoding.utf8)
         let charactersRemaining = 140 - messageLength
         self.charactersRemaining = charactersRemaining
         

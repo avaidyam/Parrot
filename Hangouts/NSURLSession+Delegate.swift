@@ -1,23 +1,23 @@
 import Foundation
 
-public class NSURLSessionTaskDelegateProxy: NSObject, NSURLSessionTaskDelegate {
+public class URLSessionTaskDelegateProxy: NSObject, URLSessionTaskDelegate {
 	
 	// Closure forms corresponding to each of the delegate methods.
-	public var willPerformHTTPRedirection: ((NSURLSession, NSURLSessionTask, NSHTTPURLResponse, NSURLRequest) -> NSURLRequest?)?
-	public var didReceiveChallenge: ((NSURLSession, NSURLSessionTask, NSURLAuthenticationChallenge) -> (NSURLSessionAuthChallengeDisposition, NSURLCredential?))?
-	public var needNewBodyStream: ((NSURLSession, NSURLSessionTask) -> NSInputStream?)?
-	public var didSendBodyData: ((NSURLSession, NSURLSessionTask, Int64, Int64, Int64) -> Void)?
-	public var didComplete: ((NSURLSession, NSURLSessionTask, NSError?) -> Void)?
+	public var willPerformHTTPRedirection: ((URLSession, URLSessionTask, HTTPURLResponse, URLRequest) -> URLRequest?)?
+	public var didReceiveChallenge: ((URLSession, URLSessionTask, URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?))?
+	public var needNewBodyStream: ((URLSession, URLSessionTask) -> InputStream?)?
+	public var didSendBodyData: ((URLSession, URLSessionTask, Int64, Int64, Int64) -> Void)?
+	public var didComplete: ((URLSession, URLSessionTask, NSError?) -> Void)?
 	
 	// Proxying delegate methods follow:
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
-		willPerformHTTPRedirection response: NSHTTPURLResponse,
-		newRequest request: NSURLRequest,
-		completionHandler: ((NSURLRequest?) -> Void))
+		_ session: URLSession,
+		task: URLSessionTask,
+		willPerformHTTPRedirection response: HTTPURLResponse,
+		newRequest request: URLRequest,
+		completionHandler: ((URLRequest?) -> Void))
 	{
-		var redirectRequest: NSURLRequest? = request
+		var redirectRequest: URLRequest? = request
 		if let willPerformHTTPRedirection = willPerformHTTPRedirection {
 			redirectRequest = willPerformHTTPRedirection(session, task, response, request)
 		}
@@ -25,10 +25,10 @@ public class NSURLSessionTaskDelegateProxy: NSObject, NSURLSessionTaskDelegate {
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
-		didReceive challenge: NSURLAuthenticationChallenge,
-		completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void))
+		_ session: URLSession,
+		task: URLSessionTask,
+		didReceive challenge: URLAuthenticationChallenge,
+		completionHandler: ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void))
 	{
 		if let didReceiveChallenge = didReceiveChallenge {
 			let (a, c) = didReceiveChallenge(session, task, challenge)
@@ -37,9 +37,9 @@ public class NSURLSessionTaskDelegateProxy: NSObject, NSURLSessionTaskDelegate {
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
-		needNewBodyStream completionHandler: ((NSInputStream?) -> Void))
+		_ session: URLSession,
+		task: URLSessionTask,
+		needNewBodyStream completionHandler: ((InputStream?) -> Void))
 	{
 		if let needNewBodyStream = needNewBodyStream {
 			completionHandler(needNewBodyStream(session, task))
@@ -47,8 +47,8 @@ public class NSURLSessionTaskDelegateProxy: NSObject, NSURLSessionTaskDelegate {
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
+		_ session: URLSession,
+		task: URLSessionTask,
 		didSendBodyData bytesSent: Int64,
 		totalBytesSent: Int64,
 		totalBytesExpectedToSend: Int64)
@@ -59,8 +59,8 @@ public class NSURLSessionTaskDelegateProxy: NSObject, NSURLSessionTaskDelegate {
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
+		_ session: URLSession,
+		task: URLSessionTask,
 		didCompleteWithError error: NSError?)
 	{
 		if let didComplete = didComplete {
@@ -69,22 +69,22 @@ public class NSURLSessionTaskDelegateProxy: NSObject, NSURLSessionTaskDelegate {
 	}
 }
 
-public class NSURLSessionDataDelegateProxy: NSURLSessionTaskDelegateProxy, NSURLSessionDataDelegate {
+public class URLSessionDataDelegateProxy: URLSessionTaskDelegateProxy, URLSessionDataDelegate {
 	
 	// Closure forms corresponding to each of the delegate methods.
-	public var didReceiveResponse: ((NSURLSession, NSURLSessionDataTask, NSURLResponse) -> NSURLSessionResponseDisposition)?
-	public var didBecomeDownloadTask: ((NSURLSession, NSURLSessionDataTask, NSURLSessionDownloadTask) -> Void)?
-	public var didReceiveData: ((NSURLSession, NSURLSessionDataTask, NSData) -> Void)?
-	public var willCacheResponse: ((NSURLSession, NSURLSessionDataTask, NSCachedURLResponse) -> NSCachedURLResponse?)?
+	public var didReceiveResponse: ((URLSession, URLSessionDataTask, URLResponse) -> URLSession.ResponseDisposition)?
+	public var didBecomeDownloadTask: ((URLSession, URLSessionDataTask, URLSessionDownloadTask) -> Void)?
+	public var didReceiveData: ((URLSession, URLSessionDataTask, Data) -> Void)?
+	public var willCacheResponse: ((URLSession, URLSessionDataTask, CachedURLResponse) -> CachedURLResponse?)?
 	
 	// Proxying delegate methods follow:
 	public func urlSession(
-		_ session: NSURLSession,
-		dataTask: NSURLSessionDataTask,
-		didReceive response: NSURLResponse,
-		completionHandler: ((NSURLSessionResponseDisposition) -> Void))
+		_ session: URLSession,
+		dataTask: URLSessionDataTask,
+		didReceive response: URLResponse,
+		completionHandler: ((URLSession.ResponseDisposition) -> Void))
 	{
-		var disposition: NSURLSessionResponseDisposition = .allow
+		var disposition: URLSession.ResponseDisposition = .allow
 		if let didReceiveResponse = didReceiveResponse {
 			disposition = didReceiveResponse(session, dataTask, response)
 		}
@@ -92,9 +92,9 @@ public class NSURLSessionDataDelegateProxy: NSURLSessionTaskDelegateProxy, NSURL
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		dataTask: NSURLSessionDataTask,
-		didBecome downloadTask: NSURLSessionDownloadTask)
+		_ session: URLSession,
+		dataTask: URLSessionDataTask,
+		didBecome downloadTask: URLSessionDownloadTask)
 	{
 		if let didBecomeDownloadTask = didBecomeDownloadTask {
 			didBecomeDownloadTask(session, dataTask, downloadTask)
@@ -102,9 +102,9 @@ public class NSURLSessionDataDelegateProxy: NSURLSessionTaskDelegateProxy, NSURL
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		dataTask: NSURLSessionDataTask,
-		didReceive data: NSData)
+		_ session: URLSession,
+		dataTask: URLSessionDataTask,
+		didReceive data: Data)
 	{
 		if let didReceiveData = didReceiveData {
 			didReceiveData(session, dataTask, data)
@@ -112,10 +112,10 @@ public class NSURLSessionDataDelegateProxy: NSURLSessionTaskDelegateProxy, NSURL
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		dataTask: NSURLSessionDataTask,
-		willCacheResponse proposedResponse: NSCachedURLResponse,
-		completionHandler: ((NSCachedURLResponse?) -> Void))
+		_ session: URLSession,
+		dataTask: URLSessionDataTask,
+		willCacheResponse proposedResponse: CachedURLResponse,
+		completionHandler: ((CachedURLResponse?) -> Void))
 	{
 		if let willCacheResponse = willCacheResponse {
 			completionHandler(willCacheResponse(session, dataTask, proposedResponse))
@@ -125,18 +125,18 @@ public class NSURLSessionDataDelegateProxy: NSURLSessionTaskDelegateProxy, NSURL
 	}
 }
 
-public class NSURLSessionDownloadDelegateProxy: NSURLSessionDataDelegateProxy, NSURLSessionDownloadDelegate {
+public class URLSessionDownloadDelegateProxy: URLSessionDataDelegateProxy, URLSessionDownloadDelegate {
 	
 	// Closure forms corresponding to each of the delegate methods.
-	public var didFinishDownloadingToURL: ((NSURLSession, NSURLSessionDownloadTask, NSURL) -> Void)?
-	public var didWriteData: ((NSURLSession, NSURLSessionDownloadTask, Int64, Int64, Int64) -> Void)?
-	public var didResumeAtOffset: ((NSURLSession, NSURLSessionDownloadTask, Int64, Int64) -> Void)?
+	public var didFinishDownloadingToURL: ((URLSession, URLSessionDownloadTask, URL) -> Void)?
+	public var didWriteData: ((URLSession, URLSessionDownloadTask, Int64, Int64, Int64) -> Void)?
+	public var didResumeAtOffset: ((URLSession, URLSessionDownloadTask, Int64, Int64) -> Void)?
 	
 	// Proxying delegate methods follow:
 	public func urlSession(
-		_ session: NSURLSession,
-		downloadTask: NSURLSessionDownloadTask,
-		didFinishDownloadingTo location: NSURL)
+		_ session: URLSession,
+		downloadTask: URLSessionDownloadTask,
+		didFinishDownloadingTo location: URL)
 	{
 		if let didFinishDownloadingToURL = didFinishDownloadingToURL {
 			didFinishDownloadingToURL(session, downloadTask, location)
@@ -144,8 +144,8 @@ public class NSURLSessionDownloadDelegateProxy: NSURLSessionDataDelegateProxy, N
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		downloadTask: NSURLSessionDownloadTask,
+		_ session: URLSession,
+		downloadTask: URLSessionDownloadTask,
 		didWriteData bytesWritten: Int64,
 		totalBytesWritten: Int64,
 		totalBytesExpectedToWrite: Int64)
@@ -156,8 +156,8 @@ public class NSURLSessionDownloadDelegateProxy: NSURLSessionDataDelegateProxy, N
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		downloadTask: NSURLSessionDownloadTask,
+		_ session: URLSession,
+		downloadTask: URLSessionDownloadTask,
 		didResumeAtOffset fileOffset: Int64,
 		expectedTotalBytes: Int64)
 	{
@@ -168,57 +168,57 @@ public class NSURLSessionDownloadDelegateProxy: NSURLSessionDataDelegateProxy, N
 }
 
 // Straight from Alamofire.
-public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate {
+public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate {
 	
 	// Internal management for subdelegates.
-	private var subdelegates: [Int: NSURLSessionTaskDelegateProxy] = [:]
-	private let subdelegateQueue = dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT)
+	private var subdelegates: [Int: URLSessionTaskDelegateProxy] = [:]
+	private let subdelegateQueue = DispatchQueue(label: "", attributes: .concurrent, target: nil)
 	
 	// Allows setting and getting subdelegates for handling a session's delegate call.
-	subscript(task: NSURLSessionTask) -> NSURLSessionTaskDelegateProxy? {
+	subscript(task: URLSessionTask) -> URLSessionTaskDelegateProxy? {
 		get {
-			var subdelegate: NSURLSessionTaskDelegateProxy?
-			dispatch_sync(subdelegateQueue!) { subdelegate = self.subdelegates[task.taskIdentifier] }
+			var subdelegate: URLSessionTaskDelegateProxy?
+			subdelegateQueue.sync { subdelegate = self.subdelegates[task.taskIdentifier] }
 			return subdelegate
 		}
 		set {
-			dispatch_barrier_async(subdelegateQueue!) { self.subdelegates[task.taskIdentifier] = newValue }
+			subdelegateQueue.async(group: nil, qos: .default, flags: .barrier) { self.subdelegates[task.taskIdentifier] = newValue }
 		}
 	}
 	
 	// Closure forms corresponding to each of the delegate methods.
 	// Note that this takes priority over a provided subdelegate.
-	public var sessionDidBecomeInvalidWithError: ((NSURLSession, NSError?) -> Void)?
-	public var sessionDidReceiveChallenge: ((NSURLSession, NSURLAuthenticationChallenge) -> (NSURLSessionAuthChallengeDisposition, NSURLCredential?))?
-	public var sessionDidFinishEventsForBackgroundURLSession: ((NSURLSession) -> Void)?
-	public var taskWillPerformHTTPRedirection: ((NSURLSession, NSURLSessionTask, NSHTTPURLResponse, NSURLRequest) -> NSURLRequest?)?
-	public var taskDidReceiveChallenge: ((NSURLSession, NSURLSessionTask, NSURLAuthenticationChallenge) -> (NSURLSessionAuthChallengeDisposition, NSURLCredential?))?
-	public var taskNeedNewBodyStream: ((NSURLSession, NSURLSessionTask) -> NSInputStream?)?
-	public var taskDidSendBodyData: ((NSURLSession, NSURLSessionTask, Int64, Int64, Int64) -> Void)?
-	public var taskDidComplete: ((NSURLSession, NSURLSessionTask, NSError?) -> Void)?
-	public var dataTaskDidReceiveResponse: ((NSURLSession, NSURLSessionDataTask, NSURLResponse) -> NSURLSessionResponseDisposition)?
-	public var dataTaskDidBecomeDownloadTask: ((NSURLSession, NSURLSessionDataTask, NSURLSessionDownloadTask) -> Void)?
-	public var dataTaskDidReceiveData: ((NSURLSession, NSURLSessionDataTask, NSData) -> Void)?
-	public var dataTaskWillCacheResponse: ((NSURLSession, NSURLSessionDataTask, NSCachedURLResponse) -> NSCachedURLResponse?)?
-	public var downloadTaskDidFinishDownloadingToURL: ((NSURLSession, NSURLSessionDownloadTask, NSURL) -> Void)?
-	public var downloadTaskDidWriteData: ((NSURLSession, NSURLSessionDownloadTask, Int64, Int64, Int64) -> Void)?
-	public var downloadTaskDidResumeAtOffset: ((NSURLSession, NSURLSessionDownloadTask, Int64, Int64) -> Void)?
+	public var sessionDidBecomeInvalidWithError: ((URLSession, NSError?) -> Void)?
+	public var sessionDidReceiveChallenge: ((URLSession, URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?))?
+	public var sessionDidFinishEventsForBackgroundURLSession: ((URLSession) -> Void)?
+	public var taskWillPerformHTTPRedirection: ((URLSession, URLSessionTask, HTTPURLResponse, URLRequest) -> URLRequest?)?
+	public var taskDidReceiveChallenge: ((URLSession, URLSessionTask, URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?))?
+	public var taskNeedNewBodyStream: ((URLSession, URLSessionTask) -> InputStream?)?
+	public var taskDidSendBodyData: ((URLSession, URLSessionTask, Int64, Int64, Int64) -> Void)?
+	public var taskDidComplete: ((URLSession, URLSessionTask, NSError?) -> Void)?
+	public var dataTaskDidReceiveResponse: ((URLSession, URLSessionDataTask, URLResponse) -> URLSession.ResponseDisposition)?
+	public var dataTaskDidBecomeDownloadTask: ((URLSession, URLSessionDataTask, URLSessionDownloadTask) -> Void)?
+	public var dataTaskDidReceiveData: ((URLSession, URLSessionDataTask, Data) -> Void)?
+	public var dataTaskWillCacheResponse: ((URLSession, URLSessionDataTask, CachedURLResponse) -> CachedURLResponse?)?
+	public var downloadTaskDidFinishDownloadingToURL: ((URLSession, URLSessionDownloadTask, URL) -> Void)?
+	public var downloadTaskDidWriteData: ((URLSession, URLSessionDownloadTask, Int64, Int64, Int64) -> Void)?
+	public var downloadTaskDidResumeAtOffset: ((URLSession, URLSessionDownloadTask, Int64, Int64) -> Void)?
 	
 	//
 	// Proxying delegate methods follow:
 	//
 	
-	public func urlSession(_ session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
+	public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: NSError?) {
 		sessionDidBecomeInvalidWithError?(session, error)
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		didReceive challenge: NSURLAuthenticationChallenge,
-		completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void))
+		_ session: URLSession,
+		didReceive challenge: URLAuthenticationChallenge,
+		completionHandler: ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void))
 	{
-		var disposition: NSURLSessionAuthChallengeDisposition = .performDefaultHandling
-		var credential: NSURLCredential?
+		var disposition: URLSession.AuthChallengeDisposition = .performDefaultHandling
+		var credential: URLCredential?
 		
 		if let sessionDidReceiveChallenge = sessionDidReceiveChallenge {
 			(disposition, credential) = sessionDidReceiveChallenge(session, challenge)
@@ -226,19 +226,19 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 		completionHandler(disposition, credential)
 	}
 	
-	public func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
+	public func URLSessionDidFinishEventsForBackgroundURLSession(session: URLSession) {
 		sessionDidFinishEventsForBackgroundURLSession?(session)
 	}
 	
 	// FIXME
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
-		willPerformHTTPRedirection response: NSHTTPURLResponse,
-		newRequest request: NSURLRequest,
-		completionHandler: ((NSURLRequest?) -> Void))
+		_ session: URLSession,
+		task: URLSessionTask,
+		willPerformHTTPRedirection response: HTTPURLResponse,
+		newRequest request: URLRequest,
+		completionHandler: ((URLRequest?) -> Void))
 	{
-		var redirectRequest: NSURLRequest? = request
+		var redirectRequest: URLRequest? = request
 		
 		if let taskWillPerformHTTPRedirection = taskWillPerformHTTPRedirection {
 			redirectRequest = taskWillPerformHTTPRedirection(session, task, response, request)
@@ -248,10 +248,10 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
-		didReceive challenge: NSURLAuthenticationChallenge,
-		completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void))
+		_ session: URLSession,
+		task: URLSessionTask,
+		didReceive challenge: URLAuthenticationChallenge,
+		completionHandler: ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void))
 	{
 		if let taskDidReceiveChallenge = taskDidReceiveChallenge {
 			let (a, c) = taskDidReceiveChallenge(session, task, challenge)
@@ -269,9 +269,9 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
-		needNewBodyStream completionHandler: ((NSInputStream?) -> Void))
+		_ session: URLSession,
+		task: URLSessionTask,
+		needNewBodyStream completionHandler: ((InputStream?) -> Void))
 	{
 		if let taskNeedNewBodyStream = taskNeedNewBodyStream {
 			completionHandler(taskNeedNewBodyStream(session, task))
@@ -281,8 +281,8 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
+		_ session: URLSession,
+		task: URLSessionTask,
 		didSendBodyData bytesSent: Int64,
 		totalBytesSent: Int64,
 		totalBytesExpectedToSend: Int64)
@@ -301,8 +301,8 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		task: NSURLSessionTask,
+		_ session: URLSession,
+		task: URLSessionTask,
 		didCompleteWithError error: NSError?)
 	{
 		if let taskDidComplete = taskDidComplete {
@@ -315,12 +315,12 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		dataTask: NSURLSessionDataTask,
-		didReceive response: NSURLResponse,
-		completionHandler: ((NSURLSessionResponseDisposition) -> Void))
+		_ session: URLSession,
+		dataTask: URLSessionDataTask,
+		didReceive response: URLResponse,
+		completionHandler: ((URLSession.ResponseDisposition) -> Void))
 	{
-		var disposition: NSURLSessionResponseDisposition = .allow
+		var disposition: URLSession.ResponseDisposition = .allow
 		
 		if let dataTaskDidReceiveResponse = dataTaskDidReceiveResponse {
 			disposition = dataTaskDidReceiveResponse(session, dataTask, response)
@@ -330,38 +330,38 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		dataTask: NSURLSessionDataTask,
-		didBecome downloadTask: NSURLSessionDownloadTask)
+		_ session: URLSession,
+		dataTask: URLSessionDataTask,
+		didBecome downloadTask: URLSessionDownloadTask)
 	{
 		if let dataTaskDidBecomeDownloadTask = dataTaskDidBecomeDownloadTask {
 			dataTaskDidBecomeDownloadTask(session, dataTask, downloadTask)
 		}/* else {
-			self[downloadTask] = NSURLSessionDownloadDelegateProxy(task: downloadTask)
+			self[downloadTask] = URLSessionDownloadDelegateProxy(task: downloadTask)
 		}*/
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		dataTask: NSURLSessionDataTask,
-		didReceive data: NSData)
+		_ session: URLSession,
+		dataTask: URLSessionDataTask,
+		didReceive data: Data)
 	{
 		if let dataTaskDidReceiveData = dataTaskDidReceiveData {
 			dataTaskDidReceiveData(session, dataTask, data)
-		} else if let delegate = self[dataTask] as? NSURLSessionDataDelegateProxy {
+		} else if let delegate = self[dataTask] as? URLSessionDataDelegateProxy {
 			delegate.urlSession(session, dataTask: dataTask, didReceive: data)
 		}
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		dataTask: NSURLSessionDataTask,
-		willCacheResponse proposedResponse: NSCachedURLResponse,
-		completionHandler: ((NSCachedURLResponse?) -> Void))
+		_ session: URLSession,
+		dataTask: URLSessionDataTask,
+		willCacheResponse proposedResponse: CachedURLResponse,
+		completionHandler: ((CachedURLResponse?) -> Void))
 	{
 		if let dataTaskWillCacheResponse = dataTaskWillCacheResponse {
 			completionHandler(dataTaskWillCacheResponse(session, dataTask, proposedResponse))
-		} else if let delegate = self[dataTask] as? NSURLSessionDataDelegateProxy {
+		} else if let delegate = self[dataTask] as? URLSessionDataDelegateProxy {
 			delegate.urlSession(session, dataTask: dataTask,
 			                    willCacheResponse: proposedResponse,
 			                    completionHandler: completionHandler)
@@ -371,27 +371,27 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		downloadTask: NSURLSessionDownloadTask,
-		didFinishDownloadingTo location: NSURL)
+		_ session: URLSession,
+		downloadTask: URLSessionDownloadTask,
+		didFinishDownloadingTo location: URL)
 	{
 		if let downloadTaskDidFinishDownloadingToURL = downloadTaskDidFinishDownloadingToURL {
 			downloadTaskDidFinishDownloadingToURL(session, downloadTask, location)
-		} else if let delegate = self[downloadTask] as? NSURLSessionDownloadDelegateProxy {
+		} else if let delegate = self[downloadTask] as? URLSessionDownloadDelegateProxy {
 			delegate.urlSession(session, downloadTask: downloadTask, didFinishDownloadingTo: location)
 		}
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		downloadTask: NSURLSessionDownloadTask,
+		_ session: URLSession,
+		downloadTask: URLSessionDownloadTask,
 		didWriteData bytesWritten: Int64,
 		totalBytesWritten: Int64,
 		totalBytesExpectedToWrite: Int64)
 	{
 		if let downloadTaskDidWriteData = downloadTaskDidWriteData {
 			downloadTaskDidWriteData(session, downloadTask, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)
-		} else if let delegate = self[downloadTask] as? NSURLSessionDownloadDelegateProxy {
+		} else if let delegate = self[downloadTask] as? URLSessionDownloadDelegateProxy {
 			delegate.urlSession(session,
 				downloadTask: downloadTask,
 				didWriteData: bytesWritten,
@@ -402,14 +402,14 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	}
 	
 	public func urlSession(
-		_ session: NSURLSession,
-		downloadTask: NSURLSessionDownloadTask,
+		_ session: URLSession,
+		downloadTask: URLSessionDownloadTask,
 		didResumeAtOffset fileOffset: Int64,
 		expectedTotalBytes: Int64)
 	{
 		if let downloadTaskDidResumeAtOffset = downloadTaskDidResumeAtOffset {
 			downloadTaskDidResumeAtOffset(session, downloadTask, fileOffset, expectedTotalBytes)
-		} else if let delegate = self[downloadTask] as? NSURLSessionDownloadDelegateProxy {
+		} else if let delegate = self[downloadTask] as? URLSessionDownloadDelegateProxy {
 			delegate.urlSession(session,
 				downloadTask: downloadTask,
 				didResumeAtOffset: fileOffset,
@@ -420,15 +420,15 @@ public final class NSURLSessionDelegateProxy: NSObject, NSURLSessionDelegate, NS
 	
 	public override func responds(to selector: Selector!) -> Bool {
 		switch selector {
-		case #selector(NSURLSessionDelegate.urlSession(_:didBecomeInvalidWithError:)):
+		case #selector(URLSessionDelegate.urlSession(_:didBecomeInvalidWithError:)):
 			return sessionDidBecomeInvalidWithError != nil
-		case #selector(NSURLSessionDelegate.urlSession(_:didReceive:completionHandler:)):
+		case #selector(URLSessionDelegate.urlSession(_:didReceive:completionHandler:)):
 			return sessionDidReceiveChallenge != nil
-		//case #selector(NSURLSessionDelegate.URLSessionDidFinishEventsForBackgroundURLSession(_:)):
+		//case #selector(URLSessionDelegate.URLSessionDidFinishEventsForBackgroundURLSession(_:)):
 		//	return sessionDidFinishEventsForBackgroundURLSession != nil
-		case #selector(NSURLSessionTaskDelegate.urlSession(_:task:willPerformHTTPRedirection:newRequest:completionHandler:)):
+		case #selector(URLSessionTaskDelegate.urlSession(_:task:willPerformHTTPRedirection:newRequest:completionHandler:)):
 			return taskWillPerformHTTPRedirection != nil
-		case #selector(NSURLSessionDataDelegate.urlSession(_:dataTask:didReceive:completionHandler:)):
+		case #selector(URLSessionDataDelegate.urlSession(_:dataTask:didReceive:completionHandler:)):
 			return dataTaskDidReceiveResponse != nil
 		default:
 			return self.dynamicType.instancesRespond(to: selector)

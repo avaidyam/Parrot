@@ -23,11 +23,11 @@ public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSV
 		assert(self.contentViewController == nil, "Animator was not invoked!")
 	}
 	
-	public func windowWillClose(_ notification: NSNotification) {
+	public func windowWillClose(_ notification: Notification) {
 		self.contentViewController?.presenting?.dismiss(self.contentViewController!)
 	}
 	
-	public func displayViewController(viewController: NSViewController, fromViewController: NSViewController? = nil) {
+	public func displayViewController(_ viewController: NSViewController, fromViewController: NSViewController? = nil) {
 		if let from = fromViewController {
 			from.present(viewController, animator: self)
 		} else {

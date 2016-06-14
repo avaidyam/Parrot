@@ -72,7 +72,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.personsView.insets = NSEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
+		self.personsView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.personsView.selectionProvider = { row in
 			if row >= 0 {
 				self.selectionProvider?(row)
@@ -122,7 +122,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 		}
 	}
 	
-	private func _getPerson(conversation: IConversation) -> Person {
+	private func _getPerson(_ conversation: IConversation) -> Person {
 		
 		// Propogate info for data filling
 		let a = conversation.messages.last?.userID
@@ -151,7 +151,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 		let ind = conversation.unread_events.count
 		let name = title
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
-		let time = conversation.messages.last?.timestamp ?? NSDate(timeIntervalSince1970: 0)
+		let time = conversation.messages.last?.timestamp ?? Date(timeIntervalSince1970: 0)
 		
 		return Person(photo: img, caption: cap, highlight: ring, indicator: ind, primary: name, secondary: sub, time: time)
 	}
@@ -160,9 +160,9 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 		return self.conversationList?.conversations.map { _getPerson(conversation: $0) }
 	}
 	
-	func conversationList(list: ConversationList, didReceiveEvent event: IEvent) {}
-	func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
-	func conversationList(list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
+	func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent) {}
+	func conversationList(_ list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
+	func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
 	
 	/* TODO: Just update the row that is updated. */
 	func conversationList(didUpdate list: ConversationList) {
@@ -172,7 +172,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 	}
 	
 	/* TODO: Just update the row that is updated. */
-	func conversationList(list: ConversationList, didUpdateConversation conversation: IConversation) {
+	func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 		}
@@ -184,10 +184,10 @@ extension ParrotViewController: NCWidgetProviding {
 	override var nibName: String? {
 		return self.className
 	}
-	func widgetMarginInsetsForProposedMarginInsets(defaultMarginInset: NSEdgeInsets) -> NSEdgeInsets {
+	func widgetMarginInsets(forProposedMarginInsets defaultMarginInset: EdgeInsets) -> EdgeInsets {
 		return NSEdgeInsetsZero
 	}
-	func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)!) {
+	func widgetPerformUpdateWithCompletionHandler(_ completionHandler: ((NCUpdateResult) -> Void)!) {
 		completionHandler(.newData)
 	}
 	var widgetAllowsEditing: Bool {

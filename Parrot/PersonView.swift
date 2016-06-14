@@ -11,7 +11,7 @@ public struct Person: Equatable {
 	var indicator: Int
 	var primary: String
 	var secondary: String
-	var time: NSDate
+	var time: Date
 }
 
 // Person: Equatable
@@ -30,7 +30,7 @@ public class PersonView : NSTableCellView {
 	@IBOutlet var timeLabel: NSTextField?
 	@IBOutlet var unreadLabel: NSTextField?
 	
-	var time: NSDate!
+	var time: Date!
 	
 	public override init(frame: NSRect) {
 		super.init(frame: frame)
@@ -46,7 +46,7 @@ public class PersonView : NSTableCellView {
 				return
 			}
 			
-			let f = NSDateFormatter()
+			let f = DateFormatter()
 			f.dateStyle = .fullStyle
 			f.timeStyle = .longStyle
 			self.time = o.time

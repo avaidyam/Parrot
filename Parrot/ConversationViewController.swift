@@ -40,7 +40,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		_measure = stuff?.filter { $0 is MessageView }.first as? MessageView// stuff[0]: NSApplication
 		
 		// Set up dark/light notifications.
-		Notifications.subscribe(name: NSUserDefaultsDidChangeNotification) { note in
+		Notifications.subscribe(name: UserDefaults.didChangeNotification) { note in
 			
 			// Handle appearance colors.
 			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
@@ -71,8 +71,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		self.messagesView.insets = NSEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
-		self.messagesView.sizeClass = .Dynamic
+		self.messagesView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
+		self.messagesView.sizeClass = .dynamic
         self.messageTextField.delegate = self
 		
 		self.messagesView.dynamicHeightProvider = { (row: Int) -> Double in
@@ -94,11 +94,11 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
     override func viewWillAppear() {
-		_note = Notifications.subscribe(name: NSWindowDidBecomeKeyNotification, object: self.window) { a in
+		_note = Notifications.subscribe(name: NSNotification.Name.NSWindowDidBecomeKey, object: self.window) { a in
 			self.windowDidBecomeKey(sender: nil)
 		}
         if self.window?.isKeyWindow ?? false {
-            self.windowDidBecomeKey(sender: nil)
+            self.windowDidBecomeKey(nil)
         }
 		
 		// woohoo this is a terrible idea, move this out of here later.
@@ -132,7 +132,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		return self.view.window
 	}
 	
-    func conversation(conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
+    func conversation(_ conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
         if user.isSelf || self.messageTextField?.window == nil {
             return
         }
@@ -151,7 +151,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		}
     }
 
-	func conversation(conversation: IConversation, didReceiveEvent event: IEvent) {
+	func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
 		self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
 		
 		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
@@ -167,7 +167,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				let notification = NSUserNotification()
 				notification.title = user.fullName
 				notification.informativeText = text
-				notification.deliveryDate = NSDate()
+				notification.deliveryDate = Date()
 				notification.soundName = NSUserNotificationDefaultSoundName
 				
 				var img: NSImage = defaultUserImage
@@ -181,15 +181,15 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         }
     }
 
-    func conversation(conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {
+    func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {
 
     }
 
-	func conversationDidUpdateEvents(conversation: IConversation) {
+	func conversationDidUpdateEvents(_ conversation: IConversation) {
 		self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
     }
 
-    func conversationDidUpdate(conversation: IConversation) {
+    func conversationDidUpdate(_ conversation: IConversation) {
         
     }
 	
@@ -199,7 +199,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	}
 	
 	// get a single message
-	func _getMessage(ev: IChatMessageEvent) -> Message {
+	func _getMessage(_ ev: IChatMessageEvent) -> Message {
 		let user = self.conversation!.user_list[ev.userID]
 		let network_ = self.conversation!.conversation.networkType
 		let network = NetworkType(rawValue: network_[0].rawValue) // FIXME weird stuff here
@@ -221,21 +221,21 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			img = NSImage(data: d)!
 		}
 		
-		let time = ev.timestamp ?? NSDate(timeIntervalSince1970: 0)
+		let time = ev.timestamp ?? Date(timeIntervalSince1970: 0)
 		return Message(photo: img, caption: cap, string: text,
 		               orientation: orientation, color: color, time: time)
 	}
 	
     // MARK: Window notifications
 
-    func windowDidBecomeKey(sender: AnyObject?) {
+    func windowDidBecomeKey(_ sender: AnyObject?) {
         if let conversation = conversation {
             NotificationManager.sharedInstance.clearNotificationsFor(group: conversation.id)
         }
 
         //  Delay here to ensure that small context switches don't send focus messages.
-		let dt = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
-		dispatch_after(dt, dispatch_get_main_queue()) {
+		let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+		DispatchQueue.main.after(when: dt) {
             if let window = self.window where window.isKeyWindow {
                 self.conversation?.setFocus()
             }
@@ -244,23 +244,23 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
     // MARK: NSTextFieldDelegate
-    var lastTypingTimestamp: NSDate?
-	func textDidChange(_ obj: NSNotification) {
+    var lastTypingTimestamp: Date?
+	func textDidChange(_ obj: Notification) {
         if messageTextField.string == "" {
             return
         }
 
         let typingTimeout = 0.4
-        let now = NSDate()
+        let now = Date()
 
-        if lastTypingTimestamp == nil || NSDate().timeIntervalSince(lastTypingTimestamp!) > typingTimeout {
+        if lastTypingTimestamp == nil || Date().timeIntervalSince(lastTypingTimestamp!) > typingTimeout {
             self.conversation?.setTyping(typing: TypingType.Started)
         }
 
         lastTypingTimestamp = now
-		let dt = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
-		dispatch_after(dt, dispatch_get_main_queue()) {
-            if let ts = self.lastTypingTimestamp where NSDate().timeIntervalSince(ts) > typingTimeout {
+		let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+		DispatchQueue.main.after(when: dt) {
+            if let ts = self.lastTypingTimestamp where Date().timeIntervalSince(ts) > typingTimeout {
                 self.conversation?.setTyping(typing: TypingType.Stopped)
             }
         }
@@ -279,10 +279,14 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			let txt = ConversationViewController.segmentsForInput(text: text!, emojify: emojify)
 			conversation?.sendMessage(segments: txt)
             messageTextField.string = ""
+			
+			NSAnimationContext.runAnimationGroup({ c in
+				self.messagesView.tableView.noteHeightOfRows(withIndexesChanged: <#T##NSIndexSet#> as IndexSet)
+			}, completionHandler: nil)
         }
     }
 	
-	private class func segmentsForInput(text: String, emojify: Bool = true) -> [IChatMessageSegment] {
+	private class func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
 		return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
 	}
 }

@@ -3,7 +3,7 @@ import Cocoa
 /* TODO: Switch to a Disk LRU Cache instead of Dictionary. */
 
 // Internal NSImage cache, and
-private var _cache = Dictionary<String, NSData>()
+private var _cache = Dictionary<String, Data>()
 private var _notes = Dictionary<String, [String]>()
 
 // Quick alias just for us.
@@ -21,7 +21,7 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
     }
 	
 	// Overrides notification identifier
-	public func sendNotificationFor(group: (group: String, item: String), notification: NSUserNotification) {
+	public func sendNotificationFor(_ group: (group: String, item: String), notification: NSUserNotification) {
         let conversationID = group.0
         let notificationID = group.1
         notification.identifier = notificationID
@@ -48,7 +48,7 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
 		}
     }
 
-    public func clearNotificationsFor(group: String) {
+    public func clearNotificationsFor(_ group: String) {
         for notificationID in (_notes[group] ?? []) {
             let notification = NSUserNotification()
             notification.identifier = notificationID
@@ -59,7 +59,7 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
 	
 	// Handle NSApp dock badge.
 	
-	public class func updateAppBadge(messages: Int) {
+	public class func updateAppBadge(_ messages: Int) {
 		NSApp.dockTile.badgeLabel = messages > 0 ? "\(messages)" : ""
 	}
 	
@@ -79,7 +79,7 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
 }
 
 // Note that this is general purpose! It needs a unique ID and a resource URL string.
-public func fetchData(id: String?, _ resource: String?, handler: ((NSData?) -> Void)? = nil) -> NSData? {
+public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> Void)? = nil) -> Data? {
 	
 	// Case 1: No unique ID -> bail.
 	guard let id = id else {
@@ -94,14 +94,14 @@ public func fetchData(id: String?, _ resource: String?, handler: ((NSData?) -> V
 	}
 	
 	// Case 3: No resource URL -> bail.
-	guard let photo_url = resource, let url = NSURL(string: photo_url) else {
+	guard let photo_url = resource, let url = URL(string: photo_url) else {
 		handler?(nil)
 		return nil
 	}
 	
 	// Case 4: We can request the resource -> return image.
 	let semaphore = Semaphore(count: 0)
-	NSURLSession.shared().request(request: NSURLRequest(url: url)) {
+	URLSession.shared().request(request: URLRequest(url: url)) {
 		if let data = $0.data {
 			_cache[id] = data
 			handler?(data)
