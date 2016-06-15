@@ -29,7 +29,7 @@ public final class Channel : NSObject {
 	// entire chunk has been received.
 	internal class ChunkParser {
 		
-		internal var buf = Data()
+		internal var buf = NSMutableData()
 		
 		// Yield submissions generated from received data.
 		// Responses from the push endpoint consist of a sequence of submissions.
@@ -47,7 +47,7 @@ public final class Channel : NSObject {
 			buf.append(newBytes)
 			var submissions = [String]()
 			
-			while buf.count > 0 {
+			while buf.length > 0 {
 				if let decoded = bestEffortDecode(data: buf) {
 					let bufUTF16 = decoded.data(using: String.Encoding.utf16BigEndian)!
 					let decodedUtf16LengthInChars = bufUTF16.count / 2
@@ -66,8 +66,8 @@ public final class Channel : NSObject {
 							
 							let submissionAsUTF8 = submission.data(using: String.Encoding.utf8)!
 							
-							let removeRange: Range<Int> = NSMakeRange(0, (length_str.characters.count + submissionAsUTF8.count)).toRange()!
-							buf.resetBytes(in: removeRange)
+							let removeRange = NSMakeRange(0, (length_str.characters.count + submissionAsUTF8.count))
+							buf.replaceBytes(in: removeRange, withBytes: nil, length: 0)
 						} else {
 							break
 						}
@@ -82,9 +82,9 @@ public final class Channel : NSObject {
 		// Decode data_bytes into a string using UTF-8.
 		// If data_bytes cannot be decoded, pop the last byte until it can be or
 		// return an empty string.
-		private func bestEffortDecode(data: Data) -> String? {
-			for i in 0 ..< data.count {
-				if let s = NSString(data: data.subdata(in: NSMakeRange(0, (data.count - i)).toRange()!), encoding: String.Encoding.utf8.rawValue) {
+		private func bestEffortDecode(data: NSMutableData) -> String? {
+			for i in 0 ..< data.length {
+				if let s = NSString(data: data.subdata(with: NSMakeRange(0, (data.length - i))), encoding: String.Encoding.utf8.rawValue) {
 					return s as String
 				}
 			}
@@ -279,9 +279,7 @@ public final class Channel : NSObject {
 	// Delay subscribing until first byte is received prevent "channel not
 	// ready" errors that appear to be caused by a race condition on the server.
 	private func onPushData(data: Data) {
-		print("data is: \(data)")
 		for chunk in (self.chunkParser?.getChunks(newBytes: data))! {
-			print("chunk")
 			
 			// This method is only called when the long-polling request was
 			// successful, so use it to trigger connection events if necessary.
@@ -299,7 +297,6 @@ public final class Channel : NSObject {
 			}
 			
 			if let json = try? chunk.decodeJSON(), let container = json as? [AnyObject] {
-				print("got data")
 				for inner in container {
 					//let array_id = inner[0]
 					if let array = inner[1] as? [AnyObject] {
