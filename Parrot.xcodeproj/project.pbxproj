@@ -19,6 +19,7 @@
 		4835ECB11C1C620E00193EBC /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		4835ECB71C1C672900193EBC /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB31C1C672900193EBC /* NotificationManager.swift */; };
 		4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB61C1C672900193EBC /* Emoji.swift */; };
+		48574F131D11F9FC002375E1 /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
 		4866337E1C5822FA006C094B /* ElementContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4866337D1C5822FA006C094B /* ElementContainerView.swift */; };
 		487A0E151C1E6D61007A4696 /* NotificationCenter+PubSub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A0E141C1E6D61007A4696 /* NotificationCenter+PubSub.swift */; };
 		48808EDD1C6463DD00236E96 /* WindowTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */; };
@@ -53,7 +54,7 @@
 		4884929B1D0B59370003D522 /* MessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4884929A1D0B59370003D522 /* MessageView.xib */; };
 		488C65B01C3A8EA600D792C6 /* NSColor+MaterialDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */; };
 		48AD01DF1C1EC8A90031FDD7 /* UserDefaults+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* UserDefaults+Subscript.swift */; };
-		48AD01E11C1ECBE70031FDD7 /* LinkPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreview.swift */; };
+		48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
 		48B3AD781C38043B0023FAA3 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B3AD771C38043B0023FAA3 /* Canvas.swift */; };
 		48BA5B4B1C37A55A00ACA29B /* Terminal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4A1C37A55A00ACA29B /* Terminal.swift */; };
 		48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4F1C37DACE00ACA29B /* Reference.swift */; };
@@ -89,7 +90,7 @@
 		48DF84AD1D08EEB800F39444 /* NSDate+TimeAgo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF49A21C1D23D000AC4DD5 /* NSDate+TimeAgo.swift */; };
 		48DF84AE1D08EEB800F39444 /* NotificationCenter+PubSub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A0E141C1E6D61007A4696 /* NotificationCenter+PubSub.swift */; };
 		48DF84AF1D08EEB800F39444 /* UserDefaults+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* UserDefaults+Subscript.swift */; };
-		48DF84B01D08EEB800F39444 /* LinkPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreview.swift */; };
+		48DF84B01D08EEB800F39444 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
 		48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E3C0811C1F363F008B2D1D /* UserList.swift */; };
 		48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3391D04DFF90074984D /* Protobuf.swift */; };
 		48F84D451D0DEC1E00E77AD9 /* LinkPreviews.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48F84D441D0DEC1E00E77AD9 /* LinkPreviews.xib */; };
@@ -255,6 +256,7 @@
 		4835ECB31C1C672900193EBC /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		4835ECB61C1C672900193EBC /* Emoji.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
+		48574F121D11F9FC002375E1 /* AppManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppManagement.swift; sourceTree = "<group>"; };
 		4866337D1C5822FA006C094B /* ElementContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElementContainerView.swift; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
@@ -300,7 +302,7 @@
 		4884929A1D0B59370003D522 /* MessageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageView.xib; sourceTree = "<group>"; };
 		488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+MaterialDesign.swift"; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* UserDefaults+Subscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Subscript.swift"; sourceTree = "<group>"; };
-		48AD01E01C1ECBE70031FDD7 /* LinkPreview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPreview.swift; sourceTree = "<group>"; };
+		48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPreviewParser.swift; sourceTree = "<group>"; };
 		48B3AD771C38043B0023FAA3 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
 		48BA5B481C379CCF00ACA29B /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
 		48BA5B4A1C37A55A00ACA29B /* Terminal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Terminal.swift; sourceTree = "<group>"; };
@@ -435,13 +437,14 @@
 		481687261C39E1370070EEF6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				48AD01E01C1ECBE70031FDD7 /* LinkPreview.swift */,
 				48834D951C1B3602009BC442 /* ServiceManager.swift */,
+				48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */,
 				4835ECAE1C1C620E00193EBC /* Authenticator.swift */,
 				4835ECB61C1C672900193EBC /* Emoji.swift */,
 				4835ECB31C1C672900193EBC /* NotificationManager.swift */,
 				48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */,
 				4866337D1C5822FA006C094B /* ElementContainerView.swift */,
+				48574F121D11F9FC002375E1 /* AppManagement.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -1208,13 +1211,14 @@
 				48AD01DF1C1EC8A90031FDD7 /* UserDefaults+Subscript.swift in Sources */,
 				482E21391C23F5F500A4C7B3 /* ChatModel.swift in Sources */,
 				4835ECAF1C1C620E00193EBC /* ConversationsViewController.swift in Sources */,
+				48574F131D11F9FC002375E1 /* AppManagement.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* ConversationViewController.swift in Sources */,
 				481687251C39DA900070EEF6 /* NSView+Snapshot.swift in Sources */,
 				488239A31C455CED00C5E8EB /* Array+Remove.swift in Sources */,
 				48834D961C1B3602009BC442 /* ServiceManager.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* PersonView.swift in Sources */,
 				4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */,
-				48AD01E11C1ECBE70031FDD7 /* LinkPreview.swift in Sources */,
+				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
 				4835ECB71C1C672900193EBC /* NotificationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1309,7 +1313,7 @@
 				48DF84AD1D08EEB800F39444 /* NSDate+TimeAgo.swift in Sources */,
 				48DF84AE1D08EEB800F39444 /* NotificationCenter+PubSub.swift in Sources */,
 				48DF84AF1D08EEB800F39444 /* UserDefaults+Subscript.swift in Sources */,
-				48DF84B01D08EEB800F39444 /* LinkPreview.swift in Sources */,
+				48DF84B01D08EEB800F39444 /* LinkPreviewParser.swift in Sources */,
 				48DE52F71C1CC28000647C63 /* ParrotViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1645,8 +1649,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/External/CommonCrypto";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OBJC_INTERFACE_HEADER_NAME = "${TARGET_NAME}-Swift.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1683,8 +1688,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/External/CommonCrypto";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OBJC_INTERFACE_HEADER_NAME = "${TARGET_NAME}-Swift.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
