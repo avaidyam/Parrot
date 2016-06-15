@@ -94,7 +94,7 @@ public func escape(string: String) -> String {
 	let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
 	let subDelimitersToEncode = "!$&'()*+,;="
 	
-	var allowedCharacterSet = CharacterSet.urlQueryAllowed
+	var allowedCharacterSet = NSMutableCharacterSet.urlQueryAllowed() // FIXME!
 	allowedCharacterSet.remove(charactersIn: generalDelimitersToEncode + subDelimitersToEncode)
 	
 	return string.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? string

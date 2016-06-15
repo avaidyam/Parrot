@@ -112,25 +112,6 @@ internal extension Dictionary {
 // Since we can't use nil in JSON arrays due to the parser.
 internal let None = NSNull()
 
-// Provides equality and comparison operators for Date
-public func <=(lhs: Date, rhs: Date) -> Bool {
-	let res = lhs.compare(rhs)
-	return res == .orderedAscending || res == .orderedSame
-}
-public func >=(lhs: Date, rhs: Date) -> Bool {
-	let res = lhs.compare(rhs)
-	return res == .orderedDescending || res == .orderedSame
-}
-public func >(lhs: Date, rhs: Date) -> Bool {
-	return lhs.compare(rhs) == .orderedDescending
-}
-public func <(lhs: Date, rhs: Date) -> Bool {
-	return lhs.compare(rhs) == .orderedAscending
-}
-public func ==(lhs: Date, rhs: Date) -> Bool {
-	return lhs.compare(rhs) == .orderedSame
-}
-
 // Microseconds
 // Convert a microsecond timestamp to an Date instance.
 // Convert UTC datetime to microsecond timestamp used by Hangouts.
