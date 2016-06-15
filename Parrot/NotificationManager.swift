@@ -35,7 +35,7 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
         }
         nc.deliver(notification)
 		
-		let vibrate = Settings()[Parrot.VibrateForceTouch] as? Bool ?? false
+		let vibrate = UserDefaults.standard()[Parrot.VibrateForceTouch] as? Bool ?? false
 		if vibrate {
 			let length = 1000
 			let interval = 10
@@ -100,7 +100,7 @@ public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> V
 	}
 	
 	// Case 4: We can request the resource -> return image.
-	let semaphore = Semaphore(count: 0)
+	let semaphore = DispatchSemaphore(value: 0)
 	URLSession.shared().request(request: URLRequest(url: url)) {
 		if let data = $0.data {
 			_cache[id] = data
@@ -111,7 +111,7 @@ public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> V
 	
 	// Onlt wait on the semaphore if we don't have a handler.
 	if handler == nil {
-		semaphore.wait()
+		_ = semaphore.wait()
 		return _cache[id]
 	} else {
 		return nil

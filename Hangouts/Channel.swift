@@ -143,7 +143,7 @@ public final class Channel : NSObject, URLSessionDataDelegate {
 				}
 				
 				// FIXME: Deadlocks here after network disconnection.
-				s.wait(timeout: DispatchTime.distantFuture)
+				_ = s.wait(timeout: DispatchTime.distantFuture)
 				self.needsSID = false
             }
 
@@ -242,7 +242,7 @@ public final class Channel : NSObject, URLSessionDataDelegate {
 		
 		/* TODO: Make sure stream{} times out with PUSH_TIMEOUT. */
 		
-		manager.request(urlRequest: request)
+		_ = manager.request(urlRequest: request)
 			.stream { (data: NSData) in
 				self.onPushData(data: data as Data)
 			}.responseData { response in

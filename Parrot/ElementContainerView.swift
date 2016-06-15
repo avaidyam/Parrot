@@ -294,7 +294,7 @@ public extension NSTableView {
 		
 		var selected = self.selectedRowIndexes
 		if !selected.contains(row) {
-			selected = IndexSet(index: row)
+			selected = IndexSet(integer: row)
 			// Enable this to select the row upon menu-click.
 			//self.selectRowIndexes(selected, byExtendingSelection: false)
 		}

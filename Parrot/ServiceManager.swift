@@ -17,17 +17,17 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
-		NSActivity.begin("Authenticate")
+		BackgroundActivity.begin("Authenticate")
 		Authenticator.authenticateClient {
 			_hangoutsClient = Client(configuration: $0)
 			_hangoutsClient?.connect()
-			NSActivity.end("Authenticate")
+			BackgroundActivity.end("Authenticate")
 			
-			NSNotificationCenter.default()
+			NotificationCenter.default()
 				.addObserver(forName: Client.didConnectNotification, object: _hangoutsClient!, queue: nil) { _ in
-					NSActivity.begin("Setup")
+					BackgroundActivity.begin("Setup")
 					_hangoutsClient!.buildUserConversationList { (userList, conversationList) in
-						NSActivity.begin("Setup")
+						BackgroundActivity.begin("Setup")
 						_REMOVE.forEach {
 							$0(userList, conversationList)
 						}
@@ -35,20 +35,20 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 			}
 			
 			// Instantiate storyboard and controller and begin the UI from here.
-			Dispatch.main().add {
+			DispatchQueue.main.async {
 				let vc = ConversationsViewController(nibName: "ConversationsViewController", bundle: nil)
 				vc?.selectionProvider = { row in
 					let vc2 = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
 					vc2?.representedObject = vc?.conversationList?.conversations[row]
-					vc?.present(vc2!, animator: WindowTransitionAnimator())
+					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator())
 				}
 				self.trans = WindowTransitionAnimator()
-				self.trans!.displayViewController(viewController: vc!)
+				self.trans!.displayViewController(vc!)
 				
 				self.trans?.window?.titleVisibility = .hidden;
 				self.trans?.window?.titlebarAppearsTransparent = true;
 				
-				let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
+				let dark = UserDefaults.standard()[Parrot.DarkAppearance] as? Bool ?? false
 				let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 				self.trans?.window?.appearance = NSAppearance(named: appearance)
 			}

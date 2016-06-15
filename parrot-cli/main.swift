@@ -1,6 +1,6 @@
 import Hangouts
 
-let sem = dispatch_semaphore_create(0)
+let sem = DispatchSemaphore(value: 0)
 print("Initializing...")
 
 // Authenticate and initialize the Hangouts client.
@@ -15,17 +15,18 @@ AuthenticatorCLI.authenticateClient {
 	client.buildUserConversationList {
 		userList = $0; conversationList = $1
 		print("Obtained userList \(userList) and conversationList! \(conversationList)")
-		dispatch_semaphore_signal(sem!)
+		sem.signal()
 	}
 }
-dispatch_semaphore_wait(sem!, DISPATCH_TIME_FOREVER)
+_ = sem.wait(timeout: DispatchTime.distantFuture)
 print("Continuing...")
 
-print(conversationList.all_conversations.map { $0.conversation.conversation_id })
+print(conversationList.all_conversations.map { $0.conversation.conversationId })
 
 // Start with the constant strings up here.
 let str1 = "Parrot is not yet ready as a CLI tool."
 let str2 = "Press ESC to exit."
+
 
 // Launch an encapsulated interactive Terminal.
 Terminal.interactive {
@@ -66,10 +67,10 @@ Terminal.interactive {
 		c.frame = g()
 		
 		// Redraw all our strings.
-		c.write(string: str2,
+		_ = c.write(string: str2,
 			point: (center(item: c.frame.s.w, str2.characters.count), center(item: c.frame.s.h, 0) + 0),
 			colors: ColorPair(2, colors: (.Black, .Blue)))
-		c.write(string: str3,
+		_ = c.write(string: str3,
 			point: (center(item: c.frame.s.w, str3.characters.count), center(item: c.frame.s.h, 0) + 1),
 			colors: ColorPair(3, colors: (.Black, .Yellow)))
 	}
@@ -86,10 +87,10 @@ Terminal.interactive {
 		c.frame = f()
 		
 		// Redraw all our strings.
-		c.write(string: str1,
+		_ = c.write(string: str1,
 			point: (center(item: c.frame.s.w, str1.characters.count), center(item: c.frame.s.h, 0) + 0),
 			colors: ColorPair(1, colors: (.Black, .Red)))
-		c.write(string: str3,
+		_ = c.write(string: str3,
 			point: (center(item: c.frame.s.w, str3.characters.count), center(item: c.frame.s.h, 0) + 1),
 			colors: ColorPair(3, colors: (.Black, .Yellow)))
 	}
@@ -98,7 +99,7 @@ Terminal.interactive {
 	var header = Canvas(t())
 	header.redraw = { c in
 		c.frame = t()
-		c.write(string: title,
+		_ = c.write(string: title,
 			point: (center(item: c.frame.s.w, title.characters.count), center(item: c.frame.s.h, 0) + 0),
 			colors: ColorPair(6, colors: (.Black, .White)))
 	}

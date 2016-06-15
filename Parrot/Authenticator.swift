@@ -89,7 +89,7 @@ public class Authenticator {
 				saveTokens(access_token, refresh_token: refresh_token)
 				
 				let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"
-				let request = NSMutableURLRequest(url: URL(string: url)! as URL)
+				var request = URLRequest(url: URL(string: url)! as URL)
 				request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 				
 				session.request(request: request) {
@@ -98,10 +98,10 @@ public class Authenticator {
 						return
 					}
 					
-					var uberauth = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+					var uberauth = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
 					uberauth.replaceSubrange(uberauth.index(uberauth.endIndex, offsetBy: -1) ..< uberauth.endIndex, with: "")
 					
-					let request = NSMutableURLRequest(url: URL(string: "https://accounts.google.com/MergeSession")!)
+					var request = URLRequest(url: URL(string: "https://accounts.google.com/MergeSession")!)
 					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 					
 					session.request(request: request) {
@@ -111,7 +111,7 @@ public class Authenticator {
 						}
 						
 						let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
-						let request = NSMutableURLRequest(url: URL(string: url)!)
+						var request = URLRequest(url: URL(string: url)!)
 						request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 						
 						session.request(request: request) {
@@ -137,12 +137,12 @@ public class Authenticator {
 						return
 					}
 					
-					let body = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+					let body = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
 					let auth_code = body.findAllOccurrences(matching: "value=\"(.+?)\"").first!
 					
 					//  - first: authenticate(auth_code)
 					authenticate(auth_code: auth_code, cb: { (access_token, refresh_token) in
-						saveTokens(access_token: access_token, refresh_token: refresh_token)
+						saveTokens(access_token, refresh_token: refresh_token)
 						cb(configuration: session.configuration)
 					})
 				}
@@ -165,10 +165,10 @@ public class Authenticator {
 		]
 		
 		// Make request first.
-		let req = NSMutableURLRequest(url: URL(string: OAUTH2_TOKEN_REQUEST_URL)! as URL)
+		var req = URLRequest(url: URL(string: OAUTH2_TOKEN_REQUEST_URL)! as URL)
 		req.httpMethod = "POST"
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
-		req.httpBody = query(parameters: token_request_data).data(using: NSUTF8StringEncoding, allowLossyConversion: false)
+		req.httpBody = query(parameters: token_request_data).data(using: String.Encoding.utf8, allowLossyConversion: false)
 		
 		URLSession.shared().request(request: req) {
 			guard let data = $0.data else {
@@ -204,10 +204,10 @@ public class Authenticator {
 		]
 		
 		// Make request first.
-		let req = NSMutableURLRequest(url: URL(string: OAUTH2_TOKEN_REQUEST_URL)! as URL)
+		var req = URLRequest(url: URL(string: OAUTH2_TOKEN_REQUEST_URL)! as URL)
 		req.httpMethod = "POST"
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
-		req.httpBody = query(parameters: token_request_data).data(using: NSUTF8StringEncoding, allowLossyConversion: false)
+		req.httpBody = query(parameters: token_request_data).data(using: String.Encoding.utf8, allowLossyConversion: false)
 		
 		session.request(request: req) {
 			guard let data = $0.data else {
@@ -236,10 +236,10 @@ public class Authenticator {
 		let webView = WebView(frame: NSMakeRect(0, 0, 386, 512))
 		webView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		webView.policyDelegate = delegate
-		webView.mainFrame.load(NSMutableURLRequest(url: url as URL))
+		webView.mainFrame.load(URLRequest(url: url as URL))
 		
 		window = NSWindow(contentRect: NSMakeRect(0, 0, 386, 512),
-			styleMask: NSTitledWindowMask | NSClosableWindowMask,
+			styleMask: [.titled, .closable],
 			backing: .buffered, defer: false)
 		window?.title = "Login to Parrot"
 		window?.isOpaque = false

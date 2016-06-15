@@ -10,13 +10,13 @@ public extension Array where Element : Equatable {
 	
 	public mutating func removeContentsOf<S : Sequence where S.Iterator.Element == Element>(_ newElements: S) {
 		for object in newElements {
-			self.remove(item: object)
+			self.remove(object)
 		}
 	}
 	
 	public mutating func removeContentsOf<C : Collection where C.Iterator.Element == Element>(_ newElements: C) {
 		for object in newElements {
-			self.remove(item: object)
+			self.remove(object)
 		}
 	}
 }
@@ -29,71 +29,9 @@ public class Wrapper<T> {
 	}
 }
 
-// A nifty wrapper around NSOperationQueue (which is itself, a wrapper
-// of dispatch_queue_t) to provide simple chaining and whatnot.
-public typealias Dispatch = OperationQueue
-public extension OperationQueue {
-	
-	@discardableResult
-	public func pause() -> Self {
-		self.isSuspended = true
-		return self
-	}
-	
-	@discardableResult
-	public func resume() -> Self {
-		self.isSuspended = false
-		return self
-	}
-	
-	@discardableResult
-	public func stop() -> Self {
-		self.cancelAllOperations()
-		return self
-	}
-	
-	@discardableResult
-	public func wait() -> Self {
-		self.waitUntilAllOperationsAreFinished()
-		return self
-	}
-	
-	@discardableResult
-	public func quality(_ quality: QualityOfService) -> Self {
-		self.qualityOfService = quality
-		return self
-	}
-	
-	@discardableResult
-	public func add(_ block: () -> Void) -> Self {
-		self.addOperation(BlockOperation(block: block))
-		return self
-	}
-}
-
-// Wrap a Dispatch Semaphore in a nice struct.
-public struct Semaphore {
-	let rawValue: DispatchSemaphore
-	
-	init(count: Int = 0) {
-		self.rawValue = DispatchSemaphore(value: count)
-	}
-	
-	@discardableResult
-	public func signal() -> Int {
-		return self.rawValue.signal()
-	}
-	
-	/* TODO: Use dispatch_time_t until we replace it nicely. */
-	@discardableResult
-	public func wait(_ timeout: DispatchTime = DispatchTime.distantFuture) -> Int {
-		return self.rawValue.wait(timeout: timeout)
-	}
-}
-
 // alias for the UI thread
 public func UI(_ block: () -> Void) {
-	Dispatch.main().add(block)
+	DispatchQueue.main.async(execute: block)
 }
 
 // Provides the old-style @synchronized {} statements from Objective-C.
@@ -103,9 +41,10 @@ public func Synchronized(_ lock: AnyObject, closure: () -> ()) {
 	objc_sync_exit(lock)
 }
 
-/// A proxy for NSProcessInfo's NSActivity API.
+/// A proxy for NSProcessInfo's BackgroundActivity API.
 /// Simplified for internal use only.
-public struct NSActivity {
+/* TODO: Use NSBackgroundActivityScheduler as well. */
+public struct BackgroundActivity {
 	public static var activities = [String: NSObjectProtocol]()
 	public static let mode: ProcessInfo.ActivityOptions = [
 		.userInitiated, // every Parrot action MUST be user-initiated
@@ -130,4 +69,16 @@ public struct NSActivity {
 	}
 }
 
-
+public extension Timer {
+	
+	/// Trigger a notification every minute, starting from the next minute.
+	public class func scheduledWallclock(_ target: AnyObject, selector: Selector) -> Timer {
+		var comps = Calendar.current().components(_units, from: Date())
+		comps.minute = (comps.minute ?? 0) + 1; comps.second = 0
+		let date = Calendar.current().date(from: comps)!
+		let timer = Timer(fireAt: date, interval: 60, target: target,
+		                  selector: selector, userInfo: nil, repeats: true)
+		RunLoop.main().add(timer, forMode: RunLoopMode.defaultRunLoopMode)
+		return timer
+	}
+}

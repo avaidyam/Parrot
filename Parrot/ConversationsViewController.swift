@@ -32,15 +32,15 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			}
 		}
 		
-		Notifications.subscribe(name: UserDefaults.didChangeNotification) { note in
+		NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
 			
 			// Handle appearance colors.
-			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
+			let dark = UserDefaults.standard()[Parrot.DarkAppearance] as? Bool ?? false
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
 		}
 		
-		NotificationManager.updateAppBadge(messages: conversationList?.unreadEventCount ?? 0)
+		NotificationManager.updateAppBadge(conversationList?.unreadEventCount ?? 0)
 	}
 	
 	override func viewDidLoad() {
@@ -102,11 +102,11 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		scroll!.scrollerInsets = EdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
 		//self.timeLabel?.stringValue = self.time.relativeString()
 		
-		self.wallclock = Timer.scheduledWallclock(target: self, selector: #selector(_updateWallclock(_:)))
+		self.wallclock = Timer.scheduledWallclock(self, selector: #selector(_updateWallclock(_:)))
 	}
 	
 	func _updateWallclock(_ timer: Timer) {
-		Notifications.post(name: "PersonView.UpdateTime", object: self)
+		NotificationCenter.default().post(name: Notification.Name("PersonView.UpdateTime"), object: self)
 	}
 	
 	var userList: UserList? // FIXME
@@ -139,7 +139,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		
 		// Load all the field values from the conversation.
 		var img: NSImage = defaultUserImage
-		if let d = fetchData(id: c?.id.gaiaID, c?.photoURL) {
+		if let d = fetchData(c?.id.gaiaID, c?.photoURL) {
 			img = NSImage(data: d)!
 		}
 		
@@ -156,7 +156,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	}
 	
 	private func _getAllPersons() -> [Person]? {
-		return self.conversationList?.conversations.map { _getPerson(conversation: $0) }
+		return self.conversationList?.conversations.map { _getPerson($0) }
 	}
 	
     func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent) {}
@@ -167,7 +167,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     func conversationList(didUpdate list: ConversationList) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			NotificationManager.updateAppBadge(messages: self.conversationList?.unreadEventCount ?? 0)
+			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 	
@@ -175,7 +175,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			NotificationManager.updateAppBadge(messages: self.conversationList?.unreadEventCount ?? 0)
+			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 }

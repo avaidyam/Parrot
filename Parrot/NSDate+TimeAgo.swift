@@ -3,14 +3,14 @@ import Foundation
 /* TODO: Localization support for timeAgo. */
 
 /// from @jack205: https://gist.github.com/jacks205/4a77fb1703632eb9ae79
-private let _units: Calendar.Unit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
+internal let _units: Calendar.Unit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
 public extension Date {
 	public func relativeString(_ numeric: Bool = false) -> String {
 		
 		// Setup for calendar components.
 		let date = self, now = Date()
 		let calendar = Calendar.current()
-		let earliest = (now as Date).earlierDate(date)
+		let earliest = (now as NSDate).earlierDate(date) as Date
 		let latest = (earliest == now) ? date : now
 		let components = calendar.components(_units, from: earliest, to: latest, options: Calendar.Options())
 		
@@ -62,19 +62,5 @@ public extension DateComponentsFormatter {
 			return nil
 		}
 		return str + " ago" // TODO: localize!
-	}
-}
-
-public extension Timer {
-	
-	/// Trigger a notification every minute, starting from the next minute.
-	public class func scheduledWallclock(_ target: AnyObject, selector: Selector) -> Timer {
-		var comps = Calendar.current().components(_units, from: Date())
-		comps.minute += 1; comps.second = 0
-		let date = Calendar.current().date(from: comps)!
-		let timer = Timer(fireAt: date, interval: 60, target: target,
-		                    selector: selector, userInfo: nil, repeats: true)
-		RunLoop.main().add(timer, forMode: RunLoopMode.defaultRunLoopMode)
-		return timer
 	}
 }

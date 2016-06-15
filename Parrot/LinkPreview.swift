@@ -66,21 +66,21 @@ public struct LinkPreviewParser {
 		var data: Data?, response: URLResponse?, error: NSError?
 		let semaphore = DispatchSemaphore(value: 0)
 		
-		let request = NSMutableURLRequest(url: url)
+		var request = URLRequest(url: url)
 		request.httpMethod = method
 		URLSession.shared().dataTask(with: request) {
 			data = $0; response = $1; error = $2
-			dispatch_semaphore_signal(semaphore!)
-			}.resume()
+			semaphore.signal()
+		}.resume()
 		
-		semaphore.wait(timeout: DispatchTime.distantFuture)
+		_ = semaphore.wait(timeout: DispatchTime.distantFuture)
 		return (data, response, error)
 	}
 	
 	private static func _extractTitle(from str: String) -> String {
 		let o = str.findAllOccurrences(matching: TITLE_REGEX, all: true)
 		let q = CFXMLCreateStringByUnescapingEntities(nil, (o.first ?? ""), nil) as String
-		return q.trimmingCharacters(in: .whitespacesAndNewlines())
+		return q.trimmingCharacters(in: .whitespacesAndNewlines)
 	}
 	
 	private static func _extractMetadata(from str: String) -> [String: String] {
@@ -90,7 +90,7 @@ public struct LinkPreviewParser {
 				s.findAllOccurrences(matching: _tag("property"), all: true)
 			var vals =	s.findAllOccurrences(matching: _tag("content"), all: true)
 			keys = keys.flatMap { $0.components(separatedBy: " ") }
-			vals = vals.map { $0.trimmingCharacters(in: .whitespacesAndNewlines()) }
+			vals = vals.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
 			vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0, nil) as String }
 			keys.forEach { tags[$0] = (vals.first ?? "") }
 		}
@@ -114,7 +114,7 @@ public struct LinkPreviewParser {
 	
 	private static func _verifyLink(_ url: URL) -> (safe: Bool, error: Bool) {
 		let url2 = URL(string: SBURL + url.absoluteString!)!
-		let out = _get(url 2, method: "HEAD")
+		let out = _get(url2, method: "HEAD")
 		let resp = (out.1 as? HTTPURLResponse)?.statusCode ?? 0
 		return (safe: (resp == 204), error: !(resp == 200 || resp == 204))
 	}

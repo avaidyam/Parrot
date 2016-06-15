@@ -9,7 +9,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     @IBOutlet var messageTextField: NSTextView!
 	@IBOutlet var statusView: NSTextField!
 	
-	var _note: TokenObserver!
+	var _note: NSObjectProtocol!
 	var popover: NSPopover!
 	
 	var _measure: MessageView? = nil
@@ -36,14 +36,14 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		// Set up the measurement view.
 		let nib = NSNib(nibNamed: "MessageView", bundle: nil)
 		messagesView.tableView.register(nib, forIdentifier: MessageView.className())
-		let stuff = nib?.instantiate(owner: nil)
+		let stuff = nib?.instantiate(nil)
 		_measure = stuff?.filter { $0 is MessageView }.first as? MessageView// stuff[0]: NSApplication
 		
 		// Set up dark/light notifications.
-		Notifications.subscribe(name: UserDefaults.didChangeNotification) { note in
+		NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
 			
 			// Handle appearance colors.
-			let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
+			let dark = UserDefaults.standard()[Parrot.DarkAppearance] as? Bool ?? false
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
 			
@@ -56,13 +56,13 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				// NSTextView doesn't automatically change its text color when the
 				// backing view's appearance changes, so we need to set it each time.
 				// In addition, make sure links aren't blue as usual.
-				text.textColor = NSColor.label()
+				text.textColor = NSColor.labelColor()
 				text.linkTextAttributes = [
-					NSCursorAttributeName: NSColor.label()
+					NSCursorAttributeName: NSColor.labelColor()
 				]
 				text.selectedTextAttributes = [
 					NSBackgroundColorAttributeName: self._textFront,
-					NSForegroundColorAttributeName: NSColor.label(),
+					NSForegroundColorAttributeName: NSColor.labelColor(),
 				]
 			}
 		}
@@ -84,7 +84,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			//print(self._measure?.frame.size.height)
 			
 			let b = self.messagesView.frame.width
-			return Double(MessageView.heightForContainerWidth(text: a, width: b)) + 20.0
+			return Double(MessageView.heightForContainerWidth(a, width: b)) + 20.0
 		}
 		
 		self.popover = NSPopover()
@@ -94,8 +94,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
     override func viewWillAppear() {
-		_note = Notifications.subscribe(name: NSNotification.Name.NSWindowDidBecomeKey, object: self.window) { a in
-			self.windowDidBecomeKey(sender: nil)
+		_note = NotificationCenter.default().subscribe(name: NSNotification.Name.NSWindowDidBecomeKey.rawValue, object: self.window) { a in
+			self.windowDidBecomeKey(nil)
 		}
         if self.window?.isKeyWindow ?? false {
             self.windowDidBecomeKey(nil)
@@ -140,7 +140,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		UI {
 			switch (status) {
 			case TypingType.Started:
-				self.popover.showRelative(to: self.messageTextField!.bounds, of: self.messageTextField!, preferredEdge: .minY)
+				self.popover.show(relativeTo: self.messageTextField!.bounds, of: self.messageTextField!, preferredEdge: .minY)
 				self.statusView.stringValue = "Typing..."
 			case TypingType.Paused:
 				self.statusView.stringValue = "Entered text."
@@ -171,12 +171,12 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				notification.soundName = NSUserNotificationDefaultSoundName
 				
 				var img: NSImage = defaultUserImage
-				if let d = fetchData(id: user.id.chatID, user.photoURL) {
+				if let d = fetchData(user.id.chatID, user.photoURL) {
 					img = NSImage(data: d)!
 				}
 				notification.contentImage = img
 				
-				NotificationManager.sharedInstance.sendNotificationFor(group: a, notification: notification)
+				NotificationManager.sharedInstance.sendNotificationFor(a, notification: notification)
             }
         }
     }
@@ -189,13 +189,13 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
     }
 
-    func conversationDidUpdate(_ conversation: IConversation) {
+    func conversationDidUpdate(conversation: IConversation) {
         
     }
 	
 	// get all messages
 	private func _getAllMessages() -> [Message]? {
-		return self.conversation?.messages.map { _getMessage(ev: $0) }
+		return self.conversation?.messages.map { _getMessage($0) }
 	}
 	
 	// get a single message
@@ -217,7 +217,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		
 		// Load all the field values from the conversation.
 		var img: NSImage = defaultUserImage
-		if let d = fetchData(id: user.id.gaiaID, user.photoURL) {
+		if let d = fetchData(user.id.gaiaID, user.photoURL) {
 			img = NSImage(data: d)!
 		}
 		
@@ -230,7 +230,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
     func windowDidBecomeKey(_ sender: AnyObject?) {
         if let conversation = conversation {
-            NotificationManager.sharedInstance.clearNotificationsFor(group: conversation.id)
+            NotificationManager.sharedInstance.clearNotificationsFor(conversation.id)
         }
 
         //  Delay here to ensure that small context switches don't send focus messages.
@@ -268,21 +268,21 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
     // MARK: IBActions
     @IBAction func messageTextFieldDidAction(_:AnyObject?) {
-		if NSEvent.modifierFlags().contains(.shiftKeyMask) {
+		if NSEvent.modifierFlags().contains(.shift) {
 			return
 		}
 		
         let text = messageTextField.string
         if text?.characters.count > 0 {
-			var emojify = Settings()[Parrot.AutoEmoji] as? Bool ?? false
-			emojify = NSEvent.modifierFlags().contains(.alternateKeyMask) ? false : emojify
-			let txt = ConversationViewController.segmentsForInput(text: text!, emojify: emojify)
+			var emojify = UserDefaults.standard()[Parrot.AutoEmoji] as? Bool ?? false
+			emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
+			let txt = ConversationViewController.segmentsForInput(text!, emojify: emojify)
 			conversation?.sendMessage(segments: txt)
             messageTextField.string = ""
 			
-			NSAnimationContext.runAnimationGroup({ c in
-				self.messagesView.tableView.noteHeightOfRows(withIndexesChanged: <#T##NSIndexSet#> as IndexSet)
-			}, completionHandler: nil)
+			//NSAnimationContext.runAnimationGroup({ c in
+			//	self.messagesView.tableView.noteHeightOfRows(withIndexesChanged: idx as IndexSet)
+			//}, completionHandler: nil)
         }
     }
 	

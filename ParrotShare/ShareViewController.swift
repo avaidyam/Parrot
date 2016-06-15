@@ -31,7 +31,7 @@ class ShareViewController: SLComposeServiceViewController {
     }
 
     override func isContentValid() -> Bool {
-        let messageLength = self.contentText.trimmingCharacters(in: CharacterSet.whitespaces()).lengthOfBytes(using: String.Encoding.utf8)
+        let messageLength = self.contentText.trimmingCharacters(in: .whitespaces).lengthOfBytes(using: String.Encoding.utf8)
         let charactersRemaining = 140 - messageLength
         self.charactersRemaining = charactersRemaining
         

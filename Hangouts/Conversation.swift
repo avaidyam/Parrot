@@ -1,9 +1,9 @@
 
 public protocol ConversationDelegate {
-    func conversation(conversation: IConversation, didChangeTypingStatusForUser: User, toStatus: TypingType)
-    func conversation(conversation: IConversation, didReceiveEvent: IEvent)
-    func conversation(conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification)
-    func conversationDidUpdateEvents(conversation: IConversation)
+    func conversation(_ conversation: IConversation, didChangeTypingStatusForUser: User, toStatus: TypingType)
+    func conversation(_ conversation: IConversation, didReceiveEvent: IEvent)
+    func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification)
+    func conversationDidUpdateEvents(_ conversation: IConversation)
 
     //  The conversation did receive an update to its internal state - 
     //  the sort timestamp probably changed, at least.
@@ -103,6 +103,7 @@ public class IConversation {
 	
 	// Add a ClientEvent to the Conversation.
 	// Returns an instance of Event or subclass.
+	@discardableResult
     public func add_event(event: Event) -> IEvent {
         let conv_event = IConversation.wrap_event(event: event)
 		/* TODO: Enable this. */
@@ -267,7 +268,7 @@ public class IConversation {
 
     public func handleEvent(event: IEvent) {
         if let delegate = delegate {
-			delegate.conversation(conversation: self, didReceiveEvent: event)
+			delegate.conversation(self, didReceiveEvent: event)
         } else {
             let user = user_list[event.userID]
             if !user.isSelf {
@@ -280,12 +281,12 @@ public class IConversation {
         let existingTypingStatus = typingStatuses[user.id]
         if existingTypingStatus == nil || existingTypingStatus! != status {
             typingStatuses[user.id] = status
-            delegate?.conversation(conversation: self, didChangeTypingStatusForUser: user, toStatus: status)
+            delegate?.conversation(self, didChangeTypingStatusForUser: user, toStatus: status)
         }
     }
 
     public func handleWatermarkNotification(status: IWatermarkNotification) {
-		delegate?.conversation(conversation: self, didReceiveWatermarkNotification: status)
+		delegate?.conversation(self, didReceiveWatermarkNotification: status)
     }
 
     public var messages: [IChatMessageEvent] {
@@ -327,7 +328,7 @@ public class IConversation {
                     self.events_dict[conv_event.id] = conv_event
                 }
                 cb?(conv_events)
-                self.delegate?.conversationDidUpdateEvents(conversation: self)
+                self.delegate?.conversationDidUpdateEvents(self)
             }
         } else {
             print("Event not found.")

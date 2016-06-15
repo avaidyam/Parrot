@@ -8,8 +8,8 @@ public class AuthenticatorCLI {
 	private static let OAUTH2_TOKEN_REQUEST_URL = "https://accounts.google.com/o/oauth2/token"
 	
 	private class func loadTokens() -> (access_token: String, refresh_token: String)? {
-		let at = NSUserDefaults.standard().string(forKey: "access_token")
-		let rt = NSUserDefaults.standard().string(forKey: "refresh_token")
+		let at = UserDefaults.standard().string(forKey: "access_token")
+		let rt = UserDefaults.standard().string(forKey: "refresh_token")
 		
 		if let at = at, rt = rt {
 			return (access_token: at, refresh_token: rt)
@@ -27,10 +27,10 @@ public class AuthenticatorCLI {
 		]
 		
 		// Make request first.
-		let req = NSMutableURLRequest(url: URL(string: OAUTH2_TOKEN_REQUEST_URL)!)
+		var req = URLRequest(url: URL(string: OAUTH2_TOKEN_REQUEST_URL)!)
 		req.httpMethod = "POST"
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
-		req.httpBody = query(parameters: token_request_data).data(using: NSUTF8StringEncoding, allowLossyConversion: false)
+		req.httpBody = query(parameters: token_request_data).data(using: String.Encoding.utf8, allowLossyConversion: false)
 		
 		session.request(request: req) {
 			guard let data = $0.data else {
@@ -53,7 +53,7 @@ public class AuthenticatorCLI {
 	
 	public static func authenticateClient(cb: (configuration: URLSessionConfiguration) -> Void) {
 		let cfg = URLSessionConfiguration.default()
-		cfg.httpCookieStorage = NSHTTPCookieStorage.shared()
+		cfg.httpCookieStorage = HTTPCookieStorage.shared()
 		cfg.httpAdditionalHeaders = _defaultHTTPHeaders
 		let session = URLSession(configuration: cfg)
 		
@@ -64,7 +64,7 @@ public class AuthenticatorCLI {
 			authenticate(session: session, refresh_token: code.refresh_token) { (access_token: String, refresh_token: String) in
 				
 				let url = "https://accounts.google.com/accounts/OAuthLogin?source=hangups&issueuberauth=1"
-				let request = NSMutableURLRequest(url: URL(string: url)!)
+				var request = URLRequest(url: URL(string: url)!)
 				request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 				
 				session.request(request: request) {
@@ -73,13 +73,13 @@ public class AuthenticatorCLI {
 						return
 					}
 					
-					var uberauth = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+					var uberauth = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
 					uberauth.replaceSubrange(Range<String.Index>(uncheckedBounds: (
 						lower: uberauth.index(uberauth.endIndex, offsetBy: -1),
 						upper: uberauth.endIndex
 					)), with: "")
 					
-					let request = NSMutableURLRequest(url: URL(string: "https://accounts.google.com/MergeSession")!)
+					var request = URLRequest(url: URL(string: "https://accounts.google.com/MergeSession")!)
 					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 					
 					session.request(request: request) {
@@ -89,7 +89,7 @@ public class AuthenticatorCLI {
 						}
 						
 						let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
-						let request = NSMutableURLRequest(url: URL(string: url)!)
+						var request = URLRequest(url: URL(string: url)!)
 						request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
 						
 						session.request(request: request) {

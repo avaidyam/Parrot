@@ -1,11 +1,11 @@
 import Foundation // Date
 
 public protocol ConversationListDelegate {
-    func conversationList(list: ConversationList, didReceiveEvent event: IEvent)
-    func conversationList(list: ConversationList, didChangeTypingStatusTo status: TypingType)
-    func conversationList(list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification)
+    func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent)
+    func conversationList(_ list: ConversationList, didChangeTypingStatusTo status: TypingType)
+    func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification)
     func conversationList(didUpdate list: ConversationList)
-    func conversationList(list: ConversationList, didUpdateConversation conversation: IConversation)
+    func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation)
 }
 
 // Wrapper around Client that maintains a list of Conversations
@@ -116,7 +116,7 @@ public class ConversationList {
         if let conv = conv_dict[event.conversationId!.id!] {
             let conv_event = conv.add_event(event: event)
 
-			delegate?.conversationList(list: self, didReceiveEvent: conv_event)
+			delegate?.conversationList(self, didReceiveEvent: conv_event)
             conv.handleEvent(event: conv_event)
         } else {
             print("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
@@ -128,7 +128,7 @@ public class ConversationList {
         let conv_id = client_conversation.conversationId!.id!
         if let conv = conv_dict[conv_id] {
             conv.update_conversation(conversation: client_conversation)
-			delegate?.conversationList(list: self, didUpdateConversation: conv)
+			delegate?.conversationList(self, didUpdateConversation: conv)
         } else {
             self.add_conversation(client_conversation: client_conversation)
         }
@@ -140,7 +140,7 @@ public class ConversationList {
         let conv_id = set_typing_notification.conversationId!.id!
         if let conv = conv_dict[conv_id] {
             let res = parseTypingStatusMessage(p: set_typing_notification)
-			delegate?.conversationList(list: self, didChangeTypingStatusTo: res.status)
+			delegate?.conversationList(self, didChangeTypingStatusTo: res.status)
             let user = user_list[UserID(
 				
                 chatID: set_typing_notification.senderId!.chatId!,
@@ -157,7 +157,7 @@ public class ConversationList {
         let conv_id = watermark_notification.conversationId!.id!
         if let conv = conv_dict[conv_id] {
             let res = parseWatermarkNotification(client_watermark_notification: watermark_notification)
-			delegate?.conversationList(list: self, didReceiveWatermarkNotification: res)
+			delegate?.conversationList(self, didReceiveWatermarkNotification: res)
             conv.handleWatermarkNotification(status: res)
         } else {
             print("Received WatermarkNotification for unknown conversation \(conv_id)")
@@ -190,7 +190,7 @@ public class ConversationList {
     // MARK: Calls from conversations
 	
     public func conversationDidUpdate(conversation: IConversation) {
-		delegate?.conversationList(list: self, didUpdateConversation: conversation)
+		delegate?.conversationList(self, didUpdateConversation: conversation)
     }
 	
 	// Receive a ClientStateUpdate and fan out to Conversations

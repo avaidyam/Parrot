@@ -25,7 +25,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 			_hangoutsClient = Client(configuration: $0)
 			_hangoutsClient?.connect()
 			
-			NSNotificationCenter.default()
+			NotificationCenter.default()
 				.addObserver(forName: Client.didConnectNotification, object: _hangoutsClient!, queue: nil) { _ in
 					_hangoutsClient!.buildUserConversationList { (userList, conversationList) in
 						_REMOVE.forEach {
@@ -45,22 +45,22 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 					self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 				}
 				
-				Notifications.subscribe(name: NSUserDefaultsDidChangeNotification) { note in
+				NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
 					
 					// Handle appearance colors.
-					let dark = Settings()[Parrot.DarkAppearance] as? Bool ?? false
+					let dark = UserDefaults.standard()[Parrot.DarkAppearance] as? Bool ?? false
 					let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 					self.view.window?.appearance = NSAppearance(named: appearance)
 				}
 				
 				// Instantiate storyboard and controller and begin the UI from here.
-				Dispatch.main().add {
+				DispatchQueue.main.async {
 					self.viewingVC = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
 					self.viewingVC?.preferredContentSize = CGSize(width: 320, height: 480)
 					
 					self.selectionProvider = { row in
 						self.viewingVC?.representedObject = self.conversationList?.conversations[row]
-						self.present(inWidget: self.viewingVC)
+						self.present(inWidget: self.viewingVC!)
 					}
 				}
 			}
@@ -142,7 +142,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 		
 		// Load all the field values from the conversation.
 		var img: NSImage = defaultUserImage
-		if let d = fetchData(id: c?.id.gaiaID, c?.photoURL) {
+		if let d = fetchData(c?.id.gaiaID, c?.photoURL) {
 			img = NSImage(data: d)!
 		}
 		
@@ -157,14 +157,15 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 	}
 	
 	private func _getAllPersons() -> [Person]? {
-		return self.conversationList?.conversations.map { _getPerson(conversation: $0) }
+		return self.conversationList?.conversations.map { _getPerson($0) }
 	}
 	
 	func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent) {}
 	func conversationList(_ list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
 	func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
 	
-	/* TODO: Just update the row that is updated. */
+	/* TODO: Just updat
+	e the row that is updated. */
 	func conversationList(didUpdate list: ConversationList) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
@@ -187,7 +188,7 @@ extension ParrotViewController: NCWidgetProviding {
 	func widgetMarginInsets(forProposedMarginInsets defaultMarginInset: EdgeInsets) -> EdgeInsets {
 		return NSEdgeInsetsZero
 	}
-	func widgetPerformUpdateWithCompletionHandler(_ completionHandler: ((NCUpdateResult) -> Void)!) {
+	func widgetPerformUpdate(completionHandler: ((NCUpdateResult) -> Void)) {
 		completionHandler(.newData)
 	}
 	var widgetAllowsEditing: Bool {

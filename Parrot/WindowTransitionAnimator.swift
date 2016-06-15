@@ -5,7 +5,7 @@ public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSV
 	public init(size: NSSize = NSSize(width: 480, height: 320)) {
 		super.init(window: nil)
 		let rect = NSRect(x: 0, y: 0, width: size.width, height: size.height)
-		let style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask
+		let style: NSWindowStyleMask = [.titled, .closable, .resizable]
 		let window = NSWindow(contentRect: rect, styleMask: style, backing: .buffered, defer: false)
 		self.window = window
 		
@@ -29,7 +29,7 @@ public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSV
 	
 	public func displayViewController(_ viewController: NSViewController, fromViewController: NSViewController? = nil) {
 		if let from = fromViewController {
-			from.present(viewController, animator: self)
+			from.presentViewController(viewController, animator: self)
 		} else {
 			self.contentViewController = viewController
 			self.window?.bind(NSTitleBinding, to: viewController, withKeyPath: "title", options: nil)

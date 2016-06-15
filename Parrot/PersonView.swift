@@ -78,7 +78,7 @@ public class PersonView : NSTableCellView {
 			}
 			
 			// Update the time label in realtime!
-			Notifications.subscribe(name: "PersonView.UpdateTime") { n in
+			NotificationCenter.default().subscribe(name: "PersonView.UpdateTime") { n in
 				self.timeLabel?.stringValue = self.time.relativeString()
 			}
 		}
@@ -94,7 +94,7 @@ public class PersonView : NSTableCellView {
 	
 	// Return an array of all dragging components corresponding to our subviews.
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
-		return [self.draggingComponent(key: "Person")]
+		return [self.draggingComponent("Person")]
 	}
 	
 	// Allows the circle crop to dynamically change.

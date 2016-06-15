@@ -1,9 +1,5 @@
 import Foundation
 
-public func Settings(_ domain: String? = nil) -> UserDefaults {
-	return UserDefaults(suiteName: domain)!
-}
-
 public extension UserDefaults {
 	
 	// Set a settings key with a given non-nil value.
@@ -24,7 +20,6 @@ public extension UserDefaults {
 	}
 	
 	// Utility for getting multiple settings at a time.
-	/* TODO: Replace with a map from an array to a dictionary. */
 	public func get(_ keys: [String], domain: String? = nil) -> [String: AnyObject?] {
 		var map = [String: AnyObject?]()
 		for (key) in keys {
@@ -33,7 +28,7 @@ public extension UserDefaults {
 		return map
 	}
 	
-	// Allows shorter syntax, like so: Settings()["Test"] = 42
+	// Allows shorter syntax, like so: UserDefaults.standard()["Test"] = 42
 	subscript(key: String) -> AnyObject? {
 		get {
 			return self.value(forKey: key)

@@ -160,7 +160,7 @@ struct Terminal {
 	}
 	
 	static func ignoreSignals(flag: Bool) {
-		flag ? raw() : noraw()
+		_ = flag ? raw() : noraw()
 		_rawMode = flag
 	}
 	
@@ -169,7 +169,7 @@ struct Terminal {
 	}
 	
 	static func printSignals(flag: Bool) {
-		flag ? cbreak() : nocbreak()
+		_ = flag ? cbreak() : nocbreak()
 		_charBreak = flag
 	}
 	
@@ -178,7 +178,7 @@ struct Terminal {
 	}
 	
 	static func echoMode(flag: Bool) {
-		flag ? echo() : noecho()
+		_ = flag ? echo() : noecho()
 		_echoOn = flag
 	}
 	
@@ -205,34 +205,33 @@ struct Terminal {
 
 // Rudimentary event loop to drive UI refreshing and whatnot.
 class EventLoop {
-	let attr: dispatch_queue_attr_t
-	let queue: dispatch_queue_t
-	let source: dispatch_source_t
+	let attr: DispatchQueueAttributes = [.serial, .qosUserInteractive]
+	let queue: DispatchQueue
+	let source: DispatchSourceTimer
 	
 	// name - name of the dispatch queue
 	// frequency - how many times per second to update
 	// handler - what to do during the update
-	init(name: String, frequency: Double, handler: (Void) -> Void) {
-		attr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_USER_INTERACTIVE, 0)
-		queue = dispatch_queue_create(name, attr)
-		source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue)
+	init(name: String, frequency: Int, handler: (Void) -> Void) {
+		queue = DispatchQueue(label: name, attributes: attr)
+		source = DispatchSource.timer(queue: queue)
 		
-		let int = UInt64(frequency * Double(NSEC_PER_SEC))
-		dispatch_source_set_timer(source, dispatch_time(DISPATCH_TIME_NOW, 0), int, 0)
-		dispatch_source_set_event_handler(source, handler)
-		dispatch_resume(source)
+		source.scheduleRepeating(deadline: DispatchTime.now(), // FIXME this was borked...
+		                         interval: DispatchTimeInterval.seconds(frequency))
+		source.setEventHandler(handler: handler)
+		source.resume()
 	}
 	
 	deinit {
-		dispatch_source_cancel(source)
+		source.cancel()
 		// can't delete anything :(
 	}
 	
 	// Use only in case of a heavy operation that could backlog the queue.
 	// This temporarily disables the queue execution!
 	func execute(handler: (Void) -> Void) {
-		dispatch_suspend(source)
+		source.suspend()
 		handler()
-		dispatch_resume(source)
+		source.resume()
 	}
 }

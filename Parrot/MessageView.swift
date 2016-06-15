@@ -61,7 +61,7 @@ public class MessageView : NSTableCellView {
 	
 	private class func attributedStringForText(_ text: String) -> AttributedString {
 		let attrString = NSMutableAttributedString(string: text)
-		let linkDetector = try! DataDetector(types: TextCheckingResult.CheckingType.link.rawValue)
+		let linkDetector = try! NSDataDetector(types: TextCheckingResult.CheckingType.link.rawValue)
 		for match in linkDetector.matches(in: text, options: [], range: NSMakeRange(0, text.characters.count)) {
 			if let url = match.url {
 				attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
@@ -72,7 +72,7 @@ public class MessageView : NSTableCellView {
 				)
 				
 				// TESTING:
-				_ = try? LinkPreviewParser.parse(link: url.absoluteString!)
+				_ = try? LinkPreviewParser.parse(url.absoluteString!)
 			}
 		}
 		return attrString
@@ -117,13 +117,13 @@ public class MessageView : NSTableCellView {
 			// NSTextView doesn't automatically change its text color when the 
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.
-			text.textColor = NSColor.label()
+			text.textColor = NSColor.labelColor()
 			text.linkTextAttributes = [
-				NSCursorAttributeName: NSColor.label()
+				NSCursorAttributeName: NSColor.labelColor()
 			]
 			text.selectedTextAttributes = [
 				NSBackgroundColorAttributeName: self._textFront,
-				NSForegroundColorAttributeName: NSColor.label(),
+				NSForegroundColorAttributeName: NSColor.labelColor(),
 			]
 		}
 	}
