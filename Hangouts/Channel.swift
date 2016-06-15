@@ -1,11 +1,9 @@
-import Foundation // lots of things here
-import Alamofire
+import Foundation
 
 /* TODO: Fix the retry semantics instead of what we have right now. */
 /* TODO: Auto-turn a callback into a blocking using semaphores. */
-/* TODO: Remove Alamofire dependency - stream{}. */
 
-public final class Channel : NSObject, URLSessionDataDelegate {
+public final class Channel : NSObject {
 	
 	// The prefix for any BrowserChannel endpoint.
 	private static let URLPrefix = "https://0.client-channel.google.com/client-channel"
@@ -96,6 +94,7 @@ public final class Channel : NSObject, URLSessionDataDelegate {
 	
 	// For use in Client:
 	internal var session = URLSession()
+	internal var proxy = URLSessionDelegateProxy()
 	
     private var isConnected = false
     private var onConnectCalled = false
@@ -105,17 +104,10 @@ public final class Channel : NSObject, URLSessionDataDelegate {
 	private var retries = Channel.maxRetries
     private var needsSID = true
 	
-	private let manager: Alamofire.Manager
-	
 	public init(configuration: URLSessionConfiguration) {
-		//super.init()
-		//session = URLSession(configuration: configuration,
-		//                       delegate: self, delegateQueue: nil)
-		
+		super.init()
 		session = URLSession(configuration: configuration,
-			delegate: Manager.SessionDelegate(), delegateQueue: nil)
-		self.manager = Manager(session: session,
-			delegate: (session.delegate as! Manager.SessionDelegate))!
+		                     delegate: self.proxy, delegateQueue: nil)
 	}
 	
 	// Listen for messages on the backwards channel.
@@ -240,29 +232,33 @@ public final class Channel : NSObject, URLSessionDataDelegate {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
-		/* TODO: Make sure stream{} times out with PUSH_TIMEOUT. */
-		
-		_ = manager.request(urlRequest: request)
-			.stream { (data: NSData) in
-				self.onPushData(data: data as Data)
-			}.responseData { response in
-			if response.result.isFailure { // response.response?.statusCode >= 400
+		let task = self.session.dataTask(with: request)
+		let p = URLSessionDataDelegateProxy()
+		p.didReceiveData = { _,_,data in
+			self.onPushData(data: data)
+		}
+		p.didComplete = { _,t,error in
+			let response = t.response
+			let r = response as? HTTPURLResponse
+			if r?.statusCode >= 400 {
 				/* TODO: Sometimes things fail here, not sure why yet. */
 				/* TODO: This should be moved out of here later on. */
-				print("Request failed with: \(response.result.error!)")
+				print("Request failed with: \(error)")
 				self.needsSID = true
 				self.listen()
-			} else if response.response?.statusCode == 200 {
+			} else if r?.statusCode == 200 {
 				//self.onPushData(response.result.value!) // why is this commented again??
 				self.longPollRequest()
 				
 				// we shouldn't call ourselves; the while loop thing should.
 				// doesn't work right though.
 			} else {
-				print("Received unknown response code \(response.response?.statusCode)")
-				print(NSString(data: response.result.value! as Data, encoding: 4)! as String)
+				print("Received unknown response code \(r?.statusCode)")
+				//print(NSString(data: response.data ?? Data(), encoding: 4)! as String)
 			}
 		}
+		self.proxy[task] = p
+		task.resume()
 	}
 	
 	// Creates a new channel for receiving push data.
@@ -282,8 +278,10 @@ public final class Channel : NSObject, URLSessionDataDelegate {
 	
 	// Delay subscribing until first byte is received prevent "channel not
 	// ready" errors that appear to be caused by a race condition on the server.
-    private func onPushData(data: Data) {
+	private func onPushData(data: Data) {
+		print("data is: \(data)")
 		for chunk in (self.chunkParser?.getChunks(newBytes: data))! {
+			print("chunk")
 			
 			// This method is only called when the long-polling request was
 			// successful, so use it to trigger connection events if necessary.
@@ -301,6 +299,7 @@ public final class Channel : NSObject, URLSessionDataDelegate {
 			}
 			
 			if let json = try? chunk.decodeJSON(), let container = json as? [AnyObject] {
+				print("got data")
 				for inner in container {
 					//let array_id = inner[0]
 					if let array = inner[1] as? [AnyObject] {

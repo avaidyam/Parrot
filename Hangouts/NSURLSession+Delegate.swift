@@ -222,12 +222,24 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 		
 		if let sessionDidReceiveChallenge = sessionDidReceiveChallenge {
 			(disposition, credential) = sessionDidReceiveChallenge(session, challenge)
+		} else if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+			let host = challenge.protectionSpace.host
+			
+			disposition = .useCredential // FIXME
+			/*if let
+				serverTrustPolicy = session.serverTrustPolicyManager?.serverTrustPolicyForHost(host),
+				serverTrust = challenge.protectionSpace.serverTrust
+			{
+				if serverTrustPolicy.evaluateServerTrust(serverTrust, isValidForHost: host) {
+					disposition = .UseCredential
+					credential = NSURLCredential(forTrust: serverTrust)
+				} else {
+					disposition = .CancelAuthenticationChallenge
+				}
+			}*/
 		}
+		
 		completionHandler(disposition, credential)
-	}
-	
-	public func URLSessionDidFinishEventsForBackgroundURLSession(session: URLSession) {
-		sessionDidFinishEventsForBackgroundURLSession?(session)
 	}
 	
 	// FIXME
@@ -280,6 +292,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 		}
 	}
 	
+	// FIXME
 	public func urlSession(
 		_ session: URLSession,
 		task: URLSessionTask,
@@ -329,6 +342,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 		completionHandler(disposition)
 	}
 	
+	// FIXME
 	public func urlSession(
 		_ session: URLSession,
 		dataTask: URLSessionDataTask,
@@ -424,8 +438,6 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 			return sessionDidBecomeInvalidWithError != nil
 		case #selector(URLSessionDelegate.urlSession(_:didReceive:completionHandler:)):
 			return sessionDidReceiveChallenge != nil
-		//case #selector(URLSessionDelegate.URLSessionDidFinishEventsForBackgroundURLSession(_:)):
-		//	return sessionDidFinishEventsForBackgroundURLSession != nil
 		case #selector(URLSessionTaskDelegate.urlSession(_:task:willPerformHTTPRedirection:newRequest:completionHandler:)):
 			return taskWillPerformHTTPRedirection != nil
 		case #selector(URLSessionDataDelegate.urlSession(_:dataTask:didReceive:completionHandler:)):
