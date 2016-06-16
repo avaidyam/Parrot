@@ -1,3 +1,4 @@
+import Foundation // String, Date
 
 /* TODO: Refactor ChatMessageSegment to match hangups and Protobuf docs. */
 /* TODO: Include Markdown, HTML, and URL formatting parsers. */
@@ -192,13 +193,13 @@ public class IChatMessageSegment {
 	// Create a chat message segment from a parsed MessageSegment.
 	// The formatting options are optional.
 	public init(segment: Segment) {
-		self.text = segment.text as String? ?? ""
+		self.text = segment.text ?? ""
 		self.type = segment.type
-		self.bold = segment.formatting?.bold?.boolValue ?? false
-		self.italic = segment.formatting?.italic?.boolValue ?? false
-		self.strikethrough = segment.formatting?.strikethrough?.boolValue ?? false
-		self.underline = segment.formatting?.underline?.boolValue ?? false
-		self.linkTarget = (segment.linkData?.linkTarget as String?) ?? nil
+		self.bold = segment.formatting?.bold ?? false
+		self.italic = segment.formatting?.italic ?? false
+		self.strikethrough = segment.formatting?.strikethrough ?? false
+		self.underline = segment.formatting?.underline ?? false
+		self.linkTarget = segment.linkData?.linkTarget ?? nil
 	}
 	
 	// Serialize the segment to pblite.
@@ -208,7 +209,6 @@ public class IChatMessageSegment {
 			self.text,
 			[
 				self.bold ? 1 : 0,
-				
 				self.italic ? 1 : 0,
 				self.strikethrough ? 1 : 0,
 				self.underline ? 1 : 0,
@@ -234,8 +234,8 @@ public typealias IWatermarkNotification = (convID: String, userID: UserID, readT
 internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatusMessage {
 	return ITypingStatusMessage(
 		convID: p.conversationId!.id! ,
-		userID: UserID(chatID: p.senderId!.chatId! , gaiaID: p.senderId!.gaiaId! ),
-		timestamp: Date.from(UTC: Double(p.timestamp ?? 0)),//from_timestamp(microsecond_timestamp: )!,
+		userID: UserID(chatID: p.senderId!.chatId!, gaiaID: p.senderId!.gaiaId!),
+		timestamp: Date.from(UTC: Double(p.timestamp ?? 0)),
 		status: p.type!
 	)
 }
@@ -243,11 +243,11 @@ internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatu
 // Return WatermarkNotification from ClientWatermarkNotification.
 internal func parseWatermarkNotification(client_watermark_notification: WatermarkNotification) -> IWatermarkNotification {
 	return IWatermarkNotification(
-		convID: client_watermark_notification.conversationId!.id! ,
+		convID: client_watermark_notification.conversationId!.id!,
 		userID: UserID(
-			chatID: client_watermark_notification.senderId!.chatId! ,
+			chatID: client_watermark_notification.senderId!.chatId!,
 			gaiaID: client_watermark_notification.senderId!.gaiaId!
 		),
-		readTimestamp: Date.from(UTC: Double(client_watermark_notification.latestReadTimestamp ?? 0)) //from_timestamp(microsecond_timestamp: )!
+		readTimestamp: Date.from(UTC: Double(client_watermark_notification.latestReadTimestamp ?? 0))
 	)
 }

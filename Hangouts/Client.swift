@@ -6,11 +6,11 @@ public final class Client {
 	public static let IMAGE_UPLOAD_URL = "https://docs.google.com/upload/photos/resumable"
 	
 	// NotificationCenter notification and userInfo keys.
-	public static let didConnectNotification = NSNotification.Name(rawValue: "Hangouts.Client.DidConnect")
-	public static let didReconnectNotification = NSNotification.Name(rawValue: "Hangouts.Client.DidReconnect")
-	public static let didDisconnectNotification = NSNotification.Name(rawValue: "Hangouts.Client.DidDisconnect")
-	public static let didUpdateStateNotification = NSNotification.Name(rawValue: "Hangouts.Client.UpdateState")
-	public static let didUpdateStateKey = NSNotification.Name(rawValue: "Hangouts.Client.UpdateState.Key")
+	public static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidConnect")
+	public static let didReconnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidReconnect")
+	public static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidDisconnect")
+	public static let didUpdateStateNotification = Notification.Name(rawValue: "Hangouts.Client.UpdateState")
+	public static let didUpdateStateKey = Notification.Name(rawValue: "Hangouts.Client.UpdateState.Key")
 	
 	// Timeout to send for setactiveclient requests:
 	public static let ACTIVE_TIMEOUT_SECS = 120

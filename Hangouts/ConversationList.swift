@@ -44,7 +44,6 @@ public class ConversationList {
 			// nothing here
 		}
 		let d = _c.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) { note in
-			print("got \(note)")
 			if let val = (note.userInfo)?[Client.didUpdateStateKey.rawValue] as? Wrapper<StateUpdate> {
 				self.clientDidUpdateState(client: self.client, update: val.element)
 			} else {

@@ -94,7 +94,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
     override func viewWillAppear() {
-		_note = NotificationCenter.default().subscribe(name: NSNotification.Name.NSWindowDidBecomeKey.rawValue, object: self.window) { a in
+		_note = NotificationCenter.default().subscribe(name: Notification.Name.NSWindowDidBecomeKey.rawValue, object: self.window) { a in
 			self.windowDidBecomeKey(nil)
 		}
         if self.window?.isKeyWindow ?? false {
@@ -156,7 +156,6 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		
 		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
 		//self.messagesView.appendElements(found)
-		//print("got \(msg)")
 		
         if !(self.window?.isKeyWindow ?? false) {
             let user = conversation.user_list[event.userID]

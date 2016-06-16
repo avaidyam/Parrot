@@ -223,7 +223,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 		if let sessionDidReceiveChallenge = sessionDidReceiveChallenge {
 			(disposition, credential) = sessionDidReceiveChallenge(session, challenge)
 		} else if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-			let host = challenge.protectionSpace.host
+			_ = challenge.protectionSpace.host
 			
 			disposition = .useCredential // FIXME
 			/*if let

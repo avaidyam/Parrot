@@ -233,7 +233,7 @@ class Canvas {
 	
 	// If clear is true, the window is cleared and then refreshed.
 	// If soft is true, wrefresh() isn't called. Panels are updated.
-	func refresh(clear clear: Bool = false) {
+	func refresh(clear: Bool = false) {
 		if clear {
 			wclear(self.window)
 		}

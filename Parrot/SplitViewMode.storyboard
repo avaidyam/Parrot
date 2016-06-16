@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11129.15" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="BQX-cr-Ai7">
+            <objects>
+                <windowController id="pNf-3Q-IjX" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="MAK-RD-8yB">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="245" y="310" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
+                    </window>
+                    <connections>
+                        <segue destination="rNA-wJ-63x" kind="relationship" relationship="window.shadowedContentViewController" id="5S1-bq-uMT"/>
+                    </connections>
+                </windowController>
+                <customObject id="K9B-6O-kiK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-198" y="-106"/>
+        </scene>
+        <!--Split View Controller-->
+        <scene sceneID="lkF-PF-Lqy">
+            <objects>
+                <splitViewController id="rNA-wJ-63x" sceneMemberID="viewController">
+                    <splitViewItems>
+                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="zns-55-jxl"/>
+                        <splitViewItem id="KJ1-aX-11e"/>
+                    </splitViewItems>
+                    <splitView key="splitView" dividerStyle="thin" vertical="YES" id="qrN-9o-JbY">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </splitView>
+                    <connections>
+                        <segue destination="4sj-BC-juc" kind="relationship" relationship="splitItems" id="aGH-ma-bwR"/>
+                        <segue destination="0yO-BQ-B71" kind="relationship" relationship="splitItems" id="dXM-F3-ayW"/>
+                    </connections>
+                </splitViewController>
+                <customObject id="BbD-zd-pBx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-198" y="294"/>
+        </scene>
+        <!--Conversations View Controller-->
+        <scene sceneID="sQh-wM-asi">
+            <objects>
+                <viewController id="4sj-BC-juc" customClass="ConversationsViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="EMP-32-gAm">
+                        <rect key="frame" x="0.0" y="0.0" width="197" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="HGN-6H-xQ4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-425" y="732"/>
+        </scene>
+        <!--Conversation View Controller-->
+        <scene sceneID="jj2-OU-ovk">
+            <objects>
+                <viewController id="0yO-BQ-B71" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="b59-fe-aQ2">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="ekk-HK-9gj" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-98" y="732"/>
+        </scene>
+    </scenes>
+</document>

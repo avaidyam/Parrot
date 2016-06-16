@@ -1,9 +1,9 @@
-import Foundation // NSNotificationCenter
+import Foundation // NotificationCenter
 
 // Collection of User instances.
 public class UserList {
 	
-	private var observer: NSObjectProtocol? // for NSNotification
+	private var observer: NSObjectProtocol? // for Notification
 	private let selfUser: User
 	private var users: [UserID: User]
 	

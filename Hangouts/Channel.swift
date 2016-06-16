@@ -16,11 +16,11 @@ public final class Channel : NSObject {
 	private static let maxRetries = 5
 	
 	// NotificationCenter notification and userInfo keys.
-	public static let didConnectNotification = NSNotification.Name(rawValue: "Hangouts.Channel.DidConnect")
-	public static let didReconnectNotification = NSNotification.Name(rawValue: "Hangouts.Channel.DidReconnect")
-	public static let didDisconnectNotification = NSNotification.Name(rawValue: "Hangouts.Channel.DidDisconnect")
-	public static let didReceiveMessageNotification = NSNotification.Name(rawValue: "Hangouts.Channel.ReceiveMessage")
-	public static let didReceiveMessageKey = NSNotification.Name(rawValue: "Hangouts.Channel.ReceiveMessage.Key")
+	public static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidConnect")
+	public static let didReconnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidReconnect")
+	public static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidDisconnect")
+	public static let didReceiveMessageNotification = Notification.Name(rawValue: "Hangouts.Channel.ReceiveMessage")
+	public static let didReceiveMessageKey = Notification.Name(rawValue: "Hangouts.Channel.ReceiveMessage.Key")
 	
 	// Parse data from the backward channel into chunks.
 	// Responses from the backward channel consist of a sequence of chunks which

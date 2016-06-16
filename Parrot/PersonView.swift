@@ -28,7 +28,7 @@ public class PersonView : NSTableCellView {
 	@IBOutlet var nameLabel: NSTextField?
 	@IBOutlet var textLabel: NSTextField?
 	@IBOutlet var timeLabel: NSTextField?
-	@IBOutlet var unreadLabel: NSTextField?
+	@IBOutlet var unreadLabel: NSImageView?
 	
 	var time: Date!
 	
@@ -60,22 +60,23 @@ public class PersonView : NSTableCellView {
 			self.textLabel?.toolTip = o.secondary
 			self.timeLabel?.stringValue = o.time.relativeString()
 			self.timeLabel?.toolTip = "\(f.string(from: o.time))"
-			self.unreadLabel?.stringValue = "\(o.indicator)"
-			//self.unreadLabel?.layer?.backgroundColor = o.highlight.cgColor
+			//self.unreadLabel?.stringValue = "\(o.indicator)"
+			self.unreadLabel?.layer?.backgroundColor = o.highlight.cgColor
 			
 			// Set the unread label and its spacing constraint visibility.
 			self.unreadLabel?.isHidden = o.indicator <= 0
-			let c = self.unreadLabel?.constraints.filter { $0.identifier == "UnreadEventSpacing" }
+			let c = self.unreadLabel?.constraints.filter { $0.identifier == "TimeUnreadSpacing" }
 			if o.indicator <= 0 {
 				NSLayoutConstraint.deactivate(c ?? [])
 			} else {
 				NSLayoutConstraint.activate(c ?? [])
 			}
 			
+			/* // bold the message contents
 			if let t = self.textLabel {
 				t.font = NSFont.systemFont(ofSize: t.font!.pointSize,
-						weight: o.indicator <= 0 ? NSFontWeightBold : NSFontWeightRegular)
-			}
+						weight: o.indicator >= 0 ? NSFontWeightBold : NSFontWeightRegular)
+			}*/
 			
 			// Update the time label in realtime!
 			NotificationCenter.default().subscribe(name: "PersonView.UpdateTime") { n in
