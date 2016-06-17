@@ -52,3 +52,20 @@ public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSV
 		self.contentViewController = nil
 	}
 }
+
+public class DetailSegue: NSStoryboardSegue {
+	public override func perform() {
+		guard	let source = self.sourceController as? NSViewController,
+				let destination = self.destinationController as? NSViewController,
+				let splitView = source.parent as? NSSplitViewController
+		else { return }
+		
+		let splitItem = NSSplitViewItem(viewController: destination)
+		
+		// Remove the last SplitViewItem before adding the next one.
+		if splitView.childViewControllers.count > 1 {
+			splitView.removeSplitViewItem(splitView.splitViewItems.last!)
+		}
+		splitView.addSplitViewItem(splitItem)
+	}
+}

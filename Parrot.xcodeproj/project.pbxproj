@@ -60,6 +60,8 @@
 		48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4F1C37DACE00ACA29B /* Reference.swift */; };
 		48BF49A31C1D23D000AC4DD5 /* NSDate+TimeAgo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF49A21C1D23D000AC4DD5 /* NSDate+TimeAgo.swift */; };
 		48BFD0321D13130000DAE29E /* SplitViewMode.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48BFD0311D13130000DAE29E /* SplitViewMode.storyboard */; };
+		48BFD0351D13850B00DAE29E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
+		48BFD0361D13856A00DAE29E /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
 		48CA70211C50252F0026270E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
 		48CA70231C502B6A0026270E /* AuthenticatorCLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA70221C502B6A0026270E /* AuthenticatorCLI.swift */; };
 		48DE52CC1C1CC12900647C63 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52CB1C1CC12900647C63 /* icon.icns */; };
@@ -311,6 +313,7 @@
 		48BA5B4F1C37DACE00ACA29B /* Reference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reference.swift; sourceTree = "<group>"; };
 		48BF49A21C1D23D000AC4DD5 /* NSDate+TimeAgo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+TimeAgo.swift"; sourceTree = "<group>"; };
 		48BFD0311D13130000DAE29E /* SplitViewMode.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplitViewMode.storyboard; sourceTree = "<group>"; };
+		48BFD0341D13694900DAE29E /* hangouts.proto */ = {isa = PBXFileReference; lastKnownFileType = text; path = hangouts.proto; sourceTree = "<group>"; };
 		48CA70221C502B6A0026270E /* AuthenticatorCLI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticatorCLI.swift; sourceTree = "<group>"; };
 		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52CB1C1CC12900647C63 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
@@ -408,6 +411,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48BFD0351D13850B00DAE29E /* Hangouts.framework in Frameworks */,
 				48DE52F21C1CC28000647C63 /* NotificationCenter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -633,6 +637,7 @@
 		48834E0A1C1B3739009BC442 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				48BFD0341D13694900DAE29E /* hangouts.proto */,
 				48834E271C1B3D98009BC442 /* Hangouts.h */,
 				48834DF01C1B372E009BC442 /* Info.plist */,
 			);
@@ -1005,6 +1010,7 @@
 						DevelopmentTeam = 2754ZHC8VE;
 						DevelopmentTeamName = "Aditya Vaidyam (Personal Team)";
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
 								enabled = 1;
@@ -1053,6 +1059,7 @@
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 2754ZHC8VE;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
 								enabled = 1;
@@ -1066,6 +1073,7 @@
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 2754ZHC8VE;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
 								enabled = 1;
@@ -1079,6 +1087,7 @@
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 2754ZHC8VE;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
 								enabled = 1;
@@ -1312,6 +1321,7 @@
 				48DF849E1D08EEB800F39444 /* ElementContainerView.swift in Sources */,
 				48DF849F1D08EEB800F39444 /* MessageView.swift in Sources */,
 				48DF84A01D08EEB800F39444 /* PersonView.swift in Sources */,
+				48BFD0361D13856A00DAE29E /* AppManagement.swift in Sources */,
 				48DF84A11D08EEB800F39444 /* ServiceManager.swift in Sources */,
 				48DF84A21D08EEB800F39444 /* ConversationsViewController.swift in Sources */,
 				48DF84A31D08EEB800F39444 /* ConversationViewController.swift in Sources */,
@@ -1549,6 +1559,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = 2754ZHC8VE/;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -1569,6 +1580,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = 2754ZHC8VE/;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
@@ -1794,6 +1806,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotShare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = 2754ZHC8VE/;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -1811,6 +1824,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotShare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = 2754ZHC8VE/;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
@@ -1829,6 +1843,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = 2754ZHC8VE/;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -1846,6 +1861,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = 2754ZHC8VE/;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
@@ -1864,6 +1880,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotToday;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = 2754ZHC8VE/;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -1881,6 +1898,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotToday;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = 2754ZHC8VE/;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;

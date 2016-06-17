@@ -17,7 +17,7 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
-		//checkLatestRelease()
+		_checkLatestRelease(prerelease: true)
 		BackgroundActivity.begin("Authenticate")
 		Authenticator.authenticateClient {
 			_hangoutsClient = Client(configuration: $0)

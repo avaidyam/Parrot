@@ -29,7 +29,11 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="K7u-i2-yQe"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                            <connections>
+                                                <segue destination="2UE-pw-Aer" kind="show" id="TeP-Cu-olc"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                                         <menuItem title="Services" id="NMo-om-nkz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -697,6 +701,52 @@
                 <userDefaultsController representsSharedInstance="YES" id="5Jg-0f-uLC"/>
             </objects>
             <point key="canvasLocation" x="1513" y="-315"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="8gj-44-OyX">
+            <objects>
+                <windowController id="2UE-pw-Aer" sceneMemberID="viewController">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="RsH-tq-Ya4">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="245" y="310" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
+                        <toolbar key="toolbar" implicitIdentifier="2AD61817-4A36-4B14-81D5-E0398A5A58CC" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="DBF-0p-Ly5">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="UBh-QH-G6M"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="1yy-Yc-euc"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="Ae4-XZ-qcD"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="6Bc-6B-iqW"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="yWB-ye-RqG"/>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="yWB-ye-RqG"/>
+                                <toolbarItem reference="UBh-QH-G6M"/>
+                                <toolbarItem reference="1yy-Yc-euc"/>
+                                <toolbarItem reference="yWB-ye-RqG"/>
+                            </defaultToolbarItems>
+                        </toolbar>
+                    </window>
+                    <connections>
+                        <segue destination="oKo-85-cKw" kind="relationship" relationship="window.shadowedContentViewController" id="3Z4-je-QC8"/>
+                    </connections>
+                </windowController>
+                <customObject id="nUq-uK-0bu" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1513" y="13"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="EvH-N7-cT2">
+            <objects>
+                <viewController id="oKo-85-cKw" sceneMemberID="viewController">
+                    <view key="view" id="OyE-Op-ZFm">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="xul-AJ-gC4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2144" y="-14"/>
         </scene>
     </scenes>
 </document>

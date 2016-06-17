@@ -21,7 +21,7 @@
                 </windowController>
                 <customObject id="K9B-6O-kiK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-198" y="-106"/>
+            <point key="canvasLocation" x="-198" y="-107"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="lkF-PF-Lqy">
@@ -52,10 +52,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="197" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </view>
+                    <connections>
+                        <segue destination="0yO-BQ-B71" kind="custom" customClass="DetailSegue" customModule="Parrot" customModuleProvider="target" id="ILP-cK-tYk"/>
+                    </connections>
                 </viewController>
                 <customObject id="HGN-6H-xQ4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-425" y="732"/>
+            <point key="canvasLocation" x="-483" y="709"/>
         </scene>
         <!--Conversation View Controller-->
         <scene sceneID="jj2-OU-ovk">
@@ -68,7 +71,10 @@
                 </viewController>
                 <customObject id="ekk-HK-9gj" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-98" y="732"/>
+            <point key="canvasLocation" x="-69" y="709"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="ILP-cK-tYk"/>
+    </inferredMetricsTieBreakers>
 </document>
