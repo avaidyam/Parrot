@@ -26,10 +26,11 @@ public class Authenticator {
 			request: URLRequest!,
 			frame: WebFrame!,
 			decisionListener listener: WebPolicyDecisionListener!) {
+				guard	let url = request.url?.absoluteString,
+						let val = validURL?.absoluteString
+				else { listener.use(); return }
 			
-				let url = request.url!.absoluteString
-				let val = (validURL?.absoluteString)!
-				if ((url?.contains(val)) != nil) {
+				if url.contains(val) {
 					listener.ignore()
 					handler?(request)
 					window?.close()
