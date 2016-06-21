@@ -60,7 +60,7 @@ public class PersonView : NSTableCellView {
 			self.textLabel?.toolTip = o.secondary
 			self.timeLabel?.stringValue = o.time.relativeString()
 			self.timeLabel?.toolTip = "\(f.string(from: o.time))"
-			//self.unreadLabel?.stringValue = "\(o.indicator)"
+			/*//self.unreadLabel?.stringValue = "\(o.indicator)"
 			self.unreadLabel?.layer?.backgroundColor = o.highlight.cgColor
 			
 			// Set the unread label and its spacing constraint visibility.
@@ -70,13 +70,13 @@ public class PersonView : NSTableCellView {
 				NSLayoutConstraint.deactivate(c ?? [])
 			} else {
 				NSLayoutConstraint.activate(c ?? [])
-			}
-			
-			/* // bold the message contents
+			}*/
+			self.unreadLabel?.isHidden = true
+			// bold the message contents
 			if let t = self.textLabel {
 				t.font = NSFont.systemFont(ofSize: t.font!.pointSize,
-						weight: o.indicator >= 0 ? NSFontWeightBold : NSFontWeightRegular)
-			}*/
+						weight: o.indicator > 0 ? NSFontWeightBold : NSFontWeightRegular)
+			}
 			
 			// Update the time label in realtime!
 			NotificationCenter.default().subscribe(name: "PersonView.UpdateTime") { n in

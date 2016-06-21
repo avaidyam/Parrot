@@ -61,7 +61,7 @@ public class PreferencesViewController: NSTabViewController {
 		super.viewWillAppear()
 		if let w = self.view.window, let t = w.toolbar {
 			w.titleVisibility = .hidden
-			t.displayMode = .iconAndLabel
+			t.displayMode = .iconOnly
 			t.insertItem(withItemIdentifier: NSToolbarFlexibleSpaceItemIdentifier, at: 0)
 			t.insertItem(withItemIdentifier: NSToolbarFlexibleSpaceItemIdentifier, at: t.items.count)
 			
@@ -73,7 +73,7 @@ public class PreferencesViewController: NSTabViewController {
 	
 	public override func tabView(_ tabView: NSTabView, willSelect tabViewItem: NSTabViewItem?) {
 		super.tabView(tabView, willSelect: tabViewItem)
-		_ = tabView.selectedTabViewItem
+		//_ = tabView.selectedTabViewItem
 		_willSelect(tabViewItem!)
 	}
 	

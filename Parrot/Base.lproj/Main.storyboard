@@ -596,60 +596,8 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" id="HyV-fh-RgO">
                                     <items>
-                                        <menuItem title="Dark Appearance" id="snW-S8-Cw5">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.DarkAppearance" id="5CY-ro-hvr">
-                                                    <dictionary key="options">
-                                                        <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                        <bool key="NSValidatesImmediately" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Invert Chat Style" id="wJg-Ua-skg">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.InvertChatStyle" id="8Ji-uS-FpT">
-                                                    <dictionary key="options">
-                                                        <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                        <bool key="NSValidatesImmediately" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Auto Emoji" id="Ojh-FQ-Nth">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.AutoEmoji" id="kcP-0g-Rgz">
-                                                    <dictionary key="options">
-                                                        <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                        <bool key="NSValidatesImmediately" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Vibrate Force Touch" id="1mp-kZ-0FF">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.VibrateForceTouch" id="FcP-JF-9RI">
-                                                    <dictionary key="options">
-                                                        <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                        <bool key="NSValidatesImmediately" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Show Sidebar" keyEquivalent="t" id="ISI-Dd-ffs">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <binding destination="5Jg-0f-uLC" name="value" keyPath="values.Parrot.ShowSidebar" id="U0v-BK-Dia">
-                                                    <dictionary key="options">
-                                                        <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                        <bool key="NSValidatesImmediately" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -699,7 +647,6 @@
                 </application>
                 <customObject id="Voe-Tx-rLC" customClass="ServiceManager" customModule="Parrot" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <userDefaultsController representsSharedInstance="YES" id="5Jg-0f-uLC"/>
             </objects>
             <point key="canvasLocation" x="1513" y="-315"/>
         </scene>
@@ -732,15 +679,15 @@
             </objects>
             <point key="canvasLocation" x="1513" y="-29"/>
         </scene>
-        <!--Preferences View Controller-->
+        <!--Preferences-->
         <scene sceneID="V8I-ad-rAx">
             <objects>
-                <tabViewController tabStyle="toolbar" id="gJR-Sw-Gfg" customClass="PreferencesViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                <tabViewController title="Preferences" tabStyle="toolbar" id="gJR-Sw-Gfg" customClass="PreferencesViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
                     <tabViewItems>
-                        <tabViewItem label="General" identifier="" image="NSPreferencesGeneral" id="gBw-aq-f1Z"/>
-                        <tabViewItem label="Accounts" identifier="" image="NSUserGroup" id="4YT-e8-Zez"/>
+                        <tabViewItem label="Appearance" identifier="Parrot.Appearance" image="NSColorPanel" id="gBw-aq-f1Z"/>
+                        <tabViewItem label="Notifications" identifier="Parrot.Notifications" image="NSPreferencesGeneral" id="4YT-e8-Zez"/>
+                        <tabViewItem label="Accounts" identifier="Parrot.Accounts" image="NSUserAccounts" id="5Dn-GQ-Rnb"/>
                     </tabViewItems>
-                    <viewControllerTransitionOptions key="transitionOptions" crossfade="YES" slideLeft="YES" allowUserInteraction="YES"/>
                     <tabView key="tabView" type="noTabsNoBorder" id="PnR-Xd-GfW">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -753,76 +700,101 @@
                     <connections>
                         <segue destination="pKj-Ns-rph" kind="relationship" relationship="tabItems" id="8ce-3E-Pfg"/>
                         <segue destination="MRF-LU-YO2" kind="relationship" relationship="tabItems" id="s18-wP-rrI"/>
+                        <segue destination="nBO-60-3Hu" kind="relationship" relationship="tabItems" id="bag-EB-Gq7"/>
                     </connections>
                 </tabViewController>
                 <customObject id="gVI-or-jUe" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1513" y="368"/>
         </scene>
-        <!--View Controller-->
+        <!--Appearance-->
         <scene sceneID="E9z-Ze-Wgi">
             <objects>
-                <viewController id="pKj-Ns-rph" sceneMemberID="viewController">
+                <viewController title="Appearance" id="pKj-Ns-rph" sceneMemberID="viewController">
                     <view key="view" id="xUP-4m-s2J">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W6e-2m-eIn">
-                                <rect key="frame" x="0.0" y="154" width="84" height="146"/>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cTs-k1-Wrm">
+                                <rect key="frame" x="8" y="190" width="188" height="102"/>
                                 <subviews>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="IDR-iT-i4d">
-                                        <rect key="frame" x="-2" y="130" width="88" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="nAc-uO-gYx">
+                                    <button toolTip="Use the system dark theme for the Parrot UI." translatesAutoresizingMaskIntoConstraints="NO" id="IDR-iT-i4d">
+                                        <rect key="frame" x="-2" y="86" width="127" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Dark Appearance" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="nAc-uO-gYx">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.DarkAppearance" id="d5K-aX-ctT">
+                                                <dictionary key="options">
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
                                     </button>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="gIu-E1-Fba">
-                                        <rect key="frame" x="-2" y="108" width="88" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="kfo-jp-d0W">
+                                    <button toolTip="Automatically change Parrot UI appearance to match the system appearance." translatesAutoresizingMaskIntoConstraints="NO" id="KHF-tc-eje">
+                                        <rect key="frame" x="-2" y="64" width="192" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Automatic Dark Appearance" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="aH8-uF-OHR">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.AutomaticDarkAppearance" id="bVD-VJ-vZi">
+                                                <dictionary key="options">
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
                                     </button>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="xWR-ND-WPe">
-                                        <rect key="frame" x="-2" y="86" width="88" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="upd-9o-K5s">
+                                    <button toolTip="Invert the Parrot conversation direction, so outgoing messages are on the left and incoming messages are on the right." translatesAutoresizingMaskIntoConstraints="NO" id="84g-xW-6Ak">
+                                        <rect key="frame" x="-2" y="42" width="123" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Invert Chat Style" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="yCn-Pp-xVP">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.InvertChatStyle" id="Pd0-1J-Dad">
+                                                <dictionary key="options">
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
                                     </button>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="U1G-k4-rrg">
-                                        <rect key="frame" x="-2" y="64" width="88" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="qnb-vK-mcG">
+                                    <button toolTip="Automatically convert text emoticons into rich emoji." translatesAutoresizingMaskIntoConstraints="NO" id="H8p-mW-AtS">
+                                        <rect key="frame" x="-2" y="20" width="87" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Auto Emoji" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Mxm-Cr-vhF">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.AutoEmoji" id="9UJ-bg-jsB">
+                                                <dictionary key="options">
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
                                     </button>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="jCg-1w-ixv">
-                                        <rect key="frame" x="-2" y="42" width="88" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="1cX-cX-Nx6">
+                                    <button toolTip="Vibrate a force touch trackpad if a notification occurs (only if there is a finger on the trackpad at the same instant)." translatesAutoresizingMaskIntoConstraints="NO" id="ntd-TB-ihF">
+                                        <rect key="frame" x="-2" y="-2" width="145" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Vibrate Force Touch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eGm-ez-1E0">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
-                                    </button>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="bvG-NI-0Lv">
-                                        <rect key="frame" x="-2" y="20" width="88" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Nqe-j4-R4W">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                    </button>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="IAx-x2-Z6f">
-                                        <rect key="frame" x="-2" y="-2" width="88" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KhJ-Uo-Irt">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
+                                        <connections>
+                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.VibrateForceTouch" id="6Qa-hc-0MT">
+                                                <dictionary key="options">
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <visibilityPriorities>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
@@ -835,25 +807,24 @@
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="W6e-2m-eIn" firstAttribute="leading" secondItem="xUP-4m-s2J" secondAttribute="leading" id="PhC-of-MdG"/>
-                            <constraint firstItem="W6e-2m-eIn" firstAttribute="top" secondItem="xUP-4m-s2J" secondAttribute="top" id="jVD-ou-nv4"/>
+                            <constraint firstItem="cTs-k1-Wrm" firstAttribute="leading" secondItem="xUP-4m-s2J" secondAttribute="leading" constant="8" id="7K3-Jh-r0Z"/>
+                            <constraint firstItem="cTs-k1-Wrm" firstAttribute="top" secondItem="xUP-4m-s2J" secondAttribute="top" constant="8" id="VuO-ni-CWm"/>
                         </constraints>
                     </view>
                 </viewController>
                 <customObject id="rtd-0l-cK2" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController id="Gao-hZ-CgW"/>
             </objects>
             <point key="canvasLocation" x="1270" y="800"/>
         </scene>
-        <!--View Controller-->
+        <!--Notifications-->
         <scene sceneID="u1m-pE-gEh">
             <objects>
-                <viewController id="MRF-LU-YO2" sceneMemberID="viewController">
+                <viewController title="Notifications" id="MRF-LU-YO2" sceneMemberID="viewController">
                     <view key="view" id="2kt-Lw-ez7">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -861,7 +832,7 @@
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bHX-D2-41l">
                                 <rect key="frame" x="26" y="36" width="299" height="227"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="NSUserGroup" id="SnA-QU-nJ4"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="NSPreferencesGeneral" id="SnA-QU-nJ4"/>
                             </imageView>
                         </subviews>
                     </view>
@@ -870,9 +841,30 @@
             </objects>
             <point key="canvasLocation" x="1757" y="800"/>
         </scene>
+        <!--Accounts-->
+        <scene sceneID="267-EA-phL">
+            <objects>
+                <viewController title="Accounts" id="nBO-60-3Hu" sceneMemberID="viewController">
+                    <view key="view" id="CwE-13-tbf">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ACN-Dl-NbD">
+                                <rect key="frame" x="57" y="53" width="299" height="227"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="NSUserAccounts" id="LcX-p2-jci"/>
+                            </imageView>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="BhR-WV-Gpi" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2241" y="800"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="NSColorPanel" width="32" height="32"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
-        <image name="NSUserGroup" width="32" height="32"/>
+        <image name="NSUserAccounts" width="32" height="32"/>
     </resources>
 </document>
