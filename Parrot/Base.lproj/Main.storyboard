@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -705,48 +706,173 @@
         <!--Window Controller-->
         <scene sceneID="8gj-44-OyX">
             <objects>
-                <windowController id="2UE-pw-Aer" sceneMemberID="viewController">
-                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="RsH-tq-Ya4">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                <windowController showSeguePresentationStyle="single" id="2UE-pw-Aer" sceneMemberID="viewController">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="alertPanel" frameAutosaveName="" id="RsH-tq-Ya4">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" unifiedTitleAndToolbar="YES"/>
+                        <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES" transient="YES" ignoresCycle="YES" fullScreenNone="YES" fullScreenDisallowsTiling="YES"/>
                         <rect key="contentRect" x="245" y="310" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
+                        <value key="minSize" type="size" width="480" height="270"/>
+                        <value key="maxSize" type="size" width="480" height="270"/>
                         <toolbar key="toolbar" implicitIdentifier="2AD61817-4A36-4B14-81D5-E0398A5A58CC" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="DBF-0p-Ly5">
-                            <allowedToolbarItems>
-                                <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="UBh-QH-G6M"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="1yy-Yc-euc"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="Ae4-XZ-qcD"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="6Bc-6B-iqW"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="yWB-ye-RqG"/>
-                            </allowedToolbarItems>
-                            <defaultToolbarItems>
-                                <toolbarItem reference="yWB-ye-RqG"/>
-                                <toolbarItem reference="UBh-QH-G6M"/>
-                                <toolbarItem reference="1yy-Yc-euc"/>
-                                <toolbarItem reference="yWB-ye-RqG"/>
-                            </defaultToolbarItems>
+                            <allowedToolbarItems/>
+                            <defaultToolbarItems/>
                         </toolbar>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="titleVisibility">
+                                <integer key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </window>
                     <connections>
-                        <segue destination="oKo-85-cKw" kind="relationship" relationship="window.shadowedContentViewController" id="3Z4-je-QC8"/>
+                        <segue destination="gJR-Sw-Gfg" kind="relationship" relationship="window.shadowedContentViewController" id="CuY-NH-xvd"/>
                     </connections>
                 </windowController>
                 <customObject id="nUq-uK-0bu" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1513" y="13"/>
+            <point key="canvasLocation" x="1513" y="-29"/>
+        </scene>
+        <!--Preferences View Controller-->
+        <scene sceneID="V8I-ad-rAx">
+            <objects>
+                <tabViewController tabStyle="toolbar" id="gJR-Sw-Gfg" customClass="PreferencesViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem label="General" identifier="" image="NSPreferencesGeneral" id="gBw-aq-f1Z"/>
+                        <tabViewItem label="Accounts" identifier="" image="NSUserGroup" id="4YT-e8-Zez"/>
+                    </tabViewItems>
+                    <viewControllerTransitionOptions key="transitionOptions" crossfade="YES" slideLeft="YES" allowUserInteraction="YES"/>
+                    <tabView key="tabView" type="noTabsNoBorder" id="PnR-Xd-GfW">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <tabViewItems/>
+                        <connections>
+                            <outlet property="delegate" destination="gJR-Sw-Gfg" id="U0M-cs-w2C"/>
+                        </connections>
+                    </tabView>
+                    <connections>
+                        <segue destination="pKj-Ns-rph" kind="relationship" relationship="tabItems" id="8ce-3E-Pfg"/>
+                        <segue destination="MRF-LU-YO2" kind="relationship" relationship="tabItems" id="s18-wP-rrI"/>
+                    </connections>
+                </tabViewController>
+                <customObject id="gVI-or-jUe" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1513" y="368"/>
         </scene>
         <!--View Controller-->
-        <scene sceneID="EvH-N7-cT2">
+        <scene sceneID="E9z-Ze-Wgi">
             <objects>
-                <viewController id="oKo-85-cKw" sceneMemberID="viewController">
-                    <view key="view" id="OyE-Op-ZFm">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <viewController id="pKj-Ns-rph" sceneMemberID="viewController">
+                    <view key="view" id="xUP-4m-s2J">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W6e-2m-eIn">
+                                <rect key="frame" x="0.0" y="154" width="84" height="146"/>
+                                <subviews>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="IDR-iT-i4d">
+                                        <rect key="frame" x="-2" y="130" width="88" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="nAc-uO-gYx">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="gIu-E1-Fba">
+                                        <rect key="frame" x="-2" y="108" width="88" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="kfo-jp-d0W">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="xWR-ND-WPe">
+                                        <rect key="frame" x="-2" y="86" width="88" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="upd-9o-K5s">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="U1G-k4-rrg">
+                                        <rect key="frame" x="-2" y="64" width="88" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="qnb-vK-mcG">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="jCg-1w-ixv">
+                                        <rect key="frame" x="-2" y="42" width="88" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="1cX-cX-Nx6">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="bvG-NI-0Lv">
+                                        <rect key="frame" x="-2" y="20" width="88" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Nqe-j4-R4W">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="IAx-x2-Z6f">
+                                        <rect key="frame" x="-2" y="-2" width="88" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Test Item 1" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KhJ-Uo-Irt">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="W6e-2m-eIn" firstAttribute="leading" secondItem="xUP-4m-s2J" secondAttribute="leading" id="PhC-of-MdG"/>
+                            <constraint firstItem="W6e-2m-eIn" firstAttribute="top" secondItem="xUP-4m-s2J" secondAttribute="top" id="jVD-ou-nv4"/>
+                        </constraints>
                     </view>
                 </viewController>
-                <customObject id="xul-AJ-gC4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <customObject id="rtd-0l-cK2" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2144" y="-14"/>
+            <point key="canvasLocation" x="1270" y="800"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="u1m-pE-gEh">
+            <objects>
+                <viewController id="MRF-LU-YO2" sceneMemberID="viewController">
+                    <view key="view" id="2kt-Lw-ez7">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bHX-D2-41l">
+                                <rect key="frame" x="26" y="36" width="299" height="227"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="NSUserGroup" id="SnA-QU-nJ4"/>
+                            </imageView>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="pWa-EW-Chm" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1757" y="800"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSPreferencesGeneral" width="32" height="32"/>
+        <image name="NSUserGroup" width="32" height="32"/>
+    </resources>
 </document>
