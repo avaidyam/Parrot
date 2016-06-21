@@ -1,23 +1,56 @@
 import Cocoa
 
 /* TODO: Switch to a Disk LRU Cache instead of Dictionary. */
+/* TODO: NotificationManager - Complete support for NSUserNotificationAuxiliary. */
+/* TODO: Support pattern-based haptic feedback. */
 
-// Internal NSImage cache, and
-private var _cache = Dictionary<String, Data>()
-private var _notes = Dictionary<String, [String]>()
+/// Provide a key below in the userInfo of an NSUserNotification when used with the
+/// NotificationManager, regardless of the value, and that feature will be enabled.
+public enum NotificationOptions: String {
+	case presentEvenIfFront
+	case lockscreenOnly // unsupported
+	case ignoreDoNotDisturb // unsupported
+	case useContentImage // unsupported
+}
 
-// Quick alias just for us.
-private let nc = NSUserNotificationCenter.default()
+public let NSUserNotificationCenterDidDeliverNotification = NSNotification.Name("NSUserNotificationCenter.DidDeliverNotification")
+public let NSUserNotificationCenterDidActivateNotification = NSNotification.Name("NSUserNotificationCenter.DidActivateNotification")
 
-// The default user image, when none can be located.
-public let defaultUserImage = NSImage(named: "NSUserGuest")!
+public extension NSHapticFeedbackManager {
+	public static func vibrate(length: Int = 1000, interval: Int = 10) {
+		let hp = NSHapticFeedbackManager.defaultPerformer()
+		for _ in 1...(length/interval) {
+			hp.perform(.generic, performanceTime: .now)
+			usleep(UInt32(interval * 1000))
+		}
+	}
+}
+
+extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
+	public func userNotificationCenter(_ center: NSUserNotificationCenter, didDeliver notification: NSUserNotification) {
+		NotificationCenter.default().post(name: NSUserNotificationCenterDidDeliverNotification, object: notification)
+	}
+	
+	public func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
+		NotificationCenter.default().post(name: NSUserNotificationCenterDidActivateNotification, object: notification)
+	}
+	
+	public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
+		return notification.userInfo?[NotificationOptions.presentEvenIfFront.rawValue] != nil
+	}
+	
+	public class func updateDockBadge(_ count: Int) {
+		NSApp.dockTile.badgeLabel = count > 0 ? "\(count)" : ""
+	}
+}
 
 public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
-    static let sharedInstance = NotificationManager()
+	static let sharedInstance = NotificationManager()
+	private var _notes = Dictionary<String, [String]>()
 
     public override init() {
         super.init()
-        nc.delegate = self
+        NSUserNotificationCenter.default().delegate = NSUserNotificationCenter.default()
     }
 	
 	// Overrides notification identifier
@@ -33,50 +66,26 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
         } else {
             _notes[conversationID] = [notificationID]
         }
-        nc.deliver(notification)
+        NSUserNotificationCenter.default().deliver(notification)
 		
 		let vibrate = UserDefaults.standard()[Parrot.VibrateForceTouch] as? Bool ?? false
-		if vibrate {
-			let length = 1000
-			let interval = 10
-			
-			let hp = NSHapticFeedbackManager.defaultPerformer()
-			for _ in 1...(length/interval) {
-				hp.perform(.generic, performanceTime: .now)
-				usleep(10 * 1000)
-			}
-		}
+		let interval = UserDefaults.standard()[Parrot.VibrateInterval] as? Int ?? 10
+		let length = UserDefaults.standard()[Parrot.VibrateLength] as? Int ?? 1000
+		if vibrate { NSHapticFeedbackManager.vibrate(length: length, interval: interval) }
     }
 
     public func clearNotificationsFor(_ group: String) {
         for notificationID in (_notes[group] ?? []) {
             let notification = NSUserNotification()
             notification.identifier = notificationID
-            nc.removeDeliveredNotification(notification)
+            NSUserNotificationCenter.default().removeDeliveredNotification(notification)
         }
         _notes.removeValue(forKey: group)
 	}
-	
-	// Handle NSApp dock badge.
-	
-	public class func updateAppBadge(_ messages: Int) {
-		NSApp.dockTile.badgeLabel = messages > 0 ? "\(messages)" : ""
-	}
-	
-	// Handle NSUserNotificationCenter delivery.
-	
-    public func userNotificationCenter(_ center: NSUserNotificationCenter, didDeliver notification: NSUserNotification) {
-		
-    }
-	
-	public func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
-		
-	}
-
-    public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
-        return true
-    }
 }
+
+private var _cache = Dictionary<String, Data>()
+public let defaultUserImage = NSImage(named: "NSUserGuest")!
 
 // Note that this is general purpose! It needs a unique ID and a resource URL string.
 public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> Void)? = nil) -> Data? {

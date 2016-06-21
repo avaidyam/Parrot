@@ -40,7 +40,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			self.view.window?.appearance = NSAppearance(named: appearance)
 		}
 		
-		NotificationManager.updateAppBadge(conversationList?.unreadEventCount ?? 0)
+		NSUserNotificationCenter.updateDockBadge(conversationList?.unreadEventCount ?? 0)
 	}
 	
 	override func viewDidLoad() {
@@ -167,7 +167,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     func conversationList(didUpdate list: ConversationList) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
+			NSUserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 	
@@ -175,7 +175,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation) {
 		UI {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			NotificationManager.updateAppBadge(self.conversationList?.unreadEventCount ?? 0)
+			NSUserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 }

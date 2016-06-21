@@ -7,7 +7,10 @@ public class Parrot {
 	public static let DarkAppearance = "Parrot.DarkAppearance"
 	public static let InvertChatStyle = "Parrot.InvertChatStyle"
 	public static let ShowSidebar = "Parrot.ShowSidebar"
+	
 	public static let VibrateForceTouch = "Parrot.VibrateForceTouch"
+	public static let VibrateInterval = "Parrot.VibrateInterval"
+	public static let VibrateLength = "Parrot.VibrateLength"
 }
 
 @NSApplicationMain
