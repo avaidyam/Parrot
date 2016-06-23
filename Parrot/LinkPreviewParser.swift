@@ -43,6 +43,10 @@ public enum LinkPreviewType {
 	case youtube(String)
 	/// MIME: text/html
 	case link(LinkMeta)
+	/// Special: long text messages
+	case summary(String)
+	/// Special: heartbeat bpm
+	case heartbeat(UInt)
 }
 
 public struct LinkPreviewParser {

@@ -1,4 +1,5 @@
-import Cocoa
+import AppKit
+import AVFoundation
 
 /* TODO: Switch to a Disk LRU Cache instead of Dictionary. */
 /* TODO: NotificationManager - Complete support for NSUserNotificationAuxiliary. */
@@ -8,6 +9,7 @@ import Cocoa
 /// NotificationManager, regardless of the value, and that feature will be enabled.
 public enum NotificationOptions: String {
 	case presentEvenIfFront
+	case customSoundURL
 	case lockscreenOnly // unsupported
 	case ignoreDoNotDisturb // unsupported
 	case useContentImage // unsupported
@@ -29,6 +31,13 @@ public extension NSHapticFeedbackManager {
 extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 	public func userNotificationCenter(_ center: NSUserNotificationCenter, didDeliver notification: NSUserNotification) {
 		NotificationCenter.default().post(name: NSUserNotificationCenterDidDeliverNotification, object: notification)
+		
+		// Support for NotificationOptions.customSoundURL
+		if let alert = notification.userInfo?[NotificationOptions.customSoundURL.rawValue] as? URL where notification.isPresented {
+			let audioPlayer = try? AVAudioPlayer(contentsOf: alert)
+			audioPlayer?.prepareToPlay()
+			audioPlayer?.play()
+		}
 	}
 	
 	public func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
@@ -36,6 +45,7 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 	}
 	
 	public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
+		// Support for NotificationOptions.presentEvenIfFront
 		return notification.userInfo?[NotificationOptions.presentEvenIfFront.rawValue] != nil
 	}
 	

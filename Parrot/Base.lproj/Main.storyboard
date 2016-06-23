@@ -867,6 +867,21 @@
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a3L-92-mxx">
+                                <rect key="frame" x="6" y="146" width="76" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="BEc-I8-SxB">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="FrC-tL-NZS">
+                                        <items>
+                                            <menuItem title="Item 1" id="agv-SN-WX7"/>
+                                            <menuItem title="Item 2" id="kPf-WS-XFb"/>
+                                            <menuItem title="Item 3" id="Zlm-Bb-BcC"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                            </popUpButton>
                         </subviews>
                         <constraints>
                             <constraint firstItem="cTs-k1-Wrm" firstAttribute="leading" secondItem="xUP-4m-s2J" secondAttribute="leading" constant="8" id="7K3-Jh-r0Z"/>

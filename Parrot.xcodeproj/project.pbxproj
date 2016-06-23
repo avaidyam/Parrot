@@ -53,12 +53,15 @@
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
 		4884929B1D0B59370003D522 /* MessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4884929A1D0B59370003D522 /* MessageView.xib */; };
 		488C65B01C3A8EA600D792C6 /* NSColor+MaterialDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */; };
+		48A452271D19B16500CB588A /* NSSound+SystemSounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A452261D19B16500CB588A /* NSSound+SystemSounds.swift */; };
 		48AD01DF1C1EC8A90031FDD7 /* UserDefaults+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* UserDefaults+Subscript.swift */; };
 		48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
 		48B3AD781C38043B0023FAA3 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B3AD771C38043B0023FAA3 /* Canvas.swift */; };
 		48BA5B4B1C37A55A00ACA29B /* Terminal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4A1C37A55A00ACA29B /* Terminal.swift */; };
 		48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4F1C37DACE00ACA29B /* Reference.swift */; };
 		48BF49A31C1D23D000AC4DD5 /* NSDate+TimeAgo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF49A21C1D23D000AC4DD5 /* NSDate+TimeAgo.swift */; };
+		48BFAE5B1D19B47A00ADBA3A /* NSSound+SystemSounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A452261D19B16500CB588A /* NSSound+SystemSounds.swift */; };
+		48BFAE5D1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BFAE5C1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift */; };
 		48BFD0321D13130000DAE29E /* SplitViewMode.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48BFD0311D13130000DAE29E /* SplitViewMode.storyboard */; };
 		48BFD0351D13850B00DAE29E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
 		48BFD0361D13856A00DAE29E /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
@@ -304,6 +307,7 @@
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4884929A1D0B59370003D522 /* MessageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageView.xib; sourceTree = "<group>"; };
 		488C65AF1C3A8EA600D792C6 /* NSColor+MaterialDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+MaterialDesign.swift"; sourceTree = "<group>"; };
+		48A452261D19B16500CB588A /* NSSound+SystemSounds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSSound+SystemSounds.swift"; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* UserDefaults+Subscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Subscript.swift"; sourceTree = "<group>"; };
 		48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPreviewParser.swift; sourceTree = "<group>"; };
 		48B3AD771C38043B0023FAA3 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
@@ -312,6 +316,7 @@
 		48BA5B4C1C37ABB600ACA29B /* ncurses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ncurses.h; sourceTree = "<group>"; };
 		48BA5B4F1C37DACE00ACA29B /* Reference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reference.swift; sourceTree = "<group>"; };
 		48BF49A21C1D23D000AC4DD5 /* NSDate+TimeAgo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+TimeAgo.swift"; sourceTree = "<group>"; };
+		48BFAE5C1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequentialTextSelectionManager.swift; sourceTree = "<group>"; };
 		48BFD0311D13130000DAE29E /* SplitViewMode.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplitViewMode.storyboard; sourceTree = "<group>"; };
 		48BFD0341D13694900DAE29E /* hangouts.proto */ = {isa = PBXFileReference; lastKnownFileType = text; path = hangouts.proto; sourceTree = "<group>"; };
 		48CA70221C502B6A0026270E /* AuthenticatorCLI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticatorCLI.swift; sourceTree = "<group>"; };
@@ -451,6 +456,7 @@
 				48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */,
 				4866337D1C5822FA006C094B /* ElementContainerView.swift */,
 				48574F121D11F9FC002375E1 /* AppManagement.swift */,
+				48BFAE5C1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -484,6 +490,7 @@
 				48BF49A21C1D23D000AC4DD5 /* NSDate+TimeAgo.swift */,
 				487A0E141C1E6D61007A4696 /* NotificationCenter+PubSub.swift */,
 				48AD01DE1C1EC8A90031FDD7 /* UserDefaults+Subscript.swift */,
+				48A452261D19B16500CB588A /* NSSound+SystemSounds.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1239,8 +1246,10 @@
 				48834D961C1B3602009BC442 /* ServiceManager.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* PersonView.swift in Sources */,
 				4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */,
+				48BFAE5D1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
 				4835ECB71C1C672900193EBC /* NotificationManager.swift in Sources */,
+				48A452271D19B16500CB588A /* NSSound+SystemSounds.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1332,6 +1341,7 @@
 				48DF84A91D08EEB800F39444 /* Array+Remove.swift in Sources */,
 				48DF84AB1D08EEB800F39444 /* NSColor+MaterialDesign.swift in Sources */,
 				48DF84AC1D08EEB800F39444 /* NSView+Snapshot.swift in Sources */,
+				48BFAE5B1D19B47A00ADBA3A /* NSSound+SystemSounds.swift in Sources */,
 				48DF84AD1D08EEB800F39444 /* NSDate+TimeAgo.swift in Sources */,
 				48DF84AE1D08EEB800F39444 /* NotificationCenter+PubSub.swift in Sources */,
 				48DF84AF1D08EEB800F39444 /* UserDefaults+Subscript.swift in Sources */,
