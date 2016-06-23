@@ -9,7 +9,8 @@ import AVFoundation
 /// NotificationManager, regardless of the value, and that feature will be enabled.
 public enum NotificationOptions: String {
 	case presentEvenIfFront
-	case customSoundURL
+	case toneLibrarySoundName // to be supported
+	case customSoundPath
 	case lockscreenOnly // unsupported
 	case ignoreDoNotDisturb // unsupported
 	case useContentImage // unsupported
@@ -33,10 +34,10 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 		NotificationCenter.default().post(name: NSUserNotificationCenterDidDeliverNotification, object: notification)
 		
 		// Support for NotificationOptions.customSoundURL
-		if let alert = notification.userInfo?[NotificationOptions.customSoundURL.rawValue] as? URL where notification.isPresented {
-			let audioPlayer = try? AVAudioPlayer(contentsOf: alert)
-			audioPlayer?.prepareToPlay()
-			audioPlayer?.play()
+		if let alert = notification.userInfo?[NotificationOptions.customSoundPath.rawValue] as? String where notification.isPresented {
+			if _conformsToUTI(path: alert, UTI: kUTTypeAudio) {
+				NSSound(contentsOfFile: alert, byReference: true)?.play()
+			}
 		}
 	}
 	

@@ -167,7 +167,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				notification.title = user.fullName
 				notification.informativeText = text
 				notification.deliveryDate = Date()
-				notification.soundName = NSUserNotificationDefaultSoundName
+				//notification.soundName = "texttone:Bamboo" // this works!!
+				notification.userInfo = [NotificationOptions.customSoundPath.rawValue: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/sms_alert_bamboo.caf"]
 				
 				var img: NSImage = defaultUserImage
 				if let d = fetchData(user.id.chatID, user.photoURL) {
