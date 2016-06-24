@@ -122,7 +122,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	
 	/* TODO: Monitor actual addition/removal changes. */
 	public var dataSource: [Wrapper<Any>]! {
-		didSet { UI {
+		didSet { DispatchQueue.main.async {
 			self.tableView.reloadData()
 			let row = self.updateScrollsToBottom ? self.numberOfRows(in: self.tableView) - 1 : 0
 			self.tableView.scrollRowToVisible(row)
@@ -134,24 +134,24 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	public func appendElements(elements: [Element]) {
 		self.dataSource.appendContentsOf(elements)
 		
-		UI { self.tableView.beginUpdates() }
+		DispatchQueue.main.async { self.tableView.beginUpdates() }
 		elements.forEach {
 			let idx = NSIndexSet(index: self.dataSource.indexOf($0)!)
 			self.tableView.insertRowsAtIndexes(idx, withAnimation: [.EffectFade, .SlideUp])
 		}
-		UI { self.tableView.endUpdates() }
+		DispatchQueue.main.async { self.tableView.endUpdates() }
 	}
 	
 	// If you REALLY want animations, use this to remove a set of elements.
 	// Note: this is arbitrary removal, not sequential removal, like appendElements().
 	public func removeElements(elements: [Element]) {
-		UI { self.tableView.beginUpdates() }
+		DispatchQueue.main.async { self.tableView.beginUpdates() }
 		elements.forEach {
 			if let i = self.dataSource.indexOf($0) {
 				self.tableView.removeRowsAtIndexes(NSIndexSet(index: i), withAnimation: [.EffectFade, .SlideUp])
 			}
 		}
-		UI { self.tableView.endUpdates() }
+		DispatchQueue.main.async { self.tableView.endUpdates() }
 		
 		self.dataSource.removeContentsOf(elements)
 	}*/

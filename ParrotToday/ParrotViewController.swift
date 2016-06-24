@@ -41,7 +41,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 				self.userList = $0
 				self.conversationList = $1
 				
-				UI {
+				DispatchQueue.main.async {
 					self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 				}
 				
@@ -116,7 +116,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 	var conversationList: ConversationList? {
 		didSet {
 			conversationList?.delegate = self
-			UI {
+			DispatchQueue.main.async {
 				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 			}
 		}
@@ -167,14 +167,14 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 	/* TODO: Just updat
 	e the row that is updated. */
 	func conversationList(didUpdate list: ConversationList) {
-		UI {
+		DispatchQueue.main.async {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 		}
 	}
 	
 	/* TODO: Just update the row that is updated. */
 	func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation) {
-		UI {
+		DispatchQueue.main.async {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 		}
 	}

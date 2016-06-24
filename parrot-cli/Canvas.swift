@@ -14,18 +14,6 @@ public extension Array where Element : Equatable {
 			self.remove(at: index)
 		}
 	}
-	
-	public mutating func removeContentsOf<S : Sequence where S.Iterator.Element == Element>(newElements: S) {
-		for object in newElements {
-			self.remove(item: object)
-		}
-	}
-	
-	public mutating func removeContentsOf<C : Collection where C.Iterator.Element == Element>(newElements: C) {
-		for object in newElements {
-			self.remove(item: object)
-		}
-	}
 }
 
 class Canvas {

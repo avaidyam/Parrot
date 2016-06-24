@@ -137,7 +137,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
             return
         }
 		
-		UI {
+		DispatchQueue.main.async {
 			switch (status) {
 			case TypingType.Started:
 				self.popover.show(relativeTo: self.messageTextField!.bounds, of: self.messageTextField!, preferredEdge: .minY)
