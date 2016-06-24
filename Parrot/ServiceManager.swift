@@ -5,6 +5,7 @@ import Hangouts
 public class Parrot {
 	public static let AutoEmoji = "Parrot.AutoEmoji"
 	public static let DarkAppearance = "Parrot.DarkAppearance"
+	public static let AutomaticDarkAppearance = "Parrot.AutomaticDarkAppearance"
 	public static let InvertChatStyle = "Parrot.InvertChatStyle"
 	public static let ShowSidebar = "Parrot.ShowSidebar"
 	
@@ -51,7 +52,7 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 				self.trans?.window?.titleVisibility = .hidden;
 				self.trans?.window?.titlebarAppearsTransparent = true;
 				
-				let dark = UserDefaults.standard()[Parrot.DarkAppearance] as? Bool ?? false
+				let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
 				let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 				self.trans?.window?.appearance = NSAppearance(named: appearance)
 			}

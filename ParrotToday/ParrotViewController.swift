@@ -48,7 +48,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 				NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
 					
 					// Handle appearance colors.
-					let dark = UserDefaults.standard()[Parrot.DarkAppearance] as? Bool ?? false
+					let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
 					let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 					self.view.window?.appearance = NSAppearance(named: appearance)
 				}

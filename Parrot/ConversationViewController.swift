@@ -43,7 +43,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
 			
 			// Handle appearance colors.
-			let dark = UserDefaults.standard()[Parrot.DarkAppearance] as? Bool ?? false
+			let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
 			
@@ -274,7 +274,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		
         let text = messageTextField.string
         if text?.characters.count > 0 {
-			var emojify = UserDefaults.standard()[Parrot.AutoEmoji] as? Bool ?? false
+			var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
 			emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
 			let txt = ConversationViewController.segmentsForInput(text!, emojify: emojify)
 			conversation?.sendMessage(segments: txt)

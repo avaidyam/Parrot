@@ -79,9 +79,9 @@ public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
         }
         NSUserNotificationCenter.default().deliver(notification)
 		
-		let vibrate = UserDefaults.standard()[Parrot.VibrateForceTouch] as? Bool ?? false
-		let interval = UserDefaults.standard()[Parrot.VibrateInterval] as? Int ?? 10
-		let length = UserDefaults.standard()[Parrot.VibrateLength] as? Int ?? 1000
+		let vibrate = Settings[Parrot.VibrateForceTouch] as? Bool ?? false
+		let interval = Settings[Parrot.VibrateInterval] as? Int ?? 10
+		let length = Settings[Parrot.VibrateLength] as? Int ?? 1000
 		if vibrate { NSHapticFeedbackManager.vibrate(length: length, interval: interval) }
     }
 

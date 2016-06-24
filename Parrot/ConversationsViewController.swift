@@ -35,8 +35,17 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
 			
 			// Handle appearance colors.
-			let dark = UserDefaults.standard()[Parrot.DarkAppearance] as? Bool ?? false
+			let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
 			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
+			self.view.window?.appearance = NSAppearance(named: appearance)
+		}
+		
+		DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("AppleInterfaceThemeChangedNotification"), object: nil, queue: nil) { n in
+			let auto = Settings[Parrot.AutomaticDarkAppearance] as? Bool ?? false
+			let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
+			guard auto && dark else { return }
+			
+			let appearance = (darkModeActive() ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
 			self.view.window?.appearance = NSAppearance(named: appearance)
 		}
 		

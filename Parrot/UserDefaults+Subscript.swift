@@ -1,40 +1,32 @@
 import Foundation
 
-public extension UserDefaults {
+/// Settings is a subscripting-only alias for NS/UserDefaults, and can be used like so:
+///
+/// let myValue = Settings["myKey"]	// get
+/// Settings["myKey"] = myValue // set
+/// Settings["myKey"] = nil // remove
+public let Settings = _Settings()
+public final class _Settings {
+	private init() {}
 	
-	// Set a settings key with a given non-nil value.
-	// If the value is nil, the key will be removed.
-	public func set(_ key: String, value: AnyObject?, domain: String? = nil) {
-		self.setValue(value, forKey: key)
-	}
-	
-	public func get(_ key: String, domain: String? = nil) -> AnyObject? {
-		return self.value(forKey: key)
-	}
-	
-	// Utility for setting multiple settings at a time.
-	public func set(_ keys: [String: AnyObject?], domain: String? = nil) {
-		keys.forEach { key, value in
-			self.setValue(value, forKey: key)
-		}
-	}
-	
-	// Utility for getting multiple settings at a time.
-	public func get(_ keys: [String], domain: String? = nil) -> [String: AnyObject?] {
-		var map = [String: AnyObject?]()
-		for (key) in keys {
-			map[key] = self.value(forKey: key)
-		}
-		return map
-	}
-	
-	// Allows shorter syntax, like so: UserDefaults.standard()["Test"] = 42
+	/// Quick access subscripting for NS/UserDefaults.
 	subscript(key: String) -> AnyObject? {
 		get {
-			return self.value(forKey: key)
+			return UserDefaults.standard().value(forKey: key)
 		}
 		set (value) {
-			self.setValue(value, forKey: key)
+			UserDefaults.standard().setValue(value, forKey: key)
+		}
+	}
+	
+	/// Quick access subscripting for NS/UserDefaults with domain support.
+	/// Note: Use this sparingly as it is not cached and might be expensive.
+	subscript(key: String, domain domain: String) -> AnyObject? {
+		get {
+			return UserDefaults(suiteName: domain)?.value(forKey: key)
+		}
+		set (value) {
+			UserDefaults(suiteName: domain)?.setValue(value, forKey: key)
 		}
 	}
 }
