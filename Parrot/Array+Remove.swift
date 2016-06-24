@@ -82,3 +82,9 @@ public extension Timer {
 		return timer
 	}
 }
+
+// Optional Setter
+infix operator ??= { associativity right precedence 90 }
+public func ??= <T>(lhs: inout T?,  rhs: @autoclosure () -> T) {
+	lhs = lhs ?? rhs()
+}

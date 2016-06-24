@@ -32,6 +32,10 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			}
 		}
 		
+		/*UserDefaults.add(observer: self, forKey: Parrot.DarkAppearance) {
+			print("\(Parrot.DarkAppearance) => \(Settings[Parrot.DarkAppearance])")
+		}*/
+		
 		NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
 			
 			// Handle appearance colors.

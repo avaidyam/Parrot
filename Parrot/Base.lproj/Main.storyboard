@@ -725,7 +725,7 @@
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.DarkAppearance" id="d5K-aX-ctT">
+                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.DarkAppearance" id="QSO-jN-NGX">
                                                 <dictionary key="options">
                                                     <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
                                                     <bool key="NSValidatesImmediately" value="YES"/>
@@ -740,7 +740,7 @@
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.AutomaticDarkAppearance" id="bVD-VJ-vZi">
+                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.AutomaticDarkAppearance" id="JUC-Jr-MEK">
                                                 <dictionary key="options">
                                                     <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
                                                     <bool key="NSValidatesImmediately" value="YES"/>
@@ -755,7 +755,7 @@
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.InvertChatStyle" id="Pd0-1J-Dad">
+                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.InvertChatStyle" id="nCW-2H-v9Q">
                                                 <dictionary key="options">
                                                     <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
                                                     <bool key="NSValidatesImmediately" value="YES"/>
@@ -770,7 +770,7 @@
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.AutoEmoji" id="9UJ-bg-jsB">
+                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.AutoEmoji" id="VPP-eF-hP4">
                                                 <dictionary key="options">
                                                     <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
                                                     <bool key="NSValidatesImmediately" value="YES"/>
@@ -785,7 +785,7 @@
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <binding destination="Gao-hZ-CgW" name="value" keyPath="values.Parrot.VibrateForceTouch" id="6Qa-hc-0MT">
+                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateForceTouch" id="ZVn-Uo-Sxi">
                                                 <dictionary key="options">
                                                     <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
                                                     <bool key="NSValidatesImmediately" value="YES"/>
@@ -890,7 +890,6 @@
                     </view>
                 </viewController>
                 <customObject id="rtd-0l-cK2" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <userDefaultsController id="Gao-hZ-CgW"/>
                 <userDefaultsController representsSharedInstance="YES" id="cbh-fj-EIe"/>
             </objects>
             <point key="canvasLocation" x="1270" y="800"/>

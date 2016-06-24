@@ -4,7 +4,7 @@ import WebKit
 
 public class Authenticator {
 	
-	//private static let DEFAULTS = UserDefaults.init(suiteName: "group.com.avaidyam.Parrot")!
+	private static let GROUP_DOMAIN = "group.com.avaidyam.Parrot"
 	private static let ACCESS_TOKEN = "access_token"
 	private static let REFRESH_TOKEN = "refresh_token"
 	
@@ -45,8 +45,8 @@ public class Authenticator {
 	- returns: Tuple containing tokens, or nil on failure.
 	*/
 	public class func loadTokens() -> (access_token: String, refresh_token: String)? {
-		let at = Settings[ACCESS_TOKEN, domain: "group.com.avaidyam.Parrot"] as? String
-		let rt = Settings[REFRESH_TOKEN, domain: "group.com.avaidyam.Parrot"] as? String
+		let at = Settings[ACCESS_TOKEN, domain: GROUP_DOMAIN] as? String
+		let rt = Settings[REFRESH_TOKEN, domain: GROUP_DOMAIN] as? String
 		
 		if let at = at, rt = rt {
 			return (access_token: at, refresh_token: rt)
@@ -62,16 +62,16 @@ public class Authenticator {
 	- parameter refresh_token the OAuth2 refresh token
 	*/
 	public class func saveTokens(_ access_token: String, refresh_token: String) {
-		Settings[ACCESS_TOKEN, domain: "group.com.avaidyam.Parrot"] = access_token
-		Settings[REFRESH_TOKEN, domain: "group.com.avaidyam.Parrot"] = refresh_token
+		Settings[ACCESS_TOKEN, domain: GROUP_DOMAIN] = access_token
+		Settings[REFRESH_TOKEN, domain: GROUP_DOMAIN] = refresh_token
 	}
 	
 	/**
 	Clear the existing auth_token and refresh_token for OAuth2.
 	*/
 	public class func clearTokens() {
-		Settings[ACCESS_TOKEN, domain: "group.com.avaidyam.Parrot"] = nil
-		Settings[REFRESH_TOKEN, domain: "group.com.avaidyam.Parrot"] = nil
+		Settings[ACCESS_TOKEN, domain: GROUP_DOMAIN] = nil
+		Settings[REFRESH_TOKEN, domain: GROUP_DOMAIN] = nil
 	}
 	
 	public class func authenticateClient(_ cb: (configuration: URLSessionConfiguration) -> Void) {
