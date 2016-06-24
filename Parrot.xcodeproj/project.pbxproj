@@ -103,6 +103,8 @@
 		48DF84B01D08EEB800F39444 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
 		48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E3C0811C1F363F008B2D1D /* UserList.swift */; };
 		48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3391D04DFF90074984D /* Protobuf.swift */; };
+		48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
+		48F077181D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
 		48F84D451D0DEC1E00E77AD9 /* LinkPreviews.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48F84D441D0DEC1E00E77AD9 /* LinkPreviews.xib */; };
 /* End PBXBuildFile section */
 
@@ -346,6 +348,7 @@
 		48DF84971D04E1F800F39444 /* hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hangouts.proto.swift; sourceTree = "<group>"; };
 		48E3C0811C1F363F008B2D1D /* UserList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserList.swift; sourceTree = "<group>"; };
 		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
+		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
 		48F84D441D0DEC1E00E77AD9 /* LinkPreviews.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LinkPreviews.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -463,6 +466,7 @@
 				4866337D1C5822FA006C094B /* ElementContainerView.swift */,
 				48574F121D11F9FC002375E1 /* AppManagement.swift */,
 				48BFAE5C1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift */,
+				48F077161D1DE8DC003964FD /* ParrotAppearance.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -1254,6 +1258,7 @@
 				481687251C39DA900070EEF6 /* NSView+Snapshot.swift in Sources */,
 				488239A31C455CED00C5E8EB /* Array+Remove.swift in Sources */,
 				48834D961C1B3602009BC442 /* ServiceManager.swift in Sources */,
+				48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* PersonView.swift in Sources */,
 				4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */,
 				48BFAE5D1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift in Sources */,
@@ -1353,6 +1358,7 @@
 				48DF84A91D08EEB800F39444 /* Array+Remove.swift in Sources */,
 				48DF84AB1D08EEB800F39444 /* NSColor+MaterialDesign.swift in Sources */,
 				48DF84AC1D08EEB800F39444 /* NSView+Snapshot.swift in Sources */,
+				48F077181D1DE8DC003964FD /* ParrotAppearance.swift in Sources */,
 				48BFAE5B1D19B47A00ADBA3A /* NSSound+ToneLibrary.swift in Sources */,
 				48DF84AD1D08EEB800F39444 /* NSDate+TimeAgo.swift in Sources */,
 				48DF84AE1D08EEB800F39444 /* NotificationCenter+PubSub.swift in Sources */,

@@ -137,8 +137,3 @@ public class DetailSegue: NSStoryboardSegue {
 		splitView.addSplitViewItem(splitItem)
 	}
 }
-
-public func darkModeActive() -> Bool {
-	let style = UserDefaults.standard().persistentDomain(forName: UserDefaults.globalDomain)?["AppleInterfaceStyle"]
-	return (style != nil) && (style as? NSString != nil) && (style!.caseInsensitiveCompare("dark") == .orderedSame)
-}

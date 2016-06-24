@@ -45,12 +45,8 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 					self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 				}
 				
-				NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
-					
-					// Handle appearance colors.
-					let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
-					let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
-					self.view.window?.appearance = NSAppearance(named: appearance)
+				ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
+					self.view.window?.appearance = appearance
 				}
 				
 				// Instantiate storyboard and controller and begin the UI from here.

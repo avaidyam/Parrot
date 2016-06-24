@@ -31,61 +31,59 @@ public final class _Settings {
 	}
 }
 
+/*
+private let UserDefaultsTrampoline = KVOTrampoline(observeOn: UserDefaults.standard()) {
+	print("DEFAULT UPDATE!")
+}
+private let CocoaBindingsTrampoline = KVOTrampoline(observeOn: NSUserDefaultsController.shared()) {
+	print("BINDING UPDATE!")
+}
 public extension UserDefaults {
 	
 	public class func add(observer object: AnyObject, forKey name: String, handler: (Void) -> Void) {
-		KVOTrampoline.create(object: object, name: name, block: handler)
+		//KVOTrampoline.create(object: object, name: name, block: handler)
+		UserDefaultsTrampoline.observe(keyPath: name)
+		CocoaBindingsTrampoline.observe(keyPath: "values." + name)
 	}
 	
 	public class func remove(observer object: AnyObject, forKey name: String) {
-		KVOTrampoline.remove(object: object, name: name)
+		//KVOTrampoline.remove(object: object, name: name)
+		UserDefaultsTrampoline.release(keyPath: name)
+		CocoaBindingsTrampoline.observe(keyPath: "values." + name)
 	}
 }
+*/
 
-/* TODO: This works with UserDefaults too, but not very well... fix it at some point. */
+/// Completely dysfunctional with UserDefaults for some insane reason.
 public final class KVOTrampoline: NSObject {
-	private let object: AnyObject
-	private let name: String
-	private let block: (Void) -> Void
+	private let refObject: NSObject
+	private let refAction: (Void) -> Void
+	private var refCounts = [String: UInt]()
 	
-	required public init(object: AnyObject, name: String, block: (Void) -> Void) {
-		self.object = object
-		self.name = name
-		self.block = block
-		
-		super.init()
-		NSUserDefaultsController.shared().addObserver(self, forKeyPath: "values." + name, options: .new, context: nil)
+	public required init(observeOn object: NSObject, perform handler: (Void) -> Void) {
+		self.refObject = object
+		self.refAction = handler
 	}
 	
-	deinit {
-		NSUserDefaultsController.shared().removeObserver(self, forKeyPath: self.name)
-	}
-	
-	public static var _trampolines = [String: [KVOTrampoline]]()
-	
-	public static func create(object: AnyObject, name: String, block: (Void) -> Void) {
-		if _trampolines[name] == nil {
-			_trampolines[name] = []
+	public func observe(keyPath: String) {
+		if (self.refCounts[keyPath] ?? 0) == 0 {
+			self.refObject.addObserver(self, forKeyPath: keyPath, options: [.initial, .new], context: nil)
 		}
-		
-		// Create and add a KVO subscriber to monitor.
-		_trampolines[name]!.append(KVOTrampoline(object: object, name: name, block: block))
+		self.refCounts[keyPath] = (self.refCounts[keyPath] ?? 0) + 1
 	}
 	
-	public static func remove(object: AnyObject, name: String) {
-		if let subs = _trampolines[name] {
-			subs.filter { $0.object === object && $0.name == name }.forEach {
-				_trampolines[name]!.remove($0)
-			}
+	public func release(keyPath: String) {
+		self.refCounts[keyPath] = (self.refCounts[keyPath] ?? 0) - 1
+		if (self.refCounts[keyPath] ?? 0) == 0 {
+			self.refObject.removeObserver(self, forKeyPath: keyPath)
 		}
 	}
 	
 	public override func observeValue(forKeyPath keyPath: String?, of object: AnyObject?,
-	                                   change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
-		guard let o = object as? NSObject where o === NSUserDefaultsController.shared() else { return }
-		guard let k = keyPath where k == "values." + self.name else { return }
-		
-		// If we have the right UserDefaults and keyPath, we're good to go.
-		self.block()
+	                                  change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
+		guard let o = object where o === self.refObject else { return }
+		guard let k = keyPath where self.refCounts.keys.contains(k) else { return }
+		self.refAction()
 	}
 }
+

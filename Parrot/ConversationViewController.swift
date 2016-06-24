@@ -38,34 +38,6 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		messagesView.tableView.register(nib, forIdentifier: MessageView.className())
 		let stuff = nib?.instantiate(nil)
 		_measure = stuff?.filter { $0 is MessageView }.first as? MessageView// stuff[0]: NSApplication
-		
-		// Set up dark/light notifications.
-		NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
-			
-			// Handle appearance colors.
-			let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
-			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
-			self.view.window?.appearance = NSAppearance(named: appearance)
-			
-			if let text = self.messageTextField, let layer = text.enclosingScrollView?.layer {
-				layer.masksToBounds = true
-				layer.cornerRadius = 2.0
-				layer.backgroundColor = self._textBack.cgColor
-				// FIXME: If the appearance changes, the layer disappears...
-				
-				// NSTextView doesn't automatically change its text color when the
-				// backing view's appearance changes, so we need to set it each time.
-				// In addition, make sure links aren't blue as usual.
-				text.textColor = NSColor.labelColor()
-				text.linkTextAttributes = [
-					NSCursorAttributeName: NSColor.labelColor()
-				]
-				text.selectedTextAttributes = [
-					NSBackgroundColorAttributeName: self._textFront,
-					NSForegroundColorAttributeName: NSColor.labelColor(),
-				]
-			}
-		}
 	}
 	
     override func viewDidLoad() {
@@ -103,7 +75,35 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		
 		// woohoo this is a terrible idea, move this out of here later.
 		self.window?.collectionBehavior = [.fullScreenAuxiliary, .fullScreenAllowsTiling]
+		
+		// Set up dark/light notifications.
+		ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
+			self.view.window?.appearance = appearance
+			
+			if let text = self.messageTextField, let layer = text.enclosingScrollView?.layer {
+				layer.masksToBounds = true
+				layer.cornerRadius = 2.0
+				layer.backgroundColor = self._textBack.cgColor
+				// FIXME: If the appearance changes, the layer disappears...
+				
+				// NSTextView doesn't automatically change its text color when the
+				// backing view's appearance changes, so we need to set it each time.
+				// In addition, make sure links aren't blue as usual.
+				text.textColor = NSColor.labelColor()
+				text.linkTextAttributes = [
+					NSCursorAttributeName: NSColor.labelColor()
+				]
+				text.selectedTextAttributes = [
+					NSBackgroundColorAttributeName: self._textFront,
+					NSForegroundColorAttributeName: NSColor.labelColor(),
+				]
+			}
+		}
     }
+	
+	override func viewDidDisappear() {
+		ParrotAppearance.unregisterAppearanceListener(observer: self)
+	}
 
     override var representedObject: AnyObject? {
         didSet {

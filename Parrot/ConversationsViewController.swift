@@ -32,27 +32,6 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			}
 		}
 		
-		/*UserDefaults.add(observer: self, forKey: Parrot.DarkAppearance) {
-			print("\(Parrot.DarkAppearance) => \(Settings[Parrot.DarkAppearance])")
-		}*/
-		
-		NotificationCenter.default().subscribe(name: UserDefaults.didChangeNotification.rawValue) { note in
-			
-			// Handle appearance colors.
-			let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
-			let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
-			self.view.window?.appearance = NSAppearance(named: appearance)
-		}
-		
-		DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("AppleInterfaceThemeChangedNotification"), object: nil, queue: nil) { n in
-			let auto = Settings[Parrot.AutomaticDarkAppearance] as? Bool ?? false
-			let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
-			guard auto && dark else { return }
-			
-			let appearance = (darkModeActive() ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
-			self.view.window?.appearance = NSAppearance(named: appearance)
-		}
-		
 		NSUserNotificationCenter.updateDockBadge(conversationList?.unreadEventCount ?? 0)
 	}
 	
@@ -116,6 +95,14 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		//self.timeLabel?.stringValue = self.time.relativeString()
 		
 		self.wallclock = Timer.scheduledWallclock(self, selector: #selector(_updateWallclock(_:)))
+		
+		ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
+			self.view.window?.appearance = appearance
+		}
+	}
+	
+	override func viewDidDisappear() {
+		ParrotAppearance.unregisterAppearanceListener(observer: self)
 	}
 	
 	func _updateWallclock(_ timer: Timer) {
