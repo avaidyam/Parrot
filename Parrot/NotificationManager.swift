@@ -35,7 +35,7 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 		
 		// Support for NotificationOptions.customSoundURL
 		if let alert = notification.userInfo?[NotificationOptions.customSoundPath.rawValue] as? String where notification.isPresented {
-			if _conformsToUTI(path: alert, UTI: kUTTypeAudio) {
+			if alert.conformsToUTI(kUTTypeAudio) {
 				NSSound(contentsOfFile: alert, byReference: true)?.play()
 			}
 		}
