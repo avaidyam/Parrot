@@ -85,15 +85,11 @@ public class MessageView : NSTableCellView {
 				return
 			}
 			
-			let f = DateFormatter()
-			f.dateStyle = .fullStyle
-			f.timeStyle = .longStyle
-			
 			self.orientation = o.orientation
 			self.color = o.color
 			let str = MessageView.attributedStringForText(o.string as String)
 			self.textLabel?.textStorage?.setAttributedString(str)
-			self.textLabel?.toolTip = "\(f.string(from: o.time))"
+			self.textLabel?.toolTip = "\(o.time.fullString())"
 			self.photoView?.image = o.photo
 			self.photoView?.toolTip = o.caption
 		}

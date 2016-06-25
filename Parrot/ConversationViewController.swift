@@ -66,7 +66,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
     override func viewWillAppear() {
-		_note = NotificationCenter.default().subscribe(name: Notification.Name.NSWindowDidBecomeKey.rawValue, object: self.window) { a in
+		_note = NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidBecomeKey, object: self.window, queue: nil) { a in
 			self.windowDidBecomeKey(nil)
 		}
         if self.window?.isKeyWindow ?? false {

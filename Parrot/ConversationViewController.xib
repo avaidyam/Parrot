@@ -105,12 +105,12 @@
             <point key="canvasLocation" x="667" y="537"/>
         </textField>
         <view wantsLayer="YES" focusRingType="none" id="NtL-HB-vJs">
-            <rect key="frame" x="0.0" y="0.0" width="304" height="58"/>
+            <rect key="frame" x="0.0" y="0.0" width="304" height="57"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <segmentedControl wantsLayer="YES" verticalHuggingPriority="750" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tvh-FQ-tna">
-                    <rect key="frame" x="4" y="30" width="296" height="25"/>
-                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="rL6-Dw-gZy">
+                    <rect key="frame" x="2" y="30" width="296" height="24"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="rL6-Dw-gZy">
                         <font key="font" metaFont="system"/>
                         <segments>
                             <segment label="Photo" image="NSFlowViewTemplate" width="101"/>
@@ -120,7 +120,7 @@
                     </segmentedCell>
                 </segmentedControl>
                 <searchField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Swj-Tf-yJb">
-                    <rect key="frame" x="4" y="6" width="296" height="22"/>
+                    <rect key="frame" x="4" y="6" width="292" height="22"/>
                     <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" sendsWholeSearchString="YES" maximumRecents="20" id="nyM-2C-ByS">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>

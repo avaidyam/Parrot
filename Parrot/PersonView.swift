@@ -46,11 +46,7 @@ public class PersonView : NSTableCellView {
 				return
 			}
 			
-			let f = DateFormatter()
-			f.dateStyle = .fullStyle
-			f.timeStyle = .longStyle
 			self.time = o.time
-			
 			self.photoView?.image = o.photo
 			self.photoView?.toolTip = o.caption
 			self.photoView?.layer?.borderColor = o.highlight.cgColor
@@ -59,7 +55,7 @@ public class PersonView : NSTableCellView {
 			self.textLabel?.stringValue = o.secondary
 			self.textLabel?.toolTip = o.secondary
 			self.timeLabel?.stringValue = o.time.relativeString()
-			self.timeLabel?.toolTip = "\(f.string(from: o.time))"
+			self.timeLabel?.toolTip = "\(o.time.fullString())"
 			/*//self.unreadLabel?.stringValue = "\(o.indicator)"
 			self.unreadLabel?.layer?.backgroundColor = o.highlight.cgColor
 			
@@ -79,7 +75,7 @@ public class PersonView : NSTableCellView {
 			}
 			
 			// Update the time label in realtime!
-			NotificationCenter.default().subscribe(name: "PersonView.UpdateTime") { n in
+			_ = NotificationCenter.default().addObserver(forName: Notification.Name(rawValue: "PersonView.UpdateTime"), object: nil, queue: nil) { n in
 				self.timeLabel?.stringValue = self.time.relativeString()
 			}
 		}
