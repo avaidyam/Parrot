@@ -204,11 +204,11 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		let network_ = self.conversation!.conversation.networkType
 		let network = NetworkType(rawValue: network_[0].rawValue) // FIXME weird stuff here
 		
-		var color: NSColor = NSColor.materialBlueGrey()
+		var color: NSColor = #colorLiteral(red: 0.2078431398, green: 0.2823529541, blue: 0.3215686381, alpha: 1)
 		if !user.isSelf && network == NetworkType.Babel {
-			color = NSColor.materialGreen()
+			color = #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
 		} else if !user.isSelf && network == NetworkType.GoogleVoice {
-			color = NSColor.materialBlue()
+			color = #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1)
 		}
 		let cap = network == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
 		

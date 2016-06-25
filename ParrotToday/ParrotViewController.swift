@@ -88,8 +88,8 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 				]
 				
 				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = NSColor.materialBlue()
-				actions[1].backgroundColor = NSColor.materialAmber()
+				actions[0].backgroundColor = #colorLiteral(red: 0.06274510175, green: 0.360784322, blue: 0.7960784435, alpha: 1)
+				actions[1].backgroundColor = #colorLiteral(red: 1, green: 0.5607843399, blue: 0, alpha: 1)
 			} else if edge == .trailing { // Swipe Left Actions
 				actions = [
 					NSTableViewRowAction(style: .destructive, title: "Delete", handler: { action, select in
@@ -101,8 +101,8 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 				]
 				
 				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = NSColor.materialAmber()
-				actions[1].backgroundColor = NSColor.materialRed()
+				actions[0].backgroundColor = #colorLiteral(red: 1, green: 0.5607843399, blue: 0, alpha: 1)
+				actions[1].backgroundColor = #colorLiteral(red: 0.7882353067, green: 0.09019608051, blue: 0.1215686277, alpha: 1)
 			}
 			return actions
 		}
@@ -142,7 +142,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 			img = NSImage(data: d)!
 		}
 		
-		let ring = d == NetworkType.GoogleVoice ? NSColor.materialBlue() : NSColor.materialGreen()
+		let ring = d == NetworkType.GoogleVoice ? #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1) : #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
 		let cap = d == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
 		let ind = conversation.unread_events.count
 		let name = title
