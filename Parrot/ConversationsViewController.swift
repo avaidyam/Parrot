@@ -76,7 +76,12 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			return actions
 		}
 		self.personsView.menuProvider = { rows in
-			return NSMenu(title: "")
+			let m = NSMenu(title: "")
+			m.addItem(withTitle: "Mute", action: nil, keyEquivalent: "")
+			m.addItem(withTitle: "Block", action: nil, keyEquivalent: "")
+			m.addItem(withTitle: "Delete", action: nil, keyEquivalent: "")
+			m.addItem(withTitle: "Archive", action: nil, keyEquivalent: "")
+			return m
 		}
 		self.personsView.pasteboardProvider = { row in
 			let pb = NSPasteboardItem()
