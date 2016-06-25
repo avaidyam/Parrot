@@ -3,9 +3,10 @@ import Hangouts
 
 // Existing Parrot Settings keys.
 public class Parrot {
+	public static let InterfaceStyle = "Parrot.InterfaceStyle"
+	public static let SystemInterfaceStyle = "Parrot.SystemInterfaceStyle"
+	
 	public static let AutoEmoji = "Parrot.AutoEmoji"
-	public static let DarkAppearance = "Parrot.DarkAppearance"
-	public static let AutomaticDarkAppearance = "Parrot.AutomaticDarkAppearance"
 	public static let InvertChatStyle = "Parrot.InvertChatStyle"
 	public static let ShowSidebar = "Parrot.ShowSidebar"
 	
@@ -13,7 +14,6 @@ public class Parrot {
 	public static let VibrateInterval = "Parrot.VibrateInterval"
 	public static let VibrateLength = "Parrot.VibrateLength"
 	
-	public static let SystemInterfaceStyle = "Parrot.SystemInterfaceStyle"
 }
 
 @NSApplicationMain
@@ -48,15 +48,12 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 					vc2?.representedObject = vc?.conversationList?.conversations[row]
 					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator())
 				}
+				
 				self.trans = WindowTransitionAnimator()
 				self.trans!.displayViewController(vc!)
-				
 				self.trans?.window?.titleVisibility = .hidden;
 				self.trans?.window?.titlebarAppearsTransparent = true;
-				
-				let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
-				let appearance = (dark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
-				self.trans?.window?.appearance = NSAppearance(named: appearance)
+				self.trans?.window?.appearance = ParrotAppearance.current()
 			}
 		}
 	}

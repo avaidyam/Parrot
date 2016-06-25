@@ -78,15 +78,32 @@ public class PreferencesViewController: NSTabViewController {
 	public override func viewWillAppear() {
 		super.viewWillAppear()
 		if let w = self.view.window, let t = w.toolbar {
+			w.appearance = ParrotAppearance.current()
 			w.titleVisibility = .hidden
-			t.displayMode = .iconOnly
-			t.insertItem(withItemIdentifier: NSToolbarFlexibleSpaceItemIdentifier, at: 0)
-			t.insertItem(withItemIdentifier: NSToolbarFlexibleSpaceItemIdentifier, at: t.items.count)
+			
+			// If the toolbar has an NSSegmentedControl "Tabs", tie it to our NSTabView.
+			for i in t.items {
+				if i.label == "Tabs" && i.view as? NSSegmentedControl != nil {
+					let seg = i.view! as! NSSegmentedControl
+					seg.action = #selector(NSTabView.takeSelectedTabViewItemFromSender(_:))
+					seg.target = self.tabView
+					seg.selectedSegment = 0
+				}
+			}
 			
 			let tabViewItem = self.tabView.tabViewItems[0]
 			_willSelect(tabViewItem)
 			_didSelect(tabViewItem)
+
+			ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
+				w.appearance = appearance
+				self.tabView.appearance = appearance
+			}
 		}
+	}
+	
+	public override func viewDidDisappear() {
+		ParrotAppearance.unregisterAppearanceListener(observer: self)
 	}
 	
 	public override func tabView(_ tabView: NSTabView, willSelect tabViewItem: NSTabViewItem?) {

@@ -1,12 +1,10 @@
 import AppKit
 
-/* TODO: Refactor this into four modes: [Classic, Light, Dark, System] */
-
 /// ParrotAppearance controls all user interface constructs (style, theme,
 /// mode, etc.) at runtime. It cannot be instantiated.
 public struct ParrotAppearance {
 	private init() {}
-	private static var _cachedAppearance: String = ParrotAppearance.current()
+	private static var _cachedAppearance: String = ParrotAppearance._current()
 	private static var _listeners = [AppearanceListener]()
 	
 	/// Trampolines the distributed notification sent when the user changes interface styles
@@ -23,7 +21,7 @@ public struct ParrotAppearance {
 	/// registered listeners IFF the appearance has changed. [KVO doesn't work with UserDefaults.]
 	private static let registerNotificationChangeListener: NSObjectProtocol = {
 		NotificationCenter.default().addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { n in
-			let current = ParrotAppearance.current()
+			let current = ParrotAppearance._current()
 			if _cachedAppearance != current {
 				_cachedAppearance = current
 				
@@ -44,20 +42,61 @@ public struct ParrotAppearance {
 		}
 	}
 	
+	///
+	/// PUBLIC:
+	///
+	
+	public enum InterfaceStyle: Int {
+		/// Aqua Light theme. (a la default macOS)
+		case Aqua
+		/// Aqua Dark theme. (a la Apple ProApps)
+		case Pro
+		/// Vibrant Light theme.
+		case Light
+		/// Vibrant Dark theme.
+		case Dark
+		/// System-defined vibrant theme.
+		case System
+	}
+	
+	public enum WindowInteraction: Int {
+		/// App windows can be tabbed.
+		case Tabbed
+		/// App windows can be docked.
+		case Docking
+	}
+	
+	public enum InterfaceMode: Int {
+		///
+		case MasterDetail
+		///
+		case InlineExpansion
+		/// Sidebar for all conversations, content has a single conversation.
+		case SplitView
+		///
+		case PopoverDetail
+		///
+		case OverlayBubble
+	}
+	
 	/// Returns the currently indicated Parrot appearance based on user preference
 	/// and if applicable, the global dark interface style preference (trampolined).
-	public static func current() -> String {
-		let dark = Settings[Parrot.DarkAppearance] as? Bool ?? false
-		let auto = Settings[Parrot.AutomaticDarkAppearance] as? Bool ?? false
-		let appleDark = Settings[Parrot.SystemInterfaceStyle] as? Bool ?? false
+	private static func _current() -> String {
+		let style = InterfaceStyle(rawValue: Settings[Parrot.InterfaceStyle] as? Int ?? -1) ?? .Dark
 		
-		guard dark else {
-			return NSAppearanceNameVibrantLight
+		switch style {
+		case .Light: return NSAppearanceNameVibrantLight
+		case .Dark: return NSAppearanceNameVibrantDark
+			
+		case .System:
+			let system = Settings[Parrot.SystemInterfaceStyle] as? Bool ?? false
+			return (system ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
+		default: return NSAppearanceNameVibrantDark
 		}
-		if auto {
-			return (appleDark ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
-		}
-		return NSAppearanceNameVibrantDark
+	}
+	
+	public static func current() -> NSAppearance {
+		return NSAppearance(named: _current())!
 	}
 	
 	/// Register a listener to be invoked when the application appearance changes.
