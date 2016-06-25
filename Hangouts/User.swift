@@ -4,14 +4,14 @@
 public struct UserID : Hashable, Equatable {
 	public let chatID: String
 	public let gaiaID: String
-	
-	// UserID: Equatable
+}
+
+// UserID: Hashable, Equatable
+public extension UserID {
 	public var hashValue: Int {
 		return chatID.hashValue &+ gaiaID.hashValue
 	}
 }
-
-// UserID: Equatable
 public func ==(lhs: UserID, rhs: UserID) -> Bool {
 	return lhs.hashValue == rhs.hashValue
 }
@@ -86,14 +86,102 @@ public struct User: Hashable, Equatable {
 	public var firstName: String {
 		return self.nameComponents.first ?? ""
 	}
-	
-	// User: Hashable
+}
+
+// User: Hashable, Equatable
+public extension User {
 	public var hashValue: Int {
 		return self.id.hashValue
 	}
 }
-
-// User: Equatable
 public func ==(lhs: User, rhs: User) -> Bool {
 	return lhs.id == rhs.id
+}
+
+
+// Collection of User instances.
+public class UserList: Collection {
+	
+	private var observer: NSObjectProtocol? // for Notification
+	private let me: User
+	private var users: [UserID: User]
+	
+	// Returns all users as an array.
+	public var allUsers: [User] {
+		return Array(self.users.values)
+	}
+	
+	// Return a User by their UserID.
+	// Logs and returns a placeholder User if not found.
+	public subscript(userID: UserID) -> User {
+		if let user = self.users[userID] {
+			return user
+		} else {
+			print("UserList returning unknown User for UserID \(userID)")
+			return User(userID: userID)
+		}
+	}
+	
+	// Initialize the list of Users.
+	// Creates users from the given ClientEntity and
+	// ClientConversationParticipantData instances. The latter is used only as
+	// a fallback, because it doesn't include a real first_name.
+	public init(client: Client, me: User, users: [User] = []) {
+		var usersDict = [UserID: User]()
+		users.forEach { usersDict[$0.id] = $0 }
+		self.users = usersDict
+		self.me = me
+		
+		self.observer = NotificationCenter.default()
+			.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) {
+				
+				if let userInfo = $0.userInfo,
+					state_update = userInfo[Client.didUpdateStateKey.rawValue] {
+					
+					if let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
+						for participant in conversation.participantData {
+							
+							let user = User(data: participant, selfUser: self.me.id)
+							if self.users[user.id] == nil {
+								self.users[user.id] = user
+							}
+						}
+					}
+				}
+		}
+	}
+	
+	deinit {
+		NotificationCenter.default().removeObserver(self.observer!)
+	}
+}
+
+// UserList Collection support.
+public extension UserList {
+	public typealias Index = DictionaryIndex<UserID, User>
+	public typealias SubSequence = Slice<LazyMapCollection<Dictionary<UserID, User>, User>>
+	
+	public var startIndex : Index {
+		return self.users.values.startIndex
+	}
+	
+	public var endIndex : Index {
+		return self.users.values.endIndex
+	}
+	
+	public func index(after i: Index) -> Index {
+		return self.users.values.index(after: i)
+	}
+	
+	public func formIndex(after i: inout Index) {
+		return self.users.values.formIndex(after: &i)
+	}
+	
+	public subscript(index: Index) -> User {
+		return self.users.values[index]
+	}
+	
+	public subscript(bounds: Range<Index>) -> SubSequence {
+		return self.users.values[bounds]
+	}
 }

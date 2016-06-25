@@ -20,6 +20,7 @@
 		4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB61C1C672900193EBC /* Emoji.swift */; };
 		48574F141D120314002375E1 /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
 		4866337E1C5822FA006C094B /* ElementContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4866337D1C5822FA006C094B /* ElementContainerView.swift */; };
+		486907F71D1EE266007C2532 /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486907F61D1EE266007C2532 /* MulticastDelegate.swift */; };
 		48808EDD1C6463DD00236E96 /* WindowTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */; };
 		488239A31C455CED00C5E8EB /* AppKitSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488239A21C455CED00C5E8EB /* AppKitSupport.swift */; };
 		48834D961C1B3602009BC442 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ServiceManager.swift */; };
@@ -94,7 +95,6 @@
 		48DF84A91D08EEB800F39444 /* AppKitSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488239A21C455CED00C5E8EB /* AppKitSupport.swift */; };
 		48DF84AF1D08EEB800F39444 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */; };
 		48DF84B01D08EEB800F39444 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
-		48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E3C0811C1F363F008B2D1D /* UserList.swift */; };
 		48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3391D04DFF90074984D /* Protobuf.swift */; };
 		48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
 		48F077181D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
@@ -262,6 +262,7 @@
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		48574F121D11F9FC002375E1 /* AppManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppManagement.swift; sourceTree = "<group>"; };
 		4866337D1C5822FA006C094B /* ElementContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElementContainerView.swift; sourceTree = "<group>"; };
+		486907F61D1EE266007C2532 /* MulticastDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowTransitionAnimator.swift; sourceTree = "<group>"; };
@@ -335,7 +336,6 @@
 		48DE52FB1C1CC28000647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DE52FD1C1CC28000647C63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		48DF84971D04E1F800F39444 /* hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hangouts.proto.swift; sourceTree = "<group>"; };
-		48E3C0811C1F363F008B2D1D /* UserList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserList.swift; sourceTree = "<group>"; };
 		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
 		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
 		48F84D441D0DEC1E00E77AD9 /* LinkPreviews.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LinkPreviews.xib; sourceTree = "<group>"; };
@@ -499,7 +499,6 @@
 				48834E381C1B4098009BC442 /* ConversationList.swift */,
 				48834E371C1B4098009BC442 /* Event.swift */,
 				48834E3A1C1B4098009BC442 /* User.swift */,
-				48E3C0811C1F363F008B2D1D /* UserList.swift */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -671,6 +670,7 @@
 				48834E391C1B4098009BC442 /* FoundationSupport.swift */,
 				481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */,
 				4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */,
+				486907F61D1EE266007C2532 /* MulticastDelegate.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1255,7 +1255,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
-				48E3C0821C1F363F008B2D1D /* UserList.swift in Sources */,
 				48DF84981D04E1F800F39444 /* hangouts.proto.swift in Sources */,
 				4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */,
 				481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */,
@@ -1263,6 +1262,7 @@
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
+				486907F71D1EE266007C2532 /* MulticastDelegate.swift in Sources */,
 				48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
 				48834E401C1B4098009BC442 /* ConversationList.swift in Sources */,
@@ -1646,10 +1646,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/External",
-				);
 				FRAMEWORK_VERSION = A;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1690,10 +1686,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/External",
-				);
 				FRAMEWORK_VERSION = A;
 				GCC_PREPROCESSOR_DEFINITIONS = "BUILTIN_SHA1=1";
 				INFOPLIST_FILE = Hangouts/Info.plist;

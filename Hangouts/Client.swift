@@ -249,11 +249,25 @@ public final class Client {
 				}
 				
 				// Let's request our own entity now.
-				var self_entity = Entity()
 				self.getSelfInfo {
-					self_entity = $0!.selfEntity!
+					let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
+					var users = [selfUser]
 					
-					let userList = UserList(client: self, selfEntity: self_entity, entities: required_entities, data: conv_part_list)
+					// Add each entity as a new User.
+					for entity in required_entities {
+						let user = User(entity: entity, selfUser: selfUser.id)
+						users.append(user)
+					}
+					
+					// Add each conversation participant as a new User if we didn't already add them from an entity.
+					for participant in conv_part_list {
+						let user = User(data: participant, selfUser: selfUser.id)
+						if !users.contains(user) {
+							users.append(user)
+						}
+					}
+					
+					let userList = UserList(client: self, me: selfUser, users: users)
 					let conversationList = ConversationList(client: self, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
 					cb(userList, conversationList)
 				}
