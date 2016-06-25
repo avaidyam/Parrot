@@ -1,7 +1,4 @@
 import Foundation
-import CommonCrypto
-
-/* TODO: Remove dependency on CommonCrypto. */
 
 // PBLiteSerialization wrapper
 public class PBLiteSerialization {
@@ -157,7 +154,7 @@ public let ORIGIN_URL = "https://talkgadget.google.com"
 public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
 	let time_msec = Int(Date().timeIntervalSince1970 * 1000)
 	let auth_string = "\(time_msec) \(sapisid_cookie) \(ORIGIN_URL)"
-	let auth_hash = auth_string.SHA1()
+	let auth_hash = auth_string.sha1()
 	let sapisidhash = "SAPISIDHASH \(time_msec)_\(auth_hash)"
 	return [
 		"Authorization": sapisidhash,
@@ -168,13 +165,10 @@ public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String
 
 /* String Crypto extensions */
 public extension String {
-	public func SHA1() -> String {
-		let data = self.data(using: String.Encoding.utf8)! as NSData
-		var digest = [UInt8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
-		CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
-		let hexBytes = digest.map {
-			String(format: "%02hhx", $0)
-		}
-		return hexBytes.joined(separator: "")
+	public func sha1() -> String {
+		let str = Array(self.utf8).map { Int8($0) }
+		var store = [Int8](repeating: 0, count: 20)
+		SHA1(&store, str, Int32(str.count))
+		return store.map { String(format: "%02hhx", $0) }.joined(separator: "")
 	}
 }

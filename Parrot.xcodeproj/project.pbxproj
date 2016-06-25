@@ -43,7 +43,6 @@
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
 		48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */; };
 		48834E4C1C1B4253009BC442 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */; };
-		48834E571C1B490B009BC442 /* CommonCrypto in Resources */ = {isa = PBXBuildFile; fileRef = 48834E561C1B490B009BC442 /* CommonCrypto */; };
 		488492741D0B392A0003D522 /* ConversationsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492731D0B392A0003D522 /* ConversationsViewController.xib */; };
 		488492761D0B3A010003D522 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* ConversationViewController.xib */; };
 		488492771D0B3CA60003D522 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* ConversationViewController.xib */; };
@@ -298,7 +297,6 @@
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLiteSerialization.swift; sourceTree = "<group>"; };
 		48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		48834E561C1B490B009BC442 /* CommonCrypto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CommonCrypto; path = External/CommonCrypto; sourceTree = SOURCE_ROOT; };
 		488492731D0B392A0003D522 /* ConversationsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationsViewController.xib; sourceTree = "<group>"; };
 		488492751D0B3A010003D522 /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationViewController.xib; sourceTree = "<group>"; };
 		488492781D0B3F370003D522 /* PersonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonView.xib; sourceTree = "<group>"; };
@@ -518,7 +516,6 @@
 				48834E121C1B38B9009BC442 /* HangoutsProvider */,
 				48DE53051C1CC29500647C63 /* Extensions */,
 				48834E0C1C1B3756009BC442 /* Tests */,
-				48834E291C1B3F6E009BC442 /* External */,
 				48DE52DD1C1CC1D300647C63 /* Frameworks */,
 				48834D931C1B3602009BC442 /* Products */,
 			);
@@ -668,16 +665,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		48834E291C1B3F6E009BC442 /* External */ = {
-			isa = PBXGroup;
-			children = (
-				48834E561C1B490B009BC442 /* CommonCrypto */,
-				48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */,
-			);
-			name = External;
-			path = Parrot;
-			sourceTree = "<group>";
-		};
 		48834E511C1B4380009BC442 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -735,6 +722,7 @@
 			children = (
 				48BA5B481C379CCF00ACA29B /* libncurses.tbd */,
 				48DE52DE1C1CC1D300647C63 /* Cocoa.framework */,
+				48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */,
 				48DE52F11C1CC28000647C63 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
@@ -1161,7 +1149,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48834E571C1B490B009BC442 /* CommonCrypto in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1664,6 +1651,11 @@
 					"$(PROJECT_DIR)/External",
 				);
 				FRAMEWORK_VERSION = A;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"BUILTIN_SHA1=1",
+				);
 				INFOPLIST_FILE = Hangouts/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -1703,6 +1695,7 @@
 					"$(PROJECT_DIR)/External",
 				);
 				FRAMEWORK_VERSION = A;
+				GCC_PREPROCESSOR_DEFINITIONS = "BUILTIN_SHA1=1";
 				INFOPLIST_FILE = Hangouts/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
