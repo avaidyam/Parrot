@@ -43,7 +43,6 @@
 		48834E411C1B4098009BC442 /* FoundationSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E391C1B4098009BC442 /* FoundationSupport.swift */; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
 		48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */; };
-		48834E4C1C1B4253009BC442 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */; };
 		488492741D0B392A0003D522 /* ConversationsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492731D0B392A0003D522 /* ConversationsViewController.xib */; };
 		488492761D0B3A010003D522 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* ConversationViewController.xib */; };
 		488492771D0B3CA60003D522 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* ConversationViewController.xib */; };
@@ -80,7 +79,7 @@
 		48DE52FA1C1CC28000647C63 /* ParrotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52F81C1CC28000647C63 /* ParrotViewController.xib */; };
 		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
 		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		48DF84981D04E1F800F39444 /* hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* hangouts.proto.swift */; };
+		48DF84981D04E1F800F39444 /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
 		48DF849D1D08EEB800F39444 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482E21381C23F5F500A4C7B3 /* ChatModel.swift */; };
 		48DF849E1D08EEB800F39444 /* ElementContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4866337D1C5822FA006C094B /* ElementContainerView.swift */; };
 		48DF849F1D08EEB800F39444 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageView.swift */; };
@@ -297,7 +296,6 @@
 		48834E391C1B4098009BC442 /* FoundationSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationSupport.swift; sourceTree = "<group>"; };
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLiteSerialization.swift; sourceTree = "<group>"; };
-		48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		488492731D0B392A0003D522 /* ConversationsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationsViewController.xib; sourceTree = "<group>"; };
 		488492751D0B3A010003D522 /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationViewController.xib; sourceTree = "<group>"; };
 		488492781D0B3F370003D522 /* PersonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonView.xib; sourceTree = "<group>"; };
@@ -335,7 +333,7 @@
 		48DE52F91C1CC28000647C63 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ParrotViewController.xib; sourceTree = "<group>"; };
 		48DE52FB1C1CC28000647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DE52FD1C1CC28000647C63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		48DF84971D04E1F800F39444 /* hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hangouts.proto.swift; sourceTree = "<group>"; };
+		48DF84971D04E1F800F39444 /* Hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hangouts.proto.swift; sourceTree = "<group>"; };
 		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
 		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
 		48F84D441D0DEC1E00E77AD9 /* LinkPreviews.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LinkPreviews.xib; sourceTree = "<group>"; };
@@ -376,7 +374,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48834E4C1C1B4253009BC442 /* JavaScriptCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +480,7 @@
 		487A0E101C1E0F6C007A4696 /* PBLite */ = {
 			isa = PBXGroup;
 			children = (
-				48DF84971D04E1F800F39444 /* hangouts.proto.swift */,
+				48DF84971D04E1F800F39444 /* Hangouts.proto.swift */,
 				48E9C3391D04DFF90074984D /* Protobuf.swift */,
 				48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */,
 			);
@@ -722,7 +719,6 @@
 			children = (
 				48BA5B481C379CCF00ACA29B /* libncurses.tbd */,
 				48DE52DE1C1CC1D300647C63 /* Cocoa.framework */,
-				48834E4B1C1B4253009BC442 /* JavaScriptCore.framework */,
 				48DE52F11C1CC28000647C63 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
@@ -1255,7 +1251,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
-				48DF84981D04E1F800F39444 /* hangouts.proto.swift in Sources */,
+				48DF84981D04E1F800F39444 /* Hangouts.proto.swift in Sources */,
 				4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */,
 				481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */,
 				48834E411C1B4098009BC442 /* FoundationSupport.swift in Sources */,

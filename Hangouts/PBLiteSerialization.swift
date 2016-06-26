@@ -119,28 +119,32 @@ public class PBLiteSerialization {
 	
 	public class func parseProtoJSON<T: ProtoMessage>(input: Data) -> T? {
 		let script = (NSString(data: input, encoding: String.Encoding.utf8.rawValue)! as String)
-		if let parsedObject = evalArray(string: script) as? [AnyObject] {
+		if let parsedObject = sanitizedDecode(JSON: script) as? [AnyObject] {
 			var msg = T.init() as ProtoMessage
 			decode(message: &msg, pblite: parsedObject, ignoreFirstItem: true)
 			return msg as? T
 		}
 		return nil
 	}
+	
+	/// Sanitize and decode JSON from a server PBLite response.
+	/// Note: This assumes the output will always be an array.
+	public class func sanitizedDecode(JSON string: String) -> NSArray? {
+		
+		// Sanitize the string first.
+		var sanitizedStr = string
+		sanitizedStr.replaceAllOccurrences(matching: "(\n|\t)+", with: "") // strip \n, \t
+		sanitizedStr.replaceAllOccurrences(matching: "(\\[,)", with: "[null,") // leading comma
+		sanitizedStr.replaceAllOccurrences(matching: "((,)(\\s)*(,))", with: ",null,") // null elements
+		// Don't do this: railing commas are allowed in JSON.
+		//sanitizedStr.replaceAllOccurrences(matching: "(,\\])", with: ",null]") // trailing comma
+		
+		guard let data = sanitizedStr.data(using: String.Encoding.utf8) else { return nil }
+		let json = try? JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+		guard json != nil else { return nil }
+		return json as? NSArray
+	}
 }
-
-//
-// BIG CRUTCH: Should be replaced later.
-//
-
-import JavaScriptCore
-@available(iOS, deprecated: 1.0, message: "Avoid JSContext!")
-@available(OSX, deprecated: 1.0, message: "Avoid JSContext!")
-public func evalArray(string: String) -> NSArray? {
-	return JSContext().evaluateScript("a = " + string).toArray()
-}
-/*public func evalDict<T: Hashable>(string: String) -> [T: Any?] {
-	return JSContext().evaluateScript("a = " + string).toDictionary()
-}*/
 
 
 //

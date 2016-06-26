@@ -328,7 +328,7 @@ public final class Channel : NSObject {
 	//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
 	internal class func parseSIDResponse(res: Data) -> (sid: String, gSessionID: String) {
 		if let firstSubmission = Channel.ChunkParser().getChunks(newBytes: res).first {
-			let val = evalArray(string: firstSubmission)!
+			let val = PBLiteSerialization.sanitizedDecode(JSON: firstSubmission)!
 			let sid = ((val[0] as! NSArray)[1] as! NSArray)[1] as! String
 			let gSessionID = (((val[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String
 			return (sid, gSessionID)

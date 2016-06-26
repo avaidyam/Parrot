@@ -138,8 +138,6 @@ public class PreferencesViewController: NSTabViewController {
 	}
 }
 
-/* TODO: The NSPanel titlebar doesn't respond to appearance changes well. */
-
 public class AboutViewController: NSViewController {
 	
 	@IBOutlet public var appIcon: NSImageView?
@@ -147,28 +145,23 @@ public class AboutViewController: NSViewController {
 	@IBOutlet public var appVersion: NSTextField?
 	@IBOutlet public var copyright: NSTextField?
 	
-	// Because suffering and NSPanels...
-	private func _fixTitlebar() {
-		if let v = self.view.superview {
-			for r in v.subviews {
-				if let r = r as? NSVisualEffectView where r !== self.view {
-					r.material = (self.view as! NSVisualEffectView).material
-				}
-			}
-		}
+	private func configureWindow(_ w: NSWindow) {
+		w.styleMask = [.titled, .closable, .fullSizeContentView]
+		w.collectionBehavior = [.moveToActiveSpace, .transient, .ignoresCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
+		w.titleVisibility = .hidden
+		w.titlebarAppearsTransparent = true
+		w.isMovableByWindowBackground = true
+		w.standardWindowButton(.miniaturizeButton)?.isHidden = true
+		w.standardWindowButton(.zoomButton)?.isHidden = true
 	}
 	
 	public override func viewWillAppear() {
 		super.viewWillAppear()
-		
-		self.view.window!.titlebarAppearsTransparent = true
-		self.view.window!.isMovableByWindowBackground = true
-		self.view.window!.appearance = ParrotAppearance.current()
-		self._fixTitlebar()
-		
-		ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
-			self.view.window!.appearance = appearance
-			self._fixTitlebar()
+		if let w = self.view.window {
+			configureWindow(w)
+			ParrotAppearance.registerAppearanceListener(observer: self, invokeImmediately: true) { appearance in
+				w.appearance = appearance
+			}
 		}
 		
 		self.appIcon?.image = NSApp.applicationIconImage

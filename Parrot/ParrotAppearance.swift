@@ -100,11 +100,15 @@ public struct ParrotAppearance {
 	}
 	
 	/// Register a listener to be invoked when the application appearance changes.
+	/// If invokeImmediately is true, the handler will be invoked immediately.
+	/// This is useful in case appearance update logic is unified and can be streamlined.
 	/// Note: this should be done when a view appears on-screen.
-	public static func registerAppearanceListener(observer: AnyObject, handler: (NSAppearance) -> Void) {
-		_ = registerDarkModeActiveListener
-		_ = registerNotificationChangeListener
+	public static func registerAppearanceListener(observer: AnyObject, invokeImmediately: Bool = false, handler: (NSAppearance) -> Void) {
+		_ = registerDarkModeActiveListener; _ = registerNotificationChangeListener // SETUP
 		_listeners.append(AppearanceListener(object: observer, handler: handler))
+		if invokeImmediately {
+			handler(ParrotAppearance.current())
+		}
 	}
 	
 	/// Unregister a previously registered listener.

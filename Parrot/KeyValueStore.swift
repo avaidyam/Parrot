@@ -6,11 +6,15 @@ import Foundation
 /// A KeyValueStore is a container layer that stores values for given keys.
 public protocol KeyValueStore {
 	subscript(key: String) -> AnyObject? { get set }
+}
+
+/// A KeyValueStore that supports specific application-defined domains.
+public protocol DomainSpecificKeyValueStore: KeyValueStore {
 	subscript(key: String, domain domain: String) -> AnyObject? { get set }
 }
 
 /// A KeyValueStore that encodes its contents in the OS defaults database.
-public final class SettingsStore: KeyValueStore {
+public final class SettingsStore: DomainSpecificKeyValueStore {
 	private init() {}
 	
 	/// Set or get a  key's value with the default domain (global search list).
@@ -37,7 +41,7 @@ public final class SettingsStore: KeyValueStore {
 }
 
 /// A KeyValueStore that securely encodes its contents in the OS keychain.
-public final class SecureSettingsStore: KeyValueStore {
+public final class SecureSettingsStore: DomainSpecificKeyValueStore {
 	private init() {}
 	private var _defaultDomain = Bundle.main().bundleIdentifier ?? "SecureSettings:ERR"
 	
@@ -91,8 +95,28 @@ public final class SecureSettingsStore: KeyValueStore {
 	}
 }
 
+/// A KeyValueStore that encodes its contents in the user's iCloud database.
+/// Note: UbiqutousStore does not support domains.
+public final class UbiquitousStore: KeyValueStore {
+	private init() {}
+	
+	public subscript(key: String) -> AnyObject? {
+		get {
+			NSUbiquitousKeyValueStore.default().synchronize()
+			return NSUbiquitousKeyValueStore.default().object(forKey: key)
+		}
+		set(value) {
+			NSUbiquitousKeyValueStore.default().set(value, forKey: key)
+			NSUbiquitousKeyValueStore.default().synchronize()
+		}
+	}
+}
+
 /// Aliased singleton for SettingsStore.
 public let Settings = SettingsStore()
 
 /// Aliased singleton for SecureSettingsStore.
 public let SecureSettings = SecureSettingsStore()
+
+/// Aliased singleton for UbiquitousStore.
+public let CloudSettings = UbiquitousStore()

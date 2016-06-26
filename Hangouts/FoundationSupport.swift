@@ -15,6 +15,14 @@ public func ??= <T>(lhs: inout T?,  rhs: @autoclosure () -> T) {
 	lhs = lhs ?? rhs()
 }
 
+// Because warnings are bad.
+public extension Optional {
+	@discardableResult
+	public func _flatMap<U>(_ f: @noescape (Wrapped) throws -> U?) rethrows -> U? {
+		return try flatMap(f)
+	}
+}
+
 // Needs to be fixed somehow to not use NSString stuff.
 internal extension String {
 	

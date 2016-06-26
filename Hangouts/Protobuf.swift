@@ -319,7 +319,7 @@ public struct ProtoMessageDescriptor {
 			case .required:
 				output += "\t\thash = (hash &* 31) &+ self.\(field.camelName).hashValue\n"
 			case .optional:
-				output += "\t\tself.\(field.camelName)._flatMap { hash = (hash &* 31) &+ $0.hashValue }\n"
+				output += "\t\t_= self.\(field.camelName).flatMap { hash = (hash &* 31) &+ $0.hashValue }\n"
 			case .repeated:
 				output += "\t\tself.\(field.camelName).forEach { hash = (hash &* 31) &+ $0.hashValue }\n"
 			}
@@ -372,14 +372,6 @@ public struct ProtoFileDescriptor {
 			output += "\t\"\(e.name)\": \(e.name).self,\n"
 		}
 		return output + "]"
-	}
-}
-
-// Because warnings are bad.
-public extension Optional {
-	@discardableResult
-	public func _flatMap<U>(_ f: @noescape (Wrapped) throws -> U?) rethrows -> U? {
-		return try flatMap(f)
 	}
 }
 

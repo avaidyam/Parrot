@@ -19,7 +19,7 @@
                                         <menuItem title="About Parrot" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <segue destination="Scw-gi-fte" kind="show" id="LFr-Uv-Nc1"/>
+                                                <segue destination="ep9-7s-JMi" kind="show" id="0uQ-Bg-jLh"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
@@ -650,26 +650,6 @@
             </objects>
             <point key="canvasLocation" x="1270" y="-413"/>
         </scene>
-        <!--Window Controller-->
-        <scene sceneID="b89-bn-CsE">
-            <objects>
-                <windowController showSeguePresentationStyle="single" id="Scw-gi-fte" sceneMemberID="viewController">
-                    <window key="window" title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="alertPanel" frameAutosaveName="" id="Yvv-YP-nNO" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES" HUD="YES"/>
-                        <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES" transient="YES" ignoresCycle="YES" fullScreenAuxiliary="YES" fullScreenDisallowsTiling="YES"/>
-                        <rect key="contentRect" x="245" y="310" width="256" height="256"/>
-                        <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
-                        <value key="minSize" type="size" width="256" height="256"/>
-                        <value key="maxSize" type="size" width="256" height="256"/>
-                    </window>
-                    <connections>
-                        <segue destination="ep9-7s-JMi" kind="relationship" relationship="window.shadowedContentViewController" id="m7j-fU-833"/>
-                    </connections>
-                </windowController>
-                <customObject id="ZbX-Ge-UnI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1044.5" y="-110.5"/>
-        </scene>
         <!--About-->
         <scene sceneID="V4L-iD-HgF">
             <objects>
@@ -721,7 +701,7 @@
                 </viewController>
                 <customObject id="Mr8-W0-8Te" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1044" y="211"/>
+            <point key="canvasLocation" x="1047" y="-96"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="8gj-44-OyX">
