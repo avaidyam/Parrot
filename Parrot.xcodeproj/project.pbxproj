@@ -668,9 +668,9 @@
 			isa = PBXGroup;
 			children = (
 				48834E391C1B4098009BC442 /* FoundationSupport.swift */,
+				486907F61D1EE266007C2532 /* MulticastDelegate.swift */,
 				481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */,
 				4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */,
-				486907F61D1EE266007C2532 /* MulticastDelegate.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1422,7 +1422,6 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/External";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
 					"-lncurses",
@@ -1438,7 +1437,6 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/External";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
 					"-lncurses",
@@ -1540,10 +1538,6 @@
 				CODE_SIGN_ENTITLEMENTS = Parrot/Parrot.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/External",
-				);
 				INFOPLIST_FILE = Parrot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot;
@@ -1561,10 +1555,6 @@
 				CODE_SIGN_ENTITLEMENTS = Parrot/Parrot.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/External",
-				);
 				INFOPLIST_FILE = Parrot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot;
@@ -1662,7 +1652,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Hangouts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "${SRCROOT}/External/CommonCrypto";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
@@ -1698,7 +1687,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Hangouts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "${SRCROOT}/External/CommonCrypto";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
@@ -1747,10 +1735,6 @@
 				CODE_SIGN_ENTITLEMENTS = HangoutsProvider/HangoutsProvider.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/External",
-				);
 				INFOPLIST_FILE = HangoutsProvider/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.HangoutsProvider;
@@ -1767,10 +1751,6 @@
 				CODE_SIGN_ENTITLEMENTS = HangoutsProvider/HangoutsProvider.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/External",
-				);
 				INFOPLIST_FILE = HangoutsProvider/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.HangoutsProvider;

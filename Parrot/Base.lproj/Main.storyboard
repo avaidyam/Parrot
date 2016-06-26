@@ -19,7 +19,7 @@
                                         <menuItem title="About Parrot" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="orderFrontStandardAboutPanel:" target="Ady-hI-5gd" id="Exp-CZ-Vem"/>
+                                                <segue destination="Scw-gi-fte" kind="show" id="LFr-Uv-Nc1"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
@@ -648,13 +648,86 @@
                 <customObject id="Voe-Tx-rLC" customClass="ServiceManager" customModule="Parrot" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1513" y="-315"/>
+            <point key="canvasLocation" x="1270" y="-413"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="b89-bn-CsE">
+            <objects>
+                <windowController showSeguePresentationStyle="single" id="Scw-gi-fte" sceneMemberID="viewController">
+                    <window key="window" title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="alertPanel" frameAutosaveName="" id="Yvv-YP-nNO" customClass="NSPanel">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES" HUD="YES"/>
+                        <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES" transient="YES" ignoresCycle="YES" fullScreenAuxiliary="YES" fullScreenDisallowsTiling="YES"/>
+                        <rect key="contentRect" x="245" y="310" width="256" height="256"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
+                        <value key="minSize" type="size" width="256" height="256"/>
+                        <value key="maxSize" type="size" width="256" height="256"/>
+                    </window>
+                    <connections>
+                        <segue destination="ep9-7s-JMi" kind="relationship" relationship="window.shadowedContentViewController" id="m7j-fU-833"/>
+                    </connections>
+                </windowController>
+                <customObject id="ZbX-Ge-UnI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1044.5" y="-110.5"/>
+        </scene>
+        <!--About-->
+        <scene sceneID="V4L-iD-HgF">
+            <objects>
+                <viewController title="About" showSeguePresentationStyle="single" id="ep9-7s-JMi" customClass="AboutViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="NWz-l0-bgD" customClass="NSVisualEffectView">
+                        <rect key="frame" x="0.0" y="0.0" width="256" height="256"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JaQ-31-nDO">
+                                <rect key="frame" x="64" y="108" width="128" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="oZF-5b-Kuu"/>
+                            </imageView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oRn-Nc-kwa">
+                                <rect key="frame" x="18" y="83" width="220" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="App Name" id="tse-6X-Fo3">
+                                    <font key="font" metaFont="systemMedium" size="16"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kl9-Lm-WxU">
+                                <rect key="frame" x="18" y="58" width="220" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="App Version" id="eWC-lk-1dw">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="muk-U1-zeL">
+                                <rect key="frame" x="18" y="20" width="220" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Copyright" usesSingleLineMode="YES" id="8dR-1f-4BH">
+                                    <font key="font" metaFont="systemLight" size="11"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="appIcon" destination="JaQ-31-nDO" id="vnA-iE-JBu"/>
+                        <outlet property="appName" destination="oRn-Nc-kwa" id="nnd-ia-Lmc"/>
+                        <outlet property="appVersion" destination="kl9-Lm-WxU" id="WpI-0q-bpF"/>
+                        <outlet property="copyright" destination="muk-U1-zeL" id="3eJ-5d-HOf"/>
+                    </connections>
+                </viewController>
+                <customObject id="Mr8-W0-8Te" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1044" y="211"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="8gj-44-OyX">
             <objects>
                 <windowController showSeguePresentationStyle="single" id="2UE-pw-Aer" sceneMemberID="viewController">
-                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="alertPanel" frameAutosaveName="" id="RsH-tq-Ya4">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="" id="RsH-tq-Ya4">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" unifiedTitleAndToolbar="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES" transient="YES" ignoresCycle="YES" fullScreenNone="YES" fullScreenDisallowsTiling="YES"/>
                         <rect key="contentRect" x="245" y="310" width="480" height="270"/>

@@ -138,6 +138,51 @@ public class PreferencesViewController: NSTabViewController {
 	}
 }
 
+/* TODO: The NSPanel titlebar doesn't respond to appearance changes well. */
+
+public class AboutViewController: NSViewController {
+	
+	@IBOutlet public var appIcon: NSImageView?
+	@IBOutlet public var appName: NSTextField?
+	@IBOutlet public var appVersion: NSTextField?
+	@IBOutlet public var copyright: NSTextField?
+	
+	// Because suffering and NSPanels...
+	private func _fixTitlebar() {
+		if let v = self.view.superview {
+			for r in v.subviews {
+				if let r = r as? NSVisualEffectView where r !== self.view {
+					r.material = (self.view as! NSVisualEffectView).material
+				}
+			}
+		}
+	}
+	
+	public override func viewWillAppear() {
+		super.viewWillAppear()
+		
+		self.view.window!.titlebarAppearsTransparent = true
+		self.view.window!.isMovableByWindowBackground = true
+		self.view.window!.appearance = ParrotAppearance.current()
+		self._fixTitlebar()
+		
+		ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
+			self.view.window!.appearance = appearance
+			self._fixTitlebar()
+		}
+		
+		self.appIcon?.image = NSApp.applicationIconImage
+		self.appName?.stringValue = Bundle.main().objectForInfoDictionaryKey("CFBundleName") as! String
+		self.appVersion?.stringValue = Bundle.main().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
+		self.copyright?.stringValue = Bundle.main().objectForInfoDictionaryKey("NSHumanReadableCopyright") as! String
+	}
+	
+	public override func viewDidDisappear() {
+		super.viewDidDisappear()
+		ParrotAppearance.unregisterAppearanceListener(observer: self)
+	}
+}
+
 public class DetailSegue: NSStoryboardSegue {
 	public override func perform() {
 		guard	let source = self.sourceController as? NSViewController,
