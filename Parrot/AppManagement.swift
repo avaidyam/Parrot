@@ -93,7 +93,6 @@ public func __test() {
 	n.actionButtonTitle = "Update"
 	n.identifier = "com.avaidyam.Parrot.UpdateNotification"
 	n.informativeText = release!.releaseNotes
-	_ = NotificationManager.sharedInstance
-	NSUserNotificationCenter.default().deliver(n)
+	UserNotificationCenter.deliver(n)
 	print(release)
 }

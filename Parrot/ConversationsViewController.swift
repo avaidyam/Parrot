@@ -2,6 +2,7 @@ import Cocoa
 import Hangouts
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
+/* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
 
 class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	
@@ -32,7 +33,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			}
 		}
 		
-		NSUserNotificationCenter.updateDockBadge(conversationList?.unreadEventCount ?? 0)
+		UserNotificationCenter.updateDockBadge(conversationList?.unreadEventCount ?? 0)
 	}
 	
 	override func viewDidLoad() {
@@ -172,7 +173,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     func conversationList(didUpdate list: ConversationList) {
 		DispatchQueue.main.async {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			NSUserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
+			UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 	
@@ -180,7 +181,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
     func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation) {
 		DispatchQueue.main.async {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			NSUserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
+			UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 }

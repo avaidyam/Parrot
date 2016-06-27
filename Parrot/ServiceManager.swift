@@ -1,5 +1,6 @@
 import Cocoa
 import Hangouts
+import WebKit
 
 // Existing Parrot Settings keys.
 public class Parrot {
@@ -16,6 +17,8 @@ public class Parrot {
 	
 }
 
+public let defaultUserImage = NSImage(named: "NSUserGuest")!
+
 @NSApplicationMain
 class ServiceManager: NSObject, NSApplicationDelegate {
 	
@@ -23,17 +26,17 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
-		BackgroundActivity.begin("Authenticate")
+		AppActivity.begin("Authenticate")
 		Authenticator.authenticateClient {
 			_hangoutsClient = Client(configuration: $0)
 			_hangoutsClient?.connect()
-			BackgroundActivity.end("Authenticate")
+			AppActivity.end("Authenticate")
 			
 			NotificationCenter.default()
 				.addObserver(forName: Client.didConnectNotification, object: _hangoutsClient!, queue: nil) { _ in
-					BackgroundActivity.begin("Setup")
+					AppActivity.begin("Setup")
 					_hangoutsClient!.buildUserConversationList { (userList, conversationList) in
-						BackgroundActivity.begin("Setup")
+						AppActivity.begin("Setup")
 						_REMOVE.forEach {
 							$0(userList, conversationList)
 						}

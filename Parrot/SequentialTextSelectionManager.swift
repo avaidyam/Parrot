@@ -209,7 +209,7 @@ class SequentialTextSelectionManager: NSResponder {
 	
 	func menuForEvent(theEvent: NSEvent) -> NSMenu {
 		return self.validTextView(event: theEvent)!.menu(for: theEvent)!
-		
+		/*
 		let menu = NSMenu(title: NSLocalizedString("Text Actions", comment: ""))
 		let copy = menu.addItem(withTitle: NSLocalizedString("Copy", comment: ""), action: #selector(NSText.copy(_:)), keyEquivalent: "")
 		copy.target = self
@@ -217,6 +217,7 @@ class SequentialTextSelectionManager: NSResponder {
 		let share = menu.addItem(withTitle: NSLocalizedString("Share", comment: ""), action: nil, keyEquivalent: "")
 		share.submenu = self.buildSharingMenu()
 		return menu
+		*/
 	}
 	
 	func share(item: NSMenuItem) {

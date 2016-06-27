@@ -410,7 +410,7 @@ public final class Client {
 			
 			// Not sure what timestamp should be there, last time I have tried
 			// it Hangouts client in GMail sent something like now() - 5 hours
-			NSNumber(value: UInt64(Date().toUTC())), /* TODO: This should be in UTC form. */
+			NSNumber(value: UInt64(Date().toUTC())),
 			None,
 			[]
 		]
@@ -507,7 +507,7 @@ public final class Client {
 		}
 	}
 	
-	public func queryPresence(chat_ids: [String] = [], cb: (() -> Void)? = nil) {
+	public func queryPresence(chat_ids: [String] = [], cb: ((response: QueryPresenceResponse?) -> Void)) {
 		guard chat_ids.count > 0 else {
 			print("Cannot query presence for zero chat IDs!")
 			return
@@ -518,11 +518,8 @@ public final class Client {
 			[chat_ids],
 			[1, 2, 5, 7, 8] // what are FieldMasks 5 and 8?
 		]
-		self.request(endpoint: "presence/querypresence", body: data) { r in
-			
-			/* TODO: Does not return data, only calls the callback. */
-			// cb(response: PBLiteSerialization.parseProtoJSON(r.data!)) //PresenceResult
-			cb?()
+		self.request(endpoint: "presence/querypresence", body: data, use_json: false) { r in
+			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	

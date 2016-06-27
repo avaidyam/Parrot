@@ -1,9 +1,10 @@
 import Foundation
 
+/* TODO: Integrate NSBackgroundActivityScheduler, NSProgress, NSOperation, DispatchQoS, and os_log_breadcrumb*. */
+
 /// A proxy for NSProcessInfo's BackgroundActivity API.
 /// Simplified for internal use only.
-/* TODO: Use NSBackgroundActivityScheduler as well. */
-public struct BackgroundActivity {
+public struct AppActivity {
 	public static var activities = [String: NSObjectProtocol]()
 	public static let mode: ProcessInfo.ActivityOptions = [
 		.userInitiated, // every Parrot action MUST be user-initiated

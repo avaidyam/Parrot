@@ -1,6 +1,6 @@
 import Foundation
 
-/* TODO: More extensive support for Keychains. */
+/* TODO: More extensive support for Keychain attributes. */
 /* TODO: InternetSettings to wrap SecKeychain*InternetPassword. */
 
 /// A KeyValueStore is a container layer that stores values for given keys.

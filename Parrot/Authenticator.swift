@@ -233,7 +233,6 @@ public class Authenticator {
 		validURL = valid as URL
 		handler = cb
 		
-		
 		let webView = WebView(frame: NSMakeRect(0, 0, 386, 512))
 		webView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		webView.policyDelegate = delegate
@@ -247,6 +246,10 @@ public class Authenticator {
 		window?.isMovableByWindowBackground = true
 		window?.contentView = webView
 		window?.center()
+		window?.titlebarAppearsTransparent = true
+		window?.standardWindowButton(.miniaturizeButton)?.isHidden = true
+		window?.standardWindowButton(.zoomButton)?.isHidden = true
+		window?.collectionBehavior = [.moveToActiveSpace, .transient, .ignoresCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
 		window?.makeKeyAndOrderFront(nil)
 	}
 }

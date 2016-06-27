@@ -38,6 +38,16 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		messagesView.tableView.register(nib, forIdentifier: MessageView.className())
 		let stuff = nib?.instantiate(nil)
 		_measure = stuff?.filter { $0 is MessageView }.first as? MessageView// stuff[0]: NSApplication
+		
+		NotificationCenter.default().addObserver(forName: UserNotification.didActivateNotification, object: nil, queue: nil) { n in
+			guard let u = n.object as? UserNotification where u.identifier ?? "" == self.conversation?.id else { return }
+			print("note \(u.identifier) with response \(u.response)")
+			guard u.response != nil else { return }
+			
+			let emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
+			let txt = ConversationViewController.segmentsForInput(u.response!.string, emojify: emojify)
+			self.conversation?.sendMessage(segments: txt)
+		}
 	}
 	
     override func viewDidLoad() {
@@ -115,6 +125,10 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			self.conversation?.getEvents(event_id: conversation?.events.first?.id, max_events: 50)
 			self.title = self.conversation?.name
 			
+			self.conversation?.client.queryPresence(chat_ids: self.conversation!.users.map { $0.id.chatID }) { response in
+				//print("GOT \(response?.presenceResult)")
+			}
+			
 			//self.messagesView.removeElements(self._getAllMessages()!)
 			if self.messagesView != nil {
 				self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
@@ -156,19 +170,23 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		
 		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
 		//self.messagesView.appendElements(found)
-		
-        if !(self.window?.isKeyWindow ?? false) {
-            let user = conversation.user_list[event.userID]
-            if !user.isSelf {
+		if !(self.window?.isKeyWindow ?? false) {
+			let user = conversation.user_list[event.userID]
+			if !user.isSelf {
 				let a = (event.conversation_id as String, event.id as String)
 				let text = (event as? IChatMessageEvent)?.text ?? "Event"
 				
 				let notification = NSUserNotification()
+				notification.identifier = a.0
 				notification.title = user.fullName
+				notification.subtitle = "Hangouts"
 				notification.informativeText = text
 				notification.deliveryDate = Date()
+				notification.hasReplyButton = true
+				notification.responsePlaceholder = "Reply..."
 				//notification.soundName = "texttone:Bamboo" // this works!!
-				notification.userInfo = [NotificationOptions.customSoundPath.rawValue: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/sms_alert_bamboo.caf"]
+				notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
+				notification.set(option: .vibrateForceTouch, value: true)
 				
 				var img: NSImage = defaultUserImage
 				if let d = fetchData(user.id.chatID, user.photoURL) {
@@ -176,7 +194,8 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				}
 				notification.contentImage = img
 				
-				NotificationManager.sharedInstance.sendNotificationFor(a, notification: notification)
+				UserNotificationCenter.remove(byIdentifier: a.0)
+				UserNotificationCenter.post(notification: notification)
             }
         }
     }
@@ -230,7 +249,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 
     func windowDidBecomeKey(_ sender: AnyObject?) {
         if let conversation = conversation {
-            NotificationManager.sharedInstance.clearNotificationsFor(conversation.id)
+			UserNotificationCenter.remove(byIdentifier: conversation.id)
         }
 
         //  Delay here to ensure that small context switches don't send focus messages.

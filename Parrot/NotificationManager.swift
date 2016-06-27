@@ -1,23 +1,108 @@
 import AppKit
-import AVFoundation
 
-/* TODO: Switch to a Disk LRU Cache instead of Dictionary. */
-/* TODO: NotificationManager - Complete support for NSUserNotificationAuxiliary. */
 /* TODO: Support pattern-based haptic feedback. */
 
-/// Provide a key below in the userInfo of an NSUserNotification when used with the
-/// NotificationManager, regardless of the value, and that feature will be enabled.
-public enum NotificationOptions: String {
-	case presentEvenIfFront
-	case toneLibrarySoundName // to be supported
-	case customSoundPath
-	case lockscreenOnly // unsupported
-	case ignoreDoNotDisturb // unsupported
-	case useContentImage // unsupported
+public typealias UserNotification = NSUserNotification
+
+/// Customized NSUserNotificationCenter with easier access.
+public let UserNotificationCenter: NSUserNotificationCenter = {
+	let s = NSUserNotificationCenter.default()
+	s.delegate = s; return s
+}()
+
+public extension NSUserNotification {
+	
+	@nonobjc public static let didDeliverNotification = Notification.Name("NSUserNotification.didDeliverNotification")
+	@nonobjc public static let didActivateNotification = Notification.Name("NSUserNotification.didActivateNotification")
+	
+	/// Provide a key below in the userInfo of an NSUserNotification when used with the
+	/// NotificationManager, regardless of the value, and that feature will be enabled.
+	public enum AuxOptions: String {
+		case alwaysShow
+		case customSoundPath
+		case vibrateForceTouch
+		case automaticDockBadge
+	}
+	
+	public func set(option: AuxOptions, value: AnyObject) {
+		if self.userInfo == nil { self.userInfo = [:] }
+		self.userInfo?[option.rawValue] = value
+	}
+	
+	public func get(option: AuxOptions) -> AnyObject? {
+		return self.userInfo?[option.rawValue]
+	}
 }
 
-public let NSUserNotificationCenterDidDeliverNotification = NSNotification.Name("NSUserNotificationCenter.DidDeliverNotification")
-public let NSUserNotificationCenterDidActivateNotification = NSNotification.Name("NSUserNotificationCenter.DidActivateNotification")
+public extension NSUserNotificationCenter {
+	
+	public func updateDockBadge(_ count: Int) {
+		NSApp.dockTile.badgeLabel = count > 0 ? "\(count)" : nil
+	}
+	
+	public func post(notification: NSUserNotification, schedule: Bool = false) {
+		if schedule {
+			self.scheduleNotification(notification)
+		} else {
+			self.deliver(notification)
+		}
+	}
+	
+	public func remove(notification: NSUserNotification, scheduled: Bool = false) {
+		if scheduled {
+			self.removeScheduledNotification(notification)
+		} else {
+			self.removeDeliveredNotification(notification)
+		}
+	}
+	
+	public func remove(byIdentifier id: String, scheduled: Bool = false) {
+		for n in (scheduled ? self.scheduledNotifications : self.deliveredNotifications) {
+			if n.identifier == id {
+				self.removeDeliveredNotification(n)
+			}
+		}
+	}
+	
+	public func post(notifications: [NSUserNotification], schedule: Bool = false) {
+		notifications.forEach { self.post(notification: $0, schedule: schedule) }
+	}
+	
+	public func remove(notifications: [NSUserNotification], scheduled: Bool = false) {
+		notifications.forEach { self.remove(notification: $0, scheduled: scheduled) }
+	}
+	
+	public func remove(byIdentifiers ids: [String], scheduled: Bool = false) {
+		ids.forEach { self.remove(byIdentifier: $0, scheduled: scheduled) }
+	}
+}
+
+extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
+	public func userNotificationCenter(_ center: NSUserNotificationCenter, didDeliver notification: NSUserNotification) {
+		NotificationCenter.default().post(name: UserNotification.didDeliverNotification, object: notification)
+		guard notification.isPresented else { return }
+		
+		if let alert = notification.get(option: .customSoundPath) as? String {
+			guard alert.conformsToUTI(kUTTypeAudio) else { return }
+			NSSound(contentsOfFile: alert, byReference: true)?.play()
+		}
+		
+		if let s = notification.get(option: .vibrateForceTouch) as? Bool where s {
+			let vibrate = Settings[Parrot.VibrateForceTouch] as? Bool ?? false
+			let interval = Settings[Parrot.VibrateInterval] as? Int ?? 10
+			let length = Settings[Parrot.VibrateLength] as? Int ?? 1000
+			if vibrate { NSHapticFeedbackManager.vibrate(length: length, interval: interval) }
+		}
+	}
+	
+	public func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
+		NotificationCenter.default().post(name: UserNotification.didActivateNotification, object: notification)
+	}
+	
+	public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
+		return notification.get(option: .alwaysShow) != nil
+	}
+}
 
 public extension NSHapticFeedbackManager {
 	public static func vibrate(length: Int = 1000, interval: Int = 10) {
@@ -26,114 +111,5 @@ public extension NSHapticFeedbackManager {
 			hp.perform(.generic, performanceTime: .now)
 			usleep(UInt32(interval * 1000))
 		}
-	}
-}
-
-extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
-	public func userNotificationCenter(_ center: NSUserNotificationCenter, didDeliver notification: NSUserNotification) {
-		NotificationCenter.default().post(name: NSUserNotificationCenterDidDeliverNotification, object: notification)
-		
-		// Support for NotificationOptions.customSoundURL
-		if let alert = notification.userInfo?[NotificationOptions.customSoundPath.rawValue] as? String where notification.isPresented {
-			if alert.conformsToUTI(kUTTypeAudio) {
-				NSSound(contentsOfFile: alert, byReference: true)?.play()
-			}
-		}
-	}
-	
-	public func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
-		NotificationCenter.default().post(name: NSUserNotificationCenterDidActivateNotification, object: notification)
-	}
-	
-	public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
-		// Support for NotificationOptions.presentEvenIfFront
-		return notification.userInfo?[NotificationOptions.presentEvenIfFront.rawValue] != nil
-	}
-	
-	public class func updateDockBadge(_ count: Int) {
-		NSApp.dockTile.badgeLabel = count > 0 ? "\(count)" : ""
-	}
-}
-
-public class NotificationManager: NSObject, NSUserNotificationCenterDelegate {
-	static let sharedInstance = NotificationManager()
-	private var _notes = Dictionary<String, [String]>()
-
-    public override init() {
-        super.init()
-        NSUserNotificationCenter.default().delegate = NSUserNotificationCenter.default()
-    }
-	
-	// Overrides notification identifier
-	public func sendNotificationFor(_ group: (group: String, item: String), notification: NSUserNotification) {
-        let conversationID = group.0
-        let notificationID = group.1
-        notification.identifier = notificationID
-		
-        var notificationIDs = _notes[conversationID]
-        if notificationIDs != nil {
-            notificationIDs!.append(notificationID)
-            _notes[conversationID] = notificationIDs
-        } else {
-            _notes[conversationID] = [notificationID]
-        }
-        NSUserNotificationCenter.default().deliver(notification)
-		
-		let vibrate = Settings[Parrot.VibrateForceTouch] as? Bool ?? false
-		let interval = Settings[Parrot.VibrateInterval] as? Int ?? 10
-		let length = Settings[Parrot.VibrateLength] as? Int ?? 1000
-		if vibrate { NSHapticFeedbackManager.vibrate(length: length, interval: interval) }
-    }
-
-    public func clearNotificationsFor(_ group: String) {
-        for notificationID in (_notes[group] ?? []) {
-            let notification = NSUserNotification()
-            notification.identifier = notificationID
-            NSUserNotificationCenter.default().removeDeliveredNotification(notification)
-        }
-        _notes.removeValue(forKey: group)
-	}
-}
-
-private var _cache = Dictionary<String, Data>()
-public let defaultUserImage = NSImage(named: "NSUserGuest")!
-
-// Note that this is general purpose! It needs a unique ID and a resource URL string.
-public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> Void)? = nil) -> Data? {
-	
-	// Case 1: No unique ID -> bail.
-	guard let id = id else {
-		handler?(nil)
-		return nil
-	}
-	
-	// Case 2: We've already fetched it -> return image.
-	if let img = _cache[id] {
-		handler?(img)
-		return img
-	}
-	
-	// Case 3: No resource URL -> bail.
-	guard let photo_url = resource, let url = URL(string: photo_url) else {
-		handler?(nil)
-		return nil
-	}
-	
-	// Case 4: We can request the resource -> return image.
-	let semaphore = DispatchSemaphore(value: 0)
-	URLSession.shared().request(request: URLRequest(url: url)) {
-		if let data = $0.data {
-			_cache[id] = data
-			handler?(data)
-			semaphore.signal()
-		}
-	}
-	
-	// Onlt wait on the semaphore if we don't have a handler.
-	if handler == nil {
-		_ = semaphore.wait()
-		return _cache[id]
-	} else {
-		return nil
 	}
 }

@@ -53,7 +53,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </view>
                     <connections>
-                        <segue destination="0yO-BQ-B71" kind="custom" customClass="DetailSegue" customModule="Parrot" customModuleProvider="target" id="ILP-cK-tYk"/>
+                        <segue destination="0yO-BQ-B71" kind="custom" identifier="DetailSegueIdentifier" customClass="DetailSegue" customModule="Parrot" customModuleProvider="target" id="ILP-cK-tYk"/>
                     </connections>
                 </viewController>
                 <customObject id="HGN-6H-xQ4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -75,6 +75,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="dXM-F3-ayW"/>
+        <segue reference="ILP-cK-tYk"/>
     </inferredMetricsTieBreakers>
 </document>
