@@ -114,12 +114,25 @@ public class MessageView : NSTableCellView {
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.
 			text.textColor = NSColor.labelColor()
+			text.font = NSFont.systemFont(ofSize: 12.0)
+			text.typingAttributes = [
+				NSForegroundColorAttributeName: text.textColor!,
+				NSFontAttributeName: text.font!
+			]
 			text.linkTextAttributes = [
-				NSCursorAttributeName: NSColor.labelColor()
+				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSCursorAttributeName: NSCursor.pointingHand(),
+				NSUnderlineStyleAttributeName: 1,
 			]
 			text.selectedTextAttributes = [
 				NSBackgroundColorAttributeName: self._textFront,
 				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSUnderlineStyleAttributeName: 0,
+			]
+			text.markedTextAttributes = [
+				NSBackgroundColorAttributeName: self._textFront,
+				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSUnderlineStyleAttributeName: 0,
 			]
 		}
 	}

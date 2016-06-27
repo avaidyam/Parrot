@@ -2,6 +2,7 @@ import Cocoa
 import Hangouts
 
 /* TODO: Use NSWindow occlusion API to fully support focus. */
+/* TODO: Use NSTextAlternatives instead of force-replacing text. */
 
 class ConversationViewController: NSViewController, ConversationDelegate, NSTextViewDelegate {
 	
@@ -87,27 +88,35 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		self.window?.collectionBehavior = [.fullScreenAuxiliary, .fullScreenAllowsTiling]
 		
 		// Set up dark/light notifications.
-		ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
+		ParrotAppearance.registerAppearanceListener(observer: self, invokeImmediately: true) { appearance in
 			self.view.window?.appearance = appearance
 			
-			if let text = self.messageTextField, let layer = text.enclosingScrollView?.layer {
-				layer.masksToBounds = true
-				layer.cornerRadius = 2.0
-				layer.backgroundColor = self._textBack.cgColor
-				// FIXME: If the appearance changes, the layer disappears...
-				
-				// NSTextView doesn't automatically change its text color when the
-				// backing view's appearance changes, so we need to set it each time.
-				// In addition, make sure links aren't blue as usual.
-				text.textColor = NSColor.labelColor()
-				text.linkTextAttributes = [
-					NSCursorAttributeName: NSColor.labelColor()
-				]
-				text.selectedTextAttributes = [
-					NSBackgroundColorAttributeName: self._textFront,
-					NSForegroundColorAttributeName: NSColor.labelColor(),
-				]
-			}
+			// NSTextView doesn't automatically change its text color when the
+			// backing view's appearance changes, so we need to set it each time.
+			// In addition, make sure links aren't blue as usual.
+			guard let text = self.messageTextField else { return }
+			
+			text.textColor = NSColor.labelColor()
+			text.font = NSFont.systemFont(ofSize: 12.0)
+			text.typingAttributes = [
+				NSForegroundColorAttributeName: text.textColor!,
+				NSFontAttributeName: text.font!
+			]
+			text.linkTextAttributes = [
+				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSCursorAttributeName: NSCursor.pointingHand(),
+				NSUnderlineStyleAttributeName: 1,
+			]
+			text.selectedTextAttributes = [
+				NSBackgroundColorAttributeName: self._textFront,
+				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSUnderlineStyleAttributeName: 0,
+			]
+			text.markedTextAttributes = [
+				NSBackgroundColorAttributeName: self._textFront,
+				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSUnderlineStyleAttributeName: 0,
+			]
 		}
     }
 	
@@ -179,7 +188,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				let notification = NSUserNotification()
 				notification.identifier = a.0
 				notification.title = user.fullName
-				notification.subtitle = "Hangouts"
+				//notification.subtitle = "Hangouts"
 				notification.informativeText = text
 				notification.deliveryDate = Date()
 				notification.hasReplyButton = true

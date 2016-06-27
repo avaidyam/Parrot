@@ -82,6 +82,14 @@ public class PreferencesViewController: NSTabViewController {
 			w.appearance = ParrotAppearance.current()
 			w.titleVisibility = .hidden
 			
+			w.standardWindowButton(.miniaturizeButton)?.isHidden = true
+			w.standardWindowButton(.zoomButton)?.isHidden = true
+			
+			// Fix titlebar blending.
+			let r = w.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView
+			r?.material = .appearanceBased
+			r?.blendingMode = .behindWindow
+			
 			// If the toolbar has an NSSegmentedControl "Tabs", tie it to our NSTabView.
 			for i in t.items {
 				if i.label == "Tabs" && i.view as? NSSegmentedControl != nil {

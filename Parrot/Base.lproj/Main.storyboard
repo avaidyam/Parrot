@@ -812,12 +812,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aI8-z9-Uro">
-                                <rect key="frame" x="20" y="81" width="169" height="199"/>
+                                <rect key="frame" x="20" y="80" width="169" height="200"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vwu-bS-VYB">
-                                        <rect key="frame" x="-2" y="176" width="173" height="24"/>
-                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="ERn-Gk-mOP">
+                                        <rect key="frame" x="0.0" y="176" width="169" height="25"/>
+                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="ERn-Gk-mOP">
                                             <font key="font" metaFont="system"/>
                                             <segments>
                                                 <segment label="Light" tag="2"/>
