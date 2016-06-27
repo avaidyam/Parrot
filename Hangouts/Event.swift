@@ -83,28 +83,19 @@ public class IChatMessageEvent : IEvent {
 		var attachments = [String]()
 		
 		for attachment in raws {
-			if attachment.embedItem!.type == [.PlusPhoto] { // PLUS_PHOTO
-				
-				// Try to parse an image message. Image messages contain no
-				// message segments, and thus have no automatic textual fallback.
-				if let data = attachment.embedItem!._unknownFields[27639957] as? [AnyObject],
-					zeroth = data[0] as? [AnyObject],
-					third = zeroth[3] as? String {
-						attachments.append(third)
+			if attachment.embedItem!.type.contains(.PlusPhoto) { // PLUS_PHOTO
+				if let data = attachment.embedItem?.plusPhoto?.url {
+						attachments.append(data)
 				}
-			} else if attachment.embedItem!.type == [438] { // VOICE_PHOTO
-				
-				// Try to parse an image message. Image messages contain no
-				// message segments, and thus have no automatic textual fallback.
+			} else if attachment.embedItem!.type.contains(438) { // VOICE_PHOTO
 				if let data = attachment.embedItem!._unknownFields[62101782] as? [AnyObject],
-					zeroth = data[0] as? [AnyObject],
-					third = zeroth[3] as? String {
-						attachments.append(third)
+					zeroth = data[0] as? [AnyObject], url = zeroth[0] as? String {
+					attachments.append(url)
 				}
-			} else if attachment.embedItem!.type == [.Place, .PlaceV2, .Thing] {
+			} else if attachment.embedItem!.type == [.Place, .PlaceV2, .Thing] { // FIXME this is bad swift
 				// Google Maps URL that's already in the text.
 			} else {
-				print("Ignoring unknown chat message attachment: \(attachment)")
+				//print("Ignoring unknown chat message attachment: \(attachment)")
 			}
 		}
 		return attachments

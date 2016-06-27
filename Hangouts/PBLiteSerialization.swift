@@ -97,7 +97,7 @@ public class PBLiteSerialization {
 		
 		let field_values = ((pblite.enumerated().map { ($0.0 + 1, $0.1) }) + extra_fields)
 		for (tag, subdata) in field_values {
-			if subdata == nil { continue }
+			if subdata == nil || subdata is NSNull { continue }
 			if let field = message._declaredFields[tag] {
 				if field.label == .repeated {
 					decodeRepeatedField(message: &message, field: field, value: subdata)
