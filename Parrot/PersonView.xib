@@ -22,7 +22,7 @@
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="pyV-Ol-A2T"/>
                 </imageView>
                 <textField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bul-Yb-hpg">
-                    <rect key="frame" x="58" y="39" width="203" height="17"/>
+                    <rect key="frame" x="58" y="39" width="215" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="John Smith" placeholderString="First Last" id="KKh-aC-jq2">
                         <font key="font" metaFont="systemMedium" size="13"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -30,7 +30,7 @@
                     </textFieldCell>
                 </textField>
                 <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="98f-We-Vvp">
-                    <rect key="frame" x="261" y="39" width="48" height="17"/>
+                    <rect key="frame" x="273" y="39" width="48" height="17"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="just now" placeholderString="a while ago" id="0ne-BI-seh">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -45,29 +45,19 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Fn6-xP-JEc" userLabel="Unread">
-                    <rect key="frame" x="311" y="44" width="8" height="8"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="Fn6-xP-JEc" secondAttribute="height" multiplier="1:1" id="AEm-t2-ZfB"/>
-                        <constraint firstAttribute="width" constant="8" id="z1q-ue-DOi"/>
-                    </constraints>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="Sbu-2y-mn0"/>
-                </imageView>
             </subviews>
             <constraints>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="614-Mt-nc3"/>
                 <constraint firstItem="Bul-Yb-hpg" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="8kk-Tz-SAE"/>
                 <constraint firstItem="N7p-DV-XCL" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="Fb2-9Y-vG3"/>
+                <constraint firstAttribute="trailing" secondItem="98f-We-Vvp" secondAttribute="trailing" constant="8" id="UiQ-u1-4QI"/>
                 <constraint firstItem="N7p-DV-XCL" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="WT8-Yq-ee6"/>
-                <constraint firstItem="Fn6-xP-JEc" firstAttribute="centerY" secondItem="98f-We-Vvp" secondAttribute="centerY" id="Xng-kR-rFD"/>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="leading" secondItem="Bul-Yb-hpg" secondAttribute="trailing" constant="4" id="b4Q-j2-cQm"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="top" secondItem="Bul-Yb-hpg" secondAttribute="bottom" constant="4" id="cNz-zg-drJ"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="top" secondItem="98f-We-Vvp" secondAttribute="bottom" constant="4" id="ce9-fP-ntK"/>
-                <constraint firstItem="Fn6-xP-JEc" firstAttribute="leading" secondItem="98f-We-Vvp" secondAttribute="trailing" constant="4" identifier="TimeUnreadSpacing" id="cuD-Yi-2nr"/>
                 <constraint firstItem="Bul-Yb-hpg" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="4" id="ekM-qu-jmL"/>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="centerY" secondItem="Bul-Yb-hpg" secondAttribute="centerY" id="hfP-e9-RCT"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="4" id="n6G-VK-XVZ"/>
-                <constraint firstAttribute="trailing" secondItem="Fn6-xP-JEc" secondAttribute="trailing" constant="8" id="nQW-l8-E7W"/>
                 <constraint firstAttribute="trailing" secondItem="Nw5-Um-35D" secondAttribute="trailing" constant="8" id="pYv-6v-EBj"/>
                 <constraint firstAttribute="bottom" secondItem="Nw5-Um-35D" secondAttribute="bottom" constant="8" id="tvp-gd-SXn"/>
                 <constraint firstAttribute="height" relation="greaterThanOrEqual" secondItem="N7p-DV-XCL" secondAttribute="height" constant="16" id="wd1-jU-Oqk"/>
@@ -77,13 +67,11 @@
                 <outlet property="photoView" destination="N7p-DV-XCL" id="6Pw-6n-SCK"/>
                 <outlet property="textLabel" destination="Nw5-Um-35D" id="b9L-cF-4Cb"/>
                 <outlet property="timeLabel" destination="98f-We-Vvp" id="Mw8-Ct-2Fw"/>
-                <outlet property="unreadLabel" destination="Fn6-xP-JEc" id="qfP-vr-kl4"/>
             </connections>
             <point key="canvasLocation" x="17.5" y="-257"/>
         </customView>
     </objects>
     <resources>
-        <image name="NSStatusAvailable" width="16" height="16"/>
         <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ConversationsViewController" customModule="Parrot" customModuleProvider="target">
             <connections>
+                <outlet property="indicator" destination="wFw-qM-P7g" id="5QQ-dh-FWD"/>
                 <outlet property="personsView" destination="9lt-ER-yzx" id="K9C-IE-eaf"/>
                 <outlet property="view" destination="9lt-ER-yzx" id="3VD-Bk-aHE"/>
             </connections>
@@ -16,6 +17,15 @@
         <view wantsLayer="YES" id="9lt-ER-yzx" customClass="PersonsView" customModule="Parrot" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="270" height="300"/>
             <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="wFw-qM-P7g">
+                    <rect key="frame" x="119" y="134" width="32" height="32"/>
+                </progressIndicator>
+            </subviews>
+            <constraints>
+                <constraint firstItem="wFw-qM-P7g" firstAttribute="centerX" secondItem="9lt-ER-yzx" secondAttribute="centerX" id="F79-Id-RVa"/>
+                <constraint firstItem="wFw-qM-P7g" firstAttribute="centerY" secondItem="9lt-ER-yzx" secondAttribute="centerY" id="LQf-QZ-qBk"/>
+            </constraints>
             <point key="canvasLocation" x="434" y="313"/>
         </view>
     </objects>

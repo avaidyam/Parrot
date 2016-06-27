@@ -7,6 +7,7 @@ import Hangouts
 class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	
 	@IBOutlet var personsView: PersonsView!
+	@IBOutlet var indicator: NSProgressIndicator!
 	
 	var selectionProvider: ((Int) -> Void)? = nil
 	var wallclock: Timer!
@@ -96,7 +97,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	override func viewWillAppear() {
 		super.viewWillAppear()
 		
-		let scroll = self.view.subviews[0] as? NSScrollView
+		let scroll = self.view.subviews[1] as? NSScrollView
 		scroll!.scrollerInsets = EdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
 		//self.timeLabel?.stringValue = self.time.relativeString()
 		
@@ -120,6 +121,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
         didSet {
             conversationList?.delegate = self
 			DispatchQueue.main.async {
+				self.indicator.isHidden = true
 				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 			}
         }
