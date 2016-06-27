@@ -18,6 +18,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	
 	override func loadView() {
 		super.loadView()
+		self.title = "Parrot" // weird stuff
 		
 		let nib = NSNib(nibNamed: "PersonView", bundle: nil)
 		personsView.tableView.register(nib, forIdentifier: PersonView.className())
@@ -96,13 +97,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	
 	override func viewWillAppear() {
 		super.viewWillAppear()
-		
-		let scroll = self.view.subviews[1] as? NSScrollView
-		scroll!.scrollerInsets = EdgeInsets(top: -48.0, left: 0, bottom: 0, right: 0)
-		//self.timeLabel?.stringValue = self.time.relativeString()
-		
 		self.wallclock = Timer.scheduledWallclock(self, selector: #selector(_updateWallclock(_:)))
-		
 		ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
 			self.view.window?.appearance = appearance
 		}

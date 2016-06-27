@@ -122,3 +122,10 @@ public struct ParrotAppearance {
 		}
 	}
 }
+
+public extension NSWindow {
+	public func enableRealTitlebarVibrancy() {
+		let t = self.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView
+		t?.material = .appearanceBased
+	}
+}

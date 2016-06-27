@@ -481,9 +481,6 @@ public final class Client {
 			None,
 			chat_id_list.map { [$0] }
 		]
-		self.request(endpoint: "contacts/getentitybyid", body: data, use_json: true) { r in
-			print("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue)!)")
-		}
 		self.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}

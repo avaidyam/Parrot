@@ -2,13 +2,13 @@ import Cocoa
 
 public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSViewControllerPresentationAnimator {
 	
-	public init(size: NSSize = NSSize(width: 480, height: 320)) {
+	public init(size: NSSize = NSSize(width: 480, height: 320), windowCustomizer: (NSWindow) -> Void = {_ in}) {
 		super.init(window: nil)
 		let rect = NSRect(x: 0, y: 0, width: size.width, height: size.height)
 		let style: NSWindowStyleMask = [.titled, .closable, .resizable]
 		let window = NSWindow(contentRect: rect, styleMask: style, backing: .buffered, defer: false)
 		self.window = window
-		
+		windowCustomizer(self.window!)
 		self.window?.delegate = self
 		self.window?.center()
 	}
@@ -53,6 +53,7 @@ public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSV
 	}
 }
 
+/// For Interface Builder to not screw with NSTextView embedding.
 public class AntiScrollView: NSScrollView {
 	public override init(frame frameRect: NSRect) {
 		super.init(frame: frameRect)

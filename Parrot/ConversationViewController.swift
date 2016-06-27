@@ -125,9 +125,9 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			self.conversation?.getEvents(event_id: conversation?.events.first?.id, max_events: 50)
 			self.title = self.conversation?.name
 			
-			self.conversation?.client.queryPresence(chat_ids: self.conversation!.users.map { $0.id.chatID }) { response in
+			/*self.conversation?.client.queryPresence(chat_ids: self.conversation!.users.map { $0.id.chatID }) { response in
 				print("GOT \(response?.presenceResult)")
-			}
+			}*/
 			
 			//self.messagesView.removeElements(self._getAllMessages()!)
 			if self.messagesView != nil {

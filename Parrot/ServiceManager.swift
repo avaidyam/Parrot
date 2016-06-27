@@ -49,14 +49,21 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 				vc?.selectionProvider = { row in
 					let vc2 = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
 					vc2?.representedObject = vc?.conversationList?.conversations[row]
-					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator())
+					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator { w in
+						w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
+						w.appearance = ParrotAppearance.current()
+						w.enableRealTitlebarVibrancy()
+					})
 				}
 				
-				self.trans = WindowTransitionAnimator()
+				// The .titlebar material has no transluency in dark appearances, and
+				// has a standard window gradient in light ones.
+				self.trans = WindowTransitionAnimator { w in
+					w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
+					w.appearance = ParrotAppearance.current()
+					w.enableRealTitlebarVibrancy()
+				}
 				self.trans!.displayViewController(vc!)
-				self.trans?.window?.titleVisibility = .hidden;
-				self.trans?.window?.titlebarAppearsTransparent = true;
-				self.trans?.window?.appearance = ParrotAppearance.current()
 			}
 		}
 	}

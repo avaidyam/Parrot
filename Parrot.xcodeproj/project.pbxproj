@@ -16,7 +16,7 @@
 		4835ECAF1C1C620E00193EBC /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAC1C1C620E00193EBC /* ConversationsViewController.swift */; };
 		4835ECB01C1C620E00193EBC /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAD1C1C620E00193EBC /* ConversationViewController.swift */; };
 		4835ECB11C1C620E00193EBC /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
-		4835ECB71C1C672900193EBC /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB31C1C672900193EBC /* NotificationManager.swift */; };
+		4835ECB71C1C672900193EBC /* UserNotification+AuxOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB31C1C672900193EBC /* UserNotification+AuxOptions.swift */; };
 		4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB61C1C672900193EBC /* Emoji.swift */; };
 		48574F141D120314002375E1 /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
 		4866337E1C5822FA006C094B /* ElementContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4866337D1C5822FA006C094B /* ElementContainerView.swift */; };
@@ -89,7 +89,7 @@
 		48DF84A31D08EEB800F39444 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAD1C1C620E00193EBC /* ConversationViewController.swift */; };
 		48DF84A41D08EEB800F39444 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		48DF84A51D08EEB800F39444 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB61C1C672900193EBC /* Emoji.swift */; };
-		48DF84A61D08EEB800F39444 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB31C1C672900193EBC /* NotificationManager.swift */; };
+		48DF84A61D08EEB800F39444 /* UserNotification+AuxOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB31C1C672900193EBC /* UserNotification+AuxOptions.swift */; };
 		48DF84A81D08EEB800F39444 /* WindowTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */; };
 		48DF84A91D08EEB800F39444 /* AppKitSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488239A21C455CED00C5E8EB /* AppKitSupport.swift */; };
 		48DF84AF1D08EEB800F39444 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */; };
@@ -258,7 +258,7 @@
 		4835ECAC1C1C620E00193EBC /* ConversationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
 		4835ECAD1C1C620E00193EBC /* ConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		4835ECAE1C1C620E00193EBC /* Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
-		4835ECB31C1C672900193EBC /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		4835ECB31C1C672900193EBC /* UserNotification+AuxOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserNotification+AuxOptions.swift"; sourceTree = "<group>"; };
 		4835ECB61C1C672900193EBC /* Emoji.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		48574F121D11F9FC002375E1 /* AppManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppManagement.swift; sourceTree = "<group>"; };
@@ -473,6 +473,7 @@
 				48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */,
 				4866337D1C5822FA006C094B /* ElementContainerView.swift */,
 				48574F121D11F9FC002375E1 /* AppManagement.swift */,
+				4835ECB31C1C672900193EBC /* UserNotification+AuxOptions.swift */,
 				48BFAE5C1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift */,
 				48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */,
 				48BFAECF1D1CF19100ADBA3A /* BackgroundActivity.swift */,
@@ -691,7 +692,6 @@
 			isa = PBXGroup;
 			children = (
 				48834D951C1B3602009BC442 /* ServiceManager.swift */,
-				4835ECB31C1C672900193EBC /* NotificationManager.swift */,
 				48F077161D1DE8DC003964FD /* ParrotAppearance.swift */,
 				48BFD0311D13130000DAE29E /* SplitViewMode.storyboard */,
 				4835ECAE1C1C620E00193EBC /* Authenticator.swift */,
@@ -1230,7 +1230,7 @@
 				4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */,
 				48BFAE5D1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
-				4835ECB71C1C672900193EBC /* NotificationManager.swift in Sources */,
+				4835ECB71C1C672900193EBC /* UserNotification+AuxOptions.swift in Sources */,
 				48A452271D19B16500CB588A /* Tone.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1320,7 +1320,7 @@
 				48DF84A31D08EEB800F39444 /* ConversationViewController.swift in Sources */,
 				48DF84A41D08EEB800F39444 /* Authenticator.swift in Sources */,
 				48DF84A51D08EEB800F39444 /* Emoji.swift in Sources */,
-				48DF84A61D08EEB800F39444 /* NotificationManager.swift in Sources */,
+				48DF84A61D08EEB800F39444 /* UserNotification+AuxOptions.swift in Sources */,
 				48DF84A81D08EEB800F39444 /* WindowTransitionAnimator.swift in Sources */,
 				48DF84A91D08EEB800F39444 /* AppKitSupport.swift in Sources */,
 				48F077181D1DE8DC003964FD /* ParrotAppearance.swift in Sources */,
