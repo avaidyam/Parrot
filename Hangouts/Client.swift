@@ -313,7 +313,7 @@ public final class Client {
         request.httpMethod = "POST"
         request.httpBody = data
 
-        for (k, v) in getAuthorizationHeaders(sapisid_cookie: Channel.getCookieValue(key: "SAPISID")!) {
+        for (k, v) in Channel.getAuthorizationHeaders(Channel.getCookieValue(key: "SAPISID")!) {
             request.setValue(v, forHTTPHeaderField: k)
         }
         request.setValue(content_type, forHTTPHeaderField: "Content-Type")
@@ -481,6 +481,9 @@ public final class Client {
 			None,
 			chat_id_list.map { [$0] }
 		]
+		self.request(endpoint: "contacts/getentitybyid", body: data, use_json: true) { r in
+			print("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue)!)")
+		}
 		self.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
@@ -507,7 +510,14 @@ public final class Client {
 		}
 	}
 	
-	public func queryPresence(chat_ids: [String] = [], cb: ((response: QueryPresenceResponse?) -> Void)) {
+	public func queryPresence(chat_ids: [String] = [],
+	                          reachable: Bool = true,
+	                          available: Bool = true,
+	                          mood: Bool = true,
+	                          inCall: Bool = true,
+	                          device: Bool = true,
+	                          lastSeen: Bool = true,
+	                          cb: ((response: QueryPresenceResponse?) -> Void)) {
 		guard chat_ids.count > 0 else {
 			print("Cannot query presence for zero chat IDs!")
 			return
@@ -516,9 +526,10 @@ public final class Client {
 		let data = [
 			self.getRequestHeader(),
 			[chat_ids],
-			[1, 2, 5, 7, 8] // what are FieldMasks 5 and 8?
+			[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // what are FieldMasks 4, 5, 8, 9?
 		]
 		self.request(endpoint: "presence/querypresence", body: data, use_json: false) { r in
+			//print("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue)!)")
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}

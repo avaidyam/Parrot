@@ -105,7 +105,6 @@ public class PBLiteSerialization {
 					decodeField(message: &message, field: field, value: subdata)
 				}
 			} else {
-				//print("Message \(_typeName(message.dynamicType)) contains unknown field \(tag); storing...")
 				message._unknownFields[tag] = subdata
 			}
 		}
@@ -127,52 +126,14 @@ public class PBLiteSerialization {
 		return nil
 	}
 	
+	// Precompile the regex so we don't fiddle around with slow loading times.
+	private static let reg = try! RegularExpression(pattern: "(?<=,|\\[)(\\s)*(?=,)", options: [])
+	
 	/// Sanitize and decode JSON from a server PBLite response.
 	/// Note: This assumes the output will always be an array.
 	public class func sanitizedDecode(JSON string: String) -> NSArray? {
-		
-		// Sanitize the string first.
-		var sanitizedStr = string
-		sanitizedStr.replaceAllOccurrences(matching: "(\n|\t)+", with: "") // strip \n, \t
-		sanitizedStr.replaceAllOccurrences(matching: "(\\[,)", with: "[null,") // leading comma
-		sanitizedStr.replaceAllOccurrences(matching: "((,)(\\s)*(,))", with: ",null,") // null elements
-		// Don't do this: railing commas are allowed in JSON.
-		//sanitizedStr.replaceAllOccurrences(matching: "(,\\])", with: ",null]") // trailing comma
-		
-		guard let data = sanitizedStr.data(using: String.Encoding.utf8) else { return nil }
-		let json = try? JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-		guard json != nil else { return nil }
-		return json as? NSArray
-	}
-}
-
-
-//
-// SHOEHORNED HERE
-//
-
-
-public let ORIGIN_URL = "https://talkgadget.google.com"
-// Return authorization headers for API request. It doesn't seem to matter
-// what the url and time are as long as they are consistent.
-public func getAuthorizationHeaders(sapisid_cookie: String) -> Dictionary<String, String> {
-	let time_msec = Int(Date().timeIntervalSince1970 * 1000)
-	let auth_string = "\(time_msec) \(sapisid_cookie) \(ORIGIN_URL)"
-	let auth_hash = auth_string.sha1()
-	let sapisidhash = "SAPISIDHASH \(time_msec)_\(auth_hash)"
-	return [
-		"Authorization": sapisidhash,
-		"X-Origin": ORIGIN_URL,
-		"X-Goog-Authuser": "0",
-	]
-}
-
-/* String Crypto extensions */
-public extension String {
-	public func sha1() -> String {
-		let str = Array(self.utf8).map { Int8($0) }
-		var store = [Int8](repeating: 0, count: 20)
-		SHA1(&store, str, Int32(str.count))
-		return store.map { String(format: "%02hhx", $0) }.joined(separator: "")
+		let st = reg.stringByReplacingMatches(in: string, options: [],
+			range: NSMakeRange(0, string.utf16.count), withTemplate: "$1null")
+		return try! st.decodeJSON() as? NSArray
 	}
 }

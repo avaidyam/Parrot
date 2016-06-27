@@ -197,7 +197,7 @@ public final class Channel : NSObject {
 		/* TODO: Clearly, we shouldn't call encodeURL(), but what do we do? */
 		request.httpBody = data_dict.encodeURL().data(using: String.Encoding.utf8,
 			allowLossyConversion: false)!
-		for (k, v) in getAuthorizationHeaders(sapisid_cookie: Channel.getCookieValue(key: "SAPISID")!) {
+		for (k, v) in Channel.getAuthorizationHeaders(Channel.getCookieValue(key: "SAPISID")!) {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
@@ -228,7 +228,7 @@ public final class Channel : NSObject {
 		let url = "\(Channel.URLPrefix)/channel/bind?\(params.encodeURL())"
 		var request = URLRequest(url: URL(string: url)!)
 		request.timeoutInterval = Double(Channel.connectTimeout)
-		for (k, v) in getAuthorizationHeaders(sapisid_cookie: Channel.getCookieValue(key: "SAPISID")!) {
+		for (k, v) in Channel.getAuthorizationHeaders(Channel.getCookieValue(key: "SAPISID")!) {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
@@ -334,6 +334,28 @@ public final class Channel : NSObject {
 			return (sid, gSessionID)
 		}
 		return ("", "")
+	}
+	
+	// Return authorization headers for API request. It doesn't seem to matter
+	// what the url and time are as long as they are consistent.
+	public static func getAuthorizationHeaders(_ sapisid_cookie: String) -> Dictionary<String, String> {
+		let ORIGIN_URL = "https://talkgadget.google.com"
+		func sha1(_ source: String) -> String {
+			let str = Array(source.utf8).map { Int8($0) }
+			var store = [Int8](repeating: 0, count: 20)
+			SHA1(&store, str, Int32(str.count))
+			return store.map { String(format: "%02hhx", $0) }.joined(separator: "")
+		}
+		
+		let time_msec = Int(Date().timeIntervalSince1970 * 1000)
+		let auth_string = "\(time_msec) \(sapisid_cookie) \(ORIGIN_URL)"
+		let auth_hash = sha1(auth_string)
+		let sapisidhash = "SAPISIDHASH \(time_msec)_\(auth_hash)"
+		return [
+			"Authorization": sapisidhash,
+			"X-Origin": ORIGIN_URL,
+			"X-Goog-Authuser": "0",
+		]
 	}
 }
 
