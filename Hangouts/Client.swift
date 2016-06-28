@@ -626,7 +626,7 @@ public final class Client {
 				[conversation_id],
 				generateClientID(),
 				NSNumber(value: otr_status.rawValue),
-				[NSNumber(value: DeliveryMediumType.DeliveryMediumGoogleVoice.rawValue), ],
+				[NSNumber(value: DeliveryMediumType.GoogleVoice.rawValue), ],
 				NSNumber(value: EventType.Sms.rawValue)
 			],
 			//None,

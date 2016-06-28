@@ -49,9 +49,9 @@ public enum SelectionCapability {
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
-public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSTableViewContextMenuDelegate {
+public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExtendedTableViewDelegate {
 	internal var scrollView: NSScrollView!
-	internal var tableView: NSTableView!
+	internal var tableView: NSExtendedTableView!
 	
 	// Override and patch in the default initializers to our init.
 	public override init(frame frameRect: NSRect) {
@@ -67,7 +67,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		self.dataSource = []
 		
 		self.scrollView = NSScrollView(frame: self.bounds)
-		self.tableView = NSTableView(frame: self.scrollView.bounds)
+		self.tableView = NSExtendedTableView(frame: self.scrollView.bounds)
 		
 		self.tableView.delegate = self
 		self.tableView.dataSource = self
@@ -161,6 +161,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 	}
 	
 	public var dynamicHeightProvider: ((row: Int) -> Double)? = nil
+	public var clickedRowProvider: ((row: Int) -> Void)? = nil
 	public var selectionProvider: ((row: Int) -> Void)? = nil
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
 	public var menuProvider: ((rows: [Int]) -> NSMenu?)? = nil
@@ -239,6 +240,10 @@ public extension ElementContainerView {
 	public func tableView(_ tableView: NSTableView, menuForRows rows: IndexSet) -> NSMenu? {
 		return self.menuProvider?(rows: rows.map { $0 })
 	}
+	
+	public func tableView(_: NSTableView, didClickRow row: Int) {
+		self.clickedRowProvider?(row: row)
+	}
 }
 
 // Drag & Drop Support
@@ -278,11 +283,13 @@ public extension ElementContainerView {
 }
 
 // Support for per-row and multi-select menus.
-@objc public protocol NSTableViewContextMenuDelegate {
+@objc public protocol NSExtendedTableViewDelegate {
 	@objc(tableView:menuForRows:)
 	func tableView(_: NSTableView, menuForRows: IndexSet) -> NSMenu?
+	@objc(tableView:didClickRow:)
+	func tableView(_: NSTableView, didClickRow: Int)
 }
-public extension NSTableView {
+public class NSExtendedTableView: NSTableView {
 	
 	// Support for per-row and multi-select menus.
 	public override func menu(for event: NSEvent) -> NSMenu? {
@@ -302,9 +309,19 @@ public extension NSTableView {
 		// As a last resort, if the row was selected alone, ask the view.
 		//let view = self.view(atColumn: 0, row: row, makeIfNecessary: false)
 		
-		if let d = self.delegate as? NSTableViewContextMenuDelegate {
+		if let d = self.delegate as? NSExtendedTableViewDelegate {
 			return d.tableView(self, menuForRows: selected)
 		}
 		return super.menu(for: event)
+	}
+	
+	public override func mouseDown(_ event: NSEvent) {
+		let loc = self.convert(event.locationInWindow, from: nil)
+		let row = self.row(at: loc)
+		
+		super.mouseDown(event)
+		if let d = self.delegate as? NSExtendedTableViewDelegate where row != -1 {
+			d.tableView(self, didClickRow: row)
+		}
 	}
 }

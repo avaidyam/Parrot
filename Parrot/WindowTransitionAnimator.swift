@@ -2,15 +2,15 @@ import Cocoa
 
 public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSViewControllerPresentationAnimator {
 	
-	public init(size: NSSize = NSSize(width: 480, height: 320), windowCustomizer: (NSWindow) -> Void = {_ in}) {
+	public init(windowCustomizer: @noescape (NSWindow) -> Void = {_ in}) {
 		super.init(window: nil)
-		let rect = NSRect(x: 0, y: 0, width: size.width, height: size.height)
+		let rect = NSRect(x: 0, y: 0, width: 0, height: 0)
 		let style: NSWindowStyleMask = [.titled, .closable, .resizable]
 		let window = NSWindow(contentRect: rect, styleMask: style, backing: .buffered, defer: false)
+		window.delegate = self
+		
 		self.window = window
 		windowCustomizer(self.window!)
-		self.window?.delegate = self
-		self.window?.center()
 	}
 	
 	public required init(coder: NSCoder) {
@@ -31,7 +31,9 @@ public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSV
 		if let from = fromViewController {
 			from.presentViewController(viewController, animator: self)
 		} else {
+			let f = self.window!.frame
 			self.contentViewController = viewController
+			self.window!.setFrame(f, display: false, animate: false)
 			self.window?.bind(NSTitleBinding, to: viewController, withKeyPath: "title", options: nil)
 			self.window?.appearance = viewController.view.window?.appearance
 			self.showWindow(nil)

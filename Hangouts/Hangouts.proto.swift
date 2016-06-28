@@ -44,10 +44,10 @@ public struct TypingType: ProtoEnumExtensor {
 }
 
 public struct ClientPresenceStateType: ProtoEnumExtensor {
-	public static let ClientPresenceStateUnknown: ClientPresenceStateType = 0
-	public static let ClientPresenceStateNone: ClientPresenceStateType = 1
-	public static let ClientPresenceStateDesktopIdle: ClientPresenceStateType = 30
-	public static let ClientPresenceStateDesktopActive: ClientPresenceStateType = 40
+	public static let Unknown: ClientPresenceStateType = 0
+	public static let None: ClientPresenceStateType = 1
+	public static let DesktopIdle: ClientPresenceStateType = 30
+	public static let DesktopActive: ClientPresenceStateType = 40
 
 	public let rawValue: Int
 	public init(_ rawValue: Int) {
@@ -212,10 +212,10 @@ public struct ConversationView: ProtoEnumExtensor {
 }
 
 public struct DeliveryMediumType: ProtoEnumExtensor {
-	public static let DeliveryMediumUnknown: DeliveryMediumType = 0
-	public static let DeliveryMediumBabel: DeliveryMediumType = 1
-	public static let DeliveryMediumGoogleVoice: DeliveryMediumType = 2
-	public static let DeliveryMediumLocalSms: DeliveryMediumType = 3
+	public static let Unknown: DeliveryMediumType = 0
+	public static let Babel: DeliveryMediumType = 1
+	public static let GoogleVoice: DeliveryMediumType = 2
+	public static let LocalSms: DeliveryMediumType = 3
 
 	public let rawValue: Int
 	public init(_ rawValue: Int) {
@@ -224,9 +224,9 @@ public struct DeliveryMediumType: ProtoEnumExtensor {
 }
 
 public struct InvitationAffinity: ProtoEnumExtensor {
-	public static let InviteAffinityUnknown: InvitationAffinity = 0
-	public static let InviteAffinityHigh: InvitationAffinity = 1
-	public static let InviteAffinityLow: InvitationAffinity = 2
+	public static let Unknown: InvitationAffinity = 0
+	public static let High: InvitationAffinity = 1
+	public static let Low: InvitationAffinity = 2
 
 	public let rawValue: Int
 	public init(_ rawValue: Int) {
@@ -315,9 +315,9 @@ public struct ClientId: ProtoEnumExtensor {
 }
 
 public struct ClientBuildType: ProtoEnumExtensor {
-	public static let BuildTypeUnknown: ClientBuildType = 0
-	public static let BuildTypeProductionWeb: ClientBuildType = 1
-	public static let BuildTypeProductionApp: ClientBuildType = 3
+	public static let Unknown: ClientBuildType = 0
+	public static let ProductionWeb: ClientBuildType = 1
+	public static let ProductionApp: ClientBuildType = 3
 
 	public let rawValue: Int
 	public init(_ rawValue: Int) {
@@ -381,44 +381,8 @@ public struct ProfileType: ProtoEnumExtensor {
 }
 
 public struct ConfigurationBitType: ProtoEnumExtensor {
-	public static let Unknown: ConfigurationBitType = 0
-	public static let Unknown1: ConfigurationBitType = 1
-	public static let Unknown2: ConfigurationBitType = 2
-	public static let Unknown3: ConfigurationBitType = 3
-	public static let Unknown4: ConfigurationBitType = 4
-	public static let Unknown5: ConfigurationBitType = 5
-	public static let Unknown6: ConfigurationBitType = 6
-	public static let Unknown7: ConfigurationBitType = 7
-	public static let Unknown8: ConfigurationBitType = 8
-	public static let Unknown9: ConfigurationBitType = 9
-	public static let Unknown10: ConfigurationBitType = 10
-	public static let Unknown11: ConfigurationBitType = 11
-	public static let Unknown12: ConfigurationBitType = 12
-	public static let Unknown13: ConfigurationBitType = 13
-	public static let Unknown14: ConfigurationBitType = 14
-	public static let Unknown15: ConfigurationBitType = 15
-	public static let Unknown16: ConfigurationBitType = 16
-	public static let Unknown17: ConfigurationBitType = 17
-	public static let Unknown18: ConfigurationBitType = 18
-	public static let Unknown19: ConfigurationBitType = 19
-	public static let Unknown20: ConfigurationBitType = 20
-	public static let Unknown21: ConfigurationBitType = 21
-	public static let Unknown22: ConfigurationBitType = 22
-	public static let Unknown23: ConfigurationBitType = 23
-	public static let Unknown24: ConfigurationBitType = 24
-	public static let Unknown25: ConfigurationBitType = 25
-	public static let Unknown26: ConfigurationBitType = 26
-	public static let Unknown27: ConfigurationBitType = 27
-	public static let Unknown28: ConfigurationBitType = 28
-	public static let Unknown29: ConfigurationBitType = 29
-	public static let Unknown30: ConfigurationBitType = 30
-	public static let Unknown31: ConfigurationBitType = 31
-	public static let Unknown32: ConfigurationBitType = 32
-	public static let Unknown33: ConfigurationBitType = 33
-	public static let Unknown34: ConfigurationBitType = 34
-	public static let Unknown35: ConfigurationBitType = 35
-	public static let Unknown36: ConfigurationBitType = 36
-
+	
+	
 	public let rawValue: Int
 	public init(_ rawValue: Int) {
 		self.rawValue = rawValue

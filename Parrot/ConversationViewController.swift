@@ -142,7 +142,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			if self.messagesView != nil {
 				self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
 			} else {
-				print("Not initialized.")
+				//print("Not initialized.")
 			}
         }
 	}

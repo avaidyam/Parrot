@@ -50,9 +50,11 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 					let vc2 = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
 					vc2?.representedObject = vc?.conversationList?.conversations[row]
 					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator { w in
+						w.setFrame(NSRect(x: 0, y: 0, width: 480, height: 320), display: false, animate: true)
 						w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
 						w.appearance = ParrotAppearance.current()
 						w.enableRealTitlebarVibrancy()
+						w.center()
 					})
 				}
 				
@@ -62,6 +64,7 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 					w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
 					w.appearance = ParrotAppearance.current()
 					w.enableRealTitlebarVibrancy()
+					w.setFrameAutosaveName("Conversations")
 				}
 				self.trans!.displayViewController(vc!)
 			}
