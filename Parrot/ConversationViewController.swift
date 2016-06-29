@@ -1,7 +1,6 @@
 import Cocoa
 import Hangouts
 
-/* TODO: Use NSWindow occlusion API to fully support focus. */
 /* TODO: Use NSTextAlternatives instead of force-replacing text. */
 
 class ConversationViewController: NSViewController, ConversationDelegate, NSTextViewDelegate {
@@ -77,15 +76,20 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
     }
 
     override func viewWillAppear() {
-		_note = NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidBecomeKey, object: self.window, queue: nil) { a in
+		_note = NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidBecomeKey,
+		                                                 object: self.window, queue: nil) { a in
 			self.windowDidBecomeKey(nil)
 		}
         if self.window?.isKeyWindow ?? false {
             self.windowDidBecomeKey(nil)
         }
 		
-		// woohoo this is a terrible idea, move this out of here later.
-		self.window?.collectionBehavior = [.fullScreenAuxiliary, .fullScreenAllowsTiling]
+		// NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded,
+		NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidChangeOcclusionState,
+		                                         object: self.window, queue: nil) { a in
+			self.conversation?.focus = self.window!.occlusionState.rawValue == 8194
+		}
+		self.conversation?.focus = self.window!.occlusionState.rawValue == 8194
 		
 		// Set up dark/light notifications.
 		ParrotAppearance.registerAppearanceListener(observer: self, invokeImmediately: true) { appearance in
@@ -265,7 +269,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 		DispatchQueue.main.after(when: dt) {
             if let window = self.window where window.isKeyWindow {
-                self.conversation?.setFocus()
+				self.conversation?.focus = true // set it here too just in case.
             }
             self.conversation?.updateReadTimestamp()
         }

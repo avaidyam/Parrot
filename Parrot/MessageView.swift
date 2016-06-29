@@ -137,85 +137,32 @@ public class MessageView : NSTableCellView {
 		}
 	}
 	
-	//
-	// FRAME ADJUSTMENT
-	//
-
-    /*public override var frame: NSRect {
-        didSet {
-            var backgroundFrame = frame
-
-            backgroundFrame.size.width *= MessageView.FillPercentage.x
-
-            let textMaxWidth = MessageView.widthOfText(backgroundWidth: backgroundFrame.size.width)
-            let textSize = MessageView.textSizeInWidth(
-                text: self.textLabel!.attributedStringValue,
-                width: textMaxWidth
-            )
-
-            backgroundFrame.size.width = MessageView.widthOfBackground(textWidth: textSize.width)
-
-            switch (orientation) {
-            case .left:
-                backgroundFrame.origin.x = frame.origin.x
-            case .right:
-				backgroundFrame.origin.x = frame.size.width - backgroundFrame.size.width
-			default:
-				backgroundFrame.origin.x = frame.origin.x
-            }
-
-			/*
-            switch (orientation) {
-            case .Left:
-                self.textLabel.frame = NSRect(
-                    x: self.backgroundView.frame.origin.x + MessageView.TextBorder.l,
-                    y: self.backgroundView.frame.origin.y + MessageView.TextBorder.t - (MessageView.TextPadding.v / 2),
-                    width: textSize.width,
-                    height: textSize.height + MessageView.TextPadding.v / 2
-                )
-            case .Right:
-                self.textLabel.frame = NSRect(
-                    x: self.backgroundView.frame.origin.x + MessageView.TextBorder.r,
-                    y: self.backgroundView.frame.origin.y + MessageView.TextBorder.t - (MessageView.TextPadding.v / 2),
-                    width: textSize.width,
-                    height: textSize.height + MessageView.TextPadding.v / 2
-				)
-			default:
-				self.textLabel.frame = NSRect(
-					x: self.backgroundView.frame.origin.x + MessageView.TextBorder.l,
-					y: self.backgroundView.frame.origin.y + MessageView.TextBorder.t - (MessageView.TextPadding.v / 2),
-					width: textSize.width,
-					height: textSize.height + MessageView.TextPadding.v / 2
-				)
-            }*/
-        }
-    }*/
-	
-    private class func widthOfText(_ backgroundWidth: CGFloat) -> CGFloat {
-        return backgroundWidth
-            - MessageView.TextBorder.r
-            - MessageView.TextBorder.l
-    }
-
-    private class func widthOfBackground(_ textWidth: CGFloat) -> CGFloat {
-        return textWidth
-            + MessageView.TextBorder.r
-            + MessageView.TextBorder.l
-	}
-	
-	private class func textSizeInWidth(_ text: NSString, width: CGFloat) -> CGSize {
-		var size = text.boundingRect(
-			with: NSMakeSize(width, 0),
-			options: [
-				.usesLineFragmentOrigin,
-				.usesFontLeading
-			]
-			).size
-		size.width += TextPadding.h
-		return size
-	}
-	
+	/* TODO: Clean this up and out of here. */
 	internal class func heightForContainerWidth(_ text: NSString, width: CGFloat) -> CGFloat {
+		func widthOfText(_ backgroundWidth: CGFloat) -> CGFloat {
+			return backgroundWidth
+				- MessageView.TextBorder.r
+				- MessageView.TextBorder.l
+		}
+		
+		func widthOfBackground(_ textWidth: CGFloat) -> CGFloat {
+			return textWidth
+				+ MessageView.TextBorder.r
+				+ MessageView.TextBorder.l
+		}
+		
+		func textSizeInWidth(_ text: NSString, width: CGFloat) -> CGSize {
+			var size = text.boundingRect(
+				with: NSMakeSize(width, 0),
+				options: [
+					.usesLineFragmentOrigin,
+					.usesFontLeading
+				]
+				).size
+			size.width += TextPadding.h
+			return size
+		}
+		
 		let size = textSizeInWidth(text, width: widthOfText((width * FillPercentage.x)))
 		let height = size.height + TextBorder.t + TextBorder.b
 		return height

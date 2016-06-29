@@ -240,13 +240,15 @@ public final class Client {
 			
 			var required_entities = [Entity]()
 			self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
-				required_entities = resp?.entity ?? []
+				required_entities = resp?.entityResult.flatMap { $0.entity } ?? []
 				
-				var conv_part_list = Array<ConversationParticipantData>()
+				// TODO: REMOVE THIS
+				// This doesn't make sense: we're doing this twice...?
+				/*var conv_part_list = [ConversationParticipantData]()
 				for conv_state in conv_states {
 					let participants = conv_state.conversation!.participantData
 					conv_part_list.append(contentsOf: participants)
-				}
+				}*/
 				
 				// Let's request our own entity now.
 				self.getSelfInfo {
@@ -259,13 +261,15 @@ public final class Client {
 						users.append(user)
 					}
 					
+					// TODO: REMOVE THIS
+					// We should already have all required entities.
 					// Add each conversation participant as a new User if we didn't already add them from an entity.
-					for participant in conv_part_list {
+					/*for participant in conv_part_list {
 						let user = User(data: participant, selfUser: selfUser.id)
 						if !users.contains(user) {
 							users.append(user)
 						}
-					}
+					}*/
 					
 					let userList = UserList(client: self, me: selfUser, users: users)
 					let conversationList = ConversationList(client: self, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
@@ -481,6 +485,10 @@ public final class Client {
 			None,
 			chat_id_list.map { [$0] }
 		]
+		/*
+		self.request(endpoint: "contacts/getentitybyid", body: data) { r in
+			print("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue))")
+		}*/
 		self.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
@@ -666,11 +674,11 @@ public final class Client {
 	}
 	
 	// Set focus (occurs whenever you give focus to a client).
-    public func setFocus(conversation_id: String, cb: (() -> Void)? = nil) {
+	public func setFocus(conversation_id: String, focused: Bool = true, cb: (() -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
-			1,
+			focused ? 1 : 2,
 			20
 		]
         self.request(endpoint: "conversations/setfocus", body: data) { r in

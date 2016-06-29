@@ -575,7 +575,6 @@
 			children = (
 				48C35AB41D1E4A650022997B /* github_emoji.plist */,
 				48C35AB51D1E4A650022997B /* google_emoji.plist */,
-				4884927C1D0B46BB0003D522 /* Main.storyboard */,
 				48834DC01C1B3686009BC442 /* Parrot.entitlements */,
 				48834D991C1B3602009BC442 /* Assets.xcassets */,
 				48834D9E1C1B3602009BC442 /* Info.plist */,
@@ -692,6 +691,7 @@
 			isa = PBXGroup;
 			children = (
 				48834D951C1B3602009BC442 /* ServiceManager.swift */,
+				4884927C1D0B46BB0003D522 /* Main.storyboard */,
 				48F077161D1DE8DC003964FD /* ParrotAppearance.swift */,
 				48BFD0311D13130000DAE29E /* SplitViewMode.storyboard */,
 				4835ECAE1C1C620E00193EBC /* Authenticator.swift */,

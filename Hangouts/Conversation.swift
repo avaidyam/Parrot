@@ -168,8 +168,14 @@ public class IConversation {
         }
     }
 
-    public func setFocus() {
-        self.client.setFocus(conversation_id: id)
+	public var focus: Bool {
+		get {
+			return true // this doesn't work yet.
+			//return self.client.getFocus(conversation_id: id)
+		}
+		set (value) {
+			self.client.setFocus(conversation_id: id, focused: value)
+		}
     }
 	
 	// Send a message to this conversation.

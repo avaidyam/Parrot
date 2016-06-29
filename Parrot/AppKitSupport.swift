@@ -46,6 +46,7 @@ public extension Timer {
 		let date = Calendar.current().date(from: comps)!
 		let timer = Timer(fireAt: date, interval: 60, target: target,
 		                  selector: selector, userInfo: nil, repeats: true)
+		timer.tolerance = 2 /* We can delay the wallclock at most 2sec. */
 		RunLoop.main().add(timer, forMode: RunLoopMode.defaultRunLoopMode)
 		return timer
 	}

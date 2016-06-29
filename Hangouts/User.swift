@@ -48,8 +48,16 @@ public struct User: Hashable, Equatable {
 			gaiaID: entity.id!.gaiaId!)
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
 		
+		var phone: String? = nil
+		var phoneI18N: String? = nil
+		if	let r = entity.properties?._unknownFields[14] as? [AnyObject] where r.count > 0 {
+			if let d = r[0][0][1] as? [AnyObject] { // retrieve the I18nData
+				phone = d[0] as? String; phoneI18N = d[1] as? String
+			}
+		}
+		
         self.init(userID: userID,
-            fullName: entity.properties!.displayName as String?,
+            fullName: phoneI18N ?? (entity.properties!.displayName as String?),
             firstName: entity.properties!.firstName as String?,
             photoURL: entity.properties!.photoUrl as String?,
             emails: entity.properties!.email.map { $0 as String },
@@ -57,9 +65,10 @@ public struct User: Hashable, Equatable {
         )
     }
 	
+	// TODO: REMOVE THIS
 	// Initialize from ClientConversationParticipantData.
 	// If selfUser is nil, assume this is the self user.
-    public init(data: ConversationParticipantData, selfUser: UserID?) {
+    /*public init(data: ConversationParticipantData, selfUser: UserID?) {
 		let userID = UserID(chatID: data.id!.chatId!,
 			gaiaID: data.id!.gaiaId!)
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
@@ -71,7 +80,7 @@ public struct User: Hashable, Equatable {
             emails: [],
             isSelf: isSelf
         )
-	}
+	}*/
 	
 	// Computes the full name by taking the name components like so:
 	// ["John", "Mark", "Smith"] => "John Mark Smith"
@@ -139,13 +148,23 @@ public class UserList: Collection {
 					state_update = userInfo[Client.didUpdateStateKey.rawValue] {
 					
 					if let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
-						for participant in conversation.participantData {
-							
+						client.getEntitiesByID(chat_id_list: conversation.participantData.flatMap { $0.id?.chatId }) { response in
+							let entities = response?.entityResult.flatMap { $0.entity } ?? []
+							for entity in entities {
+								let user = User(entity: entity, selfUser: self.me.id)
+								if self.users[user.id] == nil {
+									self.users[user.id] = user
+								}
+							}
+						}
+						
+						// TODO: REMOVE THIS
+						/*for participant in conversation.participantData {
 							let user = User(data: participant, selfUser: self.me.id)
 							if self.users[user.id] == nil {
 								self.users[user.id] = user
 							}
-						}
+						}*/
 					}
 				}
 		}

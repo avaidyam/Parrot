@@ -187,7 +187,7 @@ public class AboutViewController: NSViewController {
 	}
 }
 
-public class DetailSegue: NSStoryboardSegue {
+public final class DetailSegue: NSStoryboardSegue {
 	public override func perform() {
 		guard	let source = self.sourceController as? NSViewController,
 				let destination = self.destinationController as? NSViewController,
@@ -201,5 +201,19 @@ public class DetailSegue: NSStoryboardSegue {
 			splitView.removeSplitViewItem(splitView.splitViewItems.last!)
 		}
 		splitView.addSplitViewItem(splitItem)
+	}
+}
+
+// very weird and experimental idea.
+public final class MenuSegue: NSStoryboardSegue {
+	public override func perform() {
+		guard	let source = self.sourceController as? NSViewController,
+				let destination = self.destinationController as? NSViewController
+		else { return }
+		let menu = NSMenu(title: destination.title ?? "")
+		let item = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+		item.view = destination.view
+		
+		menu.popUp(positioning: item, at: .zero, in: source.view)
 	}
 }

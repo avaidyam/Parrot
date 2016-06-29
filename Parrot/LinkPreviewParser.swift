@@ -1,6 +1,7 @@
 import Foundation
 
 /* TODO: Use NSLinguisticTagger to identify nouns and search them and provide data. */
+/* TODO: Support meta[name="theme-color"] tags for background color tint. */
 
 public enum LinkPreviewError: ErrorProtocol {
 	case invalidUrl(String)

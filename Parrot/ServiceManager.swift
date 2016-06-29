@@ -48,13 +48,20 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 				let vc = ConversationsViewController(nibName: "ConversationsViewController", bundle: nil)
 				vc?.selectionProvider = { row in
 					let vc2 = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
-					vc2?.representedObject = vc?.conversationList?.conversations[row]
+					let ic = vc?.conversationList?.conversations[row]
+					vc2?.representedObject = ic
 					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator { w in
-						w.setFrame(NSRect(x: 0, y: 0, width: 480, height: 320), display: false, animate: true)
 						w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
+						w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
 						w.appearance = ParrotAppearance.current()
 						w.enableRealTitlebarVibrancy()
-						w.center()
+						
+						// Because autosave is miserable.
+						w.setFrameAutosaveName("\(ic!.conversation.conversationId!.id!)")
+						if w.frame == .zero {
+							w.setFrame(NSRect(x: 0, y: 0, width: 480, height: 320), display: false, animate: true)
+							w.center()
+						}
 					})
 				}
 				
@@ -62,9 +69,16 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 				// has a standard window gradient in light ones.
 				self.trans = WindowTransitionAnimator { w in
 					w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
+					w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenPrimary, .fullScreenAllowsTiling]
 					w.appearance = ParrotAppearance.current()
 					w.enableRealTitlebarVibrancy()
+					
+					// Because autosave is miserable.
 					w.setFrameAutosaveName("Conversations")
+					if w.frame == .zero {
+						w.setFrame(NSRect(x: 0, y: 0, width: 386, height: 512), display: false, animate: true)
+						w.center()
+					}
 				}
 				self.trans!.displayViewController(vc!)
 			}

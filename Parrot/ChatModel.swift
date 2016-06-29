@@ -110,6 +110,18 @@ public struct Capabilities: OptionSet {
 	public static let editMessage = Capabilities(rawValue: 1 << 22)
 }
 
+public enum MessageType {
+	case text
+	case richText
+	case image
+	case audio
+	case video
+	case link
+	case snippet
+	case summary
+	case heartbeat
+}
+
 public enum ServiceNotification2 {
 	case didConnect
 	case didReconnect
@@ -121,19 +133,19 @@ public protocol Service2 {
 	
 	/// Returns the notification key for the event fired when this service connects
 	/// successfully to its server/host.
-	static func didConnectNotification() -> String
+	static var didConnectNotification: Notification.Name { get }
 	
 	/// Returns the notification key for the event fired when this service reconnects
 	/// upon a previous non-user-initiated disconnection.
-	static func didReconnectNotification() -> String
+	static var didReconnectNotification: Notification.Name { get }
 	
 	/// Returns the notification key for the event fired when this service disconnects
 	/// from its server/host.
-	static func didDisconnectNotification() -> String
+	static var didDisconnectNotification: Notification.Name { get }
 	
 	/// Returns the notification key for the event fired when this service receives
 	/// an update of any kind; this should be used only by the service itself.
-	static func didReceiveUpdateNotification() -> String
+	static var didReceiveUpdateNotification: Notification.Name { get }
 	
 	/// Connects the service to its server/host.
 	/// Returns true if connection succeeded, or false if it failed.

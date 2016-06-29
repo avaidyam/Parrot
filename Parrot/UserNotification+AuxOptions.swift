@@ -1,6 +1,7 @@
 import AppKit
 
 /* TODO: Support pattern-based haptic feedback. */
+/* TODO: Support NSApp.requestUserAttention(...). */
 
 public typealias UserNotification = NSUserNotification
 
