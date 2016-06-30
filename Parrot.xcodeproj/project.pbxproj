@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		4803639D1C1D08490008E9F5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4803639C1C1D08490008E9F5 /* main.swift */; };
-		481300351D257FE300768D79 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300341D257FE300768D79 /* Log.swift */; };
-		481300361D257FE300768D79 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300341D257FE300768D79 /* Log.swift */; };
-		481300371D257FE300768D79 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300341D257FE300768D79 /* Log.swift */; };
-		481300381D257FE300768D79 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300341D257FE300768D79 /* Log.swift */; };
+		481300351D257FE300768D79 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300341D257FE300768D79 /* Logger.swift */; };
+		481300361D257FE300768D79 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300341D257FE300768D79 /* Logger.swift */; };
+		481300371D257FE300768D79 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300341D257FE300768D79 /* Logger.swift */; };
+		481300381D257FE300768D79 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300341D257FE300768D79 /* Logger.swift */; };
 		481687281C39F6DC0070EEF6 /* NSURLSession+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */; };
 		4816872C1C3A340E0070EEF6 /* NSURLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */; };
 		482E21391C23F5F500A4C7B3 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482E21381C23F5F500A4C7B3 /* ChatModel.swift */; };
@@ -254,7 +254,7 @@
 /* Begin PBXFileReference section */
 		4803639A1C1D08490008E9F5 /* parrot-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "parrot-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4803639C1C1D08490008E9F5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		481300341D257FE300768D79 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		481300341D257FE300768D79 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		481687271C39F6DC0070EEF6 /* NSURLSession+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLSession+Extensions.swift"; sourceTree = "<group>"; };
 		4816872B1C3A340E0070EEF6 /* NSURLSession+Delegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLSession+Delegate.swift"; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* ChatModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
@@ -483,7 +483,7 @@
 				48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */,
 				48BFAECF1D1CF19100ADBA3A /* AppActivity.swift */,
 				48A452261D19B16500CB588A /* Tone.swift */,
-				481300341D257FE300768D79 /* Log.swift */,
+				481300341D257FE300768D79 /* Logger.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1226,7 +1226,7 @@
 				48808EDD1C6463DD00236E96 /* WindowTransitionAnimator.swift in Sources */,
 				48EB54F61D209DD100F77C2C /* Cache.swift in Sources */,
 				48AD01DF1C1EC8A90031FDD7 /* KeyValueStore.swift in Sources */,
-				481300351D257FE300768D79 /* Log.swift in Sources */,
+				481300351D257FE300768D79 /* Logger.swift in Sources */,
 				482E21391C23F5F500A4C7B3 /* ChatModel.swift in Sources */,
 				4835ECAF1C1C620E00193EBC /* ConversationsViewController.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* ConversationViewController.swift in Sources */,
@@ -1299,7 +1299,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				481300361D257FE300768D79 /* Log.swift in Sources */,
+				481300361D257FE300768D79 /* Logger.swift in Sources */,
 				48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1308,7 +1308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				481300371D257FE300768D79 /* Log.swift in Sources */,
+				481300371D257FE300768D79 /* Logger.swift in Sources */,
 				48DE52E41C1CC1D300647C63 /* RequestHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1325,7 +1325,7 @@
 				48BFD0361D13856A00DAE29E /* AppManagement.swift in Sources */,
 				48EB54F71D209E2000F77C2C /* Cache.swift in Sources */,
 				48DF84A11D08EEB800F39444 /* ServiceManager.swift in Sources */,
-				481300381D257FE300768D79 /* Log.swift in Sources */,
+				481300381D257FE300768D79 /* Logger.swift in Sources */,
 				48DF84A21D08EEB800F39444 /* ConversationsViewController.swift in Sources */,
 				48DF84A31D08EEB800F39444 /* ConversationViewController.swift in Sources */,
 				48DF84A41D08EEB800F39444 /* Authenticator.swift in Sources */,

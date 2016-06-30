@@ -3,6 +3,7 @@ import Foundation
 /* TODO: Integrate NSBackgroundActivityScheduler, NSProgress, NSOperation, DispatchQoS, and os_log_breadcrumb*. */
 /* TODO: Add property .cancellable and ensure NSApplication doesn't quit until .cancellable propogates. */
 /* TODO: Use applicationShouldTerminate() to control this behavior. */
+/* TODO: Support os_activity and os_trace, integrate with Logger. */
 
 /// A proxy for NSProcessInfo's BackgroundActivity API.
 /// Simplified for internal use only.

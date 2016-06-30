@@ -5,6 +5,7 @@ import asl
 /* TODO: Support same parameters as Swift's print() or debugPrint(). */
 /* TODO: Support dumping backtraces using Thread.callStackSymbols. */
 /* TODO: Finish support for ASL facilities, using userInfo parameters. */
+/* TODO: Support logging date/time, file, function, line. */
 
 /// A Logger is responsible for persisting text information to disk or memory
 /// for logging purposes. It relies on its Severity and Channel to do so.
@@ -61,14 +62,14 @@ public final class Logger {
 	}
 	
 	public let subsystem: String
-	public let channel: Channel
+	public let channels: [Channel]
 	public var severity: Severity
 	
 	/// Initialize a Logger for a particular subsystem. 
-	/// Note: the subsystem should preferrably be unique.
-	public init(subsystem: String, channel: Channel = Channel.print, severity: Severity = .verbose) {
+	/// Note: the subsystem should preferrably be a unique reverse domain name.
+	public init(subsystem: String, channels: [Channel] = [Channel.print], severity: Severity = .verbose) {
 		self.subsystem = subsystem
-		self.channel = channel
+		self.channels = channels
 		self.severity = severity
 	}
 	
@@ -76,7 +77,7 @@ public final class Logger {
 	/// flow through the Logger's Channel if the Severity allows it.
 	public func post(severity: Severity, message: @autoclosure() -> String) {
 		guard self.severity >= severity else { return }
-		self.channel.operation(message(), self.severity)
+		self.channels.forEach { $0.operation(message(), self.severity) }
 	}
 }
 
