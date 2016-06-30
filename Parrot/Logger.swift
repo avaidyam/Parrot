@@ -1,40 +1,51 @@
-import func Foundation.NSLog
 import asl
 
 /* TODO: Support Logger hierarchies like NSProgress. */
 /* TODO: Support same parameters as Swift's print() or debugPrint(). */
 /* TODO: Support dumping backtraces using Thread.callStackSymbols. */
-/* TODO: Finish support for ASL facilities, using userInfo parameters. */
+/* TODO: Support for ASL facilities, objects, and parameters. */
 /* TODO: Support logging date/time, file, function, line. */
 
 /// A Logger is responsible for persisting text information to disk or memory
 /// for logging purposes. It relies on its Severity and Channel to do so.
 public final class Logger {
+	public typealias Subsystem = String
+	public typealias Message = String
 	
 	/// A Channel is a pathway in which the logged data flows. For example,
 	/// it may simply be printed to stdout, stderr, or sent to a system logging
 	/// facility, or even displayed to the user visually if needed.
 	public struct Channel {
-		public let operation: (String, Severity) -> ()
-		
-		/// Channel.ignore does not submit the message anywhere.
-		public static let ignore = Channel { _ in }
+		public let operation: (Message, Severity) -> ()
 		
 		/// Channel.print sends the message to stdout with tags.
-		public static let print = Channel { Swift.print("[\($1)] \($0)") }
+		public static let print = Channel {
+			Swift.print("[\($1)] \($0)")
+		}
 		
 		/// Channel.print sends the message to stdout, with a debugging-suitable transformation.
-		public static let debugPrint = Channel { $1 >= .info ? Swift.debugPrint($0) : Swift.print($0) }
-		
-		/// Channel.NSLog uses the NSLog function to submit the message.
-		public static let NSLog = Channel { Foundation.NSLog($0.0) }
+		public static let debugPrint = Channel {
+			$1 >= .info ? Swift.debugPrint($0) : Swift.print($0)
+		}
 		
 		/// Channel.ASL uses the Apple System Logging facility to submit the message.
-		/*public static let ASL = Channel { a, b in
-			let log_client = asl_open("Parrot", "Parrot Facility", UInt32(ASL_OPT_STDERR));
-			asl_log(log_client, nil, ASL_LEVEL_EMERG, "Test: Error %m: %d", 42);
-			asl_close(log_client)
-		}*/
+		/// Note: ASL may not accept the message flow if its configuration severity
+		/// is at a different level than what is set here.
+		public static let ASL = Channel { message, severity in
+			withVaList([]) { ignore in
+				var s = ASL_LEVEL_DEBUG
+				switch severity {
+				case .fatal: s = ASL_LEVEL_EMERG
+				case .critical: s = ASL_LEVEL_CRIT
+				case .error: s = ASL_LEVEL_ERR
+				case .warning: s = ASL_LEVEL_WARNING
+				case .info: s = ASL_LEVEL_NOTICE
+				case .debug: s = ASL_LEVEL_INFO
+				case .verbose: s = ASL_LEVEL_DEBUG
+				}
+				asl_vlog(nil, nil, s, message, ignore)
+			}
+		}
 	}
 	
 	public enum Severity: Int, Comparable {
@@ -61,13 +72,14 @@ public final class Logger {
 		case verbose
 	}
 	
-	public let subsystem: String
+	public let subsystem: Subsystem
 	public let channels: [Channel]
 	public var severity: Severity
 	
 	/// Initialize a Logger for a particular subsystem. 
 	/// Note: the subsystem should preferrably be a unique reverse domain name.
-	public init(subsystem: String, channels: [Channel] = [Channel.print], severity: Severity = .verbose) {
+	/// Note: if channels is empty, the message will not enter a logging flow.
+	public init(subsystem: Subsystem, channels: [Channel] = [Channel.print, Channel.ASL], severity: Severity = .verbose) {
 		self.subsystem = subsystem
 		self.channels = channels
 		self.severity = severity
@@ -75,7 +87,7 @@ public final class Logger {
 	
 	/// Post a message to the Logger with a given severity. This message will 
 	/// flow through the Logger's Channel if the Severity allows it.
-	public func post(severity: Severity, message: @autoclosure() -> String) {
+	public func post(severity: Severity, message: @autoclosure() -> Message) {
 		guard self.severity >= severity else { return }
 		self.channels.forEach { $0.operation(message(), self.severity) }
 	}
@@ -91,31 +103,31 @@ public func <(lhs: Logger.Severity, rhs: Logger.Severity) -> Bool {
 
 /// Shortcuts for Logger.post(...)
 public extension Logger {
-	public func fatal(_ message: @autoclosure() -> String) {
+	public func fatal(_ message: @autoclosure() -> Message) {
 		self.post(severity: .fatal, message: message)
 	}
 	
-	public func critical(_ message: @autoclosure() -> String) {
+	public func critical(_ message: @autoclosure() -> Message) {
 		self.post(severity: .critical, message: message)
 	}
 	
-	public func error(_ message: @autoclosure() -> String) {
+	public func error(_ message: @autoclosure() -> Message) {
 		self.post(severity: .error, message: message)
 	}
 	
-	public func warning(_ message: @autoclosure() -> String) {
+	public func warning(_ message: @autoclosure() -> Message) {
 		self.post(severity: .warning, message: message)
 	}
 	
-	public func info(_ message: @autoclosure() -> String) {
+	public func info(_ message: @autoclosure() -> Message) {
 		self.post(severity: .info, message: message)
 	}
 	
-	public func debug(_ message: @autoclosure() -> String) {
+	public func debug(_ message: @autoclosure() -> Message) {
 		self.post(severity: .debug, message: message)
 	}
 	
-	public func verbose(_ message: @autoclosure() -> String) {
+	public func verbose(_ message: @autoclosure() -> Message) {
 		self.post(severity: .verbose, message: message)
 	}
 }
