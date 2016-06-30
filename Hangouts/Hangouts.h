@@ -1,5 +1,3 @@
-#import <JavascriptCore/JavascriptCore.h>
-
 #if BUILTIN_SHA1
 #include <stdio.h>
 #include <string.h>

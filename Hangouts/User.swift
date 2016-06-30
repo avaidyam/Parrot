@@ -1,3 +1,4 @@
+import Foundation
 
 // A chat user identifier.
 // Use the much more full-featured User class for more data.
@@ -48,11 +49,10 @@ public struct User: Hashable, Equatable {
 			gaiaID: entity.id!.gaiaId!)
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
 		
-		var phone: String? = nil
-		var phoneI18N: String? = nil
+		var phoneI18N: String? = nil // just use I18N and reformat it if needed.
 		if	let r = entity.properties?._unknownFields[14] as? [AnyObject] where r.count > 0 {
 			if let d = r[0][0][1] as? [AnyObject] { // retrieve the I18nData
-				phone = d[0] as? String; phoneI18N = d[1] as? String
+				phoneI18N = d[1] as? String
 			}
 		}
 		

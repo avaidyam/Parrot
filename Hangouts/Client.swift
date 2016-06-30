@@ -1,4 +1,4 @@
-import Foundation // lots of things here
+import Foundation
 
 public final class Client {
 	
@@ -76,7 +76,7 @@ public final class Client {
 	// Use this method for constructing request messages when calling Hangouts APIs.
 	private func getRequestHeader() -> [AnyObject] {
 		return [
-			[None /* 6 */, None /* 3 */, "parrot-0.1", None, None, None],
+			[None /* 6 */, None /* 3 */, "parrot", None, None, None],
 			[self.client_id ?? None, None],
 			None,
 			"en"
@@ -161,6 +161,26 @@ public final class Client {
 	
 	// Parse channel array and call the appropriate events.
 	public func channel(channel: Channel, didReceiveMessage message: [AnyObject]) {
+		
+		// Add services to the channel.
+		//
+		// The services we add to the channel determine what kind of data we will
+		// receive on it. The "babel" service includes what we need for Hangouts.
+		// If this fails for some reason, hangups will never receive any events.
+		// This needs to be re-called whenever we open a new channel (when there's
+		// a new SID and client_id.
+		//
+		// Based on what Hangouts for Chrome does over 2 requests, this is
+		// trimmed down to 1 request that includes the bare minimum to make
+		// things work.
+		func addChannelServices() {
+			let inner = ["3": ["1": ["1": "babel"]]]
+			let dat = try! JSONSerialization.data(withJSONObject: inner, options: [])
+			let str = NSString(data: dat, encoding: String.Encoding.utf8.rawValue) as! String
+			
+			self.channel?.sendMaps(mapList: [["p": str]])
+		}
+		
 		guard message[0] as? String != "noop" else {
 			return
 		}
@@ -174,7 +194,7 @@ public final class Client {
 		// Once client_id is received, the channel is ready to have services added.
 		if let id = wrapper["3"] as? [String: AnyObject] {
 			self.client_id = (id["2"] as! String)
-			self.addChannelServices()
+			addChannelServices()
 		}
 		if let cbu = wrapper["2"] as? [String: AnyObject] {
 			let val2 = (cbu["2"]! as! String).data(using: String.Encoding.utf8)
@@ -195,25 +215,6 @@ public final class Client {
 				print("Ignoring message: \(payload[0])")
 			}
 		}
-	}
-	
-	// Add services to the channel.
-	//
-	// The services we add to the channel determine what kind of data we will
-	// receive on it. The "babel" service includes what we need for Hangouts.
-	// If this fails for some reason, hangups will never receive any events.
-	// This needs to be re-called whenever we open a new channel (when there's
-	// a new SID and client_id.
-	//
-	// Based on what Hangouts for Chrome does over 2 requests, this is
-	// trimmed down to 1 request that includes the bare minimum to make
-	// things work.
-	private func addChannelServices() {
-		let inner = ["3": ["1": ["1": "babel"]]]
-		let dat = try! JSONSerialization.data(withJSONObject: inner, options: [])
-		let str = NSString(data: dat, encoding: String.Encoding.utf8.rawValue) as! String
-		
-		self.channel?.sendMaps(mapList: [["p": str]])
 	}
 	
 	public func buildUserConversationList(cb: (UserList, ConversationList) -> Void) {

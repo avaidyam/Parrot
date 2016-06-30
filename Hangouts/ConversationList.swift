@@ -1,4 +1,4 @@
-import Foundation // Date
+import Foundation
 
 public protocol ConversationListDelegate {
     func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent)
@@ -110,60 +110,6 @@ public class ConversationList {
         }
     }
 	
-	// Receive a ClientEvent and fan out to Conversations
-    public func on_client_event(event: Event) {
-        sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
-        if let conv = conv_dict[event.conversationId!.id!] {
-            let conv_event = conv.add_event(event: event)
-
-			delegate?.conversationList(self, didReceiveEvent: conv_event)
-            conv.handleEvent(event: conv_event)
-        } else {
-            print("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
-        }
-    }
-	
-	// Receive Conversation and create or update the conversation
-    public func handle_client_conversation(client_conversation: Conversation) {
-        let conv_id = client_conversation.conversationId!.id!
-        if let conv = conv_dict[conv_id] {
-            conv.update_conversation(conversation: client_conversation)
-			delegate?.conversationList(self, didUpdateConversation: conv)
-        } else {
-            self.add_conversation(client_conversation: client_conversation)
-        }
-		delegate?.conversationList(didUpdate: self)
-    }
-	
-	// Receive ClientSetTypingNotification and update the conversation
-    public func handle_set_typing_notification(set_typing_notification: SetTypingNotification) {
-        let conv_id = set_typing_notification.conversationId!.id!
-        if let conv = conv_dict[conv_id] {
-            let res = parseTypingStatusMessage(p: set_typing_notification)
-			delegate?.conversationList(self, didChangeTypingStatusTo: res.status)
-            let user = user_list[UserID(
-				
-                chatID: set_typing_notification.senderId!.chatId!,
-                gaiaID: set_typing_notification.senderId!.gaiaId!
-            )]
-            conv.handleTypingStatus(status: res.status, forUser: user)
-        } else {
-            print("Received ClientSetTypingNotification for unknown conversation \(conv_id)")
-        }
-    }
-	
-	// Receive ClientWatermarkNotification and update the conversation
-    public func handle_watermark_notification(watermark_notification: WatermarkNotification) {
-        let conv_id = watermark_notification.conversationId!.id!
-        if let conv = conv_dict[conv_id] {
-            let res = parseWatermarkNotification(client_watermark_notification: watermark_notification)
-			delegate?.conversationList(self, didReceiveWatermarkNotification: res)
-            conv.handleWatermarkNotification(status: res)
-        } else {
-            print("Received WatermarkNotification for unknown conversation \(conv_id)")
-        }
-    }
-	
 	
 	// Sync conversation state and events that could have been missed
     public func sync(cb: (() -> Void)? = nil) {
@@ -176,7 +122,16 @@ public class ConversationList {
                             if event.timestamp > UInt64(self.sync_timestamp.toUTC()) {
 								
                                 // This updates the sync_timestamp for us, as well as triggering events.
-                                self.on_client_event(event: event)
+                                //self._eventNotification(event: event)
+								self.sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
+								if let conv = self.conv_dict[event.conversationId!.id!] {
+									let conv_event = conv.add_event(event: event)
+									
+									self.delegate?.conversationList(self, didReceiveEvent: conv_event)
+									conv.handleEvent(event: conv_event)
+								} else {
+									print("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
+								}
                             }
                         }
                     } else {
@@ -186,27 +141,109 @@ public class ConversationList {
             }
         }
     }
-
-    // MARK: Calls from conversations
 	
     public func conversationDidUpdate(conversation: IConversation) {
 		delegate?.conversationList(self, didUpdateConversation: conversation)
     }
 	
 	// Receive a ClientStateUpdate and fan out to Conversations
-	/* TODO: Refactor this to use the Oneof support in Protobuf. */
     public func clientDidUpdateState(client: Client, update: StateUpdate) {
-        if let client_conversation = update.conversation {
-            handle_client_conversation(client_conversation: client_conversation)
-        }
-        if let typing_notification = update.typingNotification {
-            handle_set_typing_notification(set_typing_notification: typing_notification)
-        }
-        if let watermark_notification = update.watermarkNotification {
-            handle_watermark_notification(watermark_notification: watermark_notification)
-        }
-        if let event_notification = update.eventNotification {
-            on_client_event(event: event_notification.event!)
-        }
-    }
+        if let note = update.conversationNotification {
+            _conversationNotification(note)
+		} else if let note = update.eventNotification {
+			_eventNotification(note)
+		} else if let note = update.focusNotification {
+			_focusNotification(note)
+		} else if let note = update.typingNotification {
+			_typingNotification(note)
+		} else if let note = update.notificationLevelNotification {
+			_notificationLevelNotification(note)
+		} else if let note = update.watermarkNotification {
+			_watermarkNotification(note)
+		} else if let note = update.viewModification {
+			_viewModification(note)
+		} else if let note = update.selfPresenceNotification {
+			_selfPresenceNotification(note)
+		} else if let note = update.deleteNotification {
+			_deleteNotification(note)
+		} else if let note = update.presenceNotification {
+			_presenceNotification(note)
+		}
+	}
+	
+	public func _conversationNotification(_ note: ConversationNotification) {
+		let client_conversation = note.conversation!
+		let conv_id = client_conversation.conversationId!.id!
+		if let conv = conv_dict[conv_id] {
+			conv.update_conversation(conversation: client_conversation)
+			delegate?.conversationList(self, didUpdateConversation: conv)
+		} else {
+			self.add_conversation(client_conversation: client_conversation)
+		}
+		delegate?.conversationList(didUpdate: self)
+	}
+	
+	public func _focusNotification(_ note: SetFocusNotification) {
+		print("UNIMPLEMENTED: \(#function) => \(note)")
+	}
+	
+	public func _eventNotification(_ note: EventNotification) {
+		let event = note.event!
+		sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
+		if let conv = conv_dict[event.conversationId!.id!] {
+			let conv_event = conv.add_event(event: event)
+			
+			delegate?.conversationList(self, didReceiveEvent: conv_event)
+			conv.handleEvent(event: conv_event)
+		} else {
+			print("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
+		}
+	}
+	
+	public func _typingNotification(_ note: SetTypingNotification) {
+		let conv_id = note.conversationId!.id!
+		if let conv = conv_dict[conv_id] {
+			let res = parseTypingStatusMessage(p: note)
+			delegate?.conversationList(self, didChangeTypingStatusTo: res.status)
+			let user = user_list[UserID(
+				
+				chatID: note.senderId!.chatId!,
+				gaiaID: note.senderId!.gaiaId!
+				)]
+			conv.handleTypingStatus(status: res.status, forUser: user)
+		} else {
+			print("Received ClientSetTypingNotification for unknown conversation \(conv_id)")
+		}
+	}
+	
+	public func _notificationLevelNotification(_ note: SetConversationNotificationLevelNotification) {
+		print("UNIMPLEMENTED: \(#function) => \(note)")
+	}
+	
+	public func _watermarkNotification(_ note: WatermarkNotification) {
+		let conv_id = note.conversationId!.id!
+		if let conv = self.conv_dict[conv_id] {
+			let res = parseWatermarkNotification(client_watermark_notification: note)
+			self.delegate?.conversationList(self, didReceiveWatermarkNotification: res)
+			conv.handleWatermarkNotification(status: res)
+		} else {
+			print("Received WatermarkNotification for unknown conversation \(conv_id)")
+		}
+	}
+	
+	public func _viewModification(_ note: ConversationViewModification) {
+		print("UNIMPLEMENTED: \(#function) => \(note)")
+	}
+	
+	public func _selfPresenceNotification(_ note: SelfPresenceNotification) {
+		print("UNIMPLEMENTED: \(#function) => \(note)")
+	}
+	
+	public func _deleteNotification(_ note: DeleteActionNotification) {
+		print("UNIMPLEMENTED: \(#function) => \(note)")
+	}
+	
+	public func _presenceNotification(_ note: PresenceNotification) {
+		print("UNIMPLEMENTED: \(#function) => \(note)")
+	}
 }

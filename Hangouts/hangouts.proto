@@ -1022,30 +1022,32 @@ message StateUpdate {
   // notification.
   optional Conversation conversation = 13;
 
+  // oneof {
   optional ConversationNotification conversation_notification = 2;
-  optional  EventNotification event_notification = 3;
-  optional  SetFocusNotification focus_notification = 4;
-  optional  SetTypingNotification typing_notification = 5;
-  optional  SetConversationNotificationLevelNotification notification_level_notification = 6;
-  optional  ReplyToInviteNotification reply_to_invite_notification = 7;
-  optional  WatermarkNotification watermark_notification = 8;
+  optional EventNotification event_notification = 3;
+  optional SetFocusNotification focus_notification = 4;
+  optional SetTypingNotification typing_notification = 5;
+  optional SetConversationNotificationLevelNotification notification_level_notification = 6;
+  optional ReplyToInviteNotification reply_to_invite_notification = 7;
+  optional WatermarkNotification watermark_notification = 8;
 
     //UnimplementedMessage unknown_1 = 9;
     //UnimplementedMessage settings_notification = 10;
 
     // TODO: rename to ViewModificationNotification?
 
-  optional  ConversationViewModification view_modification = 11;
-  optional  EasterEggNotification easter_egg_notification = 12;
-  optional  SelfPresenceNotification self_presence_notification = 14;
-  optional  DeleteActionNotification delete_notification = 15;
-  optional  PresenceNotification presence_notification = 16;
-  optional  BlockNotification block_notification = 17;
+  optional ConversationViewModification view_modification = 11;
+  optional EasterEggNotification easter_egg_notification = 12;
+  optional SelfPresenceNotification self_presence_notification = 14;
+  optional DeleteActionNotification delete_notification = 15;
+  optional PresenceNotification presence_notification = 16;
+  optional BlockNotification block_notification = 17;
 
     //UnimplementedMessage invitation_watermark_notification = 18;
 
-  optional  SetNotificationSettingNotification notification_setting_notification = 19;
-  optional  RichPresenceEnabledStateNotification rich_presence_enabled_state_notification = 20;
+  optional SetNotificationSettingNotification notification_setting_notification = 19;
+  optional RichPresenceEnabledStateNotification rich_presence_enabled_state_notification = 20;
+  //}
 }
 
 // Header for StateUpdate messages.

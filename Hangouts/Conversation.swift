@@ -1,3 +1,4 @@
+import Foundation
 
 public protocol ConversationDelegate {
     func conversation(_ conversation: IConversation, didChangeTypingStatusForUser: User, toStatus: TypingType)

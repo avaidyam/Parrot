@@ -1,4 +1,4 @@
-import Foundation // String, Date
+import Foundation
 
 /* TODO: Refactor ChatMessageSegment to match hangups and Protobuf docs. */
 /* TODO: Include Markdown, HTML, and URL formatting parsers. */
