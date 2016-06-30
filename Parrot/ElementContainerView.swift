@@ -184,7 +184,7 @@ public extension ElementContainerView {
 	}
 	
 	public func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {
-		//Swift.print("Unimplemented \(__FUNCTION__)")
+		//log.info("Unimplemented \(__FUNCTION__)")
 		return false
 	}
 	
@@ -200,19 +200,19 @@ public extension ElementContainerView {
 	}
 	
 	public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-		//Swift.print("Unimplemented \(__FUNCTION__)")
+		//log.info("Unimplemented \(__FUNCTION__)")
 		return nil // no default row yet
 	}
 	
 	@objc(tableView:didAddRowView:forRow:)
 	public func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int) {
-		//Swift.print("Unimplemented \(__FUNCTION__)")
+		//log.info("Unimplemented \(__FUNCTION__)")
 		rowView.isEmphasized = false
 	}
 	
 	@objc(tableView:didRemoveRowView:forRow:)
 	public func tableView(_ tableView: NSTableView, didRemove rowView: NSTableRowView, forRow row: Int) {
-		//Swift.print("Unimplemented \(__FUNCTION__)")
+		//log.info("Unimplemented \(__FUNCTION__)")
 	}
 }
 
@@ -225,7 +225,7 @@ public extension ElementContainerView {
 	}
 	
 	public func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: IndexSet) -> IndexSet {
-		Swift.print("Unimplemented \(#function)")
+		log.info("Unimplemented \(#function)")
 		return proposedSelectionIndexes
 	}
 	
@@ -234,7 +234,7 @@ public extension ElementContainerView {
 	}
 	
 	public func tableViewSelectionIsChanging(_ notification: Notification) {
-		Swift.print("Unimplemented \(#function)")
+		log.info("Unimplemented \(#function)")
 	}
 	
 	public func tableView(_ tableView: NSTableView, menuForRows rows: IndexSet) -> NSMenu? {
@@ -271,13 +271,13 @@ public extension ElementContainerView {
 	
 	public func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int,
 	                      proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-		Swift.print("Unimplemented \(#function)")
+		log.info("Unimplemented \(#function)")
 		return [.copy]
 	}
 	
 	public func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo,
 	                      row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
-		Swift.print("Unimplemented \(#function)")
+		log.info("Unimplemented \(#function)")
 		return true
 	}
 }

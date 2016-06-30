@@ -52,10 +52,10 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			if edge == .leading { // Swipe Right Actions
 				actions = [
 					NSTableViewRowAction(style: .regular, title: "Mute", handler: { action, select in
-						print("Mute row:\(select)")
+						log.info("Mute row:\(select)")
 					}),
 					NSTableViewRowAction(style: .destructive, title: "Block", handler: { action, select in
-						print("Block row:\(select)")
+						log.info("Block row:\(select)")
 					})
 				]
 				
@@ -65,10 +65,10 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 			} else if edge == .trailing { // Swipe Left Actions
 				actions = [
 					NSTableViewRowAction(style: .destructive, title: "Delete", handler: { action, select in
-						print("Delete row:\(select)")
+						log.info("Delete row:\(select)")
 					}),
 					NSTableViewRowAction(style: .regular, title: "Archive", handler: { action, select in
-						print("Archive row:\(select)")
+						log.info("Archive row:\(select)")
 					})
 				]
 				
@@ -89,7 +89,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		self.personsView.pasteboardProvider = { row in
 			let pb = NSPasteboardItem()
 			//NSPasteboardTypeRTF, NSPasteboardTypeString, NSPasteboardTypeTabularText
-			print("pb for row \(row)")
+			log.info("pb for row \(row)")
 			pb.setString("TEST", forType: "public.utf8-plain-text")
 			return pb
 		}

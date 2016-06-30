@@ -80,10 +80,10 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 			if edge == .leading { // Swipe Right Actions
 				actions = [
 					NSTableViewRowAction(style: .regular, title: "Mute", handler: { action, select in
-						print("Mute row:\(select)")
+						log.info("Mute row:\(select)")
 					}),
 					NSTableViewRowAction(style: .destructive, title: "Block", handler: { action, select in
-						print("Block row:\(select)")
+						log.info("Block row:\(select)")
 					})
 				]
 				
@@ -93,10 +93,10 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 			} else if edge == .trailing { // Swipe Left Actions
 				actions = [
 					NSTableViewRowAction(style: .destructive, title: "Delete", handler: { action, select in
-						print("Delete row:\(select)")
+						log.info("Delete row:\(select)")
 					}),
 					NSTableViewRowAction(style: .regular, title: "Archive", handler: { action, select in
-						print("Archive row:\(select)")
+						log.info("Archive row:\(select)")
 					})
 				]
 				

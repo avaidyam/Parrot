@@ -83,5 +83,5 @@ public func __test() {
 	n.identifier = "com.avaidyam.Parrot.UpdateNotification"
 	n.informativeText = release!.releaseNotes
 	UserNotificationCenter.deliver(n)
-	print(release)
+	log.info("\(release)")
 }

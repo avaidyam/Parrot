@@ -126,7 +126,7 @@ public class UserList: Collection {
 		if let user = self.users[userID] {
 			return user
 		} else {
-			print("UserList returning unknown User for UserID \(userID)")
+			//print("UserList returning unknown User for UserID \(userID)")
 			return User(userID: userID)
 		}
 	}

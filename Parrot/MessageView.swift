@@ -72,7 +72,7 @@ public class MessageView : NSTableCellView {
 				)
 				
 				// TESTING:
-				//Swift.print(try? LinkPreviewParser.parse(url.absoluteString!))
+				//log.info(try? LinkPreviewParser.parse(url.absoluteString!))
 			}
 		}
 		return attrString

@@ -95,7 +95,7 @@ public class IChatMessageEvent : IEvent {
 			} else if attachment.embedItem!.type == [.Place, .PlaceV2, .Thing] { // FIXME this is bad swift
 				// Google Maps URL that's already in the text.
 			} else {
-				//print("Ignoring unknown chat message attachment: \(attachment)")
+				//log.info("Ignoring unknown chat message attachment: \(attachment)")
 			}
 		}
 		return attachments

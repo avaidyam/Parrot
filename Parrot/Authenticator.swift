@@ -95,7 +95,7 @@ public class Authenticator {
 				
 				session.request(request: request) {
 					guard let data = $0.data else {
-						print("Request failed with error: \($0.error!)")
+						log.info("Request failed with error: \($0.error!)")
 						return
 					}
 					
@@ -107,7 +107,7 @@ public class Authenticator {
 					
 					session.request(request: request) {
 						guard let _ = $0.data else {
-							print("Request failed with error: \($0.error!)")
+							log.info("Request failed with error: \($0.error!)")
 							return
 						}
 						
@@ -117,7 +117,7 @@ public class Authenticator {
 						
 						session.request(request: request) {
 							guard let _ = $0.data else {
-								print("Request failed with error: \($0.error!)")
+								log.info("Request failed with error: \($0.error!)")
 								return
 							}
 							cb(configuration: session.configuration)
@@ -134,7 +134,7 @@ public class Authenticator {
 			prompt(url: a, valid: b) { request in
 				session.request(request: request) {
 					guard let data = $0.data else {
-						print("Request failed with error: \($0.error!)")
+						log.info("Request failed with error: \($0.error!)")
 						return
 					}
 					
@@ -173,7 +173,7 @@ public class Authenticator {
 		
 		URLSession.shared().request(request: req) {
 			guard let data = $0.data else {
-				print("Request failed with error: \($0.error!)")
+				log.info("Request failed with error: \($0.error!)")
 				return
 			}
 			
@@ -182,10 +182,10 @@ public class Authenticator {
 				if let access = json[ACCESS_TOKEN] as? String, refresh = json[REFRESH_TOKEN] as? String  {
 					cb(access_token: access, refresh_token: refresh)
 				} else {
-					print("JSON was invalid: \(json)")
+					log.info("JSON was invalid: \(json)")
 				}
 			} catch let error as NSError {
-				print("JSON returned invalid data: \(error.localizedDescription)")
+				log.info("JSON returned invalid data: \(error.localizedDescription)")
 			}
 		}
 	}
@@ -212,7 +212,7 @@ public class Authenticator {
 		
 		session.request(request: req) {
 			guard let data = $0.data else {
-				print("Request failed with error: \($0.error!)")
+				log.info("Request failed with error: \($0.error!)")
 				return
 			}
 			
@@ -221,10 +221,10 @@ public class Authenticator {
 				if let access = json[ACCESS_TOKEN] as? String  {
 					cb(access_token: access, refresh_token: refresh_token)
 				} else {
-					print("JSON was invalid: \(json)")
+					log.info("JSON was invalid: \(json)")
 				}
 			} catch let error as NSError {
-				print("JSON returned invalid data: \(error.localizedDescription)")
+				log.info("JSON returned invalid data: \(error.localizedDescription)")
 			}
 		}
 	}

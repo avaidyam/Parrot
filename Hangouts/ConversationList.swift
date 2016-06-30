@@ -206,10 +206,9 @@ public class ConversationList {
 			let res = parseTypingStatusMessage(p: note)
 			delegate?.conversationList(self, didChangeTypingStatusTo: res.status)
 			let user = user_list[UserID(
-				
 				chatID: note.senderId!.chatId!,
 				gaiaID: note.senderId!.gaiaId!
-				)]
+			)]
 			conv.handleTypingStatus(status: res.status, forUser: user)
 		} else {
 			print("Received ClientSetTypingNotification for unknown conversation \(conv_id)")

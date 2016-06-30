@@ -41,7 +41,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		
 		NotificationCenter.default().addObserver(forName: UserNotification.didActivateNotification, object: nil, queue: nil) { n in
 			guard let u = n.object as? UserNotification where u.identifier ?? "" == self.conversation?.id else { return }
-			print("note \(u.identifier) with response \(u.response)")
+			log.info("note \(u.identifier) with response \(u.response)")
 			guard u.response != nil else { return }
 			
 			let emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
@@ -63,7 +63,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			let a = (self.messagesView.dataSource[row].element as? Message)!.string
 			//self._measure?.textLabel?.string = a as String
 			//self._measure?.layout()
-			//print(self._measure?.frame.size.height)
+			//log.info(self._measure?.frame.size.height)
 			
 			let b = self.messagesView.frame.width
 			return Double(MessageView.heightForContainerWidth(a, width: b)) + 20.0
@@ -139,14 +139,14 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			self.title = self.conversation?.name
 			
 			/*self.conversation?.client.queryPresence(chat_ids: self.conversation!.users.map { $0.id.chatID }) { response in
-				print("GOT \(response?.presenceResult)")
+				log.info("GOT \(response?.presenceResult)")
 			}*/
 			
 			//self.messagesView.removeElements(self._getAllMessages()!)
 			if self.messagesView != nil {
 				self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
 			} else {
-				//print("Not initialized.")
+				//log.info("Not initialized.")
 			}
         }
 	}

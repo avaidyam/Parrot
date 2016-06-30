@@ -17,6 +17,8 @@ public class Parrot {
 	
 }
 
+//severity: Logger.Severity(rawValue: Process.arguments["log_level"]) ?? .verbose
+public let log = Logger(subsystem: "com.avaidyam.Parrot.global")
 public let defaultUserImage = NSImage(named: "NSUserGuest")!
 
 @NSApplicationMain
@@ -26,6 +28,7 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
+		log.verbose("Parrot starting up...")
 		AppActivity.begin("Authenticate")
 		Authenticator.authenticateClient {
 			_hangoutsClient = Client(configuration: $0)
