@@ -309,6 +309,54 @@ public final class Channel : NSObject {
         }
     }
 	
+	// Send a Protocol Buffer or JSON formatted chat API request.
+	// endpoint is the chat API endpoint to use.
+	// request_pb: The request body as a Protocol Buffer message.
+	// response_pb: The response body as a Protocol Buffer message.
+	internal func request(
+		endpoint: String,
+		body: AnyObject,
+		use_json: Bool = true,
+		cb: (Result) -> Void
+		) {
+		base_request(path: "https://clients6.google.com/chat/v1/\(endpoint)",
+		             content_type: "application/json+protobuf",
+		             data: try! JSONSerialization.data(withJSONObject: body, options: []),
+		             use_json: use_json,
+		             cb: cb
+		)
+	}
+	
+	// Valid formats are: 'json' (JSON), 'protojson' (pblite), and 'proto'
+	// (binary Protocol Buffer). 'proto' requires manually setting an extra
+	// header 'X-Goog-Encode-Response-If-Executable: base64'.
+	internal func base_request(
+		path: String,
+		content_type: String,
+		data: Data,
+		use_json: Bool = true,
+		cb: (Result) -> Void
+		) {
+		let params = ["alt": use_json ? "json" : "protojson"]
+		let url = URL(string: (path + "?" + params.encodeURL()))!
+		let request = NSMutableURLRequest(url: url)
+		request.httpMethod = "POST"
+		request.httpBody = data
+		
+		for (k, v) in Channel.getAuthorizationHeaders(Channel.getCookieValue(key: "SAPISID")!) {
+			request.setValue(v, forHTTPHeaderField: k)
+		}
+		request.setValue(content_type, forHTTPHeaderField: "Content-Type")
+		
+		self.session.request(request: request as URLRequest) {
+			guard let _ = $0.data else {
+				print("Request failed with error: \($0.error!)")
+				return
+			}
+			cb($0)
+		}
+	}
+	
 	// Get the cookie value of the key given from the NSHTTPCookieStorage.
 	internal class func getCookieValue(key: String) -> String? {
 		if let c = HTTPCookieStorage.shared().cookies {

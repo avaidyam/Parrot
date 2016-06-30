@@ -51,49 +51,46 @@ public enum LinkPreviewType {
 }
 
 public struct LinkPreviewParser {
+	private init() {}
+	
 	private static let SBKEY = "AIzaSyCE0A8INTc8KQLIaotaHiWvqUkit5-_sTE"
 	private static let SBURL = "https://sb-ssl.google.com/safebrowsing/api/lookup?client=parrot&key=\(SBKEY)&appver=1.0.0&pver=3.1&url="
-	
-	private static let TITLE_REGEX = "(?<=<title>)(?:[\\s\\S]*?)(?=<\\/title>)"
-	private static let META_REGEX = "(?:\\<meta)([\\s\\S]*?)(?:>)"
-	private static let LINK_REGEX = "(?:\\<link)([\\s\\S]*?)(?:>)"
-	
 	private static let _validIcons = ["icon", "apple-touch-icon", "apple-touch-icon-precomposed"]
 	private static let _YTDomains = ["youtu.be", "www.youtube.com", "youtube.com"]
 	
-	private init() { }
-	
-	private static func _tag(_ str: String) -> String {
-		return "(?<=\(str)=\\\")[\\s\\S]+?(?=\\\")"
-	}
+	// Precompile all the regex so we save on time a little.
+	private static let TITLE_REGEX = try! RegularExpression(pattern: "(?<=<title>)(?:[\\s\\S]*?)(?=<\\/title>)",
+	                                                        options: .caseInsensitive)
+	private static let META_REGEX = try! RegularExpression(pattern: "(?:\\<meta)([\\s\\S]*?)(?:>)",
+	                                                       options: .caseInsensitive)
+	private static let LINK_REGEX = try! RegularExpression(pattern: "(?:\\<link)([\\s\\S]*?)(?:>)",
+	                                                       options: .caseInsensitive)
+	private static let NAME_REGEX = try! RegularExpression(pattern: "(?<=name=\\\")[\\s\\S]+?(?=\\\")",
+	                                                       options: .caseInsensitive)
+	private static let PROP_REGEX = try! RegularExpression(pattern: "(?<=property=\\\")[\\s\\S]+?(?=\\\")",
+	                                                       options: .caseInsensitive)
+	private static let CONT_REGEX = try! RegularExpression(pattern: "(?<=content=\\\")[\\s\\S]+?(?=\\\")",
+	                                                       options: .caseInsensitive)
+	private static let REL_REGEX = try! RegularExpression(pattern: "(?<=rel=\\\")[\\s\\S]+?(?=\\\")",
+	                                                       options: .caseInsensitive)
+	private static let HREF_REGEX = try! RegularExpression(pattern: "(?<=href=\\\")[\\s\\S]+?(?=\\\")",
+	                                                       options: .caseInsensitive)
 	
 	private static func _get(_ url: URL, method: String = "GET") -> (Data?, URLResponse?, NSError?) {
-		var data: Data?, response: URLResponse?, error: NSError?
-		let semaphore = DispatchSemaphore(value: 0)
-		
-		var request = URLRequest(url: url)
-		request.httpMethod = method
-		URLSession.shared().dataTask(with: request) {
-			data = $0; response = $1; error = $2
-			semaphore.signal()
-		}.resume()
-		
-		_ = semaphore.wait(timeout: DispatchTime.distantFuture)
-		return (data, response, error)
+		return URLSession.shared().synchronousRequest(url, method: method)
 	}
 	
 	private static func _extractTitle(from str: String) -> String {
-		let o = str.findAllOccurrences(matching: TITLE_REGEX, all: true)
+		let o = str.find(matching: TITLE_REGEX)
 		let q = CFXMLCreateStringByUnescapingEntities(nil, (o.first ?? ""), nil) as String
 		return q.trimmingCharacters(in: .whitespacesAndNewlines)
 	}
 	
 	private static func _extractMetadata(from str: String) -> [String: String] {
 		var tags: [String: String] = [:]
-		for s in str.findAllOccurrences(matching: META_REGEX, all: true) {
-			var keys =	s.findAllOccurrences(matching: _tag("name"), all: true) +
-				s.findAllOccurrences(matching: _tag("property"), all: true)
-			var vals =	s.findAllOccurrences(matching: _tag("content"), all: true)
+		for s in str.find(matching: META_REGEX) {
+			var keys = s.find(matching: NAME_REGEX) + s.find(matching: PROP_REGEX)
+			var vals = s.find(matching: CONT_REGEX)
 			keys = keys.flatMap { $0.components(separatedBy: " ") }
 			vals = vals.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
 			vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0, nil) as String }
@@ -104,9 +101,9 @@ public struct LinkPreviewParser {
 	
 	private static func _extractIcon(from str: String) -> [String] {
 		var icons: [String] = []
-		for s in str.findAllOccurrences(matching: LINK_REGEX, all: true) {
-			var keys = s.findAllOccurrences(matching: _tag("rel"), all: true)
-			let vals = s.findAllOccurrences(matching: _tag("href"), all: true)
+		for s in str.find(matching: LINK_REGEX) {
+			var keys = s.find(matching: REL_REGEX)
+			let vals = s.find(matching: HREF_REGEX)
 			keys = keys.flatMap { $0.components(separatedBy: " ") }
 			//vals = vals.map { $0.trimmingCharacters(in: .whitespacesAndNewlines()) }
 			//vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0, nil) as String }
@@ -158,8 +155,6 @@ public struct LinkPreviewParser {
 	
 	public static func parse(_ link: String) throws -> LinkPreviewType {
 		
-		let start = mach_absolute_time()
-		
 		// Step 1: Verify valid URL
 		guard let url = URL(string: link) else {
 			throw LinkPreviewError.invalidUrl(link)
@@ -179,9 +174,6 @@ public struct LinkPreviewParser {
 		guard headers.statusCode == 200 else {
 			throw LinkPreviewError.invalidHeaders(url, headers.statusCode)
 		}
-		
-		let final = mach_absolute_time() - start
-		Swift.print("took \(final / 1000000)ms to parse url.")
 		
 		// Step 4: Verify URL content type
 		let type = headers.mimeType ?? ""

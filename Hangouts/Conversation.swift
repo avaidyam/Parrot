@@ -206,9 +206,7 @@ public class IConversation {
 					segments: segments.map { $0.serialize() },
 					image_id: image_id,
 					image_user_id: nil,
-					otr_status: otr_status,
-					cb: cb
-				)
+					otr_status: otr_status) { _ in cb?() }
 			}
             return
         }
@@ -216,18 +214,16 @@ public class IConversation {
         client.sendChatMessage(conversation_id: id,
             segments: segments.map { $0.serialize() },
             image_id: image_id,
-            otr_status: otr_status,
-            cb: cb
-        )
+            otr_status: otr_status) { cb?(); print($0) }
     }
 
     public func leave(cb: (() -> Void)? = nil) {
         switch (self.conversation.type!) {
         case ConversationType.Group:
             //print("Remove Not Implemented!")
-            client.removeUser(conversation_id: id, cb: cb)
+			client.removeUser(conversation_id: id) { _ in cb?() }
         case ConversationType.OneToOne:
-            client.deleteConversation(conversation_id: id, cb: cb)
+            client.deleteConversation(conversation_id: id) { _ in cb?() }
         default:
             break
         }
@@ -238,19 +234,19 @@ public class IConversation {
 	// custom names for one-to-one conversations may or may not appear in all
 	// first party clients.
     public func rename(name: String, cb: (() -> Void)?) {
-        self.client.renameConversation(conversation_id: self.id, name: name, cb: cb)
+        self.client.renameConversation(conversation_id: self.id, name: name) { _ in cb?() }
     }
 	
 	// Set the notification level of the conversation.
 	// Pass .QUIET to disable notifications or .RING to enable them.
 	public func setConversationNotificationLevel(level: NotificationLevel, cb: (() -> Void)?) {
-		self.client.setConversationNotificationLevel(conversation_id: self.id, level: level, cb: cb)
+		self.client.setConversationNotificationLevel(conversation_id: self.id, level: level) { _ in cb?() }
     }
 	
 	// Set typing status.
 	// TODO: Add rate-limiting to avoid unnecessary requests.
     public func setTyping(typing: TypingType = TypingType.Started, cb: (() -> Void)? = nil) {
-        client.setTyping(conversation_id: id, typing: typing, cb: cb)
+        client.setTyping(conversation_id: id, typing: typing) { _ in cb?() }
     }
 	
 	// Update the timestamp of the latest event which has been read.
@@ -268,7 +264,7 @@ public class IConversation {
                 latest_read_timestamp = new_read_timestamp
                 delegate?.conversationDidUpdate(conversation: self)
                 conversationList?.conversationDidUpdate(conversation: self)
-                client.updateWatermark(conv_id: id, read_timestamp: new_read_timestamp, cb: cb)
+                client.updateWatermark(conv_id: id, read_timestamp: new_read_timestamp) { _ in cb?() }
             }
         }
     }

@@ -129,7 +129,7 @@ public final class Client {
 	public func uploadImage(data: Data, filename: String, cb: ((String) -> Void)? = nil) {
 		let json = "{\"protocolVersion\":\"0.8\",\"createSessionRequest\":{\"fields\":[{\"external\":{\"name\":\"file\",\"filename\":\"\(filename)\",\"put\":{},\"size\":\(data.count)}}]}}"
 		
-		self.base_request(path: Client.IMAGE_UPLOAD_URL,
+		self.channel?.base_request(path: Client.IMAGE_UPLOAD_URL,
 			content_type: "application/x-www-form-urlencoded;charset=UTF-8",
 			data: json.data(using: String.Encoding.utf8)!) { response in
 			
@@ -142,7 +142,7 @@ public final class Client {
 			let _d = _c["putInfo"] as! NSDictionary
 			let upload = (_d["url"] as! NSString) as String
 			
-			self.base_request(path: upload, content_type: "application/octet-stream", data: data) { resp in
+			self.channel?.base_request(path: upload, content_type: "application/octet-stream", data: data) { resp in
 				
 				// Sift through JSON for a response with the photo ID.
 				let _data2: NSDictionary = try! JSONSerialization.jsonObject(with: resp.data!,
@@ -222,14 +222,7 @@ public final class Client {
 		// Retrieve recent conversations so we can preemptively look up their participants.
 		self.syncRecentConversations { response in
 			let conv_states = response!.conversationState
-			
-			// syncrecentconversations seems to return a sync_timestamp 4 minutes
-			// before the present. To prevent syncallnewevents later breaking
-			// requesting events older than what we already have, use
-			// current_server_time instead. use:
-			//
-			// from_timestamp(response!.response_header!.current_server_time)
-			let sync_timestamp = response!.syncTimestamp//from_timestamp(microsecond_timestamp: )
+			let sync_timestamp = response!.syncTimestamp// use current_server_time?
 			
 			var required_user_ids = Set<UserID>()
 			for conv_state in conv_states {
@@ -243,14 +236,6 @@ public final class Client {
 			self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
 				required_entities = resp?.entityResult.flatMap { $0.entity } ?? []
 				
-				// TODO: REMOVE THIS
-				// This doesn't make sense: we're doing this twice...?
-				/*var conv_part_list = [ConversationParticipantData]()
-				for conv_state in conv_states {
-					let participants = conv_state.conversation!.participantData
-					conv_part_list.append(contentsOf: participants)
-				}*/
-				
 				// Let's request our own entity now.
 				self.getSelfInfo {
 					let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
@@ -262,16 +247,6 @@ public final class Client {
 						users.append(user)
 					}
 					
-					// TODO: REMOVE THIS
-					// We should already have all required entities.
-					// Add each conversation participant as a new User if we didn't already add them from an entity.
-					/*for participant in conv_part_list {
-						let user = User(data: participant, selfUser: selfUser.id)
-						if !users.contains(user) {
-							users.append(user)
-						}
-					}*/
-					
 					let userList = UserList(client: self, me: selfUser, users: users)
 					let conversationList = ConversationList(client: self, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
 					cb(userList, conversationList)
@@ -280,58 +255,6 @@ public final class Client {
 		}
 	}
 	
-	// MARK - Request Factories
-	
-	/* TODO: Refactor request() and base_request(). */
-
-	// Send a Protocol Buffer or JSON formatted chat API request.
-	// endpoint is the chat API endpoint to use.
-	// request_pb: The request body as a Protocol Buffer message.
-	// response_pb: The response body as a Protocol Buffer message.
-    private func request(
-        endpoint: String,
-        body: AnyObject,
-        use_json: Bool = true,
-        cb: (Result) -> Void
-    ) {
-        base_request(path: "https://clients6.google.com/chat/v1/\(endpoint)",
-            content_type: "application/json+protobuf",
-            data: try! JSONSerialization.data(withJSONObject: body, options: []),
-            use_json: use_json,
-            cb: cb
-        )
-    }
-	
-	// Valid formats are: 'json' (JSON), 'protojson' (pblite), and 'proto'
-	// (binary Protocol Buffer). 'proto' requires manually setting an extra
-	// header 'X-Goog-Encode-Response-If-Executable: base64'.
-    private func base_request(
-        path: String,
-        content_type: String,
-        data: Data,
-        use_json: Bool = true,
-        cb: (Result) -> Void
-    ) {
-        let params = ["alt": use_json ? "json" : "protojson"]
-        let url = URL(string: (path + "?" + params.encodeURL()))!
-        let request = NSMutableURLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = data
-
-        for (k, v) in Channel.getAuthorizationHeaders(Channel.getCookieValue(key: "SAPISID")!) {
-            request.setValue(v, forHTTPHeaderField: k)
-        }
-        request.setValue(content_type, forHTTPHeaderField: "Content-Type")
-		
-		self.channel?.session.request(request: request as URLRequest) {
-			guard let _ = $0.data else {
-				print("Request failed with error: \($0.error!)")
-				return
-			}
-			cb($0)
-		}
-    }
-
     private func verifyResponseOK(responseObject: Data) {
 		let parsedObject = try! JSONSerialization.jsonObject(with: responseObject, options: []) as? NSDictionary
         let status = ((parsedObject?["response_header"] as? NSDictionary) ?? NSDictionary())["status"] as? String
@@ -341,74 +264,48 @@ public final class Client {
     }
 	
 	// MARK - Client Requests
-	/* TODO: Implement the last four requests and refactor them to use Request messages. */
-	/* TODO: Refactor everything into just protojson. */
 	
-	//    @asyncio.coroutine
-	//    def adduser(self, conversation_id, chat_id_list):
-	//        """Add user to existing conversation.
-	//
-	//        conversation_id must be a valid conversation ID.
-	//        chat_id_list is list of users which should be invited to conversation.
-	//
-	//        Raises hangups.NetworkError if the request fails.
-	//        """
-	//        client_generated_id = random.randint(0, 2**32)
-	//        body = [
-	//            self.getRequestHeader(),
-	//            nil,
-	//            [[str(chat_id), nil, nil, "unknown", nil, []]
-	//             for chat_id in chat_id_list],
-	//            nil,
-	//            [
-	//                [conversation_id], client_generated_id, 2, nil, 4
-	//            ]
-	//        ]
-	//
-	//        self.request('conversations/adduser', body)
-	//        # can return 200 but still contain an error
-	//        res = json.loads(res.body.decode())
-	//        res_status = res['response_header']['status']
-	//        if res_status != 'OK':
-	//            raise exceptions.NetworkError('Unexpected status: {}'
-	//                                          .format(res_status))
-	//        return res
+	// Add user to existing conversation.
+	// conversation_id must be a valid conversation ID.
+	// chat_id_list is list of users which should be invited to conversation.
+	public func addUser(conversation_id: String, chat_id_list: [String], cb: ((response: AddUserResponse?) -> Void)? = nil) {
+		let each = chat_id_list.map { [$0, None, None, "unknown", None, []] }
+		let data = [
+			self.getRequestHeader(),
+			None,
+			each,
+			None,
+			[
+				[conversation_id],
+				self.generateClientID(),
+				2, None, 4
+			]
+		]
+		self.channel?.request(endpoint: "conversations/adduser", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+		}
+	}
 	
-	//    @asyncio.coroutine
-	//    def createconversation(self, chat_id_list, force_group=False):
-	//        """Create new conversation.
-	//
-	//        conversation_id must be a valid conversation ID.
-	//        chat_id_list is list of users which should be invited to conversation
-	//        (except from yourself).
-	//
-	//        New conversation ID is returned as res['conversation']['id']['id']
-	//
-	//        Raises hangups.NetworkError if the request fails.
-	//        """
-	//        client_generated_id = random.randint(0, 2**32)
-	//        body = [
-	//            self.getRequestHeader(),
-	//            1 if len(chat_id_list) == 1 and not force_group else 2,
-	//            client_generated_id,
-	//            nil,
-	//            [[str(chat_id), nil, nil, "unknown", nil, []]
-	//             for chat_id in chat_id_list]
-	//        ]
-	//
-	//        self.request('conversations/createconversation',
-	//                                       body)
-	//        # can return 200 but still contain an error
-	//        res = json.loads(res.body.decode())
-	//        res_status = res['response_header']['status']
-	//        if res_status != 'OK':
-	//            raise exceptions.NetworkError('Unexpected status: {}'
-	//                                          .format(res_status))
-	//        return res
+	// Create new conversation.
+	// chat_id_list is list of users which should be invited to conversation (except from yourself).
+	public func createConversation(chat_id_list: [String], force_group: Bool = false,
+	                               cb: ((response: CreateConversationResponse?) -> Void)? = nil) {
+		let each = chat_id_list.map { [$0, None, None, "unknown", None, []] }
+		let data = [
+			self.getRequestHeader(),
+			(chat_id_list.count == 1 && !force_group) ? 1 : 2,
+			self.generateClientID(),
+			None,
+			each
+		]
+		self.channel?.request(endpoint: "conversations/createconversation", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+		}
+	}
 	
 	// Delete one-to-one conversation.
 	// conversation_id must be a valid conversation ID.
-	public func deleteConversation(conversation_id: String, cb: (() -> Void)? = nil) {
+	public func deleteConversation(conversation_id: String, cb: ((response: DeleteConversationResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
@@ -419,31 +316,22 @@ public final class Client {
 			None,
 			[]
 		]
-		self.request(endpoint: "conversations/deleteconversation", body: data) { r in
-			self.verifyResponseOK(responseObject: r.data!); cb?()
+		self.channel?.request(endpoint: "conversations/deleteconversation", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
-	//    @asyncio.coroutine
-	//    def sendeasteregg(self, conversation_id, easteregg):
-	//        """Send a easteregg to a conversation.
-	//
-	//        easteregg may not be empty.
-	//
-	//        Raises hangups.NetworkError if the request fails.
-	//        """
-	//        body = [
-	//            self.getRequestHeader(),
-	//            [conversation_id],
-	//            [easteregg, nil, 1]
-	//        ]
-	//        self.request('conversations/easteregg', body)
-	//        res = json.loads(res.body.decode())
-	//        res_status = res['response_header']['status']
-	//        if res_status != 'OK':
-	//            logger.warning('easteregg returned status {}'
-	//                           .format(res_status))
-	//            raise exceptions.NetworkError()
+	// Send a easteregg to a conversation.
+	public func sendEasterEgg(conversation_id: String, easteregg: String, cb: ((response: EasterEggResponse?) -> Void)? = nil) {
+		let data = [
+			self.getRequestHeader(),
+			[conversation_id],
+			[easteregg, None, 1],
+		]
+		self.channel?.request(endpoint: "conversations/easteregg", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+		}
+	}
 	
 	// Return conversation events.
 	// This is mainly used for retrieving conversation scrollback. Events
@@ -473,7 +361,7 @@ public final class Client {
 			] // eventContinuationToken (specifying timestamp is sufficient)
 		]
 		
-		self.request(endpoint: "conversations/getconversation", body: data, use_json: false) { r in
+		self.channel?.request(endpoint: "conversations/getconversation", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
@@ -490,7 +378,7 @@ public final class Client {
 		self.request(endpoint: "contacts/getentitybyid", body: data) { r in
 			print("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue))")
 		}*/
-		self.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
+		self.channel?.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
@@ -499,7 +387,7 @@ public final class Client {
 		let data = [
 			self.getRequestHeader()
 		]
-		self.request(endpoint: "contacts/getselfinfo", body: data, use_json: false) { r in
+		self.channel?.request(endpoint: "contacts/getselfinfo", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
@@ -511,7 +399,7 @@ public final class Client {
 			None,
 			max_count
 		]
-		self.request(endpoint: "contacts/getsuggestedentities", body: data, use_json: false) { r in
+		self.channel?.request(endpoint: "contacts/getsuggestedentities", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
@@ -534,15 +422,14 @@ public final class Client {
 			[chat_ids],
 			[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // what are FieldMasks 4, 5, 8, 9?
 		]
-		self.request(endpoint: "presence/querypresence", body: data, use_json: false) { r in
-			//print("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue)!)")
+		self.channel?.request(endpoint: "presence/querypresence", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Leave group conversation.
 	// conversation_id must be a valid conversation ID.
-	public func removeUser(conversation_id: String, cb: (() -> Void)? = nil) {
+	public func removeUser(conversation_id: String, cb: ((response: RemoveUserResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			None,
@@ -554,13 +441,13 @@ public final class Client {
 				2
 			],
 		]
-		self.request(endpoint: "conversations/removeuser", body: data) { r in
-			self.verifyResponseOK(responseObject: r.data!); cb?()
+		self.channel?.request(endpoint: "conversations/removeuser", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Set the name of a conversation.
-	public func renameConversation(conversation_id: String, name: String, cb: (() -> Void)? = nil) {
+	public func renameConversation(conversation_id: String, name: String, cb: ((response: RenameConversationResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			None,
@@ -572,24 +459,23 @@ public final class Client {
 				1
 			]
 		]
-		self.request(endpoint: "conversations/renameconversation", body: data) {
-			r in self.verifyResponseOK(responseObject: r.data!); cb?()
+		self.channel?.request(endpoint: "conversations/renameconversation", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
-	//    @asyncio.coroutine
-	//    def searchentities(self, search_string, max_results):
-	//        """Search for people.
-	//
-	//        Raises hangups.NetworkError if the request fails.
-	//        """
-	//        self.request('contacts/searchentities', [
-	//            self.getRequestHeader(),
-	//            [],
-	//            search_string,
-	//            max_results
-	//        ])
-	//        return json.loads(res.body.decode())
+	// Search for people.
+	public func searchEntities(search_string: String, max_results: Int, cb: ((response: SearchEntitiesResponse?) -> Void)? = nil) {
+		let data = [
+			self.getRequestHeader(),
+			[],
+			search_string,
+			max_results,
+		]
+		self.channel?.request(endpoint: "conversations/searchentities", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+		}
+	}
 	
 	// Send a chat message to a conversation.
 	// conversation_id must be a valid conversation ID. segments must be a
@@ -606,7 +492,7 @@ public final class Client {
 		image_id: String? = nil,
 		image_user_id: String? = nil,
 		otr_status: OffTheRecordStatus = .OnTheRecord,
-		cb: (() -> Void)? = nil)
+		cb: ((response: SendChatMessageResponse?) -> Void)? = nil)
 	{
 		// Support sending images from other user id's.
 		var a: NSObject
@@ -645,12 +531,13 @@ public final class Client {
 		]
 		
 		// sendchatmessage can return 200 but still contain an error
-		self.request(endpoint: "conversations/sendchatmessage", body: data) {
-			r in self.verifyResponseOK(responseObject: r.data!); cb?()
+		self.channel?.request(endpoint: "conversations/sendchatmessage", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
-	public func setActiveClient(is_active: Bool, timeout_secs: Int, cb: (() -> Void)? = nil) {
+	public func setActiveClient(is_active: Bool, timeout_secs: Int,
+	                            cb: ((response: SetActiveClientResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			is_active, // whether the client is active or not
@@ -659,36 +546,39 @@ public final class Client {
 		]
 		
 		// Set the active client.
-		self.request(endpoint: "clients/setactiveclient", body: data) {
-			r in self.verifyResponseOK(responseObject: r.data!); cb?()
+		self.channel?.request(endpoint: "clients/setactiveclient", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
-	public func setConversationNotificationLevel(conversation_id: String, level: NotificationLevel = .Ring, cb: (() -> Void)? = nil) {
+	public func setConversationNotificationLevel(conversation_id: String, level: NotificationLevel = .Ring,
+	                                             cb: ((response: SetConversationNotificationLevelResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id]
 		]
-		self.request(endpoint: "conversations/setconversationnotificationlevel", body: data) { r in
-			self.verifyResponseOK(responseObject: r.data!); cb?()
+		self.channel?.request(endpoint: "conversations/setconversationnotificationlevel", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Set focus (occurs whenever you give focus to a client).
-	public func setFocus(conversation_id: String, focused: Bool = true, cb: (() -> Void)? = nil) {
+	public func setFocus(conversation_id: String, focused: Bool = true,
+	                     cb: ((response: SetFocusResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
 			focused ? 1 : 2,
 			20
 		]
-        self.request(endpoint: "conversations/setfocus", body: data) { r in
-			self.verifyResponseOK(responseObject: r.data!); cb?()
+        self.channel?.request(endpoint: "conversations/setfocus", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
     }
 	
 	/* TODO: Does not return data, only calls the callback. */
-	public func setPresence(online: Bool, mood: String?, cb: (() -> Void)? = nil) {
+	public func setPresence(online: Bool, mood: String?,
+	                        cb: ((response: SetPresenceResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[
@@ -705,19 +595,21 @@ public final class Client {
 			[!online], // True if going offline, False if coming online
 			[mood ?? None] // UTF-8 smiley like 0x1f603
 		]
-		self.request(endpoint: "presence/setpresence", body: data) { r in cb?()}
-		// result['response_header']['status']
+		self.channel?.request(endpoint: "presence/setpresence", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+		}
 	}
 	
 	// Send typing notification.
-	public func setTyping(conversation_id: String, typing: TypingType = TypingType.Started, cb: (() -> Void)? = nil) {
+	public func setTyping(conversation_id: String, typing: TypingType = TypingType.Started,
+	                      cb: ((response: SetTypingResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
 			NSNumber(value: typing.rawValue)
 		]
-		self.request(endpoint: "conversations/settyping", body: data) {
-			r in self.verifyResponseOK(responseObject: r.data!); cb?()
+		self.channel?.request(endpoint: "conversations/settyping", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -733,7 +625,7 @@ public final class Client {
 			[],
 			1048576 // max_response_size_bytes
 		]
-		self.request(endpoint: "conversations/syncallnewevents", body: data, use_json: false) { r in
+		self.channel?.request(endpoint: "conversations/syncallnewevents", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 		
@@ -753,20 +645,20 @@ public final class Client {
 			maxEventsPer,
 			[1]
 		]
-		self.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
+		self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Update the watermark (read timestamp) for a conversation.
-	public func updateWatermark(conv_id: String, read_timestamp: Date, cb: (() -> Void)? = nil) {
+	public func updateWatermark(conv_id: String, read_timestamp: Date, cb: ((response: UpdateWatermarkResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
 			[conv_id], // conversation_id
 			NSNumber(value: UInt64(read_timestamp.toUTC()))//to_timestamp(date: ), // latest_read_timestamp
 		]
-		self.request(endpoint: "conversations/updatewatermark", body: data) { r in
-			self.verifyResponseOK(responseObject: r.data!); cb?()
+		self.channel?.request(endpoint: "conversations/updatewatermark", body: data, use_json: false) { r in
+			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 }

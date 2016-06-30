@@ -84,6 +84,21 @@ public extension URLSession {
 		}
 		return task!
 	}
+	
+	public func synchronousRequest(_ url: URL, method: String = "GET") -> (Data?, URLResponse?, NSError?) {
+		var data: Data?, response: URLResponse?, error: NSError?
+		let semaphore = DispatchSemaphore(value: 0)
+		
+		var request = URLRequest(url: url)
+		request.httpMethod = method
+		self.dataTask(with: request) {
+			data = $0; response = $1; error = $2
+			semaphore.signal()
+		}.resume()
+		
+		_ = semaphore.wait(timeout: .distantFuture)
+		return (data, response, error)
+	}
 }
 
 //

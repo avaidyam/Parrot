@@ -109,6 +109,12 @@ public extension String {
 			}
 		}
 	}
+	
+	public func find(matching regex: RegularExpression) -> [String] {
+		return regex.matches(in: self, options:[], range:NSMakeRange(0, self.characters.count)).map {
+			self.substring(with: NSRangeToRange(s: self, r: $0.range))
+		}
+	}
 }
 
 internal extension Dictionary {

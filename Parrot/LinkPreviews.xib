@@ -4,6 +4,7 @@
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.AVKitIBPlugin" version="11129.15"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <plugIn identifier="com.apple.MapKitIBPlugin" version="11129.15"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner"/>
@@ -70,6 +71,11 @@
             </subviews>
             <point key="canvasLocation" x="300" y="1013"/>
         </customView>
+        <mapView mapType="standard" showsUserLocation="YES" showsScale="YES" id="Spx-co-8qQ">
+            <rect key="frame" x="0.0" y="0.0" width="361" height="232"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <point key="canvasLocation" x="299.5" y="1216"/>
+        </mapView>
     </objects>
     <resources>
         <image name="NSTrashFull" width="32" height="32"/>
