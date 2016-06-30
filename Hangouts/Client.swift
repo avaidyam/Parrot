@@ -492,6 +492,7 @@ public final class Client {
 		image_id: String? = nil,
 		image_user_id: String? = nil,
 		otr_status: OffTheRecordStatus = .OnTheRecord,
+		delivery_medium: DeliveryMediumType = .Babel,
 		cb: ((response: SendChatMessageResponse?) -> Void)? = nil)
 	{
 		// Support sending images from other user id's.
@@ -520,9 +521,9 @@ public final class Client {
 			[ //EventRequestHeader
 				[conversation_id],
 				generateClientID(),
-				NSNumber(value: otr_status.rawValue),
-				[NSNumber(value: DeliveryMediumType.GoogleVoice.rawValue), ],
-				NSNumber(value: EventType.Sms.rawValue)
+				otr_status.rawValue,
+				[delivery_medium.rawValue],
+				None, //NSNumber(value: EventType.Sms.rawValue)
 			],
 			//None,
 			//None,

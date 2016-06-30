@@ -123,41 +123,33 @@ public class IConversation {
         return self.user_list[user_id]
     }
 	
-	/* TODO: Translate these methods: */
-	/*
-	    def _get_default_delivery_medium(self):
-	        """Return default DeliveryMedium to use for sending messages.
+	// Return default DeliveryMedium to use for sending messages.
+	// Use the first option, or an option that's marked as the current default.
+	public func getDefaultDeliveryMedium() -> DeliveryMedium {
+		let medium_options = self.conversation.selfConversationState?.deliveryMediumOption
+		
+		var default_medium: DeliveryMedium = DeliveryMedium()
+		default_medium.mediumType = .Babel
+		if let r = medium_options?[0].deliveryMedium {
+			default_medium = r
+		}
+		for medium_option in medium_options! {
+			if let m = medium_option.currentDefault where m {
+				default_medium = medium_option.deliveryMedium!; break
+			}
+		}
+		return default_medium
+	}
 	
-	        Use the first option, or an option that's marked as the current
-	        default.
-	        """
-	        medium_options = (
-	            self._conversation.self_conversation_state.delivery_medium_option
-	        )
-	        try:
-	            default_medium = medium_options[0].delivery_medium
-	        except IndexError:
-	            logger.warning('Conversation %r has no delivery medium')
-	            default_medium = hangouts_pb2.DeliveryMedium(
-	                medium_type=hangouts_pb2.DELIVERY_MEDIUM_BABEL
-	            )
-	        for medium_option in medium_options:
-	            if medium_option.current_default:
-	                default_medium = medium_option.delivery_medium
-	        return default_medium
-	
-	    def _get_event_request_header(self):
-	        """Return EventRequestHeader for conversation."""
-	        otr_status = (hangouts_pb2.OFF_THE_RECORD_STATUS_OFF_THE_RECORD
-	                      if self.is_off_the_record else
-	                      hangouts_pb2.OFF_THE_RECORD_STATUS_ON_THE_RECORD)
-	        return hangouts_pb2.EventRequestHeader(
-	            conversation_id=hangouts_pb2.ConversationId(id=self.id_),
-	            client_generated_id=self._client.get_client_generated_id(),
-	            expected_otr=otr_status,
-	            delivery_medium=self._get_default_delivery_medium(),
-	        )
-	*/
+	public func getEventRequestHeader() -> EventRequestHeader {
+		let otr_status: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
+		var e = EventRequestHeader()
+		e.conversationId = self.conversation.conversationId
+		e.clientGeneratedId = UInt64(self.client.generateClientID())
+		e.expectedOtr = otr_status
+		e.deliveryMedium = getDefaultDeliveryMedium()
+		return e
+	}
 
     public var otherUserIsTyping: Bool {
         get {
@@ -210,11 +202,11 @@ public class IConversation {
 			}
             return
         }
-
         client.sendChatMessage(conversation_id: id,
             segments: segments.map { $0.serialize() },
             image_id: image_id,
-            otr_status: otr_status) { cb?(); print($0) }
+            otr_status: otr_status,
+            delivery_medium: getDefaultDeliveryMedium().mediumType!) { _ in cb?() }
     }
 
     public func leave(cb: (() -> Void)? = nil) {
