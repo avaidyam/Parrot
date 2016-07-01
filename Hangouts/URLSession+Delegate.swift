@@ -175,7 +175,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 	private let subdelegateQueue = DispatchQueue(label: "", attributes: .concurrent, target: nil)
 	
 	// Allows setting and getting subdelegates for handling a session's delegate call.
-	subscript(task: URLSessionTask) -> URLSessionTaskDelegateProxy? {
+	public subscript(task: URLSessionTask) -> URLSessionTaskDelegateProxy? {
 		get {
 			var subdelegate: URLSessionTaskDelegateProxy?
 			subdelegateQueue.sync { subdelegate = self.subdelegates[task.taskIdentifier] }

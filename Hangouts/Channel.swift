@@ -1,4 +1,5 @@
 import Foundation
+import ParrotServiceExtension
 
 /* TODO: Fix the retry semantics instead of what we have right now. */
 /* TODO: Auto-turn a callback into a blocking using semaphores. */

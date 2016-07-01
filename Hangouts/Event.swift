@@ -1,4 +1,5 @@
 import Foundation
+import var ParrotServiceExtension.None
 
 /* TODO: Refactor ChatMessageSegment to match hangups and Protobuf docs. */
 /* TODO: Include Markdown, HTML, and URL formatting parsers. */

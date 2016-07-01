@@ -24,7 +24,7 @@ public extension Optional {
 }
 
 // Needs to be fixed somehow to not use NSString stuff.
-internal extension String {
+public extension String {
 	
 	// Converts an NSRange to a Range for String indices.
 	// FIXME: Weird Range/Index mess happened here.
@@ -38,14 +38,14 @@ internal extension String {
 		return Range<String.Index>(uncheckedBounds: (lower: i1, upper: i2))
 	}
 	
-	internal func encodeURL() -> String {
+	public func encodeURL() -> String {
 		return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
 	}
 	
 	// Will return any JSON object, array, number, or string.
 	// If there is an error, the error will be presented instead.
 	// Allows fragments, and always returns mutable object types.
-	internal func decodeJSON() throws -> AnyObject {
+	public func decodeJSON() throws -> AnyObject {
 		let _str = (self as NSString).data(using: String.Encoding.utf8.rawValue)
 		guard let _ = _str else {
 			throw NSError(domain: NSStringEncodingErrorKey, code: Int(String.Encoding.utf8.rawValue), userInfo: nil)
@@ -63,7 +63,7 @@ internal extension String {
 	// Will return a String from any Array, Dictionary, Number, or String.
 	// If there is an error, the error will be presented instead.
 	// Allows fragments and can optionally return a pretty-printed string.
-	internal static func encodeJSON(object: AnyObject, pretty: Bool = false) throws -> String {
+	public static func encodeJSON(object: AnyObject, pretty: Bool = false) throws -> String {
 		let options: JSONSerialization.WritingOptions = pretty ? [.prettyPrinted] : []
 		do {
 			let obj = try JSONSerialization.data(withJSONObject: object, options: options)
@@ -117,12 +117,12 @@ public extension String {
 	}
 }
 
-internal extension Dictionary {
+public extension Dictionary {
 	
 	// Returns a really weird result like below:
 	// "%63%74%79%70%65=%68%61%6E%67%6F%75%74%73&%56%45%52=%38&%52%49%44=%38%31%31%38%38"
 	// instead of "ctype=hangouts&VER=8&RID=81188"
-	internal func encodeURL() -> String {
+	public func encodeURL() -> String {
 		let set = CharacterSet(charactersIn: ":/?&=;+!@#$()',*")
 		
 		var parts = [String]()
@@ -139,7 +139,7 @@ internal extension Dictionary {
 }
 
 // Since we can't use nil in JSON arrays due to the parser.
-internal let None = NSNull()
+public let None = NSNull()
 
 // Microseconds
 // Convert a microsecond timestamp to an Date instance.

@@ -1,4 +1,5 @@
 import Foundation
+import class ParrotServiceExtension.Wrapper
 
 // A chat user identifier.
 // Use the much more full-featured User class for more data.

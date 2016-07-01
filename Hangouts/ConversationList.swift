@@ -1,4 +1,5 @@
 import Foundation
+import class ParrotServiceExtension.Wrapper
 
 public protocol ConversationListDelegate {
     func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent)
