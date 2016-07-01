@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 
 public class WindowTransitionAnimator: NSWindowController, NSWindowDelegate, NSViewControllerPresentationAnimator {
 	

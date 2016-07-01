@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 
 /* TODO: Rewrite to use associatedtype Element and Container as protocol-style. */
 
