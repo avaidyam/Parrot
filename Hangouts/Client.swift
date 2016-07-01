@@ -96,14 +96,6 @@ public final class Client: Service {
 	
 	// Use this method for constructing request messages when calling Hangouts APIs.
 	public func generateClientID() -> UInt64 {
-		// Generate 64-bit random value in a range that is divisible by upper_bound:
-		func random64(_ upper_bound: UInt64) -> UInt64 {
-			let range = UInt64.max - UInt64.max % upper_bound
-			var rnd: UInt64 = 0
-			repeat { arc4random_buf(&rnd, sizeofValue(rnd))
-			} while rnd >= range
-			return rnd % upper_bound
-		}
 		return random64(UInt64(pow(2.0, 32.0)))
 	}
 	
