@@ -169,7 +169,16 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		return self.conversationList?.conversations.map { _getPerson($0) }
 	}
 	
-    func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent) {}
+    func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent) {
+		guard event is IChatMessageEvent else { return }
+		
+		// pls fix :(
+		DispatchQueue.main.async {
+			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
+			UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
+		}
+	}
+	
     func conversationList(_ list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
     func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
 	

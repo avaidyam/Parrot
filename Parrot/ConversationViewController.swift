@@ -336,5 +336,4 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		}
 		sendQ.async(execute: operation)
 	}
-	
 }

@@ -2,6 +2,19 @@ import Foundation
 import class ParrotServiceExtension.Wrapper
 
 public protocol ConversationListDelegate {
+	/*
+	conversationNotification(note)
+	eventNotification(note)
+	focusNotification(note)
+	typingNotification(note)
+	notificationLevelNotification(note)
+	watermarkNotification(note)
+	viewModification(note)
+	selfPresenceNotification(note)
+	deleteNotification(note)
+	presenceNotification(note)
+	*/
+	
     func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent)
     func conversationList(_ list: ConversationList, didChangeTypingStatusTo status: TypingType)
     func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification)
