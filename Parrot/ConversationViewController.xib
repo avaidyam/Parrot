@@ -42,7 +42,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="messageTextFieldDidAction:" target="-2" id="GpF-ya-Qv1"/>
+                        <action selector="sendCurrentMessage:" target="-2" id="wb7-V9-vlI"/>
                     </connections>
                 </button>
                 <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">

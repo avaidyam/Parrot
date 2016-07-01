@@ -3,6 +3,9 @@ import Hangouts
 import WebKit
 import ParrotServiceExtension
 
+/* TODO: Support /cmd's (i.e. /remove <username>) for power-users. */
+/* TODO: Support Slack-like plugin integrations. */
+
 //severity: Logger.Severity(rawValue: Process.arguments["log_level"]) ?? .verbose
 public let log = Logger(subsystem: "com.avaidyam.Parrot.global")
 public let defaultUserImage = NSImage(named: "NSUserGuest")!
@@ -32,7 +35,6 @@ public class ServiceManager: ApplicationController {
 		AppActivity.start("Authenticate")
 		Authenticator.authenticateClient {
 			let c = Client(configuration: $0)
-			log.verbose("got \(c)")
 			AppActivity.end("Authenticate")
 			
 			NotificationCenter.default()

@@ -95,8 +95,16 @@ public final class Client: Service {
 	}
 	
 	// Use this method for constructing request messages when calling Hangouts APIs.
-	public func generateClientID() -> Int {
-		return Int(arc4random_uniform(2^32))
+	public func generateClientID() -> UInt64 {
+		// Generate 64-bit random value in a range that is divisible by upper_bound:
+		func random64(_ upper_bound: UInt64) -> UInt64 {
+			let range = UInt64.max - UInt64.max % upper_bound
+			var rnd: UInt64 = 0
+			repeat { arc4random_buf(&rnd, sizeofValue(rnd))
+			} while rnd >= range
+			return rnd % upper_bound
+		}
+		return random64(UInt64(pow(2.0, 32.0)))
 	}
 	
 	// Set this client as active.
@@ -291,7 +299,7 @@ public final class Client: Service {
 			None,
 			[
 				[conversation_id],
-				self.generateClientID(),
+				NSNumber(value: self.generateClientID()),
 				2, None, 4
 			]
 		]
@@ -308,7 +316,7 @@ public final class Client: Service {
 		let data = [
 			self.getRequestHeader(),
 			(chat_id_list.count == 1 && !force_group) ? 1 : 2,
-			self.generateClientID(),
+			NSNumber(value: self.generateClientID()),
 			None,
 			each
 		]
@@ -451,7 +459,7 @@ public final class Client: Service {
 			None,
 			[
 				[conversation_id],
-				generateClientID(),
+				NSNumber(value: self.generateClientID()),
 				2
 			],
 		]
@@ -469,7 +477,7 @@ public final class Client: Service {
 			None,
 			[
 				[conversation_id],
-				generateClientID(),
+				NSNumber(value: self.generateClientID()),
 				1
 			]
 		]
@@ -527,25 +535,20 @@ public final class Client: Service {
 			None,
 			None,
 			[], //EventAnnotation
-			[ //ChatMessageContent
+			[ //MessageContent
 				segments,
 				[]
 			],
 			a, // it's too long for one line! // ExistingMedia
 			[ //EventRequestHeader
 				[conversation_id],
-				generateClientID(),
-				otr_status.rawValue,
-				[delivery_medium.rawValue],
-				None, //NSNumber(value: EventType.Sms.rawValue)
-			],
-			//None,
-			//None,
-			//None,
-			//[]
+				NSNumber(value: self.generateClientID()),
+				NSNumber(value: otr_status.rawValue),
+				[NSNumber(value: delivery_medium.rawValue), None],
+				NSNumber(value: delivery_medium == .Babel ? EventType.RegularChatMessage.rawValue : EventType.Sms.rawValue)
+			]
 		]
 		
-		// sendchatmessage can return 200 but still contain an error
 		self.channel?.request(endpoint: "conversations/sendchatmessage", body: data, use_json: false) { r in
 			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}

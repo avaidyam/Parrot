@@ -154,6 +154,12 @@ public extension Date {
 	}
 }
 
+public extension DispatchSemaphore {
+	public static var mutex: DispatchSemaphore {
+		return DispatchSemaphore(value: 0)
+	}
+}
+
 /// Can hold any (including non-object) type as an object type.
 public class Wrapper<T> {
 	public let element: T

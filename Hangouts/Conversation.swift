@@ -190,8 +190,6 @@ public class IConversation {
         cb: (() -> Void)? = nil
     ) {
         let otr_status = (is_off_the_record ? OffTheRecordStatus.OffTheRecord : OffTheRecordStatus.OnTheRecord)
-
-		/* TODO: Fix the conditionality here. */
         if let image_data = image_data, image_name = image_name {
 			client.uploadImage(data: image_data, filename: image_name) { photoID in
 				self.client.sendChatMessage(conversation_id: self.id,
@@ -200,13 +198,13 @@ public class IConversation {
 					image_user_id: nil,
 					otr_status: otr_status) { _ in cb?() }
 			}
-            return
-        }
-        client.sendChatMessage(conversation_id: id,
-            segments: segments.map { $0.serialize() },
-            image_id: image_id,
-            otr_status: otr_status,
-            delivery_medium: getDefaultDeliveryMedium().mediumType!) { _ in cb?() }
+		} else {
+			client.sendChatMessage(conversation_id: id,
+				segments: segments.map { $0.serialize() },
+				image_id: nil,
+				otr_status: otr_status,
+				delivery_medium: getDefaultDeliveryMedium().mediumType!) { _ in cb?() }
+		}
     }
 
     public func leave(cb: (() -> Void)? = nil) {

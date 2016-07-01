@@ -44,9 +44,12 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			log.info("note \(u.identifier) with response \(u.response)")
 			guard u.response != nil else { return }
 			
+			log.warning("sending disabled temporarily")
+			/*
 			let emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
 			let txt = ConversationViewController.segmentsForInput(u.response!.string, emojify: emojify)
 			self.conversation?.sendMessage(segments: txt)
+			*/
 		}
 	}
 	
@@ -297,28 +300,41 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
             }
         }
     }
-
-    // MARK: IBActions
-    @IBAction func messageTextFieldDidAction(_:AnyObject?) {
-		if NSEvent.modifierFlags().contains(.shift) {
-			return
+	
+	// If the user presses ENTER and doesn't hold SHIFT, send the message.
+	func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+		guard commandSelector == #selector(NSResponder.insertNewline(_:)) &&
+			!NSEvent.modifierFlags().contains(.shift) else { return false }
+		self.sendCurrentMessage(textView)
+		return true
+	}
+	
+	// IBAction because we have a button that needs pressing.
+	@IBAction func sendCurrentMessage(_:AnyObject?) {
+		func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
+			return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
 		}
 		
-        let text = messageTextField.string
-        if text?.characters.count > 0 {
+		// Grab a local copy of the text and let the user continue.
+		guard let text = messageTextField.string where text.characters.count > 0 else { return }
+		self.messageTextField.string = ""
+		
+		// Create an operation to process the message and then send it.
+		let operation = DispatchWorkItem(group: nil, qos: .userInteractive, flags: [.enforceQoS]) {
 			var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
 			emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
-			let txt = ConversationViewController.segmentsForInput(text!, emojify: emojify)
-			conversation?.sendMessage(segments: txt)
-            messageTextField.string = ""
+			let txt = segmentsForInput(text, emojify: emojify)
 			
-			//NSAnimationContext.runAnimationGroup({ c in
-			//	self.messagesView.tableView.noteHeightOfRows(withIndexesChanged: idx as IndexSet)
-			//}, completionHandler: nil)
-        }
-    }
-	
-	private class func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
-		return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
+			let s = DispatchSemaphore.mutex
+			self.conversation?.sendMessage(segments: txt) { s.signal() }
+			s.wait()
+		}
+		
+		// Send the operation to the serial send queue, and notify on completion.
+		operation.notify(queue: DispatchQueue.main) {
+			log.debug("message sent")
+		}
+		sendQ.async(execute: operation)
 	}
+	
 }

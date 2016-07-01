@@ -3,6 +3,9 @@ import Hangouts
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
 /* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
+/* TODO: Support group images and letter images instead of generic noimage icon. */
+
+let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.serial, .qosUserInteractive])
 
 class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	
@@ -150,6 +153,10 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		let cap = d == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
 		let ind = conversation.unread_events.count
 		let name = title
+		
+		// this doesn't work yet.
+		//let q = conversation.users.count > 2 ? "Them: " : (a != b ? "" : "You: ")
+		
 		// FIXME: Sometimes, the messages will be empty if there was a hangouts call as the last event.
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp ?? Date(timeIntervalSince1970: 0)
