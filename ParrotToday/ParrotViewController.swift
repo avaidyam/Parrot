@@ -1,6 +1,7 @@
 import Cocoa
 import NotificationCenter
 import Hangouts
+import ParrotServiceExtension
 
 // Private service points go here:
 private var _hangoutsClient: Client? = nil
@@ -21,45 +22,43 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 	
 	// We're jumpstarted into the setup function here.
 	func setup() {
+		AppActivity.start("Authenticate")
 		Authenticator.authenticateClient {
-			_hangoutsClient = Client(configuration: $0)
-			_hangoutsClient?.connect()
+			let c = Client(configuration: $0)
+			_ = c.connect()
+			AppActivity.end("Authenticate")
 			
 			NotificationCenter.default()
-				.addObserver(forName: Client.didConnectNotification, object: _hangoutsClient!, queue: nil) { _ in
-					_hangoutsClient!.buildUserConversationList { (userList, conversationList) in
-						_REMOVE.forEach {
-							$0(userList, conversationList)
+				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
+					AppActivity.start("Setup")
+					c.buildUserConversationList { 
+						AppActivity.end("Setup")
+						ServiceRegistry.add(service: c)
+						
+						self.userList = c.userList
+						self.conversationList = c.conversationList
+						
+						DispatchQueue.main.async {
+							self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
+						}
+						
+						ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
+							self.view.window?.appearance = appearance
+						}
+						
+						// Instantiate storyboard and controller and begin the UI from here.
+						DispatchQueue.main.async {
+							self.viewingVC = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
+							self.viewingVC?.preferredContentSize = CGSize(width: 320, height: 480)
+							
+							self.selectionProvider = { row in
+								self.viewingVC?.representedObject = self.conversationList?.conversations[row]
+								self.present(inWidget: self.viewingVC!)
+							}
 						}
 					}
 			}
-			
 			self.personsView.updateScrollsToBottom = false
-			
-			/* TODO: VERY BAD! */
-			_REMOVE.append {
-				self.userList = $0
-				self.conversationList = $1
-				
-				DispatchQueue.main.async {
-					self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-				}
-				
-				ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
-					self.view.window?.appearance = appearance
-				}
-				
-				// Instantiate storyboard and controller and begin the UI from here.
-				DispatchQueue.main.async {
-					self.viewingVC = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
-					self.viewingVC?.preferredContentSize = CGSize(width: 320, height: 480)
-					
-					self.selectionProvider = { row in
-						self.viewingVC?.representedObject = self.conversationList?.conversations[row]
-						self.present(inWidget: self.viewingVC!)
-					}
-				}
-			}
 		}
 	}
 	

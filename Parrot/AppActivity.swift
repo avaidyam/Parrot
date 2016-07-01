@@ -20,14 +20,16 @@ public struct AppActivity {
 		//.latencyCritical // for audio/video streaming
 	]
 	
-	public static func begin(_ string: String) {
+	public static func start(_ string: String) {
 		let holder = ProcessInfo.processInfo().beginActivity(mode, reason: string)
 		activities[string] = holder
+		log.info("Starting activity \"\(string)\"")
 	}
 	
 	public static func end(_ string: String) {
 		if let act = activities[string] {
 			ProcessInfo.processInfo().endActivity(act)
+			log.info("Ending activity \"\(string)\"")
 		}
 	}
 }

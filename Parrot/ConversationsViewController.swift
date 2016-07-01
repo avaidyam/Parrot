@@ -25,10 +25,10 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		
 		personsView.updateScrollsToBottom = false
 		
-		/* TODO: VERY BAD! */
-		_REMOVE.append {
-			self.userList = $0
-			self.conversationList = $1
+		NotificationCenter.default().addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
+			let c = note.object as! Hangouts.Client
+			self.userList = c.userList
+			self.conversationList = c.conversationList
 			
 			DispatchQueue.main.async {
 				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }

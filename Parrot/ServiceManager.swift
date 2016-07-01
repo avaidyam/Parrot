@@ -1,9 +1,14 @@
 import Cocoa
 import Hangouts
 import WebKit
+import ParrotServiceExtension
+
+//severity: Logger.Severity(rawValue: Process.arguments["log_level"]) ?? .verbose
+public let log = Logger(subsystem: "com.avaidyam.Parrot.global")
+public let defaultUserImage = NSImage(named: "NSUserGuest")!
 
 // Existing Parrot Settings keys.
-public class Parrot {
+public final class Parrot {
 	public static let InterfaceStyle = "Parrot.InterfaceStyle"
 	public static let SystemInterfaceStyle = "Parrot.SystemInterfaceStyle"
 	
@@ -14,37 +19,31 @@ public class Parrot {
 	public static let VibrateForceTouch = "Parrot.VibrateForceTouch"
 	public static let VibrateInterval = "Parrot.VibrateInterval"
 	public static let VibrateLength = "Parrot.VibrateLength"
-	
 }
 
-//severity: Logger.Severity(rawValue: Process.arguments["log_level"]) ?? .verbose
-public let log = Logger(subsystem: "com.avaidyam.Parrot.global")
-public let defaultUserImage = NSImage(named: "NSUserGuest")!
-
 @NSApplicationMain
-class ServiceManager: NSObject, NSApplicationDelegate {
+public class ServiceManager: ApplicationController {
 	
 	private var trans: WindowTransitionAnimator? = nil
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
-		log.verbose("Parrot starting up...")
-		AppActivity.begin("Authenticate")
+		log.verbose("Initializing Parrot...")
+		AppActivity.start("Authenticate")
 		Authenticator.authenticateClient {
-			_hangoutsClient = Client(configuration: $0)
-			_hangoutsClient?.connect()
+			let c = Client(configuration: $0)
+			log.verbose("got \(c)")
 			AppActivity.end("Authenticate")
 			
 			NotificationCenter.default()
-				.addObserver(forName: Client.didConnectNotification, object: _hangoutsClient!, queue: nil) { _ in
-					AppActivity.begin("Setup")
-					_hangoutsClient!.buildUserConversationList { (userList, conversationList) in
-						AppActivity.begin("Setup")
-						_REMOVE.forEach {
-							$0(userList, conversationList)
-						}
+				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
+					AppActivity.start("Setup")
+					c.buildUserConversationList {
+						AppActivity.end("Setup")
+						ServiceRegistry.add(service: c)
 					}
 			}
+			_ = c.connect()
 			
 			// Instantiate storyboard and controller and begin the UI from here.
 			DispatchQueue.main.async {
@@ -109,23 +108,5 @@ class ServiceManager: NSObject, NSApplicationDelegate {
 		}
 		Authenticator.clearTokens();
 		NSApplication.shared().terminate(self)
-	}
-}
-
-// Private service points go here:
-private var _hangoutsClient: Client? = nil
-
-/* TODO: SHOULD NOT BE USED. */
-public typealias _RM2 = (UserList, ConversationList) -> Void
-public var _REMOVE = [_RM2]()
-
-// In the future, this will be an extensible service point for all services.
-public extension NSApplication {
-	
-	// Provides a global Hangouts.Client service point.
-	public var hangoutsClient: Hangouts.Client? {
-		get {
-			return _hangoutsClient
-		}
 	}
 }

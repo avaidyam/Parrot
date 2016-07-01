@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "48834E101C1B38B9009BC442"
-               BuildableName = "HangoutsProvider.xpc"
-               BlueprintName = "HangoutsProvider"
+               BuildableName = "parrotd.xpc"
+               BlueprintName = "parrotd"
                ReferencedContainer = "container:Parrot.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,8 +46,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "48834E101C1B38B9009BC442"
-            BuildableName = "HangoutsProvider.xpc"
-            BlueprintName = "HangoutsProvider"
+            BuildableName = "parrotd.xpc"
+            BlueprintName = "parrotd"
             ReferencedContainer = "container:Parrot.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -64,8 +64,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "48834E101C1B38B9009BC442"
-            BuildableName = "HangoutsProvider.xpc"
-            BlueprintName = "HangoutsProvider"
+            BuildableName = "parrotd.xpc"
+            BlueprintName = "parrotd"
             ReferencedContainer = "container:Parrot.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

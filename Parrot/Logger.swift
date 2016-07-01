@@ -1,3 +1,4 @@
+import Foundation.NSDate
 import asl
 
 /* TODO: Support Logger hierarchies like NSProgress. */
@@ -16,22 +17,22 @@ public final class Logger {
 	/// it may simply be printed to stdout, stderr, or sent to a system logging
 	/// facility, or even displayed to the user visually if needed.
 	public struct Channel {
-		public let operation: (Message, Severity) -> ()
+		public let operation: (Message, Severity, Subsystem) -> ()
 		
 		/// Channel.print sends the message to stdout with tags.
 		public static let print = Channel {
-			Swift.print("[\($1)] \($0)")
+			Swift.print("[\($2)] [\($1)]: \($0)")
 		}
 		
 		/// Channel.print sends the message to stdout, with a debugging-suitable transformation.
 		public static let debugPrint = Channel {
-			$1 >= .info ? Swift.debugPrint($0) : Swift.print($0)
+			$0.1 >= .info ? Swift.debugPrint($0.0) : Swift.print($0.0)
 		}
 		
 		/// Channel.ASL uses the Apple System Logging facility to submit the message.
 		/// Note: ASL may not accept the message flow if its configuration severity
 		/// is at a different level than what is set here.
-		public static let ASL = Channel { message, severity in
+		public static let ASL = Channel { message, severity, subsystem in
 			withVaList([]) { ignore in
 				var s = ASL_LEVEL_DEBUG
 				switch severity {
@@ -79,6 +80,7 @@ public final class Logger {
 	/// Initialize a Logger for a particular subsystem. 
 	/// Note: the subsystem should preferrably be a unique reverse domain name.
 	/// Note: if channels is empty, the message will not enter a logging flow.
+	/// Note: by default, the Logger is configured to act similarly to NSLog.
 	public init(subsystem: Subsystem, channels: [Channel] = [Channel.print, Channel.ASL], severity: Severity = .verbose) {
 		self.subsystem = subsystem
 		self.channels = channels
@@ -87,9 +89,9 @@ public final class Logger {
 	
 	/// Post a message to the Logger with a given severity. This message will 
 	/// flow through the Logger's Channel if the Severity allows it.
-	public func post(severity: Severity, message: @autoclosure() -> Message) {
+	public func trace(severity: Severity, message: @autoclosure() -> Message) {
 		guard self.severity >= severity else { return }
-		self.channels.forEach { $0.operation(message(), self.severity) }
+		self.channels.forEach { $0.operation(message(), severity, self.subsystem) }
 	}
 }
 
@@ -104,30 +106,30 @@ public func <(lhs: Logger.Severity, rhs: Logger.Severity) -> Bool {
 /// Shortcuts for Logger.post(...)
 public extension Logger {
 	public func fatal(_ message: @autoclosure() -> Message) {
-		self.post(severity: .fatal, message: message)
+		self.trace(severity: .fatal, message: message)
 	}
 	
 	public func critical(_ message: @autoclosure() -> Message) {
-		self.post(severity: .critical, message: message)
+		self.trace(severity: .critical, message: message)
 	}
 	
 	public func error(_ message: @autoclosure() -> Message) {
-		self.post(severity: .error, message: message)
+		self.trace(severity: .error, message: message)
 	}
 	
 	public func warning(_ message: @autoclosure() -> Message) {
-		self.post(severity: .warning, message: message)
+		self.trace(severity: .warning, message: message)
 	}
 	
 	public func info(_ message: @autoclosure() -> Message) {
-		self.post(severity: .info, message: message)
+		self.trace(severity: .info, message: message)
 	}
 	
 	public func debug(_ message: @autoclosure() -> Message) {
-		self.post(severity: .debug, message: message)
+		self.trace(severity: .debug, message: message)
 	}
 	
 	public func verbose(_ message: @autoclosure() -> Message) {
-		self.post(severity: .verbose, message: message)
+		self.trace(severity: .verbose, message: message)
 	}
 }

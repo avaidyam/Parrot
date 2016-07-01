@@ -129,23 +129,23 @@ public enum ServiceNotification2 {
 	case didReceiveUpdate(Any)
 }
 
-public protocol Service2 {
+public protocol Service: class {
 	
 	/// Returns the notification key for the event fired when this service connects
 	/// successfully to its server/host.
-	static var didConnectNotification: Notification.Name { get }
+	//static var didConnectNotification: Notification.Name { get }
 	
 	/// Returns the notification key for the event fired when this service reconnects
 	/// upon a previous non-user-initiated disconnection.
-	static var didReconnectNotification: Notification.Name { get }
+	//static var didReconnectNotification: Notification.Name { get }
 	
 	/// Returns the notification key for the event fired when this service disconnects
 	/// from its server/host.
-	static var didDisconnectNotification: Notification.Name { get }
+	//static var didDisconnectNotification: Notification.Name { get }
 	
 	/// Returns the notification key for the event fired when this service receives
 	/// an update of any kind; this should be used only by the service itself.
-	static var didReceiveUpdateNotification: Notification.Name { get }
+	//static var didReceiveUpdateNotification: Notification.Name { get }
 	
 	/// Connects the service to its server/host.
 	/// Returns true if connection succeeded, or false if it failed.

@@ -147,6 +147,9 @@ public final class KVOTrampoline: NSObject {
 	}
 }
 
+/// A "typealias" for the traditional NSApplication delegation.
+public class ApplicationController: NSObject, NSApplicationDelegate {}
+
 /// Can hold any (including non-object) type as an object type.
 public class Wrapper<T> {
 	public let element: T

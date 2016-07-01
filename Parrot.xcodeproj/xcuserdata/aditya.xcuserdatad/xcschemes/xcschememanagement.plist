@@ -24,6 +24,11 @@
 			<key>orderHint</key>
 			<integer>5</integer>
 		</dict>
+		<key>ParrotServiceExtension.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
 		<key>ParrotShare.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -43,6 +48,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>480363991C1D08490008E9F5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>481300431D26BD4900768D79</key>
 		<dict>
 			<key>primary</key>
 			<true/>

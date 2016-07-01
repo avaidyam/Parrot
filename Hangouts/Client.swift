@@ -1,6 +1,7 @@
 import Foundation
+import ParrotServiceExtension
 
-public final class Client {
+public final class Client: Service {
 	
 	// URL for uploading any URL to Photos
 	public static let IMAGE_UPLOAD_URL = "https://docs.google.com/upload/photos/resumable"
@@ -26,6 +27,9 @@ public final class Client {
 	public var last_active_secs: NSNumber? = 0
 	public var active_client_state: ActiveClientState?
 	
+	public private(set) var conversationList: ConversationList!
+	public private(set) var userList: UserList!
+	
 	public init(configuration: URLSessionConfiguration) {
 		self.config = configuration
     }
@@ -33,7 +37,7 @@ public final class Client {
 	private var tokens = [NSObjectProtocol]()
 	
 	// Establish a connection to the chat server.
-    public func connect() {
+    public func connect() -> Bool {
 		self.channel = Channel(configuration: self.config)
 		//self.channel?.delegate = self
 		self.channel?.listen()
@@ -60,17 +64,24 @@ public final class Client {
 			}
 		}
 		self.tokens.append(contentsOf: [a, b, c, d])
+		return true
     }
 	
 	/* TODO: Can't disconnect a Channel yet. */
 	// Gracefully disconnect from the server.
-	public func disconnect() {
+	public func disconnect() -> Bool {
 		//self.channel?.disconnect()
 		
 		// Remove all the observers so we aren't receiving calls later on.
 		self.tokens.forEach {
 			NotificationCenter.default().removeObserver($0)
 		}
+		return true
+	}
+	
+	public var connected: Bool = true
+	public func synchronize() -> Bool {
+		return true
 	}
 	
 	// Use this method for constructing request messages when calling Hangouts APIs.
@@ -217,7 +228,7 @@ public final class Client {
 		}
 	}
 	
-	public func buildUserConversationList(cb: (UserList, ConversationList) -> Void) {
+	public func buildUserConversationList(_ completionHandler: () -> Void = {}) {
 		
 		// Retrieve recent conversations so we can preemptively look up their participants.
 		self.syncRecentConversations { response in
@@ -249,7 +260,10 @@ public final class Client {
 					
 					let userList = UserList(client: self, me: selfUser, users: users)
 					let conversationList = ConversationList(client: self, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
-					cb(userList, conversationList)
+					self.conversationList = conversationList
+					self.userList = userList
+					completionHandler()
+					//cb(userList, conversationList)
 				}
 			}
 		}

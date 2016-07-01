@@ -1,7 +1,5 @@
 import Cocoa
 
-/* TODO: Fix NSLayoutConstraints that tend to "not work" until resized. */
-
 // Serves as the "model" behind the view. Technically speaking, this is a translation
 // layer between the application model and decouples it from the view.
 public struct Person: Equatable {
