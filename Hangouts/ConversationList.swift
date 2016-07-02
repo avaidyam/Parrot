@@ -61,7 +61,7 @@ public class ConversationList {
 			if let val = (note.userInfo)?[Client.didUpdateStateKey.rawValue] as? Wrapper<StateUpdate> {
 				self.clientDidUpdateState(client: self.client, update: val.element)
 			} else {
-				print("Encountered an error! \(note)")
+				log.error("Encountered an error! \(note)")
 			}
 		}
 		self.tokens.append(contentsOf: [a, b, c, d])
@@ -144,7 +144,7 @@ public class ConversationList {
 									self.delegate?.conversationList(self, didReceiveEvent: conv_event)
 									conv.handleEvent(event: conv_event)
 								} else {
-									print("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
+									log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
 								}
                             }
                         }
@@ -198,7 +198,7 @@ public class ConversationList {
 	}
 	
 	public func _focusNotification(_ note: SetFocusNotification) {
-		print("UNIMPLEMENTED: \(#function) => \(note)")
+		log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
 	}
 	
 	public func _eventNotification(_ note: EventNotification) {
@@ -210,7 +210,7 @@ public class ConversationList {
 			delegate?.conversationList(self, didReceiveEvent: conv_event)
 			conv.handleEvent(event: conv_event)
 		} else {
-			print("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
+			log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
 		}
 	}
 	
@@ -219,18 +219,18 @@ public class ConversationList {
 		if let conv = conv_dict[conv_id] {
 			let res = parseTypingStatusMessage(p: note)
 			delegate?.conversationList(self, didChangeTypingStatusTo: res.status)
-			let user = user_list[UserID(
+			let user = user_list[User.ID(
 				chatID: note.senderId!.chatId!,
 				gaiaID: note.senderId!.gaiaId!
 			)]
 			conv.handleTypingStatus(status: res.status, forUser: user)
 		} else {
-			print("Received ClientSetTypingNotification for unknown conversation \(conv_id)")
+			log.warning("Received ClientSetTypingNotification for unknown conversation \(conv_id)")
 		}
 	}
 	
 	public func _notificationLevelNotification(_ note: SetConversationNotificationLevelNotification) {
-		print("UNIMPLEMENTED: \(#function) => \(note)")
+		log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
 	}
 	
 	public func _watermarkNotification(_ note: WatermarkNotification) {
@@ -240,23 +240,23 @@ public class ConversationList {
 			self.delegate?.conversationList(self, didReceiveWatermarkNotification: res)
 			conv.handleWatermarkNotification(status: res)
 		} else {
-			print("Received WatermarkNotification for unknown conversation \(conv_id)")
+			log.warning("Received WatermarkNotification for unknown conversation \(conv_id)")
 		}
 	}
 	
 	public func _viewModification(_ note: ConversationViewModification) {
-		print("UNIMPLEMENTED: \(#function) => \(note)")
+		log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
 	}
 	
 	public func _selfPresenceNotification(_ note: SelfPresenceNotification) {
-		print("UNIMPLEMENTED: \(#function) => \(note)")
+		log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
 	}
 	
 	public func _deleteNotification(_ note: DeleteActionNotification) {
-		print("UNIMPLEMENTED: \(#function) => \(note)")
+		log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
 	}
 	
 	public func _presenceNotification(_ note: PresenceNotification) {
-		print("UNIMPLEMENTED: \(#function) => \(note)")
+		log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
 	}
 }

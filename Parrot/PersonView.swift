@@ -52,7 +52,7 @@ public class PersonView : NSTableCellView {
 			self.nameLabel?.toolTip = o.primary
 			self.textLabel?.stringValue = o.secondary
 			self.textLabel?.toolTip = o.secondary
-			self.timeLabel?.stringValue = o.time.relativeString()
+			self.timeLabel?.stringValue = o.time.relativeString() + (o.indicator > 0 ? " (\(o.indicator))" : "")
 			self.timeLabel?.toolTip = "\(o.time.fullString())"
 			/*//self.unreadLabel?.stringValue = "\(o.indicator)"
 			self.unreadLabel?.layer?.backgroundColor = o.highlight.cgColor

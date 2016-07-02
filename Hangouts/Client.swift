@@ -1,6 +1,8 @@
 import Foundation
 import ParrotServiceExtension
 
+internal let log = Logger(subsystem: "com.avaidyam.Hangouts.global")
+
 public final class Client: Service {
 	
 	// URL for uploading any URL to Photos
@@ -60,7 +62,7 @@ public final class Client: Service {
 			if let val = (note.userInfo)?[Channel.didReceiveMessageKey.rawValue] as? [AnyObject] {
 				self.channel(channel: self.channel!, didReceiveMessage: val)
 			} else {
-				print("Encountered an error! \(note)")
+				log.error("Encountered an error! \(note)")
 			}
 		}
 		self.tokens.append(contentsOf: [a, b, c, d])
@@ -93,7 +95,7 @@ public final class Client: Service {
 		
 		// If the client_id hasn't been received yet, we can't set the active client.
 		guard self.client_id != nil else {
-			print("Cannot set active client until client_id is received")
+			log.error("Cannot set active client until client_id is received")
 			return
 		}
 		
@@ -208,7 +210,7 @@ public final class Client: Service {
 						userInfo: [Client.didUpdateStateKey: Wrapper(state_update)])
 				}
 			} else {
-				print("Ignoring message: \(payload[0])")
+				log.warning("Ignoring message: \(payload[0])")
 			}
 		}
 	}
@@ -220,11 +222,11 @@ public final class Client: Service {
 			let conv_states = response!.conversationState
 			let sync_timestamp = response!.syncTimestamp// use current_server_time?
 			
-			var required_user_ids = Set<UserID>()
+			var required_user_ids = Set<User.ID>()
 			for conv_state in conv_states {
 				let participants = conv_state.conversation!.participantData
 				required_user_ids = required_user_ids.union(Set(participants.map {
-					UserID(chatID: $0.id!.chatId!, gaiaID: $0.id!.gaiaId!)
+					User.ID(chatID: $0.id!.chatId!, gaiaID: $0.id!.gaiaId!)
 				}))
 			}
 			
@@ -248,7 +250,6 @@ public final class Client: Service {
 					self.conversationList = conversationList
 					self.userList = userList
 					completionHandler()
-					//cb(userList, conversationList)
 				}
 			}
 		}

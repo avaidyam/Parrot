@@ -7,7 +7,7 @@ import ParrotServiceExtension
 /* TODO: Support Slack-like plugin integrations. */
 
 //severity: Logger.Severity(rawValue: Process.arguments["log_level"]) ?? .verbose
-public let log = Logger(subsystem: "com.avaidyam.Parrot.global")
+internal let log = Logger(subsystem: "com.avaidyam.Parrot.global")
 public let defaultUserImage = NSImage(named: "NSUserGuest")!
 
 // Existing Parrot Settings keys.

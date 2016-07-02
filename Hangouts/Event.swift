@@ -17,9 +17,9 @@ public class IEvent : Hashable, Equatable {
 		return Date.from(UTC: Double(self.event.timestamp ?? 0))
     }()
 	
-	// A UserID indicating who created the event.
-    public lazy var userID: UserID = {
-        return UserID(
+	// A User.ID indicating who created the event.
+    public lazy var userID: User.ID = {
+        return User.ID(
             chatID: self.event.senderId!.chatId!,
             gaiaID: self.event.senderId!.gaiaId!
         )
@@ -61,7 +61,7 @@ public class IChatMessageEvent : IEvent {
             case SegmentType.LineBreak:
                 lines.append("")
             default:
-                print("Ignoring unknown chat message segment type: \(segment.type)")
+                log.warning("Ignoring unknown chat message segment type: \(segment.type)")
             }
         }
 		
@@ -124,11 +124,11 @@ public class IMembershipChangeEvent : IEvent {
         return self.event.membershipChange!.type!
     }
 	
-	// Return the UserIDs involved in the membership change.
+	// Return the User.IDs involved in the membership change.
 	// Multiple users may be added to a conversation at the same time.
-    public var participantIDs: [UserID] {
+    public var participantIDs: [User.ID] {
 		return self.event.membershipChange!.participantIds.map {
-			UserID(chatID: $0.chatId! , gaiaID: $0.gaiaId!)
+			User.ID(chatID: $0.chatId! , gaiaID: $0.gaiaId!)
 		}
     }
 }
@@ -214,10 +214,10 @@ public class IChatMessageSegment {
 //
 
 // Definition of the public TypingStatusMessage.
-public typealias ITypingStatusMessage = (convID: String, userID: UserID, timestamp: Date, status: TypingType)
+public typealias ITypingStatusMessage = (convID: String, userID: User.ID, timestamp: Date, status: TypingType)
 
 // Definition of the public WatermarkNotification.
-public typealias IWatermarkNotification = (convID: String, userID: UserID, readTimestamp: Date)
+public typealias IWatermarkNotification = (convID: String, userID: User.ID, readTimestamp: Date)
 
 // Return TypingStatusMessage from ClientSetTypingNotification.
 // The same status may be sent multiple times consecutively, and when a
@@ -225,7 +225,7 @@ public typealias IWatermarkNotification = (convID: String, userID: UserID, readT
 internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatusMessage {
 	return ITypingStatusMessage(
 		convID: p.conversationId!.id! ,
-		userID: UserID(chatID: p.senderId!.chatId!, gaiaID: p.senderId!.gaiaId!),
+		userID: User.ID(chatID: p.senderId!.chatId!, gaiaID: p.senderId!.gaiaId!),
 		timestamp: Date.from(UTC: Double(p.timestamp ?? 0)),
 		status: p.type!
 	)
@@ -235,7 +235,7 @@ internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatu
 internal func parseWatermarkNotification(client_watermark_notification: WatermarkNotification) -> IWatermarkNotification {
 	return IWatermarkNotification(
 		convID: client_watermark_notification.conversationId!.id!,
-		userID: UserID(
+		userID: User.ID(
 			chatID: client_watermark_notification.senderId!.chatId!,
 			gaiaID: client_watermark_notification.senderId!.gaiaId!
 		),

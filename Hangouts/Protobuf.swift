@@ -389,12 +389,12 @@ public func translateProtoFile(filename: String) {
 		do {
 			let outputFilename = _convert(filename)
 			try output.write(toFile: outputFilename, atomically: true, encoding: String.Encoding.utf8)
-			print("\(filename) written successfully.")
+			log.info("\(filename) written successfully.")
 			
 		} catch {
-			print("Could not write output file \(filename).")
+			log.error("Could not write output file \(filename).")
 		}
 	} catch {
-		print("Could not read input file \(filename).")
+		log.error("Could not read input file \(filename).")
 	}
 }

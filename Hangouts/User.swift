@@ -1,31 +1,37 @@
 import Foundation
 import class ParrotServiceExtension.Wrapper
 
-// A chat user identifier.
-// Use the much more full-featured User class for more data.
-public struct UserID : Hashable, Equatable {
-	public let chatID: String
-	public let gaiaID: String
-}
-
-// UserID: Hashable, Equatable
-public extension UserID {
-	public var hashValue: Int {
-		return chatID.hashValue &+ gaiaID.hashValue
-	}
-}
-public func ==(lhs: UserID, rhs: UserID) -> Bool {
-	return lhs.hashValue == rhs.hashValue
-}
-
-// A chat user.
+/// A chat user.
 public struct User: Hashable, Equatable {
     public static let DEFAULT_NAME = "Unknown"
 	
-    public let id: UserID
+	/// A chat user identifier.
+	public struct ID: Hashable, Equatable {
+		public let chatID: String
+		public let gaiaID: String
+		
+		public var hashValue: Int {
+			return chatID.hashValue &+ gaiaID.hashValue
+		}
+	}
+	
+	/// The globally unique identifier for this user.
+    public let id: User.ID
+	
+	/// The name components for this user. This will contain each part of the name,
+	/// such as first and last name, given name, titles, suffixes, and more.
+	/// Note: it is advised to use a formatter to comprehend this information.
 	public let nameComponents: [String]
+	
+	/// If applicable, the user's photo.
     public let photoURL: String?
-    public let emails: [String]
+	
+	/// Any possible locations for the user. This can be physical or virtual.
+	/// For example, it may contain email addresses and phone numbers, and even
+	/// real physical addresses or coordinates.
+    public let locations: [String]
+	
+	/// Is this user the currently logged in user?
     public let isSelf: Bool
 	
 	// Initialize a User directly.
@@ -33,23 +39,25 @@ public struct User: Hashable, Equatable {
 	// first_name from the full_name, or setting both to DEFAULT_NAME.
 	//
 	// Ignores firstName value.
-    public init(userID: UserID, fullName: String? = nil, firstName: String? = nil,
-		photoURL: String? = nil, emails: [String] = [], isSelf: Bool = false)
-	{
+    public init(userID: User.ID, fullName: String? = nil, photoURL: String? = nil,
+                locations: [String] = [], isSelf: Bool = false) {
 		self.id = userID
 		self.nameComponents = (fullName ?? User.DEFAULT_NAME).characters.split{$0 == " "}.map(String.init)
-        self.photoURL = photoURL != nil ? "https:" + photoURL! : nil
-        self.emails = emails
+        self.photoURL = photoURL
+        self.locations = locations
         self.isSelf = isSelf
     }
 	
-	// Initialize a User from an Entity.
-	// If selfUser is nil, assume this is the self user.
-    public init(entity: Entity, selfUser: UserID?) {
-		let userID = UserID(chatID: entity.id!.chatId!,
+	// Parse and initialize a User from an Entity.
+	// Note: If selfUser is nil, assume this is the self user.
+    public init(entity: Entity, selfUser: User.ID?) {
+		
+		// Parse User ID and self status.
+		let userID = User.ID(chatID: entity.id!.chatId!,
 			gaiaID: entity.id!.gaiaId!)
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
 		
+		// Parse possible phone numbers.
 		var phoneI18N: String? = nil // just use I18N and reformat it if needed.
 		if	let r = entity.properties?._unknownFields[14] as? [AnyObject] where r.count > 0 {
 			if let d = r[0][0][1] as? [AnyObject] { // retrieve the I18nData
@@ -57,56 +65,62 @@ public struct User: Hashable, Equatable {
 			}
 		}
 		
+		// Parse the user photo.
+		var photo: String? = nil
+		if let e = entity.properties!.photoUrl {
+			photo = "https:" + e
+		}
+		
+		// Parse possible locations.
+		var locations: [String] = []
+		locations += entity.properties!.email
+		locations += entity.properties!.phone
+		if let c = entity.properties!.canonicalEmail {
+			locations.append(c)
+		}
+		if let p = phoneI18N {
+			locations.append(p)
+		}
+		
+		// Initialize the user.
         self.init(userID: userID,
-            fullName: phoneI18N ?? (entity.properties!.displayName as String?),
-            firstName: entity.properties!.firstName as String?,
-            photoURL: entity.properties!.photoUrl as String?,
-            emails: entity.properties!.email.map { $0 as String },
-            isSelf: isSelf
+            fullName: phoneI18N ?? entity.properties!.displayName,
+            photoURL: photo, locations: locations, isSelf: isSelf
         )
     }
 	
-	// TODO: REMOVE THIS
-	// Initialize from ClientConversationParticipantData.
-	// If selfUser is nil, assume this is the self user.
-    /*public init(data: ConversationParticipantData, selfUser: UserID?) {
-		let userID = UserID(chatID: data.id!.chatId!,
-			gaiaID: data.id!.gaiaId!)
-		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
-		
-        self.init(userID: userID,
-            fullName: data.fallbackName,
-            firstName: nil,
-            photoURL: nil,
-            emails: [],
-            isSelf: isSelf
-        )
-	}*/
-	
-	// Computes the full name by taking the name components like so:
-	// ["John", "Mark", "Smith"] => "John Mark Smith"
-	// Will return an empty string if there are no name components.
+	/// Computes the full name by taking the name components like so:
+	/// ["John", "Mark", "Smith"] => "John Mark Smith"
+	/// Will return an empty string if there are no name components.
 	public var fullName: String {
 		return self.nameComponents.joined(separator: " ")
 	}
 	
-	// Computes the first name by taking the first of the name components:
-	// ["John", "Mark", "Smith"] => "John"
-	// Will return an empty string if there are no name components.
+	/// Computes the first name by taking the first of the name components:
+	/// ["John", "Mark", "Smith"] => "John"
+	/// Will return an empty string if there are no name components.
 	public var firstName: String {
 		return self.nameComponents.first ?? ""
 	}
-}
-
-// User: Hashable, Equatable
-public extension User {
+	
+	/// The User's hash value.
 	public var hashValue: Int {
 		return self.id.hashValue
 	}
 }
+
+/// Are the two User.IDs equal?
+public func ==(lhs: User.ID, rhs: User.ID) -> Bool {
+	return lhs.hashValue == rhs.hashValue
+}
+/// Are the two Users equal?
 public func ==(lhs: User, rhs: User) -> Bool {
 	return lhs.id == rhs.id
 }
+
+
+
+
 
 
 // Collection of User instances.
@@ -114,20 +128,20 @@ public class UserList: Collection {
 	
 	private var observer: NSObjectProtocol? // for Notification
 	public let me: User
-	private var users: [UserID: User]
+	private var users: [User.ID: User]
 	
 	// Returns all users as an array.
 	public var allUsers: [User] {
 		return Array(self.users.values)
 	}
 	
-	// Return a User by their UserID.
+	// Return a User by their User.ID.
 	// Logs and returns a placeholder User if not found.
-	public subscript(userID: UserID) -> User {
+	public subscript(userID: User.ID) -> User {
 		if let user = self.users[userID] {
 			return user
 		} else {
-			//print("UserList returning unknown User for UserID \(userID)")
+			//log.warning("UserList returning unknown User for User.ID \(userID)")
 			return User(userID: userID)
 		}
 	}
@@ -137,7 +151,7 @@ public class UserList: Collection {
 	// ClientConversationParticipantData instances. The latter is used only as
 	// a fallback, because it doesn't include a real first_name.
 	public init(client: Client, me: User, users: [User] = []) {
-		var usersDict = [UserID: User]()
+		var usersDict = Dictionary<User.ID, User>()
 		users.forEach { usersDict[$0.id] = $0 }
 		self.users = usersDict
 		self.me = me
@@ -178,8 +192,8 @@ public class UserList: Collection {
 
 // UserList Collection support.
 public extension UserList {
-	public typealias Index = DictionaryIndex<UserID, User>
-	public typealias SubSequence = Slice<LazyMapCollection<Dictionary<UserID, User>, User>>
+	public typealias Index = DictionaryIndex<User.ID, User>
+	public typealias SubSequence = Slice<LazyMapCollection<Dictionary<User.ID, User>, User>>
 	
 	public var startIndex : Index {
 		return self.users.values.startIndex

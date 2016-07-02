@@ -8,7 +8,7 @@ public class PBLiteSerialization {
 			let val = !_cast ? value : field.type._cast(value: value)
 			try message.set(id: field.id, value: val)
 		} catch let error {
-			print("Failed to set \(field.id):\(field.name) of \(_typeName(message.dynamicType)) due to \(error)")
+			log.error("Failed to set \(field.id):\(field.name) of \(_typeName(message.dynamicType)) due to \(error)")
 			message._unknownFields[field.id] = value // store it anyway
 		}
 	}
@@ -18,7 +18,7 @@ public class PBLiteSerialization {
 			let val = !_cast ? value : field.type._cast(value: value)
 			try message.set(id: field.id, value: val, at: index)
 		} catch let error {
-			print("Failed to set \(field.id):\(field.name) of \(_typeName(message.dynamicType)) due to \(error)")
+			log.error("Failed to set \(field.id):\(field.name) of \(_typeName(message.dynamicType)) due to \(error)")
 			message._unknownFields[field.id] = value // store it anyway
 		}
 	}
@@ -35,17 +35,17 @@ public class PBLiteSerialization {
 					decode(message: &q, pblite: value)
 					_setField(message: &message, field: field, value: q)
 				} else {
-					print("message \(t) expected [Any] values but got \(value.dynamicType) instead.")
+					log.warning("message \(t) expected [Any] values but got \(value.dynamicType) instead.")
 				}
 			} else if let e = _protoEnums[str] {
 				if let value = value as? Int {
 					_setField(message: &message, field: field, value: e.init(value))
 				} else {
-					print("enum \(e) expected Int but got \(value.dynamicType) instead.")
+					log.warning("enum \(e) expected Int but got \(value.dynamicType) instead.")
 				}
 			} else {
 				// nil case
-				print("non-prototype field \(field.id):\(field.name) ignored!")
+				log.warning("non-prototype field \(field.id):\(field.name) ignored!")
 			}
 		default:
 			_setField(message: &message, field: field, value: value, _cast: true)
@@ -66,17 +66,17 @@ public class PBLiteSerialization {
 						decode(message: &q, pblite: x)
 						_setField(message: &message, field: field, value: q, index: -1)
 					} else {
-						print("message \(t) expected [Any] values but got \(x.dynamicType) instead.")
+						log.warning("message \(t) expected [Any] values but got \(x.dynamicType) instead.")
 					}
 				} else if let e = _protoEnums[str] {
 					if let x = x as? Int {
 						_setField(message: &message, field: field, value: e.init(x), index: -1)
 					} else {
-						print("enum \(e) expected Int but got \(x.dynamicType) instead.")
+						log.warning("enum \(e) expected Int but got \(x.dynamicType) instead.")
 					}
 				} else {
 					// nil case
-					print("non-prototype field \(field.id):\(field.name) ignored!")
+					log.warning("non-prototype field \(field.id):\(field.name) ignored!")
 				}
 			default:
 				_setField(message: &message, field: field, value: x, index: -1, _cast: true)

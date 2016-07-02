@@ -147,7 +147,7 @@ public extension Client {
 		]
 		/*
 		self.request(endpoint: "contacts/getentitybyid", body: data) { r in
-		print("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue))")
+		log.info("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue))")
 		}*/
 		self.channel?.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
@@ -184,7 +184,7 @@ public extension Client {
 	                          lastSeen: Bool = true,
 	                          cb: ((response: QueryPresenceResponse?) -> Void)) {
 		guard chat_ids.count > 0 else {
-			print("Cannot query presence for zero chat IDs!")
+			log.error("Cannot query presence for zero chat IDs!")
 			return
 		}
 		

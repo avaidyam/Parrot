@@ -23,7 +23,7 @@ public class IConversation {
             self._cachedEvents = nil
         }
     }
-    public var typingStatuses = Dictionary<UserID, TypingType>()
+    public var typingStatuses = Dictionary<User.ID, TypingType>()
 
     public var delegate: ConversationDelegate?
     public var conversationList: ConversationList?
@@ -118,8 +118,8 @@ public class IConversation {
         return conv_event
     }
 	
-	// Return the User instance with the given UserID.
-    public func get_user(user_id: UserID) -> User {
+	// Return the User instance with the given User.ID.
+    public func get_user(user_id: User.ID) -> User {
         return self.user_list[user_id]
     }
 	
@@ -210,7 +210,6 @@ public class IConversation {
     public func leave(cb: (() -> Void)? = nil) {
         switch (self.conversation.type!) {
         case ConversationType.Group:
-            //print("Remove Not Implemented!")
 			client.removeUser(conversation_id: id) { _ in cb?() }
         case ConversationType.OneToOne:
             client.deleteConversation(conversation_id: id) { _ in cb?() }
@@ -265,7 +264,7 @@ public class IConversation {
         } else {
             let user = user_list[event.userID]
             if !user.isSelf {
-				print("Notification \(event) from User \(user)!");
+				log.info("Notification \(event) from User \(user)!");
             }
         }
     }
@@ -312,7 +311,7 @@ public class IConversation {
 			
             client.getConversation(conversation_id: id, event_timestamp: conv_event.timestamp, max_events: max_events) { res in
 				if res!.responseHeader!.status == ResponseStatus.InvalidRequest {
-					print("Invalid request! \(res!.responseHeader)")
+					log.error("Invalid request! \(res!.responseHeader)")
 					return
 				}
 				let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(event: $0) }
@@ -324,7 +323,7 @@ public class IConversation {
                 self.delegate?.conversationDidUpdateEvents(self)
             }
         } else {
-            print("Event not found.")
+            log.error("Event not found.")
         }
     }
 
@@ -359,7 +358,7 @@ public class IConversation {
     public var users: [User] {
         get {
             return conversation.participantData.map {
-                self.user_list[UserID(
+                self.user_list[User.ID(
                     chatID: $0.id!.chatId!,
                     gaiaID: $0.id!.gaiaId!
                 )]
@@ -411,7 +410,7 @@ public class IConversation {
     public var hasUnreadEvents: Bool {
         get {
             if unread_events.first != nil {
-                //print("Conversation \(name) has unread events, latest read timestamp is \(self.latest_read_timestamp)")
+                //log.info("Conversation \(name) has unread events, latest read timestamp is \(self.latest_read_timestamp)")
             }
             return unread_events.first != nil
         }

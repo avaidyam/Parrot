@@ -2,6 +2,7 @@ import Cocoa
 import Hangouts
 
 /* TODO: Use NSTextAlternatives instead of force-replacing text. */
+/* TODO: Smart entry completion for ()/[]/""/etc. */
 
 class ConversationViewController: NSViewController, ConversationDelegate, NSTextViewDelegate {
 	
@@ -311,11 +312,19 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	
 	// If the user presses ENTER and doesn't hold SHIFT, send the message.
 	func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-		guard commandSelector == #selector(NSResponder.insertNewline(_:)) &&
-			!NSEvent.modifierFlags().contains(.shift) else { return false }
-		self.sendCurrentMessage(textView)
-		return true
+		switch commandSelector {
+			
+		case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
+			self.sendCurrentMessage(textView)
+		case #selector(NSResponder.insertTab(_:)): // TODO: configurable later
+			textView.textStorage?.append(AttributedString(string: "    ", attributes: textView.typingAttributes))
+			
+		default: return false
+		}; return true
 	}
+	
+	//["()", "[]", "{}", "\"\"", "''", "``"]
+	//func textViewDidChangeText?
 	
 	// IBAction because we have a button that needs pressing.
 	@IBAction func sendCurrentMessage(_:AnyObject?) {

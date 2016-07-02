@@ -31,8 +31,8 @@ public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> V
 		if let data = $0.data {
 			_cache[id] = data
 			handler?(data)
-			semaphore.signal()
 		}
+		semaphore.signal()
 	}
 	
 	// Onlt wait on the semaphore if we don't have a handler.

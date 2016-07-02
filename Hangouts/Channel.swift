@@ -121,7 +121,7 @@ public final class Channel : NSObject {
 			// After the first failed retry, back off exponentially longer each time.
             if retries + 1 < Channel.maxRetries {
                 let backoff_seconds = UInt64(2 << (Channel.maxRetries - retries))
-                print("Backing off for \(backoff_seconds) seconds")
+                log.info("Backing off for \(backoff_seconds) seconds")
                 usleep(useconds_t(backoff_seconds * USEC_PER_SEC))
 			}
 
@@ -148,7 +148,7 @@ public final class Channel : NSObject {
 			/* TODO: Catch the errors as shown here (pseudocode). */
 			/*
 			catch (UnknownSIDError, exceptions.NetworkError) { e in
-				print("Long-polling request failed: \(e)")
+				log.error("Long-polling request failed: \(e)")
 				self.retries -= 1
 				if self.isConnected {
 					self.isConnected = false
@@ -204,7 +204,7 @@ public final class Channel : NSObject {
 		
 		self.session.request(request: request) {
 			guard let data = $0.data else {
-				print("Request failed with error: \($0.error!)")
+				log.error("Request failed with error: \($0.error!)")
 				return
 			}
 			cb?(data)
@@ -244,7 +244,7 @@ public final class Channel : NSObject {
 			if r?.statusCode >= 400 {
 				/* TODO: Sometimes things fail here, not sure why yet. */
 				/* TODO: This should be moved out of here later on. */
-				print("Request failed with: \(error)")
+				log.error("Request failed with: \(error)")
 				self.needsSID = true
 				self.listen()
 			} else if r?.statusCode == 200 {
@@ -254,8 +254,8 @@ public final class Channel : NSObject {
 				// we shouldn't call ourselves; the while loop thing should.
 				// doesn't work right though.
 			} else {
-				print("Received unknown response code \(r?.statusCode)")
-				//print(NSString(data: response.data ?? Data(), encoding: 4)! as String)
+				log.error("Received unknown response code \(r?.statusCode)")
+				//log.info(NSString(data: response.data ?? Data(), encoding: 4)! as String)
 			}
 		}
 		self.proxy[task] = p
@@ -351,7 +351,7 @@ public final class Channel : NSObject {
 		
 		self.session.request(request: request as URLRequest) {
 			guard let _ = $0.data else {
-				print("Request failed with error: \($0.error!)")
+				log.error("Request failed with error: \($0.error!)")
 				return
 			}
 			cb($0)
