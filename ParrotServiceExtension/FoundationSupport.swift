@@ -151,18 +151,6 @@ public extension DispatchData {
 	}
 }
 
-// Generate 64-bit random value in a range that is divisible by upper_bound:
-// from @martin-r: http://stackoverflow.com/questions/26549830/swift-random-number-for-64-bit-integers
-public func random64(_ upper_bound: UInt64) -> UInt64 {
-	let range = UInt64.max - UInt64.max % upper_bound
-	var rnd: UInt64 = 0
-	repeat { arc4random_buf(&rnd, sizeofValue(rnd))
-	} while rnd >= range
-	return rnd % upper_bound
-}
-
-// Since we can't use nil in JSON arrays due to the parser.
-public let None = NSNull()
 
 // Microseconds
 // Convert a microsecond timestamp to an Date instance.

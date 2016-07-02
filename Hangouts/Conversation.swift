@@ -145,7 +145,7 @@ public class IConversation {
 		let otr_status: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
 		var e = EventRequestHeader()
 		e.conversationId = self.conversation.conversationId
-		e.clientGeneratedId = UInt64(self.client.generateClientID())
+		//e.clientGeneratedId = UInt64(self.client.generateClientID())
 		e.expectedOtr = otr_status
 		e.deliveryMedium = getDefaultDeliveryMedium()
 		return e
