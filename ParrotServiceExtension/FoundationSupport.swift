@@ -138,6 +138,19 @@ public extension Dictionary {
 	}
 }
 
+public extension DispatchData {
+	public static func from(data: Data) -> DispatchData {
+		return data.withUnsafeBytes {
+			DispatchData(bytesNoCopy: UnsafeBufferPointer(start: $0, count: data.count))
+		}
+	}
+	public func toData() -> Data {
+		return self.withUnsafeBytes { (a: UnsafePointer<UInt8>) in
+			Data(buffer: UnsafeBufferPointer(start: a, count: self.count))
+		}
+	}
+}
+
 // Generate 64-bit random value in a range that is divisible by upper_bound:
 // from @martin-r: http://stackoverflow.com/questions/26549830/swift-random-number-for-64-bit-integers
 public func random64(_ upper_bound: UInt64) -> UInt64 {

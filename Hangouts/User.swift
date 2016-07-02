@@ -113,7 +113,7 @@ public func ==(lhs: User, rhs: User) -> Bool {
 public class UserList: Collection {
 	
 	private var observer: NSObjectProtocol? // for Notification
-	private let me: User
+	public let me: User
 	private var users: [UserID: User]
 	
 	// Returns all users as an array.

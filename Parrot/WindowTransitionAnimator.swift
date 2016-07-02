@@ -72,6 +72,9 @@ public class AntiScrollView: NSScrollView {
 	public override func scrollWheel(_ theEvent: NSEvent) {
 		self.nextResponder?.scrollWheel(theEvent)
 	}
+	public override var intrinsicContentSize: NSSize {
+		return self.contentView.intrinsicContentSize
+	}
 }
 
 public class PreferencesViewController: NSTabViewController {

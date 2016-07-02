@@ -3,10 +3,12 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target">
             <connections>
+                <outlet property="imageView" destination="Ab2-7z-caP" id="jiX-Q0-Fdg"/>
                 <outlet property="messageTextField" destination="A58-4G-SjV" id="S7h-hF-amm"/>
                 <outlet property="messagesView" destination="yMT-fg-2gH" id="SNf-Rj-7x7"/>
                 <outlet property="statusView" destination="eNL-fW-1Cx" id="gX1-VY-R6C"/>
@@ -28,39 +30,22 @@
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <font key="titleFont" metaFont="system"/>
                 </box>
-                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GG6-O2-ffU">
-                    <rect key="frame" x="8" y="6" width="20" height="25"/>
-                    <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSIconViewTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="lhg-yZ-Rwd">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                </button>
-                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sXA-Lz-wpm">
-                    <rect key="frame" x="541" y="6" width="19" height="25"/>
-                    <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRightFacingTriangleTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gDM-fa-dLS">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="sendCurrentMessage:" target="-2" id="wb7-V9-vlI"/>
-                    </connections>
-                </button>
                 <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
-                    <rect key="frame" x="36" y="8" width="497" height="22"/>
+                    <rect key="frame" x="36" y="8" width="524" height="22"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
-                        <rect key="frame" x="0.0" y="0.0" width="497" height="22"/>
+                        <rect key="frame" x="0.0" y="0.0" width="524" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView drawsBackground="NO" findStyle="bar" incrementalSearchingEnabled="YES" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV">
-                                <rect key="frame" x="0.0" y="0.0" width="497" height="22"/>
+                                <rect key="frame" x="0.0" y="0.0" width="524" height="22"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <size key="minSize" width="497" height="22"/>
-                                <size key="maxSize" width="497" height="10000000"/>
+                                <size key="minSize" width="524" height="22"/>
+                                <size key="maxSize" width="552" height="10000000"/>
                                 <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                <size key="minSize" width="497" height="22"/>
-                                <size key="maxSize" width="497" height="10000000"/>
+                                <size key="minSize" width="524" height="22"/>
+                                <size key="maxSize" width="552" height="10000000"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -70,29 +55,35 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="glu-WV-IDk">
-                        <rect key="frame" x="481" y="0.0" width="16" height="22"/>
+                        <rect key="frame" x="508" y="0.0" width="16" height="22"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Ab2-7z-caP">
+                    <rect key="frame" x="8" y="8" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Ab2-7z-caP" secondAttribute="height" multiplier="1:1" id="WlU-Mv-yGk"/>
+                        <constraint firstAttribute="height" constant="24" id="d2d-Td-yha"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="CNL-A5-xoa"/>
+                </imageView>
             </subviews>
             <constraints>
                 <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="38s-F8-Xds"/>
+                <constraint firstItem="Ab2-7z-caP" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" constant="8" id="3gp-3B-Lan"/>
                 <constraint firstItem="yMT-fg-2gH" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" id="9so-cq-mbb"/>
+                <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="Ab2-7z-caP" secondAttribute="trailing" constant="4" id="BJy-zv-GnW"/>
                 <constraint firstItem="yMT-fg-2gH" firstAttribute="width" secondItem="V7l-JF-KwK" secondAttribute="width" id="Co0-LE-wqU"/>
-                <constraint firstAttribute="bottom" secondItem="sXA-Lz-wpm" secondAttribute="bottom" constant="8" id="Ds9-uq-aEo"/>
                 <constraint firstItem="MlJ-gQ-qkl" firstAttribute="top" secondItem="yMT-fg-2gH" secondAttribute="bottom" id="MM7-Nx-baP"/>
-                <constraint firstAttribute="bottom" secondItem="GG6-O2-ffU" secondAttribute="bottom" constant="8" id="Mwv-4s-zi6"/>
-                <constraint firstItem="GG6-O2-ffU" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="NHu-cc-m84"/>
+                <constraint firstAttribute="trailing" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="N0r-4y-BX9"/>
                 <constraint firstItem="MlJ-gQ-qkl" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" id="OLQ-lg-8aB"/>
-                <constraint firstAttribute="trailing" secondItem="sXA-Lz-wpm" secondAttribute="trailing" constant="8" id="XRI-wh-Hno"/>
+                <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="V7l-JF-KwK" secondAttribute="top" constant="353" id="VjR-b7-ogQ"/>
                 <constraint firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" constant="8" id="XSb-KR-Pbe"/>
-                <constraint firstItem="sXA-Lz-wpm" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="alm-Wt-Kqv"/>
-                <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="GG6-O2-ffU" secondAttribute="trailing" constant="8" id="g40-Q4-wRg"/>
                 <constraint firstItem="yMT-fg-2gH" firstAttribute="top" secondItem="V7l-JF-KwK" secondAttribute="top" id="iOd-dt-igW"/>
-                <constraint firstItem="GG6-O2-ffU" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" constant="8" id="jDH-gw-qGg"/>
+                <constraint firstAttribute="bottom" secondItem="Ab2-7z-caP" secondAttribute="bottom" constant="8" id="sRd-rq-o3P"/>
                 <constraint firstAttribute="trailing" secondItem="MlJ-gQ-qkl" secondAttribute="trailing" id="tfK-yG-qdb"/>
-                <constraint firstItem="sXA-Lz-wpm" firstAttribute="leading" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="y92-UJ-H5l"/>
             </constraints>
+            <point key="canvasLocation" x="139" y="168.5"/>
         </view>
         <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
             <rect key="frame" x="0.0" y="0.0" width="132" height="22"/>
@@ -152,8 +143,7 @@
     <resources>
         <image name="NSFlowViewTemplate" width="18" height="10"/>
         <image name="NSIChatTheaterTemplate" width="15" height="13"/>
-        <image name="NSIconViewTemplate" width="10" height="10"/>
         <image name="NSQuickLookTemplate" width="19" height="12"/>
-        <image name="NSRightFacingTriangleTemplate" width="9" height="12"/>
+        <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>

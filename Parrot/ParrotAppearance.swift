@@ -47,10 +47,6 @@ public struct ParrotAppearance {
 	///
 	
 	public enum InterfaceStyle: Int {
-		/// Aqua Light theme. (a la default macOS)
-		case Aqua
-		/// Aqua Dark theme. (a la Apple ProApps)
-		case Pro
 		/// Vibrant Light theme.
 		case Light
 		/// Vibrant Dark theme.
@@ -91,7 +87,6 @@ public struct ParrotAppearance {
 		case .System:
 			let system = Settings[Parrot.SystemInterfaceStyle] as? Bool ?? false
 			return (system ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
-		default: return NSAppearanceNameVibrantDark
 		}
 	}
 	

@@ -21,14 +21,23 @@ public func ==(lhs: Message, rhs: Message) -> Bool {
 		lhs.color == rhs.color
 }
 
-public class MessageView : NSTableCellView {
+public protocol NSTableRowViewProviding {
+	var selectionHighlightStyle: NSTableViewSelectionHighlightStyle { get }
+	var isEmphasized: Bool { get }
+	var isSelected: Bool { get }
+	var backgroundColor: NSColor { get }
 	
-	// Customization settings for rendering the message.
-	// Support: fill percentages, text border and padding, optional photo,
-	// decorators, etc. (anything NSView or CALayer can support!)
-	internal static var FillPercentage = (x: CGFloat(0.75), y: CGFloat(1.00))
-	internal static var TextBorder = (l: CGFloat(4), r: CGFloat(4), t: CGFloat(4), b: CGFloat(4))
-	internal static var TextPadding = (v: CGFloat(8), h: CGFloat(8))
+	var isTargetForDropOperation: Bool { get }
+	var draggingDestinationFeedbackStyle: NSTableViewDraggingDestinationFeedbackStyle { get }
+	var indentationForDropOperation: CGFloat { get }
+	
+	func drawBackground(in dirtyRect: NSRect)
+	func drawSelection(in dirtyRect: NSRect)
+	func drawSeparator(in dirtyRect: NSRect)
+	func drawDraggingDestinationFeedback(in dirtyRect: NSRect)
+}
+
+public class MessageView: NSTableCellView {
 	
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
@@ -137,7 +146,17 @@ public class MessageView : NSTableCellView {
 		}
 	}
 	
-	/* TODO: Clean this up and out of here. */
+	
+	/* TODO: Clean this up and out of here: */
+	
+	
+	// Customization settings for rendering the message.
+	// Support: fill percentages, text border and padding, optional photo,
+	// decorators, etc. (anything NSView or CALayer can support!)
+	internal static var FillPercentage = (x: CGFloat(0.75), y: CGFloat(1.00))
+	internal static var TextBorder = (l: CGFloat(4), r: CGFloat(4), t: CGFloat(4), b: CGFloat(4))
+	internal static var TextPadding = (v: CGFloat(8), h: CGFloat(8))
+	
 	internal class func heightForContainerWidth(_ text: NSString, width: CGFloat) -> CGFloat {
 		func widthOfText(_ backgroundWidth: CGFloat) -> CGFloat {
 			return backgroundWidth

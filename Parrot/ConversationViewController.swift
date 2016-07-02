@@ -8,6 +8,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	@IBOutlet var messagesView: MessagesView!
     @IBOutlet var messageTextField: NSTextView!
 	@IBOutlet var statusView: NSTextField!
+	@IBOutlet var imageView: NSImageView!
 	
 	var _note: NSObjectProtocol!
 	var popover: NSPopover!
@@ -55,6 +56,14 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	
     override func viewDidLoad() {
         super.viewDidLoad()
+		
+		if let me = self.conversation?.client.userList.me {
+			if let photo = self.imageView, let layer = photo.layer {
+				layer.masksToBounds = true
+				layer.cornerRadius = photo.bounds.width / 2.0
+			}
+			self.imageView.image = fetchImage(user: me, network: .Babel)
+		}
 		
 		self.messagesView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.messagesView.sizeClass = .dynamic
