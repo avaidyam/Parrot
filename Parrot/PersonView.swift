@@ -47,7 +47,7 @@ public class PersonView : NSTableCellView {
 			self.time = o.time
 			self.photoView?.image = o.photo
 			self.photoView?.toolTip = o.caption
-			self.photoView?.layer?.borderColor = o.highlight.cgColor
+			//self.photoView?.layer?.borderColor = o.highlight.cgColor
 			self.nameLabel?.stringValue = o.primary
 			self.nameLabel?.toolTip = o.primary
 			self.textLabel?.stringValue = o.secondary
@@ -97,7 +97,7 @@ public class PersonView : NSTableCellView {
 		super.layout()
 		if let photo = self.photoView, let layer = photo.layer {
 			layer.masksToBounds = true
-			layer.borderWidth = 2.0
+			//layer.borderWidth = 2.0
 			layer.cornerRadius = photo.bounds.width / 2.0
 		}
 		if let unread = self.unreadLabel, let layer = unread.layer {

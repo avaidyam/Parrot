@@ -144,13 +144,17 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		}
 		
 		// Load all the field values from the conversation.
-		var img: NSImage = defaultUserImage
+		var img: NSImage! = nil
 		if let d = fetchData(c?.id.gaiaID, c?.photoURL) {
 			img = NSImage(data: d)!
+		} else if d != .GoogleVoice {
+			img = imageForString(forString: title)
+		} else {
+			img = defaultImageForString(forString: title)
 		}
 		
-		let ring = d == NetworkType.GoogleVoice ? #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1) : #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
-		let cap = d == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
+		let ring = d == .GoogleVoice ? #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1) : #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
+		let cap = d == .GoogleVoice ? "Google Voice" : "Hangouts"
 		let ind = conversation.unread_events.count
 		let name = title
 		
