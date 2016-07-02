@@ -7,6 +7,24 @@ import Hangouts
 
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.serial, .qosUserInteractive])
 
+private var _imgCache = [String: NSImage]()
+public func fetchImage(user: User, network: NetworkType) -> NSImage {
+	let output = _imgCache[user.id.gaiaID]
+	guard output == nil else { return output! }
+	
+	var img: NSImage! = nil
+	if let d = fetchData(user.id.gaiaID, user.photoURL) {
+		img = NSImage(data: d)!
+	} else if network != .GoogleVoice {
+		img = imageForString(forString: user.fullName)
+	} else {
+		img = defaultImageForString(forString: user.fullName)
+	}
+	
+	_imgCache[user.id.gaiaID] = img
+	return img
+}
+
 class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	
 	@IBOutlet var personsView: PersonsView!
@@ -144,15 +162,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		}
 		
 		// Load all the field values from the conversation.
-		var img: NSImage! = nil
-		if let d = fetchData(c?.id.gaiaID, c?.photoURL) {
-			img = NSImage(data: d)!
-		} else if d != .GoogleVoice {
-			img = imageForString(forString: title)
-		} else {
-			img = defaultImageForString(forString: title)
-		}
-		
+		let img: NSImage = fetchImage(user: c!, network: d!)
 		let ring = d == .GoogleVoice ? #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1) : #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
 		let cap = d == .GoogleVoice ? "Google Voice" : "Hangouts"
 		let ind = conversation.unread_events.count

@@ -102,6 +102,9 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.
 			guard let text = self.messageTextField else { return }
+			text.layer?.masksToBounds = true
+			text.layer?.cornerRadius = 2.0
+			text.layer?.backgroundColor = self._textBack.cgColor
 			
 			text.textColor = NSColor.labelColor()
 			text.font = NSFont.systemFont(ofSize: 12.0)
@@ -251,11 +254,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		let orientation = (user.isSelf ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
 		
 		// Load all the field values from the conversation.
-		var img: NSImage = defaultUserImage
-		if let d = fetchData(user.id.gaiaID, user.photoURL) {
-			img = NSImage(data: d)!
-		}
-		
+		let img: NSImage = fetchImage(user: user, network: network!)
 		let time = ev.timestamp ?? Date(timeIntervalSince1970: 0)
 		return Message(photo: img, caption: cap, string: text,
 		               orientation: orientation, color: color, time: time)

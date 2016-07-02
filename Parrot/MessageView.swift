@@ -102,8 +102,8 @@ public class MessageView : NSTableCellView {
 		if let photo = self.photoView, let layer = photo.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = photo.bounds.width / 2.0
-			layer.borderWidth = 1.0
-			layer.borderColor = self.color.cgColor
+			//layer.borderWidth = 1.0
+			//layer.borderColor = self.color.cgColor
 		}
 		if let text = self.textLabel, let layer = text.layer {
 			layer.masksToBounds = true
