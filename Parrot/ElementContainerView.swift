@@ -183,6 +183,15 @@ public extension ElementContainerView {
 		})
 	}
 	
+	// Inform the TableView that every row needs to resize.
+	public func tableViewColumnDidResize(_ notification: Notification) {
+		NSAnimationContext.beginGrouping()
+		NSAnimationContext.current().duration = 0
+		let set = IndexSet(integersIn: 0..<self.dataSource.count)
+		tableView.noteHeightOfRows(withIndexesChanged: set)
+		NSAnimationContext.endGrouping()
+	}
+	
 	public func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {
 		//log.info("Unimplemented \(__FUNCTION__)")
 		return false
