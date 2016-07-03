@@ -205,6 +205,7 @@ public extension ElementContainerView {
 	public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		let view = createView()
 		view.objectValue = self.dataSource[row]
+		//tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
 		return view
 	}
 	
@@ -216,6 +217,7 @@ public extension ElementContainerView {
 	@objc(tableView:didAddRowView:forRow:)
 	public func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int) {
 		//log.info("Unimplemented \(__FUNCTION__)")
+		rowView.canDrawSubviewsIntoLayer = true
 		rowView.isEmphasized = false
 	}
 	

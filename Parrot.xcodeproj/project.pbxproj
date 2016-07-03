@@ -63,10 +63,10 @@
 		48BFD0321D13130000DAE29E /* SplitViewMode.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48BFD0311D13130000DAE29E /* SplitViewMode.storyboard */; };
 		48BFD0351D13850B00DAE29E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
 		48BFD0361D13856A00DAE29E /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
-		48C35AB61D1E4A650022997B /* github_emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48C35AB41D1E4A650022997B /* github_emoji.plist */; };
-		48C35AB71D1E4A650022997B /* google_emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48C35AB51D1E4A650022997B /* google_emoji.plist */; };
-		48C35AB81D1E4A6D0022997B /* github_emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48C35AB41D1E4A650022997B /* github_emoji.plist */; };
-		48C35AB91D1E4A700022997B /* google_emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48C35AB51D1E4A650022997B /* google_emoji.plist */; };
+		48C35AB61D1E4A650022997B /* emoji_descriptors.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48C35AB41D1E4A650022997B /* emoji_descriptors.plist */; };
+		48C35AB71D1E4A650022997B /* emoticon_descriptors.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48C35AB51D1E4A650022997B /* emoticon_descriptors.plist */; };
+		48C35AB81D1E4A6D0022997B /* emoji_descriptors.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48C35AB41D1E4A650022997B /* emoji_descriptors.plist */; };
+		48C35AB91D1E4A700022997B /* emoticon_descriptors.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48C35AB51D1E4A650022997B /* emoticon_descriptors.plist */; };
 		48CA70211C50252F0026270E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
 		48CA70231C502B6A0026270E /* AuthenticatorCLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA70221C502B6A0026270E /* AuthenticatorCLI.swift */; };
 		48DE52CC1C1CC12900647C63 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52CB1C1CC12900647C63 /* icon.icns */; };
@@ -299,8 +299,8 @@
 		48BFAECF1D1CF19100ADBA3A /* AppActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppActivity.swift; path = Parrot/AppActivity.swift; sourceTree = SOURCE_ROOT; };
 		48BFD0311D13130000DAE29E /* SplitViewMode.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplitViewMode.storyboard; sourceTree = "<group>"; };
 		48BFD0341D13694900DAE29E /* hangouts.proto */ = {isa = PBXFileReference; lastKnownFileType = text; path = hangouts.proto; sourceTree = "<group>"; };
-		48C35AB41D1E4A650022997B /* github_emoji.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = github_emoji.plist; sourceTree = "<group>"; };
-		48C35AB51D1E4A650022997B /* google_emoji.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = google_emoji.plist; sourceTree = "<group>"; };
+		48C35AB41D1E4A650022997B /* emoji_descriptors.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = emoji_descriptors.plist; sourceTree = "<group>"; };
+		48C35AB51D1E4A650022997B /* emoticon_descriptors.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = emoticon_descriptors.plist; sourceTree = "<group>"; };
 		48CA70221C502B6A0026270E /* AuthenticatorCLI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticatorCLI.swift; sourceTree = "<group>"; };
 		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52CB1C1CC12900647C63 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
@@ -549,8 +549,8 @@
 		48834DC11C1B36D1009BC442 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				48C35AB41D1E4A650022997B /* github_emoji.plist */,
-				48C35AB51D1E4A650022997B /* google_emoji.plist */,
+				48C35AB41D1E4A650022997B /* emoji_descriptors.plist */,
+				48C35AB51D1E4A650022997B /* emoticon_descriptors.plist */,
 				48834DC01C1B3686009BC442 /* Parrot.entitlements */,
 				48834D991C1B3602009BC442 /* Assets.xcassets */,
 				48834D9E1C1B3602009BC442 /* Info.plist */,
@@ -1026,13 +1026,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48C35AB61D1E4A650022997B /* github_emoji.plist in Resources */,
+				48C35AB61D1E4A650022997B /* emoji_descriptors.plist in Resources */,
 				4884929B1D0B59370003D522 /* MessageView.xib in Resources */,
 				488492741D0B392A0003D522 /* ConversationsViewController.xib in Resources */,
 				48F84D451D0DEC1E00E77AD9 /* LinkPreviews.xib in Resources */,
 				48BFD0321D13130000DAE29E /* SplitViewMode.storyboard in Resources */,
 				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
-				48C35AB71D1E4A650022997B /* google_emoji.plist in Resources */,
+				48C35AB71D1E4A650022997B /* emoticon_descriptors.plist in Resources */,
 				488492791D0B3F370003D522 /* PersonView.xib in Resources */,
 				488492761D0B3A010003D522 /* ConversationViewController.xib in Resources */,
 				48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */,
@@ -1073,9 +1073,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				48DE52FA1C1CC28000647C63 /* ParrotViewController.xib in Resources */,
-				48C35AB91D1E4A700022997B /* google_emoji.plist in Resources */,
+				48C35AB91D1E4A700022997B /* emoticon_descriptors.plist in Resources */,
 				48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */,
-				48C35AB81D1E4A6D0022997B /* github_emoji.plist in Resources */,
+				48C35AB81D1E4A6D0022997B /* emoji_descriptors.plist in Resources */,
 				488492771D0B3CA60003D522 /* ConversationViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

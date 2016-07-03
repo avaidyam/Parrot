@@ -7,7 +7,7 @@ import Cocoa
 public struct Message: Equatable {
 	var photo: NSImage
 	var caption: String
-	var string: NSString
+	var string: String
 	var orientation: NSUserInterfaceLayoutDirection
 	var color: NSColor
 	var time: Date
@@ -68,39 +68,25 @@ public class MessageView: NSTableCellView {
 		}
 	}
 	
-	private class func attributedStringForText(_ text: String) -> AttributedString {
-		let attrString = NSMutableAttributedString(string: text)
-		let linkDetector = try! NSDataDetector(types: TextCheckingResult.CheckingType.link.rawValue)
-		for match in linkDetector.matches(in: text, options: [], range: NSMakeRange(0, text.characters.count)) {
-			if let url = match.url {
-				attrString.addAttribute(NSLinkAttributeName, value: url, range: match.range)
-				attrString.addAttribute(
-					NSUnderlineStyleAttributeName,
-					value: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue),
-					range: match.range
-				)
-				
-				// TESTING:
-				//log.info(try? LinkPreviewParser.parse(url.absoluteString!))
-			}
-		}
-		return attrString
-	}
-	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
 			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Message else {
 				return
 			}
+			let str = AttributedString(string: o.string as String)
 			
 			self.orientation = o.orientation
 			self.color = o.color
-			let str = MessageView.attributedStringForText(o.string as String)
 			self.textLabel?.textStorage?.setAttributedString(str)
 			self.textLabel?.toolTip = "\(o.time.fullString())"
 			self.photoView?.image = o.photo
 			self.photoView?.toolTip = o.caption
+			
+			// Enable automatic links, etc.
+			self.textLabel?.isEditable = true
+			self.textLabel?.checkTextInDocument(nil)
+			self.textLabel?.isEditable = false
 		}
 	}
 	
@@ -122,8 +108,9 @@ public class MessageView: NSTableCellView {
 			// NSTextView doesn't automatically change its text color when the 
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.
+			// Also, expand the text size if it's purely emoji.
 			text.textColor = NSColor.labelColor()
-			text.font = NSFont.systemFont(ofSize: 12.0)
+			text.font = NSFont.systemFont(ofSize: 12.0 * (text.string!.isEmoji ? 3 : 1))
 			text.typingAttributes = [
 				NSForegroundColorAttributeName: text.textColor!,
 				NSFontAttributeName: text.font!
@@ -143,48 +130,21 @@ public class MessageView: NSTableCellView {
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
+			
+			//log.debug("text height: \(text.string!) => \(text.attributedString().boundingRect(with: NSSize(width: self.bounds.width, height: 100000), options: .usesLineFragmentOrigin).size.height)")
 		}
 	}
 	
 	
 	/* TODO: Clean this up and out of here: */
-	
-	
-	// Customization settings for rendering the message.
-	// Support: fill percentages, text border and padding, optional photo,
-	// decorators, etc. (anything NSView or CALayer can support!)
-	internal static var FillPercentage = (x: CGFloat(0.75), y: CGFloat(1.00))
-	internal static var TextBorder = (l: CGFloat(4), r: CGFloat(4), t: CGFloat(4), b: CGFloat(4))
-	internal static var TextPadding = (v: CGFloat(8), h: CGFloat(8))
-	
-	internal class func heightForContainerWidth(_ text: NSString, width: CGFloat) -> CGFloat {
-		func widthOfText(_ backgroundWidth: CGFloat) -> CGFloat {
-			return backgroundWidth
-				- MessageView.TextBorder.r
-				- MessageView.TextBorder.l
-		}
-		
-		func widthOfBackground(_ textWidth: CGFloat) -> CGFloat {
-			return textWidth
-				+ MessageView.TextBorder.r
-				+ MessageView.TextBorder.l
-		}
-		
-		func textSizeInWidth(_ text: NSString, width: CGFloat) -> CGSize {
-			var size = text.boundingRect(
-				with: NSMakeSize(width, 0),
-				options: [
-					.usesLineFragmentOrigin,
-					.usesFontLeading
-				]
-				).size
-			size.width += TextPadding.h
-			return size
-		}
-		
-		let size = textSizeInWidth(text, width: widthOfText((width * FillPercentage.x)))
-		let height = size.height + TextBorder.t + TextBorder.b
-		return height
+	internal class func heightForContainerWidth(_ text: String, size: CGFloat, width: CGFloat) -> CGFloat {
+		let attr = AttributedString(string: text, attributes: [
+			NSFontAttributeName: NSFont.systemFont(ofSize: size * (text.isEmoji ? 3 : 1))
+		])
+		let fake = NSSize(width: width, height: 10000000)
+		let box = attr.boundingRect(with: fake, options: [.usesLineFragmentOrigin, .usesFontLeading])
+		let height = box.size.height
+		return (height > 24.0 ? height : 24.0) + 16.0
 	}
 }
 

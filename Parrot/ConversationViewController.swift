@@ -79,7 +79,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			//log.info(self._measure?.frame.size.height)
 			
 			let b = self.messagesView.frame.width
-			return Double(MessageView.heightForContainerWidth(a, width: b)) + 20.0
+			return MessageView.heightForContainerWidth(a, size: 12, width: b).native
 		}
 		
 		self.popover = NSPopover()
@@ -137,6 +137,10 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
+			/*text.placeholderTextAttributes = [
+				NSForegroundColorAttributeName: NSColor.tertiaryLabelColor(),
+				NSFontAttributeName: text.font!
+			]*/
 		}
     }
 	
@@ -315,7 +319,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 		switch commandSelector {
 			
 		case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
-			self.sendCurrentMessage(textView)
+			self.sendCurrentMessage()
 		case #selector(NSResponder.insertTab(_:)): // TODO: configurable later
 			textView.textStorage?.append(AttributedString(string: "    ", attributes: textView.typingAttributes))
 			
@@ -326,8 +330,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 	//["()", "[]", "{}", "\"\"", "''", "``"]
 	//func textViewDidChangeText?
 	
-	// IBAction because we have a button that needs pressing.
-	@IBAction func sendCurrentMessage(_:AnyObject?) {
+	func sendCurrentMessage() {
 		func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
 			return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
 		}

@@ -104,6 +104,11 @@ public extension Date {
 
 @IBDesignable
 public class NSAutoLayoutTextView: NSTextView {
+	
+	@IBInspectable
+	public var placeholderString: String? = nil
+	public var placeholderTextAttributes: [String: AnyObject] = [:]
+	
 	public override var intrinsicContentSize: NSSize {
 		self.layoutManager?.ensureLayout(for: self.textContainer!)
 		return (self.layoutManager?.usedRect(for: self.textContainer!).size)!
@@ -111,6 +116,25 @@ public class NSAutoLayoutTextView: NSTextView {
 	public override func didChangeText() {
 		super.didChangeText()
 		self.invalidateIntrinsicContentSize()
+	}
+	public override func becomeFirstResponder() -> Bool {
+		self.needsDisplay = true
+		return super.becomeFirstResponder()
+	}
+	public override func resignFirstResponder() -> Bool {
+		self.needsDisplay = true
+		return super.resignFirstResponder()
+	}
+	
+	public override func draw(_ dirtyRect: NSRect) {
+		super.draw(dirtyRect)
+		
+		guard let s = self.string where s.isEmpty else { return }
+		guard let p = self.placeholderString else { return }
+		guard self !== self.window?.firstResponder else { return }
+		
+		let str = AttributedString(string: p, attributes: self.placeholderTextAttributes)
+		str.draw(at: .zero)
 	}
 }
 
@@ -147,6 +171,16 @@ public func defaultImageForString(forString source: String, size: NSSize = NSSiz
 		r.origin.y -= size.height * 0.1
 		NSImage(named: "NSUserGuest")!.draw(in: r) // composite this somehow.
 		return true
+	}
+}
+
+public extension NSFont {
+	
+	/// Load an NSFont from a provided URL.
+	public static func from(_ fontURL: URL, size: CGFloat) -> NSFont? {
+		let desc = CTFontManagerCreateFontDescriptorsFromURL(fontURL)
+		guard let item = (desc as? NSArray)?[0] else { return nil }
+		return CTFontCreateWithFontDescriptor(item as! CTFontDescriptor, size, nil)
 	}
 }
 
