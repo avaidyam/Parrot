@@ -25,7 +25,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 		AppActivity.start("Authenticate")
 		Authenticator.authenticateClient {
 			let c = Client(configuration: $0)
-			_ = c.connect()
+			_ = c.connect() {_ in}
 			AppActivity.end("Authenticate")
 			
 			NotificationCenter.default()

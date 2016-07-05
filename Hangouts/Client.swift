@@ -39,7 +39,7 @@ public final class Client: Service {
 	private var tokens = [NSObjectProtocol]()
 	
 	// Establish a connection to the chat server.
-    public func connect() -> Bool {
+    public func connect(_ onConnect: (ErrorProtocol?) -> ()) {
 		self.channel = Channel(configuration: self.config)
 		//self.channel?.delegate = self
 		self.channel?.listen()
@@ -66,24 +66,22 @@ public final class Client: Service {
 			}
 		}
 		self.tokens.append(contentsOf: [a, b, c, d])
-		return true
     }
 	
 	/* TODO: Can't disconnect a Channel yet. */
 	// Gracefully disconnect from the server.
-	public func disconnect() -> Bool {
+	public func disconnect(_ onDisconnect: (ErrorProtocol?) -> ()) {
 		//self.channel?.disconnect()
 		
 		// Remove all the observers so we aren't receiving calls later on.
 		self.tokens.forEach {
 			NotificationCenter.default().removeObserver($0)
 		}
-		return true
 	}
 	
 	public var connected: Bool = true
-	public func synchronize() -> Bool {
-		return true
+	public func synchronize(_ onSynchronize: (ErrorProtocol?) -> ()) {
+		
 	}
 	
 	// Set this client as active.

@@ -45,7 +45,7 @@ public class ServiceManager: ApplicationController {
 						ServiceRegistry.add(service: c)
 					}
 			}
-			_ = c.connect()
+			_ = c.connect() {_ in}
 			
 			// Instantiate storyboard and controller and begin the UI from here.
 			DispatchQueue.main.async {

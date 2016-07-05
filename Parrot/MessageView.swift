@@ -130,8 +130,6 @@ public class MessageView: NSTableCellView {
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
-			
-			//log.debug("text height: \(text.string!) => \(text.attributedString().boundingRect(with: NSSize(width: self.bounds.width, height: 100000), options: .usesLineFragmentOrigin).size.height)")
 		}
 	}
 	
