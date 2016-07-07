@@ -108,7 +108,7 @@ public class PersonView : NSTableCellView {
 }
 
 // Container-type view for PersonView.
-public class PersonsView: ElementContainerView {
+public class PersonsView: ListView {
 	internal override func createView() -> PersonView {
 		var view = self.tableView.make(withIdentifier: PersonView.className(), owner: nil) as? PersonView
 		if view == nil {

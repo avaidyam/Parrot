@@ -19,6 +19,7 @@
 		481300551D26BDA000768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		481300561D26BDA400768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		481300571D26BDA700768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
+		4814E3B91D2DCC860079C3DB /* AdvancedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4814E3B81D2DCC860079C3DB /* AdvancedTextView.swift */; };
 		48158E1F1D28690C00ED369C /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48158E1E1D28690C00ED369C /* API.swift */; };
 		48158E441D29C28A00ED369C /* MessgingExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48158E431D29C28A00ED369C /* MessgingExtension.swift */; };
 		4835ECA91C1C620000193EBC /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageView.swift */; };
@@ -243,6 +244,8 @@
 		481300441D26BD4900768D79 /* ParrotServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ParrotServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481300481D26BD4900768D79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		481300581D26C00800768D79 /* ParrotServiceExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParrotServiceExtension.h; sourceTree = "<group>"; };
+		4814E3B61D2C973D0079C3DB /* kelvin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = kelvin.py; path = ../../../Desktop/Other/LEDENET/kelvin.py; sourceTree = "<group>"; };
+		4814E3B81D2DCC860079C3DB /* AdvancedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedTextView.swift; sourceTree = "<group>"; };
 		48158E1E1D28690C00ED369C /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		48158E431D29C28A00ED369C /* MessgingExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessgingExtension.swift; sourceTree = "<group>"; };
 		481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+Extensions.swift"; sourceTree = "<group>"; };
@@ -476,6 +479,7 @@
 				4835ECB31C1C672900193EBC /* UserNotification+AuxOptions.swift */,
 				48BFAE5C1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift */,
 				48A452261D19B16500CB588A /* Tone.swift */,
+				4814E3B81D2DCC860079C3DB /* AdvancedTextView.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -656,6 +660,7 @@
 		48DE52DD1C1CC1D300647C63 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4814E3B61D2C973D0079C3DB /* kelvin.py */,
 				48BA5B481C379CCF00ACA29B /* libncurses.tbd */,
 				48DE52DE1C1CC1D300647C63 /* Cocoa.framework */,
 				48DE52F11C1CC28000647C63 /* NotificationCenter.framework */,
@@ -1129,6 +1134,7 @@
 				4835ECAB1C1C620000193EBC /* PersonView.swift in Sources */,
 				4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */,
 				48BFAE5D1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift in Sources */,
+				4814E3B91D2DCC860079C3DB /* AdvancedTextView.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
 				4835ECB71C1C672900193EBC /* UserNotification+AuxOptions.swift in Sources */,
 				4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */,

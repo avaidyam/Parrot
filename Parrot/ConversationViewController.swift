@@ -4,7 +4,7 @@ import Hangouts
 /* TODO: Use NSTextAlternatives instead of force-replacing text. */
 /* TODO: Smart entry completion for ()/[]/""/etc. */
 
-class ConversationViewController: NSViewController, ConversationDelegate, NSTextViewDelegate {
+class ConversationViewController: NSViewController, ConversationDelegate, NSTextViewDelegate, NSTextDelegate {
 	
 	@IBOutlet var messagesView: MessagesView!
     @IBOutlet var messageTextField: NSTextView!
@@ -297,7 +297,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
         if messageTextField.string == "" {
             return
         }
-
+		
         let typingTimeout = 0.4
         let now = Date()
 
@@ -325,6 +325,10 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			
 		default: return false
 		}; return true
+	}
+	
+	func textView(_ textView: NSTextView, completions words: [String], forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>?) -> [String] {
+		return ["this", "is", "a", "test"]
 	}
 	
 	//["()", "[]", "{}", "\"\"", "''", "``"]

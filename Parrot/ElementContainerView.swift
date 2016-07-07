@@ -49,7 +49,7 @@ public enum SelectionCapability {
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
-public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExtendedTableViewDelegate {
+public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExtendedTableViewDelegate {
 	internal var scrollView: NSScrollView!
 	internal var tableView: NSExtendedTableView!
 	
@@ -74,6 +74,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 		
 		let col = NSTableColumn(identifier: "")
 		col.resizingMask = .autoresizingMask
+		col.isEditable = false
 		self.tableView.addTableColumn(col)
 		self.tableView.headerView = nil
 		self.tableView.menu = NSMenu(title: "")
@@ -169,7 +170,7 @@ public class ElementContainerView: NSView, NSTableViewDataSource, NSTableViewDel
 }
 
 // Essential Support
-public extension ElementContainerView {
+public extension ListView {
 	
 	@objc(numberOfRowsInTableView:)
 	public func numberOfRows(in tableView: NSTableView) -> Int {
@@ -228,7 +229,7 @@ public extension ElementContainerView {
 }
 
 // Selection Support
-public extension ElementContainerView {
+public extension ListView {
 	
 	@objc(selectionShouldChangeInTableView:)
 	public func selectionShouldChange(in tableView: NSTableView) -> Bool {
@@ -258,7 +259,7 @@ public extension ElementContainerView {
 }
 
 // Drag & Drop Support
-public extension ElementContainerView {
+public extension ListView {
 	
 	public func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
 		return self.pasteboardProvider?(row: row)

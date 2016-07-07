@@ -820,9 +820,9 @@
                                         <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="ERn-Gk-mOP">
                                             <font key="font" metaFont="system"/>
                                             <segments>
-                                                <segment label="Light" tag="2"/>
-                                                <segment label="Dark" selected="YES" tag="3"/>
-                                                <segment label="System" tag="4"/>
+                                                <segment label="Light"/>
+                                                <segment label="Dark" selected="YES" tag="1"/>
+                                                <segment label="System" tag="2"/>
                                             </segments>
                                         </segmentedCell>
                                         <connections>
@@ -836,7 +836,7 @@
                                     </segmentedControl>
                                     <button toolTip="Invert the Parrot conversation direction, so outgoing messages are on the left and incoming messages are on the right." translatesAutoresizingMaskIntoConstraints="NO" id="84g-xW-6Ak">
                                         <rect key="frame" x="-2" y="154" width="123" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Invert Chat Style" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="yCn-Pp-xVP">
+                                        <buttonCell key="cell" type="check" title="Invert Chat Style" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="yCn-Pp-xVP">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
@@ -941,6 +941,17 @@
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="alQ-Y9-JAT">
+                                <rect key="frame" x="255" y="147" width="85" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="roundTextured" title="Testing" bezelStyle="texturedRounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NCD-vr-d7U">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                </buttonCell>
+                            </button>
                         </subviews>
                     </view>
                 </viewController>
