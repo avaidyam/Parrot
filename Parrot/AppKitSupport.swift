@@ -184,39 +184,6 @@ public extension NSFont {
 	}
 }
 
-/// Completely dysfunctional with UserDefaults for some insane reason.
-public final class KVOTrampoline: NSObject {
-	private let refObject: NSObject
-	private let refAction: (Void) -> Void
-	private var refCounts = [String: UInt]()
-	
-	public required init(observeOn object: NSObject, perform handler: (Void) -> Void) {
-		self.refObject = object
-		self.refAction = handler
-	}
-	
-	public func observe(keyPath: String) {
-		if (self.refCounts[keyPath] ?? 0) == 0 {
-			self.refObject.addObserver(self, forKeyPath: keyPath, options: [.initial, .new], context: nil)
-		}
-		self.refCounts[keyPath] = (self.refCounts[keyPath] ?? 0) + 1
-	}
-	
-	public func release(keyPath: String) {
-		self.refCounts[keyPath] = (self.refCounts[keyPath] ?? 0) - 1
-		if (self.refCounts[keyPath] ?? 0) == 0 {
-			self.refObject.removeObserver(self, forKeyPath: keyPath)
-		}
-	}
-	
-	public override func observeValue(forKeyPath keyPath: String?, of object: AnyObject?,
-	                                  change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
-		guard let o = object where o === self.refObject else { return }
-		guard let k = keyPath where self.refCounts.keys.contains(k) else { return }
-		self.refAction()
-	}
-}
-
 /// A "typealias" for the traditional NSApplication delegation.
 public class ApplicationController: NSObject, NSApplicationDelegate {}
 

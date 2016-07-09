@@ -807,16 +807,16 @@
         <scene sceneID="E9z-Ze-Wgi">
             <objects>
                 <viewController title="Appearance" id="pKj-Ns-rph" sceneMemberID="viewController">
-                    <view key="view" id="xUP-4m-s2J" customClass="NSVisualEffectView">
+                    <view key="view" wantsLayer="YES" id="xUP-4m-s2J" customClass="NSVisualEffectView">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aI8-z9-Uro">
-                                <rect key="frame" x="20" y="80" width="169" height="200"/>
+                            <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aI8-z9-Uro">
+                                <rect key="frame" x="20" y="58" width="169" height="222"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vwu-bS-VYB">
-                                        <rect key="frame" x="0.0" y="176" width="169" height="25"/>
+                                        <rect key="frame" x="0.0" y="198" width="169" height="25"/>
                                         <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="ERn-Gk-mOP">
                                             <font key="font" metaFont="system"/>
                                             <segments>
@@ -835,7 +835,7 @@
                                         </connections>
                                     </segmentedControl>
                                     <button toolTip="Invert the Parrot conversation direction, so outgoing messages are on the left and incoming messages are on the right." translatesAutoresizingMaskIntoConstraints="NO" id="84g-xW-6Ak">
-                                        <rect key="frame" x="-2" y="154" width="123" height="18"/>
+                                        <rect key="frame" x="-2" y="176" width="123" height="18"/>
                                         <buttonCell key="cell" type="check" title="Invert Chat Style" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="yCn-Pp-xVP">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -850,7 +850,7 @@
                                         </connections>
                                     </button>
                                     <button toolTip="Automatically convert text emoticons into rich emoji." translatesAutoresizingMaskIntoConstraints="NO" id="H8p-mW-AtS">
-                                        <rect key="frame" x="-2" y="132" width="87" height="18"/>
+                                        <rect key="frame" x="-2" y="154" width="87" height="18"/>
                                         <buttonCell key="cell" type="check" title="Auto Emoji" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Mxm-Cr-vhF">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -865,13 +865,28 @@
                                         </connections>
                                     </button>
                                     <button toolTip="Vibrate a force touch trackpad if a notification occurs (only if there is a finger on the trackpad at the same instant)." translatesAutoresizingMaskIntoConstraints="NO" id="ntd-TB-ihF">
-                                        <rect key="frame" x="-2" y="110" width="145" height="18"/>
+                                        <rect key="frame" x="-2" y="132" width="145" height="18"/>
                                         <buttonCell key="cell" type="check" title="Vibrate Force Touch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eGm-ez-1E0">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
                                             <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateForceTouch" id="ZVn-Uo-Sxi">
+                                                <dictionary key="options">
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
+                                    </button>
+                                    <button toolTip="Vibrate a force touch trackpad if a notification occurs (only if there is a finger on the trackpad at the same instant)." wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LKe-zb-BFZ">
+                                        <rect key="frame" x="-2" y="110" width="151" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Disable Translucency" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="5a1-3U-neJ">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.DisableTranslucency" id="bbf-Fu-F5E">
                                                 <dictionary key="options">
                                                     <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
                                                     <bool key="NSValidatesImmediately" value="YES"/>
@@ -929,6 +944,7 @@
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
+                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
                                     <real value="3.4028234663852886e+38"/>
@@ -939,17 +955,23 @@
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="alQ-Y9-JAT">
-                                <rect key="frame" x="255" y="147" width="85" height="25"/>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z5y-cY-OXR">
+                                <rect key="frame" x="20" y="26" width="81" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="roundTextured" title="Testing" bezelStyle="texturedRounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NCD-vr-d7U">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <buttonCell key="cell" type="roundTextured" title="OTR" bezelStyle="texturedRounded" image="NSIChatTheaterTemplate" imagePosition="left" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gPA-lF-aRu">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                     <font key="font" metaFont="system"/>
-                                    <string key="keyEquivalent" base64-UTF8="YES">
-DQ
-</string>
+                                </buttonCell>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PPw-cV-QEy">
+                                <rect key="frame" x="109" y="26" width="81" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="roundTextured" title="OTR" bezelStyle="texturedRounded" image="NSIChatTheaterTemplate" imagePosition="left" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ikV-IL-XNN">
+                                    <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
                         </subviews>
@@ -1004,6 +1026,7 @@ DQ
     <resources>
         <image name="NSApplicationIcon" width="128" height="128"/>
         <image name="NSColorPanel" width="32" height="32"/>
+        <image name="NSIChatTheaterTemplate" width="15" height="13"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
         <image name="NSUserAccounts" width="32" height="32"/>
     </resources>

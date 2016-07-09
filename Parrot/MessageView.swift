@@ -105,6 +105,9 @@ public class MessageView: NSTableCellView {
 			layer.cornerRadius = 2.0
 			layer.backgroundColor = self._textBack.cgColor
 			
+			// [BUG] [macOS 12] NSTextView doesn't fill width for some reason.
+			text.frame = text.enclosingScrollView!.bounds
+			
 			// NSTextView doesn't automatically change its text color when the 
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.

@@ -66,7 +66,6 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			self.imageView.image = fetchImage(user: me, network: .Babel)
 		}
 		
-		self.messagesView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.messagesView.sizeClass = .dynamic
         self.messageTextField.delegate = self
 		

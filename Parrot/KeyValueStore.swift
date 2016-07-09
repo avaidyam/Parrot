@@ -3,19 +3,26 @@ import Foundation
 /* TODO: More extensive support for Keychain attributes. */
 /* TODO: InternetSettings to wrap SecKeychain*InternetPassword. */
 
-/// A KeyValueStore is a container layer that stores values for given keys.
+/// A KeyValueStore is a container layer that stores values for given keys
+/// and supports specific application-defined or special/protected domains.
 public protocol KeyValueStore {
 	subscript(key: String) -> AnyObject? { get set }
-}
-
-/// A KeyValueStore that supports specific application-defined domains.
-public protocol DomainSpecificKeyValueStore: KeyValueStore {
 	subscript(key: String, domain domain: String) -> AnyObject? { get set }
 }
 
 /// A KeyValueStore that encodes its contents in the OS defaults database.
-public final class SettingsStore: DomainSpecificKeyValueStore {
+public final class SettingsStore: KeyValueStore {
 	private init() {}
+	
+	/// A special protected SettingsStore domain.
+	/// In case this is used as the domain for the SettingsStore, it will read from
+	/// the system-wide KeyValueStore internally. It cannot be used to set values.
+	public static let globalDomain = UserDefaults.globalDomain
+	
+	/// A special protected SettingsStore domain.
+	/// In the case this is used as the domain for the SettingsStore, it will read
+	/// and write from the user's global iCloud KeyValueStore.
+	public static let ubiquitousDomain = "SettingsStore.UbiquitousKeyValueDomain"
 	
 	/// Set or get a  key's value with the default domain (global search list).
 	/// Note: setting a key's value to nil will delete the key from the store.
@@ -32,16 +39,30 @@ public final class SettingsStore: DomainSpecificKeyValueStore {
 	/// Note: setting a key's value to nil will delete the key from the store.
 	public subscript(key: String, domain domain: String) -> AnyObject? {
 		get {
-			return UserDefaults(suiteName: domain)?.value(forKey: key)
+			if domain == SettingsStore.globalDomain {
+				return UserDefaults.standard().persistentDomain(forName: UserDefaults.globalDomain)?[key]
+			} else if domain == SettingsStore.ubiquitousDomain {
+				NSUbiquitousKeyValueStore.default().synchronize()
+				return NSUbiquitousKeyValueStore.default().object(forKey: key)
+			} else {
+				return UserDefaults(suiteName: domain)?.value(forKey: key)
+			}
 		}
 		set (value) {
-			UserDefaults(suiteName: domain)?.setValue(value, forKey: key)
+			if domain == SettingsStore.globalDomain {
+				// FIXME: Unsupported.
+			} else if domain == SettingsStore.ubiquitousDomain {
+				NSUbiquitousKeyValueStore.default().set(value, forKey: key)
+				NSUbiquitousKeyValueStore.default().synchronize()
+			} else {
+				UserDefaults(suiteName: domain)?.setValue(value, forKey: key)
+			}
 		}
 	}
 }
 
 /// A KeyValueStore that securely encodes its contents in the OS keychain.
-public final class SecureSettingsStore: DomainSpecificKeyValueStore {
+public final class SecureSettingsStore: KeyValueStore {
 	private init() {}
 	private var _defaultDomain = Bundle.main().bundleIdentifier ?? "SecureSettings:ERR"
 	
@@ -95,28 +116,8 @@ public final class SecureSettingsStore: DomainSpecificKeyValueStore {
 	}
 }
 
-/// A KeyValueStore that encodes its contents in the user's iCloud database.
-/// Note: UbiqutousStore does not support domains.
-public final class UbiquitousStore: KeyValueStore {
-	private init() {}
-	
-	public subscript(key: String) -> AnyObject? {
-		get {
-			NSUbiquitousKeyValueStore.default().synchronize()
-			return NSUbiquitousKeyValueStore.default().object(forKey: key)
-		}
-		set(value) {
-			NSUbiquitousKeyValueStore.default().set(value, forKey: key)
-			NSUbiquitousKeyValueStore.default().synchronize()
-		}
-	}
-}
-
 /// Aliased singleton for SettingsStore.
 public let Settings = SettingsStore()
 
 /// Aliased singleton for SecureSettingsStore.
 public let SecureSettings = SecureSettingsStore()
-
-/// Aliased singleton for UbiquitousStore.
-public let CloudSettings = UbiquitousStore()

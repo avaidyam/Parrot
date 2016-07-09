@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A238m" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
@@ -21,72 +21,34 @@
                     </constraints>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="pE0-nd-e80"/>
                 </imageView>
-                <scrollView wantsLayer="YES" verifyAmbiguity="ignoreSizes" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="QLh-pw-ow3" customClass="AntiScrollView" customModule="Parrot" customModuleProvider="target">
+                <scrollView wantsLayer="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="QLh-pw-ow3" customClass="AntiScrollView" customModule="Parrot" customModuleProvider="target">
                     <rect key="frame" x="36" y="8" width="318" height="24"/>
                     <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="ISP-1s-HMH">
                         <rect key="frame" x="0.0" y="0.0" width="318" height="24"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView wantsLayer="YES" horizontalCompressionResistancePriority="751" editable="NO" drawsBackground="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" smartInsertDelete="YES" id="1dL-oQ-fiX">
+                            <textView wantsLayer="YES" horizontalCompressionResistancePriority="751" editable="NO" drawsBackground="NO" verticallyResizable="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" smartInsertDelete="YES" id="1dL-oQ-fiX">
                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <size key="minSize" width="0.0" height="24"/>
-                                <size key="maxSize" width="463" height="10000000"/>
+                                <size key="maxSize" width="0.0" height="10000000"/>
                                 <attributedString key="textStorage">
                                     <fragment content="Cheers, love! The cavalry's here!">
                                         <attributes>
                                             <font key="NSFont" metaFont="system"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                <tabStops>
-                                                    <textTab alignment="left" location="28">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="56">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="84">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="112">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="140">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="168">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="196">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="224">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="252">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="280">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="308">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="336">
-                                                        <options/>
-                                                    </textTab>
-                                                </tabStops>
-                                            </paragraphStyle>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                         </attributes>
                                     </fragment>
                                 </attributedString>
                                 <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 <size key="minSize" width="0.0" height="24"/>
-                                <size key="maxSize" width="463" height="10000000"/>
+                                <size key="maxSize" width="0.0" height="10000000"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                     </clipView>
+                    <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="ROC-aq-PBt">
                         <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -98,12 +60,12 @@
                 </scrollView>
             </subviews>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="QLh-pw-ow3" secondAttribute="trailing" constant="8" id="ENF-wl-uFg"/>
                 <constraint firstItem="QLh-pw-ow3" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="Flq-Ox-3WH"/>
                 <constraint firstItem="QLh-pw-ow3" firstAttribute="leading" secondItem="wEL-KW-aRK" secondAttribute="trailing" constant="4" id="Kst-w6-kXP"/>
-                <constraint firstAttribute="bottom" secondItem="QLh-pw-ow3" secondAttribute="bottom" constant="8" id="Ord-Fb-Rkt"/>
                 <constraint firstItem="wEL-KW-aRK" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="joL-ln-WDl"/>
                 <constraint firstItem="wEL-KW-aRK" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="uIz-B5-lez"/>
-                <constraint firstAttribute="trailing" secondItem="QLh-pw-ow3" secondAttribute="trailing" constant="8" id="xjw-rc-JB7"/>
+                <constraint firstAttribute="bottom" secondItem="QLh-pw-ow3" secondAttribute="bottom" constant="8" id="ufM-YY-Rkd"/>
             </constraints>
             <connections>
                 <outlet property="photoView" destination="wEL-KW-aRK" id="CDZ-Os-RaC"/>

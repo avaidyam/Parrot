@@ -14,6 +14,7 @@ public let defaultUserImage = NSImage(named: "NSUserGuest")!
 public final class Parrot {
 	public static let InterfaceStyle = "Parrot.InterfaceStyle"
 	public static let SystemInterfaceStyle = "Parrot.SystemInterfaceStyle"
+	public static let DisableTranslucency = "Parrot.DisableTranslucency"
 	
 	public static let AutoEmoji = "Parrot.AutoEmoji"
 	public static let InvertChatStyle = "Parrot.InvertChatStyle"
