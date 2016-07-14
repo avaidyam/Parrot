@@ -8,25 +8,7 @@ import ParrotServiceExtension
 
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.serial, .qosUserInteractive])
 
-private var _imgCache = [String: NSImage]()
-public func fetchImage(user: Person, network: NetworkType) -> NSImage {
-	let output = _imgCache[user.identifier]
-	guard output == nil else { return output! }
-	
-	var img: NSImage! = nil
-	if let d = fetchData(user.identifier, user.photoURL) {
-		img = NSImage(data: d)!
-	} else if network != .GoogleVoice {
-		img = imageForString(forString: user.fullName)
-	} else {
-		img = defaultImageForString(forString: user.fullName)
-	}
-	
-	_imgCache[user.identifier] = img
-	return img
-}
-
-class ConversationListViewController:  NSViewController, ConversationListDelegate {
+class ConversationListViewController: NSViewController, ConversationListDelegate {
 	
 	@IBOutlet var personsView: ConversationListView!
 	@IBOutlet var indicator: NSProgressIndicator!
@@ -46,8 +28,8 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 	}
 	var sortedConversations: [ParrotServiceExtension.Conversation] {
 		// FIXME: FORCE-CAST TO HANGOUTS
-		let all = (self.conversationList as! Hangouts.ConversationList).conv_dict.values.filter { !$0.is_archived }
-		return all.sorted { $0.last_modified > $1.last_modified }
+		let all = self.conversationList?.conversations.map { $1 as! IConversation }.filter { !$0.is_archived }
+		return all!.sorted { $0.last_modified > $1.last_modified }.map { $0 as ParrotServiceExtension.Conversation }
 	}
 	
 	deinit {
@@ -151,47 +133,20 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 	}
 	
 	private func _getPerson(_ conversation: ParrotServiceExtension.Conversation) -> ConversationView.Info {
-		
-		// Propogate info for data filling
-		let a = conversation.messages.last?.sender
-		let b = conversation.participants.filter { $0.me }.first?.identifier
-		let c = conversation.participants.filter { !$0.me }.first
-		
-		// FIXME: FORCE-CAST TO HANGOUTS
-		let qqqq = conversation as! Hangouts.IConversation
-		let d = NetworkType(rawValue: (qqqq.conversation.networkType)[0].rawValue)
-		
-		let title = conversation.name
-		
-		/*
-		// Patch for Google Voice contacts to show their numbers.
-		// FIXME: Sometimes [1] is actually you, fix that.
-		if title == "Unknown" {
-			if conversation.conversation.participantData.count > 0 {
-				title = conversation.conversation.participantData[1].fallbackName! as String
-			}
-		}
-		*/
-		
-		// Load all the field values from the conversation.
-		let img: NSImage = fetchImage(user: c!, network: d!)
-		//let ring = d == .GoogleVoice ? #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1) : #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
-		//let cap = d == .GoogleVoice ? "Google Voice" : "Hangouts"
-		//let ind = conversation.unread_events.count
-		let name = title
-		
-		// this doesn't work yet.
-		//let q = conversation.users.count > 2 ? "Them: " : (a != b ? "" : "You: ")
-		
-		// FIXME: Sometimes, the messages will be empty if there was a hangouts call as the last event.
-		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
+		let messageSender = conversation.messages.last?.sender
+		let selfSender = conversation.participants.filter { $0.me }.first?.identifier
+		let firstParticipant = conversation.participants.filter { !$0.me }.first!
+		let photo: NSImage = fetchImage(user: firstParticipant, conversation: conversation)
+		// FIXME: Group conversation prefixing doesn't work yet.
+		let prefix = messageSender != selfSender ? "" : "You: "
+		//let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
+		let subtitle = prefix + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp ?? Date(timeIntervalSince1970: 0)
-		
-		return ConversationView.Info(photo: img, indicator: 0, primary: name, secondary: sub, time: time)
+		return ConversationView.Info(photo: photo, indicator: 0, primary: conversation.name, secondary: subtitle, time: time)
 	}
 	
 	private func _getAllPersons() -> [ConversationView.Info]? {
-		return self.conversationList?.conversations.map { _getPerson($1) }
+		return self.sortedConversations.map { _getPerson($0) }
 	}
 	
     func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {

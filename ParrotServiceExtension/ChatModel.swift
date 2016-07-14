@@ -44,6 +44,14 @@ public protocol ConversationList /*: Collection*/ {
 	func delete(conversation: Conversation)
 }
 
+/*
+public extension ConversationList {
+	
+	public var sortedConversations: [Conversation] {
+		return self.conversations.values.sorted { $0.timestamp > $1.timestamp }
+	}
+}*/
+
 public protocol Person /*: Hashable, Equatable*/ {
 	
 	/// The Person's unique identifier (specific to the Service).

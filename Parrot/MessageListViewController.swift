@@ -64,7 +64,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 				layer.masksToBounds = true
 				layer.cornerRadius = photo.bounds.width / 2.0
 			}
-			self.imageView.image = fetchImage(user: me as! User, network: .Babel)
+			self.imageView.image = fetchImage(user: me as! User, conversation: self.conversation!)
 		}
 		
 		self.messagesView.sizeClass = .dynamic
@@ -250,26 +250,9 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	func _getMessage(_ ev: ParrotServiceExtension.Message) -> MessageView.Info {
 		let user = self.conversation!.client.directory.people[ev.sender]!
 		//let user = self.conversation!.user_list[ev.sender]
-		
-		// FIXME: FORCE-CAST TO HANGOUTS
-		let qqqq = conversation!// as! Hangouts.IConversation
-		let d = NetworkType(rawValue: (qqqq.conversation.networkType)[0].rawValue)
-		
-		/*
-		var color: NSColor = #colorLiteral(red: 0.2078431398, green: 0.2823529541, blue: 0.3215686381, alpha: 1)
-		if !user.isSelf && network == NetworkType.Babel {
-			color = #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
-		} else if !user.isSelf && network == NetworkType.GoogleVoice {
-			color = #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1)
-		}
-		let cap = network == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
-		*/
-		
 		let text = ev.text
 		let orientation = (user.me ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
-		
-		// Load all the field values from the conversation.
-		let img: NSImage = fetchImage(user: user, network: d!)
+		let img: NSImage = fetchImage(user: user, conversation: self.conversation!)
 		let time = ev.timestamp ?? Date(timeIntervalSince1970: 0)
 		return MessageView.Info(photo: img, string: text, orientation: orientation, time: time)
 	}

@@ -6,27 +6,8 @@ import ParrotServiceExtension
 /* TODO: Support /cmd's (i.e. /remove <username>) for power-users. */
 /* TODO: Support Slack-like plugin integrations. */
 
-//severity: Logger.Severity(rawValue: Process.arguments["log_level"]) ?? .verbose
-internal let log = Logger(subsystem: "com.avaidyam.Parrot.global")
-public let defaultUserImage = NSImage(named: "NSUserGuest")!
-
-// Existing Parrot Settings keys.
-public final class Parrot {
-	public static let InterfaceStyle = "Parrot.InterfaceStyle"
-	public static let SystemInterfaceStyle = "Parrot.SystemInterfaceStyle"
-	public static let DisableTranslucency = "Parrot.DisableTranslucency"
-	
-	public static let AutoEmoji = "Parrot.AutoEmoji"
-	public static let InvertChatStyle = "Parrot.InvertChatStyle"
-	public static let ShowSidebar = "Parrot.ShowSidebar"
-	
-	public static let VibrateForceTouch = "Parrot.VibrateForceTouch"
-	public static let VibrateInterval = "Parrot.VibrateInterval"
-	public static let VibrateLength = "Parrot.VibrateLength"
-}
-
 @NSApplicationMain
-public class ServiceManager: ApplicationController {
+public class ServiceManager: NSApplicationController {
 	
 	private var trans: WindowTransitionAnimator? = nil
 	
@@ -55,7 +36,7 @@ public class ServiceManager: ApplicationController {
 					let vc2 = MessageListViewController(nibName: "MessageListViewController", bundle: nil)
 					let ic = vc!.sortedConversations[row]
 					// FIXME: FORCE-CAST TO HANGOUTS
-					vc2?.representedObject = ic as! IConversation
+					vc2?.conversation = ic as! IConversation
 					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator { w in
 						w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
 						w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
