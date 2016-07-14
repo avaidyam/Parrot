@@ -11,17 +11,17 @@ public protocol Conversation /*: Hashable, Equatable*/ {
 	/// conversation is a Group one, but this setting can be overridden.
 	var name: String { get set }
 	
+	/// The set of people involved in this Conversation.
+	var participants: [Person] { get }
+	
+	/// The set of all events in this Conversation.
+	var messages: [Message] { get }
+	
 	// leave()
 	// archive()
 	// delete()
-	
 	// watermark?
 	// focus?
-	
-	// name(String)
-	// participants() -> [User]
-	// messages() -> [Message]
-	
 	// send(String)
 	// send(Image)
 	// send(Sticker)

@@ -73,7 +73,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		self.messagesView.dynamicHeightProvider = { (row: Int) -> Double in
 			
 			// TODO: Use the cached measurement sample and grab its frame after layout.
-			let a = (self.messagesView.dataSource[row].element as? Message)!.string
+			let a = (self.messagesView.dataSource[row].element as? MessageView.Info)!.string
 			//self._measure?.textLabel?.string = a as String
 			//self._measure?.layout()
 			//log.info(self._measure?.frame.size.height)
@@ -242,16 +242,20 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
     }
 	
 	// get all messages
-	private func _getAllMessages() -> [Message]? {
+	private func _getAllMessages() -> [MessageView.Info]? {
 		return self.conversation?.messages.map { _getMessage($0) }
 	}
 	
 	// get a single message
-	func _getMessage(_ ev: IChatMessageEvent) -> Message {
-		let user = self.conversation!.user_list[ev.userID]
-		let network_ = self.conversation!.conversation.networkType
-		let network = NetworkType(rawValue: network_[0].rawValue) // FIXME weird stuff here
+	func _getMessage(_ ev: ParrotServiceExtension.Message) -> MessageView.Info {
+		let user = self.conversation!.client.directory.people[ev.sender]!
+		//let user = self.conversation!.user_list[ev.sender]
 		
+		// FIXME: FORCE-CAST TO HANGOUTS
+		let qqqq = conversation!// as! Hangouts.IConversation
+		let d = NetworkType(rawValue: (qqqq.conversation.networkType)[0].rawValue)
+		
+		/*
 		var color: NSColor = #colorLiteral(red: 0.2078431398, green: 0.2823529541, blue: 0.3215686381, alpha: 1)
 		if !user.isSelf && network == NetworkType.Babel {
 			color = #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
@@ -259,15 +263,15 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			color = #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1)
 		}
 		let cap = network == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
+		*/
 		
 		let text = ev.text
-		let orientation = (user.isSelf ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
+		let orientation = (user.me ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
 		
 		// Load all the field values from the conversation.
-		let img: NSImage = fetchImage(user: user, network: network!)
+		let img: NSImage = fetchImage(user: user, network: d!)
 		let time = ev.timestamp ?? Date(timeIntervalSince1970: 0)
-		return Message(photo: img, caption: cap, string: text,
-		               orientation: orientation, color: color, time: time)
+		return MessageView.Info(photo: img, string: text, orientation: orientation, time: time)
 	}
 	
     // MARK: Window notifications

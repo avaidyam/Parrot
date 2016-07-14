@@ -2,42 +2,18 @@ import Cocoa
 
 /* TODO: Needs a complete refactor, with something like CSS styling. */
 
-// Serves as the "model" behind the view. Technically speaking, this is a translation
-// layer between the application model and decouples it from the view.
-public struct Message: Equatable {
-	var photo: NSImage
-	var caption: String
-	var string: String
-	var orientation: NSUserInterfaceLayoutDirection
-	var color: NSColor
-	var time: Date
-}
-
-// Message: Equatable
-public func ==(lhs: Message, rhs: Message) -> Bool {
-	return lhs.photo == rhs.photo &&
-		lhs.string == rhs.string &&
-		lhs.orientation == rhs.orientation &&
-		lhs.color == rhs.color
-}
-
-public protocol NSTableRowViewProviding {
-	var selectionHighlightStyle: NSTableViewSelectionHighlightStyle { get }
-	var isEmphasized: Bool { get }
-	var isSelected: Bool { get }
-	var backgroundColor: NSColor { get }
-	
-	var isTargetForDropOperation: Bool { get }
-	var draggingDestinationFeedbackStyle: NSTableViewDraggingDestinationFeedbackStyle { get }
-	var indentationForDropOperation: CGFloat { get }
-	
-	func drawBackground(in dirtyRect: NSRect)
-	func drawSelection(in dirtyRect: NSRect)
-	func drawSeparator(in dirtyRect: NSRect)
-	func drawDraggingDestinationFeedback(in dirtyRect: NSRect)
-}
-
 public class MessageView: NSTableCellView {
+	
+	// Serves as the "model" behind the view. Technically speaking, this is a translation
+	// layer between the application model and decouples it from the view.
+	public struct Info: Equatable {
+		var photo: NSImage
+		//var caption: String
+		var string: String
+		var orientation: NSUserInterfaceLayoutDirection
+		//var color: NSColor
+		var time: Date
+	}
 	
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
@@ -71,17 +47,17 @@ public class MessageView: NSTableCellView {
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
-			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Message else {
+			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? MessageView.Info else {
 				return
 			}
 			let str = AttributedString(string: o.string as String)
 			
 			self.orientation = o.orientation
-			self.color = o.color
+			//self.color = o.color
 			self.textLabel?.textStorage?.setAttributedString(str)
 			self.textLabel?.toolTip = "\(o.time.fullString())"
 			self.photoView?.image = o.photo
-			self.photoView?.toolTip = o.caption
+			//self.photoView?.toolTip = o.caption
 			
 			// Enable automatic links, etc.
 			self.textLabel?.isEditable = true
@@ -146,6 +122,14 @@ public class MessageView: NSTableCellView {
 		let height = box.size.height
 		return (height > 24.0 ? height : 24.0) + 16.0
 	}
+}
+
+// Message: Equatable
+public func ==(lhs: MessageView.Info, rhs: MessageView.Info) -> Bool {
+	return lhs.photo == rhs.photo &&
+		lhs.string == rhs.string &&
+		lhs.orientation == rhs.orientation //&&
+		//lhs.color == rhs.color
 }
 
 // Container-type view for MessageView.

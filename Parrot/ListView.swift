@@ -337,3 +337,19 @@ public class NSExtendedTableView: NSTableView {
 		}
 	}
 }
+
+public protocol NSTableRowViewProviding {
+	var selectionHighlightStyle: NSTableViewSelectionHighlightStyle { get }
+	var isEmphasized: Bool { get }
+	var isSelected: Bool { get }
+	var backgroundColor: NSColor { get }
+	
+	var isTargetForDropOperation: Bool { get }
+	var draggingDestinationFeedbackStyle: NSTableViewDraggingDestinationFeedbackStyle { get }
+	var indentationForDropOperation: CGFloat { get }
+	
+	func drawBackground(in dirtyRect: NSRect)
+	func drawSelection(in dirtyRect: NSRect)
+	func drawSeparator(in dirtyRect: NSRect)
+	func drawDraggingDestinationFeedback(in dirtyRect: NSRect)
+}

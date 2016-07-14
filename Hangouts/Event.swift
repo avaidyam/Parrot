@@ -1,4 +1,5 @@
 import Foundation
+import ParrotServiceExtension
 
 /* TODO: Refactor ChatMessageSegment to match hangups and Protobuf docs. */
 /* TODO: Include Markdown, HTML, and URL formatting parsers. */
@@ -47,7 +48,7 @@ public func ==(lhs: IEvent, rhs: IEvent) -> Bool {
 }
 
 // An event containing a chat message.
-public class IChatMessageEvent : IEvent {
+public class IChatMessageEvent: IEvent, Message {
 	
 	// A textual representation of the message.
     public lazy var text: String = {
@@ -100,6 +101,10 @@ public class IChatMessageEvent : IEvent {
 		}
 		return attachments
     }
+	
+	public var sender: String {
+		return self.userID.gaiaID
+	}
 }
 
 // An event that renames a conversation.

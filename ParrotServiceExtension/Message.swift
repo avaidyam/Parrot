@@ -18,6 +18,32 @@ public enum MessageType {
 	case heartbeat
 }
 
-public protocol Message2 {
-	
+public protocol Message {
+	var timestamp: Date { get }
+	var sender: String { get }
+	var text: String { get }
 }
+
+/*
+public protocol ConversationListDelegate {
+	/*
+	conversationNotification(note)
+	eventNotification(note)
+	focusNotification(note)
+	typingNotification(note)
+	notificationLevelNotification(note)
+	watermarkNotification(note)
+	viewModification(note)
+	selfPresenceNotification(note)
+	deleteNotification(note)
+	presenceNotification(note)
+	*/
+	
+	
+	func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent)
+	func conversationList(_ list: ConversationList, didChangeTypingStatusTo status: TypingType)
+	func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification)
+	func conversationList(didUpdate list: ConversationList)
+	func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation)
+}
+*/

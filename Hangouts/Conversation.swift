@@ -45,6 +45,10 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
 	
+	public var participants: [Person] {
+		return self.users.map { $0 as Person }
+	}
+	
 	// Update the conversations latest_read_timestamp.
     public func on_watermark_notification(notif: IWatermarkNotification) {
         if self.get_user(user_id: notif.userID).isSelf {
@@ -282,7 +286,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		delegate?.conversation(self, didReceiveWatermarkNotification: status)
     }
 
-    public var messages: [IChatMessageEvent] {
+    public var _messages: [IChatMessageEvent] {
 		get {
 			return events.flatMap { $0 as? IChatMessageEvent }
         }
@@ -358,6 +362,10 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	
 	public var identifier: String {
 		return self.id
+	}
+	
+	public var messages: [Message] {
+		return self._messages.map { $0 as Message }
 	}
 
     public var users: [User] {

@@ -7,8 +7,8 @@ public class ConversationView : NSTableCellView {
 	// layer between the application model and decouples it from the view.
 	public struct Info: Equatable {
 		var photo: NSImage
-		var caption: String
-		var highlight: NSColor
+		//var caption: String
+		//var highlight: NSColor
 		var indicator: Int
 		var primary: String
 		var secondary: String
@@ -39,7 +39,7 @@ public class ConversationView : NSTableCellView {
 			
 			self.time = o.time
 			self.photoView?.image = o.photo
-			self.photoView?.toolTip = o.caption
+			//self.photoView?.toolTip = o.caption
 			//self.photoView?.layer?.borderColor = o.highlight.cgColor
 			self.nameLabel?.stringValue = o.primary
 			self.nameLabel?.toolTip = o.primary

@@ -46,8 +46,8 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 	}
 	var sortedConversations: [ParrotServiceExtension.Conversation] {
 		// FIXME: FORCE-CAST TO HANGOUTS
-		let all = (self.conversationList as? Hangouts.ConversationList)?.conv_dict.values.filter { !$0.is_archived }
-		return all!.sorted { $0.last_modified > $1.last_modified }
+		let all = (self.conversationList as! Hangouts.ConversationList).conv_dict.values.filter { !$0.is_archived }
+		return all.sorted { $0.last_modified > $1.last_modified }
 	}
 	
 	deinit {
@@ -150,31 +150,34 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 		NotificationCenter.default().post(name: Notification.Name("ConversationView.UpdateTime"), object: self)
 	}
 	
-	private func _getPerson(_ _conversation: ParrotServiceExtension.Conversation) -> ConversationView.Info {
-		// FIXME: FORCE-CAST TO HANGOUTS
-		let conversation = _conversation as! Hangouts.IConversation
+	private func _getPerson(_ conversation: ParrotServiceExtension.Conversation) -> ConversationView.Info {
 		
 		// Propogate info for data filling
-		let a = conversation.messages.last?.userID
-		let b = conversation.users.filter { $0.isSelf }.first?.id
-		let c = conversation.users.filter { !$0.isSelf }.first
-		let network_ = conversation.conversation.networkType
-		let d = NetworkType(rawValue: network_[0].rawValue) // FIXME weird stuff here
+		let a = conversation.messages.last?.sender
+		let b = conversation.participants.filter { $0.me }.first?.identifier
+		let c = conversation.participants.filter { !$0.me }.first
 		
+		// FIXME: FORCE-CAST TO HANGOUTS
+		let qqqq = conversation as! Hangouts.IConversation
+		let d = NetworkType(rawValue: (qqqq.conversation.networkType)[0].rawValue)
+		
+		let title = conversation.name
+		
+		/*
 		// Patch for Google Voice contacts to show their numbers.
 		// FIXME: Sometimes [1] is actually you, fix that.
-		var title = conversation.name
 		if title == "Unknown" {
 			if conversation.conversation.participantData.count > 0 {
 				title = conversation.conversation.participantData[1].fallbackName! as String
 			}
 		}
+		*/
 		
 		// Load all the field values from the conversation.
 		let img: NSImage = fetchImage(user: c!, network: d!)
-		let ring = d == .GoogleVoice ? #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1) : #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
-		let cap = d == .GoogleVoice ? "Google Voice" : "Hangouts"
-		let ind = conversation.unread_events.count
+		//let ring = d == .GoogleVoice ? #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1) : #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
+		//let cap = d == .GoogleVoice ? "Google Voice" : "Hangouts"
+		//let ind = conversation.unread_events.count
 		let name = title
 		
 		// this doesn't work yet.
@@ -184,8 +187,7 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp ?? Date(timeIntervalSince1970: 0)
 		
-		return ConversationView.Info(photo: img, caption: cap, highlight: ring,
-		              indicator: ind, primary: name, secondary: sub, time: time)
+		return ConversationView.Info(photo: img, indicator: 0, primary: name, secondary: sub, time: time)
 	}
 	
 	private func _getAllPersons() -> [ConversationView.Info]? {
