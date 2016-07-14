@@ -136,7 +136,6 @@ public class MessageView: NSTableCellView {
 		}
 	}
 	
-	
 	/* TODO: Clean this up and out of here: */
 	internal class func heightForContainerWidth(_ text: String, size: CGFloat, width: CGFloat) -> CGFloat {
 		let attr = AttributedString(string: text, attributes: [
@@ -150,7 +149,7 @@ public class MessageView: NSTableCellView {
 }
 
 // Container-type view for MessageView.
-public class MessagesView: ListView {
+public class MessageListView: ListView {
 	internal override func createView() -> MessageView {
 		var view = self.tableView.make(withIdentifier: MessageView.className(), owner: self) as? MessageView
 		if view == nil {

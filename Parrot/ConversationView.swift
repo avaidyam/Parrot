@@ -1,26 +1,19 @@
 import Cocoa
 
-// Serves as the "model" behind the view. Technically speaking, this is a translation
-// layer between the application model and decouples it from the view.
-public struct Person: Equatable {
-	var photo: NSImage
-	var caption: String
-	var highlight: NSColor
-	var indicator: Int
-	var primary: String
-	var secondary: String
-	var time: Date
-}
-
-// Person: Equatable
-public func ==(lhs: Person, rhs: Person) -> Bool {
-	return lhs.primary == rhs.primary &&
-		lhs.secondary == rhs.secondary &&
-		lhs.time == rhs.time
-}
-
 // A general person view
-public class PersonView : NSTableCellView {
+public class ConversationView : NSTableCellView {
+	
+	// Serves as the "model" behind the view. Technically speaking, this is a translation
+	// layer between the application model and decouples it from the view.
+	public struct Info: Equatable {
+		var photo: NSImage
+		var caption: String
+		var highlight: NSColor
+		var indicator: Int
+		var primary: String
+		var secondary: String
+		var time: Date
+	}
 	
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var nameLabel: NSTextField?
@@ -40,7 +33,7 @@ public class PersonView : NSTableCellView {
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
-			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Person else {
+			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Info else {
 				return
 			}
 			
@@ -73,7 +66,7 @@ public class PersonView : NSTableCellView {
 			}
 			
 			// Update the time label in realtime!
-			_ = NotificationCenter.default().addObserver(forName: Notification.Name(rawValue: "PersonView.UpdateTime"), object: nil, queue: nil) { n in
+			_ = NotificationCenter.default().addObserver(forName: Notification.Name(rawValue: "ConversationView.UpdateTime"), object: nil, queue: nil) { n in
 				self.timeLabel?.stringValue = self.time.relativeString()
 			}
 		}
@@ -107,13 +100,20 @@ public class PersonView : NSTableCellView {
 	}
 }
 
-// Container-type view for PersonView.
-public class PersonsView: ListView {
-	internal override func createView() -> PersonView {
-		var view = self.tableView.make(withIdentifier: PersonView.className(), owner: nil) as? PersonView
+// Person: Equatable
+public func ==(lhs: ConversationView.Info, rhs: ConversationView.Info) -> Bool {
+	return lhs.primary == rhs.primary &&
+		lhs.secondary == rhs.secondary &&
+		lhs.time == rhs.time
+}
+
+// Container-type view for ConversationView.
+public class ConversationListView: ListView {
+	internal override func createView() -> ConversationView {
+		var view = self.tableView.make(withIdentifier: ConversationView.className(), owner: nil) as? ConversationView
 		if view == nil {
-			view = PersonView(frame: NSZeroRect)
-			view!.identifier = PersonView.className()
+			view = ConversationView(frame: NSZeroRect)
+			view!.identifier = ConversationView.className()
 		}
 		return view!
 	}

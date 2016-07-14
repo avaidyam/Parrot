@@ -50,9 +50,9 @@ public class ServiceManager: ApplicationController {
 			
 			// Instantiate storyboard and controller and begin the UI from here.
 			DispatchQueue.main.async {
-				let vc = ConversationsViewController(nibName: "ConversationsViewController", bundle: nil)
+				let vc = ConversationListViewController(nibName: "ConversationListViewController", bundle: nil)
 				vc?.selectionProvider = { row in
-					let vc2 = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
+					let vc2 = MessageListViewController(nibName: "MessageListViewController", bundle: nil)
 					let ic = vc?.conversationList?.conversations[row]
 					vc2?.representedObject = ic
 					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator { w in

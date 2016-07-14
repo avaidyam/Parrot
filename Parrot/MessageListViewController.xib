@@ -6,7 +6,7 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ConversationViewController" customModule="Parrot" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="MessageListViewController" customModule="Parrot" customModuleProvider="target">
             <connections>
                 <outlet property="imageView" destination="Ab2-7z-caP" id="jiX-Q0-Fdg"/>
                 <outlet property="messageTextField" destination="A58-4G-SjV" id="S7h-hF-amm"/>
@@ -21,7 +21,7 @@
             <rect key="frame" x="0.0" y="0.0" width="568" height="385"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <customView wantsLayer="YES" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="MessagesView" customModule="Parrot" customModuleProvider="target">
+                <customView wantsLayer="YES" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="MessageListView" customModule="Parrot" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="41" width="568" height="344"/>
                 </customView>
                 <box wantsLayer="YES" verticalHuggingPriority="751" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="MlJ-gQ-qkl">

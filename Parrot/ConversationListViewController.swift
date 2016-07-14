@@ -25,9 +25,9 @@ public func fetchImage(user: User, network: NetworkType) -> NSImage {
 	return img
 }
 
-class ConversationsViewController:  NSViewController, ConversationListDelegate {
+class ConversationListViewController:  NSViewController, ConversationListDelegate {
 	
-	@IBOutlet var personsView: PersonsView!
+	@IBOutlet var personsView: ConversationListView!
 	@IBOutlet var indicator: NSProgressIndicator!
 	
 	var selectionProvider: ((Int) -> Void)? = nil
@@ -41,8 +41,8 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		super.loadView()
 		self.title = "Parrot" // weird stuff
 		
-		let nib = NSNib(nibNamed: "PersonView", bundle: nil)
-		personsView.tableView.register(nib, forIdentifier: PersonView.className())
+		let nib = NSNib(nibNamed: "ConversationView", bundle: nil)
+		personsView.tableView.register(nib, forIdentifier: ConversationView.className())
 		
 		personsView.updateScrollsToBottom = false
 		
@@ -129,7 +129,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 	}
 	
 	func _updateWallclock(_ timer: Timer) {
-		NotificationCenter.default().post(name: Notification.Name("PersonView.UpdateTime"), object: self)
+		NotificationCenter.default().post(name: Notification.Name("ConversationView.UpdateTime"), object: self)
 	}
 	
 	var userList: UserList? // FIXME
@@ -143,7 +143,7 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
         }
     }
 	
-	private func _getPerson(_ conversation: IConversation) -> Person {
+	private func _getPerson(_ conversation: IConversation) -> ConversationView.Info {
 		
 		// Propogate info for data filling
 		let a = conversation.messages.last?.userID
@@ -175,11 +175,11 @@ class ConversationsViewController:  NSViewController, ConversationListDelegate {
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp ?? Date(timeIntervalSince1970: 0)
 		
-		return Person(photo: img, caption: cap, highlight: ring,
+		return ConversationView.Info(photo: img, caption: cap, highlight: ring,
 		              indicator: ind, primary: name, secondary: sub, time: time)
 	}
 	
-	private func _getAllPersons() -> [Person]? {
+	private func _getAllPersons() -> [ConversationView.Info]? {
 		return self.conversationList?.conversations.map { _getPerson($0) }
 	}
 	

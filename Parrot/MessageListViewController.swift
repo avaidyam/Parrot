@@ -4,9 +4,9 @@ import Hangouts
 /* TODO: Use NSTextAlternatives instead of force-replacing text. */
 /* TODO: Smart entry completion for ()/[]/""/etc. */
 
-class ConversationViewController: NSViewController, ConversationDelegate, NSTextViewDelegate, NSTextDelegate {
+class MessageListViewController: NSViewController, ConversationDelegate, NSTextViewDelegate, NSTextDelegate {
 	
-	@IBOutlet var messagesView: MessagesView!
+	@IBOutlet var messagesView: MessageListView!
     @IBOutlet var messageTextField: NSTextView!
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSImageView!
@@ -49,7 +49,7 @@ class ConversationViewController: NSViewController, ConversationDelegate, NSText
 			log.warning("sending disabled temporarily")
 			/*
 			let emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
-			let txt = ConversationViewController.segmentsForInput(u.response!.string, emojify: emojify)
+			let txt = MessageListViewController.segmentsForInput(u.response!.string, emojify: emojify)
 			self.conversation?.sendMessage(segments: txt)
 			*/
 		}

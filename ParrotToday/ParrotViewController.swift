@@ -8,10 +8,10 @@ private var _hangoutsClient: Client? = nil
 
 class ParrotViewController: NSViewController, ConversationListDelegate {
 	
-	var personsView: PersonsView {
-		return self.view as! PersonsView
+	var personsView: ConversationListView {
+		return self.view as! ConversationListView
 	}
-	var viewingVC: ConversationViewController? = nil
+	var viewingVC: MessageListViewController? = nil
 	
 	// Sets up the content size and adds the edit view to the controller.
 	override func loadView() {
@@ -48,7 +48,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 						
 						// Instantiate storyboard and controller and begin the UI from here.
 						DispatchQueue.main.async {
-							self.viewingVC = ConversationViewController(nibName: "ConversationViewController", bundle: nil)
+							self.viewingVC = MessageListViewController(nibName: "MessageListViewController", bundle: nil)
 							self.viewingVC?.preferredContentSize = CGSize(width: 320, height: 480)
 							
 							self.selectionProvider = { row in
@@ -117,7 +117,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 		}
 	}
 	
-	private func _getPerson(_ conversation: IConversation) -> Person {
+	private func _getPerson(_ conversation: IConversation) -> ConversationView.Info {
 		
 		// Propogate info for data filling
 		let a = conversation.messages.last?.userID
@@ -148,10 +148,10 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
 		let time = conversation.messages.last?.timestamp ?? Date(timeIntervalSince1970: 0)
 		
-		return Person(photo: img, caption: cap, highlight: ring, indicator: ind, primary: name, secondary: sub, time: time)
+		return ConversationView.Info(photo: img, caption: cap, highlight: ring, indicator: ind, primary: name, secondary: sub, time: time)
 	}
 	
-	private func _getAllPersons() -> [Person]? {
+	private func _getAllPersons() -> [ConversationView.Info]? {
 		return self.conversationList?.conversations.map { _getPerson($0) }
 	}
 	
