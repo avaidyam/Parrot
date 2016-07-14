@@ -28,22 +28,6 @@ public class MessageView: NSTableCellView {
 		super.init(coder: coder)
 	}
 	
-	private var _textBack: NSColor {
-		if self.effectiveAppearance.name == NSAppearanceNameVibrantDark {
-			return NSColor(calibratedWhite: 1.00, alpha: 0.2)
-		} else {
-			return NSColor(calibratedWhite: 0.00, alpha: 0.1)
-		}
-	}
-	
-	private var _textFront: NSColor {
-		if self.effectiveAppearance.name == NSAppearanceNameVibrantDark {
-			return NSColor(calibratedWhite: 1.00, alpha: 0.5)
-		} else {
-			return NSColor(calibratedWhite: 0.00, alpha: 0.6)
-		}
-	}
-	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
@@ -79,7 +63,7 @@ public class MessageView: NSTableCellView {
 		if let text = self.textLabel, let layer = text.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = 2.0
-			layer.backgroundColor = self._textBack.cgColor
+			layer.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
 			
 			// [BUG] [macOS 12] NSTextView doesn't fill width for some reason.
 			text.frame = text.enclosingScrollView!.bounds
@@ -100,12 +84,12 @@ public class MessageView: NSTableCellView {
 				NSUnderlineStyleAttributeName: 1,
 			]
 			text.selectedTextAttributes = [
-				NSBackgroundColorAttributeName: self._textFront,
+				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.effectiveAppearance),
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
 			text.markedTextAttributes = [
-				NSBackgroundColorAttributeName: self._textFront,
+				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.effectiveAppearance),
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]

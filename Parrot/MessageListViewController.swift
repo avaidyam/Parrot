@@ -12,26 +12,19 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSImageView!
 	
-	var _note: NSObjectProtocol!
-	var popover: NSPopover!
+	
+	
 	
 	var _measure: MessageView? = nil
-	
-	private var _textBack: NSColor {
-		if self.view.effectiveAppearance.name == NSAppearanceNameVibrantDark {
-			return NSColor(calibratedWhite: 1.00, alpha: 0.2)
-		} else {
-			return NSColor(calibratedWhite: 0.00, alpha: 0.1)
-		}
-	}
-	
-	private var _textFront: NSColor {
-		if self.view.effectiveAppearance.name == NSAppearanceNameVibrantDark {
-			return NSColor(calibratedWhite: 1.00, alpha: 0.5)
-		} else {
-			return NSColor(calibratedWhite: 0.00, alpha: 0.6)
-		}
-	}
+	var _note: NSObjectProtocol!
+	lazy var popover: NSPopover = {
+		let p = NSPopover()
+		let v = NSViewController()
+		v.view = self.statusView
+		p.contentViewController = v
+		p.behavior = .applicationDefined
+		return p
+	}()
 	
 	override func loadView() {
 		super.loadView()
@@ -39,6 +32,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		// Set up the measurement view.
 		let nib = NSNib(nibNamed: "MessageView", bundle: nil)
 		messagesView.tableView.register(nib, forIdentifier: MessageView.className())
+		messagesView.tableView.register(NSNib(nibNamed: "TypingEventView", bundle: nil), forIdentifier: "Typing")
 		let stuff = nib?.instantiate(nil)
 		_measure = stuff?.filter { $0 is MessageView }.first as? MessageView// stuff[0]: NSApplication
 		
@@ -81,11 +75,6 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			let b = self.messagesView.frame.width
 			return MessageView.heightForContainerWidth(a, size: 12, width: b).native
 		}
-		
-		self.popover = NSPopover()
-		self.popover.contentViewController = NSViewController()
-		self.popover.contentViewController!.view = self.statusView
-		self.popover.behavior = .applicationDefined
     }
 
     override func viewWillAppear() {
@@ -114,7 +103,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			guard let text = self.messageTextField else { return }
 			text.layer?.masksToBounds = true
 			text.layer?.cornerRadius = 2.0
-			text.layer?.backgroundColor = self._textBack.cgColor
+			text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance).cgColor
 			
 			text.textColor = NSColor.labelColor()
 			text.font = NSFont.systemFont(ofSize: 12.0)
@@ -128,12 +117,12 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 				NSUnderlineStyleAttributeName: 1,
 			]
 			text.selectedTextAttributes = [
-				NSBackgroundColorAttributeName: self._textFront,
+				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.effectiveAppearance),
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
 			text.markedTextAttributes = [
-				NSBackgroundColorAttributeName: self._textFront,
+				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.effectiveAppearance),
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
@@ -183,11 +172,13 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		DispatchQueue.main.async {
 			switch (status) {
 			case TypingType.Started:
+				//let cell = self.messagesView.tableView.make(withIdentifier: "Typing", owner: nil)
 				self.popover.show(relativeTo: self.messageTextField!.bounds, of: self.messageTextField!, preferredEdge: .minY)
 				self.statusView.stringValue = "Typing..."
 			case TypingType.Paused:
 				self.statusView.stringValue = "Entered text."
-			default: // .STOPPED, .UNKNOWN
+			case TypingType.Stopped: fallthrough
+			default: // TypingType.Unknown:
 				self.popover.performClose(self)
 				self.statusView.stringValue = "Done."
 			}

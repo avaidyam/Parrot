@@ -174,6 +174,24 @@ public func defaultImageForString(forString source: String, size: NSSize = NSSiz
 	}
 }
 
+public extension NSColor {
+	public static func darkOverlay(forAppearance a: NSAppearance) -> NSColor {
+		if a.name == NSAppearanceNameVibrantDark {
+			return NSColor(calibratedWhite: 1.00, alpha: 0.2)
+		} else {
+			return NSColor(calibratedWhite: 0.00, alpha: 0.1)
+		}
+	}
+	
+	public static func lightOverlay(forAppearance a: NSAppearance) -> NSColor {
+		if a.name == NSAppearanceNameVibrantDark {
+			return NSColor(calibratedWhite: 1.00, alpha: 0.5)
+		} else {
+			return NSColor(calibratedWhite: 0.00, alpha: 0.6)
+		}
+	}
+}
+
 public extension NSFont {
 	
 	/// Load an NSFont from a provided URL.
