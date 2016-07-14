@@ -74,6 +74,23 @@ public protocol Person /*: Hashable, Equatable*/ {
 	//func unblock()
 }
 
+public extension Person {
+	
+	/// Computes the full name by taking the name components like so:
+	/// ["John", "Mark", "Smith"] => "John Mark Smith"
+	/// Will return an empty string if there are no name components.
+	public var fullName: String {
+		return self.nameComponents.joined(separator: " ")
+	}
+	
+	/// Computes the first name by taking the first of the name components:
+	/// ["John", "Mark", "Smith"] => "John"
+	/// Will return an empty string if there are no name components.
+	public var firstName: String {
+		return self.nameComponents.first ?? ""
+	}
+}
+
 public protocol Directory /*: Collection*/ {
 	
 	/// Return the user currently logged into the Service.

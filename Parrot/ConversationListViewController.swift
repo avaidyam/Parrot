@@ -1,5 +1,6 @@
 import Cocoa
 import Hangouts
+import ParrotServiceExtension
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
 /* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
@@ -8,12 +9,12 @@ import Hangouts
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.serial, .qosUserInteractive])
 
 private var _imgCache = [String: NSImage]()
-public func fetchImage(user: User, network: NetworkType) -> NSImage {
-	let output = _imgCache[user.id.gaiaID]
+public func fetchImage(user: Person, network: NetworkType) -> NSImage {
+	let output = _imgCache[user.identifier]
 	guard output == nil else { return output! }
 	
 	var img: NSImage! = nil
-	if let d = fetchData(user.id.gaiaID, user.photoURL) {
+	if let d = fetchData(user.identifier, user.photoURL) {
 		img = NSImage(data: d)!
 	} else if network != .GoogleVoice {
 		img = imageForString(forString: user.fullName)
@@ -21,7 +22,7 @@ public func fetchImage(user: User, network: NetworkType) -> NSImage {
 		img = defaultImageForString(forString: user.fullName)
 	}
 	
-	_imgCache[user.id.gaiaID] = img
+	_imgCache[user.identifier] = img
 	return img
 }
 
@@ -32,6 +33,22 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 	
 	var selectionProvider: ((Int) -> Void)? = nil
 	var wallclock: Timer!
+	var userList: Directory?
+	var conversationList: ParrotServiceExtension.ConversationList? {
+		didSet {
+			// FIXME: FORCE-CAST TO HANGOUTS
+			(conversationList as? Hangouts.ConversationList)?.delegate = self
+			DispatchQueue.main.async {
+				self.indicator.isHidden = true
+				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
+			}
+		}
+	}
+	var sortedConversations: [ParrotServiceExtension.Conversation] {
+		// FIXME: FORCE-CAST TO HANGOUTS
+		let all = (self.conversationList as? Hangouts.ConversationList)?.conv_dict.values.filter { !$0.is_archived }
+		return all!.sorted { $0.last_modified > $1.last_modified }
+	}
 	
 	deinit {
 		self.wallclock?.invalidate()
@@ -56,7 +73,7 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 			}
 		}
 		
-		UserNotificationCenter.updateDockBadge(conversationList?.unreadEventCount ?? 0)
+		//UserNotificationCenter.updateDockBadge(conversationList?.unreadEventCount ?? 0)
 	}
 	
 	override func viewDidLoad() {
@@ -133,18 +150,9 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 		NotificationCenter.default().post(name: Notification.Name("ConversationView.UpdateTime"), object: self)
 	}
 	
-	var userList: UserList? // FIXME
-    var conversationList: ConversationList? {
-        didSet {
-            conversationList?.delegate = self
-			DispatchQueue.main.async {
-				self.indicator.isHidden = true
-				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			}
-        }
-    }
-	
-	private func _getPerson(_ conversation: IConversation) -> ConversationView.Info {
+	private func _getPerson(_ _conversation: ParrotServiceExtension.Conversation) -> ConversationView.Info {
+		// FIXME: FORCE-CAST TO HANGOUTS
+		let conversation = _conversation as! Hangouts.IConversation
 		
 		// Propogate info for data filling
 		let a = conversation.messages.last?.userID
@@ -181,35 +189,35 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 	}
 	
 	private func _getAllPersons() -> [ConversationView.Info]? {
-		return self.conversationList?.conversations.map { _getPerson($0) }
+		return self.conversationList?.conversations.map { _getPerson($1) }
 	}
 	
-    func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent) {
+    func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {
 		guard event is IChatMessageEvent else { return }
 		
 		// pls fix :(
 		DispatchQueue.main.async {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
+			//UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
 	}
 	
-    func conversationList(_ list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
-    func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
+    func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatusTo status: TypingType) {}
+    func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
 	
 	/* TODO: Just update the row that is updated. */
-    func conversationList(didUpdate list: ConversationList) {
+    func conversationList(didUpdate list: Hangouts.ConversationList) {
 		DispatchQueue.main.async {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
+			//UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 	
 	/* TODO: Just update the row that is updated. */
-    func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation) {
+    func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
 		DispatchQueue.main.async {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
+			//UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
 }

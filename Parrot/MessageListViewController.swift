@@ -1,5 +1,6 @@
 import Cocoa
 import Hangouts
+import ParrotServiceExtension
 
 /* TODO: Use NSTextAlternatives instead of force-replacing text. */
 /* TODO: Smart entry completion for ()/[]/""/etc. */
@@ -63,7 +64,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 				layer.masksToBounds = true
 				layer.cornerRadius = photo.bounds.width / 2.0
 			}
-			self.imageView.image = fetchImage(user: me, network: .Babel)
+			self.imageView.image = fetchImage(user: me as! User, network: .Babel)
 		}
 		
 		self.messagesView.sizeClass = .dynamic
@@ -147,18 +148,18 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		ParrotAppearance.unregisterAppearanceListener(observer: self)
 	}
 
-    override var representedObject: AnyObject? {
-        didSet {
-            if let oldConversation = oldValue as? IConversation {
-                oldConversation.delegate = nil
-            }
-
-            self.conversation?.delegate = self
+	var conversation: IConversation? {
+		didSet {
+			if let oldConversation = oldValue {
+				oldConversation.delegate = nil
+			}
+			
+			self.conversation?.delegate = self
 			self.conversation?.getEvents(event_id: conversation?.events.first?.id, max_events: 50)
 			self.title = self.conversation?.name
 			
 			/*self.conversation?.client.queryPresence(chat_ids: self.conversation!.users.map { $0.id.chatID }) { response in
-				log.info("GOT \(response?.presenceResult)")
+			log.info("GOT \(response?.presenceResult)")
 			}*/
 			
 			//self.messagesView.removeElements(self._getAllMessages()!)
@@ -167,11 +168,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			} else {
 				//log.info("Not initialized.")
 			}
-        }
-	}
-	
-	var conversation: IConversation? {
-		return representedObject as? IConversation
+		}
 	}
 	
 	var window: NSWindow? {

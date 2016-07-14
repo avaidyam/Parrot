@@ -53,8 +53,9 @@ public class ServiceManager: ApplicationController {
 				let vc = ConversationListViewController(nibName: "ConversationListViewController", bundle: nil)
 				vc?.selectionProvider = { row in
 					let vc2 = MessageListViewController(nibName: "MessageListViewController", bundle: nil)
-					let ic = vc?.conversationList?.conversations[row]
-					vc2?.representedObject = ic
+					let ic = vc!.sortedConversations[row]
+					// FIXME: FORCE-CAST TO HANGOUTS
+					vc2?.representedObject = ic as! IConversation
 					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator { w in
 						w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
 						w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
@@ -62,7 +63,7 @@ public class ServiceManager: ApplicationController {
 						w.enableRealTitlebarVibrancy()
 						
 						// Because autosave is miserable.
-						w.setFrameAutosaveName("\(ic!.conversation.conversationId!.id!)")
+						w.setFrameAutosaveName("\(ic.identifier)")
 						if w.frame == .zero {
 							w.setFrame(NSRect(x: 0, y: 0, width: 480, height: 320), display: false, animate: true)
 							w.center()

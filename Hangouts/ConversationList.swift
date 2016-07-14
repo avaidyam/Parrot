@@ -26,7 +26,7 @@ public protocol ConversationListDelegate {
 public class ConversationList: ParrotServiceExtension.ConversationList {
 	
     public let client: Client
-    private var conv_dict = [String : IConversation]()
+    public var conv_dict = [String : IConversation]()
     public var sync_timestamp: Date
     public let user_list: UserList
 	

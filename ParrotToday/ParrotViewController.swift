@@ -6,21 +6,23 @@ import ParrotServiceExtension
 // Private service points go here:
 private var _hangoutsClient: Client? = nil
 
-class ParrotViewController: NSViewController, ConversationListDelegate {
+class ParrotViewController: NSViewController {//, ConversationListDelegate {
 	
+	/*
 	var personsView: ConversationListView {
 		return self.view as! ConversationListView
 	}
 	var viewingVC: MessageListViewController? = nil
+	*/
 	
 	// Sets up the content size and adds the edit view to the controller.
 	override func loadView() {
 		super.loadView()
 		self.preferredContentSize = CGSize(width: 320, height: 480)
-		self.setup()
+		//self.setup()
 	}
 	
-	// We're jumpstarted into the setup function here.
+	/*// We're jumpstarted into the setup function here.
 	func setup() {
 		AppActivity.start("Authenticate")
 		Authenticator.authenticateClient {
@@ -152,27 +154,27 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 	}
 	
 	private func _getAllPersons() -> [ConversationView.Info]? {
-		return self.conversationList?.conversations.map { _getPerson($0) }
+		return self.conversationList?._conversations.map { _getPerson($0) }
 	}
 	
-	func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent) {}
-	func conversationList(_ list: ConversationList, didChangeTypingStatusTo status: TypingType) {}
-	func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
+	func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {}
+	func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatusTo status: TypingType) {}
+	func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
 	
 	/* TODO: Just updat
 	e the row that is updated. */
-	func conversationList(didUpdate list: ConversationList) {
+	func conversationList(didUpdate list: Hangouts.ConversationList) {
 		DispatchQueue.main.async {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 		}
 	}
 	
 	/* TODO: Just update the row that is updated. */
-	func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation) {
+	func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
 		DispatchQueue.main.async {
 			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 		}
-	}
+	}*/
 }
 
 // Boilerplate stuff for NCWidgetProviding
