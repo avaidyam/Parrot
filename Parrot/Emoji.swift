@@ -74,3 +74,32 @@ public extension String {
 		return self.unicodeScalars.lazy.map { $0.isEmoji }.filter { $0 == false }.count == 0
 	}
 }
+
+public extension CharacterSet {
+	
+	///
+	public static var emojiCharacters: CharacterSet? {
+		guard	let url = Bundle.main().urlForResource("emoji_charset", withExtension: "bitmap"),
+				let data = try? Data(contentsOf: url)
+		else { return nil }
+		return CharacterSet(bitmapRepresentation: data)
+	}
+	
+	///
+	public func unicodeScalars() -> [UnicodeScalar] {
+		var chars = [UnicodeScalar]()
+		for plane: UInt8 in 0...16 {
+			if self.hasMember(inPlane: plane) {
+				for c : UInt32 in UInt32(plane) << 16 ..< (UInt32(plane) + 1) << 16 {
+					if (self as NSCharacterSet).longCharacterIsMember(c) {
+						var c = c.littleEndian // for byte-order safety
+						let e = String.Encoding.utf32LittleEndian.rawValue
+						let s = NSString(bytes: &c, length: 4, encoding: e)!
+						chars.append(contentsOf: (s as String).unicodeScalars)
+					}
+				}
+			}
+		}
+		return chars
+	}
+}

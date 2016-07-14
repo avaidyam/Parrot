@@ -2,17 +2,27 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>%)</key>
+	<string>😜</string>
+	<key>%-)</key>
+	<string>😜</string>
 	<key>(=^..^=)</key>
 	<string>😸</string>
 	<key>(=^.^=)</key>
 	<string>😸</string>
+	<key>(N)</key>
+	<string>👎</string>
+	<key>(Y)</key>
+	<string>👍</string>
 	<key>(]:{</key>
 	<string>👳</string>
 	<key>-&lt;@%</key>
 	<string>🐝</string>
 	<key>-_-</key>
 	<string>😑</string>
-	<key>:&apos;(</key>
+	<key>:!</key>
+	<string>😬</string>
+	<key>:'(</key>
 	<string>😢</string>
 	<key>:(</key>
 	<string>😞</string>
@@ -24,6 +34,8 @@
 	<string>😃</string>
 	<key>:*</key>
 	<string>😗</string>
+	<key>:-!</key>
+	<string>😬</string>
 	<key>:-(</key>
 	<string>😞</string>
 	<key>:-)</key>
@@ -32,6 +44,10 @@
 	<string>😗</string>
 	<key>:-/</key>
 	<string>😕</string>
+	<key>:-&gt;</key>
+	<string>😏</string>
+	<key>:-@</key>
+	<string>😷</string>
 	<key>:-D</key>
 	<string>😀</string>
 	<key>:-O</key>
@@ -40,8 +56,14 @@
 	<string>😛</string>
 	<key>:-S</key>
 	<string>😖</string>
+	<key>:-X</key>
+	<string>😶</string>
+	<key>:-[</key>
+	<string>😳</string>
 	<key>:-\</key>
 	<string>😕</string>
+	<key>:-d</key>
+	<string>😋</string>
 	<key>:-o</key>
 	<string>😮</string>
 	<key>:-p</key>
@@ -54,6 +76,10 @@
 	<string>😕</string>
 	<key>:3</key>
 	<string>😸</string>
+	<key>:&gt;</key>
+	<string>😏</string>
+	<key>:@</key>
+	<string>😷</string>
 	<key>:D</key>
 	<string>😀</string>
 	<key>:O</key>
@@ -62,10 +88,16 @@
 	<string>😛</string>
 	<key>:S</key>
 	<string>😖</string>
+	<key>:X</key>
+	<string>😶</string>
 	<key>:X)</key>
 	<string>😸</string>
+	<key>:[</key>
+	<string>😳</string>
 	<key>:\</key>
 	<string>😕</string>
+	<key>:d</key>
+	<string>😋</string>
 	<key>:o</key>
 	<string>😮</string>
 	<key>:p</key>
@@ -98,7 +130,7 @@
 	<string>❤️</string>
 	<key>&lt;\3</key>
 	<string>💔</string>
-	<key>=&apos;(</key>
+	<key>='(</key>
 	<string>😢</string>
 	<key>=(</key>
 	<string>😞</string>
@@ -126,16 +158,30 @@
 	<string>😡</string>
 	<key>&gt;:(</key>
 	<string>😡</string>
+	<key>&gt;:)</key>
+	<string>😈</string>
 	<key>&gt;:-(</key>
 	<string>😡</string>
+	<key>&gt;:-)</key>
+	<string>😈</string>
+	<key>&gt;:-o</key>
+	<string>😠</string>
+	<key>&gt;:3</key>
+	<string>😼</string>
+	<key>&gt;:o</key>
+	<string>😠</string>
 	<key>&gt;=(</key>
 	<string>😡</string>
 	<key>&gt;_&lt;</key>
 	<string>😣</string>
+	<key>&gt;w&lt;</key>
+	<string>😖</string>
 	<key>B)</key>
 	<string>😎</string>
 	<key>B-)</key>
 	<string>😎</string>
+	<key>D-:</key>
+	<string>😩</string>
 	<key>D:</key>
 	<string>😦</string>
 	<key>O.O</key>
@@ -156,6 +202,10 @@
 	<string>😵</string>
 	<key>X-o</key>
 	<string>😵</string>
+	<key>X3</key>
+	<string>😹</string>
+	<key>^^;</key>
+	<string>😅</string>
 	<key>^_^</key>
 	<string>😁</string>
 	<key>^_^;;</key>
