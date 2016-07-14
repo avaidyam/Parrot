@@ -20,6 +20,14 @@ public protocol Service: class {
 	/// The current connection state of the service.
 	/// See connect() and disconnect().
 	var connected: Bool { get }
+	
+	/// The directory of people (including the logged in user) that can be
+	/// queried for presence or contacted in some form.
+	var directory: Directory { get }
+	
+	/// The list of conversations that are either ongoing or have ended between
+	/// the logged in user and other people on the Service.
+	var conversations: ConversationList { get }
 }
 
 /// Service supports plain text in conversations.

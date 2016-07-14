@@ -103,6 +103,7 @@ class ConversationListViewController:  NSViewController, ConversationListDelegat
 			let m = NSMenu(title: "")
 			m.addItem(withTitle: "Mute", action: nil, keyEquivalent: "")
 			m.addItem(withTitle: "Block", action: nil, keyEquivalent: "")
+			m.addItem(NSMenuItem.separator())
 			m.addItem(withTitle: "Delete", action: nil, keyEquivalent: "")
 			m.addItem(withTitle: "Archive", action: nil, keyEquivalent: "")
 			return m

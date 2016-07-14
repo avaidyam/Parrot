@@ -1,5 +1,5 @@
 import Foundation
-import class ParrotServiceExtension.Wrapper
+import ParrotServiceExtension
 
 public protocol ConversationListDelegate {
 	/*
@@ -23,7 +23,7 @@ public protocol ConversationListDelegate {
 }
 
 // Wrapper around Client that maintains a list of Conversations
-public class ConversationList {
+public class ConversationList: ParrotServiceExtension.ConversationList {
 	
     public let client: Client
     private var conv_dict = [String : IConversation]()
@@ -74,8 +74,16 @@ public class ConversationList {
 			NotificationCenter.default().removeObserver($0)
 		}
 	}
+	
+	public var conversations: [String: ParrotServiceExtension.Conversation] {
+		var dict = Dictionary<String, ParrotServiceExtension.Conversation>()
+		for (key, conv) in self.conv_dict {
+			dict[key] = conv
+		}
+		return dict
+	}
 
-    public var conversations: [IConversation] {
+    public var _conversations: [IConversation] {
         get {
             let all = conv_dict.values.filter { !$0.is_archived }
             return all.sorted { $0.last_modified > $1.last_modified }
@@ -95,9 +103,26 @@ public class ConversationList {
 
     public var unreadEventCount: Int {
         get {
-            return conversations.flatMap { $0.unread_events }.count
+            return _conversations.flatMap { $0.unread_events }.count
         }
     }
+	
+	
+	/// Begin a new conversation with the people provided.
+	/// Note that this may be a one-on-one conversation if only one exists.
+	public func begin(with: [Person]) -> ParrotServiceExtension.Conversation? {
+		return nil
+	}
+	
+	/// Archive a conversation provided.
+	public func archive(conversation: ParrotServiceExtension.Conversation) {
+		
+	}
+	
+	/// Delete a conversation provided.
+	public func delete(conversation: ParrotServiceExtension.Conversation) {
+		
+	}
 	
 	// Add new conversation from Conversation
 	@discardableResult

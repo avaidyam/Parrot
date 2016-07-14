@@ -1,38 +1,27 @@
 import Foundation
-import class ParrotServiceExtension.Wrapper
+import ParrotServiceExtension
 
 /// A chat user.
-public struct User: Hashable, Equatable {
+public struct User: Person, Hashable, Equatable {
     public static let DEFAULT_NAME = "Unknown"
 	
 	/// A chat user identifier.
 	public struct ID: Hashable, Equatable {
 		public let chatID: String
 		public let gaiaID: String
-		
-		public var hashValue: Int {
-			return chatID.hashValue &+ gaiaID.hashValue
-		}
 	}
 	
-	/// The globally unique identifier for this user.
     public let id: User.ID
-	
-	/// The name components for this user. This will contain each part of the name,
-	/// such as first and last name, given name, titles, suffixes, and more.
-	/// Note: it is advised to use a formatter to comprehend this information.
+	public var identifier: String {
+		return id.gaiaID
+	}
 	public let nameComponents: [String]
-	
-	/// If applicable, the user's photo.
     public let photoURL: String?
-	
-	/// Any possible locations for the user. This can be physical or virtual.
-	/// For example, it may contain email addresses and phone numbers, and even
-	/// real physical addresses or coordinates.
     public let locations: [String]
-	
-	/// Is this user the currently logged in user?
     public let isSelf: Bool
+	public var me: Bool {
+		return self.isSelf
+	}
 	
 	// Initialize a User directly.
 	// Handles full_name or first_name being nil by creating an approximate
@@ -103,19 +92,6 @@ public struct User: Hashable, Equatable {
 		return self.nameComponents.first ?? ""
 	}
 	
-	/// The User's hash value.
-	public var hashValue: Int {
-		return self.id.hashValue
-	}
-}
-
-/// Are the two User.IDs equal?
-public func ==(lhs: User.ID, rhs: User.ID) -> Bool {
-	return lhs.hashValue == rhs.hashValue
-}
-/// Are the two Users equal?
-public func ==(lhs: User, rhs: User) -> Bool {
-	return lhs.id == rhs.id
 }
 
 
@@ -124,11 +100,25 @@ public func ==(lhs: User, rhs: User) -> Bool {
 
 
 // Collection of User instances.
-public class UserList: Collection {
+public class UserList: Directory, Collection {
 	
 	private var observer: NSObjectProtocol? // for Notification
-	public let me: User
 	private var users: [User.ID: User]
+	
+	public let me: Person
+	public var people: [String: Person] {
+		var dict = [String: Person]()
+		for (key, value) in self.users {
+			dict[key.gaiaID] = value
+		}
+		return dict
+	}
+	public var invitations: [String: Person] {
+		return [:]
+	}
+	public var blocked: [String: Person] {
+		return [:]
+	}
 	
 	// Returns all users as an array.
 	public var allUsers: [User] {
@@ -166,7 +156,7 @@ public class UserList: Collection {
 						client.getEntitiesByID(chat_id_list: conversation.participantData.flatMap { $0.id?.chatId }) { response in
 							let entities = response?.entityResult.flatMap { $0.entity } ?? []
 							for entity in entities {
-								let user = User(entity: entity, selfUser: self.me.id)
+								let user = User(entity: entity, selfUser: (self.me as! User).id)
 								if self.users[user.id] == nil {
 									self.users[user.id] = user
 								}
@@ -190,31 +180,47 @@ public class UserList: Collection {
 	}
 }
 
-// UserList Collection support.
+
+/// User.ID: Hashable
+public extension User.ID {
+	public var hashValue: Int {
+		return chatID.hashValue &+ gaiaID.hashValue
+	}
+}
+/// User.ID: Equatable
+public func ==(lhs: User.ID, rhs: User.ID) -> Bool {
+	return lhs.hashValue == rhs.hashValue
+}
+/// User: Hashable
+public extension User {
+	public var hashValue: Int {
+		return self.id.hashValue
+	}
+}
+/// User: Equatable
+public func ==(lhs: User, rhs: User) -> Bool {
+	return lhs.id == rhs.id
+}
+
+/// UserList: Collection
 public extension UserList {
 	public typealias Index = DictionaryIndex<User.ID, User>
 	public typealias SubSequence = Slice<LazyMapCollection<Dictionary<User.ID, User>, User>>
-	
 	public var startIndex : Index {
 		return self.users.values.startIndex
 	}
-	
 	public var endIndex : Index {
 		return self.users.values.endIndex
 	}
-	
 	public func index(after i: Index) -> Index {
 		return self.users.values.index(after: i)
 	}
-	
 	public func formIndex(after i: inout Index) {
 		return self.users.values.formIndex(after: &i)
 	}
-	
 	public subscript(index: Index) -> User {
 		return self.users.values[index]
 	}
-	
 	public subscript(bounds: Range<Index>) -> SubSequence {
 		return self.users.values[bounds]
 	}

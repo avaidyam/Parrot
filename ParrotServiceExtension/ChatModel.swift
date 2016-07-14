@@ -1,30 +1,16 @@
 import Foundation
 
-// Modularize Conversations + ConversationsView
-// for widget:
-// - main view is conversation view selected
-// - press (i) to show conversations list
-// - select = show a new conversation
-
-public enum MessageType {
-	case text
-	case richText
-	case image
-	case audio
-	case video
-	case link
-	case snippet
-	case summary
-	case heartbeat
-}
-
-public protocol ConversationList2 {
-	// conversations() -> [Conversation]
-	// begin([User]) -> Conversation
-}
-
-// Conversation consists of
-public protocol Conversation2 {
+/// A Conversation is uniquely identified by its ID, and consists of
+/// the current user, along with either one or more persons as well.
+public protocol Conversation /*: Hashable, Equatable*/ {
+	
+	/// The Conversation's unique identifier (specific to the Service).
+	var identifier: String { get }
+	
+	/// The user-facing Conversation name. This may only be displayed if the
+	/// conversation is a Group one, but this setting can be overridden.
+	var name: String { get set }
+	
 	// leave()
 	// archive()
 	// delete()
@@ -42,45 +28,68 @@ public protocol Conversation2 {
 	// typing()
 }
 
-public protocol Message2 {
+public protocol ConversationList /*: Collection*/ {
 	
+	/// A list of all conversations mapped by their unique ID.
+	var conversations: [String: Conversation] { get }
+	
+	/// Begin a new conversation with the people provided.
+	/// Note that this may be a one-on-one conversation if only one exists.
+	func begin(with: [Person]) -> Conversation?
+	
+	/// Archive a conversation provided.
+	func archive(conversation: Conversation)
+	
+	/// Delete a conversation provided.
+	func delete(conversation: Conversation)
 }
 
-public protocol Directory2 {
+public protocol Person /*: Hashable, Equatable*/ {
+	
+	/// The Person's unique identifier (specific to the Service).
+	var identifier: String { get }
+	
+	/// The Person's name as an array of components.
+	/// For example, the first element of the array provides the first name,
+	/// and the last element provides the last name. Concatenation of all the elements
+	/// in the array should produce the full name.
+	var nameComponents: [String] { get }
+	
+	/// The Person's photo as a remote (internet) or file URL (on disk).
+	/// If there is no photo, nil should be returned.
+	var photoURL: String? { get }
+	
+	/// Any possible locations for the Person. These can be physical or virtual.
+	/// For example, it may contain email addresses and phone numbers, and even
+	/// twitter handles, real physical addresses or coordinates.
+	var locations: [String] { get }
+	
+	/// Is this Person the one logged into the Service?
+	var me: Bool { get }
+	
+	/// Block this person from contacting the logged in user.
+	//func block()
+	
+	/// Unblock this person from contacting the logged in user.
+	//func unblock()
+}
+
+public protocol Directory /*: Collection*/ {
 	
 	/// Return the user currently logged into the Service.
 	var me: Person { get }
 	
-	/// Return all users the current user can locate.
-	var users: [Person] { get }
+	/// Return all users the current user can locate mapped by their unique ID.
+	var people: [String: Person] { get }
 	
-	//var invitations: [User2] { get }
+	/// Returns all pending invitations requested to the current user.
+	var invitations: [String: Person] { get }
 	
-	//var blocked: [User2] { get }
+	/// Returns all the people blocked by the current user.
+	var blocked: [String: Person] { get }
 	
 	/// Search for users given a set of identifiers.
 	/// Identifiers can include anything including name components.
 	/// Returns a set of users that could be possible matches.
-	func search(for identifiers: [String]) -> [Person]
-}
-
-public protocol Person {
-	
-	/// The user's name as an array of components.
-	///
-	/// For example, the first element of the array provides the first name,
-	/// and the last element provides the last name. Concatenation of all the elements
-	/// in the array should produce the full name.
-	var name: [String] { get }
-	
-	/// The user's photo as an array of bytes.
-	/// If there is none, nil should be returned.
-	var photo: [UInt8]? { get }
-	
-	/// The user's possible identifiers.
-	/// Note: this could include email address, twitter handles, or anything else.
-	var identifiers: [String] { get }
-	
-	/// Is this user the one logged into the Service?
-	var me: Bool { get }
+	//func search(for: [String]) -> [Person]
 }

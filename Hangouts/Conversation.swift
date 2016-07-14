@@ -1,4 +1,5 @@
 import Foundation
+import ParrotServiceExtension
 
 public protocol ConversationDelegate {
     func conversation(_ conversation: IConversation, didChangeTypingStatusForUser: User, toStatus: TypingType)
@@ -12,7 +13,7 @@ public protocol ConversationDelegate {
 }
 
 // Wrapper around Client for working with a single chat conversation.
-public class IConversation {
+public class IConversation: ParrotServiceExtension.Conversation {
     public typealias EventID = String
 
     public var client: Client
@@ -354,6 +355,10 @@ public class IConversation {
             return self.conversation.conversationId!.id!
         }
     }
+	
+	public var identifier: String {
+		return self.id
+	}
 
     public var users: [User] {
         get {
@@ -373,7 +378,10 @@ public class IConversation {
             } else {
                 return users.filter { !$0.isSelf }.map { $0.fullName }.joined(separator: ", ")
             }
-        }
+		}
+		set {
+			log.info("can't set name yet!")
+		}
     }
 
     public var last_modified: Date {

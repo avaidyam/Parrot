@@ -108,7 +108,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate {
 	}
 	
 	var userList: UserList? // FIXME
-	var conversationList: ConversationList? {
+	var conversationList: Hangouts.ConversationList? {
 		didSet {
 			conversationList?.delegate = self
 			DispatchQueue.main.async {

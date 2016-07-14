@@ -68,6 +68,16 @@ public final class Client: Service {
 		self.tokens.append(contentsOf: [a, b, c, d])
     }
 	
+	///
+	public var directory: Directory {
+		return self.userList
+	}
+	
+	///
+	public var conversations: ParrotServiceExtension.ConversationList {
+		return self.conversationList
+	}
+	
 	/* TODO: Can't disconnect a Channel yet. */
 	// Gracefully disconnect from the server.
 	public func disconnect(_ onDisconnect: (ErrorProtocol?) -> ()) {
