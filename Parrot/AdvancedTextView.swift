@@ -43,14 +43,14 @@ private class AutocompleteListView: ListView {
 	
 	var createViewProvider: (() -> NSTableCellView)? = nil
 	
-	private override func createView() -> NSTableCellView {
+	/*private override func createView() -> NSTableCellView {
 		var view = tableView.make(withIdentifier: NSTableCellView.className(), owner: self) as? NSTableCellView
 		if let p = self.createViewProvider where view == nil {
 			view = p()
 			view!.identifier = NSTableCellView.className()
 		}
 		return view!
-	}
+	}*/
 	
 	private override func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
 		return InternalRowView()

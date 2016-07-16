@@ -10,7 +10,7 @@ let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.seri
 
 class ConversationListViewController: NSViewController, ConversationListDelegate {
 	
-	@IBOutlet var personsView: ConversationListView!
+	@IBOutlet var personsView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
 	
 	var selectionProvider: ((Int) -> Void)? = nil
@@ -44,6 +44,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		personsView.tableView.register(nib, forIdentifier: ConversationView.className())
 		
 		personsView.updateScrollsToBottom = false
+		personsView.viewClassProvider = { row in ConversationView.self }
 		
 		NotificationCenter.default().addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
 			let c = note.object as! Hangouts.Client

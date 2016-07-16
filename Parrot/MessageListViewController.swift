@@ -7,7 +7,7 @@ import ParrotServiceExtension
 
 class MessageListViewController: NSViewController, ConversationDelegate, NSTextViewDelegate, NSTextDelegate {
 	
-	@IBOutlet var messagesView: MessageListView!
+	@IBOutlet var messagesView: ListView!
     @IBOutlet var messageTextField: NSTextView!
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSImageView!
@@ -28,6 +28,8 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	
 	override func loadView() {
 		super.loadView()
+		
+		messagesView.viewClassProvider = { row in MessageView.self }
 		
 		// Set up the measurement view.
 		let nib = NSNib(nibNamed: "MessageView", bundle: nil)

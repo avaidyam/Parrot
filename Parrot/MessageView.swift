@@ -117,7 +117,7 @@ public func ==(lhs: MessageView.Info, rhs: MessageView.Info) -> Bool {
 }
 
 // Container-type view for MessageView.
-public class MessageListView: ListView {
+/*public class MessageListView: ListView {
 	internal override func createView() -> MessageView {
 		var view = self.tableView.make(withIdentifier: MessageView.className(), owner: self) as? MessageView
 		if view == nil {
@@ -126,4 +126,4 @@ public class MessageListView: ListView {
 		}
 		return view!
 	}
-}
+}*/

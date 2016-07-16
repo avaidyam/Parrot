@@ -1,6 +1,7 @@
 import AppKit
 
 /* TODO: Rewrite to use associatedtype Element and Container as protocol-style. */
+/* TODO: Support custom grid drawing. */
 
 /// Provides default size classes for displayed elements of a list.
 /// Any of the provided classes have an associated size.
@@ -94,15 +95,6 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 		self.tableView.sizeLastColumnToFit()
 	}
 	
-	internal func createView() -> NSTableCellView {
-		var view = tableView.make(withIdentifier: NSTableCellView.className(), owner: self) as? NSTableCellView
-		if view == nil {
-			view = NSTableCellView(frame: NSZeroRect)
-			view!.identifier = NSTableCellView.className()
-		}
-		return view!
-	}
-	
 	public var sizeClass: SizeClass = .large
 	public var selectionCapability: SelectionCapability = .none
 	public var updateScrollsToBottom = true
@@ -121,6 +113,11 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 		}
 	}
 	
+	public var rowSpacing: NSSize {
+		get { return self.tableView.intercellSpacing }
+		set { self.tableView.intercellSpacing = newValue }
+	}
+	
 	/* TODO: Monitor actual addition/removal changes. */
 	public var dataSource: [Wrapper<Any>]! {
 		didSet { DispatchQueue.main.async {
@@ -128,6 +125,10 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 			let row = self.updateScrollsToBottom ? self.numberOfRows(in: self.tableView) - 1 : 0
 			self.tableView.scrollRowToVisible(row)
 		}}
+	}
+	
+	public func scroll(toRow: Int) {
+		self.tableView.scrollRowToVisible(toRow)
 	}
 	
 	/*
@@ -161,6 +162,7 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 		return self.tableView.selectedRowIndexes.map { $0 }
 	}
 	
+	public var viewClassProvider: ((row: Int) -> NSTableCellView.Type)?
 	public var dynamicHeightProvider: ((row: Int) -> Double)? = nil
 	public var clickedRowProvider: ((row: Int) -> Void)? = nil
 	public var selectionProvider: ((row: Int) -> Void)? = nil
@@ -204,8 +206,14 @@ public extension ListView {
 	
 	@objc(tableView:viewForTableColumn:row:)
 	public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		let view = createView()
-		view.objectValue = self.dataSource[row]
+		let viewClass = (self.viewClassProvider != nil) ? self.viewClassProvider!(row: row) : NSTableCellView.self
+		var view = tableView.make(withIdentifier: viewClass.className(), owner: self) as? NSTableCellView
+		if view == nil {
+			view = viewClass.init(frame: NSZeroRect)
+			view!.identifier = viewClass.className()
+		}
+		
+		view!.objectValue = self.dataSource[row]
 		//tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
 		return view
 	}

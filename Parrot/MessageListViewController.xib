@@ -21,7 +21,7 @@
             <rect key="frame" x="0.0" y="0.0" width="568" height="385"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <customView wantsLayer="YES" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="MessageListView" customModule="Parrot" customModuleProvider="target">
+                <customView wantsLayer="YES" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="41" width="568" height="344"/>
                 </customView>
                 <box wantsLayer="YES" verticalHuggingPriority="751" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="MlJ-gQ-qkl">
