@@ -35,7 +35,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 
     public init(client: Client, conv_states: [ConversationState], user_list: UserList, sync_timestamp: UInt64?) {
         self.client = client
-		self.sync_timestamp = Date.from(UTC: Double(sync_timestamp ?? 0))//Date(timeIntervalSince1970: 0)
+		self.sync_timestamp = Date.from(UTC: Double(sync_timestamp ?? 0))//.origin
         self.user_list = user_list
 		
         // Initialize the list of conversations from Client's list of ClientConversationStates.

@@ -22,7 +22,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 			(conversationList as? Hangouts.ConversationList)?.delegate = self
 			DispatchQueue.main.async {
 				self.indicator.isHidden = true
-				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
+				self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			}
 		}
 	}
@@ -43,7 +43,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		let nib = NSNib(nibNamed: "ConversationView", bundle: nil)
 		personsView.tableView.register(nib, forIdentifier: ConversationView.className())
 		
-		personsView.updateScrollsToBottom = false
+		personsView.updateScrollDirection = .top
 		personsView.viewClassProvider = { row in ConversationView.self }
 		
 		NotificationCenter.default().addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
@@ -52,7 +52,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 			self.conversationList = c.conversationList
 			
 			DispatchQueue.main.async {
-				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
+				self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			}
 		}
 		
@@ -130,24 +130,14 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	}
 	
 	func _updateWallclock(_ timer: Timer) {
+		let r = self.personsView.tableView.rows(in: self.personsView.tableView.visibleRect)
+		for row in r.location..<r.location+r.length {
+			if	let cell = self.personsView.tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ConversationView {
+				cell.updateTimestamp()
+			}
+		}
+		
 		NotificationCenter.default().post(name: Notification.Name("ConversationView.UpdateTime"), object: self)
-	}
-	
-	private func _getPerson(_ conversation: ParrotServiceExtension.Conversation) -> ConversationView.Info {
-		let messageSender = conversation.messages.last?.sender
-		let selfSender = conversation.participants.filter { $0.me }.first?.identifier
-		let firstParticipant = conversation.participants.filter { !$0.me }.first!
-		let photo: NSImage = fetchImage(user: firstParticipant, conversation: conversation)
-		// FIXME: Group conversation prefixing doesn't work yet.
-		let prefix = messageSender != selfSender ? "" : "You: "
-		//let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
-		let subtitle = prefix + (conversation.messages.last?.text ?? "")
-		let time = conversation.messages.last?.timestamp ?? Date(timeIntervalSince1970: 0)
-		return ConversationView.Info(photo: photo, indicator: 0, primary: conversation.name, secondary: subtitle, time: time)
-	}
-	
-	private func _getAllPersons() -> [ConversationView.Info]? {
-		return self.sortedConversations.map { _getPerson($0) }
 	}
 	
     func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {
@@ -155,7 +145,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		
 		// pls fix :(
 		DispatchQueue.main.async {
-			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
+			self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			//UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
 	}
@@ -166,7 +156,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: Hangouts.ConversationList) {
 		DispatchQueue.main.async {
-			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
+			self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			//UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }
@@ -174,7 +164,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	/* TODO: Just update the row that is updated. */
     func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
 		DispatchQueue.main.async {
-			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
+			self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			//UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
 		}
     }

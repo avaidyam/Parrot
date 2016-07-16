@@ -174,6 +174,10 @@ public func defaultImageForString(forString source: String, size: NSSize = NSSiz
 	}
 }
 
+public extension Date {
+	public static let origin = Date(timeIntervalSince1970: 0)
+}
+
 public extension NSColor {
 	public static func darkOverlay(forAppearance a: NSAppearance) -> NSColor {
 		if a.name == NSAppearanceNameVibrantDark {

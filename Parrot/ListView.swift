@@ -1,8 +1,5 @@
 import AppKit
 
-/* TODO: Rewrite to use associatedtype Element and Container as protocol-style. */
-/* TODO: Support custom grid drawing. */
-
 /// Provides default size classes for displayed elements of a list.
 /// Any of the provided classes have an associated size.
 /// However, .Dynamic implies that the size class will be computed
@@ -46,6 +43,16 @@ public enum SelectionCapability {
 	case any
 }
 
+/// Determines the scroll direction of the ListView upon update.
+/// Currently, only top and bottom are supported.
+public enum ScrollDirection {
+	case top
+	case bottom
+	//case index(Int)
+}
+
+// FIXME: ListRowView, ListViewDelegate
+
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
@@ -69,7 +76,6 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 		
 		self.scrollView = NSScrollView(frame: self.bounds)
 		self.tableView = NSExtendedTableView(frame: self.scrollView.bounds)
-		
 		self.tableView.delegate = self
 		self.tableView.dataSource = self
 		
@@ -95,11 +101,15 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 		self.tableView.sizeLastColumnToFit()
 	}
 	
+	@IBInspectable // FIXME
 	public var sizeClass: SizeClass = .large
+	@IBInspectable // FIXME
 	public var selectionCapability: SelectionCapability = .none
-	public var updateScrollsToBottom = true
+	@IBInspectable // FIXME
+	public var updateScrollDirection: ScrollDirection = .bottom
 	
 	// Allow accessing the insets from the scroll view.
+	@IBInspectable // FIXME
 	public var insets: EdgeInsets {
 		get { return self.scrollView.contentInsets }
 		set { self.scrollView.contentInsets = newValue }
@@ -113,6 +123,7 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 		}
 	}
 	
+	@IBInspectable
 	public var rowSpacing: NSSize {
 		get { return self.tableView.intercellSpacing }
 		set { self.tableView.intercellSpacing = newValue }
@@ -122,8 +133,10 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 	public var dataSource: [Wrapper<Any>]! {
 		didSet { DispatchQueue.main.async {
 			self.tableView.reloadData()
-			let row = self.updateScrollsToBottom ? self.numberOfRows(in: self.tableView) - 1 : 0
-			self.tableView.scrollRowToVisible(row)
+			switch self.updateScrollDirection {
+			case .top: self.tableView.scrollRowToVisible(0)
+			case .bottom: self.tableView.scrollRowToVisible(self.dataSource.count - 1)
+			}
 		}}
 	}
 	
@@ -179,14 +192,12 @@ public extension ListView {
 		return self.dataSource.count
 	}
 	
-	/* TODO: Support size classes. */
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return CGFloat(self.sizeClass.calculate {
 			self.dynamicHeightProvider?(row: row) ?? 0
 		})
 	}
 	
-	// Inform the TableView that every row needs to resize.
 	public func tableViewColumnDidResize(_ notification: Notification) {
 		NSAnimationContext.beginGrouping()
 		NSAnimationContext.current().duration = 0

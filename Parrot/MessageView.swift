@@ -115,15 +115,3 @@ public func ==(lhs: MessageView.Info, rhs: MessageView.Info) -> Bool {
 		lhs.orientation == rhs.orientation //&&
 		//lhs.color == rhs.color
 }
-
-// Container-type view for MessageView.
-/*public class MessageListView: ListView {
-	internal override func createView() -> MessageView {
-		var view = self.tableView.make(withIdentifier: MessageView.className(), owner: self) as? MessageView
-		if view == nil {
-			view = MessageView(frame: NSZeroRect)
-			view!.identifier = MessageView.className()
-		}
-		return view!
-	}
-}*/

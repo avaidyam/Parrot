@@ -246,7 +246,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		let text = ev.text
 		let orientation = (user.me ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
 		let img: NSImage = fetchImage(user: user, conversation: self.conversation!)
-		let time = ev.timestamp ?? Date(timeIntervalSince1970: 0)
+		let time = ev.timestamp ?? .origin
 		return MessageView.Info(photo: img, string: text, orientation: orientation, time: time)
 	}
 	

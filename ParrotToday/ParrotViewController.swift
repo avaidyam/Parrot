@@ -148,7 +148,7 @@ class ParrotViewController: NSViewController {//, ConversationListDelegate {
 		let ind = conversation.unread_events.count
 		let name = title
 		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
-		let time = conversation.messages.last?.timestamp ?? Date(timeIntervalSince1970: 0)
+		let time = conversation.messages.last?.timestamp ?? .origin
 		
 		return ConversationView.Info(photo: img, caption: cap, highlight: ring, indicator: ind, primary: name, secondary: sub, time: time)
 	}

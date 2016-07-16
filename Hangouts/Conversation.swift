@@ -395,7 +395,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
     public var last_modified: Date {
         get {
 			return Date.from(UTC: Double(conversation.selfConversationState?.sortTimestamp ?? 0))
-			//Date(timeIntervalSinceReferenceDate: 0)
+			//.origin
         }
     }
 	
