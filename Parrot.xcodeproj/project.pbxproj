@@ -33,6 +33,8 @@
 		48574F141D120314002375E1 /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
 		4866337E1C5822FA006C094B /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4866337D1C5822FA006C094B /* ListView.swift */; };
 		486907F71D1EE266007C2532 /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486907F61D1EE266007C2532 /* MulticastDelegate.swift */; };
+		486CD8D31D3A8A9300D5128F /* SendMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 486CD8D21D3A8A9300D5128F /* SendMessageView.xib */; };
+		486CD8D51D3A8A9F00D5128F /* SendMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486CD8D41D3A8A9F00D5128F /* SendMessageView.swift */; };
 		48808EDD1C6463DD00236E96 /* WindowTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */; };
 		488239A31C455CED00C5E8EB /* AppKitSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488239A21C455CED00C5E8EB /* AppKitSupport.swift */; };
 		48834D961C1B3602009BC442 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ServiceManager.swift */; };
@@ -251,6 +253,8 @@
 		486907F61D1EE266007C2532 /* MulticastDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		486CD8D21D3A8A9300D5128F /* SendMessageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendMessageView.xib; sourceTree = "<group>"; };
+		486CD8D41D3A8A9F00D5128F /* SendMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendMessageView.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* WindowTransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowTransitionAnimator.swift; sourceTree = "<group>"; };
 		488239A21C455CED00C5E8EB /* AppKitSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitSupport.swift; sourceTree = "<group>"; };
 		48834D921C1B3602009BC442 /* Parrot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parrot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -427,6 +431,8 @@
 			children = (
 				4835ECA61C1C620000193EBC /* MessageView.swift */,
 				4884929A1D0B59370003D522 /* MessageView.xib */,
+				486CD8D41D3A8A9F00D5128F /* SendMessageView.swift */,
+				486CD8D21D3A8A9300D5128F /* SendMessageView.xib */,
 				4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */,
 				488492751D0B3A010003D522 /* MessageListViewController.xib */,
 				48D25B781D38244700753DB7 /* TypingEventView.xib */,
@@ -1029,6 +1035,7 @@
 			files = (
 				4884929B1D0B59370003D522 /* MessageView.xib in Resources */,
 				488492741D0B392A0003D522 /* ConversationListViewController.xib in Resources */,
+				486CD8D31D3A8A9300D5128F /* SendMessageView.xib in Resources */,
 				48F84D451D0DEC1E00E77AD9 /* LinkPreviewEventView.xib in Resources */,
 				48BFD0321D13130000DAE29E /* SplitViewMode.storyboard in Resources */,
 				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
@@ -1119,6 +1126,7 @@
 				4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* MessageListViewController.swift in Sources */,
 				488239A31C455CED00C5E8EB /* AppKitSupport.swift in Sources */,
+				486CD8D51D3A8A9F00D5128F /* SendMessageView.swift in Sources */,
 				48EA55CB1D26CDD300C3BC80 /* AppActivity.swift in Sources */,
 				48834D961C1B3602009BC442 /* ServiceManager.swift in Sources */,
 				48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */,

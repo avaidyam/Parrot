@@ -8,6 +8,7 @@ import ParrotServiceExtension
 // Acts as a base class for the events defined below.
 public class IEvent : Hashable, Equatable {
     public let event: Event
+	internal weak var client: Client? = nil
 	
     public init(event: Event) {
         self.event = event
@@ -103,7 +104,11 @@ public class IChatMessageEvent: IEvent, Message {
     }
 	
 	public var sender: Person {
-		return User(userID: self.userID)
+		let orig = User(userID: self.userID)
+		if let client = self.client {
+			return client.directory.people[self.userID.gaiaID] ?? orig
+		}
+		return orig
 	}
 }
 

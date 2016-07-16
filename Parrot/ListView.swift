@@ -145,6 +145,11 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 		self.tableView.scrollRowToVisible(toRow)
 	}
 	
+	public func register(nibName: String, forClass: NSTableCellView.Type) {
+		let nib = NSNib(nibNamed: nibName, bundle: nil)
+		self.tableView.register(nib, forIdentifier: forClass.className())
+	}
+	
 	/*
 	// If you REALLY want animations, use this to append a set of elements.
 	public func appendElements(elements: [Element]) {

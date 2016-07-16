@@ -48,27 +48,21 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	override func loadView() {
 		super.loadView()
 		
-		messagesView.viewClassProvider = { row in MessageView.self }
+		self.messagesView.viewClassProvider = { row in
+			switch self.conversation!._messages[row].sender.me {
+			case true: return SendMessageView.self
+			case false: return MessageView.self
+			}
+		}
 		
 		// Set up the measurement view.
+		self.messagesView.register(nibName: "MessageView", forClass: MessageView.self)
+		self.messagesView.register(nibName: "SendMessageView", forClass: SendMessageView.self)
+		//self.messagesView.register(nibName: "TypingEventView", forClass: NSTableCellView.self)
+		
 		let nib = NSNib(nibNamed: "MessageView", bundle: nil)
-		messagesView.tableView.register(nib, forIdentifier: MessageView.className())
-		messagesView.tableView.register(NSNib(nibNamed: "TypingEventView", bundle: nil), forIdentifier: "Typing")
 		let stuff = nib?.instantiate(nil)
 		_measure = stuff?.filter { $0 is MessageView }.first as? MessageView// stuff[0]: NSApplication
-		
-		NotificationCenter.default().addObserver(forName: UserNotification.didActivateNotification, object: nil, queue: nil) { n in
-			guard let u = n.object as? UserNotification where u.identifier ?? "" == self.conversation?.id else { return }
-			log.info("note \(u.identifier) with response \(u.response)")
-			guard u.response != nil else { return }
-			
-			log.warning("sending disabled temporarily")
-			/*
-			let emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
-			let txt = MessageListViewController.segmentsForInput(u.response!.string, emojify: emojify)
-			self.conversation?.sendMessage(segments: txt)
-			*/
-		}
 	}
 	
     override func viewDidLoad() {
@@ -98,7 +92,8 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		}
     }
 
-    override func viewWillAppear() {
+	override func viewWillAppear() {
+		//self.messagesView.insets = EdgeInsets(top: -(64.0 + 22.0), left: 0, bottom: 64.0, right: 0)
 		_note = NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidBecomeKey,
 		                                                 object: self.window, queue: nil) { a in
 			self.windowDidBecomeKey(nil)

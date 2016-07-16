@@ -46,3 +46,18 @@ public func fetchImage(user: Person, conversation: ParrotServiceExtension.Conver
 	_imgCache[user.identifier] = img
 	return img
 }
+public func fetchImage(user: Person) -> NSImage {
+	
+	let output = _imgCache[user.identifier]
+	guard output == nil else { return output! }
+	
+	var img: NSImage! = nil
+	if let d = fetchData(user.identifier, user.photoURL) {
+		img = NSImage(data: d)!
+	} else {
+		img = defaultImageForString(forString: user.fullName)
+	}
+	
+	_imgCache[user.identifier] = img
+	return img
+}

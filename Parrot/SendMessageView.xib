@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A238m" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView wantsLayer="YES" id="zqe-Iz-kI4" customClass="SendMessageView" customModule="Parrot" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="362" height="40"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <scrollView wantsLayer="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="mRD-CH-i9O" customClass="AntiScrollView" customModule="Parrot" customModuleProvider="target">
+                    <rect key="frame" x="8" y="8" width="318" height="24"/>
+                    <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="hBG-h2-Am9">
+                        <rect key="frame" x="0.0" y="0.0" width="318" height="24"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView wantsLayer="YES" horizontalCompressionResistancePriority="751" drawsBackground="NO" verticallyResizable="NO" continuousSpellChecking="YES" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="BKV-0K-njI">
+                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <size key="minSize" width="0.0" height="24"/>
+                                <size key="maxSize" width="318" height="10000000"/>
+                                <attributedString key="textStorage">
+                                    <fragment content="Cheers, love! The cavalry's here!">
+                                        <attributes>
+                                            <font key="NSFont" metaFont="system"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <size key="minSize" width="0.0" height="24"/>
+                                <size key="maxSize" width="318" height="10000000"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </clipView>
+                    <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="yT0-6Q-IDK">
+                        <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="J4w-Np-h3k">
+                        <rect key="frame" x="-100" y="-100" width="16" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Cc3-0E-vem">
+                    <rect key="frame" x="330" y="8" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Cc3-0E-vem" secondAttribute="height" multiplier="1:1" id="Sgb-pr-AGi"/>
+                        <constraint firstAttribute="height" constant="24" id="ujC-CR-x9Y"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="C6m-Ms-BcR"/>
+                </imageView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="mRD-CH-i9O" secondAttribute="bottom" constant="8" id="Nu9-sv-MXE"/>
+                <constraint firstItem="mRD-CH-i9O" firstAttribute="top" secondItem="zqe-Iz-kI4" secondAttribute="top" constant="8" id="iA3-hk-UsK"/>
+                <constraint firstItem="Cc3-0E-vem" firstAttribute="top" secondItem="mRD-CH-i9O" secondAttribute="top" id="iVz-ac-rqa"/>
+                <constraint firstItem="mRD-CH-i9O" firstAttribute="leading" secondItem="zqe-Iz-kI4" secondAttribute="leading" constant="8" id="jqC-mo-CcV"/>
+                <constraint firstItem="Cc3-0E-vem" firstAttribute="leading" secondItem="mRD-CH-i9O" secondAttribute="trailing" constant="4" id="nI3-Xk-rku"/>
+                <constraint firstAttribute="trailing" secondItem="Cc3-0E-vem" secondAttribute="trailing" constant="8" id="qhn-G1-WZp"/>
+            </constraints>
+            <connections>
+                <outlet property="photoView" destination="Cc3-0E-vem" id="Ias-gi-O0Z"/>
+                <outlet property="textLabel" destination="BKV-0K-njI" id="ouo-1b-Mej"/>
+            </connections>
+            <point key="canvasLocation" x="331" y="139.5"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="NSUser" width="32" height="32"/>
+    </resources>
+</document>

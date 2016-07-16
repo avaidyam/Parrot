@@ -92,6 +92,22 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		
 		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
 		UserNotificationCenter.updateDockBadge(unread)
+		
+		NotificationCenter.default().addObserver(forName: UserNotification.didActivateNotification, object: nil, queue: nil) { n in
+			guard	let u = n.object as? UserNotification
+					where ((self.conversationList?.conversations[u.identifier ?? ""]) != nil)
+			else { return }
+			
+			log.info("note \(u.identifier) with response \(u.response)")
+			guard u.response != nil else { return }
+			
+			log.warning("sending disabled temporarily")
+			/*
+			let emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
+			let txt = MessageListViewController.segmentsForInput(u.response!.string, emojify: emojify)
+			self.conversation?.sendMessage(segments: txt)
+			*/
+		}
 	}
 	
 	override func viewDidLoad() {

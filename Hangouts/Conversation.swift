@@ -112,6 +112,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	@discardableResult
     public func add_event(event: Event) -> IEvent {
         let conv_event = IConversation.wrap_event(event: event)
+		conv_event.client = self.client
 		/* TODO: Enable this. */
 		/*if !self.events_dict.contains(conv_event.id) {
 			self.events.append(conv_event)
@@ -320,8 +321,9 @@ public class IConversation: ParrotServiceExtension.Conversation {
 					return
 				}
 				let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(event: $0) }
-
+				
                 for conv_event in conv_events {
+					conv_event.client = self.client
                     self.events_dict[conv_event.id] = conv_event
                 }
                 cb?(conv_events)

@@ -1,7 +1,9 @@
 import Cocoa
 import protocol ParrotServiceExtension.Message
 
-public class MessageView: ListRowView {
+/* TODO: Add mini focus indicators that can be updated to show read status. */
+
+public class SendMessageView: ListRowView {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
 	
@@ -11,10 +13,10 @@ public class MessageView: ListRowView {
 	public override var objectValue: AnyObject? {
 		didSet {
 			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Message else {
-				log.warning("MessageView encountered faulty objectValue!")
+				log.warning("SendMessageView encountered faulty objectValue!")
 				return
 			}
-			log.verbose("Configuring MessageView.")
+			log.verbose("Configuring SendMessageView.")
 			
 			let user = o.sender
 			let str = AttributedString(string: o.text as String)
@@ -48,7 +50,7 @@ public class MessageView: ListRowView {
 			// [BUG] [macOS 12] NSTextView doesn't fill width for some reason.
 			text.frame = text.enclosingScrollView!.bounds
 			
-			// NSTextView doesn't automatically change its text color when the 
+			// NSTextView doesn't automatically change its text color when the
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.
 			// Also, expand the text size if it's purely emoji.
