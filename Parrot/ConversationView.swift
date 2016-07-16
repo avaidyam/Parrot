@@ -17,7 +17,7 @@ public class ConversationView: ListRowView {
 			}
 			log.verbose("Configuring ConversationView.")
 			
-			let messageSender = conversation.messages.last?.sender
+			let messageSender = conversation.messages.last?.sender.identifier
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
 			let firstParticipant = conversation.participants.filter { !$0.me }.first!
 			let photo = fetchImage(user: firstParticipant, conversation: conversation)

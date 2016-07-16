@@ -102,8 +102,8 @@ public class IChatMessageEvent: IEvent, Message {
 		return attachments
     }
 	
-	public var sender: String {
-		return self.userID.gaiaID
+	public var sender: Person {
+		return User(userID: self.userID)
 	}
 }
 

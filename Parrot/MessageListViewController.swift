@@ -6,6 +6,7 @@ import ParrotServiceExtension
 /* TODO: Smart entry completion for ()/[]/""/etc. */
 /* TODO: Support /cmd's (i.e. /remove <username>) for power-users. */
 /* TODO: Support Slack-like plugin integrations. */
+/* TODO: Needs a complete refactor, with something like CSS styling. */
 
 class MessageListViewController: NSViewController, ConversationDelegate, NSTextViewDelegate, NSTextDelegate {
 	
@@ -27,7 +28,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	
 	static func display(from: NSViewController, conversation: ParrotServiceExtension.Conversation) -> MessageListViewController {
 		let controller = MessageListViewController(nibName: "MessageListViewController", bundle: nil)!
-		controller.conversation = conversation as! IConversation // FIXME FORCE DOWN-CAST TO HANGOUTS
+		controller.conversation = (conversation as! IConversation) // FIXME FORCE DOWN-CAST TO HANGOUTS
 		from.presentViewController(controller, animator: WindowTransitionAnimator { w in
 			w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
 			w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
@@ -40,7 +41,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 				w.setFrame(NSRect(x: 0, y: 0, width: 480, height: 320), display: false, animate: true)
 				w.center()
 			}
-			})
+		})
 		return controller
 	}
 	
@@ -87,7 +88,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		self.messagesView.dynamicHeightProvider = { (row: Int) -> Double in
 			
 			// TODO: Use the cached measurement sample and grab its frame after layout.
-			let a = (self.messagesView.dataSource[row].element as? MessageView.Info)!.string
+			let a = (self.messagesView.dataSource[row].element as? Message)!.text
 			//self._measure?.textLabel?.string = a as String
 			//self._measure?.layout()
 			//log.info(self._measure?.frame.size.height)
@@ -173,7 +174,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			
 			//self.messagesView.removeElements(self._getAllMessages()!)
 			if self.messagesView != nil {
-				self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
+				self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
 			} else {
 				//log.info("Not initialized.")
 			}
@@ -206,7 +207,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
     }
 
 	func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
-		self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
+		self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
 		
 		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
 		//self.messagesView.appendElements(found)
@@ -245,28 +246,12 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
     }
 
 	func conversationDidUpdateEvents(_ conversation: IConversation) {
-		self.messagesView.dataSource = self._getAllMessages()!.map { Wrapper.init($0) }
+		self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
     }
 
     func conversationDidUpdate(conversation: IConversation) {
         
     }
-	
-	// get all messages
-	private func _getAllMessages() -> [MessageView.Info]? {
-		return self.conversation?.messages.map { _getMessage($0) }
-	}
-	
-	// get a single message
-	func _getMessage(_ ev: ParrotServiceExtension.Message) -> MessageView.Info {
-		let user = self.conversation!.client.directory.people[ev.sender]!
-		//let user = self.conversation!.user_list[ev.sender]
-		let text = ev.text
-		let orientation = (user.me ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
-		let img: NSImage = fetchImage(user: user, conversation: self.conversation!)
-		let time = ev.timestamp ?? .origin
-		return MessageView.Info(photo: img, string: text, orientation: orientation, time: time)
-	}
 	
     // MARK: Window notifications
 

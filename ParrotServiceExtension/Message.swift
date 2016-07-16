@@ -20,7 +20,7 @@ public enum MessageType {
 
 public protocol Message {
 	var timestamp: Date { get }
-	var sender: String { get }
+	var sender: Person { get }
 	var text: String { get }
 }
 

@@ -1,46 +1,29 @@
 import Cocoa
+import protocol ParrotServiceExtension.Message
 
-/* TODO: Needs a complete refactor, with something like CSS styling. */
-
-public class MessageView: NSTableCellView {
-	
-	// Serves as the "model" behind the view. Technically speaking, this is a translation
-	// layer between the application model and decouples it from the view.
-	public struct Info: Equatable {
-		var photo: NSImage
-		//var caption: String
-		var string: String
-		var orientation: NSUserInterfaceLayoutDirection
-		//var color: NSColor
-		var time: Date
-	}
-	
+public class MessageView: ListRowView {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
+	
 	var color: NSColor = NSColor.black()
 	var orientation: NSUserInterfaceLayoutDirection = .leftToRight
-	
-	public override init(frame: NSRect) {
-		super.init(frame: frame)
-	}
-	
-	public required init?(coder: NSCoder) {
-		super.init(coder: coder)
-	}
 	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
-			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? MessageView.Info else {
+			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Message else {
 				return
 			}
-			let str = AttributedString(string: o.string as String)
 			
-			self.orientation = o.orientation
+			let user = o.sender
+			let str = AttributedString(string: o.text as String)
+			
+			self.orientation = (user.me ? NSUserInterfaceLayoutDirection.rightToLeft : .leftToRight)
 			//self.color = o.color
 			self.textLabel?.textStorage?.setAttributedString(str)
-			self.textLabel?.toolTip = "\(o.time.fullString())"
-			self.photoView?.image = o.photo
+			self.textLabel?.toolTip = "\((o.timestamp ?? .origin).fullString())"
+			//let img: NSImage = fetchImage(user: user, conversation: self.conversation!)
+			//self.photoView?.image = img
 			//self.photoView?.toolTip = o.caption
 			
 			// Enable automatic links, etc.
@@ -57,8 +40,6 @@ public class MessageView: NSTableCellView {
 		if let photo = self.photoView, let layer = photo.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = photo.bounds.width / 2.0
-			//layer.borderWidth = 1.0
-			//layer.borderColor = self.color.cgColor
 		}
 		if let text = self.textLabel, let layer = text.layer {
 			layer.masksToBounds = true
@@ -106,12 +87,4 @@ public class MessageView: NSTableCellView {
 		let height = box.size.height
 		return (height > 24.0 ? height : 24.0) + 16.0
 	}
-}
-
-// Message: Equatable
-public func ==(lhs: MessageView.Info, rhs: MessageView.Info) -> Bool {
-	return lhs.photo == rhs.photo &&
-		lhs.string == rhs.string &&
-		lhs.orientation == rhs.orientation //&&
-		//lhs.color == rhs.color
 }
