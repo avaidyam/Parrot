@@ -4,29 +4,39 @@ import ParrotServiceExtension
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
 /* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
-/* TODO: Support group images and letter images instead of generic noimage icon. */
 
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.serial, .qosUserInteractive])
 
 class ConversationListViewController: NSViewController, ConversationListDelegate {
 	
-	@IBOutlet var personsView: ListView!
+	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
 	
 	var selectionProvider: ((Int) -> Void)? = nil
 	var wallclock: Timer!
 	var userList: Directory?
+	
 	var conversationList: ParrotServiceExtension.ConversationList? {
 		didSet {
 			// FIXME: FORCE-CAST TO HANGOUTS
 			(conversationList as? Hangouts.ConversationList)?.delegate = self
+			
 			DispatchQueue.main.async {
-				self.indicator.isHidden = true
-				self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+				NSAnimationContext.runAnimationGroup({ ctx in
+					self.indicator.stopAnimation(nil)
+					self.indicator.isHidden = true
+				}, completionHandler: {
+					self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+					//let i = (0..<self.listView.dataSource.count) as Range<Int>
+					//self.listView.tableView.insertRows(at: IndexSet(integersIn: i), withAnimation: [.effectFade, .slideUp])
+				})
 			}
 		}
 	}
+	
 	var sortedConversations: [ParrotServiceExtension.Conversation] {
+		guard self.conversationList != nil else { return [] }
+		
 		// FIXME: FORCE-CAST TO HANGOUTS
 		let all = self.conversationList?.conversations.map { $1 as! IConversation }.filter { !$0.is_archived }
 		return all!.sorted { $0.last_modified > $1.last_modified }.map { $0 as ParrotServiceExtension.Conversation }
@@ -39,12 +49,14 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	override func loadView() {
 		super.loadView()
 		self.title = "Parrot" // weird stuff
+		self.indicator.startAnimation(nil)
+		
 		
 		let nib = NSNib(nibNamed: "ConversationView", bundle: nil)
-		personsView.tableView.register(nib, forIdentifier: ConversationView.className())
+		self.listView.tableView.register(nib, forIdentifier: ConversationView.className())
 		
-		personsView.updateScrollDirection = .top
-		personsView.viewClassProvider = { row in ConversationView.self }
+		self.listView.updateScrollDirection = .top
+		self.listView.viewClassProvider = { row in ConversationView.self }
 		
 		NotificationCenter.default().addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
 			let c = note.object as! Hangouts.Client
@@ -52,23 +64,24 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 			self.conversationList = c.conversationList
 			
 			DispatchQueue.main.async {
-				self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+				self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			}
 		}
 		
-		//UserNotificationCenter.updateDockBadge(conversationList?.unreadEventCount ?? 0)
+		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
+		UserNotificationCenter.updateDockBadge(unread)
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.personsView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
-		self.personsView.clickedRowProvider = { row in
+		self.listView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
+		self.listView.clickedRowProvider = { row in
 			if row >= 0 {
 				self.selectionProvider?(row)
 			}
 		}
-		self.personsView.rowActionProvider = { row, edge in
+		self.listView.rowActionProvider = { row, edge in
 			var actions: [NSTableViewRowAction] = []
 			if edge == .leading { // Swipe Right Actions
 				actions = [
@@ -99,7 +112,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 			}
 			return actions
 		}
-		self.personsView.menuProvider = { rows in
+		self.listView.menuProvider = { rows in
 			let m = NSMenu(title: "")
 			m.addItem(withTitle: "Mute", action: nil, keyEquivalent: "")
 			m.addItem(withTitle: "Block", action: nil, keyEquivalent: "")
@@ -108,7 +121,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 			m.addItem(withTitle: "Archive", action: nil, keyEquivalent: "")
 			return m
 		}
-		self.personsView.pasteboardProvider = { row in
+		self.listView.pasteboardProvider = { row in
 			let pb = NSPasteboardItem()
 			//NSPasteboardTypeRTF, NSPasteboardTypeString, NSPasteboardTypeTabularText
 			log.info("pb for row \(row)")
@@ -130,23 +143,27 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	}
 	
 	func _updateWallclock(_ timer: Timer) {
-		let r = self.personsView.tableView.rows(in: self.personsView.tableView.visibleRect)
-		for row in r.location..<r.location+r.length {
-			if	let cell = self.personsView.tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ConversationView {
+		for row in self.listView.visibleRows {
+			if let cell = self.listView.tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ConversationView {
 				cell.updateTimestamp()
 			}
 		}
-		
-		NotificationCenter.default().post(name: Notification.Name("ConversationView.UpdateTime"), object: self)
 	}
+	
+	
+	
+	// MARK - Delegate
+	
+	
 	
     func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {
 		guard event is IChatMessageEvent else { return }
 		
 		// pls fix :(
 		DispatchQueue.main.async {
-			self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
-			//UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
+			self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
+			UserNotificationCenter.updateDockBadge(unread)
 		}
 	}
 	
@@ -156,16 +173,18 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: Hangouts.ConversationList) {
 		DispatchQueue.main.async {
-			self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
-			//UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
+			self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
+			UserNotificationCenter.updateDockBadge(unread)
 		}
     }
 	
 	/* TODO: Just update the row that is updated. */
     func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
 		DispatchQueue.main.async {
-			self.personsView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
-			//UserNotificationCenter.updateDockBadge(self.conversationList?.unreadEventCount ?? 0)
+			self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
+			UserNotificationCenter.updateDockBadge(unread)
 		}
     }
 }

@@ -17,6 +17,9 @@ public protocol Conversation /*: Hashable, Equatable*/ {
 	/// The set of all events in this Conversation.
 	var messages: [Message] { get }
 	
+	/// The number of messages that are unread for this Conversation.
+	var unreadCount: Int { get }
+	
 	// leave()
 	// archive()
 	// delete()

@@ -1,20 +1,21 @@
 import Cocoa
 import protocol ParrotServiceExtension.Conversation
 
-// A general person view
-public class ConversationView : NSTableCellView {
-	@IBOutlet var photoView: NSImageView?
-	@IBOutlet var nameLabel: NSTextField?
-	@IBOutlet var textLabel: NSTextField?
-	@IBOutlet var timeLabel: NSTextField?
-	@IBOutlet var unreadLabel: NSImageView?
+// A visual representation of a Conversation in a ListView.
+public class ConversationView: ListRowView {
+	@IBOutlet private var photoView: NSImageView?
+	@IBOutlet private var nameLabel: NSTextField?
+	@IBOutlet private var textLabel: NSTextField?
+	@IBOutlet private var timeLabel: NSTextField?
 	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: AnyObject? {
 		didSet {
 			guard let conversation = (self.objectValue as? Wrapper<Any>)?.element as? Conversation else {
+				log.warning("ConversationView encountered faulty objectValue!")
 				return
 			}
+			log.verbose("Configuring ConversationView.")
 			
 			let messageSender = conversation.messages.last?.sender
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
@@ -47,7 +48,7 @@ public class ConversationView : NSTableCellView {
 			} else {
 				NSLayoutConstraint.activate(c ?? [])
 			}*/
-			self.unreadLabel?.isHidden = true
+			//self.unreadLabel?.isHidden = true
 			// bold the message contents
 			if let t = self.textLabel {
 				t.font = NSFont.systemFont(ofSize: t.font!.pointSize,
@@ -56,35 +57,24 @@ public class ConversationView : NSTableCellView {
 		}
 	}
 	
+	// Dynamically update the visible timestamp for the Conversation.
 	var time: Date = .origin
 	public func updateTimestamp() {
-		log.info("Updated visible timestamp for Conversation.")
+		log.verbose("Updated visible timestamp for Conversation.")
 		self.timeLabel?.stringValue = self.time.relativeString()
 	}
 	
-	// Dynamically adjust subviews based on the indicated row size.
-	// Technically should be unimplemented, as AutoLayout does this for free.
-	public override var rowSizeStyle: NSTableViewRowSizeStyle {
-		didSet {
-			// FIXME: What do we do here?
-		}
-	}
-	
-	// Return an array of all dragging components corresponding to our subviews.
+	// Return a complete dragging component for this ConversationView.
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
 		return [self.draggingComponent("Person")]
 	}
 	
-	// Allows the circle crop to dynamically change.
+	// Allows the photo view's circle crop to dynamically match size.
 	public override func layout() {
 		super.layout()
 		if let photo = self.photoView, let layer = photo.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = photo.bounds.width / 2.0
-		}
-		if let unread = self.unreadLabel, let layer = unread.layer {
-			layer.masksToBounds = true
-			layer.cornerRadius = unread.bounds.width / 2.0
 		}
 	}
 }

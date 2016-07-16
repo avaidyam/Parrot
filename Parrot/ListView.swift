@@ -52,6 +52,7 @@ public enum ScrollDirection {
 }
 
 // FIXME: ListRowView, ListViewDelegate
+public class ListRowView: NSTableCellView { }
 
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
@@ -173,6 +174,11 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 	
 	public var selection: [Int] {
 		return self.tableView.selectedRowIndexes.map { $0 }
+	}
+	
+	public var visibleRows: [Int] {
+		let r = self.tableView.rows(in: self.tableView.visibleRect)
+		return Array(r.location..<r.location+r.length)
 	}
 	
 	public var viewClassProvider: ((row: Int) -> NSTableCellView.Type)?

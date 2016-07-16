@@ -422,6 +422,10 @@ public class IConversation: ParrotServiceExtension.Conversation {
             return events.filter { $0.timestamp > self.latest_read_timestamp }
         }
     }
+	
+	public var unreadCount: Int {
+		return self.unread_events.count
+	}
 
     public var hasUnreadEvents: Bool {
         get {

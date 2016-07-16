@@ -107,6 +107,9 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         }
     }
 	
+	public var unreadCount: Int {
+		return self.unreadEventCount
+	}
 	
 	/// Begin a new conversation with the people provided.
 	/// Note that this may be a one-on-one conversation if only one exists.
