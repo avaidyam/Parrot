@@ -3,13 +3,10 @@ import Hangouts
 import WebKit
 import ParrotServiceExtension
 
-/* TODO: Support /cmd's (i.e. /remove <username>) for power-users. */
-/* TODO: Support Slack-like plugin integrations. */
-
 @NSApplicationMain
 public class ServiceManager: NSApplicationController {
 	
-	private var trans: WindowTransitionAnimator? = nil
+	private var windowController: NSWindowController? = nil
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
@@ -31,57 +28,26 @@ public class ServiceManager: NSApplicationController {
 			
 			// Instantiate storyboard and controller and begin the UI from here.
 			DispatchQueue.main.async {
-				let vc = ConversationListViewController(nibName: "ConversationListViewController", bundle: nil)
-				vc?.selectionProvider = { row in
-					let vc2 = MessageListViewController(nibName: "MessageListViewController", bundle: nil)
-					let ic = vc!.sortedConversations[row]
-					// FIXME: FORCE-CAST TO HANGOUTS
-					vc2?.conversation = ic as! IConversation
-					vc?.presentViewController(vc2!, animator: WindowTransitionAnimator { w in
-						w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
-						w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
-						w.appearance = ParrotAppearance.current()
-						w.enableRealTitlebarVibrancy()
-						
-						// Because autosave is miserable.
-						w.setFrameAutosaveName("\(ic.identifier)")
-						if w.frame == .zero {
-							w.setFrame(NSRect(x: 0, y: 0, width: 480, height: 320), display: false, animate: true)
-							w.center()
-						}
-					})
-				}
-				
-				// The .titlebar material has no transluency in dark appearances, and
-				// has a standard window gradient in light ones.
-				self.trans = WindowTransitionAnimator { w in
-					w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
-					w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenPrimary, .fullScreenAllowsTiling]
-					w.appearance = ParrotAppearance.current()
-					w.enableRealTitlebarVibrancy()
-					
-					// Because autosave is miserable.
-					w.setFrameAutosaveName("Conversations")
-					if w.frame == .zero {
-						w.setFrame(NSRect(x: 0, y: 0, width: 386, height: 512), display: false, animate: true)
-						w.center()
-					}
-				}
-				self.trans!.displayViewController(vc!)
+				self.windowController = ConversationListViewController.display()
 			}
 		}
 	}
 	
 	// So clicking on the dock icon actually shows the window again.
 	func applicationShouldHandleReopen(sender: NSApplication, flag: Bool) -> Bool {
-		self.trans?.showWindow(nil)
+		self.windowController?.showWindow(nil)
 		return true
 	}
 	
 	// We need to provide a useful dock menu.
 	/* TODO: Provide a dock menu for options. */
 	func applicationDockMenu(_ sender: NSApplication) -> NSMenu? {
-		return nil
+		let menu = NSMenu(title: "Parrot")
+		menu.addItem(title: "Open Conversations") {
+			log.info("Open Conversations")
+			self.windowController?.showWindow(nil)
+		}
+		return menu
 	}
 	
 	@IBAction func logoutSelected(_ sender: AnyObject) {
@@ -91,7 +57,7 @@ public class ServiceManager: NSApplicationController {
 				cookieStorage.deleteCookie(cookie)
 			}
 		}
-		Authenticator.clearTokens();
+		Authenticator.clearTokens()
 		NSApplication.shared().terminate(self)
 	}
 }

@@ -4,6 +4,8 @@ import ParrotServiceExtension
 
 /* TODO: Use NSTextAlternatives instead of force-replacing text. */
 /* TODO: Smart entry completion for ()/[]/""/etc. */
+/* TODO: Support /cmd's (i.e. /remove <username>) for power-users. */
+/* TODO: Support Slack-like plugin integrations. */
 
 class MessageListViewController: NSViewController, ConversationDelegate, NSTextViewDelegate, NSTextDelegate {
 	
@@ -11,9 +13,6 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
     @IBOutlet var messageTextField: NSTextView!
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSImageView!
-	
-	
-	
 	
 	var _measure: MessageView? = nil
 	var _note: NSObjectProtocol!
@@ -25,6 +24,25 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		p.behavior = .applicationDefined
 		return p
 	}()
+	
+	static func display(from: NSViewController, conversation: ParrotServiceExtension.Conversation) -> MessageListViewController {
+		let controller = MessageListViewController(nibName: "MessageListViewController", bundle: nil)!
+		controller.conversation = conversation as! IConversation // FIXME FORCE DOWN-CAST TO HANGOUTS
+		from.presentViewController(controller, animator: WindowTransitionAnimator { w in
+			w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
+			w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
+			w.appearance = ParrotAppearance.current()
+			w.enableRealTitlebarVibrancy()
+			
+			// Because autosave is miserable.
+			w.setFrameAutosaveName("\(conversation.identifier)")
+			if w.frame == .zero {
+				w.setFrame(NSRect(x: 0, y: 0, width: 480, height: 320), display: false, animate: true)
+				w.center()
+			}
+			})
+		return controller
+	}
 	
 	override func loadView() {
 		super.loadView()
@@ -138,7 +156,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	override func viewDidDisappear() {
 		ParrotAppearance.unregisterAppearanceListener(observer: self)
 	}
-
+	
 	var conversation: IConversation? {
 		didSet {
 			if let oldConversation = oldValue {

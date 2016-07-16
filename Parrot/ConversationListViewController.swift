@@ -1,6 +1,7 @@
 import Cocoa
 import Hangouts
 import ParrotServiceExtension
+import protocol ParrotServiceExtension.Conversation
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
 /* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
@@ -12,9 +13,30 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
 	
-	var selectionProvider: ((Int) -> Void)? = nil
 	var wallclock: Timer!
 	var userList: Directory?
+	
+	static func display() -> WindowTransitionAnimator {
+		let vc = ConversationListViewController(nibName: "ConversationListViewController", bundle: nil)
+		
+		// The .titlebar material has no transluency in dark appearances, and
+		// has a standard window gradient in light ones.
+		let trans = WindowTransitionAnimator { w in
+			w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
+			w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenPrimary, .fullScreenAllowsTiling]
+			w.appearance = ParrotAppearance.current()
+			w.enableRealTitlebarVibrancy()
+			
+			// Because autosave is miserable.
+			w.setFrameAutosaveName("Conversations")
+			if w.frame == .zero {
+				w.setFrame(NSRect(x: 0, y: 0, width: 386, height: 512), display: false, animate: true)
+				w.center()
+			}
+		}
+		trans.displayViewController(vc!)
+		return trans
+	}
 	
 	var conversationList: ParrotServiceExtension.ConversationList? {
 		didSet {
@@ -77,9 +99,8 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		
 		self.listView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.listView.clickedRowProvider = { row in
-			if row >= 0 {
-				self.selectionProvider?(row)
-			}
+			guard row >= 0 else { return }
+			_ = MessageListViewController.display(from: self, conversation: self.sortedConversations[row])
 		}
 		self.listView.rowActionProvider = { row, edge in
 			var actions: [NSTableViewRowAction] = []
