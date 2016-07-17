@@ -79,11 +79,6 @@ public struct User: Person, Hashable, Equatable {
     }
 }
 
-
-
-
-
-
 // Collection of User instances.
 public class UserList: Directory, Collection {
 	
@@ -147,14 +142,6 @@ public class UserList: Directory, Collection {
 								}
 							}
 						}
-						
-						// TODO: REMOVE THIS
-						/*for participant in conversation.participantData {
-							let user = User(data: participant, selfUser: self.me.id)
-							if self.users[user.id] == nil {
-								self.users[user.id] = user
-							}
-						}*/
 					}
 				}
 		}

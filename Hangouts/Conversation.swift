@@ -24,6 +24,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
             self._cachedEvents = nil
         }
     }
+	public var readStates: [UserReadState] = []
     public var typingStatuses = Dictionary<User.ID, TypingType>()
 
     public var delegate: ConversationDelegate?
@@ -55,6 +56,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			//FIXME: Oops.
             //self.conversation.selfConversationState.selfReadState.latestReadTimestamp = notif.readTimestamp
         }
+		log.info("watermark for \(notif.userID)")
     }
 	
 	// Update the internal Conversation.
@@ -256,7 +258,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
             if new_read_timestamp > self.latest_read_timestamp {
 
                 // Prevent duplicate requests by updating the conversation now.
-                latest_read_timestamp = new_read_timestamp
+                self.latest_read_timestamp = new_read_timestamp
                 delegate?.conversationDidUpdate(conversation: self)
                 conversationList?.conversationDidUpdate(conversation: self)
                 client.updateWatermark(conv_id: id, read_timestamp: new_read_timestamp) { _ in cb?() }
@@ -302,7 +304,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         guard let event_id = event_id else {
             cb?(events)
             return
-        }
+		}
 
         // If event_id is provided, return the events we have that are
         // older, or request older events if event_id corresponds to the
@@ -321,6 +323,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 					return
 				}
 				let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(event: $0) }
+				self.readStates = res!.conversationState!.conversation!.readState
 				
                 for conv_event in conv_events {
 					conv_event.client = self.client

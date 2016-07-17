@@ -2,10 +2,23 @@ import Cocoa
 import protocol ParrotServiceExtension.Message
 
 /* TODO: Add mini focus indicators that can be updated to show read status. */
+/* TODO: Add Sending display with Retry/Delete support in failure case. */
+/* TODO: Support Editable messages. */
 
 public class SendMessageView: ListRowView {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
+	@IBOutlet var focusConstraint: NSLayoutConstraint?
+	@IBOutlet var focusView: NSImageView? {
+		didSet { setFocus(false) }
+	}
+	
+	public func setFocus(_ active: Bool) {
+		self.focusView?.isHidden = !active
+		NSAnimationContext.runAnimationGroup({ ctx in
+			self.focusConstraint?.animator().constant = active ? 36 : 8
+		}, completionHandler: nil)
+	}
 	
 	var color: NSColor = NSColor.black()
 	
@@ -79,13 +92,13 @@ public class SendMessageView: ListRowView {
 	}
 	
 	/* TODO: Clean this up and out of here: */
-	internal class func heightForContainerWidth(_ text: String, size: CGFloat, width: CGFloat) -> CGFloat {
+	internal class func heightForContainerWidth(_ text: String, size: CGFloat, width: CGFloat, active: Bool) -> CGFloat {
 		let attr = AttributedString(string: text, attributes: [
 			NSFontAttributeName: NSFont.systemFont(ofSize: size * (text.isEmoji ? 3 : 1))
 		])
 		let fake = NSSize(width: width, height: 10000000)
 		let box = attr.boundingRect(with: fake, options: [.usesLineFragmentOrigin, .usesFontLeading])
 		let height = box.size.height
-		return (height > 24.0 ? height : 24.0) + 16.0
+		return (height > 24.0 ? height : 24.0) + 16.0 + (active ? 32.0 : 0)
 	}
 }

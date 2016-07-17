@@ -81,7 +81,7 @@ public final class Logger {
 	/// Note: the subsystem should preferrably be a unique reverse domain name.
 	/// Note: if channels is empty, the message will not enter a logging flow.
 	/// Note: by default, the Logger is configured to act similarly to NSLog.
-	public init(subsystem: Subsystem, channels: [Channel] = [/*Channel.print,*/ Channel.ASL], severity: Severity = .verbose) {
+	public init(subsystem: Subsystem, channels: [Channel] = [Channel.print, Channel.ASL], severity: Severity = .verbose) {
 		self.subsystem = subsystem
 		self.channels = channels
 		self.severity = severity

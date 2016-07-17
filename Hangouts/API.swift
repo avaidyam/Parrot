@@ -111,6 +111,7 @@ public extension Client {
 	public func getConversation(
 		conversation_id: String,
 		event_timestamp: Date,
+		includeMetadata: Bool = true,
 		max_events: Int = 50,
 		cb: (response: GetConversationResponse?) -> Void)
 	{
@@ -121,7 +122,7 @@ public extension Client {
 				[],
 				[]
 			],  // conversationSpec
-			false,  // includeConversationMetadata
+			includeMetadata,  // includeConversationMetadata
 			true,  // includeEvents
 			None,  // ???
 			max_events,  // maxEventsPerConversation

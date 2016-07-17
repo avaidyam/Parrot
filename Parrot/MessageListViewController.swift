@@ -15,6 +15,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSImageView!
 	
+	var _focusRow = -1
 	var _measure: MessageView? = nil
 	var _note: NSObjectProtocol!
 	lazy var popover: NSPopover = {
@@ -88,7 +89,11 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			//log.info(self._measure?.frame.size.height)
 			
 			let b = self.messagesView.frame.width
-			return MessageView.heightForContainerWidth(a, size: 12, width: b).native
+			if self.conversation!._messages[row].sender.me {
+				return SendMessageView.heightForContainerWidth(a, size: 12, width: b, active: (row == self._focusRow)).native
+			} else {
+				return MessageView.heightForContainerWidth(a, size: 12, width: b).native
+			}
 		}
     }
 
@@ -262,6 +267,31 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 				self.conversation?.focus = true // set it here too just in case.
             }
             self.conversation?.updateReadTimestamp()
+			
+			// Get current states
+			for state in self.conversation!.readStates {
+				let person = self.conversation!.client.directory.people[state.participantId!.gaiaId!]!
+				let timestamp = Date.from(UTC: Double(state.latestReadTimestamp!))
+				//log.debug("conv => { conv: \(self.conversation!.conversation) }")
+				log.debug("state => { person: \(person.nameComponents), timestamp: \(timestamp) }")
+			}
+			
+			// Find the last visible row that was sent by the user.
+			var lastR: Int = -1
+			for r in self.messagesView.visibleRows {
+				if self.conversation!._messages[r].sender.me {
+					lastR = r
+				}
+			}
+			
+			// If we found a row, set the focus.
+			if lastR > 0 {
+				if let c = self.messagesView.tableView.view(atColumn: 0, row: lastR, makeIfNecessary: false) as? SendMessageView {
+					c.setFocus(true)
+					self._focusRow = lastR
+					self.messagesView.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: lastR))
+				}
+			}
         }
     }
 

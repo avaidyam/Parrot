@@ -205,7 +205,9 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	}
 	
     func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatusTo status: TypingType) {}
-    func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
+    func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
+		log.info("Received watermark \(status)")
+	}
 	
 	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: Hangouts.ConversationList) {
