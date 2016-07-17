@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A238m" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="ListViewCell" customModule="Parrot" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="339" height="32"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="sB8-cF-wJu">
+                    <rect key="frame" x="8" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="a6w-c3-gnD"/>
+                        <constraint firstAttribute="width" secondItem="sB8-cF-wJu" secondAttribute="height" multiplier="1:1" id="jnA-mD-q2x"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="VRg-dV-bBJ"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="KEU-Se-90Z">
+                    <rect key="frame" x="64" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="KEU-Se-90Z" secondAttribute="height" multiplier="1:1" id="7jZ-cV-0uT"/>
+                        <constraint firstAttribute="height" constant="24" id="dH6-VL-Pp7"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="TQn-gC-SQ5"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="tuM-cv-bDX">
+                    <rect key="frame" x="92" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="GPr-Ta-n7z"/>
+                        <constraint firstAttribute="width" secondItem="tuM-cv-bDX" secondAttribute="height" multiplier="1:1" id="fAf-P3-rYr"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="4oB-fS-NMm"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Npr-eZ-nLP">
+                    <rect key="frame" x="120" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Npr-eZ-nLP" secondAttribute="height" multiplier="1:1" id="d9J-A5-1oo"/>
+                        <constraint firstAttribute="height" constant="24" id="t2b-kb-4vq"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="P1E-sm-1qO"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="gqJ-FI-rMF">
+                    <rect key="frame" x="148" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="gqJ-FI-rMF" secondAttribute="height" multiplier="1:1" id="aK3-a6-Zxo"/>
+                        <constraint firstAttribute="height" constant="24" id="hwZ-yV-x15"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="z2B-4E-oeN"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="TYA-4W-ZQ0">
+                    <rect key="frame" x="176" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="CNu-1c-M48"/>
+                        <constraint firstAttribute="width" secondItem="TYA-4W-ZQ0" secondAttribute="height" multiplier="1:1" id="scj-Sw-qdq"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="mE0-Zm-awv"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="DlZ-2k-yVf">
+                    <rect key="frame" x="204" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="0Je-Pb-lZQ"/>
+                        <constraint firstAttribute="width" secondItem="DlZ-2k-yVf" secondAttribute="height" multiplier="1:1" id="elx-Dw-isk"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="5OT-zP-oQB"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="HeV-w2-5eJ">
+                    <rect key="frame" x="232" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="Bpu-Gz-wXe"/>
+                        <constraint firstAttribute="width" secondItem="HeV-w2-5eJ" secondAttribute="height" multiplier="1:1" id="GTK-OT-QPs"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="g39-yG-m3e"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="xFD-GR-nC4">
+                    <rect key="frame" x="260" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="xFD-GR-nC4" secondAttribute="height" multiplier="1:1" id="FE8-LR-EDk"/>
+                        <constraint firstAttribute="height" constant="24" id="wYc-bt-d0i"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="6gD-f9-YeY"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="8n9-Xq-qFt">
+                    <rect key="frame" x="36" y="4" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="pOo-1B-SjI"/>
+                        <constraint firstAttribute="width" secondItem="8n9-Xq-qFt" secondAttribute="height" multiplier="1:1" id="xUa-L2-Udg"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="dy9-WY-73g"/>
+                </imageView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="sB8-cF-wJu" secondAttribute="bottom" constant="4" id="1cb-UI-am0"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="top" secondItem="Npr-eZ-nLP" secondAttribute="top" id="25G-mt-yAG"/>
+                <constraint firstItem="tuM-cv-bDX" firstAttribute="leading" secondItem="KEU-Se-90Z" secondAttribute="trailing" constant="4" id="5xd-yw-uN8"/>
+                <constraint firstItem="8n9-Xq-qFt" firstAttribute="leading" secondItem="sB8-cF-wJu" secondAttribute="trailing" constant="4" id="6Nq-7z-cVr"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="top" secondItem="KEU-Se-90Z" secondAttribute="top" id="78G-oS-qCm"/>
+                <constraint firstItem="Npr-eZ-nLP" firstAttribute="leading" secondItem="tuM-cv-bDX" secondAttribute="trailing" constant="4" id="9CE-lr-rG4"/>
+                <constraint firstItem="sB8-cF-wJu" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="F8j-Gp-xl9"/>
+                <constraint firstItem="tuM-cv-bDX" firstAttribute="width" secondItem="tuM-cv-bDX" secondAttribute="height" multiplier="1:1" id="FY7-uv-91y"/>
+                <constraint firstItem="TYA-4W-ZQ0" firstAttribute="leading" secondItem="gqJ-FI-rMF" secondAttribute="trailing" constant="4" id="H1C-va-Lnb"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="top" secondItem="HeV-w2-5eJ" secondAttribute="top" id="HdK-up-633"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="leading" secondItem="HeV-w2-5eJ" secondAttribute="trailing" constant="4" id="KRo-Fe-4hr"/>
+                <constraint firstItem="tuM-cv-bDX" firstAttribute="width" secondItem="tuM-cv-bDX" secondAttribute="height" multiplier="1:1" id="KdL-hW-dl3"/>
+                <constraint firstItem="sB8-cF-wJu" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="4" id="NIA-oM-jhA"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="top" secondItem="TYA-4W-ZQ0" secondAttribute="top" id="NJX-I2-O1W"/>
+                <constraint firstItem="KEU-Se-90Z" firstAttribute="leading" secondItem="8n9-Xq-qFt" secondAttribute="trailing" constant="4" id="NO9-wc-drk"/>
+                <constraint firstItem="gqJ-FI-rMF" firstAttribute="leading" secondItem="Npr-eZ-nLP" secondAttribute="trailing" constant="4" id="NWH-Of-u4R"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="top" secondItem="DlZ-2k-yVf" secondAttribute="top" id="QwO-KP-kgL"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="top" secondItem="gqJ-FI-rMF" secondAttribute="top" id="dJG-Zl-e67"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="top" secondItem="sB8-cF-wJu" secondAttribute="top" id="h9p-Mu-hqX"/>
+                <constraint firstItem="HeV-w2-5eJ" firstAttribute="leading" secondItem="DlZ-2k-yVf" secondAttribute="trailing" constant="4" id="hle-nY-G6m"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="top" secondItem="8n9-Xq-qFt" secondAttribute="top" id="rOS-Ed-5aB"/>
+                <constraint firstItem="xFD-GR-nC4" firstAttribute="top" secondItem="tuM-cv-bDX" secondAttribute="top" id="rSI-JV-3zC"/>
+                <constraint firstItem="DlZ-2k-yVf" firstAttribute="leading" secondItem="TYA-4W-ZQ0" secondAttribute="trailing" constant="4" id="s4j-U1-6iX"/>
+                <constraint firstItem="sB8-cF-wJu" firstAttribute="width" secondItem="sB8-cF-wJu" secondAttribute="height" multiplier="1:1" id="yb6-nf-1B7"/>
+            </constraints>
+            <point key="canvasLocation" x="68" y="62"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="NSUser" width="32" height="32"/>
+    </resources>
+</document>

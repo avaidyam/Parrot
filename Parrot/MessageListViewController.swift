@@ -53,16 +53,11 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		self.messagesView.dataSourceProvider = { self.conversation!.messages.map { $0 as Any } }
 		
 		self.messagesView.viewClassProvider = { row in
-			/*switch self.conversation!._messages[row].sender.me {
-			case true: return SendMessageView.self
-			case false: return MessageView.self
-			}*/
 			return MessageView.self
 		}
 		
 		// Set up the measurement view.
 		self.messagesView.register(nibName: "MessageView", forClass: MessageView.self)
-		self.messagesView.register(nibName: "SendMessageView", forClass: SendMessageView.self)
 		
 		self.messagesView.sizeClass = .dynamic
 		self.messageTextField.delegate = self
@@ -277,11 +272,11 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			
 			// If we found a row, set the focus.
 			if lastR > 0 {
-				if let c = self.messagesView.tableView.view(atColumn: 0, row: lastR, makeIfNecessary: false) as? SendMessageView {
+				/*if let c = self.messagesView.tableView.view(atColumn: 0, row: lastR, makeIfNecessary: false) as? SendMessageView {
 					c.setFocus(true)
 					self._focusRow = lastR
 					self.messagesView.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: lastR))
-				}
+				}*/
 			}
         }
     }
