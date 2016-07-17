@@ -24,6 +24,7 @@ import AppKit
 
 */
 
+/*
 private class AutocompleteListView: ListView {
 	private class InternalRowView: NSTableRowView {
 		private override func drawSelection(in dirtyRect: NSRect) {
@@ -55,8 +56,9 @@ private class AutocompleteListView: ListView {
 	private override func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
 		return InternalRowView()
 	}
-}
+}*/
 
+/*
 public class AdvancedTextView: NSTextView {
 	
 	private lazy var list: AutocompleteListView = {
@@ -160,7 +162,7 @@ public class AdvancedTextView: NSTextView {
 		}
 	}
 	
-	/*
+	
 	override public func complete(_ sender: AnyObject?) {
 		let WORD_BOUNDARY_CHARS = CharacterSet.alphanumerics.inverted
 		var startOfWord = self.selectedRange.location
@@ -210,7 +212,7 @@ public class AdvancedTextView: NSTextView {
 			self.popover.close()
 		}
 	}
-	*/
+
 	
-}
+}*/
 

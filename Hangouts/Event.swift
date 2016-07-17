@@ -68,7 +68,7 @@ public class IChatMessageEvent: IEvent, Message {
         }
 		
         lines += self.attachments
-        return lines.joined(separator: "\n")
+		return lines.filter { $0 != "" }.joined(separator: "\n")
     }()
 	
 	// List of ChatMessageSegments in the message.

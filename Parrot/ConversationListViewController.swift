@@ -48,7 +48,8 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 					self.indicator.stopAnimation(nil)
 					self.indicator.isHidden = true
 				}, completionHandler: {
-					self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+					//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+					self.listView.update()
 					//let i = (0..<self.listView.dataSource.count) as Range<Int>
 					//self.listView.tableView.insertRows(at: IndexSet(integersIn: i), withAnimation: [.effectFade, .slideUp])
 				})
@@ -73,9 +74,8 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		self.title = "Parrot" // weird stuff
 		self.indicator.startAnimation(nil)
 		
-		
-		let nib = NSNib(nibNamed: "ConversationView", bundle: nil)
-		self.listView.tableView.register(nib, forIdentifier: ConversationView.className())
+		self.listView.dataSourceProvider = { self.sortedConversations.map { $0 as Any } }
+		self.listView.register(nibName: "ConversationView", forClass: ConversationView.self)
 		
 		self.listView.updateScrollDirection = .top
 		self.listView.viewClassProvider = { row in ConversationView.self }
@@ -86,7 +86,8 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 			self.conversationList = c.conversationList
 			
 			DispatchQueue.main.async {
-				self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+				//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+				self.listView.update()
 			}
 		}
 		
@@ -198,7 +199,8 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		
 		// pls fix :(
 		DispatchQueue.main.async {
-			self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
 			UserNotificationCenter.updateDockBadge(unread)
 		}
@@ -212,7 +214,8 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	/* TODO: Just update the row that is updated. */
     func conversationList(didUpdate list: Hangouts.ConversationList) {
 		DispatchQueue.main.async {
-			self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
 			UserNotificationCenter.updateDockBadge(unread)
 		}
@@ -221,7 +224,8 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	/* TODO: Just update the row that is updated. */
     func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
 		DispatchQueue.main.async {
-			self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
 			UserNotificationCenter.updateDockBadge(unread)
 		}

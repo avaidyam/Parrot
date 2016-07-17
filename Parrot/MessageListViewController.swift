@@ -49,18 +49,25 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	override func loadView() {
 		super.loadView()
 		
+		// FIXME: Why the Any cast!?
+		self.messagesView.dataSourceProvider = { self.conversation!.messages.map { $0 as Any } }
+		
 		self.messagesView.viewClassProvider = { row in
-			switch self.conversation!._messages[row].sender.me {
+			/*switch self.conversation!._messages[row].sender.me {
 			case true: return SendMessageView.self
 			case false: return MessageView.self
-			}
+			}*/
+			return MessageView.self
 		}
 		
 		// Set up the measurement view.
 		self.messagesView.register(nibName: "MessageView", forClass: MessageView.self)
 		self.messagesView.register(nibName: "SendMessageView", forClass: SendMessageView.self)
-		//self.messagesView.register(nibName: "TypingEventView", forClass: NSTableCellView.self)
 		
+		self.messagesView.sizeClass = .dynamic
+		self.messageTextField.delegate = self
+		
+		// FIXME: measure
 		let nib = NSNib(nibNamed: "MessageView", bundle: nil)
 		let stuff = nib?.instantiate(nil)
 		_measure = stuff?.filter { $0 is MessageView }.first as? MessageView// stuff[0]: NSApplication
@@ -75,25 +82,6 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 				layer.cornerRadius = photo.bounds.width / 2.0
 			}
 			self.imageView.image = fetchImage(user: me as! User, conversation: self.conversation!)
-		}
-		
-		self.messagesView.sizeClass = .dynamic
-        self.messageTextField.delegate = self
-		
-		self.messagesView.dynamicHeightProvider = { (row: Int) -> Double in
-			
-			// TODO: Use the cached measurement sample and grab its frame after layout.
-			let a = (self.messagesView.dataSource[row].element as? Message)!.text
-			//self._measure?.textLabel?.string = a as String
-			//self._measure?.layout()
-			//log.info(self._measure?.frame.size.height)
-			
-			let b = self.messagesView.frame.width
-			if self.conversation!._messages[row].sender.me {
-				return SendMessageView.heightForContainerWidth(a, size: 12, width: b, active: (row == self._focusRow)).native
-			} else {
-				return MessageView.heightForContainerWidth(a, size: 12, width: b).native
-			}
 		}
     }
 
@@ -174,7 +162,8 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			
 			//self.messagesView.removeElements(self._getAllMessages()!)
 			if self.messagesView != nil {
-				self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
+				//self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
+				self.messagesView.update()
 			} else {
 				//log.info("Not initialized.")
 			}
@@ -207,7 +196,8 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
     }
 
 	func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
-		self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
+		//self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
+		self.messagesView.update()
 		
 		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
 		//self.messagesView.appendElements(found)
@@ -246,7 +236,8 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
     }
 
 	func conversationDidUpdateEvents(_ conversation: IConversation) {
-		self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
+		//self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
+		self.messagesView.update()
     }
 
     func conversationDidUpdate(conversation: IConversation) {
@@ -259,7 +250,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
         if let conversation = conversation {
 			UserNotificationCenter.remove(byIdentifier: conversation.id)
         }
-
+		
         //  Delay here to ensure that small context switches don't send focus messages.
 		let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 		DispatchQueue.main.after(when: dt) {

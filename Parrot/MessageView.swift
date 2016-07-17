@@ -1,23 +1,23 @@
 import Cocoa
 import protocol ParrotServiceExtension.Message
 
-public class MessageView: ListRowView {
+public class MessageView: ListViewCell {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
 	
-	var color: NSColor = NSColor.black()
-	
 	// Upon assignment of the represented object, configure the subview contents.
-	public override var objectValue: AnyObject? {
+	public override var cellValue: Any? {
 		didSet {
-			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Message else {
-				log.warning("MessageView encountered faulty objectValue!")
+			guard let o = self.cellValue as? Message else {
+				log.warning("MessageView encountered faulty cellValue!")
 				return
 			}
 			log.verbose("Configuring MessageView.")
 			
 			let user = o.sender
 			let str = AttributedString(string: o.text as String)
+			self.userInterfaceLayoutDirection = o.sender.me ? .rightToLeft : .leftToRight
+			self.textLabel?.alignment = o.sender.me ? .right : .left
 			
 			//self.color = o.color
 			self.textLabel?.textStorage?.setAttributedString(str)
@@ -26,7 +26,7 @@ public class MessageView: ListRowView {
 			self.photoView?.image = img
 			//self.photoView?.toolTip = o.caption
 			
-			// Enable automatic links, etc.
+			// Enable automatic links and data detectors.
 			self.textLabel?.isEditable = true
 			self.textLabel?.checkTextInDocument(nil)
 			self.textLabel?.isEditable = false
@@ -47,6 +47,10 @@ public class MessageView: ListRowView {
 			
 			// [BUG] [macOS 12] NSTextView doesn't fill width for some reason.
 			text.frame = text.enclosingScrollView!.bounds
+			
+			// Vertically center text which can fit in the bounds of the text view.
+			let rectDiff = text.bounds.height - text.characterRect().height
+			if rectDiff > 0 { text.textContainerInset.height += rectDiff / 2.0 }
 			
 			// NSTextView doesn't automatically change its text color when the 
 			// backing view's appearance changes, so we need to set it each time.
@@ -76,14 +80,13 @@ public class MessageView: ListRowView {
 		}
 	}
 	
-	/* TODO: Clean this up and out of here: */
-	internal class func heightForContainerWidth(_ text: String, size: CGFloat, width: CGFloat) -> CGFloat {
+	public override class func cellHeight(forWidth width: CGFloat, cellValue: Any?) -> CGFloat {
+		let text = (cellValue as! Message).text ?? ""
 		let attr = AttributedString(string: text, attributes: [
-			NSFontAttributeName: NSFont.systemFont(ofSize: size * (text.isEmoji ? 3 : 1))
+			NSFontAttributeName: NSFont.systemFont(ofSize: 12.0 * (text.isEmoji ? 3 : 1))
 		])
-		let fake = NSSize(width: width, height: 10000000)
-		let box = attr.boundingRect(with: fake, options: [.usesLineFragmentOrigin, .usesFontLeading])
-		let height = box.size.height
-		return (height > 24.0 ? height : 24.0) + 16.0
+		let box = attr.boundingRect(with: NSSize(width: width, height: 10000000),
+		                            options: [.usesLineFragmentOrigin, .usesFontLeading])
+		return (box.size.height > 24.0 ? box.size.height : 24.0) + 16.0
 	}
 }

@@ -5,7 +5,9 @@ import protocol ParrotServiceExtension.Message
 /* TODO: Add Sending display with Retry/Delete support in failure case. */
 /* TODO: Support Editable messages. */
 
-public class SendMessageView: ListRowView {
+public typealias SentMessage = (Message, Bool) /* message, focus */
+
+public class SendMessageView: ListViewCell {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
 	@IBOutlet var focusConstraint: NSLayoutConstraint?
@@ -14,29 +16,27 @@ public class SendMessageView: ListRowView {
 	}
 	
 	public func setFocus(_ active: Bool) {
-		self.focusView?.isHidden = !active
 		NSAnimationContext.runAnimationGroup({ ctx in
+			self.focusView?.animator().isHidden = !active
 			self.focusConstraint?.animator().constant = active ? 36 : 8
 		}, completionHandler: nil)
 	}
 	
-	var color: NSColor = NSColor.black()
-	
 	// Upon assignment of the represented object, configure the subview contents.
-	public override var objectValue: AnyObject? {
+	public override var cellValue: Any? {
 		didSet {
-			guard let o = (self.objectValue as? Wrapper<Any>)?.element as? Message else {
-				log.warning("SendMessageView encountered faulty objectValue!")
+			guard let o = self.cellValue as? SentMessage else {
+				log.warning("SendMessageView encountered faulty cellValue!")
 				return
 			}
 			log.verbose("Configuring SendMessageView.")
 			
-			let user = o.sender
-			let str = AttributedString(string: o.text as String)
+			let user = o.0.sender
+			let str = AttributedString(string: o.0.text as String)
 			
 			//self.color = o.color
 			self.textLabel?.textStorage?.setAttributedString(str)
-			self.textLabel?.toolTip = "\((o.timestamp ?? .origin).fullString())"
+			self.textLabel?.toolTip = "\((o.0.timestamp ?? .origin).fullString())"
 			let img: NSImage = fetchImage(user: user)
 			self.photoView?.image = img
 			//self.photoView?.toolTip = o.caption
@@ -91,14 +91,17 @@ public class SendMessageView: ListRowView {
 		}
 	}
 	
-	/* TODO: Clean this up and out of here: */
-	internal class func heightForContainerWidth(_ text: String, size: CGFloat, width: CGFloat, active: Bool) -> CGFloat {
+	public override class func cellHeight(forWidth width: CGFloat, cellValue: Any?) -> CGFloat {
+		let text = (cellValue as! SentMessage).0.text ?? ""
+		let focus = (cellValue as! SentMessage).1 ?? false
 		let attr = AttributedString(string: text, attributes: [
-			NSFontAttributeName: NSFont.systemFont(ofSize: size * (text.isEmoji ? 3 : 1))
+			NSFontAttributeName: NSFont.systemFont(ofSize: 12.0 * (text.isEmoji ? 3 : 1))
 		])
-		let fake = NSSize(width: width, height: 10000000)
-		let box = attr.boundingRect(with: fake, options: [.usesLineFragmentOrigin, .usesFontLeading])
-		let height = box.size.height
-		return (height > 24.0 ? height : 24.0) + 16.0 + (active ? 32.0 : 0)
+		let box = attr.boundingRect(with: NSSize(width: width, height: 10000000),
+		                            options: [.usesLineFragmentOrigin, .usesFontLeading])
+		return
+			(box.size.height > 24.0 ? box.size.height : 24.0) /* text + photo */
+			+ (focus ? 28.0 : 0) /* focus */
+			+ 16.0 /* padding */
 	}
 }

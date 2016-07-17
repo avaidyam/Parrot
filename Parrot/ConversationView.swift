@@ -2,17 +2,17 @@ import Cocoa
 import protocol ParrotServiceExtension.Conversation
 
 // A visual representation of a Conversation in a ListView.
-public class ConversationView: ListRowView {
+public class ConversationView: ListViewCell {
 	@IBOutlet private var photoView: NSImageView?
 	@IBOutlet private var nameLabel: NSTextField?
 	@IBOutlet private var textLabel: NSTextField?
 	@IBOutlet private var timeLabel: NSTextField?
 	
 	// Upon assignment of the represented object, configure the subview contents.
-	public override var objectValue: AnyObject? {
+	public override var cellValue: Any? {
 		didSet {
-			guard let conversation = (self.objectValue as? Wrapper<Any>)?.element as? Conversation else {
-				log.warning("ConversationView encountered faulty objectValue!")
+			guard let conversation = self.cellValue as? Conversation else {
+				log.warning("ConversationView encountered faulty cellValue!")
 				return
 			}
 			log.verbose("Configuring ConversationView.")

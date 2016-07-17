@@ -73,8 +73,12 @@ public class AntiScrollView: NSScrollView {
 		self.nextResponder?.scrollWheel(theEvent)
 	}
 	public override var intrinsicContentSize: NSSize {
-		return self.contentView.intrinsicContentSize
+		return self.documentView?.intrinsicContentSize ?? NSSize(width: -1, height: -1)
 	}
+}
+
+public class AntiClipView: NSClipView {
+	public override var isFlipped: Bool { return true }
 }
 
 public class PreferencesViewController: NSTabViewController {

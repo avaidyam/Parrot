@@ -206,6 +206,14 @@ public extension Date {
 	public static let origin = Date(timeIntervalSince1970: 0)
 }
 
+public extension NSTextView {
+	public func characterRect() -> NSRect {
+		let glyphRange = NSMakeRange(0, self.layoutManager!.numberOfGlyphs)
+		let glyphRect = self.layoutManager!.boundingRect(forGlyphRange: glyphRange, in: self.textContainer!)
+		return NSInsetRect(glyphRect, -self.textContainerInset.width * 2, -self.textContainerInset.height * 2)
+	}
+}
+
 public extension NSColor {
 	public static func darkOverlay(forAppearance a: NSAppearance) -> NSColor {
 		if a.name == NSAppearanceNameVibrantDark {

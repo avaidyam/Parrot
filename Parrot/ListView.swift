@@ -51,16 +51,29 @@ public enum ScrollDirection {
 	//case index(Int)
 }
 
-// FIXME: ListRowView, ListViewDelegate
-public class ListRowView: NSTableCellView { }
+// FIXME: ListViewDelegate
+
+public class ListViewCell: NSTableCellView {
+	public var cellValue: Any?
+	public required override init(frame frameRect: NSRect) {
+		super.init(frame: frameRect)
+	}
+	public required init?(coder: NSCoder) {
+		super.init(coder: coder)
+	}
+	
+	public class func cellHeight(forWidth: CGFloat, cellValue: Any?) -> CGFloat {
+		return 0.0
+	}
+}
 
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
 public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExtendedTableViewDelegate {
-	internal var scrollView: NSScrollView!
-	internal var tableView: NSExtendedTableView!
+	private var scrollView: NSScrollView!
+	internal var tableView: NSExtendedTableView! // FIXME: Should be private...
 	
 	// Override and patch in the default initializers to our init.
 	public override init(frame frameRect: NSRect) {
@@ -72,9 +85,7 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 		self.commonInit()
 	}
 	
-	internal func commonInit() {
-		self.dataSource = []
-		
+	private func commonInit() {
 		self.scrollView = NSScrollView(frame: self.bounds)
 		self.tableView = NSExtendedTableView(frame: self.scrollView.bounds)
 		self.tableView.delegate = self
@@ -131,51 +142,31 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 	}
 	
 	/* TODO: Monitor actual addition/removal changes. */
-	public var dataSource: [Wrapper<Any>]! {
-		didSet { DispatchQueue.main.async {
+	/*public var dataSource: [Wrapper<Any>]! {
+		didSet { self.update() }
+	}*/
+	private var dataSource: [Any] {
+		return self.dataSourceProvider?() ?? []
+	}
+	
+	public func update() {
+		DispatchQueue.main.async {
 			self.tableView.reloadData()
 			switch self.updateScrollDirection {
-			case .top: self.tableView.scrollRowToVisible(0)
-			case .bottom: self.tableView.scrollRowToVisible(self.dataSource.count - 1)
+			case .top: self.scroll(toRow: 0)
+			case .bottom: self.scroll(toRow: self.dataSource.count - 1)
 			}
-		}}
+		}
 	}
 	
 	public func scroll(toRow: Int) {
 		self.tableView.scrollRowToVisible(toRow)
 	}
 	
-	public func register(nibName: String, forClass: NSTableCellView.Type) {
+	public func register(nibName: String, forClass: ListViewCell.Type) {
 		let nib = NSNib(nibNamed: nibName, bundle: nil)
 		self.tableView.register(nib, forIdentifier: forClass.className())
 	}
-	
-	/*
-	// If you REALLY want animations, use this to append a set of elements.
-	public func appendElements(elements: [Element]) {
-		self.dataSource.appendContentsOf(elements)
-		
-		DispatchQueue.main.async { self.tableView.beginUpdates() }
-		elements.forEach {
-			let idx = NSIndexSet(index: self.dataSource.indexOf($0)!)
-			self.tableView.insertRowsAtIndexes(idx, withAnimation: [.EffectFade, .SlideUp])
-		}
-		DispatchQueue.main.async { self.tableView.endUpdates() }
-	}
-	
-	// If you REALLY want animations, use this to remove a set of elements.
-	// Note: this is arbitrary removal, not sequential removal, like appendElements().
-	public func removeElements(elements: [Element]) {
-		DispatchQueue.main.async { self.tableView.beginUpdates() }
-		elements.forEach {
-			if let i = self.dataSource.indexOf($0) {
-				self.tableView.removeRowsAtIndexes(NSIndexSet(index: i), withAnimation: [.EffectFade, .SlideUp])
-			}
-		}
-		DispatchQueue.main.async { self.tableView.endUpdates() }
-		
-		self.dataSource.removeContentsOf(elements)
-	}*/
 	
 	public var selection: [Int] {
 		return self.tableView.selectedRowIndexes.map { $0 }
@@ -186,7 +177,8 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 		return Array(r.location..<r.location+r.length)
 	}
 	
-	public var viewClassProvider: ((row: Int) -> NSTableCellView.Type)?
+	public var dataSourceProvider: (() -> [Any])? = nil
+	public var viewClassProvider: ((row: Int) -> ListViewCell.Type)? = nil
 	public var dynamicHeightProvider: ((row: Int) -> Double)? = nil
 	public var clickedRowProvider: ((row: Int) -> Void)? = nil
 	public var selectionProvider: ((row: Int) -> Void)? = nil
@@ -205,7 +197,8 @@ public extension ListView {
 	
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return CGFloat(self.sizeClass.calculate {
-			self.dynamicHeightProvider?(row: row) ?? 0
+			let cellClass = (self.viewClassProvider?(row: row) ?? ListViewCell.self)
+			return cellClass.cellHeight(forWidth: self.bounds.size.height, cellValue: self.dataSource[row]).native
 		})
 	}
 	
@@ -228,14 +221,14 @@ public extension ListView {
 	
 	@objc(tableView:viewForTableColumn:row:)
 	public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		let viewClass = (self.viewClassProvider != nil) ? self.viewClassProvider!(row: row) : NSTableCellView.self
-		var view = tableView.make(withIdentifier: viewClass.className(), owner: self) as? NSTableCellView
+		let cellClass = self.viewClassProvider?(row: row) ?? ListViewCell.self
+		var view = self.tableView.make(withIdentifier: cellClass.className(), owner: self) as? ListViewCell
 		if view == nil {
-			view = viewClass.init(frame: NSZeroRect)
-			view!.identifier = viewClass.className()
+			view = cellClass.init(frame: .zero)
+			view!.identifier = cellClass.className()
 		}
 		
-		view!.objectValue = self.dataSource[row]
+		view!.cellValue = self.dataSource[row]
 		//tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
 		return view
 	}
@@ -308,7 +301,7 @@ public extension ListView {
 	}
 	
 	public func tableView(_ tableView: NSTableView, updateDraggingItemsForDrag draggingInfo: NSDraggingInfo) {
-		// Rely on the NSTableCellView's implementation
+		// Rely on the ListViewCell implementation
 	}
 	
 	public func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int,
