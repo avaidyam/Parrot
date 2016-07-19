@@ -93,9 +93,9 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		// NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded,
 		NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidChangeOcclusionState,
 		                                         object: self.window, queue: nil) { a in
-			self.conversation?.focus = self.window!.occlusionState.rawValue == 8194
+			self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
 		}
-		self.conversation?.focus = self.window!.occlusionState.rawValue == 8194
+		self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
 		
 		// Set up dark/light notifications.
 		ParrotAppearance.registerAppearanceListener(observer: self, invokeImmediately: true) { appearance in
@@ -151,6 +151,8 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			self.conversation?.getEvents(event_id: conversation?.events.first?.id, max_events: 50)
 			self.title = self.conversation?.name
 			
+			
+			
 			/*self.conversation?.client.queryPresence(chat_ids: self.conversation!.users.map { $0.id.chatID }) { response in
 			log.info("GOT \(response?.presenceResult)")
 			}*/
@@ -185,7 +187,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			case TypingType.Stopped: fallthrough
 			default: // TypingType.Unknown:
 				self.popover.performClose(self)
-				self.statusView.stringValue = "Done."
+				self.statusView.stringValue = ""
 			}
 		}
     }
@@ -250,7 +252,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 		DispatchQueue.main.after(when: dt) {
             if let window = self.window where window.isKeyWindow {
-				self.conversation?.focus = true // set it here too just in case.
+				self.conversation?.setFocus(true) // set it here too just in case.
             }
             self.conversation?.updateReadTimestamp()
 			

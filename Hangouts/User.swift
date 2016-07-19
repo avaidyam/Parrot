@@ -23,6 +23,16 @@ public struct User: Person, Hashable, Equatable {
 		return self.isSelf
 	}
 	
+	public var lastSeen: Date {
+		return Date(timeIntervalSince1970: 0)
+	}
+	public var reachability: Reachability {
+		return .unavailable
+	}
+	public var mood: String {
+		return ""
+	}
+	
 	// Initialize a User directly.
 	// Handles full_name or first_name being nil by creating an approximate
 	// first_name from the full_name, or setting both to DEFAULT_NAME.
@@ -46,25 +56,28 @@ public struct User: Person, Hashable, Equatable {
 			gaiaID: entity.id!.gaiaId!)
 		let isSelf = (selfUser != nil ? (selfUser == userID) : true)
 		
+		// If the entity has no provided properties, bail here.
+		guard let props = entity.properties else {
+			self.init(userID: userID, fullName: "", photoURL: "", locations: [], isSelf: isSelf)
+			return
+		}
+		
 		// Parse possible phone numbers.
 		var phoneI18N: String? = nil // just use I18N and reformat it if needed.
-		if	let r = entity.properties?._unknownFields[14] as? [AnyObject] where r.count > 0 {
+		if	let r = props._unknownFields[14] as? [AnyObject] where r.count > 0 {
 			if let d = r[0][0][1] as? [AnyObject] { // retrieve the I18nData
 				phoneI18N = d[1] as? String
 			}
 		}
 		
 		// Parse the user photo.
-		var photo: String? = nil
-		if let e = entity.properties!.photoUrl {
-			photo = "https:" + e
-		}
+		let photo: String? = props.photoUrl != nil ? "https:" + props.photoUrl! : nil
 		
 		// Parse possible locations.
 		var locations: [String] = []
-		locations += entity.properties!.email
-		locations += entity.properties!.phone
-		if let c = entity.properties!.canonicalEmail {
+		locations += props.email
+		locations += props.phone
+		if let c = props.canonicalEmail {
 			locations.append(c)
 		}
 		if let p = phoneI18N {
@@ -73,7 +86,7 @@ public struct User: Person, Hashable, Equatable {
 		
 		// Initialize the user.
         self.init(userID: userID,
-            fullName: phoneI18N ?? entity.properties!.displayName,
+            fullName: phoneI18N ?? props.displayName,
             photoURL: photo, locations: locations, isSelf: isSelf
         )
     }

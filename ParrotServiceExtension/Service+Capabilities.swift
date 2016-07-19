@@ -1,3 +1,4 @@
+import Foundation
 
 /// Defines all possible capabilities that Parrot will understand that can be
 /// vended by a remote messaging Service. Note that at the absolute minimum,

@@ -2992,7 +2992,7 @@ public struct Conversation: ProtoMessageExtensor {
 		self.forceHistoryState._flatMap { hash = (hash &* 31) &+ $0.hashValue }
 		return hash
 	}
-
+	
 	public var conversationId: ConversationId?
 	public var type: ConversationType?
 	public var name: String?

@@ -344,7 +344,6 @@ public extension Client {
 		}
 	}
 	
-	/* TODO: Does not return data, only calls the callback. */
 	public func setPresence(online: Bool, mood: String?,
 	                        cb: ((response: SetPresenceResponse?) -> Void)? = nil) {
 		let data = [

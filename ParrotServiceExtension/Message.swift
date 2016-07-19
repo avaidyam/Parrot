@@ -15,12 +15,11 @@ public enum MessageType {
 	case link
 	case snippet
 	case summary
-	case heartbeat
 }
 
 public protocol Message {
-	var timestamp: Date { get }
 	var sender: Person { get }
+	var timestamp: Date { get }
 	var text: String { get }
 }
 

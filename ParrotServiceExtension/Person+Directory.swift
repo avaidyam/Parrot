@@ -1,59 +1,20 @@
 import Foundation
 
-/// A Conversation is uniquely identified by its ID, and consists of
-/// the current user, along with either one or more persons as well.
-public protocol Conversation /*: Hashable, Equatable*/ {
+/// Describe's a Person's reachability in the Service.
+public enum Reachability {
 	
-	/// The Conversation's unique identifier (specific to the Service).
-	var identifier: String { get }
+	/// The Person is currently unavailable.
+	case unavailable
 	
-	/// The user-facing Conversation name. This may only be displayed if the
-	/// conversation is a Group one, but this setting can be overridden.
-	var name: String { get set }
+	/// The Person is currently available on a mobile device.
+	case mobile
 	
-	/// The set of people involved in this Conversation.
-	var participants: [Person] { get }
+	/// The Person is currently available on a mobile device.
+	case tablet
 	
-	/// The set of all events in this Conversation.
-	var messages: [Message] { get }
-	
-	/// The number of messages that are unread for this Conversation.
-	var unreadCount: Int { get }
-	
-	// leave()
-	// archive()
-	// delete()
-	// watermark?
-	// focus?
-	// send(String)
-	// send(Image)
-	// send(Sticker)
-	// typing()
+	/// The Person is currently available on a desktop device.
+	case desktop
 }
-
-public protocol ConversationList /*: Collection*/ {
-	
-	/// A list of all conversations mapped by their unique ID.
-	var conversations: [String: Conversation] { get }
-	
-	/// Begin a new conversation with the people provided.
-	/// Note that this may be a one-on-one conversation if only one exists.
-	func begin(with: [Person]) -> Conversation?
-	
-	/// Archive a conversation provided.
-	func archive(conversation: Conversation)
-	
-	/// Delete a conversation provided.
-	func delete(conversation: Conversation)
-}
-
-/*
-public extension ConversationList {
-	
-	public var sortedConversations: [Conversation] {
-		return self.conversations.values.sorted { $0.timestamp > $1.timestamp }
-	}
-}*/
 
 public protocol Person /*: Hashable, Equatable*/ {
 	
@@ -77,6 +38,15 @@ public protocol Person /*: Hashable, Equatable*/ {
 	
 	/// Is this Person the one logged into the Service?
 	var me: Bool { get }
+	
+	/// The timestamp the Person was last active on the Service.
+	var lastSeen: Date { get }
+	
+	/// The Person's reachability (device), if they are reachable.
+	var reachability: Reachability { get }
+	
+	/// The Person's mood or status message (a la XMPP or AIM).
+	var mood: String { get }
 	
 	/// Block this person from contacting the logged in user.
 	//func block()

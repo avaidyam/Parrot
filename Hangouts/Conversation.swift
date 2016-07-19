@@ -12,6 +12,13 @@ public protocol ConversationDelegate {
     func conversationDidUpdate(conversation: IConversation)
 }
 
+public struct IFocus: Focus {
+	public let owner: Person
+	public let timestamp: Date
+	public let typing: TypingProgress
+	public let present: Bool
+}
+
 // Wrapper around Client for working with a single chat conversation.
 public class IConversation: ParrotServiceExtension.Conversation {
     public typealias EventID = String
@@ -168,16 +175,23 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }.first ?? false
         }
     }
-
-	public var focus: Bool {
-		get {
-			return true // this doesn't work yet.
-			//return self.client.getFocus(conversation_id: id)
+	
+	public func setFocus(_ value: Bool) {
+		self.client.setFocus(conversation_id: id, focused: value)
+	}
+	
+	public var focus: [Focus] {
+		var focuses = [Focus]()
+		for r in self.conversation.readState {
+			let id = User.ID(chatID: r.participantId!.chatId!, gaiaID: r.participantId!.gaiaId!)
+			let person = self.client.directory.people[r.participantId!.gaiaId!]
+			let read = Date.from(UTC: Double(r.latestReadTimestamp!))
+			let t = self.typingStatuses[id]
+			let f = IFocus(owner: person!, timestamp: read, typing: .none, present: false)
+			focuses.append(f)
 		}
-		set (value) {
-			self.client.setFocus(conversation_id: id, focused: value)
-		}
-    }
+		return focuses
+	}
 	
 	// Send a message to this conversation.
 	// A per-conversation lock is acquired to ensure that messages are sent in
@@ -368,6 +382,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	public var identifier: String {
 		return self.id
 	}
+	
 	
 	public var messages: [Message] {
 		return self._messages.map { $0 as Message }

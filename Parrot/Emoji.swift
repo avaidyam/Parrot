@@ -18,7 +18,7 @@ public extension String {
 	/// Replace a Unicode Emoji descriptor (:emoji_name:) with its pictographical representation.
 	public func applyGithubEmoji() -> String {
 		var resultText = self
-		emojiDescriptorRegex.enumerateMatches(in: self, options: .reportCompletion,
+		/*emojiDescriptorRegex.enumerateMatches(in: self, options: .reportCompletion,
 		                                      range: NSMakeRange(0, self.characters.count)) { result, flags, stop in
 				if ((result != nil) && (result!.resultType == .regularExpression)) {
 					let range = result!.range
@@ -30,7 +30,7 @@ public extension String {
 						}
 					}
 				}
-		}
+		}*/
 		return resultText
 	}
 	

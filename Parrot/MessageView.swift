@@ -33,26 +33,11 @@ public class MessageView: ListViewCell {
 		}
 	}
 	
-	// Allows the circle crop to dynamically change.
-	public override func layout() {
-		super.layout()
-		if let photo = self.photoView, let layer = photo.layer {
-			layer.masksToBounds = true
-			layer.cornerRadius = photo.bounds.width / 2.0
-		}
-		if let text = self.textLabel, let layer = text.layer {
-			layer.masksToBounds = true
-			layer.cornerRadius = 2.0
-			layer.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
+	public override var backgroundStyle: NSBackgroundStyle {
+		didSet {
+			guard let text = self.textLabel else { return }
 			
-			// [BUG] [macOS 12] NSTextView doesn't fill width for some reason.
-			text.frame = text.enclosingScrollView!.bounds
-			
-			// Vertically center text which can fit in the bounds of the text view.
-			let rectDiff = text.bounds.height - text.characterRect().height
-			if rectDiff > 0 { text.textContainerInset.height += rectDiff / 2.0 }
-			
-			// NSTextView doesn't automatically change its text color when the 
+			// NSTextView doesn't automatically change its text color when the
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.
 			// Also, expand the text size if it's purely emoji.
@@ -77,6 +62,33 @@ public class MessageView: ListViewCell {
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
+		}
+	}
+	
+	// Allows the circle crop to dynamically change.
+	public override func layout() {
+		super.layout()
+		if let layer = self.photoView?.layer {
+			layer.masksToBounds = true
+			layer.cornerRadius = layer.bounds.width / 2.0
+		}
+		if let text = self.textLabel, let layer = text.layer {
+			
+			// [BUG] [macOS 12] NSTextView doesn't fill width for some reason.
+			text.frame = text.enclosingScrollView!.bounds
+			
+			// Vertically center text which can fit in the bounds of the text view.
+			// Note: only do this if the text isn't Emoji.
+			if !text.string!.isEmoji {
+				let charRect = text.characterRect()
+				let rectDiff = text.bounds.height - charRect.height
+				if rectDiff > 0 { text.textContainerInset.height += rectDiff / 2.0 }
+				
+				// Only clip the text if the text isn't purely Emoji.
+				layer.masksToBounds = true
+				layer.cornerRadius = 2.0
+				layer.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
+			}
 		}
 	}
 	
