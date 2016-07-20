@@ -7,6 +7,7 @@ import protocol ParrotServiceExtension.Conversation
 /* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
 
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.serial, .qosUserInteractive])
+let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", attributes: [.serial, .qosUserInitiated])
 
 class ConversationListViewController: NSViewController, ConversationListDelegate {
 	
@@ -181,6 +182,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	}
 	
 	func _updateWallclock(_ timer: Timer) {
+		log.verbose("Updated visible timestamp for Conversations.")
 		for row in self.listView.visibleRows {
 			if let cell = self.listView.tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ConversationView {
 				cell.updateTimestamp()

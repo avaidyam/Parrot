@@ -17,10 +17,14 @@ public enum MessageType {
 	case summary
 }
 
-public protocol Message {
+public protocol Message: EventStreamItem {
 	var sender: Person { get }
-	var timestamp: Date { get }
 	var text: String { get }
+}
+
+public protocol EventStreamItem {
+	//var identifier: String { get }
+	var timestamp: Date { get }
 }
 
 /*

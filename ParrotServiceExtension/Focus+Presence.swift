@@ -12,9 +12,8 @@ public enum TypingProgress {
 /// to AIM or XMPP-style status messages.
 
 /// A Peron's focus indicates their activity in a Conversation.
-public protocol Focus {
+public protocol Focus: EventStreamItem {
 	var owner: Person { get }
-	var timestamp: Date { get }
 	var typing: TypingProgress { get }
 	var present: Bool { get }
 }

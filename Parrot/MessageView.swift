@@ -12,7 +12,6 @@ public class MessageView: ListViewCell {
 				log.warning("MessageView encountered faulty cellValue!")
 				return
 			}
-			log.verbose("Configuring MessageView.")
 			
 			let user = o.sender
 			let str = AttributedString(string: o.text as String)
@@ -92,11 +91,30 @@ public class MessageView: ListViewCell {
 		}
 	}
 	
+	/*
+	private static var abc: NSLayoutManager = {
+		var textStorage = NSTextStorage()
+		var layoutManager = NSLayoutManager()
+		textStorage.addLayoutManager(layoutManager)
+		var textContainer = NSTextContainer()
+		layoutManager.addTextContainer(textContainer)
+		return layoutManager
+	}()
+	public static func _hAbc(_ width: CGFloat, _ attr: AttributedString) -> CGFloat {
+		abc.textContainers[0].containerSize = NSSize(width: width, height: 10000000)
+		abc.textStorage?.setAttributedString(attr)
+		let glyphRange = NSMakeRange(0, abc.numberOfGlyphs)
+		let glyphRect = abc.boundingRect(forGlyphRange: glyphRange, in: abc.textContainers[0])
+		return (glyphRect.size.height > 24.0 ? glyphRect.size.height : 24.0) + 16.0
+	}
+	*/
+	
 	public override class func cellHeight(forWidth width: CGFloat, cellValue: Any?) -> CGFloat {
 		let text = (cellValue as! Message).text ?? ""
 		let attr = AttributedString(string: text, attributes: [
 			NSFontAttributeName: NSFont.systemFont(ofSize: 12.0 * (text.isEmoji ? 3 : 1))
 		])
+		
 		let box = attr.boundingRect(with: NSSize(width: width, height: 10000000),
 		                            options: [.usesLineFragmentOrigin, .usesFontLeading])
 		return (box.size.height > 24.0 ? box.size.height : 24.0) + 16.0

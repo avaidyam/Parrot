@@ -15,7 +15,6 @@ public class ConversationView: ListViewCell {
 				log.warning("ConversationView encountered faulty cellValue!")
 				return
 			}
-			log.verbose("Configuring ConversationView.")
 			
 			let messageSender = conversation.messages.last?.sender.identifier
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
@@ -29,30 +28,20 @@ public class ConversationView: ListViewCell {
 			
 			self.time = time
 			self.photoView?.image = photo
-			//self.photoView?.toolTip = caption
-			//self.photoView?.layer?.borderColor = highlight.cgColor
 			self.nameLabel?.stringValue = conversation.name
 			self.nameLabel?.toolTip = conversation.name
 			self.textLabel?.stringValue = subtitle
 			self.textLabel?.toolTip = subtitle
-			self.timeLabel?.stringValue = time.relativeString()// + (o.indicator > 0 ? " (\(o.indicator))" : "")
+			self.timeLabel?.stringValue = time.relativeString()
 			self.timeLabel?.toolTip = "\(time.fullString())"
-			/*//self.unreadLabel?.stringValue = "\(o.indicator)"
-			self.unreadLabel?.layer?.backgroundColor = o.highlight.cgColor
 			
-			// Set the unread label and its spacing constraint visibility.
-			self.unreadLabel?.isHidden = o.indicator <= 0
-			let c = self.unreadLabel?.constraints.filter { $0.identifier == "TimeUnreadSpacing" }
-			if o.indicator <= 0 {
-				NSLayoutConstraint.deactivate(c ?? [])
-			} else {
-				NSLayoutConstraint.activate(c ?? [])
-			}*/
-			//self.unreadLabel?.isHidden = true
-			// bold the message contents
+			/*
 			if let t = self.textLabel {
-				t.font = NSFont.systemFont(ofSize: t.font!.pointSize,
-						weight: NSFontWeightRegular)//o.indicator > 0 ? NSFontWeightBold : NSFontWeightRegular
+				let weight = conversation.unreadCount > 0 ? NSFontWeightBold: NSFontWeightRegular
+				t.font = NSFont.systemFont(ofSize: t.font!.pointSize, weight: weight)
+			}*/
+			if conversation.unreadCount > 0 {
+				self.timeLabel!.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
 			}
 		}
 	}
@@ -60,7 +49,6 @@ public class ConversationView: ListViewCell {
 	// Dynamically update the visible timestamp for the Conversation.
 	var time: Date = .origin
 	public func updateTimestamp() {
-		log.verbose("Updated visible timestamp for Conversation.")
 		self.timeLabel?.stringValue = self.time.relativeString()
 	}
 	

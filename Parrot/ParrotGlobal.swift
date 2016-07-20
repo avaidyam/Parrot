@@ -25,19 +25,17 @@ public final class Parrot {
 private var _imgCache = [String: NSImage]()
 public func fetchImage(user: Person, conversation: ParrotServiceExtension.Conversation) -> NSImage {
 	
-	// FIXME: FORCE-CAST TO HANGOUTS
-	func getNetwork(_ conversation: ParrotServiceExtension.Conversation) -> NetworkType {
-		let qqqq = conversation as! Hangouts.IConversation
-		return NetworkType(rawValue: (qqqq.conversation.networkType)[0].rawValue)!
-	}
-	
 	let output = _imgCache[user.identifier]
 	guard output == nil else { return output! }
+	
+	// 1. If we can find or cache the photo URL, return that.
+	// 2. If no photo URL can be used, and the name exists, create a monogram image.
+	// 3. If a monogram is not possible, use the default image mask.
 	
 	var img: NSImage! = nil
 	if let d = fetchData(user.identifier, user.photoURL) {
 		img = NSImage(data: d)!
-	} else if getNetwork(conversation) != .GoogleVoice {
+	} else if let _ = user.fullName.rangeOfCharacter(from: .letters, options: []) {
 		img = imageForString(forString: user.fullName)
 	} else {
 		img = defaultImageForString(forString: user.fullName)

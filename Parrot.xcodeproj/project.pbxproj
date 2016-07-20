@@ -60,6 +60,7 @@
 		489018A81D3C13B400CFCA5F /* FocusCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 489018A71D3C13B400CFCA5F /* FocusCell.xib */; };
 		489018AA1D3C8CB800CFCA5F /* Focus+Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018A91D3C8CB800CFCA5F /* Focus+Presence.swift */; };
 		489018AC1D3C8FE400CFCA5F /* Person+Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */; };
+		489018AE1D3EA2DB00CFCA5F /* LinkPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AD1D3EA2DB00CFCA5F /* LinkPreviewCell.swift */; };
 		48A452271D19B16500CB588A /* Tone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A452261D19B16500CB588A /* Tone.swift */; };
 		48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
 		48B3AD781C38043B0023FAA3 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B3AD771C38043B0023FAA3 /* Canvas.swift */; };
@@ -91,7 +92,7 @@
 		48EA55CB1D26CDD300C3BC80 /* AppActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BFAECF1D1CF19100ADBA3A /* AppActivity.swift */; };
 		48EA55CC1D26CDD600C3BC80 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */; };
 		48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
-		48F84D451D0DEC1E00E77AD9 /* LinkPreviewEventView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48F84D441D0DEC1E00E77AD9 /* LinkPreviewEventView.xib */; };
+		48F84D451D0DEC1E00E77AD9 /* LinkPreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48F84D441D0DEC1E00E77AD9 /* LinkPreviewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -285,6 +286,7 @@
 		489018A71D3C13B400CFCA5F /* FocusCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FocusCell.xib; sourceTree = "<group>"; };
 		489018A91D3C8CB800CFCA5F /* Focus+Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Focus+Presence.swift"; sourceTree = "<group>"; };
 		489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Person+Directory.swift"; sourceTree = "<group>"; };
+		489018AD1D3EA2DB00CFCA5F /* LinkPreviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPreviewCell.swift; sourceTree = "<group>"; };
 		48A452261D19B16500CB588A /* Tone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tone.swift; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyValueStore.swift; path = Parrot/KeyValueStore.swift; sourceTree = SOURCE_ROOT; };
 		48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPreviewParser.swift; sourceTree = "<group>"; };
@@ -319,7 +321,7 @@
 		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
 		48EB54F51D209DD100F77C2C /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Cache.swift; path = Parrot/Cache.swift; sourceTree = SOURCE_ROOT; };
 		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
-		48F84D441D0DEC1E00E77AD9 /* LinkPreviewEventView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LinkPreviewEventView.xib; sourceTree = "<group>"; };
+		48F84D441D0DEC1E00E77AD9 /* LinkPreviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LinkPreviewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -435,9 +437,10 @@
 				4884929A1D0B59370003D522 /* MessageView.xib */,
 				489018A51D3C13A400CFCA5F /* FocusCell.swift */,
 				489018A71D3C13B400CFCA5F /* FocusCell.xib */,
+				489018AD1D3EA2DB00CFCA5F /* LinkPreviewCell.swift */,
+				48F84D441D0DEC1E00E77AD9 /* LinkPreviewCell.xib */,
 				4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */,
 				488492751D0B3A010003D522 /* MessageListViewController.xib */,
-				48F84D441D0DEC1E00E77AD9 /* LinkPreviewEventView.xib */,
 			);
 			name = "Message List";
 			sourceTree = "<group>";
@@ -1035,7 +1038,7 @@
 			files = (
 				4884929B1D0B59370003D522 /* MessageView.xib in Resources */,
 				488492741D0B392A0003D522 /* ConversationListViewController.xib in Resources */,
-				48F84D451D0DEC1E00E77AD9 /* LinkPreviewEventView.xib in Resources */,
+				48F84D451D0DEC1E00E77AD9 /* LinkPreviewCell.xib in Resources */,
 				489018A81D3C13B400CFCA5F /* FocusCell.xib in Resources */,
 				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
 				488492791D0B3F370003D522 /* ConversationView.xib in Resources */,
@@ -1133,6 +1136,7 @@
 				4835ECAB1C1C620000193EBC /* ConversationView.swift in Sources */,
 				4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */,
 				48D25B771D3817B900753DB7 /* ParrotGlobal.swift in Sources */,
+				489018AE1D3EA2DB00CFCA5F /* LinkPreviewCell.swift in Sources */,
 				48BFAE5D1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift in Sources */,
 				489018A61D3C13A400CFCA5F /* FocusCell.swift in Sources */,
 				4814E3B91D2DCC860079C3DB /* AdvancedTextView.swift in Sources */,

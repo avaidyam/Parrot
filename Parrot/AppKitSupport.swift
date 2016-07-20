@@ -63,7 +63,9 @@ public extension Date {
 		let units: Calendar.Unit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
 		let components = calendar.components(units, from: earliest, to: latest, options: Calendar.Options())
 		
-		if (components.year >= 2) {
+		if components.year > 45 {
+			return "a while ago"
+		} else if (components.year >= 2) {
 			return "\(components.year!) years ago"
 		} else if (components.year >= 1) {
 			return numeric ? "1 year ago" : "last year"
@@ -94,11 +96,15 @@ public extension Date {
 		}
 	}
 	
-	public func fullString() -> String {
+	private static var formatter: DateFormatter = {
 		let formatter = DateFormatter()
 		formatter.dateStyle = .fullStyle
 		formatter.timeStyle = .longStyle
-		return formatter.string(from: self)
+		return formatter
+	}()
+	
+	public func fullString() -> String {
+		return Date.formatter.string(from: self)
 	}
 }
 

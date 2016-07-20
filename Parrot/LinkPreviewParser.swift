@@ -37,7 +37,7 @@ public enum LinkPreviewType {
 	/// MIME: video/*
 	case video
 	/// MIME: image/*
-	case image(Data)
+	case image(URL)
 	/// MIME: text/plain
 	case snippet(String)
 	/// URL: youtu.be or youtube.com
@@ -192,11 +192,8 @@ public struct LinkPreviewParser {
 			guard size < 4 else {
 				throw LinkPreviewError.documentTooLarge(url, size)
 			}
-			guard let dl = _get(url).0 else {
-				throw LinkPreviewError.invalidDocument(url)
-			}
 			
-			return .image(dl)
+			return .image(url)
 		} else if type.hasPrefix("audio/") {
 			return .audio
 		} else if type.hasPrefix("video/") {

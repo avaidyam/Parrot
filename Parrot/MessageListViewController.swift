@@ -8,6 +8,20 @@ import ParrotServiceExtension
 /* TODO: Support Slack-like plugin integrations. */
 /* TODO: Needs a complete refactor, with something like CSS styling. */
 
+private var _linkCache = [String: LinkPreviewType]()
+private func _getLinkCached(_ key: String) throws -> LinkPreviewType {
+	if let val = _linkCache[key] {
+		return val
+	} else {
+		do {
+			let val = try LinkPreviewParser.parse(key)
+			_linkCache[key] = val
+			log.info("parsed link => \(val)")
+			return val
+		} catch { throw error }
+	}
+}
+
 class MessageListViewController: NSViewController, ConversationDelegate, NSTextViewDelegate, NSTextDelegate {
 	
 	@IBOutlet var messagesView: ListView!
@@ -15,8 +29,8 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSImageView!
 	
+	var _previews = [String: [LinkPreviewType]]()
 	var _focusRow = -1
-	var _measure: MessageView? = nil
 	var _note: NSObjectProtocol!
 	lazy var popover: NSPopover = {
 		let p = NSPopover()
@@ -49,23 +63,36 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	override func loadView() {
 		super.loadView()
 		
-		// FIXME: Why the Any cast!?
-		self.messagesView.dataSourceProvider = { self.conversation!.messages.map { $0 as Any } }
+		// oh lawd pls forgibs my sins
+		self.messagesView.dataSourceProvider = {
+			self.conversation!.messages.map {
+				if let prev = self._previews[($0 as! IChatMessageEvent).id] {
+					let ret = [$0 as Any] + prev.map { $0 as Any }
+					return ret
+				} else { return [$0 as Any] }
+			}.reduce([], combine: +)
+		}
 		
 		self.messagesView.viewClassProvider = { row in
-			return MessageView.self
+			let cls = self.messagesView.dataSourceProvider!()[row]
+			if cls is Message {
+				return MessageView.self
+			} else if cls is LinkPreviewType {
+				log.debug("\(row) got LinkPreviewType")
+				return LinkPreviewCell.self
+			} else {
+				log.debug("\(row) GOT NOTHING \(cls)")
+				return ListViewCell.self
+			}
 		}
 		
 		// Set up the measurement view.
 		self.messagesView.register(nibName: "MessageView", forClass: MessageView.self)
+		self.messagesView.register(nibName: "FocusCell", forClass: FocusCell.self)
+		self.messagesView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
 		
 		self.messagesView.sizeClass = .dynamic
 		self.messageTextField.delegate = self
-		
-		// FIXME: measure
-		let nib = NSNib(nibNamed: "MessageView", bundle: nil)
-		let stuff = nib?.instantiate(nil)
-		_measure = stuff?.filter { $0 is MessageView }.first as? MessageView// stuff[0]: NSApplication
 	}
 	
     override func viewDidLoad() {
@@ -148,7 +175,26 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			}
 			
 			self.conversation?.delegate = self
-			self.conversation?.getEvents(event_id: conversation?.events.first?.id, max_events: 50)
+			self.conversation?.getEvents(event_id: conversation?.events.first?.id, max_events: 50) { events in
+				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
+					linkQ.async {
+						let d = try! NSDataDetector(types: TextCheckingResult.CheckingType.link.rawValue)
+						let t = chat.text
+						d.enumerateMatches(in: t, options: RegularExpression.MatchingOptions(rawValue: UInt(0)),
+						                   range: NSMakeRange(0, t.unicodeScalars.count)) { (res, flag, stop) in
+							let key = res!.url!.absoluteString!
+							guard let meta = try? _getLinkCached(key) else { return }
+							
+							if let arr = self._previews[chat.id] {
+								self._previews[chat.id] = arr + [meta]
+							} else {
+								self._previews[chat.id] = [meta]
+							}
+							self.messagesView.update()
+						}
+					}
+				}
+			}
 			self.title = self.conversation?.name
 			
 			
@@ -265,6 +311,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			}
 			
 			// Find the last visible row that was sent by the user.
+			/*
 			var lastR: Int = -1
 			for r in self.messagesView.visibleRows {
 				if self.conversation!._messages[r].sender.me {
@@ -274,12 +321,12 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			
 			// If we found a row, set the focus.
 			if lastR > 0 {
-				/*if let c = self.messagesView.tableView.view(atColumn: 0, row: lastR, makeIfNecessary: false) as? SendMessageView {
+				if let c = self.messagesView.tableView.view(atColumn: 0, row: lastR, makeIfNecessary: false) as? SendMessageView {
 					c.setFocus(true)
 					self._focusRow = lastR
 					self.messagesView.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: lastR))
-				}*/
-			}
+				}
+			}*/
         }
     }
 

@@ -23,7 +23,7 @@
                 </imageView>
                 <textField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bul-Yb-hpg">
                     <rect key="frame" x="62" y="39" width="211" height="17"/>
-                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="John Smith" placeholderString="First Last" id="KKh-aC-jq2">
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="John Smith" placeholderString="Anonymous" id="KKh-aC-jq2">
                         <font key="font" metaFont="systemMedium" size="13"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -45,6 +45,12 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <box wantsLayer="YES" verticalHuggingPriority="750" alphaValue="0.5" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="yWE-Nd-iCe">
+                    <rect key="frame" x="64" y="-2" width="263" height="5"/>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <font key="titleFont" metaFont="system"/>
+                </box>
             </subviews>
             <constraints>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="614-Mt-nc3"/>
@@ -58,8 +64,11 @@
                 <constraint firstItem="Bul-Yb-hpg" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="8" id="ekM-qu-jmL"/>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="centerY" secondItem="Bul-Yb-hpg" secondAttribute="centerY" id="hfP-e9-RCT"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="8" id="n6G-VK-XVZ"/>
+                <constraint firstItem="yWE-Nd-iCe" firstAttribute="leading" secondItem="Nw5-Um-35D" secondAttribute="leading" id="nwT-wf-8uc"/>
                 <constraint firstAttribute="trailing" secondItem="Nw5-Um-35D" secondAttribute="trailing" constant="8" id="pYv-6v-EBj"/>
+                <constraint firstAttribute="bottom" secondItem="yWE-Nd-iCe" secondAttribute="bottom" id="tfC-YZ-qgL"/>
                 <constraint firstAttribute="bottom" secondItem="Nw5-Um-35D" secondAttribute="bottom" constant="8" id="tvp-gd-SXn"/>
+                <constraint firstAttribute="trailing" secondItem="yWE-Nd-iCe" secondAttribute="trailing" id="vkM-Aw-jDp"/>
                 <constraint firstAttribute="height" relation="greaterThanOrEqual" secondItem="N7p-DV-XCL" secondAttribute="height" constant="16" id="wd1-jU-Oqk"/>
             </constraints>
             <connections>
