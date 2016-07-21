@@ -63,6 +63,10 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	override func loadView() {
 		super.loadView()
 		
+		self.messagesView.register(nibName: "MessageView", forClass: MessageView.self)
+		self.messagesView.register(nibName: "FocusCell", forClass: FocusCell.self)
+		self.messagesView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
+		
 		// oh lawd pls forgibs my sins
 		self.messagesView.dataSourceProvider = {
 			self.conversation!.messages.map {
@@ -78,18 +82,12 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			if cls is Message {
 				return MessageView.self
 			} else if cls is LinkPreviewType {
-				log.debug("\(row) got LinkPreviewType")
 				return LinkPreviewCell.self
 			} else {
 				log.debug("\(row) GOT NOTHING \(cls)")
 				return ListViewCell.self
 			}
 		}
-		
-		// Set up the measurement view.
-		self.messagesView.register(nibName: "MessageView", forClass: MessageView.self)
-		self.messagesView.register(nibName: "FocusCell", forClass: FocusCell.self)
-		self.messagesView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
 		
 		self.messagesView.sizeClass = .dynamic
 		self.messageTextField.delegate = self
@@ -295,12 +293,11 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
         }
 		
         //  Delay here to ensure that small context switches don't send focus messages.
-		let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-		DispatchQueue.main.after(when: dt) {
+		DispatchQueue.main.after(when: .now() + .seconds(1)) {
             if let window = self.window where window.isKeyWindow {
 				self.conversation?.setFocus(true) // set it here too just in case.
             }
-            self.conversation?.updateReadTimestamp()
+			self.conversation?.updateReadTimestamp()
 			
 			// Get current states
 			for state in self.conversation!.readStates {
@@ -383,7 +380,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		self.messageTextField.string = ""
 		
 		// Create an operation to process the message and then send it.
-		let operation = DispatchWorkItem(group: nil, qos: .userInteractive, flags: [.enforceQoS]) {
+		let operation = DispatchWorkItem(qos: .userInteractive, flags: .enforceQoS) {
 			var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
 			emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
 			let txt = segmentsForInput(text, emojify: emojify)

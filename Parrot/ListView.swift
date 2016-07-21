@@ -224,6 +224,7 @@ public extension ListView {
 		let cellClass = self.viewClassProvider?(row: row) ?? ListViewCell.self
 		var view = self.tableView.make(withIdentifier: cellClass.className(), owner: self) as? ListViewCell
 		if view == nil {
+			log.warning("Cell class \(cellClass) not registered!")
 			view = cellClass.init(frame: .zero)
 			view!.identifier = cellClass.className()
 		}

@@ -14,6 +14,17 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
 	
+	// How to sort the conversation list: by recency or name, or manually.
+	enum SortMode {
+		case none
+		case recent
+		case name
+	}
+	enum SortDirection {
+		case ascending
+		case descending
+	}
+	
 	var wallclock: Timer!
 	var userList: Directory?
 	

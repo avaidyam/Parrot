@@ -1,4 +1,5 @@
 import Cocoa
+import AddressBook
 import protocol ParrotServiceExtension.Message
 
 public class MessageView: ListViewCell {
@@ -14,6 +15,7 @@ public class MessageView: ListViewCell {
 			}
 			
 			let user = o.sender
+			
 			let str = AttributedString(string: o.text as String)
 			self.userInterfaceLayoutDirection = o.sender.me ? .rightToLeft : .leftToRight
 			self.textLabel?.alignment = o.sender.me ? .right : .left

@@ -108,6 +108,31 @@ public extension Date {
 	}
 }
 
+public extension NSWindowOcclusionState {
+	public static let invisible = NSWindowOcclusionState(rawValue: 0)
+}
+
+public extension NSView {
+	
+	/* TODO: Finish this stuff here. */
+	public var occlusionState: NSWindowOcclusionState {
+		let selfRect = self.window!.frame
+		let windows = CGWindowListCopyWindowInfo(.optionOnScreenAboveWindow, CGWindowID(self.window!.windowNumber))!
+		for dict in (windows as [AnyObject]) {
+			guard let window = dict as? NSDictionary else { return .visible }
+			guard let detail = window[kCGWindowBounds as String] as? NSDictionary else { return .visible }
+			let rect = NSRect(x: detail["X"] as? Int ?? 0, y: detail["Y"] as? Int ?? 0,
+			                  width: detail["Width"] as? Int ?? 0, height: detail["Height"] as? Int ?? 0)
+			//guard rect.contains(selfRect) else { continue }
+			let intersected = self.window!.convertFromScreen(rect.intersection(selfRect))
+			log.info("intersect => \(intersected)")
+			
+			//log.info("alpha: \(window[kCGWindowAlpha as String])")
+		}
+		return .visible
+	}
+}
+
 @IBDesignable
 public class NSAutoLayoutTextView: NSTextView {
 	

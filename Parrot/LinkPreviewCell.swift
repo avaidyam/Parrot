@@ -13,16 +13,21 @@ public class LinkPreviewCell: ListViewCell {
 				return
 			}
 			
-			self.layer?.backgroundColor = NSColor.red().cgColor
-			
 			switch preview {
 			case .link(let linkmeta):
-				log.info("meta: \(linkmeta)")
+				var url = linkmeta.icon.first ?? ""
+				if url.hasPrefix("//") { url = "https:\(url)" }
+				if let dl = URLSession.shared().synchronousRequest(URL(string: url)!).0 {
+					self.faviconView?.image = NSImage(data: dl)
+				}
 				
-				self.titleView?.stringValue = linkmeta.title[0]
-				self.descView?.stringValue = linkmeta.description[0]
-				//self.faviconView?.image = linkmeta.icon[0]
-				//self.photoView?.image = linkmeta.image[0]
+				url = linkmeta.image.first ?? ""
+				if let dl = URLSession.shared().synchronousRequest(URL(string: url)!).0 {
+					self.photoView?.image = NSImage(data: dl)
+				}
+				
+				self.titleView?.stringValue = linkmeta.title.first ?? ""
+				self.descView?.stringValue = linkmeta.description.first ?? ""
 			default:
 				log.warning("LinkPreviewCell only supports Links!")
 			}
@@ -37,8 +42,6 @@ public class LinkPreviewCell: ListViewCell {
 			layer.cornerRadius = layer.bounds.width / 2.0
 		}
 		if let text = self.descView, let layer = text.layer {
-			
-			// Only clip the text if the text isn't purely Emoji.
 			layer.masksToBounds = true
 			layer.cornerRadius = 2.0
 			layer.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
