@@ -127,9 +127,13 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		super.viewDidLoad()
 		
 		self.listView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
-		self.listView.clickedRowProvider = { row in
+		self.listView.selectionProvider = { row in
 			guard row >= 0 else { return }
 			_ = MessageListViewController.display(from: self, conversation: self.sortedConversations[row])
+			DispatchQueue.main.after(when: .now() + .milliseconds(150)) {
+				let tb = self.listView.tableView.animator()
+				tb.selectRowIndexes(IndexSet(), byExtendingSelection: false)
+			}
 		}
 		self.listView.rowActionProvider = { row, edge in
 			var actions: [NSTableViewRowAction] = []

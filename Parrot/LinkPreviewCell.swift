@@ -1,6 +1,7 @@
 import AppKit
+import Quartz
 
-public class LinkPreviewCell: ListViewCell {
+public class LinkPreviewCell: ListViewCell, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
 	@IBOutlet var faviconView: NSImageView?
 	@IBOutlet var titleView: NSTextField?
 	@IBOutlet var descView: NSTextField?
@@ -34,18 +35,36 @@ public class LinkPreviewCell: ListViewCell {
 		}
 	}
 	
-	// Allows the circle crop to dynamically change.
-	public override func layout() {
-		super.layout()
-		if let layer = self.faviconView?.layer {
-			layer.masksToBounds = true
-			layer.cornerRadius = layer.bounds.width / 2.0
+	public override func quickLook(with event: NSEvent) {
+		log.debug("quicklook")
+		QLPreviewPanel.shared().makeKeyAndOrderFront(nil)
+	}
+	
+	public override func acceptsPreviewPanelControl(_ panel: QLPreviewPanel!) -> Bool {
+		return true
+	}
+	
+	public override func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
+		log.debug("looking...")
+		let ql = QLPreviewPanel.shared()
+		ql?.dataSource = self
+		ql?.delegate = self
+	}
+	
+	public func numberOfPreviewItems(in panel: QLPreviewPanel!) -> Int {
+		return 1
+	}
+	
+	public func previewPanel(_ panel: QLPreviewPanel!, previewItemAt index: Int) -> QLPreviewItem! {
+		switch (self.cellValue as! LinkPreviewType) {
+		case .link(let linkmeta):
+			return URL(string: linkmeta.image.first ?? "")
+		default: return nil
 		}
-		if let text = self.descView, let layer = text.layer {
-			layer.masksToBounds = true
-			layer.cornerRadius = 2.0
-			layer.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
-		}
+	}
+	
+	public func previewPanel(_ panel: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
+		return self.window!.convertToScreen(self.frame)
 	}
 	
 	public override class func cellHeight(forWidth: CGFloat, cellValue: Any?) -> CGFloat {
