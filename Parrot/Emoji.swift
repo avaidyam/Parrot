@@ -19,7 +19,7 @@ public extension String {
 	public func applyGithubEmoji() -> String {
 		var resultText = self
 		/*emojiDescriptorRegex.enumerateMatches(in: self, options: .reportCompletion,
-		                                      range: NSMakeRange(0, self.characters.count)) { result, flags, stop in
+		                                      range: NSMakeRange(0, self.endIndex)) { result, flags, stop in
 				if ((result != nil) && (result!.resultType == .regularExpression)) {
 					let range = result!.range
 					if (range.location != NSNotFound) {

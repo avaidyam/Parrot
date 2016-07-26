@@ -22,7 +22,7 @@
 	<string>😑</string>
 	<key>:!</key>
 	<string>😬</string>
-	<key>:'(</key>
+	<key>:&apos;(</key>
 	<string>😢</string>
 	<key>:(</key>
 	<string>😞</string>
@@ -121,6 +121,10 @@
 	<key>;P</key>
 	<string>😜</string>
 	<key>;_;</key>
+	<string>😭</string>
+	<key>,_,</key>
+	<string>😢</string>
+	<key>;-;</key>
 	<string>😢</string>
 	<key>;p</key>
 	<string>😜</string>
@@ -130,7 +134,7 @@
 	<string>❤️</string>
 	<key>&lt;\3</key>
 	<string>💔</string>
-	<key>='(</key>
+	<key>=&apos;(</key>
 	<string>😢</string>
 	<key>=(</key>
 	<string>😞</string>
@@ -204,6 +208,10 @@
 	<string>😵</string>
 	<key>X3</key>
 	<string>😹</string>
+	<key>xD</key>
+	<string>😂</string>
+	<key>XD</key>
+	<string>😂</string>
 	<key>^^;</key>
 	<string>😅</string>
 	<key>^_^</key>

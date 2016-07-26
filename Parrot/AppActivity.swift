@@ -1,10 +1,15 @@
 import Foundation
+import class ParrotServiceExtension.Logger
 
 /* TODO: Create Services using NSBackgroundActivityScheduler. */
 /* TODO: Finish DispatchOperation. */
 /* TODO: Integrate NSProgress, Logger, os_activity, and os_trace. */
 /* TODO: Add property .cancellable and ensure NSApplication doesn't quit until .cancellable propogates. */
 /* TODO: Use applicationShouldTerminate() to control this behavior. */
+
+/*public var log: Logger {
+	return AppActivity.current.logger
+}*/
 
 /// A proxy for NSProcessInfo's BackgroundActivity API.
 /// Simplified for internal use only.
@@ -21,7 +26,8 @@ public struct AppActivity {
 		//.latencyCritical // for audio/video streaming
 	]
 	
-	public private(set) static var current: AppActivity? = nil
+	public private(set) static var current: AppActivity! = nil
+	public var logger: Logger! = nil
 	
 	public static func start(_ string: String, cancellable: Bool = false) {
 		let holder = ProcessInfo.processInfo().beginActivity(mode, reason: string)
@@ -41,39 +47,26 @@ public struct AppActivity {
 public class DispatchOperation<Input, Output, Error: ErrorProtocol> {
 	/* [.barrier, .detached, .assignCurrentContext, .noQoS, .inheritQoS, .enforceQoS] */
 	
-	public init(group: DispatchGroup? = nil, qos: DispatchQoS = .default, block: (Input) -> (Output, Error)) {
-		
+	private var workItem: DispatchWorkItem
+	private var group: DispatchGroup
+	
+	private var input: Input! = nil
+	private var output: Output! = nil
+	private var error: Error! = nil
+	
+	public init(qos: DispatchQoS = .default, block: () -> (Output)) {
+		self.group = DispatchGroup()
+		self.workItem = DispatchWorkItem(group: self.group, qos: qos, flags: [.inheritQoS, .enforceQoS]) {
+			block()
+		}
 	}
 	
-	public func perform() -> (Output, Error) {
-		return ()
+	private init(parent: DispatchOperation, block: () -> (Output)) {
+		self.group = parent.group
+		self.workItem = DispatchWorkItem(group: parent.group, qos: .userInitiated, flags: [.inheritQoS, .enforceQoS]) {
+			block()
+		}
+		parent.workItem.notify(queue: DispatchQueue.main, execute: self.workItem)
 	}
-	
-	public func wait() -> (Output, Error) {
-		return ()
-	}
-	
-	public func wait(timeout: DispatchTime) -> (Output, Error, DispatchTimeoutResult) {
-		return ()
-	}
-	
-	public func wait(wallTimeout: DispatchWallTime) -> (Output, Error, DispatchTimeoutResult) {
-		return ()
-	}
-	
-	public func notify(qos: DispatchQoS = .default, queue: DispatchQueue, execute: () -> Void) {
-		
-	}
-	
-	public func notify(queue: DispatchQueue, execute: DispatchWorkItem) {
-		
-	}
-	
-	public func cancel() {
-		
-	}
-	
-	public var isCancelled: Bool {
-		return false
-	}
-}*/
+}
+*/

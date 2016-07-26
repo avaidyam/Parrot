@@ -1,7 +1,7 @@
 import AppKit
 import Quartz
 
-public class LinkPreviewCell: ListViewCell, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
+public class LinkPreviewCell: ListViewCell {//, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
 	@IBOutlet var faviconView: NSImageView?
 	@IBOutlet var titleView: NSTextField?
 	@IBOutlet var descView: NSTextField?
@@ -35,6 +35,15 @@ public class LinkPreviewCell: ListViewCell, QLPreviewPanelDataSource, QLPreviewP
 		}
 	}
 	
+	public override var backgroundStyle: NSBackgroundStyle {
+		didSet {
+			let color: NSColor = (self.effectiveAppearance.name == NSAppearanceNameVibrantDark) ? .white() : .black()
+			self.titleView?.textColor = color
+			self.descView?.textColor = color.withAlphaComponent(0.75)
+		}
+	}
+	
+	/*
 	public override func quickLook(with event: NSEvent) {
 		log.debug("quicklook")
 		QLPreviewPanel.shared().makeKeyAndOrderFront(nil)
@@ -66,6 +75,7 @@ public class LinkPreviewCell: ListViewCell, QLPreviewPanelDataSource, QLPreviewP
 	public func previewPanel(_ panel: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
 		return self.window!.convertToScreen(self.frame)
 	}
+	*/
 	
 	public override class func cellHeight(forWidth: CGFloat, cellValue: Any?) -> CGFloat {
 		return 96

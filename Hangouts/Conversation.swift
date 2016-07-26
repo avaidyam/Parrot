@@ -187,7 +187,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			let person = self.client.directory.people[r.participantId!.gaiaId!]
 			let read = Date.from(UTC: Double(r.latestReadTimestamp!))
 			let t = self.typingStatuses[id]
-			let f = IFocus(owner: person!, timestamp: read, typing: .none, present: false)
+			let f = IFocus(owner: person!, timestamp: read, typing: .away, present: false)
 			focuses.append(f)
 		}
 		return focuses

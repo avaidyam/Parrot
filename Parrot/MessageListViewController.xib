@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A238m" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A254g" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
@@ -21,67 +21,69 @@
             <rect key="frame" x="0.0" y="0.0" width="568" height="385"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <customView wantsLayer="YES" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="41" width="568" height="344"/>
+                <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="568" height="385"/>
                 </customView>
-                <box wantsLayer="YES" verticalHuggingPriority="751" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="MlJ-gQ-qkl">
-                    <rect key="frame" x="0.0" y="38" width="568" height="5"/>
-                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <font key="titleFont" metaFont="system"/>
-                </box>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Ab2-7z-caP">
-                    <rect key="frame" x="536" y="8" width="24" height="24"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="Ab2-7z-caP" secondAttribute="height" multiplier="1:1" id="WlU-Mv-yGk"/>
-                        <constraint firstAttribute="height" constant="24" id="d2d-Td-yha"/>
-                    </constraints>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="CNL-A5-xoa"/>
-                </imageView>
-                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
-                    <rect key="frame" x="8" y="8" width="520" height="24"/>
-                    <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
-                        <rect key="frame" x="0.0" y="0.0" width="520" height="24"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textView drawsBackground="NO" findStyle="bar" incrementalSearchingEnabled="YES" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV">
+                <visualEffectView blendingMode="withinWindow" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
+                    <rect key="frame" x="0.0" y="0.0" width="568" height="40"/>
+                    <subviews>
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Ab2-7z-caP">
+                            <rect key="frame" x="536" y="8" width="24" height="24"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="Ab2-7z-caP" secondAttribute="height" multiplier="1:1" id="WlU-Mv-yGk"/>
+                                <constraint firstAttribute="height" constant="24" id="d2d-Td-yha"/>
+                            </constraints>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="CNL-A5-xoa"/>
+                        </imageView>
+                        <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
+                            <rect key="frame" x="8" y="8" width="520" height="24"/>
+                            <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
                                 <rect key="frame" x="0.0" y="0.0" width="520" height="24"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <subviews>
+                                    <textView drawsBackground="NO" findStyle="bar" incrementalSearchingEnabled="YES" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV">
+                                        <rect key="frame" x="0.0" y="0.0" width="520" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <size key="minSize" width="520" height="24"/>
+                                        <size key="maxSize" width="552" height="10000000"/>
+                                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <size key="minSize" width="520" height="24"/>
+                                        <size key="maxSize" width="552" height="10000000"/>
+                                    </textView>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <size key="minSize" width="520" height="24"/>
-                                <size key="maxSize" width="552" height="10000000"/>
-                                <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                <size key="minSize" width="520" height="24"/>
-                                <size key="maxSize" width="552" height="10000000"/>
-                            </textView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="fv6-Li-TQq">
-                        <rect key="frame" x="-100" y="-100" width="87" height="18"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </scroller>
-                    <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="glu-WV-IDk">
-                        <rect key="frame" x="504" y="0.0" width="16" height="24"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </scroller>
-                </scrollView>
+                            </clipView>
+                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="fv6-Li-TQq">
+                                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                            <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="glu-WV-IDk">
+                                <rect key="frame" x="504" y="0.0" width="16" height="24"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                        </scrollView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="Ab2-7z-caP" firstAttribute="leading" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="0Eg-4V-lrM"/>
+                        <constraint firstAttribute="trailing" secondItem="Ab2-7z-caP" secondAttribute="trailing" constant="8" id="80e-ni-GbZ"/>
+                        <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="Ab2-7z-caP" secondAttribute="top" id="LtJ-GL-kum"/>
+                        <constraint firstItem="61a-19-CQC" firstAttribute="bottom" secondItem="Ab2-7z-caP" secondAttribute="bottom" id="Uu7-IT-SPU"/>
+                        <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" constant="8" id="kNh-UA-vLQ"/>
+                        <constraint firstItem="Ab2-7z-caP" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="p1R-YE-6mn"/>
+                        <constraint firstAttribute="bottom" secondItem="Ab2-7z-caP" secondAttribute="bottom" constant="8" id="tmS-3e-lVX"/>
+                    </constraints>
+                </visualEffectView>
             </subviews>
             <constraints>
-                <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="MlJ-gQ-qkl" secondAttribute="bottom" constant="8" id="38s-F8-Xds"/>
+                <constraint firstAttribute="bottom" secondItem="yMT-fg-2gH" secondAttribute="bottom" id="2SP-oZ-2IZ"/>
                 <constraint firstItem="yMT-fg-2gH" firstAttribute="top" secondItem="V7l-JF-KwK" secondAttribute="top" id="87O-PN-FWo"/>
+                <constraint firstAttribute="trailing" secondItem="eI1-ks-Z3P" secondAttribute="trailing" id="98A-4e-gdI"/>
                 <constraint firstItem="yMT-fg-2gH" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" id="9so-cq-mbb"/>
-                <constraint firstItem="MlJ-gQ-qkl" firstAttribute="top" secondItem="yMT-fg-2gH" secondAttribute="bottom" id="MM7-Nx-baP"/>
-                <constraint firstItem="MlJ-gQ-qkl" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" id="OLQ-lg-8aB"/>
-                <constraint firstItem="Ab2-7z-caP" firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" id="PKn-TN-Fzi"/>
                 <constraint firstAttribute="trailing" secondItem="yMT-fg-2gH" secondAttribute="trailing" id="SBd-p2-UMi"/>
-                <constraint firstAttribute="trailing" secondItem="Ab2-7z-caP" secondAttribute="trailing" constant="8" id="Sb4-je-IzH"/>
-                <constraint firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" constant="8" id="XSb-KR-Pbe"/>
-                <constraint firstItem="Ab2-7z-caP" firstAttribute="leading" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="cpR-JS-7rV"/>
-                <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="Ab2-7z-caP" secondAttribute="top" id="nLT-bu-njq"/>
-                <constraint firstAttribute="trailing" secondItem="MlJ-gQ-qkl" secondAttribute="trailing" id="tfK-yG-qdb"/>
-                <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" constant="8" id="yCW-Fj-xlk"/>
+                <constraint firstAttribute="bottom" secondItem="eI1-ks-Z3P" secondAttribute="bottom" id="UlG-Xv-nOY"/>
+                <constraint firstItem="eI1-ks-Z3P" firstAttribute="leading" secondItem="V7l-JF-KwK" secondAttribute="leading" id="ad6-HK-V9m"/>
             </constraints>
             <point key="canvasLocation" x="139" y="168.5"/>
         </view>
@@ -93,47 +95,9 @@
                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
             </textFieldCell>
-            <point key="canvasLocation" x="667" y="537"/>
+            <point key="canvasLocation" x="139" y="417"/>
         </textField>
-        <view wantsLayer="YES" focusRingType="none" id="NtL-HB-vJs">
-            <rect key="frame" x="0.0" y="0.0" width="304" height="57"/>
-            <autoresizingMask key="autoresizingMask"/>
-            <subviews>
-                <segmentedControl wantsLayer="YES" verticalHuggingPriority="750" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tvh-FQ-tna">
-                    <rect key="frame" x="2" y="30" width="296" height="24"/>
-                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="rL6-Dw-gZy">
-                        <font key="font" metaFont="system"/>
-                        <segments>
-                            <segment label="Photo" image="NSFlowViewTemplate" width="101"/>
-                            <segment label="Sticker" image="NSQuickLookTemplate" selected="YES" tag="1"/>
-                            <segment label="Camera" image="NSIChatTheaterTemplate" width="101"/>
-                        </segments>
-                    </segmentedCell>
-                </segmentedControl>
-                <searchField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Swj-Tf-yJb">
-                    <rect key="frame" x="4" y="6" width="292" height="22"/>
-                    <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" sendsWholeSearchString="YES" maximumRecents="20" id="nyM-2C-ByS">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </searchFieldCell>
-                </searchField>
-            </subviews>
-            <constraints>
-                <constraint firstItem="Swj-Tf-yJb" firstAttribute="leading" secondItem="Tvh-FQ-tna" secondAttribute="leading" id="2dr-eW-ADl"/>
-                <constraint firstItem="Tvh-FQ-tna" firstAttribute="leading" secondItem="NtL-HB-vJs" secondAttribute="leading" constant="4" id="72U-UA-idy"/>
-                <constraint firstItem="Swj-Tf-yJb" firstAttribute="top" secondItem="Tvh-FQ-tna" secondAttribute="bottom" constant="4" id="8tm-ta-jfW"/>
-                <constraint firstItem="Tvh-FQ-tna" firstAttribute="centerY" secondItem="NtL-HB-vJs" secondAttribute="centerY" constant="-14" id="EUC-VE-6pr"/>
-                <constraint firstItem="Swj-Tf-yJb" firstAttribute="trailing" secondItem="Tvh-FQ-tna" secondAttribute="trailing" id="Ojw-ba-39e"/>
-                <constraint firstItem="Tvh-FQ-tna" firstAttribute="top" secondItem="NtL-HB-vJs" secondAttribute="top" constant="4" id="jwg-gJ-Ho0"/>
-            </constraints>
-            <point key="canvasLocation" x="354" y="555"/>
-        </view>
-        <viewController id="H32-H4-UYo" userLabel="Popover View Controller">
-            <connections>
-                <outlet property="view" destination="NtL-HB-vJs" id="0QS-JY-evw"/>
-            </connections>
-        </viewController>
+        <viewController id="H32-H4-UYo" userLabel="Popover View Controller"/>
         <popover behavior="t" id="Lof-n5-PGH">
             <connections>
                 <outlet property="contentViewController" destination="H32-H4-UYo" id="q8B-R7-vC5"/>
@@ -141,9 +105,6 @@
         </popover>
     </objects>
     <resources>
-        <image name="NSFlowViewTemplate" width="18" height="10"/>
-        <image name="NSIChatTheaterTemplate" width="15" height="13"/>
-        <image name="NSQuickLookTemplate" width="19" height="12"/>
         <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>

@@ -71,7 +71,7 @@ public class ListViewCell: NSTableCellView {
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
-public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExtendedTableViewDelegate {
+public class ListView: NSView {
 	private var scrollView: NSScrollView!
 	internal var tableView: NSExtendedTableView! // FIXME: Should be private...
 	
@@ -188,7 +188,7 @@ public class ListView: NSView, NSTableViewDataSource, NSTableViewDelegate, NSExt
 }
 
 // Essential Support
-public extension ListView {
+extension ListView: NSExtendedTableViewDelegate {
 	
 	@objc(numberOfRowsInTableView:)
 	public func numberOfRows(in tableView: NSTableView) -> Int {
@@ -253,7 +253,7 @@ public extension ListView {
 }
 
 // Selection Support
-public extension ListView {
+extension ListView /*: NSExtendedTableViewDelegate*/ {
 	
 	@objc(selectionShouldChangeInTableView:)
 	public func selectionShouldChange(in tableView: NSTableView) -> Bool {
@@ -283,7 +283,7 @@ public extension ListView {
 }
 
 // Drag & Drop Support
-public extension ListView {
+extension ListView /*: NSExtendedTableViewDelegate*/ {
 	
 	public func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
 		return self.pasteboardProvider?(row: row)
@@ -319,7 +319,7 @@ public extension ListView {
 }
 
 // Support for per-row and multi-select menus.
-@objc public protocol NSExtendedTableViewDelegate {
+@objc public protocol NSExtendedTableViewDelegate: NSTableViewDataSource, NSTableViewDelegate {
 	@objc(tableView:menuForRows:)
 	func tableView(_: NSTableView, menuForRows: IndexSet) -> NSMenu?
 	@objc(tableView:didClickRow:)

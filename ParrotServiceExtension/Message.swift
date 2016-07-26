@@ -24,6 +24,7 @@ public protocol Message: EventStreamItem {
 
 public protocol EventStreamItem {
 	//var identifier: String { get }
+	//var sender: Person? { get } // if nil, global event
 	var timestamp: Date { get }
 }
 

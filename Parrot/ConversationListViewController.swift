@@ -25,7 +25,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		case descending
 	}
 	
-	var wallclock: Timer!
+	var wallclock: DispatchSourceTimer? = nil
 	var userList: Directory?
 	
 	static func display() -> WindowTransitionAnimator {
@@ -78,7 +78,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	}
 	
 	deinit {
-		self.wallclock?.invalidate()
+		self.wallclock?.cancel()
 	}
 	
 	override func loadView() {
@@ -126,13 +126,23 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		self.wallclock = DispatchSource.timer(flags: [], queue: DispatchQueue.main)
+		self.wallclock?.scheduleRepeating(wallDeadline: .now() + Date().nearestMinute().timeIntervalSinceNow, interval: 60.0, leeway: .seconds(3))
+		self.wallclock?.setEventHandler {
+			log.verbose("Updated visible timestamp for Conversations.")
+			for row in self.listView.visibleRows {
+				if let cell = self.listView.tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ConversationView {
+					cell.updateTimestamp()
+				}
+			}
+		}
+		
 		self.listView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.listView.selectionProvider = { row in
 			guard row >= 0 else { return }
 			_ = MessageListViewController.display(from: self, conversation: self.sortedConversations[row])
 			DispatchQueue.main.after(when: .now() + .milliseconds(150)) {
-				let tb = self.listView.tableView.animator()
-				tb.selectRowIndexes(IndexSet(), byExtendingSelection: false)
+				self.listView.tableView.animator().selectRowIndexes(IndexSet(), byExtendingSelection: false)
 			}
 		}
 		self.listView.rowActionProvider = { row, edge in
@@ -186,7 +196,8 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	
 	override func viewWillAppear() {
 		super.viewWillAppear()
-		self.wallclock = Timer.scheduledWallclock(self, selector: #selector(_updateWallclock(_:)))
+		self.wallclock?.resume()
+		
 		ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
 			self.view.window?.appearance = appearance
 		}
@@ -194,15 +205,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	
 	override func viewDidDisappear() {
 		ParrotAppearance.unregisterAppearanceListener(observer: self)
-	}
-	
-	func _updateWallclock(_ timer: Timer) {
-		log.verbose("Updated visible timestamp for Conversations.")
-		for row in self.listView.visibleRows {
-			if let cell = self.listView.tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ConversationView {
-				cell.updateTimestamp()
-			}
-		}
+		self.wallclock?.suspend()
 	}
 	
 	

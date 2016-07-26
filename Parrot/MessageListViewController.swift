@@ -84,7 +84,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			} else if cls is LinkPreviewType {
 				return LinkPreviewCell.self
 			} else {
-				log.debug("\(row) GOT NOTHING \(cls)")
+				log.debug("\(row) OMG GOT NOTHING \(cls)")
 				return ListViewCell.self
 			}
 		}
@@ -106,7 +106,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
     }
 
 	override func viewWillAppear() {
-		//self.messagesView.insets = EdgeInsets(top: -(64.0 + 22.0), left: 0, bottom: 64.0, right: 0)
+		self.messagesView.insets = EdgeInsets(top: 22.0, left: 0, bottom: 40.0, right: 0)
 		_note = NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidBecomeKey,
 		                                                 object: self.window, queue: nil) { a in
 			self.windowDidBecomeKey(nil)

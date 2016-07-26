@@ -57,17 +57,17 @@ public final class Channel : NSObject {
 					if let length_str = lengths.first { //length_str.endIndex.advancedBy(n: -1)
 						let length_str_without_newline = length_str.substring(to: length_str.index(length_str.endIndex, offsetBy: -1))
 						if let length = Int(length_str_without_newline) {
-							if (decodedUtf16LengthInChars - length_str.characters.count) < length {
+							if (decodedUtf16LengthInChars - length_str.utf16.count) < length {
 								break
 							}
 							
-							let subData = bufUTF16.subdata(in: NSMakeRange(length_str.characters.count * 2, length * 2).toRange()!)
+							let subData = bufUTF16.subdata(in: NSMakeRange(length_str.utf16.count * 2, length * 2).toRange()!)
 							let submission = NSString(data: subData, encoding: String.Encoding.utf16BigEndian.rawValue)! as String
 							submissions.append(submission)
 							
 							let submissionAsUTF8 = submission.data(using: String.Encoding.utf8)!
 							
-							let removeRange = NSMakeRange(0, (length_str.characters.count + submissionAsUTF8.count))
+							let removeRange = NSMakeRange(0, (length_str.utf16.count + submissionAsUTF8.count))
 							buf.replaceBytes(in: removeRange, withBytes: nil, length: 0)
 						} else {
 							break

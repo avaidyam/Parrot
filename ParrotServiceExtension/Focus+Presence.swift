@@ -1,10 +1,10 @@
 import Foundation
 
-public enum TypingProgress {
-	case none
-	case started
-	case paused
-	case stopped
+public enum TypingProgress { // FIXME: FocusType
+	case away
+	case here
+	case typing
+	case enteredText
 }
 
 /// A Person's presence in the Service can contain information such as

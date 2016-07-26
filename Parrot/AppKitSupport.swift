@@ -36,22 +36,6 @@ public extension NSNib {
 	}
 }
 
-public extension Timer {
-	
-	/// Trigger a notification every minute, starting from the next minute.
-	public class func scheduledWallclock(_ target: AnyObject, selector: Selector) -> Timer {
-		let units: Calendar.Unit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
-		var comps = Calendar.current().components(units, from: Date())
-		comps.minute = (comps.minute ?? 0) + 1; comps.second = 0
-		let date = Calendar.current().date(from: comps)!
-		let timer = Timer(fireAt: date, interval: 60, target: target,
-		                  selector: selector, userInfo: nil, repeats: true)
-		timer.tolerance = 2 /* We can delay the wallclock at most 2sec. */
-		RunLoop.main().add(timer, forMode: RunLoopMode.defaultRunLoopMode)
-		return timer
-	}
-}
-
 /// from @jack205: https://gist.github.com/jacks205/4a77fb1703632eb9ae79
 public extension Date {
 	public func relativeString(numeric: Bool = false, seconds: Bool = false) -> String {
@@ -105,6 +89,12 @@ public extension Date {
 	
 	public func fullString() -> String {
 		return Date.formatter.string(from: self)
+	}
+	
+	public func nearestMinute() -> Date {
+		let c = Calendar.current()
+		let next = c.component(.minute, from: self) + 1
+		return c.nextDate(after: self, matching: .minute, value: next, options: .matchStrictly)!
 	}
 }
 

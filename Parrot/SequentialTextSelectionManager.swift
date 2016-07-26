@@ -99,7 +99,7 @@ class SequentialTextSelectionManager: NSResponder {
 		
 		if  let textView = view as? NSTextView,
 			let identifier = textView.selectionIdentifier
-			where textView.isSelectable {
+			where textView.isSelectable() {
 			
 			return (self.textViews[identifier] != nil) ? textView : nil
 		} else { return nil }

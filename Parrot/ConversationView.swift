@@ -35,11 +35,6 @@ public class ConversationView: ListViewCell {
 			self.timeLabel?.stringValue = time.relativeString()
 			self.timeLabel?.toolTip = "\(time.fullString())"
 			
-			/*
-			if let t = self.textLabel {
-				let weight = conversation.unreadCount > 0 ? NSFontWeightBold: NSFontWeightRegular
-				t.font = NSFont.systemFont(ofSize: t.font!.pointSize, weight: weight)
-			}*/
 			if conversation.unreadCount > 0 {
 				self.timeLabel!.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
 			}
