@@ -36,6 +36,8 @@ public extension NSNib {
 	}
 }
 
+extension NSWindowController: NSWindowDelegate {}
+
 /// from @jack205: https://gist.github.com/jacks205/4a77fb1703632eb9ae79
 public extension Date {
 	public func relativeString(numeric: Bool = false, seconds: Bool = false) -> String {
@@ -266,6 +268,32 @@ public extension NSFont {
 /// A "typealias" for the traditional NSApplication delegation.
 public class NSApplicationController: NSObject, NSApplicationDelegate {}
 
+/// For Interface Builder to not screw with NSTextView embedding.
+public class AntiScrollView: NSScrollView {
+	public override init(frame frameRect: NSRect) {
+		super.init(frame: frameRect)
+		hideScrollers()
+	}
+	public required init?(coder: NSCoder) {
+		super.init(coder: coder)
+		hideScrollers()
+	}
+	private func hideScrollers() {
+		hasHorizontalScroller = false
+		hasVerticalScroller = false
+	}
+	public override func scrollWheel(_ theEvent: NSEvent) {
+		self.nextResponder?.scrollWheel(theEvent)
+	}
+	public override var intrinsicContentSize: NSSize {
+		return self.documentView?.intrinsicContentSize ?? NSSize(width: -1, height: -1)
+	}
+}
+
+public class AntiClipView: NSClipView {
+	public override var isFlipped: Bool { return true }
+}
+
 /// Can hold any (including non-object) type as an object type.
 public class Wrapper<T> {
 	public let element: T
@@ -273,3 +301,35 @@ public class Wrapper<T> {
 		self.element = value
 	}
 }
+
+public final class DetailSegue: NSStoryboardSegue {
+	public override func perform() {
+		guard	let source = self.sourceController as? NSViewController,
+			let destination = self.destinationController as? NSViewController,
+			let splitView = source.parent as? NSSplitViewController
+			else { return }
+		
+		let splitItem = NSSplitViewItem(viewController: destination)
+		
+		// Remove the last SplitViewItem before adding the next one.
+		if splitView.childViewControllers.count > 1 {
+			splitView.removeSplitViewItem(splitView.splitViewItems.last!)
+		}
+		splitView.addSplitViewItem(splitItem)
+	}
+}
+
+// very weird and experimental idea.
+public final class MenuSegue: NSStoryboardSegue {
+	public override func perform() {
+		guard	let source = self.sourceController as? NSViewController,
+			let destination = self.destinationController as? NSViewController
+			else { return }
+		let menu = NSMenu(title: destination.title ?? "")
+		let item = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+		item.view = destination.view
+		
+		menu.popUp(positioning: item, at: .zero, in: source.view)
+	}
+}
+

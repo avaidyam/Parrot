@@ -22,7 +22,7 @@ private func _getLinkCached(_ key: String) throws -> LinkPreviewType {
 	}
 }
 
-public class MessageListViewController: NSWindowController, ConversationDelegate, NSWindowDelegate, NSTextViewDelegate, NSTextDelegate {
+public class MessageListViewController: NSWindowController, NSTextViewDelegate, ConversationDelegate {
 	
 	@IBOutlet var messagesView: ListView!
     @IBOutlet var messageTextField: NSTextView!
@@ -42,27 +42,6 @@ public class MessageListViewController: NSWindowController, ConversationDelegate
 		p.behavior = .applicationDefined
 		return p
 	}()
-	
-	/*
-	static func display(from: NSViewController, conversation: ParrotServiceExtension.Conversation) -> MessageListViewController {
-		let controller = MessageListViewController(nibName: "MessageListViewController", bundle: nil)!
-		controller.conversation = (conversation as! IConversation) // FIXME FORCE DOWN-CAST TO HANGOUTS
-		from.presentViewController(controller, animator: WindowTransitionAnimator { w in
-			w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
-			w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
-			w.appearance = ParrotAppearance.current()
-			w.enableRealTitlebarVibrancy()
-			
-			// Because autosave is miserable.
-			w.setFrameAutosaveName("\(conversation.identifier)")
-			if w.frame == .zero {
-				w.setFrame(NSRect(x: 0, y: 0, width: 480, height: 320), display: false, animate: true)
-				w.center()
-			}
-		})
-		return controller
-	}
-	*/
 	
 	public override func loadWindow() {
 		super.loadWindow()

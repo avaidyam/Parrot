@@ -9,12 +9,7 @@ import protocol ParrotServiceExtension.Conversation
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.serial, .qosUserInteractive])
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", attributes: [.serial, .qosUserInitiated])
 
-public class ConversationListViewController: NSWindowController, NSWindowDelegate, ConversationListDelegate {
-	
-	@IBOutlet var listView: ListView!
-	@IBOutlet var indicator: NSProgressIndicator!
-	
-	private var childConversations = [MessageListViewController]()
+public class ConversationListViewController: NSWindowController, ConversationListDelegate {
 	
 	// How to sort the conversation list: by recency or name, or manually.
 	enum SortMode {
@@ -26,6 +21,11 @@ public class ConversationListViewController: NSWindowController, NSWindowDelegat
 		case ascending
 		case descending
 	}
+	
+	@IBOutlet var listView: ListView!
+	@IBOutlet var indicator: NSProgressIndicator!
+	
+	private var childConversations = [MessageListViewController]()
 	
 	var wallclock: DispatchSourceTimer? = nil
 	var userList: Directory?

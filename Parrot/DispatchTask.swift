@@ -43,3 +43,32 @@ public final class DispatchTask<Result> {
 	*/
 	
 }
+
+/*
+public class DispatchOperation<Input, Output, Error: ErrorProtocol> {
+	/* [.barrier, .detached, .assignCurrentContext, .noQoS, .inheritQoS, .enforceQoS] */
+	
+	private var workItem: DispatchWorkItem
+	private var group: DispatchGroup
+	
+	private var input: Input! = nil
+	private var output: Output! = nil
+	private var error: Error! = nil
+	
+	public init(qos: DispatchQoS = .default, block: () -> (Output)) {
+		self.group = DispatchGroup()
+		self.workItem = DispatchWorkItem(group: self.group, qos: qos, flags: [.inheritQoS, .enforceQoS]) {
+			block()
+		}
+	}
+	
+	private init(parent: DispatchOperation, block: () -> (Output)) {
+		self.group = parent.group
+		self.workItem = DispatchWorkItem(group: parent.group, qos: .userInitiated, flags: [.inheritQoS, .enforceQoS]) {
+			block()
+		}
+		parent.workItem.notify(queue: DispatchQueue.main, execute: self.workItem)
+	}
+}
+*/
+
