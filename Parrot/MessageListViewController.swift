@@ -22,12 +22,14 @@ private func _getLinkCached(_ key: String) throws -> LinkPreviewType {
 	}
 }
 
-class MessageListViewController: NSViewController, ConversationDelegate, NSTextViewDelegate, NSTextDelegate {
+public class MessageListViewController: NSWindowController, ConversationDelegate, NSWindowDelegate, NSTextViewDelegate, NSTextDelegate {
 	
 	@IBOutlet var messagesView: ListView!
     @IBOutlet var messageTextField: NSTextView!
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSImageView!
+	
+	public var parentController: ConversationListViewController? = nil
 	
 	var _previews = [String: [LinkPreviewType]]()
 	var _focusRow = -1
@@ -41,6 +43,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		return p
 	}()
 	
+	/*
 	static func display(from: NSViewController, conversation: ParrotServiceExtension.Conversation) -> MessageListViewController {
 		let controller = MessageListViewController(nibName: "MessageListViewController", bundle: nil)!
 		controller.conversation = (conversation as! IConversation) // FIXME FORCE DOWN-CAST TO HANGOUTS
@@ -59,9 +62,13 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		})
 		return controller
 	}
+	*/
 	
-	override func loadView() {
-		super.loadView()
+	public override func loadWindow() {
+		super.loadWindow()
+		self.window?.appearance = ParrotAppearance.current()
+		self.window?.enableRealTitlebarVibrancy()
+		self.messagesView.insets = EdgeInsets(top: 22.0, left: 0, bottom: 40.0, right: 0)
 		
 		self.messagesView.register(nibName: "MessageView", forClass: MessageView.self)
 		self.messagesView.register(nibName: "FocusCell", forClass: FocusCell.self)
@@ -91,10 +98,6 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		
 		self.messagesView.sizeClass = .dynamic
 		self.messageTextField.delegate = self
-	}
-	
-    override func viewDidLoad() {
-        super.viewDidLoad()
 		
 		if let me = self.conversation?.client.userList.me {
 			if let photo = self.imageView, let layer = photo.layer {
@@ -104,9 +107,11 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			self.imageView.image = fetchImage(user: me as! User, conversation: self.conversation!)
 		}
     }
-
-	override func viewWillAppear() {
-		self.messagesView.insets = EdgeInsets(top: 22.0, left: 0, bottom: 40.0, right: 0)
+	
+	public override func showWindow(_ sender: AnyObject?) {
+		super.showWindow(nil)
+		
+		/*
 		_note = NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidBecomeKey,
 		                                                 object: self.window, queue: nil) { a in
 			self.windowDidBecomeKey(nil)
@@ -121,10 +126,11 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
 		}
 		self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
+		*/
 		
 		// Set up dark/light notifications.
 		ParrotAppearance.registerAppearanceListener(observer: self, invokeImmediately: true) { appearance in
-			self.view.window?.appearance = appearance
+			self.window?.appearance = appearance
 			
 			// NSTextView doesn't automatically change its text color when the
 			// backing view's appearance changes, so we need to set it each time.
@@ -132,7 +138,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			guard let text = self.messageTextField else { return }
 			text.layer?.masksToBounds = true
 			text.layer?.cornerRadius = 2.0
-			text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance).cgColor
+			text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.window!.effectiveAppearance).cgColor
 			
 			text.textColor = NSColor.labelColor()
 			text.font = NSFont.systemFont(ofSize: 12.0)
@@ -146,12 +152,12 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 				NSUnderlineStyleAttributeName: 1,
 			]
 			text.selectedTextAttributes = [
-				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.effectiveAppearance),
+				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.window!.effectiveAppearance),
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
 			text.markedTextAttributes = [
-				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.effectiveAppearance),
+				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.window!.effectiveAppearance),
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
@@ -162,7 +168,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		}
     }
 	
-	override func viewDidDisappear() {
+	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterAppearanceListener(observer: self)
 	}
 	
@@ -193,7 +199,8 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 					}
 				}
 			}
-			self.title = self.conversation?.name
+			self.window?.title = self.conversation?.name ?? ""
+			self.window?.setFrameAutosaveName("\(self.conversation?.identifier)")
 			
 			
 			
@@ -211,11 +218,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		}
 	}
 	
-	var window: NSWindow? {
-		return self.view.window
-	}
-	
-    func conversation(_ conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
+    public func conversation(_ conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
         if user.isSelf || self.messageTextField?.window == nil {
             return
         }
@@ -236,7 +239,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		}
     }
 
-	func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
+	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
 		//self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
 		self.messagesView.update()
 		
@@ -272,22 +275,22 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
         }
     }
 
-    func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {
+    public func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {
 
     }
 
-	func conversationDidUpdateEvents(_ conversation: IConversation) {
+	public func conversationDidUpdateEvents(_ conversation: IConversation) {
 		//self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
 		self.messagesView.update()
     }
 
-    func conversationDidUpdate(conversation: IConversation) {
+    public func conversationDidUpdate(conversation: IConversation) {
         
     }
 	
     // MARK: Window notifications
 
-    func windowDidBecomeKey(_ sender: AnyObject?) {
+	public func windowDidBecomeKey(_ notification: Notification) {
         if let conversation = conversation {
 			UserNotificationCenter.remove(byIdentifier: conversation.id)
         }
@@ -326,10 +329,10 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			}*/
         }
     }
-
+	
     // MARK: NSTextFieldDelegate
     var lastTypingTimestamp: Date?
-	func textDidChange(_ obj: Notification) {
+	public func textDidChange(_ obj: Notification) {
         if messageTextField.string == "" {
             return
         }
@@ -351,7 +354,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
     }
 	
 	// If the user presses ENTER and doesn't hold SHIFT, send the message.
-	func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+	public func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		switch commandSelector {
 			
 		case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
@@ -363,7 +366,7 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 		}; return true
 	}
 	
-	func textView(_ textView: NSTextView, completions words: [String], forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>?) -> [String] {
+	public func textView(_ textView: NSTextView, completions words: [String], forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>?) -> [String] {
 		return ["this", "is", "a", "test"]
 	}
 	
@@ -371,6 +374,11 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 	//func textViewDidChangeText?
 	
 	func sendCurrentMessage() {
+		guard let text = messageTextField.string where text.characters.count > 0 else { return }
+		self.messageTextField.string = ""
+		self.parentController?.sendMessage(text, self.conversation!)
+		
+		/*
 		func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
 			return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
 		}
@@ -395,5 +403,6 @@ class MessageListViewController: NSViewController, ConversationDelegate, NSTextV
 			log.debug("message sent")
 		}
 		sendQ.async(execute: operation)
+		*/
 	}
 }

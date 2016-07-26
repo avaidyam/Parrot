@@ -28,7 +28,8 @@ public class ServiceManager: NSApplicationController {
 			
 			// Instantiate storyboard and controller and begin the UI from here.
 			DispatchQueue.main.async {
-				self.windowController = ConversationListViewController.display()
+				self.windowController = ConversationListViewController(windowNibName: "ConversationListViewController")
+				self.windowController?.showWindow(nil)
 			}
 		}
 	}

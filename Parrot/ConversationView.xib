@@ -74,6 +74,7 @@
             <connections>
                 <outlet property="nameLabel" destination="Bul-Yb-hpg" id="VVQ-KB-7Wy"/>
                 <outlet property="photoView" destination="N7p-DV-XCL" id="6Pw-6n-SCK"/>
+                <outlet property="separator" destination="yWE-Nd-iCe" id="Cti-WH-pKc"/>
                 <outlet property="textLabel" destination="Nw5-Um-35D" id="b9L-cF-4Cb"/>
                 <outlet property="timeLabel" destination="98f-We-Vvp" id="Mw8-Ct-2Fw"/>
             </connections>

@@ -9,10 +9,12 @@ import protocol ParrotServiceExtension.Conversation
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.serial, .qosUserInteractive])
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", attributes: [.serial, .qosUserInitiated])
 
-class ConversationListViewController: NSViewController, ConversationListDelegate {
+public class ConversationListViewController: NSWindowController, NSWindowDelegate, ConversationListDelegate {
 	
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
+	
+	private var childConversations = [MessageListViewController]()
 	
 	// How to sort the conversation list: by recency or name, or manually.
 	enum SortMode {
@@ -27,28 +29,6 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 	
 	var wallclock: DispatchSourceTimer? = nil
 	var userList: Directory?
-	
-	static func display() -> WindowTransitionAnimator {
-		let vc = ConversationListViewController(nibName: "ConversationListViewController", bundle: nil)
-		
-		// The .titlebar material has no transluency in dark appearances, and
-		// has a standard window gradient in light ones.
-		let trans = WindowTransitionAnimator { w in
-			w.styleMask = [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView]
-			w.collectionBehavior = [.managed, .participatesInCycle, .fullScreenPrimary, .fullScreenAllowsTiling]
-			w.appearance = ParrotAppearance.current()
-			w.enableRealTitlebarVibrancy()
-			
-			// Because autosave is miserable.
-			w.setFrameAutosaveName("Conversations")
-			if w.frame == .zero {
-				w.setFrame(NSRect(x: 0, y: 0, width: 386, height: 512), display: false, animate: true)
-				w.center()
-			}
-		}
-		trans.displayViewController(vc!)
-		return trans
-	}
 	
 	var conversationList: ParrotServiceExtension.ConversationList? {
 		didSet {
@@ -81,9 +61,10 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		self.wallclock?.cancel()
 	}
 	
-	override func loadView() {
-		super.loadView()
-		self.title = "Parrot" // weird stuff
+	public override func loadWindow() {
+		super.loadWindow()
+		self.window?.appearance = ParrotAppearance.current()
+		self.window?.enableRealTitlebarVibrancy()
 		self.indicator.startAnimation(nil)
 		
 		self.listView.dataSourceProvider = { self.sortedConversations.map { $0 as Any } }
@@ -121,10 +102,6 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 			self.conversation?.sendMessage(segments: txt)
 			*/
 		}
-	}
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
 		
 		self.wallclock = DispatchSource.timer(flags: [], queue: DispatchQueue.main)
 		self.wallclock?.scheduleRepeating(wallDeadline: .now() + Date().nearestMinute().timeIntervalSinceNow, interval: 60.0, leeway: .seconds(3))
@@ -137,10 +114,15 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 			}
 		}
 		
-		self.listView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
+		//self.listView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
 		self.listView.selectionProvider = { row in
 			guard row >= 0 else { return }
-			_ = MessageListViewController.display(from: self, conversation: self.sortedConversations[row])
+			let wc = MessageListViewController(windowNibName: "MessageListViewController")
+			self.childConversations.append(wc)
+			wc.conversation = (self.sortedConversations[row] as! IConversation)
+			wc.parentController = self
+			wc.showWindow(nil)
+			//_ = MessageListViewController.display(from: self, conversation: self.sortedConversations[row])
 			DispatchQueue.main.after(when: .now() + .milliseconds(150)) {
 				self.listView.tableView.animator().selectRowIndexes(IndexSet(), byExtendingSelection: false)
 			}
@@ -194,27 +176,55 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		}
 	}
 	
-	override func viewWillAppear() {
-		super.viewWillAppear()
+	public override func showWindow(_ sender: AnyObject?) {
+		super.showWindow(sender)
 		self.wallclock?.resume()
 		
 		ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
-			self.view.window?.appearance = appearance
+			self.window?.appearance = appearance
 		}
 	}
 	
-	override func viewDidDisappear() {
+	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterAppearanceListener(observer: self)
 		self.wallclock?.suspend()
 	}
 	
+	// MARK - Conversations
+	
+	
+	func sendMessage(_ text: String, _ conversation: Conversation) {
+		func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
+			return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
+		}
+		
+		// Grab a local copy of the text and let the user continue.
+		guard text.characters.count > 0 else { return }
+		
+		// Create an operation to process the message and then send it.
+		let operation = DispatchWorkItem(qos: .userInteractive, flags: .enforceQoS) {
+			var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
+			emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
+			let txt = segmentsForInput(text, emojify: emojify)
+			
+			let s = DispatchSemaphore.mutex
+			(conversation as! IConversation).sendMessage(segments: txt) { s.signal() }
+			s.wait()
+		}
+		
+		// Send the operation to the serial send queue, and notify on completion.
+		operation.notify(queue: DispatchQueue.main) {
+			log.debug("message sent")
+		}
+		sendQ.async(execute: operation)
+	}
 	
 	
 	// MARK - Delegate
 	
 	
 	
-    func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {
+    public func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {
 		guard event is IChatMessageEvent else { return }
 		
 		// pls fix :(
@@ -226,13 +236,13 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
 		}
 	}
 	
-    func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatusTo status: TypingType) {}
-    func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
+    public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatusTo status: TypingType) {}
+    public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
 		log.info("Received watermark \(status)")
 	}
 	
 	/* TODO: Just update the row that is updated. */
-    func conversationList(didUpdate list: Hangouts.ConversationList) {
+    public func conversationList(didUpdate list: Hangouts.ConversationList) {
 		DispatchQueue.main.async {
 			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			self.listView.update()
@@ -242,7 +252,7 @@ class ConversationListViewController: NSViewController, ConversationListDelegate
     }
 	
 	/* TODO: Just update the row that is updated. */
-    func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
+    public func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
 		DispatchQueue.main.async {
 			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			self.listView.update()

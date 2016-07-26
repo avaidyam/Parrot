@@ -7,6 +7,7 @@ public class ConversationView: ListViewCell {
 	@IBOutlet private var nameLabel: NSTextField?
 	@IBOutlet private var textLabel: NSTextField?
 	@IBOutlet private var timeLabel: NSTextField?
+	@IBOutlet private var separator: NSView?
 	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var cellValue: Any? {
@@ -48,8 +49,12 @@ public class ConversationView: ListViewCell {
 	}
 	
 	// Return a complete dragging component for this ConversationView.
+	// Note that we hide the separator and show it again after snapshot.
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
-		return [self.draggingComponent("Person")]
+		self.separator?.isHidden = true
+		let ret = [self.draggingComponent("Person")]
+		self.separator?.isHidden = false
+		return ret
 	}
 	
 	// Allows the photo view's circle crop to dynamically match size.

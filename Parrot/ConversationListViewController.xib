@@ -9,31 +9,40 @@
             <connections>
                 <outlet property="indicator" destination="wFw-qM-P7g" id="5QQ-dh-FWD"/>
                 <outlet property="listView" destination="9lt-ER-yzx" id="aVb-sA-car"/>
-                <outlet property="view" destination="W9N-ri-IwB" id="coL-L6-az9"/>
+                <outlet property="window" destination="ToM-qa-J2a" id="uCu-mM-pgC"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="W9N-ri-IwB">
-            <rect key="frame" x="0.0" y="0.0" width="268" height="304"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <subviews>
-                <view wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9lt-ER-yzx" userLabel="Conversation List" customClass="ListView" customModule="Parrot" customModuleProvider="target">
-                    <rect key="frame" x="-1" y="2" width="270" height="300"/>
-                </view>
-                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="wFw-qM-P7g">
-                    <rect key="frame" x="118" y="136" width="32" height="32"/>
-                </progressIndicator>
-            </subviews>
-            <constraints>
-                <constraint firstItem="wFw-qM-P7g" firstAttribute="centerX" secondItem="W9N-ri-IwB" secondAttribute="centerX" id="FyJ-B4-Gvh"/>
-                <constraint firstItem="wFw-qM-P7g" firstAttribute="centerY" secondItem="W9N-ri-IwB" secondAttribute="centerY" id="L96-kW-sLv"/>
-                <constraint firstItem="9lt-ER-yzx" firstAttribute="top" secondItem="W9N-ri-IwB" secondAttribute="top" constant="2" id="S2o-Zi-XC0"/>
-                <constraint firstItem="9lt-ER-yzx" firstAttribute="leading" secondItem="W9N-ri-IwB" secondAttribute="leading" constant="-1" id="f2z-jq-EUr"/>
-                <constraint firstAttribute="bottom" secondItem="9lt-ER-yzx" secondAttribute="bottom" constant="2" id="fBW-9m-M7D"/>
-                <constraint firstAttribute="trailing" secondItem="9lt-ER-yzx" secondAttribute="trailing" constant="-1" id="tIR-r3-FJt"/>
-            </constraints>
-            <point key="canvasLocation" x="344" y="202"/>
-        </customView>
+        <window title="Parrot" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="documentWindow" frameAutosaveName="Conversations" tabbingMode="disallowed" id="ToM-qa-J2a">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
+            <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
+            <rect key="contentRect" x="163" y="205" width="276" height="574"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
+            <view key="contentView" id="pkY-JK-KNL">
+                <rect key="frame" x="0.0" y="0.0" width="276" height="574"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="wFw-qM-P7g">
+                        <rect key="frame" x="122" y="271" width="32" height="32"/>
+                    </progressIndicator>
+                    <view wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9lt-ER-yzx" userLabel="Conversation List" customClass="ListView" customModule="Parrot" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="276" height="574"/>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="9lt-ER-yzx" firstAttribute="leading" secondItem="pkY-JK-KNL" secondAttribute="leading" id="3FZ-en-Jio"/>
+                    <constraint firstAttribute="bottom" secondItem="9lt-ER-yzx" secondAttribute="bottom" id="9bs-yw-8cC"/>
+                    <constraint firstItem="wFw-qM-P7g" firstAttribute="centerX" secondItem="pkY-JK-KNL" secondAttribute="centerX" id="D5n-2I-jfe"/>
+                    <constraint firstItem="9lt-ER-yzx" firstAttribute="top" secondItem="pkY-JK-KNL" secondAttribute="top" id="PBX-vv-UhA"/>
+                    <constraint firstItem="wFw-qM-P7g" firstAttribute="centerY" secondItem="pkY-JK-KNL" secondAttribute="centerY" id="PGu-BM-ltt"/>
+                    <constraint firstAttribute="trailing" secondItem="9lt-ER-yzx" secondAttribute="trailing" id="dYK-zT-cxR"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="NyA-Uz-W8c"/>
+            </connections>
+            <point key="canvasLocation" x="235" y="382"/>
+        </window>
     </objects>
 </document>
