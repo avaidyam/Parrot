@@ -13,22 +13,26 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	
 	// How to sort the conversation list: by recency or name, or manually.
 	enum SortMode {
+		enum Direction {
+			case ascending
+			case descending
+		}
+		
 		case none
-		case recent
-		case name
-	}
-	enum SortDirection {
-		case ascending
-		case descending
+		case recent(Direction)
+		case name(Direction)
 	}
 	
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
 	
+	private var userList: Directory?
+	private var wallclock: DispatchSourceTimer? = nil
 	private var childConversations = [MessageListViewController]()
 	
-	var wallclock: DispatchSourceTimer? = nil
-	var userList: Directory?
+	deinit {
+		self.wallclock?.cancel()
+	}
 	
 	var conversationList: ParrotServiceExtension.ConversationList? {
 		didSet {
@@ -57,21 +61,18 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		return all!.sorted { $0.last_modified > $1.last_modified }.map { $0 as ParrotServiceExtension.Conversation }
 	}
 	
-	deinit {
-		self.wallclock?.cancel()
-	}
-	
 	public override func loadWindow() {
 		super.loadWindow()
 		self.window?.appearance = ParrotAppearance.current()
 		self.window?.enableRealTitlebarVibrancy()
+		self.window?.titleVisibility = .hidden
 		self.indicator.startAnimation(nil)
 		
 		self.listView.dataSourceProvider = { self.sortedConversations.map { $0 as Any } }
-		self.listView.register(nibName: "ConversationView", forClass: ConversationView.self)
+		self.listView.register(nibName: "ConversationCell", forClass: ConversationCell.self)
 		
 		self.listView.updateScrollDirection = .top
-		self.listView.viewClassProvider = { row in ConversationView.self }
+		self.listView.viewClassProvider = { row in ConversationCell.self }
 		
 		NotificationCenter.default().addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
 			let c = note.object as! Hangouts.Client
@@ -108,7 +109,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		self.wallclock?.setEventHandler {
 			log.verbose("Updated visible timestamp for Conversations.")
 			for row in self.listView.visibleRows {
-				if let cell = self.listView.tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ConversationView {
+				if let cell = self.listView.tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ConversationCell {
 					cell.updateTimestamp()
 				}
 			}
@@ -192,7 +193,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	
 	// MARK - Conversations
 	
-	
 	func sendMessage(_ text: String, _ conversation: Conversation) {
 		func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
 			return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
@@ -236,7 +236,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		}
 	}
 	
-    public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatusTo status: TypingType) {}
+    public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: TypingType, forUser: User) {}
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
 		log.info("Received watermark \(status)")
 	}

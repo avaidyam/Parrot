@@ -24,8 +24,8 @@
 		48158E441D29C28A00ED369C /* Service+Capabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48158E431D29C28A00ED369C /* Service+Capabilities.swift */; };
 		48196B9B1D4805D9001D4BAA /* AboutWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48196B9A1D4805D9001D4BAA /* AboutWindowController.swift */; };
 		4822951D1D417B5E00A34B1B /* AddressBookSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */; };
-		4835ECA91C1C620000193EBC /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageView.swift */; };
-		4835ECAB1C1C620000193EBC /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA81C1C620000193EBC /* ConversationView.swift */; };
+		4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageCell.swift */; };
+		4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA81C1C620000193EBC /* ConversationCell.swift */; };
 		4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */; };
 		4835ECB01C1C620E00193EBC /* MessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */; };
 		4835ECB11C1C620E00193EBC /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
@@ -55,9 +55,9 @@
 		488492741D0B392A0003D522 /* ConversationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492731D0B392A0003D522 /* ConversationListViewController.xib */; };
 		488492761D0B3A010003D522 /* MessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* MessageListViewController.xib */; };
 		488492771D0B3CA60003D522 /* MessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* MessageListViewController.xib */; };
-		488492791D0B3F370003D522 /* ConversationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492781D0B3F370003D522 /* ConversationView.xib */; };
+		488492791D0B3F370003D522 /* ConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492781D0B3F370003D522 /* ConversationCell.xib */; };
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
-		4884929B1D0B59370003D522 /* MessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4884929A1D0B59370003D522 /* MessageView.xib */; };
+		4884929B1D0B59370003D522 /* MessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4884929A1D0B59370003D522 /* MessageCell.xib */; };
 		489018A61D3C13A400CFCA5F /* FocusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018A51D3C13A400CFCA5F /* FocusCell.swift */; };
 		489018A81D3C13B400CFCA5F /* FocusCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 489018A71D3C13B400CFCA5F /* FocusCell.xib */; };
 		489018AA1D3C8CB800CFCA5F /* Focus+Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018A91D3C8CB800CFCA5F /* Focus+Presence.swift */; };
@@ -240,8 +240,8 @@
 		48196B9A1D4805D9001D4BAA /* AboutWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutWindowController.swift; sourceTree = "<group>"; };
 		4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookSupport.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation+List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Conversation+List.swift"; sourceTree = "<group>"; };
-		4835ECA61C1C620000193EBC /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
-		4835ECA81C1C620000193EBC /* ConversationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
+		4835ECA61C1C620000193EBC /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		4835ECA81C1C620000193EBC /* ConversationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationListViewController.swift; sourceTree = "<group>"; };
 		4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListViewController.swift; sourceTree = "<group>"; };
 		4835ECAE1C1C620E00193EBC /* Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
@@ -283,9 +283,9 @@
 		48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLiteSerialization.swift; sourceTree = "<group>"; };
 		488492731D0B392A0003D522 /* ConversationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationListViewController.xib; sourceTree = "<group>"; };
 		488492751D0B3A010003D522 /* MessageListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageListViewController.xib; sourceTree = "<group>"; };
-		488492781D0B3F370003D522 /* ConversationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationView.xib; sourceTree = "<group>"; };
+		488492781D0B3F370003D522 /* ConversationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationCell.xib; sourceTree = "<group>"; };
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		4884929A1D0B59370003D522 /* MessageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageView.xib; sourceTree = "<group>"; };
+		4884929A1D0B59370003D522 /* MessageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageCell.xib; sourceTree = "<group>"; };
 		489018A51D3C13A400CFCA5F /* FocusCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusCell.swift; sourceTree = "<group>"; };
 		489018A71D3C13B400CFCA5F /* FocusCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FocusCell.xib; sourceTree = "<group>"; };
 		489018A91D3C8CB800CFCA5F /* Focus+Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Focus+Presence.swift"; sourceTree = "<group>"; };
@@ -437,8 +437,8 @@
 		481687231C39D3400070EEF6 /* Message List */ = {
 			isa = PBXGroup;
 			children = (
-				4835ECA61C1C620000193EBC /* MessageView.swift */,
-				4884929A1D0B59370003D522 /* MessageView.xib */,
+				4835ECA61C1C620000193EBC /* MessageCell.swift */,
+				4884929A1D0B59370003D522 /* MessageCell.xib */,
 				489018A51D3C13A400CFCA5F /* FocusCell.swift */,
 				489018A71D3C13B400CFCA5F /* FocusCell.xib */,
 				489018AD1D3EA2DB00CFCA5F /* LinkPreviewCell.swift */,
@@ -464,8 +464,8 @@
 		4835ECA51C1C61F300193EBC /* Conversation List */ = {
 			isa = PBXGroup;
 			children = (
-				4835ECA81C1C620000193EBC /* ConversationView.swift */,
-				488492781D0B3F370003D522 /* ConversationView.xib */,
+				4835ECA81C1C620000193EBC /* ConversationCell.swift */,
+				488492781D0B3F370003D522 /* ConversationCell.xib */,
 				4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */,
 				488492731D0B392A0003D522 /* ConversationListViewController.xib */,
 			);
@@ -1050,12 +1050,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4884929B1D0B59370003D522 /* MessageView.xib in Resources */,
+				4884929B1D0B59370003D522 /* MessageCell.xib in Resources */,
 				488492741D0B392A0003D522 /* ConversationListViewController.xib in Resources */,
 				48F84D451D0DEC1E00E77AD9 /* LinkPreviewCell.xib in Resources */,
 				489018A81D3C13B400CFCA5F /* FocusCell.xib in Resources */,
 				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
-				488492791D0B3F370003D522 /* ConversationView.xib in Resources */,
+				488492791D0B3F370003D522 /* ConversationCell.xib in Resources */,
 				488492761D0B3A010003D522 /* MessageListViewController.xib in Resources */,
 				48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */,
 			);
@@ -1136,7 +1136,7 @@
 				48574F141D120314002375E1 /* AppManagement.swift in Sources */,
 				4835ECB11C1C620E00193EBC /* Authenticator.swift in Sources */,
 				4866337E1C5822FA006C094B /* ListView.swift in Sources */,
-				4835ECA91C1C620000193EBC /* MessageView.swift in Sources */,
+				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
 				4814E3BB1D2ECB4F0079C3DB /* DispatchTask.swift in Sources */,
 				48808EDD1C6463DD00236E96 /* PreferencesWindowController.swift in Sources */,
 				48EA55CC1D26CDD600C3BC80 /* KeyValueStore.swift in Sources */,
@@ -1149,7 +1149,7 @@
 				48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */,
 				48EA55CA1D26CDD000C3BC80 /* Cache.swift in Sources */,
 				48196B9B1D4805D9001D4BAA /* AboutWindowController.swift in Sources */,
-				4835ECAB1C1C620000193EBC /* ConversationView.swift in Sources */,
+				4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */,
 				4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */,
 				48D25B771D3817B900753DB7 /* ParrotGlobal.swift in Sources */,
 				489018AE1D3EA2DB00CFCA5F /* LinkPreviewCell.swift in Sources */,

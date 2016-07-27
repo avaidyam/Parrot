@@ -9,7 +9,7 @@
         <customObject id="-2" userLabel="File's Owner"/>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView identifier="Parrot.MessageView" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe" customClass="MessageView" customModule="Parrot" customModuleProvider="target">
+        <customView identifier="Parrot.MessageCell" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe" customClass="MessageCell" customModule="Parrot" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="362" height="67"/>
             <subviews>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="wEL-KW-aRK">

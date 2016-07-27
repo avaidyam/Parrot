@@ -2,7 +2,7 @@ import Cocoa
 import protocol ParrotServiceExtension.Conversation
 
 // A visual representation of a Conversation in a ListView.
-public class ConversationView: ListViewCell {
+public class ConversationCell: ListViewCell {
 	@IBOutlet private var photoView: NSImageView?
 	@IBOutlet private var nameLabel: NSTextField?
 	@IBOutlet private var textLabel: NSTextField?
@@ -13,7 +13,7 @@ public class ConversationView: ListViewCell {
 	public override var cellValue: Any? {
 		didSet {
 			guard let conversation = self.cellValue as? Conversation else {
-				log.warning("ConversationView encountered faulty cellValue!")
+				log.warning("ConversationCell encountered faulty cellValue!")
 				return
 			}
 			
@@ -37,7 +37,7 @@ public class ConversationView: ListViewCell {
 			self.timeLabel?.toolTip = "\(time.fullString())"
 			
 			if conversation.unreadCount > 0 {
-				self.timeLabel!.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
+				self.timeLabel?.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
 			}
 		}
 	}

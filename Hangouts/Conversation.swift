@@ -290,7 +290,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
         }
     }
-
+	
     public func handleTypingStatus(status: TypingType, forUser user: User) {
         let existingTypingStatus = typingStatuses[user.id]
         if existingTypingStatus == nil || existingTypingStatus! != status {

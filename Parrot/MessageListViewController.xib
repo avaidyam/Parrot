@@ -8,9 +8,9 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MessageListViewController" customModule="Parrot" customModuleProvider="target">
             <connections>
-                <outlet property="imageView" destination="Ab2-7z-caP" id="jiX-Q0-Fdg"/>
-                <outlet property="messageTextField" destination="A58-4G-SjV" id="S7h-hF-amm"/>
-                <outlet property="messagesView" destination="yMT-fg-2gH" id="SNf-Rj-7x7"/>
+                <outlet property="entryView" destination="A58-4G-SjV" id="Gzs-mB-jSL"/>
+                <outlet property="imageView" destination="S2O-bo-UO2" id="84S-DQ-Ja9"/>
+                <outlet property="listView" destination="yMT-fg-2gH" id="SXU-Nq-yyB"/>
                 <outlet property="statusView" destination="eNL-fW-1Cx" id="gX1-VY-R6C"/>
                 <outlet property="window" destination="rqa-ia-OSc" id="fhe-7e-EqQ"/>
             </connections>
@@ -48,14 +48,17 @@
                     <visualEffectView blendingMode="withinWindow" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
                         <subviews>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Ab2-7z-caP">
+                            <button translatesAutoresizingMaskIntoConstraints="NO" id="S2O-bo-UO2" userLabel="Image View">
                                 <rect key="frame" x="448" y="8" width="24" height="24"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="Ab2-7z-caP" secondAttribute="height" multiplier="1:1" id="WlU-Mv-yGk"/>
-                                    <constraint firstAttribute="height" constant="24" id="d2d-Td-yha"/>
+                                    <constraint firstAttribute="width" secondItem="S2O-bo-UO2" secondAttribute="height" multiplier="1:1" id="Y9f-tR-8A4"/>
+                                    <constraint firstAttribute="width" constant="24" id="pP5-NL-Reg"/>
                                 </constraints>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="CNL-A5-xoa"/>
-                            </imageView>
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSUser" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="gwU-oa-jXA">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                            </button>
                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
                                 <rect key="frame" x="8" y="8" width="432" height="24"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
@@ -87,13 +90,13 @@
                             </scrollView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="Ab2-7z-caP" firstAttribute="leading" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="0Eg-4V-lrM"/>
-                            <constraint firstAttribute="trailing" secondItem="Ab2-7z-caP" secondAttribute="trailing" constant="8" id="80e-ni-GbZ"/>
-                            <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="Ab2-7z-caP" secondAttribute="top" id="LtJ-GL-kum"/>
-                            <constraint firstItem="61a-19-CQC" firstAttribute="bottom" secondItem="Ab2-7z-caP" secondAttribute="bottom" id="Uu7-IT-SPU"/>
+                            <constraint firstItem="S2O-bo-UO2" firstAttribute="leading" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="DMZ-XP-HrR"/>
+                            <constraint firstAttribute="trailing" secondItem="S2O-bo-UO2" secondAttribute="trailing" constant="8" id="HVB-gx-E6m"/>
+                            <constraint firstItem="S2O-bo-UO2" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="JLi-05-Zdg"/>
+                            <constraint firstItem="S2O-bo-UO2" firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" id="PTn-ns-aoi"/>
                             <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" constant="8" id="kNh-UA-vLQ"/>
-                            <constraint firstItem="Ab2-7z-caP" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="p1R-YE-6mn"/>
-                            <constraint firstAttribute="bottom" secondItem="Ab2-7z-caP" secondAttribute="bottom" constant="8" id="tmS-3e-lVX"/>
+                            <constraint firstAttribute="bottom" secondItem="S2O-bo-UO2" secondAttribute="bottom" constant="8" id="qfr-SP-QnO"/>
+                            <constraint firstItem="S2O-bo-UO2" firstAttribute="top" secondItem="61a-19-CQC" secondAttribute="top" id="rZQ-aV-2QU"/>
                         </constraints>
                     </visualEffectView>
                 </subviews>
@@ -107,10 +110,56 @@
                     <constraint firstAttribute="bottom" secondItem="yMT-fg-2gH" secondAttribute="bottom" id="wee-IV-uKB"/>
                 </constraints>
             </view>
+            <toolbar key="toolbar" implicitIdentifier="15DD37E4-A9CD-4FCB-B956-9C65DA208478" autosavesConfiguration="NO" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="ffa-CI-zYk">
+                <allowedToolbarItems>
+                    <toolbarItem implicitItemIdentifier="0BA82A9A-B384-4019-91E0-FF901AAB1BE3" label="Title" paletteLabel="Title" visibilityPriority="2" id="GTg-V7-Nyg" userLabel="Title">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="1" height="17"/>
+                        <size key="maxSize" width="1000000" height="22"/>
+                        <textField key="view" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="iSW-2i-8yA">
+                            <rect key="frame" x="0.0" y="14" width="57" height="17"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Window" id="C2Y-Ac-6VT">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                            <connections>
+                                <binding destination="-2" name="value" keyPath="self.window.title" id="7yl-Z5-s1A">
+                                    <dictionary key="options">
+                                        <string key="NSNullPlaceholder">Window</string>
+                                    </dictionary>
+                                </binding>
+                            </connections>
+                        </textField>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="DCE7A7F8-E915-48B9-BAA3-44DDEA13720D" label="Info" paletteLabel="Info" image="NSListViewTemplate" id="brc-d2-Cfi" userLabel="Info">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="21" height="28"/>
+                        <size key="maxSize" width="32" height="32"/>
+                        <button key="view" verticalHuggingPriority="750" id="5ZG-rS-xYQ" userLabel="Info">
+                            <rect key="frame" x="1" y="14" width="25" height="28"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSListViewTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fsR-u4-Th7">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                        </button>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="4xn-QA-GCz"/>
+                </allowedToolbarItems>
+                <defaultToolbarItems>
+                    <toolbarItem reference="4xn-QA-GCz"/>
+                    <toolbarItem reference="GTg-V7-Nyg"/>
+                    <toolbarItem reference="4xn-QA-GCz"/>
+                    <toolbarItem reference="brc-d2-Cfi"/>
+                </defaultToolbarItems>
+            </toolbar>
             <point key="canvasLocation" x="243" y="-237"/>
         </window>
     </objects>
     <resources>
+        <image name="NSListViewTemplate" width="14" height="10"/>
         <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>

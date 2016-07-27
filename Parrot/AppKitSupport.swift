@@ -96,7 +96,7 @@ public extension Date {
 	public func nearestMinute() -> Date {
 		let c = Calendar.current()
 		let next = c.component(.minute, from: self) + 1
-		return c.nextDate(after: self, matching: .minute, value: next, options: .matchStrictly)!
+		return c.nextDate(after: self, matching: .minute, value: next, options: .matchStrictly) ?? self
 	}
 }
 

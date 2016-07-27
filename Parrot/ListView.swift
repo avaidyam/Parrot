@@ -104,6 +104,7 @@ public class ListView: NSView {
 		self.tableView.selectionHighlightStyle = .sourceList
 		self.tableView.floatsGroupRows = true
 		self.tableView.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
+		self.tableView.intercellSpacing = NSSize(width: 0, height: 0)
 		
 		self.scrollView.documentView = self.tableView
 		self.scrollView.hasVerticalScroller = true

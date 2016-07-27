@@ -2,7 +2,7 @@ import Cocoa
 import AddressBook
 import protocol ParrotServiceExtension.Message
 
-public class MessageView: ListViewCell {
+public class MessageCell: ListViewCell {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
 	
@@ -10,7 +10,7 @@ public class MessageView: ListViewCell {
 	public override var cellValue: Any? {
 		didSet {
 			guard let o = self.cellValue as? Message else {
-				log.warning("MessageView encountered faulty cellValue!")
+				log.warning("MessageCell encountered faulty cellValue!")
 				return
 			}
 			
@@ -90,6 +90,9 @@ public class MessageView: ListViewCell {
 				layer.cornerRadius = 2.0
 				layer.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
 			}
+			
+			// FIXME: Use this when searching to highlight text.
+			//text.showFindIndicator(for: NSRange(location: 0, length: 5))
 		}
 	}
 	

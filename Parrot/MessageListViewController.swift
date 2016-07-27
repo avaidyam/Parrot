@@ -24,10 +24,10 @@ private func _getLinkCached(_ key: String) throws -> LinkPreviewType {
 
 public class MessageListViewController: NSWindowController, NSTextViewDelegate, ConversationDelegate {
 	
-	@IBOutlet var messagesView: ListView!
-    @IBOutlet var messageTextField: NSTextView!
+	@IBOutlet var listView: ListView!
+    @IBOutlet var entryView: NSTextView!
 	@IBOutlet var statusView: NSTextField!
-	@IBOutlet var imageView: NSImageView!
+	@IBOutlet var imageView: NSButton!
 	
 	public var parentController: ConversationListViewController? = nil
 	
@@ -47,14 +47,14 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 		super.loadWindow()
 		self.window?.appearance = ParrotAppearance.current()
 		self.window?.enableRealTitlebarVibrancy()
-		self.messagesView.insets = EdgeInsets(top: 22.0, left: 0, bottom: 40.0, right: 0)
+		self.window?.titleVisibility = .hidden
 		
-		self.messagesView.register(nibName: "MessageView", forClass: MessageView.self)
-		self.messagesView.register(nibName: "FocusCell", forClass: FocusCell.self)
-		self.messagesView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
+		self.listView.register(nibName: "MessageCell", forClass: MessageCell.self)
+		self.listView.register(nibName: "FocusCell", forClass: FocusCell.self)
+		self.listView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
 		
 		// oh lawd pls forgibs my sins
-		self.messagesView.dataSourceProvider = {
+		self.listView.dataSourceProvider = {
 			self.conversation!.messages.map {
 				if let prev = self._previews[($0 as! IChatMessageEvent).id] {
 					let ret = [$0 as Any] + prev.map { $0 as Any }
@@ -63,10 +63,10 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 			}.reduce([], combine: +)
 		}
 		
-		self.messagesView.viewClassProvider = { row in
-			let cls = self.messagesView.dataSourceProvider!()[row]
+		self.listView.viewClassProvider = { row in
+			let cls = self.listView.dataSourceProvider!()[row]
 			if cls is Message {
-				return MessageView.self
+				return MessageCell.self
 			} else if cls is LinkPreviewType {
 				return LinkPreviewCell.self
 			} else {
@@ -75,8 +75,8 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 			}
 		}
 		
-		self.messagesView.sizeClass = .dynamic
-		self.messageTextField.delegate = self
+		self.listView.sizeClass = .dynamic
+		self.entryView.delegate = self
 		
 		if let me = self.conversation?.client.userList.me {
 			if let photo = self.imageView, let layer = photo.layer {
@@ -89,6 +89,7 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 	
 	public override func showWindow(_ sender: AnyObject?) {
 		super.showWindow(nil)
+		self.listView.insets = EdgeInsets(top: 22.0, left: 0, bottom: 40.0, right: 0)
 		
 		/*
 		_note = NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidBecomeKey,
@@ -114,7 +115,7 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 			// NSTextView doesn't automatically change its text color when the
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.
-			guard let text = self.messageTextField else { return }
+			guard let text = self.entryView else { return }
 			text.layer?.masksToBounds = true
 			text.layer?.cornerRadius = 2.0
 			text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.window!.effectiveAppearance).cgColor
@@ -173,7 +174,7 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 							} else {
 								self._previews[chat.id] = [meta]
 							}
-							self.messagesView.update()
+							self.listView.update()
 						}
 					}
 				}
@@ -187,10 +188,10 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 			log.info("GOT \(response?.presenceResult)")
 			}*/
 			
-			//self.messagesView.removeElements(self._getAllMessages()!)
-			if self.messagesView != nil {
-				//self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
-				self.messagesView.update()
+			//self.listView.removeElements(self._getAllMessages()!)
+			if self.listView != nil {
+				//self.listView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
+				self.listView.update()
 			} else {
 				//log.info("Not initialized.")
 			}
@@ -198,15 +199,15 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 	}
 	
     public func conversation(_ conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
-        if user.isSelf || self.messageTextField?.window == nil {
+        if user.isSelf || self.entryView?.window == nil {
             return
         }
 		
 		DispatchQueue.main.async {
 			switch (status) {
 			case TypingType.Started:
-				//let cell = self.messagesView.tableView.make(withIdentifier: "Typing", owner: nil)
-				self.popover.show(relativeTo: self.messageTextField!.bounds, of: self.messageTextField!, preferredEdge: .minY)
+				//let cell = self.listView.tableView.make(withIdentifier: "Typing", owner: nil)
+				self.popover.show(relativeTo: self.entryView!.bounds, of: self.entryView!, preferredEdge: .minY)
 				self.statusView.stringValue = "Typing..."
 			case TypingType.Paused:
 				self.statusView.stringValue = "Entered text."
@@ -219,11 +220,11 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
     }
 
 	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
-		//self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
-		self.messagesView.update()
+		//self.listView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
+		self.listView.update()
 		
 		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
-		//self.messagesView.appendElements(found)
+		//self.listView.appendElements(found)
 		if !(self.window?.isKeyWindow ?? false) {
 			let user = conversation.user_list[event.userID]
 			if !user.isSelf {
@@ -259,8 +260,8 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
     }
 
 	public func conversationDidUpdateEvents(_ conversation: IConversation) {
-		//self.messagesView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
-		self.messagesView.update()
+		//self.listView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
+		self.listView.update()
     }
 
     public func conversationDidUpdate(conversation: IConversation) {
@@ -292,7 +293,7 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 			// Find the last visible row that was sent by the user.
 			/*
 			var lastR: Int = -1
-			for r in self.messagesView.visibleRows {
+			for r in self.listView.visibleRows {
 				if self.conversation!._messages[r].sender.me {
 					lastR = r
 				}
@@ -300,21 +301,26 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 			
 			// If we found a row, set the focus.
 			if lastR > 0 {
-				if let c = self.messagesView.tableView.view(atColumn: 0, row: lastR, makeIfNecessary: false) as? SendMessageView {
+				if let c = self.listView.tableView.view(atColumn: 0, row: lastR, makeIfNecessary: false) as? MessageCell {
 					c.setFocus(true)
 					self._focusRow = lastR
-					self.messagesView.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: lastR))
+					self.listView.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: lastR))
 				}
 			}*/
         }
     }
 	
+	//["()", "[]", "{}", "\"\"", "''", "``"]
+	//func textViewDidChangeText?
+	
     // MARK: NSTextFieldDelegate
     var lastTypingTimestamp: Date?
 	public func textDidChange(_ obj: Notification) {
-        if messageTextField.string == "" {
+        if entryView.string == "" {
             return
         }
+		
+		//self.entryView
 		
         let typingTimeout = 0.4
         let now = Date()
@@ -349,39 +355,9 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 		return ["this", "is", "a", "test"]
 	}
 	
-	//["()", "[]", "{}", "\"\"", "''", "``"]
-	//func textViewDidChangeText?
-	
 	func sendCurrentMessage() {
-		guard let text = messageTextField.string where text.characters.count > 0 else { return }
-		self.messageTextField.string = ""
+		guard let text = entryView.string where text.characters.count > 0 else { return }
+		self.entryView.string = ""
 		self.parentController?.sendMessage(text, self.conversation!)
-		
-		/*
-		func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
-			return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
-		}
-		
-		// Grab a local copy of the text and let the user continue.
-		guard let text = messageTextField.string where text.characters.count > 0 else { return }
-		self.messageTextField.string = ""
-		
-		// Create an operation to process the message and then send it.
-		let operation = DispatchWorkItem(qos: .userInteractive, flags: .enforceQoS) {
-			var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
-			emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
-			let txt = segmentsForInput(text, emojify: emojify)
-			
-			let s = DispatchSemaphore.mutex
-			self.conversation?.sendMessage(segments: txt) { s.signal() }
-			s.wait()
-		}
-		
-		// Send the operation to the serial send queue, and notify on completion.
-		operation.notify(queue: DispatchQueue.main) {
-			log.debug("message sent")
-		}
-		sendQ.async(execute: operation)
-		*/
 	}
 }
