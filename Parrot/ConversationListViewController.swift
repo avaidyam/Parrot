@@ -223,20 +223,68 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	// MARK - Delegate
 	
 	
-	
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {
 		guard event is IChatMessageEvent else { return }
 		
 		// pls fix :(
 		DispatchQueue.main.async {
-			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
 			UserNotificationCenter.updateDockBadge(unread)
 		}
+		
+		var display = true
+		for c in self.childConversations {
+			if let d = c.conversation?.id where d == event.conversation_id {
+				if (c.window?.isKeyWindow ?? false) {
+					c.conversation(c.conversation!, didReceiveEvent: event)
+					display = false
+				}
+				break
+			}
+		}
+		
+		let conv = self.conversationList?.conversations[event.conversation_id]
+		if let user = (conv as? IConversation)?.user_list[event.userID] where !user.isSelf && display {
+			log.debug("Sending notification...")
+			
+			let a = (event.conversation_id as String, event.id as String)
+			let text = (event as? IChatMessageEvent)?.text ?? "Event"
+			
+			let notification = NSUserNotification()
+			notification.identifier = a.0
+			notification.title = user.fullName
+			//notification.subtitle = "Hangouts"
+			notification.informativeText = text
+			notification.deliveryDate = Date()
+			notification.hasReplyButton = true
+			notification.responsePlaceholder = "Reply..."
+			//notification.soundName = "texttone:Bamboo" // this works!!
+			notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
+			notification.set(option: .vibrateForceTouch, value: true)
+			notification.set(option: .alwaysShow, value: true)
+			
+			var img: NSImage = defaultUserImage
+			if let d = fetchData(user.id.chatID, user.photoURL) {
+				img = NSImage(data: d)!
+			}
+			notification.contentImage = img
+			
+			UserNotificationCenter.remove(byIdentifier: a.0)
+			UserNotificationCenter.post(notification: notification)
+		}
 	}
 	
-    public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: TypingType, forUser: User) {}
+    public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: ITypingStatusMessage, forUser: User) {
+		for c in self.childConversations {
+			if let d = c.conversation?.id where d == status.convID {
+				if (c.window?.isKeyWindow ?? false) {
+					c.conversation(c.conversation!, didChangeTypingStatusForUser: forUser, toStatus: status.status)
+				}
+				break
+			}
+		}
+	}
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
 		log.info("Received watermark \(status)")
 	}

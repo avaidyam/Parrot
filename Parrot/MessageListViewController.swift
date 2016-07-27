@@ -7,6 +7,7 @@ import ParrotServiceExtension
 /* TODO: Support /cmd's (i.e. /remove <username>) for power-users. */
 /* TODO: Support Slack-like plugin integrations. */
 /* TODO: Needs a complete refactor, with something like CSS styling. */
+/* TODO: Re-enable link previews later when they're not terrible... */
 
 private var _linkCache = [String: LinkPreviewType]()
 private func _getLinkCached(_ key: String) throws -> LinkPreviewType {
@@ -43,6 +44,8 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 		return p
 	}()
 	
+	private var dataSource: [EventStreamItem] = []
+	
 	public override func loadWindow() {
 		super.loadWindow()
 		self.window?.appearance = ParrotAppearance.current()
@@ -55,12 +58,7 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 		
 		// oh lawd pls forgibs my sins
 		self.listView.dataSourceProvider = {
-			self.conversation!.messages.map {
-				if let prev = self._previews[($0 as! IChatMessageEvent).id] {
-					let ret = [$0 as Any] + prev.map { $0 as Any }
-					return ret
-				} else { return [$0 as Any] }
-			}.reduce([], combine: +)
+			return self.dataSource.map { $0 as Any }
 		}
 		
 		self.listView.viewClassProvider = { row in
@@ -92,21 +90,11 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 		self.listView.insets = EdgeInsets(top: 22.0, left: 0, bottom: 40.0, right: 0)
 		
 		/*
-		_note = NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidBecomeKey,
-		                                                 object: self.window, queue: nil) { a in
-			self.windowDidBecomeKey(nil)
+		if self.window?.isKeyWindow ?? false {
+			self.windowDidBecomeKey(Notification(name: "" as Notification.Name))
 		}
-        if self.window?.isKeyWindow ?? false {
-            self.windowDidBecomeKey(nil)
-        }
-		
-		// NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded,
-		NotificationCenter.default().addObserver(forName: Notification.Name.NSWindowDidChangeOcclusionState,
-		                                         object: self.window, queue: nil) { a in
-			self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
-		}
-		self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
 		*/
+		self.windowDidChangeOcclusionState(Notification(name: "" as Notification.Name))
 		
 		// Set up dark/light notifications.
 		ParrotAppearance.registerAppearanceListener(observer: self, invokeImmediately: true) { appearance in
@@ -148,20 +136,29 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 		}
     }
 	
+	// NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
+	public func windowDidChangeOcclusionState(_ notification: Notification) {
+		self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
+	}
+	
 	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterAppearanceListener(observer: self)
 	}
 	
 	var conversation: IConversation? {
 		didSet {
+			/*
 			if let oldConversation = oldValue {
 				oldConversation.delegate = nil
 			}
-			
 			self.conversation?.delegate = self
+			*/
+			
 			self.conversation?.getEvents(event_id: conversation?.events.first?.id, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
+					self.dataSource.append(chat)
 					linkQ.async {
+						/*
 						let d = try! NSDataDetector(types: TextCheckingResult.CheckingType.link.rawValue)
 						let t = chat.text
 						d.enumerateMatches(in: t, options: RegularExpression.MatchingOptions(rawValue: UInt(0)),
@@ -174,35 +171,29 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 							} else {
 								self._previews[chat.id] = [meta]
 							}
-							self.listView.update()
 						}
+						*/
+						self.listView.update()
 					}
 				}
 			}
 			self.window?.title = self.conversation?.name ?? ""
 			self.window?.setFrameAutosaveName("\(self.conversation?.identifier)")
 			
-			
-			
-			/*self.conversation?.client.queryPresence(chat_ids: self.conversation!.users.map { $0.id.chatID }) { response in
-			log.info("GOT \(response?.presenceResult)")
-			}*/
-			
-			//self.listView.removeElements(self._getAllMessages()!)
-			if self.listView != nil {
-				//self.listView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
-				self.listView.update()
-			} else {
-				//log.info("Not initialized.")
-			}
+			/*
+			self.conversation!.messages.map {
+				if let prev = self._previews[($0 as! IChatMessageEvent).id] {
+					let ret = [$0 as Any] + prev.map { $0 as Any }
+					return ret
+				} else { return [$0 as Any] }
+			}.reduce([], combine: +)
+			*/
+			self.listView?.update()
 		}
 	}
 	
     public func conversation(_ conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
-        if user.isSelf || self.entryView?.window == nil {
-            return
-        }
-		
+        guard !user.isSelf else { return }
 		DispatchQueue.main.async {
 			switch (status) {
 			case TypingType.Started:
@@ -218,55 +209,20 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 			}
 		}
     }
-
 	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
-		//self.listView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
-		self.listView.update()
-		
-		//let msg = conversation.events.filter { $0.id == event.id }.map { _getMessage($0 as! ChatMessageEvent)! }
-		//self.listView.appendElements(found)
-		if !(self.window?.isKeyWindow ?? false) {
-			let user = conversation.user_list[event.userID]
-			if !user.isSelf {
-				let a = (event.conversation_id as String, event.id as String)
-				let text = (event as? IChatMessageEvent)?.text ?? "Event"
-				
-				let notification = NSUserNotification()
-				notification.identifier = a.0
-				notification.title = user.fullName
-				//notification.subtitle = "Hangouts"
-				notification.informativeText = text
-				notification.deliveryDate = Date()
-				notification.hasReplyButton = true
-				notification.responsePlaceholder = "Reply..."
-				//notification.soundName = "texttone:Bamboo" // this works!!
-				notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
-				notification.set(option: .vibrateForceTouch, value: true)
-				
-				var img: NSImage = defaultUserImage
-				if let d = fetchData(user.id.chatID, user.photoURL) {
-					img = NSImage(data: d)!
-				}
-				notification.contentImage = img
-				
-				UserNotificationCenter.remove(byIdentifier: a.0)
-				UserNotificationCenter.post(notification: notification)
-            }
-        }
+		guard let e = event as? IChatMessageEvent else { return }
+		self.dataSource.append(e)
+		let idx = IndexSet(integer: self.dataSource.count-1)
+		DispatchQueue.main.async {
+			self.listView.tableView.insertRows(at: idx, withAnimation: [.effectFade, .slideUp])
+		}
+		DispatchQueue.main.async {
+			self.listView.scroll(toRow: idx.first!)
+		}
     }
-
-    public func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {
-
-    }
-
-	public func conversationDidUpdateEvents(_ conversation: IConversation) {
-		//self.listView.dataSource = self.conversation!.messages.map { Wrapper.init($0) }
-		self.listView.update()
-    }
-
-    public func conversationDidUpdate(conversation: IConversation) {
-        
-    }
+	public func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {}
+	public func conversationDidUpdateEvents(_ conversation: IConversation) {}
+    public func conversationDidUpdate(conversation: IConversation) {}
 	
     // MARK: Window notifications
 
@@ -320,8 +276,6 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
             return
         }
 		
-		//self.entryView
-		
         let typingTimeout = 0.4
         let now = Date()
 
@@ -339,12 +293,16 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
     }
 	
 	// If the user presses ENTER and doesn't hold SHIFT, send the message.
+	// If the user presses TAB, insert four spaces instead. // TODO: configurable later
 	public func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		switch commandSelector {
 			
 		case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
-			self.sendCurrentMessage()
-		case #selector(NSResponder.insertTab(_:)): // TODO: configurable later
+			guard let text = entryView.string where text.characters.count > 0 else { return true }
+			self.entryView.string = ""
+			self.parentController?.sendMessage(text, self.conversation!)
+			
+		case #selector(NSResponder.insertTab(_:)):
 			textView.textStorage?.append(AttributedString(string: "    ", attributes: textView.typingAttributes))
 			
 		default: return false
@@ -353,11 +311,5 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 	
 	public func textView(_ textView: NSTextView, completions words: [String], forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>?) -> [String] {
 		return ["this", "is", "a", "test"]
-	}
-	
-	func sendCurrentMessage() {
-		guard let text = entryView.string where text.characters.count > 0 else { return }
-		self.entryView.string = ""
-		self.parentController?.sendMessage(text, self.conversation!)
 	}
 }

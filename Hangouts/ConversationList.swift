@@ -16,7 +16,7 @@ public protocol ConversationListDelegate {
 	*/
 	
     func conversationList(_ list: ConversationList, didReceiveEvent event: IEvent)
-	func conversationList(_ list: ConversationList, didChangeTypingStatus status: TypingType, forUser: User)
+	func conversationList(_ list: ConversationList, didChangeTypingStatus status: ITypingStatusMessage, forUser: User)
     func conversationList(_ list: ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification)
     func conversationList(didUpdate list: ConversationList)
     func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation)
@@ -250,7 +250,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 				chatID: note.senderId!.chatId!,
 				gaiaID: note.senderId!.gaiaId!
 				)]
-			delegate?.conversationList(self, didChangeTypingStatus: res.status, forUser: user)
+			delegate?.conversationList(self, didChangeTypingStatus: res, forUser: user)
 			conv.handleTypingStatus(status: res.status, forUser: user)
 		} else {
 			log.warning("Received ClientSetTypingNotification for unknown conversation \(conv_id)")

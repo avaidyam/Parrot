@@ -25,14 +25,8 @@
                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
             </textFieldCell>
-            <point key="canvasLocation" x="139" y="417"/>
+            <point key="canvasLocation" x="243" y="-28"/>
         </textField>
-        <viewController id="H32-H4-UYo" userLabel="Popover View Controller"/>
-        <popover behavior="t" id="Lof-n5-PGH">
-            <connections>
-                <outlet property="contentViewController" destination="H32-H4-UYo" id="q8B-R7-vC5"/>
-            </connections>
-        </popover>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="documentWindow" frameAutosaveName="" tabbingMode="disallowed" id="rqa-ia-OSc">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenAuxiliary="YES"/>
@@ -144,6 +138,9 @@
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="showsBorderOnlyWhileMouseInside" value="YES"/>
+                            </userDefinedRuntimeAttributes>
                         </button>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="4xn-QA-GCz"/>
@@ -157,6 +154,39 @@
             </toolbar>
             <point key="canvasLocation" x="243" y="-237"/>
         </window>
+        <viewController id="Fnl-Yf-OK7" userLabel="Popover View Controller">
+            <connections>
+                <outlet property="view" destination="Pye-gy-Huh" id="nNW-GN-Un9"/>
+            </connections>
+        </viewController>
+        <popover id="ADy-nB-Aj1">
+            <connections>
+                <outlet property="contentViewController" destination="Fnl-Yf-OK7" id="5YB-Xa-qGE"/>
+            </connections>
+        </popover>
+        <customView id="Pye-gy-Huh">
+            <rect key="frame" x="0.0" y="0.0" width="163" height="270"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EhA-26-aSD">
+                    <rect key="frame" x="41" y="217" width="81" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qsG-dc-gjg">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ppq-JF-FK1">
+                    <rect key="frame" x="69" y="17" width="25" height="25"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Yg3-SG-8RK">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+            </subviews>
+            <point key="canvasLocation" x="612.5" y="-237"/>
+        </customView>
     </objects>
     <resources>
         <image name="NSListViewTemplate" width="14" height="10"/>
