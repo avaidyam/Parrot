@@ -286,13 +286,15 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
         if lastTypingTimestamp == nil || now.timeIntervalSince(lastTypingTimestamp!) > typingTimeout {
             self.conversation?.setTyping(typing: TypingType.Started)
         }
-
+		
         lastTypingTimestamp = now
 		let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 		DispatchQueue.main.after(when: dt) {
             if let ts = self.lastTypingTimestamp where Date().timeIntervalSince(ts) > typingTimeout {
                 self.conversation?.setTyping(typing: TypingType.Stopped)
-            }
+			} else {
+				self.conversation?.setTyping(typing: TypingType.Paused)
+			}
         }
     }
 	

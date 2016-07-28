@@ -61,6 +61,7 @@
                                             <size key="maxSize" width="552" height="10000000"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAlwaysPasteAsPlainText" value="YES"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="placeholderString" value="Send a message..."/>
                                             </userDefinedRuntimeAttributes>
                                         </textView>
                                     </subviews>
