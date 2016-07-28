@@ -36,9 +36,11 @@ public extension String {
 	
 	/// Replace a GMail-style emoticon (:D) with its pictographical representation.
 	public func applyGoogleEmoji() -> String {
-		return emoticonDescriptors.reduce(self) {
-			($0 as NSString).replacingOccurrences(of: $1.0, with: $1.1)
+		var str = self
+		for (emoticon, emoji) in emoticonDescriptors {
+			str = str.replacingOccurrences(of: " \(emoticon) ", with: " \(emoji) ")
 		}
+		return str
 	}
 }
 

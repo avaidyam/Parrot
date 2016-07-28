@@ -201,12 +201,12 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		// Grab a local copy of the text and let the user continue.
 		guard text.characters.count > 0 else { return }
 		
+		var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
+		emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
+		let txt = segmentsForInput(text, emojify: emojify)
+		
 		// Create an operation to process the message and then send it.
 		let operation = DispatchWorkItem(qos: .userInteractive, flags: .enforceQoS) {
-			var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
-			emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
-			let txt = segmentsForInput(text, emojify: emojify)
-			
 			let s = DispatchSemaphore.mutex
 			(conversation as! IConversation).sendMessage(segments: txt) { s.signal() }
 			s.wait()
@@ -233,11 +233,13 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			UserNotificationCenter.updateDockBadge(unread)
 		}
 		
+		// Forward the event to the conversation if it's open. Also, if the 
+		// conversation is not open, or if it isn't the main window, show a notification.
 		var display = true
 		for c in self.childConversations {
 			if let d = c.conversation?.id where d == event.conversation_id {
-				if (c.window?.isKeyWindow ?? false) {
-					c.conversation(c.conversation!, didReceiveEvent: event)
+				c.conversation(c.conversation!, didReceiveEvent: event)
+				if c.window?.isKeyWindow ?? false {
 					display = false
 				}
 				break

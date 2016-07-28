@@ -103,7 +103,7 @@ public class IChatMessageEvent: IEvent, Message {
 		return attachments
     }
 	
-	public var sender: Person {
+	public var sender: Person? {
 		let orig = User(userID: self.userID)
 		if let client = self.client {
 			return client.directory.people[self.userID.gaiaID] ?? orig

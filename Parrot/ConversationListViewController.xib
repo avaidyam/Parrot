@@ -43,12 +43,12 @@
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="063202D1-0689-4486-84BE-FF652DBB7FE1" label="Title" paletteLabel="Title" id="CCw-vn-xqR" userLabel="Title">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="1" height="17"/>
-                        <size key="maxSize" width="1000000" height="17"/>
+                        <size key="minSize" width="64" height="17"/>
+                        <size key="maxSize" width="68" height="17"/>
                         <textField key="view" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="EsJ-7M-xnu">
-                            <rect key="frame" x="0.0" y="14" width="38" height="17"/>
+                            <rect key="frame" x="0.0" y="14" width="68" height="17"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Window" id="yOM-aK-md0">
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Window" id="yOM-aK-md0">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

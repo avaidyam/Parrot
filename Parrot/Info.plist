@@ -22,6 +22,19 @@
 	<string>v0.4-alpha</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.avaidyam.Parrot</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>parrot</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>247</string>
 	<key>GithubRepository</key>

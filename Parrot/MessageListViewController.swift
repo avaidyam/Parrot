@@ -8,6 +8,8 @@ import ParrotServiceExtension
 /* TODO: Support Slack-like plugin integrations. */
 /* TODO: Needs a complete refactor, with something like CSS styling. */
 /* TODO: Re-enable link previews later when they're not terrible... */
+/* TODO: "Mention me when someone says [...]" option. */
+/* TODO: Use the PlaceholderMessage for sending messages. */
 
 private var _linkCache = [String: LinkPreviewType]()
 private func _getLinkCached(_ key: String) throws -> LinkPreviewType {
@@ -25,6 +27,15 @@ private func _getLinkCached(_ key: String) throws -> LinkPreviewType {
 
 public class MessageListViewController: NSWindowController, NSTextViewDelegate, ConversationDelegate {
 	
+	// This is instantly shown to the user when they send a message. It will
+	// be updated automatically when the status of the message is known.
+	public struct PlaceholderMessage: Message {
+		public let sender: Person?
+		public let timestamp: Date
+		public let text: String
+		public var failed: Bool = false
+	}
+	
 	@IBOutlet var listView: ListView!
     @IBOutlet var entryView: NSTextView!
 	@IBOutlet var statusView: NSTextField!
@@ -38,7 +49,7 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 	lazy var popover: NSPopover = {
 		let p = NSPopover()
 		let v = NSViewController()
-		v.view = self.statusView
+		v.view = self.statusView.superview!
 		p.contentViewController = v
 		p.behavior = .applicationDefined
 		return p
@@ -154,7 +165,7 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 			self.conversation?.delegate = self
 			*/
 			
-			self.conversation?.getEvents(event_id: conversation?.events.first?.id, max_events: 50) { events in
+			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
 					self.dataSource.append(chat)
 					linkQ.async {
@@ -266,7 +277,6 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
         }
     }
 	
-	//["()", "[]", "{}", "\"\"", "''", "``"]
 	//func textViewDidChangeText?
 	
     // MARK: NSTextFieldDelegate
@@ -276,10 +286,16 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
             return
         }
 		
+		/*
+		let typedStr = entryView.attributedSubstring(
+			forProposedRange: entryView.rangeForUserCompletion,
+			actualRange: nil)?.string
+		log.debug("got \(typedStr)")
+		*/
+		
         let typingTimeout = 0.4
         let now = Date()
-
-        if lastTypingTimestamp == nil || Date().timeIntervalSince(lastTypingTimestamp!) > typingTimeout {
+        if lastTypingTimestamp == nil || now.timeIntervalSince(lastTypingTimestamp!) > typingTimeout {
             self.conversation?.setTyping(typing: TypingType.Started)
         }
 
@@ -312,4 +328,32 @@ public class MessageListViewController: NSWindowController, NSTextViewDelegate, 
 	public func textView(_ textView: NSTextView, completions words: [String], forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>?) -> [String] {
 		return ["this", "is", "a", "test"]
 	}
+}
+
+/* TODO: When selecting text and typing a completion character, wrap the text. */
+/* TODO: When typing a word and typing a completion character, wrap the entire word. */
+
+private let completionsL = ["(", "[", "{", "\"", "'", "`", "*", "_", "-", "~"]
+private let completionsR = [")", "]", "}", "\"", "'", "`", "*", "_", "-", "~"]
+
+public class CompletingTextView: NSTextView {
+	
+	public override func insertText(_ string: AnyObject, replacementRange: NSRange) {
+		super.insertText(string, replacementRange: replacementRange)
+		
+		// Only deal with actual Strings, not AttributedStrings.
+		var inserted = string as? String
+		if let str = string as? AttributedString {
+			inserted = str.string
+		}
+		guard let insertedStr = inserted else { return }
+		
+		// If the entered text was a completion character, place the matching 
+		// one after the insertion point and move the cursor back.
+		if let r = completionsL.index(of: insertedStr) {
+			super.insertText(completionsR[r], replacementRange: self.selectedRange())
+			self.moveBackward(nil)
+		}
+	}
+	
 }

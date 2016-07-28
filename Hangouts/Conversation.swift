@@ -13,7 +13,7 @@ public protocol ConversationDelegate {
 }
 
 public struct IFocus: Focus {
-	public let owner: Person
+	public let sender: Person?
 	public let timestamp: Date
 	public let typing: TypingProgress
 	public let present: Bool
@@ -186,8 +186,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			let id = User.ID(chatID: r.participantId!.chatId!, gaiaID: r.participantId!.gaiaId!)
 			let person = self.client.directory.people[r.participantId!.gaiaId!]
 			let read = Date.from(UTC: Double(r.latestReadTimestamp!))
-			let t = self.typingStatuses[id]
-			let f = IFocus(owner: person!, timestamp: read, typing: .away, present: false)
+			//let t = self.typingStatuses[id]
+			let f = IFocus(sender: person, timestamp: read, typing: .away, present: false)
 			focuses.append(f)
 		}
 		return focuses
@@ -315,40 +315,45 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	// necessary. If the beginning of the conversation is reached, an empty
 	// list will be returned.
     public func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([IEvent]) -> Void)? = nil) {
-        guard let event_id = event_id else {
+        /*guard let event_id = event_id else {
             cb?(events)
             return
-		}
+		}*/
 
         // If event_id is provided, return the events we have that are
         // older, or request older events if event_id corresponds to the
         // oldest event we have.
-        if let conv_event = self.get_event(event_id: event_id) {
+		var ts = Date()
+        if	let event_id = event_id,
+			let conv_event = self.get_event(event_id: event_id) {
+			
             if events.first!.id != event_id {
                 if let indexOfEvent = self.events.index(where: { $0 == conv_event }) {
                     cb?(Array(self.events[indexOfEvent...self.events.endIndex]))
                     return
                 }
             }
-			
-            client.getConversation(conversation_id: id, event_timestamp: conv_event.timestamp, max_events: max_events) { res in
-				if res!.responseHeader!.status == ResponseStatus.InvalidRequest {
-					log.error("Invalid request! \(res!.responseHeader)")
-					return
-				}
-				let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(event: $0) }
-				self.readStates = res!.conversationState!.conversation!.readState
-				
-                for conv_event in conv_events {
-					conv_event.client = self.client
-                    self.events_dict[conv_event.id] = conv_event
-                }
-                cb?(conv_events)
-                self.delegate?.conversationDidUpdateEvents(self)
-            }
-        } else {
+			ts = conv_event.timestamp
+        }/* else {
             log.error("Event not found.")
-        }
+			return
+		}*/
+		
+		client.getConversation(conversation_id: id, event_timestamp: ts, max_events: max_events) { res in
+			if res!.responseHeader!.status == ResponseStatus.InvalidRequest {
+				log.error("Invalid request! \(res!.responseHeader)")
+				return
+			}
+			let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(event: $0) }
+			self.readStates = res!.conversationState!.conversation!.readState
+			
+			for conv_event in conv_events {
+				conv_event.client = self.client
+				self.events_dict[conv_event.id] = conv_event
+			}
+			cb?(conv_events)
+			self.delegate?.conversationDidUpdateEvents(self)
+		}
     }
 
 //    func next_event(event_id, prev=False) {

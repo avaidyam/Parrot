@@ -18,13 +18,12 @@ public enum MessageType {
 }
 
 public protocol Message: EventStreamItem {
-	var sender: Person { get }
 	var text: String { get }
 }
 
 public protocol EventStreamItem {
 	//var identifier: String { get }
-	//var sender: Person? { get } // if nil, global event
+	var sender: Person? { get } // if nil, global event
 	var timestamp: Date { get }
 }
 

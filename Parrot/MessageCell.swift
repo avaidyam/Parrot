@@ -5,6 +5,7 @@ import protocol ParrotServiceExtension.Message
 public class MessageCell: ListViewCell {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
+	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
 	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var cellValue: Any? {
@@ -17,13 +18,13 @@ public class MessageCell: ListViewCell {
 			let user = o.sender
 			
 			let str = AttributedString(string: o.text as String)
-			self.userInterfaceLayoutDirection = o.sender.me ? .rightToLeft : .leftToRight
-			self.textLabel?.alignment = o.sender.me ? .right : .left
+			self.orientation = o.sender!.me ? .rightToLeft : .leftToRight
+			self.textLabel?.alignment = o.sender!.me ? .right : .left
 			
 			//self.color = o.color
 			self.textLabel?.textStorage?.setAttributedString(str)
 			self.textLabel?.toolTip = "\((o.timestamp ?? .origin).fullString())"
-			let img: NSImage = fetchImage(user: user)
+			let img: NSImage = fetchImage(user: user!)
 			self.photoView?.image = img
 			//self.photoView?.toolTip = o.caption
 			
@@ -69,6 +70,7 @@ public class MessageCell: ListViewCell {
 	// Allows the circle crop to dynamically change.
 	public override func layout() {
 		super.layout()
+		self.userInterfaceLayoutDirection = self.orientation
 		if let layer = self.photoView?.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = layer.bounds.width / 2.0
@@ -83,7 +85,7 @@ public class MessageCell: ListViewCell {
 			if !text.string!.isEmoji {
 				let charRect = text.characterRect()
 				let rectDiff = text.bounds.height - charRect.height
-				if rectDiff > 0 { text.textContainerInset.height += rectDiff / 2.0 }
+				if rectDiff > 0 { text.textContainerInset.height = rectDiff / 2.0 }
 				
 				// Only clip the text if the text isn't purely Emoji.
 				layer.masksToBounds = true

@@ -13,7 +13,6 @@ public enum TypingProgress { // FIXME: FocusType
 
 /// A Peron's focus indicates their activity in a Conversation.
 public protocol Focus: EventStreamItem {
-	var owner: Person { get }
 	var typing: TypingProgress { get }
 	var present: Bool { get }
 }

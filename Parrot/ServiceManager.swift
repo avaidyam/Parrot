@@ -10,6 +10,14 @@ public class ServiceManager: NSApplicationController {
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
+		__test()
+		
+		NSAppleEventManager.shared().setEventHandler(self,
+			andSelector: #selector(self.handleURL(event:withReply:)),
+			forEventClass: UInt32(kInternetEventClass),
+			andEventID: UInt32(kAEGetURL)
+		)
+		
 		log.verbose("Initializing Parrot...")
 		AppActivity.start("Authenticate")
 		Authenticator.authenticateClient {
@@ -38,6 +46,12 @@ public class ServiceManager: NSApplicationController {
 	func applicationShouldHandleReopen(sender: NSApplication, flag: Bool) -> Bool {
 		self.windowController?.showWindow(nil)
 		return true
+	}
+	
+	func handleURL(event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
+		guard let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue else { return }
+		
+		log.debug("got url to open: \(urlString)")
 	}
 	
 	// We need to provide a useful dock menu.

@@ -452,6 +452,7 @@
 		48196B9C1D480624001D4BAA /* Experimental */ = {
 			isa = PBXGroup;
 			children = (
+				48574F121D11F9FC002375E1 /* AppManagement.swift */,
 				48EB54F51D209DD100F77C2C /* Cache.swift */,
 				4814E3B81D2DCC860079C3DB /* AdvancedTextView.swift */,
 				4814E3BA1D2ECB4F0079C3DB /* DispatchTask.swift */,
@@ -482,7 +483,6 @@
 				48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */,
 				4835ECB61C1C672900193EBC /* Emoji.swift */,
 				4866337D1C5822FA006C094B /* ListView.swift */,
-				48574F121D11F9FC002375E1 /* AppManagement.swift */,
 				4835ECB31C1C672900193EBC /* UserNotification+AuxOptions.swift */,
 				48A452261D19B16500CB588A /* Tone.swift */,
 			);

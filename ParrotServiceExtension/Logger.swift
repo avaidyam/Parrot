@@ -19,14 +19,13 @@ public final class Logger {
 	public struct Channel {
 		public let operation: (Message, Severity, Subsystem) -> ()
 		
-		/// Channel.print sends the message to stdout with tags.
-		public static let print = Channel {
-			Swift.print("[\($2)] [\($1)]: \($0)")
-		}
-		
 		/// Channel.print sends the message to stdout, with a debugging-suitable transformation.
-		public static let debugPrint = Channel {
-			$0.1 >= .info ? Swift.debugPrint($0.0) : Swift.print($0.0)
+		public static let print = Channel {
+			var output = ""
+			_ = $1 >= .info
+				? debugPrint($0, terminator: "", to: &output)
+				: Swift.print($0, terminator: "", to: &output)
+			Swift.print("[\($2)] [\($1)]: \(output)")
 		}
 		
 		/// Channel.ASL uses the Apple System Logging facility to submit the message.
@@ -81,7 +80,7 @@ public final class Logger {
 	/// Note: the subsystem should preferrably be a unique reverse domain name.
 	/// Note: if channels is empty, the message will not enter a logging flow.
 	/// Note: by default, the Logger is configured to act similarly to NSLog.
-	public init(subsystem: Subsystem, channels: [Channel] = [Channel.print/*, Channel.ASL*/], severity: Severity = .verbose) {
+	public init(subsystem: Subsystem, channels: [Channel] = [Channel.print], severity: Severity = .verbose) {
 		self.subsystem = subsystem
 		self.channels = channels
 		self.severity = severity
