@@ -1,7 +1,7 @@
 import AppKit
 
 /// For Interface Builder to not screw with NSTextView embedding.
-public class AntiScrollView: NSScrollView {
+public class NSAntiScrollView: NSScrollView {
 	public override init(frame frameRect: NSRect) {
 		super.init(frame: frameRect)
 		hideScrollers()
@@ -22,6 +22,7 @@ public class AntiScrollView: NSScrollView {
 	}
 }
 
-public class AntiClipView: NSClipView {
+/// For automatically flipping the NSView drawing.
+public class NSAntiClipView: NSClipView {
 	public override var isFlipped: Bool { return true }
 }
