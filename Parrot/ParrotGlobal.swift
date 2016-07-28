@@ -59,3 +59,17 @@ public func fetchImage(user: Person) -> NSImage {
 	_imgCache[user.identifier] = img
 	return img
 }
+
+private var _linkCache = [String: LinkPreviewType]()
+public func _getLinkCached(_ key: String) throws -> LinkPreviewType {
+	if let val = _linkCache[key] {
+		return val
+	} else {
+		do {
+			let val = try LinkPreviewParser.parse(key)
+			_linkCache[key] = val
+			log.info("parsed link => \(val)")
+			return val
+		} catch { throw error }
+	}
+}

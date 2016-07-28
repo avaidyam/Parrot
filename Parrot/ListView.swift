@@ -331,9 +331,9 @@ extension ListView /*: NSExtendedTableViewDelegate*/ {
 // Support for per-row and multi-select menus.
 @objc public protocol NSExtendedTableViewDelegate: NSTableViewDataSource, NSTableViewDelegate {
 	@objc(tableView:menuForRows:)
-	func tableView(_: NSTableView, menuForRows: IndexSet) -> NSMenu?
+	optional func tableView(_: NSTableView, menuForRows: IndexSet) -> NSMenu?
 	@objc(tableView:didClickRow:)
-	func tableView(_: NSTableView, didClickRow: Int)
+	optional func tableView(_: NSTableView, didClickRow: Int)
 }
 public class NSExtendedTableView: NSTableView {
 	
@@ -356,7 +356,7 @@ public class NSExtendedTableView: NSTableView {
 		//let view = self.view(atColumn: 0, row: row, makeIfNecessary: false)
 		
 		if let d = self.delegate as? NSExtendedTableViewDelegate {
-			return d.tableView(self, menuForRows: selected)
+			return d.tableView?(self, menuForRows: selected) ?? super.menu(for: event)
 		}
 		return super.menu(for: event)
 	}
@@ -367,7 +367,7 @@ public class NSExtendedTableView: NSTableView {
 		
 		super.mouseDown(event)
 		if let d = self.delegate as? NSExtendedTableViewDelegate where row != -1 {
-			d.tableView(self, didClickRow: row)
+			d.tableView?(self, didClickRow: row)
 		}
 	}
 }

@@ -333,3 +333,18 @@ public final class MenuSegue: NSStoryboardSegue {
 	}
 }
 
+@objc public protocol NSTextViewExtendedDelegate: NSTextViewDelegate {
+	@objc(textView:didInsertText:replacementRange:)
+	optional func textView(_ textView: NSTextView, didInsertText: AnyObject, replacementRange: NSRange)
+}
+
+public class NSExtendedTextView: NSTextView {
+	
+	public override func insertText(_ string: AnyObject, replacementRange: NSRange) {
+		super.insertText(string, replacementRange: replacementRange)
+		
+		if let d = self.delegate as? NSTextViewExtendedDelegate {
+			d.textView?(self, didInsertText: string, replacementRange: replacementRange)
+		}
+	}
+}
