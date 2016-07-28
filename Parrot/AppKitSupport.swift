@@ -36,7 +36,13 @@ public extension NSNib {
 	}
 }
 
-extension NSWindowController: NSWindowDelegate {}
+extension NSWindowController: NSWindowDelegate {
+	public func showWindow() {
+		DispatchQueue.main.async {
+			self.showWindow(nil)
+		}
+	}
+}
 
 /// from @jack205: https://gist.github.com/jacks205/4a77fb1703632eb9ae79
 public extension Date {

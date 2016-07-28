@@ -1,7 +1,7 @@
 import AppKit
 
 /* TODO: Support pattern-based haptic feedback. */
-/* TODO: Support NSApp.requestUserAttention(...). */
+/* TODO: Support NSApp.dockTileBadge better, as the number of outstanding notifications. */
 
 public typealias UserNotification = NSUserNotification
 
@@ -22,7 +22,7 @@ public extension NSUserNotification {
 		case alwaysShow
 		case customSoundPath
 		case vibrateForceTouch
-		case automaticDockBadge
+		case requestUserAttention
 	}
 	
 	public func set(option: AuxOptions, value: AnyObject) {
@@ -93,6 +93,10 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 			let interval = Settings[Parrot.VibrateInterval] as? Int ?? 10
 			let length = Settings[Parrot.VibrateLength] as? Int ?? 1000
 			if vibrate { NSHapticFeedbackManager.vibrate(length: length, interval: interval) }
+		}
+		
+		if let r = notification.get(option: .requestUserAttention) as? NSRequestUserAttentionType {
+			NSApp.requestUserAttention(r)
 		}
 	}
 	

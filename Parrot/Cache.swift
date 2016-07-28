@@ -1,6 +1,6 @@
-import Foundation
-
-// from @alecthomas: https://github.com/alecthomas/Cache.swift/blob/master/Cache/Cache.swift
+import AppKit
+import protocol ParrotServiceExtension.Person
+import protocol ParrotServiceExtension.Conversation
 
 /* TODO: Turn this into a lightweight disk+memory LRU cache. */
 
@@ -45,6 +45,62 @@ public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> V
 		return nil
 	}
 }
+
+private var _imgCache = [String: NSImage]()
+public func fetchImage(user: Person, conversation: Conversation) -> NSImage {
+	
+	let output = _imgCache[user.identifier]
+	guard output == nil else { return output! }
+	
+	// 1. If we can find or cache the photo URL, return that.
+	// 2. If no photo URL can be used, and the name exists, create a monogram image.
+	// 3. If a monogram is not possible, use the default image mask.
+	
+	var img: NSImage! = nil
+	if let d = fetchData(user.identifier, user.photoURL) {
+		img = NSImage(data: d)!
+	} else if let _ = user.fullName.rangeOfCharacter(from: .letters, options: []) {
+		img = imageForString(forString: user.fullName)
+	} else {
+		img = defaultImageForString(forString: user.fullName)
+	}
+	
+	_imgCache[user.identifier] = img
+	return img
+}
+public func fetchImage(user: Person) -> NSImage {
+	
+	let output = _imgCache[user.identifier]
+	guard output == nil else { return output! }
+	
+	var img: NSImage! = nil
+	if let d = fetchData(user.identifier, user.photoURL) {
+		img = NSImage(data: d)!
+	} else {
+		img = defaultImageForString(forString: user.fullName)
+	}
+	
+	_imgCache[user.identifier] = img
+	return img
+}
+
+private var _linkCache = [String: LinkPreviewType]()
+public func _getLinkCached(_ key: String) throws -> LinkPreviewType {
+	if let val = _linkCache[key] {
+		return val
+	} else {
+		do {
+			let val = try LinkPreviewParser.parse(key)
+			_linkCache[key] = val
+			log.info("parsed link => \(val)")
+			return val
+		} catch { throw error }
+	}
+}
+
+
+
+
 /*
 
 // Objects conforming to this protocol may be cached.

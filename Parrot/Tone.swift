@@ -1,6 +1,7 @@
 import AppKit
 
 /* TODO: Create a dictionary mapping of names --> disk URLs for TLToneManager. */
+/* TODO: Migrate framework resources into our bundle if requested. */
 
 public extension NSSound {
 	public typealias Path = String

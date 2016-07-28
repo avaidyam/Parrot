@@ -266,7 +266,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			notification.set(option: .vibrateForceTouch, value: true)
 			notification.set(option: .alwaysShow, value: true)
 			
-			var img: NSImage = defaultUserImage
+			var img: NSImage = NSImage(named: "NSUserGuest")!
 			if let d = fetchData(user.id.chatID, user.photoURL) {
 				img = NSImage(data: d)!
 			}
