@@ -338,13 +338,25 @@ public final class MenuSegue: NSStoryboardSegue {
 	optional func textView(_ textView: NSTextView, didInsertText: AnyObject, replacementRange: NSRange)
 }
 
+@IBDesignable
 public class NSExtendedTextView: NSTextView {
+	
+	@IBInspectable
+	public var shouldAlwaysPasteAsPlainText: Bool = false
 	
 	public override func insertText(_ string: AnyObject, replacementRange: NSRange) {
 		super.insertText(string, replacementRange: replacementRange)
 		
 		if let d = self.delegate as? NSTextViewExtendedDelegate {
 			d.textView?(self, didInsertText: string, replacementRange: replacementRange)
+		}
+	}
+	
+	public override func paste(_ sender: AnyObject?) {
+		if self.shouldAlwaysPasteAsPlainText {
+			self.pasteAsPlainText(sender)
+		} else {
+			super.paste(sender)
 		}
 	}
 }
