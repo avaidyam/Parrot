@@ -77,7 +77,7 @@ public class MessageCell: ListViewCell {
 		}
 		if let text = self.textLabel, let layer = text.layer {
 			
-			// [BUG] [macOS 12] NSTextView doesn't fill width for some reason.
+			// [BUG] [macOS 12] NSTextView doesn't fill width if layer-backed?
 			text.frame = text.enclosingScrollView!.bounds
 			
 			// Vertically center text which can fit in the bounds of the text view.
@@ -119,10 +119,11 @@ public class MessageCell: ListViewCell {
 	public override class func cellHeight(forWidth width: CGFloat, cellValue: Any?) -> CGFloat {
 		let text = (cellValue as! Message).text ?? ""
 		let attr = AttributedString(string: text, attributes: [
-			NSFontAttributeName: NSFont.systemFont(ofSize: 12.0 * (text.isEmoji ? 3 : 1))
+			NSFontAttributeName: NSFont.systemFont(ofSize: 12.0 * (text.isEmoji ? 3 : 1)),
+			NSParagraphStyleAttributeName: NSParagraphStyle.default()
 		])
 		
-		let box = attr.boundingRect(with: NSSize(width: width, height: 10000000),
+		let box = attr.boundingRect(with: NSSize(width: width, height: .greatestFiniteMagnitude),
 		                            options: [.usesLineFragmentOrigin, .usesFontLeading])
 		return (box.size.height > 24.0 ? box.size.height : 24.0) + 16.0
 	}

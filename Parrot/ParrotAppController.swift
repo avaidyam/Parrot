@@ -9,10 +9,10 @@ import ParrotServiceExtension
 internal let log = Logger(subsystem: "com.avaidyam.Parrot.global")
 
 // Existing Parrot Settings keys.
-public final class Parrot {
+public enum Parrot {
 	public static let InterfaceStyle = "Parrot.InterfaceStyle"
 	public static let SystemInterfaceStyle = "Parrot.SystemInterfaceStyle"
-	public static let DisableTranslucency = "Parrot.DisableTranslucency"
+	public static let VibrancyStyle = "Parrot.VibrancyStyle"
 	
 	public static let AutoEmoji = "Parrot.AutoEmoji"
 	public static let InvertChatStyle = "Parrot.InvertChatStyle"
@@ -33,6 +33,11 @@ public class ParrotAppController: NSApplicationController {
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
+		checkForUpdates("v0.6-alpha") {
+			NSWorkspace.shared().open($0.githubURL)
+		}
+		
+		// Register for AppleEvents that follow our URL scheme.
 		NSAppleEventManager.shared().setEventHandler(self,
 			andSelector: #selector(self.handleURL(event:withReply:)),
 			forEventClass: UInt32(kInternetEventClass),
@@ -40,16 +45,16 @@ public class ParrotAppController: NSApplicationController {
 		)
 		
 		log.verbose("Initializing Parrot...")
-		AppActivity.start("Authenticate")
+		//AppActivity.start("Authenticate")
 		Authenticator.authenticateClient {
 			let c = Client(configuration: $0)
-			AppActivity.end("Authenticate")
+			//AppActivity.end("Authenticate")
 			
 			NotificationCenter.default()
 				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
-					AppActivity.start("Setup")
+					//AppActivity.start("Setup")
 					c.buildUserConversationList {
-						AppActivity.end("Setup")
+						//AppActivity.end("Setup")
 						ServiceRegistry.add(service: c)
 					}
 			}

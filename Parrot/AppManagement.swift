@@ -1,4 +1,6 @@
 import Foundation
+import class AppKit.NSAlert
+import class AppKit.NSTextField
 
 /* TODO: Finish Semver comparison and handle app update mechanism. */
 let SEMVER_REGEX = "\\bv?(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?:-[\\da-z\\-]+(?:\\.[\\da-z\\-]+)*)?(?:\\+[\\da-z\\-]+(?:\\.[\\da-z\\-]+)*)?\\b"
@@ -33,15 +35,15 @@ public struct GithubRelease {
 		else { return nil }
 		
 		// If we're in pre-release mode, ensure we have at least one entry.
-		if prerelease && json[0] != nil {
-			json = json[0]!
-		} else { return nil }
+		if let js = json as? [AnyObject] where prerelease {
+			json = js[0]
+		} else if prerelease { return nil }
 		
 		guard	let releaseName = json["name"] as? String,
 				let buildTag = json["tag_name"] as? String,
 				let releaseNotes = json["body"] as? String,
 				let appUpdate = json["zipball_url"] as? String,
-				let githubURL = json["url"] as? String
+				let githubURL = json["html_url"] as? String
 		else { return nil }
 		
 		return GithubRelease(releaseName: releaseName, buildTag: buildTag,
@@ -73,15 +75,24 @@ public struct Semver {
 	}
 }
 
-// For testing UI updates later.
-public func __test() {
-	let release = GithubRelease.latest(prerelease: true)
-	let n = NSUserNotification()
-	n.hasActionButton = true
-	n.title = "Parrot \(release!.releaseName) available"
-	n.actionButtonTitle = "Update"
-	n.identifier = "com.avaidyam.Parrot.UpdateNotification"
-	n.informativeText = release!.releaseNotes
-	UserNotificationCenter.deliver(n)
-	log.info("\(release)")
+// For initial release alerts.
+// FIXME: Don't hardcode things.
+public func checkForUpdates(_ buildTag: String, _ updateHandler: (GithubRelease) -> Void = {_ in}) {
+	guard let release = GithubRelease.latest(prerelease: true) else { return }
+	guard release.buildTag == buildTag else { return }
+	
+	let a = NSAlert()
+	a.alertStyle = .informational
+	a.messageText = "\(release.releaseName) available"
+	a.informativeText = release.releaseNotes
+	a.addButton(withTitle: "Update")
+	a.addButton(withTitle: "Ignore")
+	a.showsSuppressionButton = true // FIXME
+	
+	a.layout()
+	a.window.appearance = ParrotAppearance.current()
+	a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
+	if a.runModal() == 1000 /*NSAlertFirstButtonReturn*/ {
+		updateHandler(release)
+	}
 }

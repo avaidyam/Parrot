@@ -1,11 +1,17 @@
 import AppKit
 
+/* TODO: Remove NSAppearance from ParrotAppearance and add an extension for it. */
+
 /// ParrotAppearance controls all user interface constructs (style, theme,
 /// mode, etc.) at runtime. It cannot be instantiated.
 public struct ParrotAppearance {
 	private init() {}
+	
 	private static var _cachedAppearance: String = ParrotAppearance._current()
 	private static var _listeners = [AppearanceListener]()
+	
+	private static var _cachedVibrancyStyle: VibrancyStyle = ParrotAppearance.vibrancyStyle()
+	private static var _vibrancyStyleListeners = [VibrancyStyleListener]()
 	
 	/// Trampolines the distributed notification sent when the user changes interface styles
 	/// into a locally stored default that can be observed normally.
@@ -21,12 +27,24 @@ public struct ParrotAppearance {
 	/// registered listeners IFF the appearance has changed. [KVO doesn't work with UserDefaults.]
 	private static let registerNotificationChangeListener: NSObjectProtocol = {
 		NotificationCenter.default().addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { n in
+			
+			// Detect InterfaceStyle changes.
 			let current = ParrotAppearance._current()
 			if _cachedAppearance != current {
 				_cachedAppearance = current
 				
 				_listeners.filter { $0.object != nil }.forEach {
 					$0.handler(NSAppearance(named: current)!)
+				}
+			}
+			
+			// Detect VibrancyStyle changes.
+			let currentVibrancyStyle = ParrotAppearance.vibrancyStyle()
+			if _cachedVibrancyStyle != currentVibrancyStyle {
+				_cachedVibrancyStyle = currentVibrancyStyle
+				
+				_vibrancyStyleListeners.filter { $0.object != nil }.forEach {
+					$0.handler(currentVibrancyStyle)
 				}
 			}
 		}
@@ -37,6 +55,16 @@ public struct ParrotAppearance {
 		weak var object: AnyObject?
 		let handler: (NSAppearance) -> Void
 		private required init(object: AnyObject, handler: (NSAppearance) -> Void) {
+			self.object = object
+			self.handler = handler
+		}
+	}
+	
+	/// Wraps the object and handler into a single container.
+	private class VibrancyStyleListener {
+		weak var object: AnyObject?
+		let handler: (VibrancyStyle) -> Void
+		private required init(object: AnyObject, handler: (VibrancyStyle) -> Void) {
 			self.object = object
 			self.handler = handler
 		}
@@ -53,6 +81,32 @@ public struct ParrotAppearance {
 		case Dark
 		/// System-defined vibrant theme.
 		case System
+		
+		/*
+		public func visualEffectState() -> NSVisualEffectMaterial {
+			switch self {
+			case Always: return .active
+			case Never: return .inactive
+			case Automatic: return .followsWindowActiveState
+			}
+		}*/
+	}
+	
+	public enum VibrancyStyle: Int {
+		/// Windows will always be vibrant.
+		case Always
+		/// Windows will never be vibrant (opaque).
+		case Never
+		/// Windows will be vibrant when focused.
+		case Automatic
+		
+		public func visualEffectState() -> NSVisualEffectState {
+			switch self {
+			case Always: return .active
+			case Never: return .inactive
+			case Automatic: return .followsWindowActiveState
+			}
+		}
 	}
 	
 	public enum WindowInteraction: Int {
@@ -94,6 +148,16 @@ public struct ParrotAppearance {
 		return NSAppearance(named: _current())!
 	}
 	
+	/// Returns the current user preferential InterfaceStyle (light, dark, system).
+	public static func interfaceStyle() -> InterfaceStyle {
+		return InterfaceStyle(rawValue: Settings[Parrot.InterfaceStyle] as? Int ?? -1) ?? .System
+	}
+	
+	/// Returns the current user preferential VibrancyStyle (always, never, automatic).
+	public static func vibrancyStyle() -> VibrancyStyle {
+		return VibrancyStyle(rawValue: Settings[Parrot.VibrancyStyle] as? Int ?? -1) ?? .Automatic
+	}
+	
 	/// Register a listener to be invoked when the application appearance changes.
 	/// If invokeImmediately is true, the handler will be invoked immediately.
 	/// This is useful in case appearance update logic is unified and can be streamlined.
@@ -116,11 +180,35 @@ public struct ParrotAppearance {
 			}
 		}
 	}
+	
+	/// Register a listener to be invoked when the application appearance changes.
+	/// If invokeImmediately is true, the handler will be invoked immediately.
+	/// This is useful in case appearance update logic is unified and can be streamlined.
+	/// Note: this should be done when a view appears on-screen.
+	public static func registerVibrancyStyleListener(observer: AnyObject, invokeImmediately: Bool = false, handler: (VibrancyStyle) -> Void) {
+		_ = registerDarkModeActiveListener; _ = registerNotificationChangeListener // SETUP
+		_vibrancyStyleListeners.append(VibrancyStyleListener(object: observer, handler: handler))
+		if invokeImmediately {
+			handler(ParrotAppearance.vibrancyStyle())
+		}
+	}
+	
+	/// Unregister a previously registered listener.
+	/// Note: this should be done when a view disappears from the screen.
+	public static func unregisterVibrancyStyleListener(observer: AnyObject) {
+		for (i, l) in _vibrancyStyleListeners.enumerated() {
+			if l.object === observer {
+				_vibrancyStyleListeners.remove(at: i)
+				break;
+			}
+		}
+	}
 }
 
 public extension NSWindow {
-	public func enableRealTitlebarVibrancy() {
+	public func enableRealTitlebarVibrancy(_ blendingMode: NSVisualEffectBlendingMode = .withinWindow) {
 		let t = self.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView
 		t?.material = .appearanceBased
+		t?.blendingMode = blendingMode
 	}
 }

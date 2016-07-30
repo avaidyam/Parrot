@@ -64,8 +64,14 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	public override func loadWindow() {
 		super.loadWindow()
 		self.window?.appearance = ParrotAppearance.current()
-		self.window?.enableRealTitlebarVibrancy()
+		self.window?.enableRealTitlebarVibrancy(.withinWindow)
 		self.window?.titleVisibility = .hidden
+		
+		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
+			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
+			vev.state = style.visualEffectState()
+		}
+		
 		self.indicator.startAnimation(nil)
 		
 		self.listView.dataSourceProvider = { self.sortedConversations.map { $0 as Any } }

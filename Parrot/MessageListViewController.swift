@@ -48,15 +48,20 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public override func loadWindow() {
 		super.loadWindow()
 		self.window?.appearance = ParrotAppearance.current()
-		self.window?.enableRealTitlebarVibrancy()
+		self.window?.enableRealTitlebarVibrancy(.withinWindow)
 		self.window?.titleVisibility = .hidden
+		
+		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
+			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
+			vev.state = style.visualEffectState()
+		}
 		
 		self.listView.register(nibName: "MessageCell", forClass: MessageCell.self)
 		self.listView.register(nibName: "FocusCell", forClass: FocusCell.self)
 		self.listView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
 		
 		// oh lawd pls forgibs my sins
-		self.listView.dataSourceProvider = {
+		self.listView.dataSourceProvider = { // watch for invalid Collection: count differed in successive traversals
 			return self.dataSource.map { $0 as Any }
 		}
 		
@@ -81,6 +86,11 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 				layer.cornerRadius = photo.bounds.width / 2.0
 			}
 			self.imageView.image = fetchImage(user: me as! User, conversation: self.conversation!)
+		}
+		
+		// [BUG] [macOS 12] NSTextView doesn't fill width if layer-backed?
+		if let text = self.entryView {
+			text.frame = text.enclosingScrollView!.bounds
 		}
     }
 	

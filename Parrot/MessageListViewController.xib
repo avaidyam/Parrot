@@ -22,14 +22,14 @@
             <windowCollectionBehavior key="collectionBehavior" fullScreenAuxiliary="YES"/>
             <rect key="contentRect" x="163" y="205" width="480" height="270"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
-            <view key="contentView" id="TjO-sk-yg0">
+            <view key="contentView" wantsLayer="YES" id="TjO-sk-yg0" customClass="NSVisualEffectView">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                     </customView>
-                    <visualEffectView blendingMode="withinWindow" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
+                    <visualEffectView wantsLayer="YES" blendingMode="withinWindow" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
                         <subviews>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="S2O-bo-UO2" userLabel="Image View">
@@ -43,14 +43,14 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
+                            <scrollView wantsLayer="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
                                 <rect key="frame" x="8" y="8" width="432" height="24"/>
-                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
+                                <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
                                     <rect key="frame" x="0.0" y="0.0" width="432" height="24"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView drawsBackground="NO" findStyle="bar" incrementalSearchingEnabled="YES" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="432" height="24"/>
+                                        <textView wantsLayer="YES" drawsBackground="NO" findStyle="bar" incrementalSearchingEnabled="YES" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -98,7 +98,7 @@
                     <constraint firstAttribute="bottom" secondItem="yMT-fg-2gH" secondAttribute="bottom" id="wee-IV-uKB"/>
                 </constraints>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="15DD37E4-A9CD-4FCB-B956-9C65DA208478" autosavesConfiguration="NO" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="ffa-CI-zYk">
+            <toolbar key="toolbar" implicitIdentifier="15DD37E4-A9CD-4FCB-B956-9C65DA208478" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="ffa-CI-zYk">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="0BA82A9A-B384-4019-91E0-FF901AAB1BE3" label="Title" paletteLabel="Title" visibilityPriority="2" id="GTg-V7-Nyg" userLabel="Title">
                         <nil key="toolTip"/>
@@ -158,11 +158,11 @@
                 <outlet property="contentViewController" destination="Fnl-Yf-OK7" id="5YB-Xa-qGE"/>
             </connections>
         </popover>
-        <customView id="Pye-gy-Huh">
+        <customView wantsLayer="YES" id="Pye-gy-Huh">
             <rect key="frame" x="0.0" y="0.0" width="163" height="270"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EhA-26-aSD">
+                <button wantsLayer="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EhA-26-aSD">
                     <rect key="frame" x="41" y="217" width="81" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qsG-dc-gjg">
@@ -170,7 +170,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
-                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ppq-JF-FK1">
+                <button wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ppq-JF-FK1">
                     <rect key="frame" x="69" y="17" width="25" height="25"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Yg3-SG-8RK">
@@ -181,7 +181,7 @@
             </subviews>
             <point key="canvasLocation" x="612.5" y="-237"/>
         </customView>
-        <visualEffectView blendingMode="behindWindow" state="active" id="lCk-Ky-CPB">
+        <visualEffectView wantsLayer="YES" blendingMode="behindWindow" state="active" id="lCk-Ky-CPB">
             <rect key="frame" x="0.0" y="0.0" width="124" height="33"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>

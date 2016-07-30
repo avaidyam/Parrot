@@ -19,7 +19,7 @@
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <rect key="contentRect" x="163" y="205" width="276" height="574"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
-            <view key="contentView" id="pkY-JK-KNL">
+            <view key="contentView" id="pkY-JK-KNL" customClass="NSVisualEffectView">
                 <rect key="frame" x="0.0" y="0.0" width="276" height="574"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -39,7 +39,7 @@
                     <constraint firstAttribute="trailing" secondItem="9lt-ER-yzx" secondAttribute="trailing" id="dYK-zT-cxR"/>
                 </constraints>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="31E8C674-0470-44C3-A383-A0C79BE00807" autosavesConfiguration="NO" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="u5g-cC-p8p">
+            <toolbar key="toolbar" implicitIdentifier="31E8C674-0470-44C3-A383-A0C79BE00807" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="u5g-cC-p8p">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="063202D1-0689-4486-84BE-FF652DBB7FE1" label="Title" paletteLabel="Title" id="CCw-vn-xqR" userLabel="Title">
                         <nil key="toolTip"/>

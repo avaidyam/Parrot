@@ -6,6 +6,7 @@ import class ParrotServiceExtension.Logger
 /* TODO: Integrate NSProgress, Logger, os_activity, and os_trace. */
 /* TODO: Add property .cancellable and ensure NSApplication doesn't quit until .cancellable propogates. */
 /* TODO: Use applicationShouldTerminate() to control this behavior. */
+/* TODO: Merge with DispatchOperation perhaps? */
 
 /*public var log: Logger {
 	return AppActivity.current.logger
