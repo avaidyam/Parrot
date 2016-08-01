@@ -146,6 +146,9 @@
                     <toolbarItem reference="brc-d2-Cfi"/>
                 </defaultToolbarItems>
             </toolbar>
+            <connections>
+                <outlet property="delegate" destination="-2" id="8Xy-aO-97X"/>
+            </connections>
             <point key="canvasLocation" x="243" y="-237"/>
         </window>
         <viewController id="Fnl-Yf-OK7" userLabel="Popover View Controller">

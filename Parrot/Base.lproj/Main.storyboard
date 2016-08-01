@@ -23,6 +23,12 @@
                                                 <segue destination="ep9-7s-JMi" kind="show" id="0uQ-Bg-jLh"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Send Feedback..." id="dFV-fk-tRB">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="feedback:" target="Voe-Tx-rLC" id="Chk-qM-SGY"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
                                         <menuItem title="Log Out..." id="TaL-BD-B7L">
                                             <modifierMask key="keyEquivalentModifierMask"/>

@@ -28,7 +28,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	
 	private var userList: Directory?
 	private var wallclock: DispatchSourceTimer? = nil
-	private var childConversations = [MessageListViewController]()
+	private var childConversations = [String: MessageListViewController]()
 	
 	deinit {
 		self.wallclock?.cancel()
@@ -121,15 +121,33 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			}
 		}
 		
-		//self.listView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
+		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
 		self.listView.selectionProvider = { row in
 			guard row >= 0 else { return }
-			let wc = MessageListViewController(windowNibName: "MessageListViewController")
-			self.childConversations.append(wc)
-			wc.conversation = (self.sortedConversations[row] as! IConversation)
-			wc.parentController = self
-			wc.showWindow(nil)
-			//_ = MessageListViewController.display(from: self, conversation: self.sortedConversations[row])
+			//DispatchQueue.global(attributes: .qosBackground).async {}
+			
+			let conv = (self.sortedConversations[row] as! IConversation)
+			if let wc = self.childConversations[conv.identifier] {
+				log.debug("Conversation found for id \(conv.identifier)")
+				wc.showWindow(nil)
+				
+			} else {
+				log.debug("Conversation NOT found for id \(conv.identifier)")
+				
+				let wc = MessageListViewController(windowNibName: "MessageListViewController")
+				wc.conversation = conv
+				wc.sendMessageHandler = { [weak self] message, conv2 in
+					self?.sendMessage(message, conv2)
+				}
+				wc.closeHandler = { [weak self] conv2 in
+					_ = self?.childConversations.removeValue(forKey: conv2)
+				}
+				//wc.parentController = self
+				self.childConversations[conv.identifier] = wc
+				
+				wc.showWindow(nil)
+			}
+			
 			DispatchQueue.main.after(when: .now() + .milliseconds(150)) {
 				self.listView.tableView.animator().selectRowIndexes(IndexSet(), byExtendingSelection: false)
 			}
@@ -241,19 +259,14 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		
 		// Forward the event to the conversation if it's open. Also, if the 
 		// conversation is not open, or if it isn't the main window, show a notification.
-		var display = true
-		for c in self.childConversations {
-			if let d = c.conversation?.id where d == event.conversation_id {
-				c.conversation(c.conversation!, didReceiveEvent: event)
-				if c.window?.isKeyWindow ?? false {
-					display = false
-				}
-				break
-			}
+		var showNote = true
+		if let c = self.childConversations[event.conversation_id] {
+			c.conversation(c.conversation!, didReceiveEvent: event)
+			showNote = !(c.window?.isKeyWindow ?? false)
 		}
 		
 		let conv = self.conversationList?.conversations[event.conversation_id]
-		if let user = (conv as? IConversation)?.user_list[event.userID] where !user.isSelf && display {
+		if let user = (conv as? IConversation)?.user_list[event.userID] where !user.isSelf && showNote {
 			log.debug("Sending notification...")
 			
 			let a = (event.conversation_id as String, event.id as String)
@@ -284,17 +297,18 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	}
 	
     public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: ITypingStatusMessage, forUser: User) {
-		for c in self.childConversations {
-			if let d = c.conversation?.id where d == status.convID {
-				if (c.window?.isKeyWindow ?? false) {
-					c.conversation(c.conversation!, didChangeTypingStatusForUser: forUser, toStatus: status.status)
-				}
-				break
+		if let c = self.childConversations[status.convID] {
+			if (c.window?.isKeyWindow ?? false) {
+				c.conversation(c.conversation!, didChangeTypingStatusForUser: forUser, toStatus: status.status)
 			}
 		}
 	}
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
-		log.info("Received watermark \(status)")
+		/*if let c = self.childConversations[status.convID] {
+			if (c.window?.isKeyWindow ?? false) {
+				c.conversation(c.conversation!, didChangeTypingStatusForUser: forUser, toStatus: status.status)
+			}
+		}*/
 	}
 	
 	/* TODO: Just update the row that is updated. */

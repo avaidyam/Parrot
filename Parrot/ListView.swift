@@ -1,5 +1,7 @@
 import AppKit
 
+/* TODO: Cell insets (or indents), separator insets/enabled/color/effects. */
+
 /// Provides default size classes for displayed elements of a list.
 /// Any of the provided classes have an associated size.
 /// However, .Dynamic implies that the size class will be computed
@@ -87,6 +89,7 @@ public class ListView: NSView {
 	
 	private func commonInit() {
 		self.scrollView = NSScrollView(frame: self.bounds)
+		self.scrollView.automaticallyAdjustsContentInsets = false
 		self.tableView = NSExtendedTableView(frame: self.scrollView.bounds)
 		self.tableView.delegate = self
 		self.tableView.dataSource = self
@@ -134,12 +137,6 @@ public class ListView: NSView {
 			self.scrollView.wantsLayer = self.wantsLayer
 			self.tableView.wantsLayer = self.wantsLayer
 		}
-	}
-	
-	@IBInspectable
-	public var rowSpacing: NSSize {
-		get { return self.tableView.intercellSpacing }
-		set { self.tableView.intercellSpacing = newValue }
 	}
 	
 	/* TODO: Monitor actual addition/removal changes. */
@@ -215,7 +212,7 @@ extension ListView: NSExtendedTableViewDelegate {
 	public func tableViewColumnDidResize(_ notification: Notification) {
 		NSAnimationContext.beginGrouping()
 		NSAnimationContext.current().duration = 0
-		let set = IndexSet(integersIn: 0..<self.dataSource.count)
+		let set = IndexSet(integersIn: 0..<(self.visibleRows.last ?? 0))
 		tableView.noteHeightOfRows(withIndexesChanged: set)
 		NSAnimationContext.endGrouping()
 	}

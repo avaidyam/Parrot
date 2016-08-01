@@ -10,8 +10,8 @@ import ParrotServiceExtension
 /* TODO: When selecting text and typing a completion character, wrap the text. */
 /* TODO: When typing a word and typing a completion character, wrap the entire word. */
 
-private let completionsL = ["(", "[", "{", "\"", "'", "`", "*", "_", "-", "~"]
-private let completionsR = [")", "]", "}", "\"", "'", "`", "*", "_", "-", "~"]
+private let completionsL = ["(", "[", "{", "\"", "`", "*", "_", "-", "~"]
+private let completionsR = [")", "]", "}", "\"", "`", "*", "_", "-", "~"]
 
 public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate {
 	
@@ -29,7 +29,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSButton!
 	
-	public var parentController: ConversationListViewController? = nil
+	public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
+	public var closeHandler: (String) -> Void = {_ in}
 	
 	var _previews = [String: [LinkPreviewType]]()
 	var _focusRow = -1
@@ -47,9 +48,12 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
 	public override func loadWindow() {
 		super.loadWindow()
-		self.window?.appearance = ParrotAppearance.current()
-		self.window?.enableRealTitlebarVibrancy(.withinWindow)
-		self.window?.titleVisibility = .hidden
+		
+		//DispatchQueue.main.sync {
+			self.window?.appearance = ParrotAppearance.current()
+			self.window?.enableRealTitlebarVibrancy(.withinWindow)
+			self.window?.titleVisibility = .hidden
+		//}
 		
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
@@ -96,7 +100,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
 	public override func showWindow(_ sender: AnyObject?) {
 		super.showWindow(nil)
-		self.listView.insets = EdgeInsets(top: 22.0, left: 0, bottom: 40.0, right: 0)
+		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
 		
 		/*
 		if self.window?.isKeyWindow ?? false {
@@ -152,10 +156,16 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
 	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterAppearanceListener(observer: self)
+		self.closeHandler(self.conversation!.identifier)
 	}
 	
 	var conversation: IConversation? {
 		didSet {
+			//DispatchQueue.main.sync {
+				self.window?.title = self.conversation?.name ?? ""
+				self.window?.setFrameAutosaveName("\(self.conversation?.identifier)")
+			//}
+			
 			/*
 			if let oldConversation = oldValue {
 				oldConversation.delegate = nil
@@ -186,8 +196,6 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 					}
 				}
 			}
-			self.window?.title = self.conversation?.name ?? ""
-			self.window?.setFrameAutosaveName("\(self.conversation?.identifier)")
 			
 			/*
 			self.conversation!.messages.map {
@@ -197,7 +205,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 				} else { return [$0 as Any] }
 			}.reduce([], combine: +)
 			*/
-			self.listView?.update()
+			//self.listView?.update()
 		}
 	}
 	
@@ -316,7 +324,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
 			guard let text = entryView.string where text.characters.count > 0 else { return true }
 			self.entryView.string = ""
-			self.parentController?.sendMessage(text, self.conversation!)
+			self.sendMessageHandler(text, self.conversation!)
+			//self.parentController?.sendMessage(text, self.conversation!)
 			
 		case #selector(NSResponder.insertTab(_:)):
 			textView.textStorage?.append(AttributedString(string: "    ", attributes: textView.typingAttributes))

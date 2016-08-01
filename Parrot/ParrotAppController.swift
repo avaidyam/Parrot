@@ -101,4 +101,8 @@ public class ParrotAppController: NSApplicationController {
 		Authenticator.clearTokens()
 		NSApplication.shared().terminate(self)
 	}
+	
+	@IBAction func feedback(_ sender: AnyObject?) {
+		NSWorkspace.shared().open(URL(string: "https://gitreports.com/issue/avaidyam/Parrot")!)
+	}
 }
