@@ -1,27 +1,43 @@
 import Foundation
 import ParrotServiceExtension
 
-public final class ServiceRegistry {
-	private init() {}
+public enum ServiceRegistry {
 	
+	/// TODO:
+	public struct Account {
+		public let serviceIdentifier: String
+		public let accountName: String
+	}
+	
+	/// ServiceRegistry.didAddService:
+	/// This notification is fired upon the discovery of a new Service type.
 	public static let didAddService = Notification.Name(rawValue: "ServiceRegistry.didAddService")
+	
+	/// ServiceRegistry.didRemoveService:
+	/// This notification is fired upon the removal of an existing Service type.
 	public static let didRemoveService = Notification.Name(rawValue: "ServiceRegistry.didAddService")
 	
-	public private(set) static var services = [Service]()
+	/// The set of all discovered Services that are available.
+	/// Note that their connection states may vary and are not determinable automatically.
+	public private(set) static var services = [String: Service]()
 	
+	/// Discovers and adds a Service to the ServiceRegistry.
+	/// Note: `connect()` is not invoked on this Service.
 	public static func add(service: Service) {
-		let idx = ServiceRegistry.services.index { $0 === service }
-		guard idx == nil else { return }
+		let id = service.dynamicType.identifier
+		guard ServiceRegistry.services[id] == nil else { return }
 		
-		ServiceRegistry.services.append(service)
+		ServiceRegistry.services[id] = service
 		NotificationCenter.default().post(name: ServiceRegistry.didAddService, object: service)
 	}
 	
+	/// Removes a Service from the ServiceRegistry.
+	/// Note: `disconnect()` is not invoked on this Service.
 	public static func remove(service: Service) {
-		let _idx = ServiceRegistry.services.index { $0 === service }
-		guard let idx = _idx else { return }
+		let id = service.dynamicType.identifier
+		guard ServiceRegistry.services[id] != nil else { return }
 		
-		ServiceRegistry.services.remove(at: idx)
+		ServiceRegistry.services.removeValue(forKey: id)
 		NotificationCenter.default().post(name: ServiceRegistry.didRemoveService, object: service)
 	}
 }

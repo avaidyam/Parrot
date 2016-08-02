@@ -5,6 +5,12 @@ import Foundation
 /// a Service must support [.text] to be compliant.
 public protocol Service: class {
 	
+	/// The reverse domain name identifier of this specific Service.
+	/// Note that having a unique identifier is required, but more than one instance
+	/// of the Service may exist if the user has logged into multiple accounts
+	/// from the same Service extension point.
+	static var identifier: String { get }
+	
 	/// Connects the service to its server/host.
 	/// Returns true if connection succeeded, or false if it failed.
 	func connect(_ onConnect: (ErrorProtocol?) -> ())

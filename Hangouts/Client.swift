@@ -38,6 +38,10 @@ public final class Client: Service {
 	
 	private var tokens = [NSObjectProtocol]()
 	
+	public static var identifier: String {
+		return "com.google.hangouts"
+	}
+	
 	// Establish a connection to the chat server.
     public func connect(_ onConnect: (ErrorProtocol?) -> ()) {
 		self.channel = Channel(configuration: self.config)

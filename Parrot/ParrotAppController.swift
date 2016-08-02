@@ -31,8 +31,10 @@ public class ParrotAppController: NSApplicationController {
 		ConversationListViewController(windowNibName: "ConversationListViewController")
 	}()
 	
-	// First begin authentication and setup for any services.
-	func applicationWillFinishLaunching(_ notification: Notification) {
+	public override init() {
+		super.init()
+		
+		// Check for updates if any are available.
 		checkForUpdates("v0.6-alpha") {
 			NSWorkspace.shared().open($0.githubURL)
 		}
@@ -43,6 +45,10 @@ public class ParrotAppController: NSApplicationController {
 			forEventClass: UInt32(kInternetEventClass),
 			andEventID: UInt32(kAEGetURL)
 		)
+	}
+	
+	// First begin authentication and setup for any services.
+	func applicationWillFinishLaunching(_ notification: Notification) {
 		
 		log.verbose("Initializing Parrot...")
 		//AppActivity.start("Authenticate")
@@ -72,8 +78,38 @@ public class ParrotAppController: NSApplicationController {
 	
 	/// Handle any URLs that follow the scheme "parrot://" by forwarding them.
 	func handleURL(event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
-		guard let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue else { return }
-		log.debug("got url to open: \(urlString)")
+		guard	let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
+				let url = URL(string: urlString) else { return }
+		
+		// Create an alert handler to catch any issues with the host or path fragments.
+		let alertHandler = {
+			let a = NSAlert()
+			a.alertStyle = .informational
+			a.messageText = "Parrot couldn't open that location!"
+			a.informativeText = urlString
+			a.addButton(withTitle: "OK")
+			
+			a.layout()
+			a.window.appearance = ParrotAppearance.current()
+			a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
+			if a.runModal() == 1000 /*NSAlertFirstButtonReturn*/ {
+				log.warning("Done with alert.")
+			}
+		}
+		
+		/// If the URL host is a Service we have registered, comprehend it.
+		if let service = ServiceRegistry.services[(url.host ?? "")] {
+			let name = url.lastPathComponent?.removingPercentEncoding ?? ""
+			let convs = Array(service.conversations.conversations.values)
+			if let found = (convs.filter { $0.name == name }).first {
+				
+				log.info("got conv: \(found)")
+			} else {
+				alertHandler()
+			}
+		} else {
+			alertHandler()
+		}
 	}
 	
 	/// Provide an application dock menu. Note that because we aren't using an NSDockTilePlugin,
