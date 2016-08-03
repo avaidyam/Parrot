@@ -345,12 +345,28 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
 		guard let insertedStr = inserted else { return }
 		
+		// Handle text replacement.
+		/*NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
+		textView.showFindIndicator(for: NSMakeRange(0, 4))
+		NSSpellChecker.shared().showCorrectionIndicator(
+			of: .guesses,
+			primaryString: ":",
+			alternativeStrings: ["this", "is", "a", "test"],
+			forStringIn: textView.characterRect(forRange: NSMakeRange(0, 4)),
+			view: textView) {
+				log.debug("user selected \($0)")
+		}*/
+		
+		//NSSpellChecker.shared().setAdditionalTextReplacementsDictionary(...)
+		//print(NSSpellChecker.shared().value(forKey: "defaultEmojiReplacementsDictionary"))
+		
 		// If the entered text was a completion character, place the matching
-		// one after the insertion point and move the cursor back.
+		// one after the insertion point and move the cursor back. Display this to the user.
 		if let r = completionsL.index(of: insertedStr) {
 			insertToken = true // prevent re-entrance
-			self.entryView.insertText(completionsR[r], replacementRange: self.entryView.selectedRange())
-			self.entryView.moveBackward(nil)
+			textView.insertText(completionsR[r], replacementRange: self.entryView.selectedRange())
+			textView.moveBackward(nil)
+			textView.showFindIndicator(for: NSMakeRange(textView.attributedString().length - 1, 1))
 		}
 	}
 	

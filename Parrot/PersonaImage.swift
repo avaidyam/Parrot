@@ -50,9 +50,9 @@ public extension NSColor {
 	
 	public static func lightOverlay(forAppearance a: NSAppearance) -> NSColor {
 		if a.name == NSAppearanceNameVibrantDark {
-			return NSColor(calibratedWhite: 1.00, alpha: 0.5)
+			return NSColor(calibratedWhite: 1.00, alpha: 0.6)
 		} else {
-			return NSColor(calibratedWhite: 0.00, alpha: 0.6)
+			return NSColor(calibratedWhite: 0.00, alpha: 0.3)
 		}
 	}
 }

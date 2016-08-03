@@ -35,10 +35,66 @@ public extension NSUserNotification {
 	}
 }
 
+/// Expose the private NSUserNotification API for identity images, a la iTunes.
+public extension NSUserNotification {
+	
+	/// Describes how the identity image will be styled in the banner.
+	public enum IdentityStyle: Int {
+		
+		/// The image will be drawn with a hairline border.
+		case bordered = 0
+		
+		/// The image will be drawn as is, with no modification.
+		case none = 1
+		
+		/// The image will be cropped to fit a circle.
+		case circle = 2
+	}
+	
+	/// The `identityImage` describes the identity of the sender of this notification.
+	/// It is displayed where the app icon normally is, if set.
+	public var identityImage: NSImage? {
+		get { return self.value(forKey: "_identityImage") as? NSImage }
+		set { self.setValue(newValue, forKey: "_identityImage") }
+	}
+	
+	/// The `identityStyle` describes how the identityImage will be styled, if set.
+	public var identityStyle: IdentityStyle? {
+		get { return IdentityStyle(rawValue: self.value(forKey: "_identityImageStyle") as? Int ?? -1) }
+		set { self.setValue(newValue?.rawValue, forKey: "_identityImageStyle") }
+	}
+	
+	/// If `alwaysShowsActions` is true, the action buttons will be shown if the app's
+	/// notification style is `Banner` if the user hovers over the banner.
+	public var alwaysShowsActions: Bool {
+		get { return self.value(forKey: "_showsButtons") as? Bool ?? false }
+		set { self.setValue(newValue, forKey: "_showsButtons") }
+	}
+}
+
 public extension NSUserNotificationCenter {
 	
 	public func updateDockBadge(_ count: Int) {
 		NSApp.dockTile.badgeLabel = count > 0 ? "\(count)" : nil
+	}
+	
+	public func notifications(includeDelivered: Bool = true, includeScheduled: Bool = false) -> [NSUserNotification] {
+		var notes = [NSUserNotification]()
+		if includeDelivered {
+			notes += self.deliveredNotifications
+		}
+		if includeScheduled {
+			notes += self.scheduledNotifications
+		}
+		return notes
+	}
+	
+	public func indexedNotifications(includeDelivered d: Bool = true, includeScheduled s: Bool = false) -> [String: NSUserNotification] {
+		let notes = self.notifications(includeDelivered: d, includeScheduled: s)
+		var indexed = [String: NSUserNotification]()
+		notes.forEach { indexed[$0.identifier ?? ""] = $0 }
+		_ = indexed.removeValue(forKey: "") // remove unidentified notifications.
+		return indexed
 	}
 	
 	public func post(notification: NSUserNotification, schedule: Bool = false) {
@@ -60,7 +116,7 @@ public extension NSUserNotificationCenter {
 	public func remove(byIdentifier id: String, scheduled: Bool = false) {
 		for n in (scheduled ? self.scheduledNotifications : self.deliveredNotifications) {
 			if n.identifier == id {
-				self.removeDeliveredNotification(n)
+				self.remove(notification: n, scheduled: scheduled)
 			}
 		}
 	}

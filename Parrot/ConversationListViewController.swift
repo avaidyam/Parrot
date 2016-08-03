@@ -80,7 +80,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		self.listView.updateScrollDirection = .top
 		self.listView.viewClassProvider = { row in ConversationCell.self }
 		
-		NotificationCenter.default().addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
+		NotificationCenter.default().addObserver(forName: ServiceRegistry.didAddService) { note in
 			let c = note.object as! Hangouts.Client
 			self.userList = c.userList
 			self.conversationList = c.conversationList
@@ -94,20 +94,21 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
 		UserNotificationCenter.updateDockBadge(unread)
 		
-		NotificationCenter.default().addObserver(forName: UserNotification.didActivateNotification, object: nil, queue: nil) { n in
-			guard	let u = n.object as? UserNotification
-					where ((self.conversationList?.conversations[u.identifier ?? ""]) != nil)
+		NotificationCenter.default().addObserver(forName: UserNotification.didActivateNotification) { n in
+			guard	let note = n.object as? UserNotification,
+					let conv = self.conversationList?.conversations[note.identifier ?? ""]
 			else { return }
 			
-			log.info("note \(u.identifier) with response \(u.response)")
-			guard u.response != nil else { return }
-			
-			log.warning("sending disabled temporarily")
-			/*
-			let emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
-			let txt = MessageListViewController.segmentsForInput(u.response!.string, emojify: emojify)
-			self.conversation?.sendMessage(segments: txt)
-			*/
+			switch note.activationType {
+			case .contentsClicked:
+				self.showConversation(conv as! IConversation)
+			case .actionButtonClicked:
+				log.error("Mute is currently disabled.")
+				//(conv as! IConversation).setConversationNotificationLevel(level: .Quiet)
+			case .replied where note.response?.string != nil:
+				self.sendMessage(note.response!.string, conv)
+			default: break
+			}
 		}
 		
 		self.wallclock = DispatchSource.timer(flags: [], queue: DispatchQueue.main)
@@ -124,29 +125,9 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
 		self.listView.selectionProvider = { row in
 			guard row >= 0 else { return }
-			//DispatchQueue.global(attributes: .qosBackground).async {}
 			
 			let conv = (self.sortedConversations[row] as! IConversation)
-			if let wc = self.childConversations[conv.identifier] {
-				log.debug("Conversation found for id \(conv.identifier)")
-				wc.showWindow(nil)
-				
-			} else {
-				log.debug("Conversation NOT found for id \(conv.identifier)")
-				
-				let wc = MessageListViewController(windowNibName: "MessageListViewController")
-				wc.conversation = conv
-				wc.sendMessageHandler = { [weak self] message, conv2 in
-					self?.sendMessage(message, conv2)
-				}
-				wc.closeHandler = { [weak self] conv2 in
-					_ = self?.childConversations.removeValue(forKey: conv2)
-				}
-				//wc.parentController = self
-				self.childConversations[conv.identifier] = wc
-				
-				wc.showWindow(nil)
-			}
+			self.showConversation(conv)
 			
 			DispatchQueue.main.after(when: .now() + .milliseconds(150)) {
 				self.listView.tableView.animator().selectRowIndexes(IndexSet(), byExtendingSelection: false)
@@ -198,6 +179,29 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			log.info("pb for row \(row)")
 			pb.setString("TEST", forType: "public.utf8-plain-text")
 			return pb
+		}
+	}
+	
+	private func showConversation(_ conv: IConversation) {
+		if let wc = self.childConversations[conv.identifier] {
+			log.debug("Conversation found for id \(conv.identifier)")
+			wc.showWindow(nil)
+			
+		} else {
+			log.debug("Conversation NOT found for id \(conv.identifier)")
+			
+			let wc = MessageListViewController(windowNibName: "MessageListViewController")
+			wc.conversation = conv
+			wc.sendMessageHandler = { [weak self] message, conv2 in
+				self?.sendMessage(message, conv2)
+			}
+			wc.closeHandler = { [weak self] conv2 in
+				_ = self?.childConversations.removeValue(forKey: conv2)
+			}
+			//wc.parentController = self
+			self.childConversations[conv.identifier] = wc
+			
+			wc.showWindow(nil)
 		}
 	}
 	
@@ -272,24 +276,22 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			let a = (event.conversation_id as String, event.id as String)
 			let text = (event as? IChatMessageEvent)?.text ?? "Event"
 			
-			let notification = NSUserNotification()
+			let notification = UserNotification()
 			notification.identifier = a.0
-			notification.title = user.fullName
-			//notification.subtitle = "Hangouts"
+			notification.title = user.firstName + " (via Hangouts)" /* FIXME */
 			notification.informativeText = text
 			notification.deliveryDate = Date()
+			notification.alwaysShowsActions = true
 			notification.hasReplyButton = true
-			notification.responsePlaceholder = "Reply..."
+			notification.otherButtonTitle = "Mute"
+			notification.responsePlaceholder = "Send a message..."
 			//notification.soundName = "texttone:Bamboo" // this works!!
 			notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
 			notification.set(option: .vibrateForceTouch, value: true)
 			notification.set(option: .alwaysShow, value: true)
-			
-			var img: NSImage = NSImage(named: "NSUserGuest")!
-			if let d = fetchData(user.id.chatID, user.photoURL) {
-				img = NSImage(data: d)!
-			}
-			notification.contentImage = img
+			//notification.contentImage = img
+			notification.identityImage = fetchImage(user: user, conversation: conv!)
+			notification.identityStyle = .circle
 			
 			UserNotificationCenter.remove(byIdentifier: a.0)
 			UserNotificationCenter.post(notification: notification)

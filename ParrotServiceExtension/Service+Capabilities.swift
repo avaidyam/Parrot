@@ -11,6 +11,10 @@ public protocol Service: class {
 	/// from the same Service extension point.
 	static var identifier: String { get }
 	
+	/// The user-friendly name of this Service. It will be used to display the
+	/// discovered Service to a user for accounts or in notifications.
+	static var name: String { get }
+	
 	/// Connects the service to its server/host.
 	/// Returns true if connection succeeded, or false if it failed.
 	func connect(_ onConnect: (ErrorProtocol?) -> ())

@@ -56,6 +56,9 @@ public class NSExtendedTextView: NSTextView {
 public extension NSTextView {
 	public func characterRect() -> NSRect {
 		let glyphRange = NSMakeRange(0, self.layoutManager!.numberOfGlyphs)
+		return self.characterRect(forRange: glyphRange)
+	}
+	public func characterRect(forRange glyphRange: NSRange) -> NSRect {
 		let glyphRect = self.layoutManager!.boundingRect(forGlyphRange: glyphRange, in: self.textContainer!)
 		return NSInsetRect(glyphRect, -self.textContainerInset.width * 2, -self.textContainerInset.height * 2)
 	}

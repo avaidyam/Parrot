@@ -171,6 +171,19 @@ public extension DispatchSemaphore {
 	}
 }
 
+public extension NotificationCenter {
+	
+	@nonobjc @discardableResult
+	public func addObserver(forName name: NSNotification.Name, object obj: AnyObject? = nil, using block: (Notification) -> Swift.Void) -> NSObjectProtocol {
+		return self.addObserver(forName: name, object: obj, queue: nil, using: block)
+	}
+	
+	@nonobjc @discardableResult
+	public func addObserver(forName name: String, object obj: AnyObject? = nil, using block: (Notification) -> Swift.Void) -> NSObjectProtocol {
+		return self.addObserver(forName: Notification.Name(rawValue: name), object: obj, queue: nil, using: block)
+	}
+}
+
 /// Can hold any (including non-object) type as an object type.
 public class Wrapper<T> {
 	public let element: T

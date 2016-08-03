@@ -42,6 +42,10 @@ public final class Client: Service {
 		return "com.google.hangouts"
 	}
 	
+	public static var name: String {
+		return "Hangouts"
+	}
+	
 	// Establish a connection to the chat server.
     public func connect(_ onConnect: (ErrorProtocol?) -> ()) {
 		self.channel = Channel(configuration: self.config)
