@@ -4,6 +4,7 @@
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <scenes>
@@ -733,28 +734,28 @@
         <scene sceneID="8gj-44-OyX">
             <objects>
                 <windowController showSeguePresentationStyle="single" id="2UE-pw-Aer" sceneMemberID="viewController">
-                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="" id="RsH-tq-Ya4">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="Preferences" id="RsH-tq-Ya4">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" unifiedTitleAndToolbar="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES" transient="YES" ignoresCycle="YES" fullScreenNone="YES" fullScreenDisallowsTiling="YES"/>
                         <rect key="contentRect" x="245" y="310" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
                         <value key="minSize" type="size" width="480" height="270"/>
                         <value key="maxSize" type="size" width="480" height="270"/>
-                        <toolbar key="toolbar" implicitIdentifier="2AD61817-4A36-4B14-81D5-E0398A5A58CC" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="DBF-0p-Ly5">
+                        <toolbar key="toolbar" implicitIdentifier="2AD61817-4A36-4B14-81D5-E0398A5A58CC" autosavesConfiguration="NO" showsBaselineSeparator="NO" displayMode="iconAndLabel" sizeMode="regular" id="DBF-0p-Ly5">
                             <allowedToolbarItems>
                                 <toolbarItem implicitItemIdentifier="A4A659DC-3EA0-457C-9571-E7344ADD5DBC" explicitItemIdentifier="Tabs" label="Tabs" paletteLabel="Tabs" id="Pwn-Xa-sCE">
                                     <nil key="toolTip"/>
-                                    <size key="minSize" width="104" height="24"/>
-                                    <size key="maxSize" width="350" height="26"/>
+                                    <size key="minSize" width="104" height="19"/>
+                                    <size key="maxSize" width="350" height="28"/>
                                     <segmentedControl key="view" verticalHuggingPriority="750" id="jqn-MJ-m9z">
-                                        <rect key="frame" x="0.0" y="14" width="299" height="26"/>
+                                        <rect key="frame" x="0.0" y="14" width="237" height="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="x7H-VJ-Odl">
-                                            <font key="font" metaFont="system"/>
+                                        <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="x7H-VJ-Odl">
+                                            <font key="font" metaFont="smallSystem"/>
                                             <segments>
-                                                <segment label="Appearance" width="99"/>
-                                                <segment label="Notifications" width="98" selected="YES" tag="1"/>
-                                                <segment label="Accounts" width="98"/>
+                                                <segment label="Appearance" selected="YES"/>
+                                                <segment label="Messages" tag="1"/>
+                                                <segment label="Experimental"/>
                                             </segments>
                                         </segmentedCell>
                                     </segmentedControl>
@@ -787,9 +788,10 @@
                 <tabViewController title="Preferences" tabStyle="unspecified" id="gJR-Sw-Gfg" customClass="PreferencesViewController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
                     <tabViewItems>
                         <tabViewItem label="Appearance" identifier="Parrot.Appearance" image="NSColorPanel" id="gBw-aq-f1Z"/>
-                        <tabViewItem label="Notifications" identifier="Parrot.Notifications" image="NSPreferencesGeneral" id="4YT-e8-Zez"/>
-                        <tabViewItem label="Accounts" identifier="Parrot.Accounts" image="NSUserAccounts" id="5Dn-GQ-Rnb"/>
+                        <tabViewItem label="Messages" identifier="Parrot.Messages" image="NSPreferencesGeneral" id="4YT-e8-Zez"/>
+                        <tabViewItem label="Experimental" identifier="Parrot.Experimental" image="NSAdvanced" id="5Dn-GQ-Rnb"/>
                     </tabViewItems>
+                    <viewControllerTransitionOptions key="transitionOptions" allowUserInteraction="YES"/>
                     <tabView key="tabView" type="noTabsNoBorder" id="PnR-Xd-GfW">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -817,180 +819,279 @@
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aI8-z9-Uro">
-                                <rect key="frame" x="20" y="2" width="205" height="278"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="su0-TS-5C3">
+                                <rect key="frame" x="34" y="233" width="382" height="47"/>
                                 <subviews>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ogW-Yu-cUi">
-                                        <rect key="frame" x="-2" y="261" width="93" height="17"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Interface Style" id="Jbq-gy-57R">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vwu-bS-VYB">
-                                        <rect key="frame" x="0.0" y="229" width="169" height="25"/>
-                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="ERn-Gk-mOP">
-                                            <font key="font" metaFont="system"/>
-                                            <segments>
-                                                <segment label="Light" toolTip="Parrot will display in a light-colored UI theme."/>
-                                                <segment label="Dark" toolTip="Parrot will display in a dark-colored UI theme." selected="YES" tag="1"/>
-                                                <segment label="System" toolTip="Parrot will match the UI theme you've configured in System Preferences." tag="2"/>
-                                            </segments>
-                                        </segmentedCell>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="selectedTag" keyPath="values.Parrot.InterfaceStyle" id="MYJ-HG-E2r">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
-                                    </segmentedControl>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Dk-tw-ndF">
-                                        <rect key="frame" x="-2" y="206" width="92" height="17"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Vibrancy Style" id="HVw-yf-VrA">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tFX-tR-OKj">
-                                        <rect key="frame" x="0.0" y="174" width="205" height="25"/>
-                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="Z9a-y0-vXb">
-                                            <font key="font" metaFont="system"/>
-                                            <segments>
-                                                <segment label="Always" toolTip="Parrot's windows will always be vibrant."/>
-                                                <segment label="Never" toolTip="Parrot's windows will never be translucent." selected="YES" tag="1"/>
-                                                <segment label="Automatic" toolTip="Parrot's windows will be translucent if you're interacting with them." tag="2"/>
-                                            </segments>
-                                        </segmentedCell>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="selectedTag" keyPath="values.Parrot.VibrancyStyle" id="oB3-gF-Z8H">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <integer key="NSNoSelectionPlaceholder" value="2"/>
-                                                    <integer key="NSNullPlaceholder" value="2"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
-                                    </segmentedControl>
-                                    <button toolTip="Invert the Parrot conversation direction, so outgoing messages are on the left and incoming messages are on the right." translatesAutoresizingMaskIntoConstraints="NO" id="84g-xW-6Ak">
-                                        <rect key="frame" x="-2" y="152" width="123" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Invert Chat Style" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="yCn-Pp-xVP">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.InvertChatStyle" id="nCW-2H-v9Q">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
-                                    </button>
-                                    <button toolTip="Automatically convert text emoticons into rich emoji." translatesAutoresizingMaskIntoConstraints="NO" id="H8p-mW-AtS">
-                                        <rect key="frame" x="-2" y="130" width="87" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Auto Emoji" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Mxm-Cr-vhF">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.AutoEmoji" id="VPP-eF-hP4">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
-                                    </button>
-                                    <button toolTip="Vibrate a force touch trackpad if a notification occurs (only if there is a finger on the trackpad at the same instant)." translatesAutoresizingMaskIntoConstraints="NO" id="ntd-TB-ihF">
-                                        <rect key="frame" x="-2" y="108" width="145" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Vibrate Force Touch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eGm-ez-1E0">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateForceTouch" id="ZVn-Uo-Sxi">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
-                                    </button>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="K4x-Li-Euk">
-                                        <rect key="frame" x="-2" y="85" width="107" height="17"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Vibration Interval" id="lkI-1Q-1pv">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i3P-ra-6Or">
-                                        <rect key="frame" x="-2" y="53" width="209" height="24"/>
-                                        <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="100" doubleValue="10" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="RaR-rj-K5H"/>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateInterval" id="nzP-IE-syJ">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
-                                    </slider>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="byP-6U-kcX">
-                                        <rect key="frame" x="-2" y="30" width="105" height="17"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Vibration Length" id="e8Q-oT-bjR">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="E8W-ep-jI9">
-                                        <rect key="frame" x="-2" y="-2" width="209" height="24"/>
-                                        <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="2000" doubleValue="1000" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="mKb-lu-CjT"/>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateLength" id="pQ6-yB-gca">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
-                                    </slider>
+                                    <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VS8-ZZ-pBh">
+                                        <rect key="frame" x="0.0" y="0.0" width="169" height="47"/>
+                                        <subviews>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ogW-Yu-cUi">
+                                                <rect key="frame" x="38" y="30" width="93" height="17"/>
+                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Interface Style" id="Jbq-gy-57R">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vwu-bS-VYB">
+                                                <rect key="frame" x="0.0" y="-2" width="169" height="25"/>
+                                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="ERn-Gk-mOP">
+                                                    <font key="font" metaFont="system"/>
+                                                    <segments>
+                                                        <segment label="Light" toolTip="Parrot will display in a light-colored UI theme."/>
+                                                        <segment label="Dark" toolTip="Parrot will display in a dark-colored UI theme." selected="YES" tag="1"/>
+                                                        <segment label="System" toolTip="Parrot will match the UI theme you've configured in System Preferences." tag="2"/>
+                                                    </segments>
+                                                </segmentedCell>
+                                                <connections>
+                                                    <binding destination="cbh-fj-EIe" name="selectedTag" keyPath="values.Parrot.InterfaceStyle" id="MYJ-HG-E2r">
+                                                        <dictionary key="options">
+                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                            <bool key="NSValidatesImmediately" value="YES"/>
+                                                        </dictionary>
+                                                    </binding>
+                                                </connections>
+                                            </segmentedControl>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                    <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EdA-cG-InP">
+                                        <rect key="frame" x="177" y="0.0" width="205" height="47"/>
+                                        <subviews>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Dk-tw-ndF">
+                                                <rect key="frame" x="56.5" y="30" width="92" height="17"/>
+                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Vibrancy Style" id="HVw-yf-VrA">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tFX-tR-OKj">
+                                                <rect key="frame" x="0.0" y="-2" width="205" height="25"/>
+                                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="Z9a-y0-vXb">
+                                                    <font key="font" metaFont="system"/>
+                                                    <segments>
+                                                        <segment label="Always" toolTip="Parrot's windows will always be vibrant."/>
+                                                        <segment label="Never" toolTip="Parrot's windows will never be translucent." selected="YES" tag="1"/>
+                                                        <segment label="Automatic" toolTip="Parrot's windows will be translucent if you're interacting with them." tag="2"/>
+                                                    </segments>
+                                                </segmentedCell>
+                                                <connections>
+                                                    <binding destination="cbh-fj-EIe" name="selectedTag" keyPath="values.Parrot.VibrancyStyle" id="oB3-gF-Z8H">
+                                                        <dictionary key="options">
+                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                            <integer key="NSNoSelectionPlaceholder" value="2"/>
+                                                            <integer key="NSNullPlaceholder" value="2"/>
+                                                            <bool key="NSValidatesImmediately" value="YES"/>
+                                                        </dictionary>
+                                                    </binding>
+                                                </connections>
+                                            </segmentedControl>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
                                 </subviews>
                                 <visibilityPriorities>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
+                            <box wantsLayer="YES" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="6u7-Kz-htL">
+                                <rect key="frame" x="50" y="222" width="350" height="5"/>
+                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <font key="titleFont" metaFont="system"/>
+                            </box>
+                            <box wantsLayer="YES" title="Conversations" borderType="bezel" translatesAutoresizingMaskIntoConstraints="NO" id="7zy-3f-KnC">
+                                <rect key="frame" x="31" y="136" width="388" height="82"/>
+                                <view key="contentView" wantsLayer="YES" id="8q7-rw-E8j">
+                                    <rect key="frame" x="3" y="3" width="382" height="64"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Xx-sN-qUn" customClass="ConversationCell" customModule="Parrot" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="382" height="64"/>
+                                            <subviews>
+                                                <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="i1A-6r-FM0">
+                                                    <rect key="frame" x="8" y="8" width="48" height="48"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="i1A-6r-FM0" secondAttribute="height" multiplier="1:1" id="RSV-d3-bxQ"/>
+                                                        <constraint firstAttribute="width" constant="48" id="TWf-HV-PK7"/>
+                                                    </constraints>
+                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSApplicationIcon" id="eSo-BU-BGe"/>
+                                                </imageView>
+                                                <textField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iF9-na-2kD">
+                                                    <rect key="frame" x="62" y="39" width="266" height="17"/>
+                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="John Smith" placeholderString="Anonymous" id="1gn-3x-yAl">
+                                                        <font key="font" metaFont="systemMedium" size="13"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="PTy-4R-fXn">
+                                                    <rect key="frame" x="328" y="39" width="48" height="17"/>
+                                                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="just now" placeholderString="a while ago" id="Bit-ap-bWJ">
+                                                        <font key="font" metaFont="smallSystem"/>
+                                                        <color key="textColor" red="0.08235294371843338" green="0.49411764740943909" blue="0.95686274766921997" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="W4O-IQ-v8h">
+                                                    <rect key="frame" x="62" y="8" width="314" height="27"/>
+                                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="You: What's up today?" placeholderString="[⚠️ No message.]" id="DLJ-Yg-l0f">
+                                                        <font key="font" metaFont="smallSystem"/>
+                                                        <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="PTy-4R-fXn" firstAttribute="top" secondItem="9Xx-sN-qUn" secondAttribute="top" constant="8" id="AKO-Uh-Od8"/>
+                                                <constraint firstItem="i1A-6r-FM0" firstAttribute="centerY" secondItem="9Xx-sN-qUn" secondAttribute="centerY" id="Hr6-37-s6I"/>
+                                                <constraint firstAttribute="bottom" secondItem="W4O-IQ-v8h" secondAttribute="bottom" constant="8" id="MgQ-WW-xe1"/>
+                                                <constraint firstItem="W4O-IQ-v8h" firstAttribute="top" secondItem="PTy-4R-fXn" secondAttribute="bottom" constant="4" id="Q55-vW-iv0"/>
+                                                <constraint firstItem="iF9-na-2kD" firstAttribute="leading" secondItem="i1A-6r-FM0" secondAttribute="trailing" constant="8" id="QNc-Ag-WSH"/>
+                                                <constraint firstAttribute="trailing" secondItem="PTy-4R-fXn" secondAttribute="trailing" constant="8" id="X00-H1-e4c"/>
+                                                <constraint firstItem="iF9-na-2kD" firstAttribute="top" secondItem="9Xx-sN-qUn" secondAttribute="top" constant="8" id="YFc-FZ-Fke"/>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" secondItem="i1A-6r-FM0" secondAttribute="height" constant="16" id="cqe-m6-qZg"/>
+                                                <constraint firstItem="i1A-6r-FM0" firstAttribute="leading" secondItem="9Xx-sN-qUn" secondAttribute="leading" constant="8" id="kPR-JS-ox1"/>
+                                                <constraint firstItem="PTy-4R-fXn" firstAttribute="centerY" secondItem="iF9-na-2kD" secondAttribute="centerY" id="lJk-9y-o3k"/>
+                                                <constraint firstItem="PTy-4R-fXn" firstAttribute="leading" secondItem="iF9-na-2kD" secondAttribute="trailing" constant="4" id="s30-pL-AZ6"/>
+                                                <constraint firstAttribute="trailing" secondItem="W4O-IQ-v8h" secondAttribute="trailing" constant="8" id="tAu-mW-k5i"/>
+                                                <constraint firstItem="W4O-IQ-v8h" firstAttribute="leading" secondItem="i1A-6r-FM0" secondAttribute="trailing" constant="8" id="vBF-RM-gw1"/>
+                                                <constraint firstItem="W4O-IQ-v8h" firstAttribute="top" secondItem="iF9-na-2kD" secondAttribute="bottom" constant="4" id="xNn-yz-R9i"/>
+                                            </constraints>
+                                            <connections>
+                                                <outlet property="nameLabel" destination="iF9-na-2kD" id="4j5-lz-9tF"/>
+                                                <outlet property="photoView" destination="i1A-6r-FM0" id="rDH-mj-fhe"/>
+                                                <outlet property="textLabel" destination="W4O-IQ-v8h" id="hy3-u0-aZz"/>
+                                                <outlet property="timeLabel" destination="PTy-4R-fXn" id="Zh0-gs-bTg"/>
+                                            </connections>
+                                        </customView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="9Xx-sN-qUn" firstAttribute="leading" secondItem="8q7-rw-E8j" secondAttribute="leading" id="8D3-pr-YPT"/>
+                                        <constraint firstItem="9Xx-sN-qUn" firstAttribute="top" secondItem="8q7-rw-E8j" secondAttribute="top" id="KqC-aL-Rz4"/>
+                                        <constraint firstAttribute="trailing" secondItem="9Xx-sN-qUn" secondAttribute="trailing" id="NnG-nq-xQl"/>
+                                        <constraint firstAttribute="bottom" secondItem="9Xx-sN-qUn" secondAttribute="bottom" id="bzV-Ul-BeY"/>
+                                    </constraints>
+                                </view>
+                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </box>
+                            <box wantsLayer="YES" title="Messages" borderType="bezel" translatesAutoresizingMaskIntoConstraints="NO" id="NLu-7n-fcK">
+                                <rect key="frame" x="31" y="76" width="388" height="58"/>
+                                <view key="contentView" wantsLayer="YES" id="bCA-4s-3g9">
+                                    <rect key="frame" x="3" y="3" width="382" height="40"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <customView identifier="Parrot.MessageCell" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="99m-ep-qa7" customClass="MessageCell" customModule="Parrot" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="382" height="40"/>
+                                            <subviews>
+                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="int-t2-TVK">
+                                                    <rect key="frame" x="8" y="8" width="24" height="24"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="24" id="7DI-8O-kuJ"/>
+                                                        <constraint firstAttribute="width" secondItem="int-t2-TVK" secondAttribute="height" multiplier="1:1" id="9U8-Ot-2NF"/>
+                                                    </constraints>
+                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSApplicationIcon" id="IRc-aW-EhI"/>
+                                                </imageView>
+                                                <scrollView wantsLayer="YES" horizontalHuggingPriority="248" verticalHuggingPriority="248" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="A8w-Cp-Irf" customClass="NSAntiScrollView" customModule="Parrot" customModuleProvider="target">
+                                                    <rect key="frame" x="36" y="8" width="338" height="24"/>
+                                                    <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="qYV-T7-5W4" customClass="NSAntiClipView" customModule="Parrot" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="338" height="24"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <subviews>
+                                                            <textView wantsLayer="YES" horizontalCompressionResistancePriority="751" editable="NO" drawsBackground="NO" importsGraphics="NO" verticallyResizable="NO" allowsDocumentBackgroundColorChange="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" smartInsertDelete="YES" id="lai-GB-jld">
+                                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
+                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                <size key="minSize" width="0.0" height="24"/>
+                                                                <size key="maxSize" width="10000000" height="10000000"/>
+                                                                <attributedString key="textStorage">
+                                                                    <fragment content="What's up today?">
+                                                                        <attributes>
+                                                                            <color key="NSColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                            <font key="NSFont" metaFont="system"/>
+                                                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                                                        </attributes>
+                                                                    </fragment>
+                                                                </attributedString>
+                                                                <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <size key="minSize" width="0.0" height="24"/>
+                                                                <size key="maxSize" width="10000000" height="10000000"/>
+                                                            </textView>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    </clipView>
+                                                    <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+                                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="zVB-zR-I4g">
+                                                        <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                    </scroller>
+                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Gwu-B7-4wS">
+                                                        <rect key="frame" x="-100" y="-100" width="16" height="24"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                    </scroller>
+                                                </scrollView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="int-t2-TVK" firstAttribute="top" secondItem="A8w-Cp-Irf" secondAttribute="top" id="0w7-OU-gMR"/>
+                                                <constraint firstAttribute="height" constant="40" id="3IX-Tt-DXX"/>
+                                                <constraint firstAttribute="bottom" secondItem="A8w-Cp-Irf" secondAttribute="bottom" constant="8" id="9bA-Td-Kmj"/>
+                                                <constraint firstItem="A8w-Cp-Irf" firstAttribute="leading" secondItem="99m-ep-qa7" secondAttribute="leading" constant="36" id="ViL-Km-fZ2"/>
+                                                <constraint firstItem="qYV-T7-5W4" firstAttribute="leading" secondItem="int-t2-TVK" secondAttribute="trailing" constant="4" id="bFS-WH-LCS"/>
+                                                <constraint firstAttribute="trailing" secondItem="A8w-Cp-Irf" secondAttribute="trailing" constant="8" id="mO1-2r-ScX"/>
+                                                <constraint firstItem="A8w-Cp-Irf" firstAttribute="top" secondItem="99m-ep-qa7" secondAttribute="top" constant="8" id="rTx-Wj-bUL"/>
+                                            </constraints>
+                                            <connections>
+                                                <outlet property="photoView" destination="int-t2-TVK" id="rw6-zl-Ss1"/>
+                                                <outlet property="textLabel" destination="lai-GB-jld" id="DJv-nO-m9i"/>
+                                            </connections>
+                                        </customView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="99m-ep-qa7" firstAttribute="top" secondItem="bCA-4s-3g9" secondAttribute="top" id="EAN-fd-0RF"/>
+                                        <constraint firstAttribute="bottom" secondItem="99m-ep-qa7" secondAttribute="bottom" id="OW1-q0-aCY"/>
+                                        <constraint firstAttribute="trailing" secondItem="99m-ep-qa7" secondAttribute="trailing" id="Ql8-bw-2JX"/>
+                                        <constraint firstItem="99m-ep-qa7" firstAttribute="leading" secondItem="bCA-4s-3g9" secondAttribute="leading" id="Twk-9z-MlP"/>
+                                    </constraints>
+                                </view>
+                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </box>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="7zy-3f-KnC" firstAttribute="top" secondItem="6u7-Kz-htL" secondAttribute="bottom" constant="6" id="2qn-AN-em6"/>
+                            <constraint firstItem="7zy-3f-KnC" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" id="8Iy-0D-5I4"/>
+                            <constraint firstItem="6u7-Kz-htL" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="CfT-3O-sJt"/>
+                            <constraint firstItem="7zy-3f-KnC" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="E38-mw-T4l"/>
+                            <constraint firstItem="NLu-7n-fcK" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="FtA-zO-cho"/>
+                            <constraint firstItem="6u7-Kz-htL" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" constant="-32" id="J5z-Oa-TWc"/>
+                            <constraint firstItem="NLu-7n-fcK" firstAttribute="top" secondItem="7zy-3f-KnC" secondAttribute="bottom" constant="6" id="JCj-lo-6NT"/>
+                            <constraint firstItem="su0-TS-5C3" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="RH0-LE-cMR"/>
+                            <constraint firstItem="6u7-Kz-htL" firstAttribute="top" secondItem="su0-TS-5C3" secondAttribute="bottom" constant="8" id="fLr-q5-vPG"/>
+                            <constraint firstItem="NLu-7n-fcK" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" id="m2F-7I-EUR"/>
+                            <constraint firstItem="su0-TS-5C3" firstAttribute="top" secondItem="xUP-4m-s2J" secondAttribute="top" constant="20" id="uzT-0k-604"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <customObject id="rtd-0l-cK2" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -998,11 +1099,11 @@
             </objects>
             <point key="canvasLocation" x="1270" y="800"/>
         </scene>
-        <!--Notifications-->
+        <!--Messages-->
         <scene sceneID="u1m-pE-gEh">
             <objects>
-                <viewController title="Notifications" id="MRF-LU-YO2" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="2kt-Lw-ez7">
+                <viewController title="Messages" id="MRF-LU-YO2" sceneMemberID="viewController">
+                    <view key="view" wantsLayer="YES" id="2kt-Lw-ez7" customClass="NSVisualEffectView">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -1205,6 +1306,22 @@
                                     <outlet property="menu" destination="EHd-br-JCE" id="CQ0-q9-xEt"/>
                                 </connections>
                             </button>
+                            <button toolTip="Automatically convert text emoticons into rich emoji." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FHK-CC-loK">
+                                <rect key="frame" x="152" y="264" width="87" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="check" title="Auto Emoji" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ZGh-3Y-j8w">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.AutoEmoji" id="GKG-3z-aIe">
+                                        <dictionary key="options">
+                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                            <bool key="NSValidatesImmediately" value="YES"/>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="RRK-8G-0Cb" firstAttribute="leading" secondItem="2kt-Lw-ez7" secondAttribute="leading" constant="20" id="5wx-nS-qdw"/>
@@ -1247,19 +1364,89 @@
             </objects>
             <point key="canvasLocation" x="1757" y="800"/>
         </scene>
-        <!--Accounts-->
+        <!--Experimental-->
         <scene sceneID="267-EA-phL">
             <objects>
-                <viewController title="Accounts" id="nBO-60-3Hu" sceneMemberID="viewController">
-                    <view key="view" id="CwE-13-tbf">
+                <viewController title="Experimental" id="nBO-60-3Hu" sceneMemberID="viewController">
+                    <view key="view" id="CwE-13-tbf" customClass="NSVisualEffectView">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ACN-Dl-NbD">
-                                <rect key="frame" x="57" y="53" width="299" height="227"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="NSUserAccounts" id="LcX-p2-jci"/>
-                            </imageView>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JKm-UX-2dv">
+                                <rect key="frame" x="20" y="156" width="141" height="124"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button toolTip="Vibrate a force touch trackpad if a notification occurs (only if there is a finger on the trackpad at the same instant)." translatesAutoresizingMaskIntoConstraints="NO" id="hZz-zh-G6d">
+                                        <rect key="frame" x="-2" y="108" width="145" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Vibrate Force Touch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="DCz-9C-mzf">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateForceTouch" id="bG8-kZ-iOb">
+                                                <dictionary key="options">
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
+                                    </button>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rvg-I8-Wcs">
+                                        <rect key="frame" x="-2" y="85" width="107" height="17"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Vibration Interval" id="wB0-nd-DX5">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GQg-xY-HA6">
+                                        <rect key="frame" x="-2" y="53" width="145" height="24"/>
+                                        <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="100" doubleValue="10" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="euk-ue-Z3N"/>
+                                        <connections>
+                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateInterval" id="Fu6-4q-F8S">
+                                                <dictionary key="options">
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
+                                    </slider>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PEB-JB-bsC">
+                                        <rect key="frame" x="-2" y="30" width="105" height="17"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Vibration Length" id="QGf-Wr-m0X">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Sgt-OT-H3F">
+                                        <rect key="frame" x="-2" y="-2" width="145" height="24"/>
+                                        <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="2000" doubleValue="1000" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="VR1-sW-ISk"/>
+                                        <connections>
+                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateLength" id="PBE-m4-J2e">
+                                                <dictionary key="options">
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
+                                    </slider>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
                         </subviews>
                     </view>
                 </viewController>
@@ -1270,10 +1457,10 @@
     </scenes>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
+        <image name="NSAdvanced" width="32" height="32"/>
         <image name="NSApplicationIcon" width="128" height="128"/>
         <image name="NSColorPanel" width="32" height="32"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="NSUserAccounts" width="32" height="32"/>
     </resources>
 </document>

@@ -10,8 +10,8 @@ public class PreferencesViewController: NSTabViewController {
 			w.appearance = ParrotAppearance.current()
 			w.titleVisibility = .hidden
 			
-			w.standardWindowButton(.miniaturizeButton)?.isHidden = true
-			w.standardWindowButton(.zoomButton)?.isHidden = true
+			//w.standardWindowButton(.miniaturizeButton)?.isHidden = true
+			//w.standardWindowButton(.zoomButton)?.isHidden = true
 			
 			// Fix titlebar blending.
 			let r = w.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView
@@ -36,11 +36,16 @@ public class PreferencesViewController: NSTabViewController {
 				w.appearance = appearance
 				self.tabView.appearance = appearance
 			}
+			
+			ParrotAppearance.registerVibrancyStyleListener(observer: self) { vibrancy in
+				//TODO
+			}
 		}
 	}
 	
 	public override func viewDidDisappear() {
 		ParrotAppearance.unregisterAppearanceListener(observer: self)
+		ParrotAppearance.unregisterVibrancyStyleListener(observer: self)
 	}
 	
 	public override func tabView(_ tabView: NSTabView, willSelect tabViewItem: NSTabViewItem?) {
