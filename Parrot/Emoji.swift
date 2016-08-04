@@ -1,12 +1,17 @@
 import Foundation
 
 private var emojiDescriptors: [String: String] = {
-	guard let url = Bundle.main().urlForResource("emoji_descriptors", withExtension: "plist") else { return [:] }
+	guard let url = Bundle.main().urlForResource("emoji_descriptors",
+	                                             withExtension: "plist")
+		else { return [:] }
 	return NSDictionary(contentsOf: url) as? [String: String] ?? [:]
 }()
 
-private var emoticonDescriptors: [String: String] = {
-	guard let url = Bundle.main().urlForResource("emoticon_descriptors", withExtension: "plist") else { return [:] }
+internal var emoticonDescriptors: [String: String] = {
+	guard let url = Bundle.main().urlForResource("emoji_emoticons",
+	                                             withExtension: "plist",
+	                                             subdirectory: "Emoji")
+		else { return [:] }
 	return NSDictionary(contentsOf: url) as? [String: String] ?? [:]
 }()
 

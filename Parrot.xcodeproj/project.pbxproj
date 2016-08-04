@@ -22,6 +22,10 @@
 		48158E1F1D28690C00ED369C /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48158E1E1D28690C00ED369C /* API.swift */; };
 		48158E441D29C28A00ED369C /* Service+Capabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48158E431D29C28A00ED369C /* Service+Capabilities.swift */; };
 		48196B9B1D4805D9001D4BAA /* AboutWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48196B9A1D4805D9001D4BAA /* AboutWindowController.swift */; };
+		4819BF601D52D78800CF609C /* emoji_charset.bitmap in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191D1D37D16C001F969E /* emoji_charset.bitmap */; };
+		4819BF611D52D78800CF609C /* emoji_descriptors.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191E1D37D16C001F969E /* emoji_descriptors.plist */; };
+		4819BF621D52D78800CF609C /* emoji_emoticons.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191F1D37D16C001F969E /* emoji_emoticons.plist */; };
+		4819BF631D52D78800CF609C /* emoji_equivalences.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 484019201D37D16C001F969E /* emoji_equivalences.plist */; };
 		4822951D1D417B5E00A34B1B /* AddressBookSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */; };
 		4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageCell.swift */; };
 		4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA81C1C620000193EBC /* ConversationCell.swift */; };
@@ -171,9 +175,13 @@
 		480363A61C1D08960008E9F5 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 6;
+			dstPath = Emoji;
+			dstSubfolderSpec = 7;
 			files = (
+				4819BF601D52D78800CF609C /* emoji_charset.bitmap in CopyFiles */,
+				4819BF611D52D78800CF609C /* emoji_descriptors.plist in CopyFiles */,
+				4819BF621D52D78800CF609C /* emoji_emoticons.plist in CopyFiles */,
+				4819BF631D52D78800CF609C /* emoji_equivalences.plist in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

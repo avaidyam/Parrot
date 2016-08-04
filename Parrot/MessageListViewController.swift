@@ -11,9 +11,6 @@ import ParrotServiceExtension
 /* TODO: When typing a word and typing a completion character, wrap the entire word. */
 /* TODO: Only trigger auto-completion when the completion character is after a space. */
 
-private let completionsL = ["(", "[", "{", "\"", "`", "*", "_", "-", "~"]
-private let completionsR = [")", "]", "}", "\"", "`", "*", "_", "-", "~"]
-
 public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate {
 	
 	// This is instantly shown to the user when they send a message. It will
@@ -339,35 +336,53 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public func textView(_ textView: NSTextView, didInsertText string: AnyObject, replacementRange: NSRange) {
 		guard !insertToken else { insertToken = false; return }
 		
-		// Only deal with actual Strings, not AttributedStrings.
+		/* // Only deal with actual Strings, not AttributedStrings.
 		var inserted = string as? String
 		if let str = string as? AttributedString {
 			inserted = str.string
 		}
 		guard let insertedStr = inserted else { return }
+		*/
 		
-		// Handle emoticon replacement.
-		/*NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
-		textView.showFindIndicator(for: NSMakeRange(0, 4))
-		NSSpellChecker.shared().showCorrectionIndicator(
-			of: .guesses,
-			primaryString: ":",
-			alternativeStrings: ["this", "is", "a", "test"],
-			forStringIn: textView.characterRect(forRange: NSMakeRange(0, 4)),
-			view: textView) {
-				log.debug("user selected \($0)")
-		}*/
+		// Use the user's last entered word as the entry.
+		let tString = textView.attributedString().string as NSString
+		var _r = tString.range(of: " ", options: .backwardsSearch)
+		if _r.location == NSNotFound { _r.location = 0 } else { _r.location += 1 }
+		let userRange = NSMakeRange(_r.location, tString.length - _r.location)
+		let userStr = tString.substring(from: _r.location)
+		//log.debug("string is \(userStr)")
 		
-		//NSSpellChecker.shared().setAdditionalTextReplacementsDictionary(...)
-		//print(NSSpellChecker.shared().value(forKey: "defaultEmojiReplacementsDictionary"))
+		// [BUG] If emojifying the first entry in the textView, and the user deletes
+		// the text, the font changes to ".Apple Color Emoji UI" on macOS Sierra.
 		
-		// If the entered text was a completion character, place the matching
-		// one after the insertion point and move the cursor back. Display this to the user.
-		if let r = completionsL.index(of: insertedStr) {
+		if let r = Settings[Parrot.Completions]?[userStr] as? String {
 			insertToken = true // prevent re-entrance
-			textView.insertText(completionsR[r], replacementRange: self.entryView.selectedRange())
+			
+			// If the entered text was a completion character, place the matching
+			// one after the insertion point and move the cursor back.
+			textView.insertText(r, replacementRange: self.entryView.selectedRange())
 			textView.moveBackward(nil)
-			textView.showFindIndicator(for: NSMakeRange(textView.attributedString().length - 1, 1))
+			
+			// Display a text bubble showing visual replacement to the user.
+			let range = NSMakeRange(textView.attributedString().length - r.characters.count, r.characters.count)
+			textView.showFindIndicator(for: range)
+		} else if let found = emoticonDescriptors[userStr] {
+			insertToken = true // prevent re-entrance
+			
+			// Handle emoticon replacement.
+			//NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
+			let attr = AttributedString(string: found, attributes: textView.typingAttributes)
+			textView.insertText(attr, replacementRange: userRange)
+			let range = NSMakeRange(_r.location, 1)
+			textView.showFindIndicator(for: range)
+			/*NSSpellChecker.shared().showCorrectionIndicator(
+				of: .reversion,
+				primaryString: found,
+				alternativeStrings: [userStr],
+				forStringIn: textView.characterRect(forRange: range),
+				view: textView) {
+					log.debug("user selected \($0)")
+			}*/
 		}
 	}
 	

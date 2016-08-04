@@ -866,7 +866,7 @@
                                         <rect key="frame" x="177" y="0.0" width="205" height="47"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Dk-tw-ndF">
-                                                <rect key="frame" x="56.5" y="30" width="92" height="17"/>
+                                                <rect key="frame" x="56" y="30" width="92" height="17"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Vibrancy Style" id="HVw-yf-VrA">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -1024,7 +1024,7 @@
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                <size key="minSize" width="0.0" height="24"/>
+                                                                <size key="minSize" width="338" height="24"/>
                                                                 <size key="maxSize" width="10000000" height="10000000"/>
                                                                 <attributedString key="textStorage">
                                                                     <fragment content="What's up today?">
@@ -1036,7 +1036,7 @@
                                                                     </fragment>
                                                                 </attributedString>
                                                                 <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <size key="minSize" width="0.0" height="24"/>
+                                                                <size key="minSize" width="338" height="24"/>
                                                                 <size key="maxSize" width="10000000" height="10000000"/>
                                                             </textView>
                                                         </subviews>
@@ -1107,21 +1107,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bBT-qM-qOj">
+                                <rect key="frame" x="18" y="271" width="130" height="14"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Text Completions" id="dcW-zJ-m9W">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                             <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RRK-8G-0Cb">
-                                <rect key="frame" x="20" y="50" width="126" height="230"/>
+                                <rect key="frame" x="20" y="50" width="126" height="220"/>
                                 <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" id="PWv-n0-E5m">
-                                    <rect key="frame" x="1" y="0.0" width="124" height="229"/>
+                                    <rect key="frame" x="1" y="0.0" width="124" height="219"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView wantsLayer="YES" verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" columnSelection="YES" autosaveColumns="NO" typeSelect="NO" rowHeight="24" headerView="FIe-mV-x92" viewBased="YES" id="DEJ-u3-3Hw">
-                                            <rect key="frame" x="0.0" y="0.0" width="124" height="206"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="124" height="196"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <tableViewGridLines key="gridStyleMask" vertical="YES" horizontal="YES"/>
                                             <color key="gridColor" white="0.80000000000000004" alpha="0.5" colorSpace="deviceWhite"/>
                                             <tableColumns>
                                                 <tableColumn width="62" minWidth="32" maxWidth="72" id="LCi-eq-Yvp">
-                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Emoticon">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Left">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1162,7 +1170,7 @@
                                                     </prototypeCellViews>
                                                 </tableColumn>
                                                 <tableColumn width="62" minWidth="32" maxWidth="72" id="VnH-EB-3vS">
-                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Emoji">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Right">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1221,11 +1229,11 @@
                                     </subviews>
                                     <nil key="backgroundColor"/>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" controlSize="mini" horizontal="YES" id="a1r-5b-9Bk">
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="mini" horizontal="YES" id="a1r-5b-9Bk">
                                     <rect key="frame" x="1" y="215" width="0.0" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" controlSize="mini" horizontal="NO" id="HpD-MV-tqk">
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="mini" horizontal="NO" id="HpD-MV-tqk">
                                     <rect key="frame" x="224" y="17" width="11" height="102"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -1246,7 +1254,7 @@
                                 </buttonCell>
                                 <connections>
                                     <action selector="add:" target="pd5-bQ-akO" id="szD-UJ-Z5I"/>
-                                    <binding destination="pd5-bQ-akO" name="enabled2" keyPath="isEditable" previousBinding="0WC-bA-jxE" id="yY5-b6-liA">
+                                    <binding destination="pd5-bQ-akO" name="enabled" keyPath="canAdd" id="0WC-bA-jxE">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="0"/>
                                             <integer key="NSNoSelectionPlaceholder" value="0"/>
@@ -1254,7 +1262,7 @@
                                             <integer key="NSNullPlaceholder" value="0"/>
                                         </dictionary>
                                     </binding>
-                                    <binding destination="pd5-bQ-akO" name="enabled" keyPath="canAdd" id="0WC-bA-jxE">
+                                    <binding destination="pd5-bQ-akO" name="enabled2" keyPath="isEditable" previousBinding="0WC-bA-jxE" id="yY5-b6-liA">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="0"/>
                                             <integer key="NSNoSelectionPlaceholder" value="0"/>
@@ -1277,7 +1285,7 @@
                                 </buttonCell>
                                 <connections>
                                     <action selector="remove:" target="pd5-bQ-akO" id="wlg-LA-u8V"/>
-                                    <binding destination="pd5-bQ-akO" name="enabled2" keyPath="isEditable" previousBinding="69B-Gh-1Rp" id="Ods-UG-4Gs">
+                                    <binding destination="pd5-bQ-akO" name="enabled" keyPath="canRemove" id="69B-Gh-1Rp">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="0"/>
                                             <integer key="NSNoSelectionPlaceholder" value="0"/>
@@ -1285,7 +1293,7 @@
                                             <integer key="NSNullPlaceholder" value="0"/>
                                         </dictionary>
                                     </binding>
-                                    <binding destination="pd5-bQ-akO" name="enabled" keyPath="canRemove" id="69B-Gh-1Rp">
+                                    <binding destination="pd5-bQ-akO" name="enabled2" keyPath="isEditable" previousBinding="69B-Gh-1Rp" id="Ods-UG-4Gs">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="0"/>
                                             <integer key="NSNoSelectionPlaceholder" value="0"/>
@@ -1307,7 +1315,7 @@
                                 </connections>
                             </button>
                             <button toolTip="Automatically convert text emoticons into rich emoji." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FHK-CC-loK">
-                                <rect key="frame" x="152" y="264" width="87" height="18"/>
+                                <rect key="frame" x="345" y="264" width="87" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Auto Emoji" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ZGh-3Y-j8w">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1325,17 +1333,21 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="RRK-8G-0Cb" firstAttribute="leading" secondItem="2kt-Lw-ez7" secondAttribute="leading" constant="20" id="5wx-nS-qdw"/>
+                            <constraint firstItem="bBT-qM-qOj" firstAttribute="width" secondItem="RRK-8G-0Cb" secondAttribute="width" id="6sW-8L-9LO"/>
                             <constraint firstItem="pWB-wH-082" firstAttribute="leading" secondItem="b3K-zW-1MU" secondAttribute="trailing" constant="-1" id="Aos-ac-hYj"/>
                             <constraint firstAttribute="bottom" secondItem="RRK-8G-0Cb" secondAttribute="bottom" constant="50" id="BV8-cn-tR4"/>
                             <constraint firstItem="b3K-zW-1MU" firstAttribute="leading" secondItem="kDA-nW-PYO" secondAttribute="trailing" constant="-1" id="QB8-5e-cQW"/>
-                            <constraint firstItem="RRK-8G-0Cb" firstAttribute="top" secondItem="2kt-Lw-ez7" secondAttribute="top" constant="20" id="R9z-zZ-Cw0"/>
+                            <constraint firstItem="RRK-8G-0Cb" firstAttribute="top" secondItem="2kt-Lw-ez7" secondAttribute="top" constant="30" id="R9z-zZ-Cw0"/>
                             <constraint firstItem="pWB-wH-082" firstAttribute="top" secondItem="RRK-8G-0Cb" secondAttribute="bottom" constant="-1" id="SN6-hM-ecu"/>
                             <constraint firstItem="b3K-zW-1MU" firstAttribute="top" secondItem="RRK-8G-0Cb" secondAttribute="bottom" constant="-1" id="Ztk-3B-6d7"/>
                             <constraint firstItem="pWB-wH-082" firstAttribute="trailing" secondItem="RRK-8G-0Cb" secondAttribute="trailing" id="bGK-Lx-HcW"/>
+                            <constraint firstItem="bBT-qM-qOj" firstAttribute="leading" secondItem="RRK-8G-0Cb" secondAttribute="leading" id="cTW-Zg-GZg"/>
                             <constraint firstItem="pWB-wH-082" firstAttribute="height" secondItem="b3K-zW-1MU" secondAttribute="height" id="cpL-9X-3b1"/>
+                            <constraint firstItem="bBT-qM-qOj" firstAttribute="trailing" secondItem="RRK-8G-0Cb" secondAttribute="trailing" id="hWQ-Op-cbF"/>
                             <constraint firstItem="kDA-nW-PYO" firstAttribute="leading" secondItem="RRK-8G-0Cb" secondAttribute="leading" id="ok0-xw-Icx"/>
                             <constraint firstAttribute="trailing" secondItem="RRK-8G-0Cb" secondAttribute="trailing" constant="304" id="t4v-8T-Cvw"/>
                             <constraint firstItem="kDA-nW-PYO" firstAttribute="top" secondItem="RRK-8G-0Cb" secondAttribute="bottom" constant="-1" id="ySO-ci-EZb"/>
+                            <constraint firstItem="RRK-8G-0Cb" firstAttribute="top" secondItem="bBT-qM-qOj" secondAttribute="bottom" constant="1" id="yYL-yL-ghc"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -1353,7 +1365,7 @@
                 </menu>
                 <dictionaryController objectClassName="_NSDictionaryControllerKeyValuePair" automaticallyPreparesContent="YES" avoidsEmptySelection="NO" id="pd5-bQ-akO">
                     <connections>
-                        <binding destination="13l-3V-Sox" name="contentDictionary" keyPath="values.Parrot.Emoticons" id="PXa-Yv-E0Y">
+                        <binding destination="13l-3V-Sox" name="contentDictionary" keyPath="values.Parrot.Completions" id="DGl-I0-1oT">
                             <dictionary key="options">
                                 <bool key="NSValidatesImmediately" value="YES"/>
                             </dictionary>

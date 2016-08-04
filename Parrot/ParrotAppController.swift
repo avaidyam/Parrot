@@ -17,6 +17,7 @@ public enum Parrot {
 	public static let AutoEmoji = "Parrot.AutoEmoji"
 	public static let InvertChatStyle = "Parrot.InvertChatStyle"
 	public static let Emoticons = "Parrot.Emoticons"
+	public static let Completions = "Parrot.Completions"
 	
 	public static let VibrateForceTouch = "Parrot.VibrateForceTouch"
 	public static let VibrateInterval = "Parrot.VibrateInterval"
@@ -46,10 +47,12 @@ public class ParrotAppController: NSApplicationController {
 			andEventID: UInt32(kAEGetURL)
 		)
 		
-		Settings[Parrot.Emoticons] = [
-			"xD": "Laughing face",
-			":D": "Happy face"
-		]
+		// Register the default completions if none are in the user settings.
+		if let c = Settings[Parrot.Completions] as? NSDictionary where c.count > 0 {} else {
+			let defaultC = ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]
+			Settings[Parrot.Completions] = defaultC
+		}
+		
 	}
 	
 	// First begin authentication and setup for any services.
