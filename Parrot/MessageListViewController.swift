@@ -9,6 +9,7 @@ import ParrotServiceExtension
 /* TODO: Use the PlaceholderMessage for sending messages. */
 /* TODO: When selecting text and typing a completion character, wrap the text. */
 /* TODO: When typing a word and typing a completion character, wrap the entire word. */
+/* TODO: Only trigger auto-completion when the completion character is after a space. */
 
 private let completionsL = ["(", "[", "{", "\"", "`", "*", "_", "-", "~"]
 private let completionsR = [")", "]", "}", "\"", "`", "*", "_", "-", "~"]
@@ -345,7 +346,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
 		guard let insertedStr = inserted else { return }
 		
-		// Handle text replacement.
+		// Handle emoticon replacement.
 		/*NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
 		textView.showFindIndicator(for: NSMakeRange(0, 4))
 		NSSpellChecker.shared().showCorrectionIndicator(

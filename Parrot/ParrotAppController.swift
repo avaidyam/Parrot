@@ -16,7 +16,7 @@ public enum Parrot {
 	
 	public static let AutoEmoji = "Parrot.AutoEmoji"
 	public static let InvertChatStyle = "Parrot.InvertChatStyle"
-	public static let ShowSidebar = "Parrot.ShowSidebar"
+	public static let Emoticons = "Parrot.Emoticons"
 	
 	public static let VibrateForceTouch = "Parrot.VibrateForceTouch"
 	public static let VibrateInterval = "Parrot.VibrateInterval"
@@ -45,6 +45,11 @@ public class ParrotAppController: NSApplicationController {
 			forEventClass: UInt32(kInternetEventClass),
 			andEventID: UInt32(kAEGetURL)
 		)
+		
+		Settings[Parrot.Emoticons] = [
+			"xD": "Laughing face",
+			":D": "Happy face"
+		]
 	}
 	
 	// First begin authentication and setup for any services.
@@ -142,3 +147,5 @@ public class ParrotAppController: NSApplicationController {
 		NSWorkspace.shared().open(URL(string: "https://gitreports.com/issue/avaidyam/Parrot")!)
 	}
 }
+
+
