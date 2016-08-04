@@ -323,7 +323,8 @@ public extension Client {
 	                                             cb: ((response: SetConversationNotificationLevelResponse?) -> Void)? = nil) {
 		let data = [
 			self.getRequestHeader(),
-			[conversation_id]
+			[conversation_id],
+			level.rawValue
 		]
 		self.channel?.request(endpoint: "conversations/setconversationnotificationlevel", body: data, use_json: false) { r in
 			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))

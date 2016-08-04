@@ -195,6 +195,11 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			wc.sendMessageHandler = { [weak self] message, conv2 in
 				self?.sendMessage(message, conv2)
 			}
+			wc.muteHandler = { muted, conv2 in
+				let level: NotificationLevel = muted ? .Quiet : .Ring
+				log.debug("setting conv level \(level) from \((conv2 as! IConversation).conversation.selfConversationState?.notificationLevel)")
+				(conv2 as! IConversation).setConversationNotificationLevel(level: level, cb: nil)
+			}
 			wc.closeHandler = { [weak self] conv2 in
 				_ = self?.childConversations.removeValue(forKey: conv2)
 			}

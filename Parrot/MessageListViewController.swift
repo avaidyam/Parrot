@@ -28,6 +28,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	@IBOutlet var imageView: NSButton!
 	
 	public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
+	public var muteHandler: (Bool, ParrotServiceExtension.Conversation) -> Void = {_ in}
 	public var closeHandler: (String) -> Void = {_ in}
 	
 	var _previews = [String: [LinkPreviewType]]()
@@ -239,6 +240,18 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public func conversationDidUpdateEvents(_ conversation: IConversation) {}
     public func conversationDidUpdate(conversation: IConversation) {}
 	
+	@IBAction public func toggleMute(_ sender: AnyObject?) {
+		guard let button = sender as? NSButton else { return }
+		
+		// Swap button images on toggle.
+		let alt = button.alternateImage
+		button.alternateImage = button.image
+		button.image = alt
+		
+		// Forward the event.
+		self.muteHandler(button.state == NSOnState ? true : false, self.conversation!)
+	}
+	
     // MARK: Window notifications
 
 	public func windowDidBecomeKey(_ notification: Notification) {
@@ -321,6 +334,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			
 		case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
 			guard let text = entryView.string where text.characters.count > 0 else { return true }
+			NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
 			self.entryView.string = ""
 			self.sendMessageHandler(text, self.conversation!)
 			//self.parentController?.sendMessage(text, self.conversation!)
@@ -355,6 +369,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		// [BUG] If emojifying the first entry in the textView, and the user deletes
 		// the text, the font changes to ".Apple Color Emoji UI" on macOS Sierra.
 		
+		NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
 		if let r = Settings[Parrot.Completions]?[userStr] as? String {
 			insertToken = true // prevent re-entrance
 			
@@ -370,19 +385,21 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			insertToken = true // prevent re-entrance
 			
 			// Handle emoticon replacement.
-			//NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
 			let attr = AttributedString(string: found, attributes: textView.typingAttributes)
 			textView.insertText(attr, replacementRange: userRange)
 			let range = NSMakeRange(_r.location, 1)
-			textView.showFindIndicator(for: range)
-			/*NSSpellChecker.shared().showCorrectionIndicator(
+			NSSpellChecker.shared().showCorrectionIndicator(
 				of: .reversion,
-				primaryString: found,
-				alternativeStrings: [userStr],
+				primaryString: userStr,
+				alternativeStrings: [found],
 				forStringIn: textView.characterRect(forRange: range),
-				view: textView) {
+				view: textView) { [weak textView] in
+					guard $0 != nil else { return }
 					log.debug("user selected \($0)")
-			}*/
+					//textView?.insertText($0, replacementRange: range)
+					textView?.showFindIndicator(for: userRange)
+			}
+			textView.showFindIndicator(for: range)
 		}
 	}
 	

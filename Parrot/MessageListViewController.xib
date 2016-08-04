@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A254g" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A270f" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
@@ -121,20 +121,23 @@
                             </connections>
                         </textField>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="DCE7A7F8-E915-48B9-BAA3-44DDEA13720D" label="Info" paletteLabel="Info" image="NSListViewTemplate" id="brc-d2-Cfi" userLabel="Info">
+                    <toolbarItem implicitItemIdentifier="DCE7A7F8-E915-48B9-BAA3-44DDEA13720D" label="Mute" paletteLabel="Mute" image="NSImageNameVolumeHigh" id="brc-d2-Cfi" userLabel="Info">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="21" height="28"/>
+                        <size key="minSize" width="21" height="20"/>
                         <size key="maxSize" width="32" height="32"/>
-                        <button key="view" verticalHuggingPriority="750" id="5ZG-rS-xYQ" userLabel="Info">
-                            <rect key="frame" x="1" y="14" width="25" height="28"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSListViewTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fsR-u4-Th7">
+                        <button key="view" verticalHuggingPriority="750" id="5ZG-rS-xYQ" userLabel="Mute">
+                            <rect key="frame" x="5" y="14" width="25" height="28"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSImageNameVolumeHigh" imagePosition="overlaps" alignment="center" alternateImage="NSImageNameVolumeMute" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fsR-u4-Th7">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="showsBorderOnlyWhileMouseInside" value="NO"/>
                             </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="toggleMute:" target="-2" id="doU-9w-bF2"/>
+                            </connections>
                         </button>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="4xn-QA-GCz"/>
@@ -207,7 +210,8 @@
         </visualEffectView>
     </objects>
     <resources>
-        <image name="NSListViewTemplate" width="14" height="10"/>
+        <image name="NSImageNameVolumeHigh" width="512" height="512"/>
+        <image name="NSImageNameVolumeMute" width="512" height="512"/>
         <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>
