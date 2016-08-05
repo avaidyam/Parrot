@@ -66,7 +66,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		self.window?.appearance = ParrotAppearance.current()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
 		self.window?.titleVisibility = .hidden
-		
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
 			vev.state = style.visualEffectState()
@@ -94,19 +93,19 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
 		UserNotificationCenter.updateDockBadge(unread)
 		
-		NotificationCenter.default().addObserver(forName: UserNotification.didActivateNotification) { n in
-			guard	let note = n.object as? UserNotification,
-					let conv = self.conversationList?.conversations[note.identifier ?? ""]
+		NotificationCenter.default().addObserver(forName: NSUserNotification.didActivateNotification) {
+			guard	let notification = $0.object as? NSUserNotification,
+					let conv = self.conversationList?.conversations[notification.identifier ?? ""]
 			else { return }
 			
-			switch note.activationType {
+			switch notification.activationType {
 			case .contentsClicked:
 				self.showConversation(conv as! IConversation)
 			case .actionButtonClicked:
 				log.error("Mute is currently disabled.")
-				//(conv as! IConversation).setConversationNotificationLevel(level: .Quiet)
-			case .replied where note.response?.string != nil:
-				self.sendMessage(note.response!.string, conv)
+			//(conv as! IConversation).setConversationNotificationLevel(level: .Quiet)
+			case .replied where notification.response?.string != nil:
+				self.sendMessage(notification.response!.string, conv)
 			default: break
 			}
 		}
@@ -197,7 +196,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			}
 			wc.muteHandler = { muted, conv2 in
 				let level: NotificationLevel = muted ? .Quiet : .Ring
-				log.debug("setting conv level \(level) from \((conv2 as! IConversation).conversation.selfConversationState?.notificationLevel)")
 				(conv2 as! IConversation).setConversationNotificationLevel(level: level, cb: nil)
 			}
 			wc.closeHandler = { [weak self] conv2 in
@@ -278,28 +276,30 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		if let user = (conv as? IConversation)?.user_list[event.userID] where !user.isSelf && showNote {
 			log.debug("Sending notification...")
 			
-			let a = (event.conversation_id as String, event.id as String)
 			let text = (event as? IChatMessageEvent)?.text ?? "Event"
 			
-			let notification = UserNotification()
-			notification.identifier = a.0
+			let notification = NSUserNotification()
+			notification.identifier = event.conversation_id
 			notification.title = user.firstName + " (via Hangouts)" /* FIXME */
+			//notification.subtitle = "via Hangouts"
 			notification.informativeText = text
 			notification.deliveryDate = Date()
 			notification.alwaysShowsActions = true
 			notification.hasReplyButton = true
 			notification.otherButtonTitle = "Mute"
 			notification.responsePlaceholder = "Send a message..."
+			notification.identityImage = fetchImage(user: user, conversation: conv!)
+			notification.identityStyle = .circle
 			//notification.soundName = "texttone:Bamboo" // this works!!
 			notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
 			notification.set(option: .vibrateForceTouch, value: true)
 			notification.set(option: .alwaysShow, value: true)
-			//notification.contentImage = img
-			notification.identityImage = fetchImage(user: user, conversation: conv!)
-			notification.identityStyle = .circle
 			
-			UserNotificationCenter.remove(byIdentifier: a.0)
-			UserNotificationCenter.post(notification: notification)
+			// Post the notification "uniquely" -- that is, replace it while it is displayed.
+			NSUserNotification.notifications()
+				.filter { $0.identifier == notification.identifier }
+				.forEach { $0.remove() }
+			notification.post()
 		}
 	}
 	

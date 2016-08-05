@@ -57,6 +57,19 @@ public protocol ConversationList /*: Collection*/ {
 	func delete(conversation: Conversation)
 }
 
+public enum ConversationNotification {
+	case create
+	case delete
+	case join
+	case leave
+	case mute
+}
+
+public enum ConversationListNotification {
+	case conversation
+	case presence
+}
+
 /*
 public extension ConversationList {
 	
