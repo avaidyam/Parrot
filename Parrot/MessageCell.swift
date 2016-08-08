@@ -18,8 +18,8 @@ public class MessageCell: ListViewCell {
 			let user = o.sender
 			
 			let str = AttributedString(string: o.text as String)
-			self.orientation = o.sender!.me ? .rightToLeft : .leftToRight
-			self.textLabel?.alignment = o.sender!.me ? .right : .left
+			//self.orientation = o.sender!.me ? .rightToLeft : .leftToRight // FIXME
+			//self.textLabel?.alignment = o.sender!.me ? .right : .left // FIXME
 			
 			//self.color = o.color
 			self.textLabel?.textStorage?.setAttributedString(str)
@@ -70,7 +70,7 @@ public class MessageCell: ListViewCell {
 	// Allows the circle crop to dynamically change.
 	public override func layout() {
 		super.layout()
-		self.userInterfaceLayoutDirection = self.orientation
+		//self.userInterfaceLayoutDirection = self.orientation // FIXME
 		if let layer = self.photoView?.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = layer.bounds.width / 2.0

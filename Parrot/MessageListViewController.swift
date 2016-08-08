@@ -11,7 +11,7 @@ import ParrotServiceExtension
 /* TODO: When typing a word and typing a completion character, wrap the entire word. */
 /* TODO: Only trigger auto-completion when the completion character is after a space. */
 
-public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate {
+public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate, NSDrawerDelegate {
 	
 	// This is instantly shown to the user when they send a message. It will
 	// be updated automatically when the status of the message is known.
@@ -26,6 +26,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     @IBOutlet var entryView: NSTextView!
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSButton!
+	@IBOutlet var drawer: NSDrawer!
+	@IBOutlet var drawerButton: NSButton!
+	@IBOutlet var drawerView: NSView!
 	
 	public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
 	public var muteHandler: (Bool, ParrotServiceExtension.Conversation) -> Void = {_ in}
@@ -37,7 +40,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	lazy var popover: NSPopover = {
 		let p = NSPopover()
 		let v = NSViewController()
-		v.view = self.statusView.superview!
+		v.view = self.statusView!
 		p.contentViewController = v
 		p.behavior = .applicationDefined
 		return p
@@ -47,6 +50,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
 	public override func loadWindow() {
 		super.loadWindow()
+		self.drawer.__setupModernDrawer()
 		
 		//DispatchQueue.main.sync {
 			self.window?.appearance = ParrotAppearance.current()
@@ -111,6 +115,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		// Set up dark/light notifications.
 		ParrotAppearance.registerAppearanceListener(observer: self, invokeImmediately: true) { appearance in
 			self.window?.appearance = appearance
+			self.drawer.window?.appearance = appearance
 			
 			// NSTextView doesn't automatically change its text color when the
 			// backing view's appearance changes, so we need to set it each time.
@@ -209,12 +214,12 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	}
 	
     public func conversation(_ conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
-        guard !user.isSelf else { return }
+		guard !user.isSelf else { return }
 		DispatchQueue.main.async {
 			switch (status) {
 			case TypingType.Started:
 				//let cell = self.listView.tableView.make(withIdentifier: "Typing", owner: nil)
-				self.popover.show(relativeTo: self.entryView!.bounds, of: self.entryView!, preferredEdge: .minY)
+				self.popover.show(relativeTo: self.entryView!.bounds.offsetBy(dx: 0, dy: 16), of: self.entryView!, preferredEdge: .minY)
 				self.statusView.stringValue = "Typing..."
 			case TypingType.Paused:
 				self.statusView.stringValue = "Entered text."
@@ -244,19 +249,26 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		guard let button = sender as? NSButton else { return }
 		
 		// Swap button images on toggle.
-		let alt = button.alternateImage
+		let altI = button.alternateImage
 		button.alternateImage = button.image
-		button.image = alt
+		button.image = altI
+		
+		// Swap button titles on toggle.
+		let altT = button.alternateTitle
+		button.alternateTitle = button.title
+		button.title = altT
 		
 		// Forward the event.
 		self.muteHandler(button.state == NSOnState ? true : false, self.conversation!)
 	}
 	
     // MARK: Window notifications
-
+	
 	public func windowDidBecomeKey(_ notification: Notification) {
         if let conversation = conversation {
-			UserNotificationCenter.remove(byIdentifier: conversation.id)
+			NSUserNotification.notifications()
+				.filter { $0.identifier == conversation.id }
+				.forEach { $0.remove() }
         }
 		
         //  Delay here to ensure that small context switches don't send focus messages.
@@ -293,6 +305,14 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			}*/
         }
     }
+	
+	// Bind the drawer state to the button that toggles it.
+	public func drawerWillOpen(_ notification: Notification) {
+		self.drawerButton.state = NSOnState
+	}
+	public func drawerWillClose(_ notification: Notification) {
+		self.drawerButton.state = NSOffState
+	}
 	
 	//func textViewDidChangeText?
 	

@@ -8,6 +8,9 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MessageListViewController" customModule="Parrot" customModuleProvider="target">
             <connections>
+                <outlet property="drawer" destination="RR8-NV-Gpy" id="kGZ-B7-HUp"/>
+                <outlet property="drawerButton" destination="5ZG-rS-xYQ" id="5CL-aP-pi4"/>
+                <outlet property="drawerView" destination="Pye-gy-Huh" id="jI9-8C-Iqi"/>
                 <outlet property="entryView" destination="A58-4G-SjV" id="Gzs-mB-jSL"/>
                 <outlet property="imageView" destination="S2O-bo-UO2" id="84S-DQ-Ja9"/>
                 <outlet property="listView" destination="yMT-fg-2gH" id="SXU-Nq-yyB"/>
@@ -29,7 +32,7 @@
                     <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                     </customView>
-                    <visualEffectView wantsLayer="YES" blendingMode="withinWindow" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
+                    <visualEffectView wantsLayer="YES" blendingMode="withinWindow" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
                         <subviews>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="S2O-bo-UO2" userLabel="Image View">
@@ -54,10 +57,10 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="432" height="24"/>
+                                            <size key="minSize" width="0.0" height="24"/>
                                             <size key="maxSize" width="552" height="10000000"/>
                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="432" height="24"/>
+                                            <size key="minSize" width="0.0" height="24"/>
                                             <size key="maxSize" width="552" height="10000000"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAlwaysPasteAsPlainText" value="YES"/>
@@ -121,14 +124,14 @@
                             </connections>
                         </textField>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="DCE7A7F8-E915-48B9-BAA3-44DDEA13720D" label="Mute" paletteLabel="Mute" image="NSImageNameVolumeHigh" id="brc-d2-Cfi" userLabel="Info">
+                    <toolbarItem implicitItemIdentifier="DCE7A7F8-E915-48B9-BAA3-44DDEA13720D" label="Info" paletteLabel="Info" image="NSListViewTemplate" id="brc-d2-Cfi" userLabel="Info">
                         <nil key="toolTip"/>
                         <size key="minSize" width="21" height="20"/>
                         <size key="maxSize" width="32" height="32"/>
-                        <button key="view" verticalHuggingPriority="750" id="5ZG-rS-xYQ" userLabel="Mute">
-                            <rect key="frame" x="5" y="14" width="25" height="28"/>
+                        <button key="view" verticalHuggingPriority="750" id="5ZG-rS-xYQ" userLabel="Info">
+                            <rect key="frame" x="1" y="14" width="25" height="28"/>
                             <autoresizingMask key="autoresizingMask"/>
-                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSImageNameVolumeHigh" imagePosition="overlaps" alignment="center" alternateImage="NSImageNameVolumeMute" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fsR-u4-Th7">
+                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSListViewTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fsR-u4-Th7">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
@@ -136,7 +139,7 @@
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="showsBorderOnlyWhileMouseInside" value="NO"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="toggleMute:" target="-2" id="doU-9w-bF2"/>
+                                <action selector="toggle:" target="RR8-NV-Gpy" id="ldT-Rx-dsb"/>
                             </connections>
                         </button>
                     </toolbarItem>
@@ -151,67 +154,73 @@
             </toolbar>
             <connections>
                 <outlet property="delegate" destination="-2" id="8Xy-aO-97X"/>
+                <outlet property="initialFirstResponder" destination="A58-4G-SjV" id="z2Z-ym-ugV"/>
             </connections>
-            <point key="canvasLocation" x="243" y="-237"/>
+            <point key="canvasLocation" x="43" y="-237"/>
         </window>
-        <viewController id="Fnl-Yf-OK7" userLabel="Popover View Controller">
-            <connections>
-                <outlet property="view" destination="Pye-gy-Huh" id="nNW-GN-Un9"/>
-            </connections>
-        </viewController>
+        <viewController id="Fnl-Yf-OK7" userLabel="Popover View Controller"/>
         <popover id="ADy-nB-Aj1">
             <connections>
                 <outlet property="contentViewController" destination="Fnl-Yf-OK7" id="5YB-Xa-qGE"/>
             </connections>
         </popover>
-        <customView wantsLayer="YES" id="Pye-gy-Huh">
-            <rect key="frame" x="0.0" y="0.0" width="163" height="270"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+        <customView wantsLayer="YES" id="Pye-gy-Huh" customClass="NSVisualEffectView">
+            <rect key="frame" x="0.0" y="0.0" width="160" height="270"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button wantsLayer="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EhA-26-aSD">
-                    <rect key="frame" x="41" y="217" width="81" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qsG-dc-gjg">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                </button>
-                <button wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ppq-JF-FK1">
-                    <rect key="frame" x="69" y="17" width="25" height="25"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                <button wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ppq-JF-FK1">
+                    <rect key="frame" x="68" y="17" width="25" height="25"/>
                     <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Yg3-SG-8RK">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
-            </subviews>
-            <point key="canvasLocation" x="612.5" y="-237"/>
-        </customView>
-        <visualEffectView wantsLayer="YES" blendingMode="behindWindow" state="active" id="lCk-Ky-CPB">
-            <rect key="frame" x="0.0" y="0.0" width="124" height="33"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <subviews>
-                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eNL-fW-1Cx">
-                    <rect key="frame" x="6" y="8" width="112" height="17"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Status" id="0ys-h0-cm2">
+                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EhA-26-aSD">
+                    <rect key="frame" x="32" y="226" width="96" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="96" id="2C0-JW-GFY"/>
+                    </constraints>
+                    <buttonCell key="cell" type="roundTextured" title="Mute" alternateTitle="Unmute" bezelStyle="texturedRounded" image="NSImageNameVolumeHigh" imagePosition="left" alignment="center" alternateImage="NSImageNameVolumeMute" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qsG-dc-gjg">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" metaFont="system"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
+                    </buttonCell>
+                    <connections>
+                        <action selector="toggleMute:" target="-2" id="Jmf-Fj-quQ"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="eNL-fW-1Cx" secondAttribute="trailing" constant="8" id="FJE-2s-SLB"/>
-                <constraint firstItem="eNL-fW-1Cx" firstAttribute="top" secondItem="lCk-Ky-CPB" secondAttribute="top" constant="8" id="QNd-i7-h8y"/>
-                <constraint firstItem="eNL-fW-1Cx" firstAttribute="leading" secondItem="lCk-Ky-CPB" secondAttribute="leading" constant="8" id="aoy-Gz-JQU"/>
-                <constraint firstAttribute="bottom" secondItem="eNL-fW-1Cx" secondAttribute="bottom" constant="8" id="vu5-8R-AN3"/>
+                <constraint firstItem="EhA-26-aSD" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="5Sw-jU-h5T"/>
+                <constraint firstItem="EhA-26-aSD" firstAttribute="top" secondItem="Pye-gy-Huh" secondAttribute="top" constant="20" id="GVH-b2-XJn"/>
+                <constraint firstItem="Ppq-JF-FK1" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="No8-nR-u1S"/>
+                <constraint firstAttribute="bottom" secondItem="Ppq-JF-FK1" secondAttribute="bottom" constant="20" id="xIA-Zt-TKI"/>
             </constraints>
-            <point key="canvasLocation" x="243" y="-42"/>
-        </visualEffectView>
+            <point key="canvasLocation" x="427" y="-237"/>
+        </customView>
+        <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
+            <rect key="frame" x="0.0" y="0.0" width="112" height="22"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" placeholderString="Status" id="0ys-h0-cm2">
+                <font key="font" metaFont="system"/>
+                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+            </textFieldCell>
+        </textField>
+        <drawer leadingOffset="40" trailingOffset="12" id="RR8-NV-Gpy">
+            <size key="contentSize" width="160" height="10000"/>
+            <size key="minContentSize" width="160" height="52"/>
+            <size key="maxContentSize" width="240" height="10000"/>
+            <connections>
+                <outlet property="contentView" destination="Pye-gy-Huh" id="zWz-aQ-fc0"/>
+                <outlet property="delegate" destination="-2" id="Y1b-PY-bLJ"/>
+                <outlet property="parentWindow" destination="rqa-ia-OSc" id="492-CG-Jtv"/>
+            </connections>
+        </drawer>
     </objects>
     <resources>
         <image name="NSImageNameVolumeHigh" width="512" height="512"/>
         <image name="NSImageNameVolumeMute" width="512" height="512"/>
+        <image name="NSListViewTemplate" width="14" height="10"/>
         <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>

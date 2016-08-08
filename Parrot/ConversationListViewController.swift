@@ -91,7 +91,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		}
 		
 		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
-		UserNotificationCenter.updateDockBadge(unread)
+		NSApp.badgeCount = unread
 		
 		NotificationCenter.default().addObserver(forName: NSUserNotification.didActivateNotification) {
 			guard	let notification = $0.object as? NSUserNotification,
@@ -261,7 +261,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		DispatchQueue.main.async {
 			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
-			UserNotificationCenter.updateDockBadge(unread)
+			NSApp.badgeCount = unread
 		}
 		
 		// Forward the event to the conversation if it's open. Also, if the 
@@ -305,9 +305,9 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	
     public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: ITypingStatusMessage, forUser: User) {
 		if let c = self.childConversations[status.convID] {
-			if (c.window?.isKeyWindow ?? false) {
+			//if (c.window?.isKeyWindow ?? false) {
 				c.conversation(c.conversation!, didChangeTypingStatusForUser: forUser, toStatus: status.status)
-			}
+			//}
 		}
 	}
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
@@ -324,7 +324,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
-			UserNotificationCenter.updateDockBadge(unread)
+			NSApp.badgeCount = unread
 		}
     }
 	
@@ -334,7 +334,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
-			UserNotificationCenter.updateDockBadge(unread)
+			NSApp.badgeCount = unread
 		}
     }
 }

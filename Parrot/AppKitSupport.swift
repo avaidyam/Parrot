@@ -26,6 +26,12 @@ public extension NSView {
 	}
 }
 
+/*
+public extension NSPopover {
+	public dynamic var anchorEdge: NSRectEdge
+}
+*/
+
 public extension NSNib {
 	public func instantiate(_ owner: AnyObject?) -> [AnyObject] {
 		var stuff: NSArray = []

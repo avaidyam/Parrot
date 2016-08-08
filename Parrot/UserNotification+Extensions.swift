@@ -6,7 +6,7 @@ import AppKit
 public typealias UserNotification = NSUserNotification
 
 /// Customized NSUserNotificationCenter with easier access.
-public let UserNotificationCenter: NSUserNotificationCenter = {
+private let UserNotificationCenter: NSUserNotificationCenter = {
 	let s = NSUserNotificationCenter.default()
 	s.delegate = s; return s
 }()
@@ -20,6 +20,7 @@ public extension NSUserNotification {
 		case customSoundPath
 		case vibrateForceTouch
 		case requestUserAttention
+		case speakContents
 	}
 	
 	public func set(option: AuxOptions, value: AnyObject) {
@@ -80,12 +81,11 @@ public extension NSUserNotification {
 		set { self.setValue(newValue, forKey: "_lockscreenOnly") }
 	}
 	
-	/// If `badgeCount` is true, this notification is only shown on the lockscreen.
+	/// If `badgeCount` is set, the notification will trigger the badge count to be set.
 	public var badgeCount: Int {
 		get { return self.value(forKey: "_badgeCount") as? Int ?? 0 }
 		set { self.setValue(newValue, forKey: "_badgeCount") }
 	}
-	
 }
 
 public extension NSUserNotification {
@@ -121,66 +121,20 @@ public extension NSUserNotification {
 	}
 }
 
-// TODO: REMOVE!
-public extension NSUserNotificationCenter {
-	
-	public func updateDockBadge(_ count: Int) {
-		NSApp.dockTile.badgeLabel = count > 0 ? "\(count)" : nil
+private var _appProgress: Double?
+public extension NSApplication {
+	public var badgeCount: Int? {
+		get { return Int(NSApp.dockTile.badgeLabel ?? "") }
+		set { NSApp.dockTile.badgeLabel = newValue != nil ? "\(newValue!)" : nil }
 	}
-	
-	public func notifications(includeDelivered: Bool = true, includeScheduled: Bool = false) -> [NSUserNotification] {
-		var notes = [NSUserNotification]()
-		if includeDelivered {
-			notes += self.deliveredNotifications
+	public var appProgress: Double? {
+		get { return _appProgress }
+		set { _appProgress = (newValue >= 0.0 && newValue <= 1.0 ? newValue : nil) ;
+			
+			let progress = _appProgress != nil ? _appProgress! : -1.0
+			NSApp.perform(Selector(("_displayProgressNotification:isIndeterminate:")),
+			              with: progress, with: false)
 		}
-		if includeScheduled {
-			notes += self.scheduledNotifications
-		}
-		return notes
-	}
-	
-	public func indexedNotifications(includeDelivered d: Bool = true, includeScheduled s: Bool = false) -> [String: NSUserNotification] {
-		let notes = self.notifications(includeDelivered: d, includeScheduled: s)
-		var indexed = [String: NSUserNotification]()
-		notes.forEach { indexed[$0.identifier ?? ""] = $0 }
-		_ = indexed.removeValue(forKey: "") // remove unidentified notifications.
-		return indexed
-	}
-	
-	public func post(notification: NSUserNotification, schedule: Bool = false) {
-		if schedule {
-			self.scheduleNotification(notification)
-		} else {
-			self.deliver(notification)
-		}
-	}
-	
-	public func remove(notification: NSUserNotification, scheduled: Bool = false) {
-		if scheduled {
-			self.removeScheduledNotification(notification)
-		} else {
-			self.removeDeliveredNotification(notification)
-		}
-	}
-	
-	public func remove(byIdentifier id: String, scheduled: Bool = false) {
-		for n in (scheduled ? self.scheduledNotifications : self.deliveredNotifications) {
-			if n.identifier == id {
-				self.remove(notification: n, scheduled: scheduled)
-			}
-		}
-	}
-	
-	public func post(notifications: [NSUserNotification], schedule: Bool = false) {
-		notifications.forEach { self.post(notification: $0, schedule: schedule) }
-	}
-	
-	public func remove(notifications: [NSUserNotification], scheduled: Bool = false) {
-		notifications.forEach { self.remove(notification: $0, scheduled: scheduled) }
-	}
-	
-	public func remove(byIdentifiers ids: [String], scheduled: Bool = false) {
-		ids.forEach { self.remove(byIdentifier: $0, scheduled: scheduled) }
 	}
 }
 
@@ -203,6 +157,11 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 		
 		if let r = notification.get(option: .requestUserAttention) as? NSRequestUserAttentionType {
 			NSApp.requestUserAttention(r)
+		}
+		
+		if let s = notification.get(option: .speakContents) as? Bool where s {
+			let text = (notification.title ?? "") + (notification.subtitle ?? "") + (notification.informativeText ?? "")
+			NSApp.perform(Selector(("speakString:")), with: text)
 		}
 	}
 	

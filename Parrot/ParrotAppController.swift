@@ -32,6 +32,10 @@ public class ParrotAppController: NSApplicationController {
 		ConversationListViewController(windowNibName: "ConversationListViewController")
 	}()
 	
+	public static override func initialize() {
+		NSDrawer.__activateModernDrawers()
+	}
+	
 	public override init() {
 		super.init()
 		
