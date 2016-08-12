@@ -26,6 +26,31 @@ public extension NSView {
 	}
 }
 
+public extension CAAnimation {
+	
+	/// A bunch of layer animations to get the "scale in" effect for NSViews.
+	public static func scaleIn(forFrame frame: CGRect, amount: Double = 1.5,
+	                           duration: TimeInterval = NSAnimationContext.current().duration) -> CAAnimation {
+		let anchorPoint = NSValue(point: CGPoint(x: 0.5, y: 0.5))
+		let position = NSValue(point: CGPoint(x: frame.midX, y: frame.midY))
+		
+		let scale = CABasicAnimation(keyPath: "transform.scale")
+		scale.fromValue = amount
+		let pos = CABasicAnimation(keyPath: "position")
+		pos.fromValue = position
+		pos.toValue = position
+		let anchor = CABasicAnimation(keyPath: "anchorPoint")
+		anchor.fromValue = anchorPoint
+		anchor.toValue = anchorPoint
+		
+		let group = CAAnimationGroup()
+		group.duration = duration
+		group.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+		group.animations = [scale, pos, anchor]
+		return group
+	}
+}
+
 /*
 public extension NSPopover {
 	public dynamic var anchorEdge: NSRectEdge

@@ -183,7 +183,6 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	public var focus: [Focus] {
 		var focuses = [Focus]()
 		for r in self.conversation.readState {
-			let id = User.ID(chatID: r.participantId!.chatId!, gaiaID: r.participantId!.gaiaId!)
 			let person = self.client.directory.people[r.participantId!.gaiaId!]
 			let read = Date.from(UTC: Double(r.latestReadTimestamp!))
 			//let t = self.typingStatuses[id]
@@ -285,8 +284,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			delegate.conversation(self, didReceiveEvent: event)
         } else {
             let user = user_list[event.userID]
-            if !user.isSelf {
-				log.info("Notification \(event) from User \(user)!");
+			if !user.isSelf {
+				//log.info("Notification \(event) from User \(user)!");
             }
         }
     }

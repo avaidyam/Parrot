@@ -38,18 +38,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		didSet {
 			// FIXME: FORCE-CAST TO HANGOUTS
 			(conversationList as? Hangouts.ConversationList)?.delegate = self
-			
-			DispatchQueue.main.async {
-				NSAnimationContext.runAnimationGroup({ ctx in
-					self.indicator.stopAnimation(nil)
-					self.indicator.isHidden = true
-				}, completionHandler: {
-					//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
-					self.listView.update()
-					//let i = (0..<self.listView.dataSource.count) as Range<Int>
-					//self.listView.tableView.insertRows(at: IndexSet(integersIn: i), withAnimation: [.effectFade, .slideUp])
-				})
-			}
+			self.animatedUpdate()
 		}
 	}
 	
@@ -59,6 +48,28 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		// FIXME: FORCE-CAST TO HANGOUTS
 		let all = self.conversationList?.conversations.map { $1 as! IConversation }.filter { !$0.is_archived }
 		return all!.sorted { $0.last_modified > $1.last_modified }.map { $0 as ParrotServiceExtension.Conversation }
+	}
+	
+	// Performs a visual refresh of the conversation list.
+	private func animatedUpdate() {
+		self.listView.animator().isHidden = true
+		self.indicator.animator().alphaValue = 1.0
+		self.indicator.isHidden = false
+		self.indicator.startAnimation(nil)
+		
+		self.listView.update {
+			self.listView.animator().isHidden = false
+			self.indicator.animator().alphaValue = 0.0
+			
+			let scaleIn = CAAnimation.scaleIn(forFrame: self.listView.layer!.frame)
+			self.listView.layer?.add(scaleIn, forKey: "updates")
+			
+			let durMS = Int(NSAnimationContext.current().duration * 1000.0)
+			DispatchQueue.main.after(when: .now() + .milliseconds(durMS)) {
+				self.indicator.stopAnimation(nil)
+				self.indicator.isHidden = true
+			}
+		}
 	}
 	
 	public override func loadWindow() {
