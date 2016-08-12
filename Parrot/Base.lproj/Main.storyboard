@@ -4,7 +4,6 @@
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -817,43 +816,178 @@
             <objects>
                 <viewController title="Appearance" id="pKj-Ns-rph" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="xUP-4m-s2J" customClass="NSVisualEffectView">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="332"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="su0-TS-5C3">
-                                <rect key="frame" x="34" y="233" width="382" height="47"/>
-                                <subviews>
-                                    <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VS8-ZZ-pBh">
-                                        <rect key="frame" x="0.0" y="0.0" width="169" height="47"/>
+                            <stackView orientation="vertical" alignment="centerX" hasEqualSpacing="YES" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TP9-bC-ksa">
+                                <rect key="frame" x="0.0" y="0.0" width="450" height="332"/>
+                                <edgeInsets key="edgeInsets" left="16" right="16" top="16" bottom="16"/>
+                                <beginningViews>
+                                    <stackView distribution="fillProportionally" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XGi-Ut-Hke">
+                                        <rect key="frame" x="16" y="316" width="418" height="0.0"/>
                                         <subviews>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ogW-Yu-cUi">
-                                                <rect key="frame" x="38" y="30" width="93" height="17"/>
-                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Interface Style" id="Jbq-gy-57R">
-                                                    <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hJP-Vc-GtM">
+                                                <rect key="frame" x="0.0" y="-67" width="339" height="47"/>
+                                                <subviews>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Knj-Pg-DpB">
+                                                        <rect key="frame" x="140" y="30" width="59" height="17"/>
+                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Text Size" id="r1E-H7-cfV">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kYI-dw-QyK">
+                                                        <rect key="frame" x="-2" y="-2" width="343" height="24"/>
+                                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="12" maxValue="48" doubleValue="12" tickMarkPosition="above" numberOfTickMarks="12" sliderType="linear" id="gfN-rP-Xi2"/>
+                                                        <connections>
+                                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.MessageTextSize" id="IP4-iG-Nwv">
+                                                                <dictionary key="options">
+                                                                    <integer key="NSMultipleValuesPlaceholder" value="12"/>
+                                                                    <integer key="NSNoSelectionPlaceholder" value="12"/>
+                                                                    <integer key="NSNotApplicablePlaceholder" value="12"/>
+                                                                    <integer key="NSNullPlaceholder" value="12"/>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
+                                                    </slider>
+                                                </subviews>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="dfO-IJ-x9d">
+                                                <rect key="frame" x="345" y="-69" width="39" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="35" id="Y0F-gL-ekn"/>
+                                                    <constraint firstAttribute="height" constant="50" id="YXC-4m-kF1"/>
+                                                </constraints>
+                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="A" id="GXy-Di-qfX">
+                                                    <font key="font" metaFont="system" size="48"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
-                                            </textField>
-                                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vwu-bS-VYB">
-                                                <rect key="frame" x="0.0" y="-2" width="169" height="25"/>
-                                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="ERn-Gk-mOP">
-                                                    <font key="font" metaFont="system"/>
-                                                    <segments>
-                                                        <segment label="Light" toolTip="Parrot will display in a light-colored UI theme."/>
-                                                        <segment label="Dark" toolTip="Parrot will display in a dark-colored UI theme." selected="YES" tag="1"/>
-                                                        <segment label="System" toolTip="Parrot will match the UI theme you've configured in System Preferences." tag="2"/>
-                                                    </segments>
-                                                </segmentedCell>
                                                 <connections>
-                                                    <binding destination="cbh-fj-EIe" name="selectedTag" keyPath="values.Parrot.InterfaceStyle" id="MYJ-HG-E2r">
+                                                    <binding destination="cbh-fj-EIe" name="fontSize" keyPath="values.Parrot.MessageTextSize" id="Iys-0B-x16">
                                                         <dictionary key="options">
-                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                            <bool key="NSValidatesImmediately" value="YES"/>
+                                                            <real key="NSMultipleValuesPlaceholder" value="12"/>
+                                                            <integer key="NSNoSelectionPlaceholder" value="12"/>
+                                                            <integer key="NSNotApplicablePlaceholder" value="12"/>
+                                                            <integer key="NSNullPlaceholder" value="12"/>
                                                         </dictionary>
                                                     </binding>
                                                 </connections>
-                                            </segmentedControl>
+                                            </textField>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstItem="dfO-IJ-x9d" firstAttribute="leading" secondItem="hJP-Vc-GtM" secondAttribute="trailing" constant="8" symbolic="YES" id="0Px-HW-sQt"/>
+                                            <constraint firstItem="hJP-Vc-GtM" firstAttribute="centerY" secondItem="XGi-Ut-Hke" secondAttribute="centerY" id="ViO-qh-svg"/>
+                                            <constraint firstItem="hJP-Vc-GtM" firstAttribute="centerY" secondItem="dfO-IJ-x9d" secondAttribute="centerY" id="YWo-kz-uMn"/>
+                                            <constraint firstItem="hJP-Vc-GtM" firstAttribute="top" secondItem="XGi-Ut-Hke" secondAttribute="top" constant="20" symbolic="YES" id="yhd-d1-bmc"/>
+                                        </constraints>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <real value="957"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                    <stackView distribution="fillProportionally" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="su0-TS-5C3">
+                                        <rect key="frame" x="16" y="69" width="418" height="239"/>
+                                        <subviews>
+                                            <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VS8-ZZ-pBh">
+                                                <rect key="frame" x="0.0" y="192" width="203" height="47"/>
+                                                <subviews>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ogW-Yu-cUi">
+                                                        <rect key="frame" x="55" y="30" width="93" height="17"/>
+                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Interface Style" id="Jbq-gy-57R">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vwu-bS-VYB">
+                                                        <rect key="frame" x="17" y="-2" width="169" height="25"/>
+                                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="ERn-Gk-mOP">
+                                                            <font key="font" metaFont="system"/>
+                                                            <segments>
+                                                                <segment label="Light" toolTip="Parrot will display in a light-colored UI theme."/>
+                                                                <segment label="Dark" toolTip="Parrot will display in a dark-colored UI theme." selected="YES" tag="1"/>
+                                                                <segment label="System" toolTip="Parrot will match the UI theme you've configured in System Preferences." tag="2"/>
+                                                            </segments>
+                                                        </segmentedCell>
+                                                        <connections>
+                                                            <binding destination="cbh-fj-EIe" name="selectedTag" keyPath="values.Parrot.InterfaceStyle" id="MYJ-HG-E2r">
+                                                                <dictionary key="options">
+                                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
+                                                    </segmentedControl>
+                                                </subviews>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
+                                            <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EdA-cG-InP">
+                                                <rect key="frame" x="211" y="192" width="205" height="47"/>
+                                                <subviews>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Dk-tw-ndF">
+                                                        <rect key="frame" x="56.5" y="30" width="92" height="17"/>
+                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Vibrancy Style" id="HVw-yf-VrA">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tFX-tR-OKj">
+                                                        <rect key="frame" x="0.0" y="-2" width="205" height="25"/>
+                                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="Z9a-y0-vXb">
+                                                            <font key="font" metaFont="system"/>
+                                                            <segments>
+                                                                <segment label="Always" toolTip="Parrot's windows will always be vibrant."/>
+                                                                <segment label="Never" toolTip="Parrot's windows will never be translucent." selected="YES" tag="1"/>
+                                                                <segment label="Automatic" toolTip="Parrot's windows will be translucent if you're interacting with them." tag="2"/>
+                                                            </segments>
+                                                        </segmentedCell>
+                                                        <connections>
+                                                            <binding destination="cbh-fj-EIe" name="selectedTag" keyPath="values.Parrot.VibrancyStyle" id="oB3-gF-Z8H">
+                                                                <dictionary key="options">
+                                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                                    <integer key="NSNoSelectionPlaceholder" value="2"/>
+                                                                    <integer key="NSNullPlaceholder" value="2"/>
+                                                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
+                                                    </segmentedControl>
+                                                </subviews>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="EdA-cG-InP" firstAttribute="leading" secondItem="su0-TS-5C3" secondAttribute="leading" constant="211" id="SH6-y6-PIV"/>
+                                        </constraints>
                                         <visibilityPriorities>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
@@ -863,252 +997,202 @@
                                             <real value="3.4028234663852886e+38"/>
                                         </customSpacing>
                                     </stackView>
-                                    <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EdA-cG-InP">
-                                        <rect key="frame" x="177" y="0.0" width="205" height="47"/>
-                                        <subviews>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Dk-tw-ndF">
-                                                <rect key="frame" x="56" y="30" width="92" height="17"/>
-                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Vibrancy Style" id="HVw-yf-VrA">
-                                                    <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
-                                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tFX-tR-OKj">
-                                                <rect key="frame" x="0.0" y="-2" width="205" height="25"/>
-                                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="Z9a-y0-vXb">
-                                                    <font key="font" metaFont="system"/>
-                                                    <segments>
-                                                        <segment label="Always" toolTip="Parrot's windows will always be vibrant."/>
-                                                        <segment label="Never" toolTip="Parrot's windows will never be translucent." selected="YES" tag="1"/>
-                                                        <segment label="Automatic" toolTip="Parrot's windows will be translucent if you're interacting with them." tag="2"/>
-                                                    </segments>
-                                                </segmentedCell>
-                                                <connections>
-                                                    <binding destination="cbh-fj-EIe" name="selectedTag" keyPath="values.Parrot.VibrancyStyle" id="oB3-gF-Z8H">
-                                                        <dictionary key="options">
-                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                            <integer key="NSNoSelectionPlaceholder" value="2"/>
-                                                            <integer key="NSNullPlaceholder" value="2"/>
-                                                            <bool key="NSValidatesImmediately" value="YES"/>
-                                                        </dictionary>
-                                                    </binding>
-                                                </connections>
-                                            </segmentedControl>
-                                        </subviews>
-                                        <visibilityPriorities>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                        </visibilityPriorities>
-                                        <customSpacing>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                        </customSpacing>
-                                    </stackView>
-                                </subviews>
+                                </beginningViews>
+                                <middleViews>
+                                    <box wantsLayer="YES" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="6u7-Kz-htL">
+                                        <rect key="frame" x="16" y="58" width="418" height="5"/>
+                                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <font key="titleFont" metaFont="system"/>
+                                    </box>
+                                </middleViews>
+                                <endViews>
+                                    <box wantsLayer="YES" title="Conversations" borderType="bezel" translatesAutoresizingMaskIntoConstraints="NO" id="7zy-3f-KnC">
+                                        <rect key="frame" x="175" y="34" width="100" height="18"/>
+                                        <view key="contentView" wantsLayer="YES" id="8q7-rw-E8j">
+                                            <rect key="frame" x="3" y="3" width="94" height="0.0"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Xx-sN-qUn" customClass="ConversationCell" customModule="Parrot" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="-64" width="382" height="64"/>
+                                                    <subviews>
+                                                        <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="i1A-6r-FM0">
+                                                            <rect key="frame" x="8" y="8" width="48" height="48"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" secondItem="i1A-6r-FM0" secondAttribute="height" multiplier="1:1" id="RSV-d3-bxQ"/>
+                                                                <constraint firstAttribute="width" constant="48" id="TWf-HV-PK7"/>
+                                                            </constraints>
+                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSApplicationIcon" id="eSo-BU-BGe"/>
+                                                        </imageView>
+                                                        <textField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iF9-na-2kD">
+                                                            <rect key="frame" x="62" y="39" width="266" height="17"/>
+                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="John Smith" placeholderString="Anonymous" id="1gn-3x-yAl">
+                                                                <font key="font" metaFont="systemMedium" size="13"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                        </textField>
+                                                        <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="PTy-4R-fXn">
+                                                            <rect key="frame" x="328" y="39" width="48" height="17"/>
+                                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="just now" placeholderString="a while ago" id="Bit-ap-bWJ">
+                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <color key="textColor" red="0.08235294371843338" green="0.49411764740943909" blue="0.95686274766921997" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                        </textField>
+                                                        <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="W4O-IQ-v8h">
+                                                            <rect key="frame" x="62" y="8" width="314" height="27"/>
+                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="You: What's up today?" placeholderString="[⚠️ No message.]" id="DLJ-Yg-l0f">
+                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                        </textField>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="PTy-4R-fXn" firstAttribute="top" secondItem="9Xx-sN-qUn" secondAttribute="top" constant="8" id="AKO-Uh-Od8"/>
+                                                        <constraint firstItem="i1A-6r-FM0" firstAttribute="centerY" secondItem="9Xx-sN-qUn" secondAttribute="centerY" id="Hr6-37-s6I"/>
+                                                        <constraint firstAttribute="bottom" secondItem="W4O-IQ-v8h" secondAttribute="bottom" constant="8" id="MgQ-WW-xe1"/>
+                                                        <constraint firstItem="W4O-IQ-v8h" firstAttribute="top" secondItem="PTy-4R-fXn" secondAttribute="bottom" constant="4" id="Q55-vW-iv0"/>
+                                                        <constraint firstItem="iF9-na-2kD" firstAttribute="leading" secondItem="i1A-6r-FM0" secondAttribute="trailing" constant="8" id="QNc-Ag-WSH"/>
+                                                        <constraint firstAttribute="trailing" secondItem="PTy-4R-fXn" secondAttribute="trailing" constant="8" id="X00-H1-e4c"/>
+                                                        <constraint firstItem="iF9-na-2kD" firstAttribute="top" secondItem="9Xx-sN-qUn" secondAttribute="top" constant="8" id="YFc-FZ-Fke"/>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" secondItem="i1A-6r-FM0" secondAttribute="height" constant="16" id="cqe-m6-qZg"/>
+                                                        <constraint firstItem="i1A-6r-FM0" firstAttribute="leading" secondItem="9Xx-sN-qUn" secondAttribute="leading" constant="8" id="kPR-JS-ox1"/>
+                                                        <constraint firstItem="PTy-4R-fXn" firstAttribute="centerY" secondItem="iF9-na-2kD" secondAttribute="centerY" id="lJk-9y-o3k"/>
+                                                        <constraint firstItem="PTy-4R-fXn" firstAttribute="leading" secondItem="iF9-na-2kD" secondAttribute="trailing" constant="4" id="s30-pL-AZ6"/>
+                                                        <constraint firstAttribute="trailing" secondItem="W4O-IQ-v8h" secondAttribute="trailing" constant="8" id="tAu-mW-k5i"/>
+                                                        <constraint firstItem="W4O-IQ-v8h" firstAttribute="leading" secondItem="i1A-6r-FM0" secondAttribute="trailing" constant="8" id="vBF-RM-gw1"/>
+                                                        <constraint firstItem="W4O-IQ-v8h" firstAttribute="top" secondItem="iF9-na-2kD" secondAttribute="bottom" constant="4" id="xNn-yz-R9i"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <outlet property="nameLabel" destination="iF9-na-2kD" id="4j5-lz-9tF"/>
+                                                        <outlet property="photoView" destination="i1A-6r-FM0" id="rDH-mj-fhe"/>
+                                                        <outlet property="textLabel" destination="W4O-IQ-v8h" id="hy3-u0-aZz"/>
+                                                        <outlet property="timeLabel" destination="PTy-4R-fXn" id="Zh0-gs-bTg"/>
+                                                    </connections>
+                                                </customView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="9Xx-sN-qUn" firstAttribute="leading" secondItem="8q7-rw-E8j" secondAttribute="leading" id="8D3-pr-YPT"/>
+                                                <constraint firstItem="9Xx-sN-qUn" firstAttribute="top" secondItem="8q7-rw-E8j" secondAttribute="top" id="KqC-aL-Rz4"/>
+                                                <constraint firstAttribute="trailing" secondItem="9Xx-sN-qUn" secondAttribute="trailing" id="NnG-nq-xQl"/>
+                                                <constraint firstAttribute="bottom" secondItem="9Xx-sN-qUn" secondAttribute="bottom" id="bzV-Ul-BeY"/>
+                                            </constraints>
+                                        </view>
+                                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </box>
+                                    <box wantsLayer="YES" title="Messages" borderType="bezel" translatesAutoresizingMaskIntoConstraints="NO" id="NLu-7n-fcK">
+                                        <rect key="frame" x="186" y="12" width="78" height="18"/>
+                                        <view key="contentView" wantsLayer="YES" id="bCA-4s-3g9">
+                                            <rect key="frame" x="3" y="3" width="72" height="0.0"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <customView identifier="Parrot.MessageCell" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="99m-ep-qa7" customClass="MessageCell" customModule="Parrot" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="-40" width="382" height="40"/>
+                                                    <subviews>
+                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="int-t2-TVK">
+                                                            <rect key="frame" x="8" y="8" width="24" height="24"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="24" id="7DI-8O-kuJ"/>
+                                                                <constraint firstAttribute="width" secondItem="int-t2-TVK" secondAttribute="height" multiplier="1:1" id="9U8-Ot-2NF"/>
+                                                            </constraints>
+                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSApplicationIcon" id="IRc-aW-EhI"/>
+                                                        </imageView>
+                                                        <scrollView wantsLayer="YES" horizontalHuggingPriority="248" verticalHuggingPriority="248" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="A8w-Cp-Irf" customClass="NSAntiScrollView" customModule="Parrot" customModuleProvider="target">
+                                                            <rect key="frame" x="36" y="8" width="338" height="24"/>
+                                                            <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="qYV-T7-5W4" customClass="NSAntiClipView" customModule="Parrot" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="0.0" width="338" height="24"/>
+                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                <subviews>
+                                                                    <textView wantsLayer="YES" horizontalCompressionResistancePriority="751" editable="NO" drawsBackground="NO" importsGraphics="NO" verticallyResizable="NO" allowsDocumentBackgroundColorChange="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" smartInsertDelete="YES" id="lai-GB-jld">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
+                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                        <size key="minSize" width="0.0" height="24"/>
+                                                                        <size key="maxSize" width="10000000" height="10000000"/>
+                                                                        <attributedString key="textStorage">
+                                                                            <fragment content="What's up today?">
+                                                                                <attributes>
+                                                                                    <color key="NSColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                    <font key="NSFont" metaFont="system"/>
+                                                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                                                                </attributes>
+                                                                            </fragment>
+                                                                        </attributedString>
+                                                                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <size key="minSize" width="0.0" height="24"/>
+                                                                        <size key="maxSize" width="10000000" height="10000000"/>
+                                                                    </textView>
+                                                                </subviews>
+                                                                <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            </clipView>
+                                                            <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+                                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="zVB-zR-I4g">
+                                                                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                            </scroller>
+                                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Gwu-B7-4wS">
+                                                                <rect key="frame" x="-100" y="-100" width="16" height="24"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                            </scroller>
+                                                        </scrollView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="int-t2-TVK" firstAttribute="top" secondItem="A8w-Cp-Irf" secondAttribute="top" id="0w7-OU-gMR"/>
+                                                        <constraint firstAttribute="height" constant="40" id="3IX-Tt-DXX"/>
+                                                        <constraint firstAttribute="bottom" secondItem="A8w-Cp-Irf" secondAttribute="bottom" constant="8" id="9bA-Td-Kmj"/>
+                                                        <constraint firstItem="A8w-Cp-Irf" firstAttribute="leading" secondItem="99m-ep-qa7" secondAttribute="leading" constant="36" id="ViL-Km-fZ2"/>
+                                                        <constraint firstItem="qYV-T7-5W4" firstAttribute="leading" secondItem="int-t2-TVK" secondAttribute="trailing" constant="4" id="bFS-WH-LCS"/>
+                                                        <constraint firstAttribute="trailing" secondItem="A8w-Cp-Irf" secondAttribute="trailing" constant="8" id="mO1-2r-ScX"/>
+                                                        <constraint firstItem="A8w-Cp-Irf" firstAttribute="top" secondItem="99m-ep-qa7" secondAttribute="top" constant="8" id="rTx-Wj-bUL"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <outlet property="photoView" destination="int-t2-TVK" id="rw6-zl-Ss1"/>
+                                                        <outlet property="textLabel" destination="lai-GB-jld" id="DJv-nO-m9i"/>
+                                                    </connections>
+                                                </customView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="99m-ep-qa7" firstAttribute="top" secondItem="bCA-4s-3g9" secondAttribute="top" id="EAN-fd-0RF"/>
+                                                <constraint firstAttribute="bottom" secondItem="99m-ep-qa7" secondAttribute="bottom" id="OW1-q0-aCY"/>
+                                                <constraint firstAttribute="trailing" secondItem="99m-ep-qa7" secondAttribute="trailing" id="Ql8-bw-2JX"/>
+                                                <constraint firstItem="99m-ep-qa7" firstAttribute="leading" secondItem="bCA-4s-3g9" secondAttribute="leading" id="Twk-9z-MlP"/>
+                                            </constraints>
+                                        </view>
+                                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </box>
+                                </endViews>
+                                <constraints>
+                                    <constraint firstItem="7zy-3f-KnC" firstAttribute="width" secondItem="NLu-7n-fcK" secondAttribute="width" id="B9w-MW-RaT"/>
+                                    <constraint firstItem="XGi-Ut-Hke" firstAttribute="trailing" secondItem="NLu-7n-fcK" secondAttribute="trailing" id="Hc7-iO-uPk"/>
+                                    <constraint firstItem="6u7-Kz-htL" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" constant="-16" id="beY-ku-NYJ"/>
+                                    <constraint firstItem="su0-TS-5C3" firstAttribute="leading" secondItem="TP9-bC-ksa" secondAttribute="leading" constant="17" id="tj4-mq-yVf"/>
+                                </constraints>
                                 <visibilityPriorities>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
+                                    <real value="700"/>
+                                    <real value="800"/>
+                                    <real value="800"/>
                                 </visibilityPriorities>
                                 <customSpacing>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
-                            <box wantsLayer="YES" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="6u7-Kz-htL">
-                                <rect key="frame" x="50" y="222" width="350" height="5"/>
-                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <font key="titleFont" metaFont="system"/>
-                            </box>
-                            <box wantsLayer="YES" title="Conversations" borderType="bezel" translatesAutoresizingMaskIntoConstraints="NO" id="7zy-3f-KnC">
-                                <rect key="frame" x="31" y="136" width="388" height="82"/>
-                                <view key="contentView" wantsLayer="YES" id="8q7-rw-E8j">
-                                    <rect key="frame" x="3" y="3" width="382" height="64"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Xx-sN-qUn" customClass="ConversationCell" customModule="Parrot" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="382" height="64"/>
-                                            <subviews>
-                                                <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="i1A-6r-FM0">
-                                                    <rect key="frame" x="8" y="8" width="48" height="48"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="i1A-6r-FM0" secondAttribute="height" multiplier="1:1" id="RSV-d3-bxQ"/>
-                                                        <constraint firstAttribute="width" constant="48" id="TWf-HV-PK7"/>
-                                                    </constraints>
-                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSApplicationIcon" id="eSo-BU-BGe"/>
-                                                </imageView>
-                                                <textField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iF9-na-2kD">
-                                                    <rect key="frame" x="62" y="39" width="266" height="17"/>
-                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="John Smith" placeholderString="Anonymous" id="1gn-3x-yAl">
-                                                        <font key="font" metaFont="systemMedium" size="13"/>
-                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="PTy-4R-fXn">
-                                                    <rect key="frame" x="328" y="39" width="48" height="17"/>
-                                                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="just now" placeholderString="a while ago" id="Bit-ap-bWJ">
-                                                        <font key="font" metaFont="smallSystem"/>
-                                                        <color key="textColor" red="0.08235294371843338" green="0.49411764740943909" blue="0.95686274766921997" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="W4O-IQ-v8h">
-                                                    <rect key="frame" x="62" y="8" width="314" height="27"/>
-                                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="You: What's up today?" placeholderString="[⚠️ No message.]" id="DLJ-Yg-l0f">
-                                                        <font key="font" metaFont="smallSystem"/>
-                                                        <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="PTy-4R-fXn" firstAttribute="top" secondItem="9Xx-sN-qUn" secondAttribute="top" constant="8" id="AKO-Uh-Od8"/>
-                                                <constraint firstItem="i1A-6r-FM0" firstAttribute="centerY" secondItem="9Xx-sN-qUn" secondAttribute="centerY" id="Hr6-37-s6I"/>
-                                                <constraint firstAttribute="bottom" secondItem="W4O-IQ-v8h" secondAttribute="bottom" constant="8" id="MgQ-WW-xe1"/>
-                                                <constraint firstItem="W4O-IQ-v8h" firstAttribute="top" secondItem="PTy-4R-fXn" secondAttribute="bottom" constant="4" id="Q55-vW-iv0"/>
-                                                <constraint firstItem="iF9-na-2kD" firstAttribute="leading" secondItem="i1A-6r-FM0" secondAttribute="trailing" constant="8" id="QNc-Ag-WSH"/>
-                                                <constraint firstAttribute="trailing" secondItem="PTy-4R-fXn" secondAttribute="trailing" constant="8" id="X00-H1-e4c"/>
-                                                <constraint firstItem="iF9-na-2kD" firstAttribute="top" secondItem="9Xx-sN-qUn" secondAttribute="top" constant="8" id="YFc-FZ-Fke"/>
-                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" secondItem="i1A-6r-FM0" secondAttribute="height" constant="16" id="cqe-m6-qZg"/>
-                                                <constraint firstItem="i1A-6r-FM0" firstAttribute="leading" secondItem="9Xx-sN-qUn" secondAttribute="leading" constant="8" id="kPR-JS-ox1"/>
-                                                <constraint firstItem="PTy-4R-fXn" firstAttribute="centerY" secondItem="iF9-na-2kD" secondAttribute="centerY" id="lJk-9y-o3k"/>
-                                                <constraint firstItem="PTy-4R-fXn" firstAttribute="leading" secondItem="iF9-na-2kD" secondAttribute="trailing" constant="4" id="s30-pL-AZ6"/>
-                                                <constraint firstAttribute="trailing" secondItem="W4O-IQ-v8h" secondAttribute="trailing" constant="8" id="tAu-mW-k5i"/>
-                                                <constraint firstItem="W4O-IQ-v8h" firstAttribute="leading" secondItem="i1A-6r-FM0" secondAttribute="trailing" constant="8" id="vBF-RM-gw1"/>
-                                                <constraint firstItem="W4O-IQ-v8h" firstAttribute="top" secondItem="iF9-na-2kD" secondAttribute="bottom" constant="4" id="xNn-yz-R9i"/>
-                                            </constraints>
-                                            <connections>
-                                                <outlet property="nameLabel" destination="iF9-na-2kD" id="4j5-lz-9tF"/>
-                                                <outlet property="photoView" destination="i1A-6r-FM0" id="rDH-mj-fhe"/>
-                                                <outlet property="textLabel" destination="W4O-IQ-v8h" id="hy3-u0-aZz"/>
-                                                <outlet property="timeLabel" destination="PTy-4R-fXn" id="Zh0-gs-bTg"/>
-                                            </connections>
-                                        </customView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="9Xx-sN-qUn" firstAttribute="leading" secondItem="8q7-rw-E8j" secondAttribute="leading" id="8D3-pr-YPT"/>
-                                        <constraint firstItem="9Xx-sN-qUn" firstAttribute="top" secondItem="8q7-rw-E8j" secondAttribute="top" id="KqC-aL-Rz4"/>
-                                        <constraint firstAttribute="trailing" secondItem="9Xx-sN-qUn" secondAttribute="trailing" id="NnG-nq-xQl"/>
-                                        <constraint firstAttribute="bottom" secondItem="9Xx-sN-qUn" secondAttribute="bottom" id="bzV-Ul-BeY"/>
-                                    </constraints>
-                                </view>
-                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </box>
-                            <box wantsLayer="YES" title="Messages" borderType="bezel" translatesAutoresizingMaskIntoConstraints="NO" id="NLu-7n-fcK">
-                                <rect key="frame" x="31" y="76" width="388" height="58"/>
-                                <view key="contentView" wantsLayer="YES" id="bCA-4s-3g9">
-                                    <rect key="frame" x="3" y="3" width="382" height="40"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <customView identifier="Parrot.MessageCell" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="99m-ep-qa7" customClass="MessageCell" customModule="Parrot" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="382" height="40"/>
-                                            <subviews>
-                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="int-t2-TVK">
-                                                    <rect key="frame" x="8" y="8" width="24" height="24"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="24" id="7DI-8O-kuJ"/>
-                                                        <constraint firstAttribute="width" secondItem="int-t2-TVK" secondAttribute="height" multiplier="1:1" id="9U8-Ot-2NF"/>
-                                                    </constraints>
-                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSApplicationIcon" id="IRc-aW-EhI"/>
-                                                </imageView>
-                                                <scrollView wantsLayer="YES" horizontalHuggingPriority="248" verticalHuggingPriority="248" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="A8w-Cp-Irf" customClass="NSAntiScrollView" customModule="Parrot" customModuleProvider="target">
-                                                    <rect key="frame" x="36" y="8" width="338" height="24"/>
-                                                    <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="qYV-T7-5W4" customClass="NSAntiClipView" customModule="Parrot" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="338" height="24"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                        <subviews>
-                                                            <textView wantsLayer="YES" horizontalCompressionResistancePriority="751" editable="NO" drawsBackground="NO" importsGraphics="NO" verticallyResizable="NO" allowsDocumentBackgroundColorChange="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" smartInsertDelete="YES" id="lai-GB-jld">
-                                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
-                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                <size key="minSize" width="338" height="24"/>
-                                                                <size key="maxSize" width="10000000" height="10000000"/>
-                                                                <attributedString key="textStorage">
-                                                                    <fragment content="What's up today?">
-                                                                        <attributes>
-                                                                            <color key="NSColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                            <font key="NSFont" metaFont="system"/>
-                                                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                                        </attributes>
-                                                                    </fragment>
-                                                                </attributedString>
-                                                                <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <size key="minSize" width="338" height="24"/>
-                                                                <size key="maxSize" width="10000000" height="10000000"/>
-                                                            </textView>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    </clipView>
-                                                    <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
-                                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="zVB-zR-I4g">
-                                                        <rect key="frame" x="-100" y="-100" width="87" height="18"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                    </scroller>
-                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Gwu-B7-4wS">
-                                                        <rect key="frame" x="-100" y="-100" width="16" height="24"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                    </scroller>
-                                                </scrollView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="int-t2-TVK" firstAttribute="top" secondItem="A8w-Cp-Irf" secondAttribute="top" id="0w7-OU-gMR"/>
-                                                <constraint firstAttribute="height" constant="40" id="3IX-Tt-DXX"/>
-                                                <constraint firstAttribute="bottom" secondItem="A8w-Cp-Irf" secondAttribute="bottom" constant="8" id="9bA-Td-Kmj"/>
-                                                <constraint firstItem="A8w-Cp-Irf" firstAttribute="leading" secondItem="99m-ep-qa7" secondAttribute="leading" constant="36" id="ViL-Km-fZ2"/>
-                                                <constraint firstItem="qYV-T7-5W4" firstAttribute="leading" secondItem="int-t2-TVK" secondAttribute="trailing" constant="4" id="bFS-WH-LCS"/>
-                                                <constraint firstAttribute="trailing" secondItem="A8w-Cp-Irf" secondAttribute="trailing" constant="8" id="mO1-2r-ScX"/>
-                                                <constraint firstItem="A8w-Cp-Irf" firstAttribute="top" secondItem="99m-ep-qa7" secondAttribute="top" constant="8" id="rTx-Wj-bUL"/>
-                                            </constraints>
-                                            <connections>
-                                                <outlet property="photoView" destination="int-t2-TVK" id="rw6-zl-Ss1"/>
-                                                <outlet property="textLabel" destination="lai-GB-jld" id="DJv-nO-m9i"/>
-                                            </connections>
-                                        </customView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="99m-ep-qa7" firstAttribute="top" secondItem="bCA-4s-3g9" secondAttribute="top" id="EAN-fd-0RF"/>
-                                        <constraint firstAttribute="bottom" secondItem="99m-ep-qa7" secondAttribute="bottom" id="OW1-q0-aCY"/>
-                                        <constraint firstAttribute="trailing" secondItem="99m-ep-qa7" secondAttribute="trailing" id="Ql8-bw-2JX"/>
-                                        <constraint firstItem="99m-ep-qa7" firstAttribute="leading" secondItem="bCA-4s-3g9" secondAttribute="leading" id="Twk-9z-MlP"/>
-                                    </constraints>
-                                </view>
-                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </box>
-                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kYI-dw-QyK">
-                                <rect key="frame" x="88" y="18" width="274" height="24"/>
-                                <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="gfN-rP-Xi2"/>
-                            </slider>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dfO-IJ-x9d">
-                                <rect key="frame" x="72" y="16" width="20" height="29"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="A" id="GXy-Di-qfX">
-                                    <font key="font" metaFont="system" size="24"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="kYI-dw-QyK" firstAttribute="width" secondItem="xUP-4m-s2J" secondAttribute="width" multiplier="0.6" id="28R-eL-bzh"/>
-                            <constraint firstItem="7zy-3f-KnC" firstAttribute="top" secondItem="6u7-Kz-htL" secondAttribute="bottom" constant="6" id="2qn-AN-em6"/>
-                            <constraint firstItem="7zy-3f-KnC" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" id="8Iy-0D-5I4"/>
-                            <constraint firstItem="6u7-Kz-htL" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="CfT-3O-sJt"/>
-                            <constraint firstItem="7zy-3f-KnC" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="E38-mw-T4l"/>
-                            <constraint firstItem="NLu-7n-fcK" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="FtA-zO-cho"/>
-                            <constraint firstItem="6u7-Kz-htL" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" constant="-32" id="J5z-Oa-TWc"/>
-                            <constraint firstItem="NLu-7n-fcK" firstAttribute="top" secondItem="7zy-3f-KnC" secondAttribute="bottom" constant="6" id="JCj-lo-6NT"/>
-                            <constraint firstAttribute="bottom" secondItem="kYI-dw-QyK" secondAttribute="bottom" constant="20" id="QjZ-8z-Oqr"/>
-                            <constraint firstItem="su0-TS-5C3" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="RH0-LE-cMR"/>
-                            <constraint firstItem="kYI-dw-QyK" firstAttribute="leading" secondItem="dfO-IJ-x9d" secondAttribute="trailing" id="Uhg-u9-N2C"/>
-                            <constraint firstItem="6u7-Kz-htL" firstAttribute="top" secondItem="su0-TS-5C3" secondAttribute="bottom" constant="8" id="fLr-q5-vPG"/>
-                            <constraint firstItem="dfO-IJ-x9d" firstAttribute="centerY" secondItem="kYI-dw-QyK" secondAttribute="centerY" id="gJc-8h-nt7"/>
-                            <constraint firstItem="kYI-dw-QyK" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="l6M-fs-czf"/>
-                            <constraint firstItem="NLu-7n-fcK" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" id="m2F-7I-EUR"/>
-                            <constraint firstItem="su0-TS-5C3" firstAttribute="top" secondItem="xUP-4m-s2J" secondAttribute="top" constant="20" id="uzT-0k-604"/>
+                            <constraint firstAttribute="trailing" secondItem="TP9-bC-ksa" secondAttribute="trailing" id="6QO-Pm-Cdn"/>
+                            <constraint firstAttribute="bottom" secondItem="TP9-bC-ksa" secondAttribute="bottom" id="QwS-PB-DeZ"/>
+                            <constraint firstItem="TP9-bC-ksa" firstAttribute="leading" secondItem="xUP-4m-s2J" secondAttribute="leading" id="fPV-Ba-eF8"/>
+                            <constraint firstItem="TP9-bC-ksa" firstAttribute="top" secondItem="xUP-4m-s2J" secondAttribute="top" id="hNc-Au-6Gx"/>
                         </constraints>
                     </view>
                 </viewController>

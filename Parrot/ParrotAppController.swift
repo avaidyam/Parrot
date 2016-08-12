@@ -15,7 +15,7 @@ public enum Parrot {
 	public static let VibrancyStyle = "Parrot.VibrancyStyle"
 	
 	public static let AutoEmoji = "Parrot.AutoEmoji"
-	public static let InvertChatStyle = "Parrot.InvertChatStyle"
+	public static let MessageTextSize = "Parrot.MessageTextSize"
 	public static let Emoticons = "Parrot.Emoticons"
 	public static let Completions = "Parrot.Completions"
 	

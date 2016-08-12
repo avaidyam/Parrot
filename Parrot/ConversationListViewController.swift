@@ -52,22 +52,24 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	
 	// Performs a visual refresh of the conversation list.
 	private func animatedUpdate() {
-		self.listView.animator().isHidden = true
-		self.indicator.animator().alphaValue = 1.0
-		self.indicator.isHidden = false
-		self.indicator.startAnimation(nil)
-		
-		self.listView.update {
-			self.listView.animator().isHidden = false
-			self.indicator.animator().alphaValue = 0.0
+		DispatchQueue.main.async {
+			self.listView.animator().isHidden = true
+			self.indicator.animator().alphaValue = 1.0
+			self.indicator.isHidden = false
+			self.indicator.startAnimation(nil)
 			
-			let scaleIn = CAAnimation.scaleIn(forFrame: self.listView.layer!.frame)
-			self.listView.layer?.add(scaleIn, forKey: "updates")
-			
-			let durMS = Int(NSAnimationContext.current().duration * 1000.0)
-			DispatchQueue.main.after(when: .now() + .milliseconds(durMS)) {
-				self.indicator.stopAnimation(nil)
-				self.indicator.isHidden = true
+			self.listView.update {
+				self.listView.animator().isHidden = false
+				self.indicator.animator().alphaValue = 0.0
+				
+				let scaleIn = CAAnimation.scaleIn(forFrame: self.listView.layer!.frame)
+				self.listView.layer?.add(scaleIn, forKey: "updates")
+				
+				let durMS = Int(NSAnimationContext.current().duration * 1000.0)
+				DispatchQueue.main.after(when: .now() + .milliseconds(durMS)) {
+					self.indicator.stopAnimation(nil)
+					self.indicator.isHidden = true
+				}
 			}
 		}
 	}

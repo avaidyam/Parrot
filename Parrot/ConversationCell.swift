@@ -22,9 +22,9 @@ public class ConversationCell: ListViewCell {
 			let firstParticipant = conversation.participants.filter { !$0.me }.first!
 			let photo = fetchImage(user: firstParticipant, conversation: conversation)
 			// FIXME: Group conversation prefixing doesn't work yet.
-			let prefix = messageSender != selfSender ? "" : "You: "
+			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
 			//let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
-			let subtitle = prefix + (conversation.messages.last?.text ?? "")
+			let subtitle = (conversation.messages.last?.text ?? "")
 			let time = conversation.messages.last?.timestamp ?? .origin
 			
 			self.time = time
@@ -33,7 +33,7 @@ public class ConversationCell: ListViewCell {
 			self.nameLabel?.toolTip = conversation.name
 			self.textLabel?.stringValue = subtitle
 			self.textLabel?.toolTip = subtitle
-			self.timeLabel?.stringValue = time.relativeString()
+			self.timeLabel?.stringValue = self.prefix + time.relativeString()
 			self.timeLabel?.toolTip = "\(time.fullString())"
 			
 			if conversation.unreadCount > 0 {
@@ -43,9 +43,10 @@ public class ConversationCell: ListViewCell {
 	}
 	
 	// Dynamically update the visible timestamp for the Conversation.
-	var time: Date = .origin
+	private var time: Date = .origin
+	private var prefix = " "
 	public func updateTimestamp() {
-		self.timeLabel?.stringValue = self.time.relativeString()
+		self.timeLabel?.stringValue = self.prefix + self.time.relativeString()
 	}
 	
 	// Return a complete dragging component for this ConversationView.

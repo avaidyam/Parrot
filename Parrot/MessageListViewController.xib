@@ -188,14 +188,26 @@
                         <action selector="toggleMute:" target="-2" id="Jmf-Fj-quQ"/>
                     </connections>
                 </button>
+                <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2rg-dH-n2k">
+                    <rect key="frame" x="7" y="59" width="147" height="19"/>
+                    <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectAny" id="fgk-A3-8nx">
+                        <font key="font" metaFont="smallSystem"/>
+                        <segments>
+                            <segment label="Archive" image="NSColumnViewTemplate"/>
+                            <segment label="Delete" image="NSColumnViewTemplate" tag="1"/>
+                        </segments>
+                    </segmentedCell>
+                </segmentedControl>
             </subviews>
             <constraints>
+                <constraint firstItem="Ppq-JF-FK1" firstAttribute="top" secondItem="2rg-dH-n2k" secondAttribute="bottom" constant="19" id="1SI-dS-vNJ"/>
                 <constraint firstItem="EhA-26-aSD" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="5Sw-jU-h5T"/>
                 <constraint firstItem="EhA-26-aSD" firstAttribute="top" secondItem="Pye-gy-Huh" secondAttribute="top" constant="20" id="GVH-b2-XJn"/>
                 <constraint firstItem="Ppq-JF-FK1" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="No8-nR-u1S"/>
+                <constraint firstItem="2rg-dH-n2k" firstAttribute="centerX" secondItem="Ppq-JF-FK1" secondAttribute="centerX" id="T9m-ea-dTU"/>
                 <constraint firstAttribute="bottom" secondItem="Ppq-JF-FK1" secondAttribute="bottom" constant="20" id="xIA-Zt-TKI"/>
             </constraints>
-            <point key="canvasLocation" x="427" y="-237"/>
+            <point key="canvasLocation" x="406" y="-237"/>
         </customView>
         <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
             <rect key="frame" x="0.0" y="0.0" width="112" height="22"/>
@@ -218,6 +230,7 @@
         </drawer>
     </objects>
     <resources>
+        <image name="NSColumnViewTemplate" width="16" height="10"/>
         <image name="NSImageNameVolumeHigh" width="512" height="512"/>
         <image name="NSImageNameVolumeMute" width="512" height="512"/>
         <image name="NSListViewTemplate" width="14" height="10"/>
