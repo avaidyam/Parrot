@@ -307,9 +307,11 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	// Bind the drawer state to the button that toggles it.
 	public func drawerWillOpen(_ notification: Notification) {
 		self.drawerButton.state = NSOnState
+		self.drawer.window?.animator().alphaValue = 1.0
 	}
 	public func drawerWillClose(_ notification: Notification) {
 		self.drawerButton.state = NSOffState
+		self.drawer.window?.animator().alphaValue = 0.0
 	}
 	
 	//func textViewDidChangeText?
@@ -318,6 +320,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     var lastTypingTimestamp: Date?
 	public func textDidChange(_ obj: Notification) {
         if entryView.string == "" {
+			entryView.font = NSFont.systemFont(ofSize: 12.0)
             return
         }
 		

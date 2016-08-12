@@ -74,7 +74,7 @@ public class ListViewCell: NSTableCellView {
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
 public class ListView: NSView {
-	private var scrollView: NSScrollView!
+	internal var scrollView: NSScrollView!
 	internal var tableView: NSExtendedTableView! // FIXME: Should be private...
 	
 	// Override and patch in the default initializers to our init.

@@ -17,6 +17,14 @@ public extension NSDrawer {
 		let frameViewClassForStyleMaskM: Method = class_getClassMethod(NSClassFromString("NSDrawerWindow")!, Selector(("frameViewClassForStyleMask:")))
 		method_setImplementation(frameViewClassForStyleMaskM, frameViewClassForStyleMaskB)
 		
+		/*
+		// Disable the shadow for any drawer windows.
+		let shadowR: @convention(block) ()->(Bool) = {false}
+		let shadowB = imp_implementationWithBlock(unsafeBitCast(shadowR, to: AnyObject.self))
+		let shadowM: Method = class_getInstanceMethod(NSClassFromString("NSDrawerWindow")!, Selector(("hasShadow")))
+		method_setImplementation(shadowM, shadowB)
+		*/
+		
 		// Unfortunately, special edge considerations don't work on NSThemeFrame.
 		let replaceR: @convention(block) ()->() = {}
 		let replaceB = imp_implementationWithBlock(unsafeBitCast(replaceR, to: AnyObject.self))
