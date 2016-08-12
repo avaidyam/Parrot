@@ -32,6 +32,10 @@ public class MessageCell: ListViewCell {
 			self.textLabel?.isEditable = true
 			self.textLabel?.checkTextInDocument(nil)
 			self.textLabel?.isEditable = false
+			
+			// Set background masking.
+			self.textLabel?.layer?.masksToBounds = true
+			self.textLabel?.layer?.cornerRadius = 2.0
 		}
 	}
 	
@@ -64,6 +68,13 @@ public class MessageCell: ListViewCell {
 				NSForegroundColorAttributeName: NSColor.labelColor(),
 				NSUnderlineStyleAttributeName: 0,
 			]
+			
+			// Only clip the text if the text isn't purely Emoji.
+			if !text.string!.isEmoji {
+				text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
+			} else {
+				text.layer?.backgroundColor = NSColor.clear().cgColor
+			}
 		}
 	}
 	
@@ -75,26 +86,18 @@ public class MessageCell: ListViewCell {
 			layer.masksToBounds = true
 			layer.cornerRadius = layer.bounds.width / 2.0
 		}
-		if let text = self.textLabel, let layer = text.layer {
+		if let text = self.textLabel {
 			
 			// [BUG] [macOS 12] NSTextView doesn't fill width if layer-backed?
 			text.frame = text.enclosingScrollView!.bounds
 			
 			// Vertically center text which can fit in the bounds of the text view.
 			// Note: only do this if the text isn't Emoji.
-			if !text.string!.isEmoji {
+			if !text.string!.isEmoji && text.bounds.height <= 24.0 {
 				let charRect = text.characterRect()
 				let rectDiff = text.bounds.height - charRect.height
 				if rectDiff > 0 { text.textContainerInset.height = rectDiff / 2.0 }
-				
-				// Only clip the text if the text isn't purely Emoji.
-				layer.masksToBounds = true
-				layer.cornerRadius = 2.0
-				layer.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
 			}
-			
-			// FIXME: Use this when searching to highlight text.
-			//text.showFindIndicator(for: NSRange(location: 0, length: 5))
 		}
 	}
 	
@@ -123,7 +126,8 @@ public class MessageCell: ListViewCell {
 			NSParagraphStyleAttributeName: NSParagraphStyle.default()
 		])
 		
-		let box = attr.boundingRect(with: NSSize(width: width, height: .greatestFiniteMagnitude),
+		let ourWidth = width - 24.0 - 16.0 // to account for padding and icon
+		let box = attr.boundingRect(with: NSSize(width: ourWidth, height: .greatestFiniteMagnitude),
 		                            options: [.usesLineFragmentOrigin, .usesFontLeading])
 		return (box.size.height > 24.0 ? box.size.height : 24.0) + 16.0
 	}

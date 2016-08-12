@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A270f" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A286a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -1078,8 +1079,21 @@
                                 <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                 <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </box>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kYI-dw-QyK">
+                                <rect key="frame" x="88" y="18" width="274" height="24"/>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="gfN-rP-Xi2"/>
+                            </slider>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dfO-IJ-x9d">
+                                <rect key="frame" x="72" y="16" width="20" height="29"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="A" id="GXy-Di-qfX">
+                                    <font key="font" metaFont="system" size="24"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="kYI-dw-QyK" firstAttribute="width" secondItem="xUP-4m-s2J" secondAttribute="width" multiplier="0.6" id="28R-eL-bzh"/>
                             <constraint firstItem="7zy-3f-KnC" firstAttribute="top" secondItem="6u7-Kz-htL" secondAttribute="bottom" constant="6" id="2qn-AN-em6"/>
                             <constraint firstItem="7zy-3f-KnC" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" id="8Iy-0D-5I4"/>
                             <constraint firstItem="6u7-Kz-htL" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="CfT-3O-sJt"/>
@@ -1087,8 +1101,12 @@
                             <constraint firstItem="NLu-7n-fcK" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="FtA-zO-cho"/>
                             <constraint firstItem="6u7-Kz-htL" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" constant="-32" id="J5z-Oa-TWc"/>
                             <constraint firstItem="NLu-7n-fcK" firstAttribute="top" secondItem="7zy-3f-KnC" secondAttribute="bottom" constant="6" id="JCj-lo-6NT"/>
+                            <constraint firstAttribute="bottom" secondItem="kYI-dw-QyK" secondAttribute="bottom" constant="20" id="QjZ-8z-Oqr"/>
                             <constraint firstItem="su0-TS-5C3" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="RH0-LE-cMR"/>
+                            <constraint firstItem="kYI-dw-QyK" firstAttribute="leading" secondItem="dfO-IJ-x9d" secondAttribute="trailing" id="Uhg-u9-N2C"/>
                             <constraint firstItem="6u7-Kz-htL" firstAttribute="top" secondItem="su0-TS-5C3" secondAttribute="bottom" constant="8" id="fLr-q5-vPG"/>
+                            <constraint firstItem="dfO-IJ-x9d" firstAttribute="centerY" secondItem="kYI-dw-QyK" secondAttribute="centerY" id="gJc-8h-nt7"/>
+                            <constraint firstItem="kYI-dw-QyK" firstAttribute="centerX" secondItem="xUP-4m-s2J" secondAttribute="centerX" id="l6M-fs-czf"/>
                             <constraint firstItem="NLu-7n-fcK" firstAttribute="width" secondItem="su0-TS-5C3" secondAttribute="width" id="m2F-7I-EUR"/>
                             <constraint firstItem="su0-TS-5C3" firstAttribute="top" secondItem="xUP-4m-s2J" secondAttribute="top" constant="20" id="uzT-0k-604"/>
                         </constraints>

@@ -7,10 +7,10 @@ import AppKit
 public struct ParrotAppearance {
 	private init() {}
 	
-	private static var _cachedAppearance: String = ParrotAppearance._current()
-	private static var _listeners = [AppearanceListener]()
+	private static var _cachedInterfaceStyle = ParrotAppearance.interfaceStyle()
+	private static var _interfaceStyleListeners = [InterfaceStyleListener]()
 	
-	private static var _cachedVibrancyStyle: VibrancyStyle = ParrotAppearance.vibrancyStyle()
+	private static var _cachedVibrancyStyle = ParrotAppearance.vibrancyStyle()
 	private static var _vibrancyStyleListeners = [VibrancyStyleListener]()
 	
 	/// Trampolines the distributed notification sent when the user changes interface styles
@@ -29,12 +29,12 @@ public struct ParrotAppearance {
 		NotificationCenter.default().addObserver(forName: UserDefaults.didChangeNotification) { n in
 			
 			// Detect InterfaceStyle changes.
-			let current = ParrotAppearance._current()
-			if _cachedAppearance != current {
-				_cachedAppearance = current
+			let currentInterfaceStyle = ParrotAppearance.interfaceStyle()
+			if _cachedInterfaceStyle != currentInterfaceStyle {
+				_cachedInterfaceStyle = currentInterfaceStyle
 				
-				_listeners.filter { $0.object != nil }.forEach {
-					$0.handler(NSAppearance(named: current)!)
+				_interfaceStyleListeners.filter { $0.object != nil }.forEach {
+					$0.handler(currentInterfaceStyle)
 				}
 			}
 			
@@ -51,10 +51,10 @@ public struct ParrotAppearance {
 	}()
 	
 	/// Wraps the object and handler into a single container.
-	private class AppearanceListener {
+	private class InterfaceStyleListener {
 		weak var object: AnyObject?
-		let handler: (NSAppearance) -> Void
-		private required init(object: AnyObject, handler: (NSAppearance) -> Void) {
+		let handler: (InterfaceStyle) -> Void
+		private required init(object: AnyObject, handler: (InterfaceStyle) -> Void) {
 			self.object = object
 			self.handler = handler
 		}
@@ -82,14 +82,20 @@ public struct ParrotAppearance {
 		/// System-defined vibrant theme.
 		case System
 		
-		/*
-		public func visualEffectState() -> NSVisualEffectMaterial {
-			switch self {
-			case Always: return .active
-			case Never: return .inactive
-			case Automatic: return .followsWindowActiveState
+		/// Returns the currently indicated Parrot appearance based on user preference
+		/// and if applicable, the global dark interface style preference (trampolined).
+		public func appearance() -> NSAppearance {
+			let style = InterfaceStyle(rawValue: Settings[Parrot.InterfaceStyle] as? Int ?? -1) ?? .Dark
+			
+			switch style {
+			case .Light: return NSAppearance(named: NSAppearanceNameVibrantLight)!
+			case .Dark: return NSAppearance(named: NSAppearanceNameVibrantDark)!
+				
+			case .System: //TODO: "NSAppearanceNameMediumLight"
+				let system = Settings[Parrot.SystemInterfaceStyle] as? Bool ?? false
+				return NSAppearance(named: (system ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight))!
 			}
-		}*/
+		}
 	}
 	
 	public enum VibrancyStyle: Int {
@@ -129,25 +135,6 @@ public struct ParrotAppearance {
 		case OverlayBubble
 	}
 	
-	/// Returns the currently indicated Parrot appearance based on user preference
-	/// and if applicable, the global dark interface style preference (trampolined).
-	private static func _current() -> String {
-		let style = InterfaceStyle(rawValue: Settings[Parrot.InterfaceStyle] as? Int ?? -1) ?? .Dark
-		
-		switch style {
-		case .Light: return NSAppearanceNameVibrantLight
-		case .Dark: return NSAppearanceNameVibrantDark
-			
-		case .System: //TODO: "NSAppearanceNameMediumLight"
-			let system = Settings[Parrot.SystemInterfaceStyle] as? Bool ?? false
-			return (system ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight)
-		}
-	}
-	
-	public static func current() -> NSAppearance {
-		return NSAppearance(named: _current())!
-	}
-	
 	/// Returns the current user preferential InterfaceStyle (light, dark, system).
 	public static func interfaceStyle() -> InterfaceStyle {
 		return InterfaceStyle(rawValue: Settings[Parrot.InterfaceStyle] as? Int ?? -1) ?? .System
@@ -162,20 +149,20 @@ public struct ParrotAppearance {
 	/// If invokeImmediately is true, the handler will be invoked immediately.
 	/// This is useful in case appearance update logic is unified and can be streamlined.
 	/// Note: this should be done when a view appears on-screen.
-	public static func registerAppearanceListener(observer: AnyObject, invokeImmediately: Bool = false, handler: (NSAppearance) -> Void) {
+	public static func registerInterfaceStyleListener(observer: AnyObject, invokeImmediately: Bool = false, handler: (InterfaceStyle) -> Void) {
 		_ = registerDarkModeActiveListener; _ = registerNotificationChangeListener // SETUP
-		_listeners.append(AppearanceListener(object: observer, handler: handler))
+		_interfaceStyleListeners.append(InterfaceStyleListener(object: observer, handler: handler))
 		if invokeImmediately {
-			handler(ParrotAppearance.current())
+			handler(ParrotAppearance.interfaceStyle())
 		}
 	}
 	
 	/// Unregister a previously registered listener.
 	/// Note: this should be done when a view disappears from the screen.
-	public static func unregisterAppearanceListener(observer: AnyObject) {
-		for (i, l) in _listeners.enumerated() {
+	public static func unregisterInterfaceStyleListener(observer: AnyObject) {
+		for (i, l) in _interfaceStyleListeners.enumerated() {
 			if l.object === observer {
-				_listeners.remove(at: i)
+				_interfaceStyleListeners.remove(at: i)
 				break;
 			}
 		}

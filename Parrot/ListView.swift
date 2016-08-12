@@ -205,14 +205,14 @@ extension ListView: NSExtendedTableViewDelegate {
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return CGFloat(self.sizeClass.calculate {
 			let cellClass = (self.viewClassProvider?(row: row) ?? ListViewCell.self)
-			return cellClass.cellHeight(forWidth: self.bounds.size.height, cellValue: self.dataSource[row]).native
+			return cellClass.cellHeight(forWidth: self.bounds.size.width, cellValue: self.dataSource[row]).native
 		})
 	}
 	
 	public func tableViewColumnDidResize(_ notification: Notification) {
 		NSAnimationContext.beginGrouping()
 		NSAnimationContext.current().duration = 0
-		let set = IndexSet(integersIn: 0..<(self.visibleRows.last ?? 0))
+		let set = IndexSet(integersIn: 0..<self.dataSource.count)
 		tableView.noteHeightOfRows(withIndexesChanged: set)
 		NSAnimationContext.endGrouping()
 	}

@@ -44,7 +44,7 @@ class ParrotViewController: NSViewController {//, ConversationListDelegate {
 							self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
 						}
 						
-						ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
+						ParrotAppearance.registerInterfaceStyleListener(observer: self) { appearance in
 							self.view.window?.appearance = appearance
 						}
 						

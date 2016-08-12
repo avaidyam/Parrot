@@ -7,7 +7,7 @@ public class PreferencesViewController: NSTabViewController {
 	public override func viewWillAppear() {
 		super.viewWillAppear()
 		if let w = self.view.window, let t = w.toolbar {
-			w.appearance = ParrotAppearance.current()
+			w.appearance = ParrotAppearance.interfaceStyle().appearance()
 			w.titleVisibility = .hidden
 			
 			//w.standardWindowButton(.miniaturizeButton)?.isHidden = true
@@ -32,9 +32,9 @@ public class PreferencesViewController: NSTabViewController {
 			_willSelect(tabViewItem)
 			_didSelect(tabViewItem)
 
-			ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
-				w.appearance = appearance
-				self.tabView.appearance = appearance
+			ParrotAppearance.registerInterfaceStyleListener(observer: self) { interface in
+				w.appearance = interface.appearance()
+				self.tabView.appearance = interface.appearance()
 			}
 			
 			ParrotAppearance.registerVibrancyStyleListener(observer: self) { vibrancy in
@@ -44,7 +44,7 @@ public class PreferencesViewController: NSTabViewController {
 	}
 	
 	public override func viewDidDisappear() {
-		ParrotAppearance.unregisterAppearanceListener(observer: self)
+		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
 		ParrotAppearance.unregisterVibrancyStyleListener(observer: self)
 	}
 	

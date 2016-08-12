@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A270f" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A286a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
@@ -63,14 +63,14 @@
                         </textField>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="GpY-lg-AmO"/>
-                    <toolbarItem implicitItemIdentifier="FA69EF72-F9B3-4B74-9C9C-44BA3BF0687C" label="Search" paletteLabel="Search" id="v8x-qQ-RRe">
+                    <toolbarItem implicitItemIdentifier="FA69EF72-F9B3-4B74-9C9C-44BA3BF0687C" label="Search" paletteLabel="Search" image="NSImageNameSearch" id="v8x-qQ-RRe">
                         <nil key="toolTip"/>
                         <size key="minSize" width="27" height="25"/>
                         <size key="maxSize" width="33" height="25"/>
                         <button key="view" verticalHuggingPriority="750" id="7vt-50-uaw">
                             <rect key="frame" x="8" y="14" width="28" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" title="🔍" bezelStyle="texturedRounded" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="A9A-0J-fYy">
+                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSImageNameSearch" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="A9A-0J-fYy">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
@@ -90,4 +90,7 @@
             <point key="canvasLocation" x="235" y="382"/>
         </window>
     </objects>
+    <resources>
+        <image name="NSImageNameSearch" width="192" height="192"/>
+    </resources>
 </document>

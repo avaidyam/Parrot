@@ -17,7 +17,6 @@ public extension NSDrawer {
 		let frameViewClassForStyleMaskM: Method = class_getClassMethod(NSClassFromString("NSDrawerWindow")!, Selector(("frameViewClassForStyleMask:")))
 		method_setImplementation(frameViewClassForStyleMaskM, frameViewClassForStyleMaskB)
 		
-		
 		// Unfortunately, special edge considerations don't work on NSThemeFrame.
 		let replaceR: @convention(block) ()->() = {}
 		let replaceB = imp_implementationWithBlock(unsafeBitCast(replaceR, to: AnyObject.self))
@@ -36,7 +35,8 @@ public extension NSDrawer {
 		guard let w = self.window else { return }
 		w.titlebarAppearsTransparent = true
 		w.titleVisibility = .hidden
-		w.styleMask = [w.styleMask, .fullSizeContentView]
+		w.styleMask = [w.styleMask, .fullSizeContentView] // .resizable
 		w.isMovable = false
+		w.hasShadow = false
 	}
 }

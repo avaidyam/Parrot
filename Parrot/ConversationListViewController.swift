@@ -63,7 +63,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	
 	public override func loadWindow() {
 		super.loadWindow()
-		self.window?.appearance = ParrotAppearance.current()
+		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
 		self.window?.titleVisibility = .hidden
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
@@ -212,13 +212,13 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		super.showWindow(sender)
 		self.wallclock?.resume()
 		
-		ParrotAppearance.registerAppearanceListener(observer: self) { appearance in
-			self.window?.appearance = appearance
+		ParrotAppearance.registerInterfaceStyleListener(observer: self) { appearance in
+			self.window?.appearance = appearance.appearance()
 		}
 	}
 	
 	public func windowWillClose(_ notification: Notification) {
-		ParrotAppearance.unregisterAppearanceListener(observer: self)
+		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
 		self.wallclock?.suspend()
 	}
 	

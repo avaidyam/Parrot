@@ -90,7 +90,7 @@ public func checkForUpdates(_ buildTag: String, _ updateHandler: (GithubRelease)
 	a.showsSuppressionButton = true // FIXME
 	
 	a.layout()
-	a.window.appearance = ParrotAppearance.current()
+	a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
 	a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
 	if a.runModal() == 1000 /*NSAlertFirstButtonReturn*/ {
 		updateHandler(release)

@@ -21,8 +21,8 @@ public class AboutViewController: NSViewController {
 		super.viewWillAppear()
 		if let w = self.view.window {
 			configureWindow(w)
-			ParrotAppearance.registerAppearanceListener(observer: self, invokeImmediately: true) { appearance in
-				w.appearance = appearance
+			ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { appearance in
+				w.appearance = appearance.appearance()
 			}
 		}
 		
@@ -34,6 +34,6 @@ public class AboutViewController: NSViewController {
 	
 	public override func viewDidDisappear() {
 		super.viewDidDisappear()
-		ParrotAppearance.unregisterAppearanceListener(observer: self)
+		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
 	}
 }

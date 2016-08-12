@@ -2,14 +2,10 @@ import Cocoa
 import Hangouts
 import ParrotServiceExtension
 
-/* TODO: Use NSTextAlternatives instead of force-replacing text. */
-/* TODO: Needs a complete refactor, with something like CSS styling. */
 /* TODO: Re-enable link previews later when they're not terrible... */
 /* TODO: "Mention me when someone says [...]" option. */
 /* TODO: Use the PlaceholderMessage for sending messages. */
 /* TODO: When selecting text and typing a completion character, wrap the text. */
-/* TODO: When typing a word and typing a completion character, wrap the entire word. */
-/* TODO: Only trigger auto-completion when the completion character is after a space. */
 
 public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate, NSDrawerDelegate {
 	
@@ -53,7 +49,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		self.drawer.__setupModernDrawer()
 		
 		//DispatchQueue.main.sync {
-			self.window?.appearance = ParrotAppearance.current()
+			self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 			self.window?.enableRealTitlebarVibrancy(.withinWindow)
 			self.window?.titleVisibility = .hidden
 		//}
@@ -61,6 +57,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
 			vev.state = style.visualEffectState()
+			guard let vev2 = self.drawer.contentView as? NSVisualEffectView else { return }
+			vev2.state = style.visualEffectState()
 		}
 		
 		self.listView.register(nibName: "MessageCell", forClass: MessageCell.self)
@@ -113,9 +111,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		self.windowDidChangeOcclusionState(Notification(name: "" as Notification.Name))
 		
 		// Set up dark/light notifications.
-		ParrotAppearance.registerAppearanceListener(observer: self, invokeImmediately: true) { appearance in
-			self.window?.appearance = appearance
-			self.drawer.window?.appearance = appearance
+		ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
+			self.window?.appearance = interface.appearance()
+			self.drawer.window?.appearance = interface.appearance()
 			
 			// NSTextView doesn't automatically change its text color when the
 			// backing view's appearance changes, so we need to set it each time.
@@ -159,7 +157,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	}
 	
 	public func windowWillClose(_ notification: Notification) {
-		ParrotAppearance.unregisterAppearanceListener(observer: self)
+		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
 		self.closeHandler(self.conversation!.identifier)
 	}
 	
@@ -421,9 +419,5 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			}
 			textView.showFindIndicator(for: range)
 		}
-	}
-	
-	public func textView(_ textView: NSTextView, completions words: [String], forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>?) -> [String] {
-		return ["this", "is", "a", "test"]
 	}
 }
