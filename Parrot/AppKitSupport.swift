@@ -186,3 +186,21 @@ public class Wrapper<T> {
 		self.element = value
 	}
 }
+
+public func runSelectionPanel(for window: NSWindow, fileTypes: [String],
+                              multiple: Bool = false, _ handler: ([URL]) -> () = {_ in}) {
+	let p = NSOpenPanel()
+	p.allowsMultipleSelection = multiple
+	p.canChooseDirectories = false
+	p.canChooseFiles = true
+	p.canCreateDirectories = false
+	p.canDownloadUbiquitousContents = true
+	p.canResolveUbiquitousConflicts = false
+	p.resolvesAliases = false
+	p.allowedFileTypes = fileTypes
+	p.prompt = "Select"
+	p.beginSheetModal(for: window) { r in
+		guard r == NSFileHandlingPanelOKButton else { return }
+		handler(p.urls)
+	}
+}

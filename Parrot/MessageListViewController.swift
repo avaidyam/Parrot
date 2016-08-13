@@ -98,6 +98,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
 	public override func showWindow(_ sender: AnyObject?) {
 		super.showWindow(nil)
+		self.indicator.startAnimation(nil)
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
 		
 		/*
@@ -146,6 +147,11 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 				NSFontAttributeName: text.font!
 			]*/
 		}
+		
+		/*
+		runSelectionPanel(for: self.window!, fileTypes: ["mp3", "caf", "aiff", "wav"]) {
+			log.debug("received \($0)")
+		}*/
     }
 	
 	// Performs a visual refresh of the conversation list.

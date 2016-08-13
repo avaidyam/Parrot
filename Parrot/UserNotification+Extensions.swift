@@ -40,6 +40,11 @@ public extension NSUserNotification {
 		/// and informational text) will be spoken alound when the notification is presented.
 		/// Note: the value of this option must be `true`.
 		case speakContents
+		
+		/// If this option is set, the notification will trigger the execution of
+		/// a provided AppleScript file in the app's context.
+		/// Note: the value of this option must be the path of the script as a String.
+		case runAppleScript
 	}
 	
 	/// Sets the provided option as explained in `NSUserNotification.Options` directly.
@@ -164,8 +169,7 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 		NotificationCenter.default().post(name: UserNotification.didDeliverNotification, object: notification)
 		guard notification.isPresented else { return }
 		
-		if let alert = notification.get(option: .customSoundPath) as? String {
-			guard alert.conformsToUTI(kUTTypeAudio) else { return }
+		if let alert = notification.get(option: .customSoundPath) as? String where alert.conformsToUTI(kUTTypeAudio) {
 			NSSound(contentsOfFile: alert, byReference: true)?.play()
 		}
 		
@@ -174,6 +178,10 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 			let interval = Settings[Parrot.VibrateInterval] as? Int ?? 10
 			let length = Settings[Parrot.VibrateLength] as? Int ?? 1000
 			if vibrate { NSHapticFeedbackManager.vibrate(length: length, interval: interval) }
+		}
+		
+		if let a = notification.get(option: .runAppleScript) as? String, let url = URL(string: a) {
+			_ = try? NSUserAppleScriptTask(url: url).execute(withAppleEvent: nil, completionHandler: nil)
 		}
 		
 		if let r = notification.get(option: .requestUserAttention) as? NSRequestUserAttentionType {

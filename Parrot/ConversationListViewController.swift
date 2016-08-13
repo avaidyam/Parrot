@@ -84,8 +84,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			vev.state = style.visualEffectState()
 		}
 		
-		self.indicator.startAnimation(nil)
-		
 		self.listView.dataSourceProvider = { self.sortedConversations.map { $0 as Any } }
 		self.listView.register(nibName: "ConversationCell", forClass: ConversationCell.self)
 		
@@ -226,6 +224,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	/// As we are about to display, configure our UI elements.
 	public override func showWindow(_ sender: AnyObject?) {
 		super.showWindow(sender)
+		self.indicator.startAnimation(nil)
 		
 		self.wallclock?.resume()
 		ParrotAppearance.registerInterfaceStyleListener(observer: self) { appearance in

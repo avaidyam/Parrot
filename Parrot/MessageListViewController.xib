@@ -175,22 +175,6 @@
             </connections>
             <point key="canvasLocation" x="43" y="-237"/>
         </window>
-        <viewController id="Fnl-Yf-OK7" userLabel="Popover View Controller">
-            <connections>
-                <outlet property="view" destination="CZV-km-5yB" id="475-Jc-sfH"/>
-            </connections>
-        </viewController>
-        <popover id="ADy-nB-Aj1">
-            <userDefinedRuntimeAttributes>
-                <userDefinedRuntimeAttribute type="number" keyPath="preferredEdgeIB">
-                    <integer key="value" value="3"/>
-                </userDefinedRuntimeAttribute>
-            </userDefinedRuntimeAttributes>
-            <connections>
-                <outlet property="contentViewController" destination="Fnl-Yf-OK7" id="5YB-Xa-qGE"/>
-                <outlet property="positioningView" destination="yMT-fg-2gH" id="w59-mZ-gGS"/>
-            </connections>
-        </popover>
         <customView wantsLayer="YES" id="Pye-gy-Huh" customClass="NSVisualEffectView">
             <rect key="frame" x="0.0" y="0.0" width="160" height="270"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -244,10 +228,51 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
-                    <connections>
-                        <action selector="performToggle:" target="ADy-nB-Aj1" id="q1o-SX-Mjc"/>
-                    </connections>
                 </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H5U-Fc-eFk">
+                    <rect key="frame" x="10" y="103" width="140" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Display Notification" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="cw2-be-cKZ">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X0e-Wa-0GQ">
+                    <rect key="frame" x="10" y="83" width="140" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Play Sound" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FRK-Pk-CVa">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Txk-ij-NB3">
+                    <rect key="frame" x="10" y="63" width="140" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Haptic Feedback" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="w4w-93-2XY">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a6n-gH-ZT0" customClass="NSPopoverColorWell">
+                    <rect key="frame" x="12" y="20" width="44" height="23"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                </colorWell>
+                <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gwM-CF-3oD">
+                    <rect key="frame" x="43" y="41" width="76" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="gHQ-ol-lHW">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="dl1-sn-xyH">
+                            <items>
+                                <menuItem title="Item 1" id="oJ5-Qy-Wal"/>
+                                <menuItem title="Item 2" id="ewl-8s-n2W"/>
+                                <menuItem title="Item 3" id="OD7-Vg-f3l"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                </popUpButton>
             </subviews>
             <constraints>
                 <constraint firstItem="gtY-6y-nj2" firstAttribute="top" secondItem="unT-iv-6FO" secondAttribute="bottom" constant="8" id="4MZ-Hg-fE5"/>
@@ -271,6 +296,7 @@
                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
             </textFieldCell>
+            <point key="canvasLocation" x="43" y="-41"/>
         </textField>
         <drawer leadingOffset="40" trailingOffset="12" id="RR8-NV-Gpy">
             <size key="contentSize" width="160" height="10000"/>
@@ -282,36 +308,6 @@
                 <outlet property="parentWindow" destination="rqa-ia-OSc" id="492-CG-Jtv"/>
             </connections>
         </drawer>
-        <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="CZV-km-5yB">
-            <rect key="frame" x="0.0" y="0.0" width="240" height="135"/>
-            <autoresizingMask key="autoresizingMask"/>
-            <clipView key="contentView" id="Zgx-JR-mFN">
-                <rect key="frame" x="1" y="1" width="238" height="133"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                <subviews>
-                    <textView importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="AMr-6Y-BT6">
-                        <rect key="frame" x="0.0" y="0.0" width="238" height="133"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <size key="minSize" width="238" height="133"/>
-                        <size key="maxSize" width="463" height="10000000"/>
-                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <size key="minSize" width="238" height="133"/>
-                        <size key="maxSize" width="463" height="10000000"/>
-                    </textView>
-                </subviews>
-                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-            </clipView>
-            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="PBV-1A-gw4">
-                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
-                <autoresizingMask key="autoresizingMask"/>
-            </scroller>
-            <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="qkC-fY-rwp">
-                <rect key="frame" x="223" y="1" width="16" height="133"/>
-                <autoresizingMask key="autoresizingMask"/>
-            </scroller>
-            <point key="canvasLocation" x="412" y="92"/>
-        </scrollView>
     </objects>
     <resources>
         <image name="NSImageNameVolumeHigh" width="512" height="512"/>
