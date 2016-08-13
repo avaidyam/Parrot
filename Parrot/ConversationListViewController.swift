@@ -286,6 +286,33 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			NSApp.badgeCount = UInt(unread)
 		}
 		
+		let conv = self.conversationList?.conversations[event.conversation_id]
+		
+		// Support mentioning a person's name. // TODO, FIXME
+		/*if	let user = (conv as? IConversation)?.user_list[event.userID],
+			let name = self.userList?.me.firstName,
+			let ev = event as? IChatMessageEvent
+			where !user.isSelf && ev.text.contains(name) {
+			
+			let notification = NSUserNotification()
+			notification.identifier = "mention"
+			notification.title = user.firstName + " (via Hangouts) mentioned you..." /* FIXME */
+			//notification.subtitle = "via Hangouts"
+			notification.deliveryDate = Date()
+			notification.identityImage = fetchImage(user: user, conversation: conv!)
+			notification.identityStyle = .circle
+			//notification.soundName = "texttone:Bamboo" // this works!!
+			notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
+			notification.set(option: .vibrateForceTouch, value: true)
+			notification.set(option: .alwaysShow, value: true)
+			
+			// Post the notification "uniquely" -- that is, replace it while it is displayed.
+			NSUserNotification.notifications()
+				.filter { $0.identifier == notification.identifier }
+				.forEach { $0.remove() }
+			notification.post()
+		}*/
+		
 		// Forward the event to the conversation if it's open. Also, if the 
 		// conversation is not open, or if it isn't the main window, show a notification.
 		var showNote = true
@@ -294,7 +321,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			showNote = !(c.window?.isKeyWindow ?? false)
 		}
 		
-		let conv = self.conversationList?.conversations[event.conversation_id]
 		if let user = (conv as? IConversation)?.user_list[event.userID] where !user.isSelf && showNote {
 			log.debug("Sending notification...")
 			

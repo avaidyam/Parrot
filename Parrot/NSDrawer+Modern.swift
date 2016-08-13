@@ -76,6 +76,7 @@ public extension NSDrawer {
 private var NSPopover_preferredEdge_key: UnsafePointer<Void>? = nil
 private var NSPopover_positioningView_key: UnsafePointer<Void>? = nil
 
+
 public extension NSPopover {
 	
 	@IBInspectable var edgeIB: Int {
@@ -88,14 +89,13 @@ public extension NSPopover {
 		set { objc_setAssociatedObject(self, &NSPopover_preferredEdge_key, newValue.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 	
-	@IBOutlet public var positioningView: NSView? {
+	@IBOutlet public var relativePositioningView: NSView? {
 		get { return objc_getAssociatedObject(self, &NSPopover_positioningView_key) as? NSView }
 		set { objc_setAssociatedObject(self, &NSPopover_positioningView_key, newValue, .OBJC_ASSOCIATION_ASSIGN) }
 	}
 	
 	@IBAction public func performOpen(_ sender: AnyObject?) {
-		guard let posView = self.positioningView else { return }
-		log.debug("opening popover at \(posView) on edge \(self.preferredEdge.rawValue)")
+		guard let posView = self.relativePositioningView else { return }
 		self.show(relativeTo: self.positioningRect, of: posView, preferredEdge: self.preferredEdge)
 	}
 	
@@ -107,3 +107,4 @@ public extension NSPopover {
 		}
 	}
 }
+

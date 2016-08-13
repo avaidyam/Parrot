@@ -159,16 +159,18 @@ public class ListView: NSView {
 	}
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
-		guard let clip = self.tableView.superview as? NSClipView where animated else {
-			self.tableView.scrollRowToVisible(row); return
+		DispatchQueue.main.async {
+			guard let clip = self.tableView.superview as? NSClipView where animated else {
+				self.tableView.scrollRowToVisible(row); return
+			}
+			
+			let rowRect = self.tableView.rect(ofRow: row)
+			var origin = rowRect.origin
+			origin.y = (origin.y - (clip.frame.height * 0.5)) + (rowRect.height * 0.5)
+			
+			self.scrollView?.flashScrollers()
+			clip.animator().setBoundsOrigin(origin)
 		}
-		
-		let rowRect = self.tableView.rect(ofRow: row)
-		var origin = rowRect.origin
-		origin.y = (origin.y - (clip.frame.height * 0.5)) + (rowRect.height * 0.5)
-		
-		self.scrollView?.flashScrollers()
-		clip.animator().setBoundsOrigin(origin)
 	}
 	
 	public func register(nibName: String, forClass: ListViewCell.Type) {

@@ -27,6 +27,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	@IBOutlet var drawerButton: NSButton!
 	@IBOutlet var drawerView: NSView!
 	
+	// TODO: BEGONE!
 	public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
 	
 	var _previews = [String: [LinkPreviewType]]()
@@ -257,13 +258,11 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
 		guard let e = event as? IChatMessageEvent else { return }
 		self.dataSource.append(e)
-		let idx = IndexSet(integer: self.dataSource.count-1)
+		let idx = IndexSet(integer: self.dataSource.count - 1)
 		DispatchQueue.main.async {
 			self.listView.tableView.insertRows(at: idx, withAnimation: [.effectFade, .slideUp])
 		}
-		DispatchQueue.main.async {
-			self.listView.scroll(toRow: idx.first!)
-		}
+		self.listView.scroll(toRow: idx.first!)
     }
 	public func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {}
 	public func conversationDidUpdateEvents(_ conversation: IConversation) {}
@@ -282,7 +281,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		button.alternateTitle = button.title
 		button.title = altT
 		
-		// Forward the event.
+		// Mute or unmute the conversation.
 		var cv = self.conversation as! ParrotServiceExtension.Conversation
 		cv.muted = (button.state == NSOnState ? true : false)
 	}
