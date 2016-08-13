@@ -24,11 +24,15 @@ public protocol Conversation /*: Hashable, Equatable*/ {
 	/// The number of messages that are unread for this Conversation.
 	var unreadCount: Int { get }
 	
+	/// Whether the conversation's notifications will be presented to the user.
+	var muted: Bool { get set }
 	
 	//var myFocus
 	
 	/// Set the current user's focus for the conversation.
 	func setFocus(_: Bool)
+	
+	//var blocked: Bool { get set }
 	
 	// leave()
 	// archive()
@@ -49,6 +53,9 @@ public protocol ConversationList /*: Collection*/ {
 	/// Begin a new conversation with the people provided.
 	/// Note that this may be a one-on-one conversation if only one exists.
 	func begin(with: [Person]) -> Conversation?
+	
+	//func mute(conversation: Conversation)
+	//func block(conversation: Conversation)
 	
 	/// Archive a conversation provided.
 	func archive(conversation: Conversation)

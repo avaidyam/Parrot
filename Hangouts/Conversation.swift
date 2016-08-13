@@ -192,6 +192,16 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		return focuses
 	}
 	
+	public var muted: Bool {
+		get {
+			return false
+			//return self.setConversationNotificationLevel(level: <#T##NotificationLevel#>, cb: nil)
+		}
+		set {
+			self.setConversationNotificationLevel(level: (newValue ? .Quiet : .Ring), cb: nil)
+		}
+	}
+	
 	// Send a message to this conversation.
 	// A per-conversation lock is acquired to ensure that messages are sent in
 	// the correct order when this method is called multiple times

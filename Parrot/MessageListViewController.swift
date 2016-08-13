@@ -7,7 +7,7 @@ import ParrotServiceExtension
 /* TODO: Use the PlaceholderMessage for sending messages. */
 /* TODO: When selecting text and typing a completion character, wrap the text. */
 
-public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate, NSDrawerDelegate {
+public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate {
 	
 	// This is instantly shown to the user when they send a message. It will
 	// be updated automatically when the status of the message is known.
@@ -19,6 +19,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	}
 	
 	@IBOutlet var listView: ListView!
+	@IBOutlet var indicator: NSProgressIndicator!
     @IBOutlet var entryView: NSTextView!
 	@IBOutlet var statusView: NSTextField!
 	@IBOutlet var imageView: NSButton!
@@ -27,8 +28,6 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	@IBOutlet var drawerView: NSView!
 	
 	public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
-	public var muteHandler: (Bool, ParrotServiceExtension.Conversation) -> Void = {_ in}
-	public var closeHandler: (String) -> Void = {_ in}
 	
 	var _previews = [String: [LinkPreviewType]]()
 	var _focusRow = -1
@@ -48,11 +47,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		super.loadWindow()
 		self.drawer.__setupModernDrawer()
 		
-		//DispatchQueue.main.sync {
-			self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
-			self.window?.enableRealTitlebarVibrancy(.withinWindow)
-			self.window?.titleVisibility = .hidden
-		//}
+		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
+		self.window?.enableRealTitlebarVibrancy(.withinWindow)
+		self.window?.titleVisibility = .hidden
 		
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
@@ -151,6 +148,30 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
     }
 	
+	// Performs a visual refresh of the conversation list.
+	private func animatedUpdate() {
+		DispatchQueue.main.async {
+			self.listView.superview!.animator().isHidden = true
+			self.indicator.animator().alphaValue = 1.0
+			self.indicator.isHidden = false
+			self.indicator.startAnimation(nil)
+			
+			self.listView.update(animated: false) {
+				self.listView.superview!.animator().isHidden = false
+				self.indicator.animator().alphaValue = 0.0
+				
+				let scaleIn = CAAnimation.scaleIn(forFrame: self.listView.layer!.frame)
+				self.listView.superview!.layer?.add(scaleIn, forKey: "updates")
+				
+				let durMS = Int(NSAnimationContext.current().duration * 1000.0)
+				DispatchQueue.main.after(when: .now() + .milliseconds(durMS)) {
+					self.indicator.stopAnimation(nil)
+					self.indicator.isHidden = true
+				}
+			}
+		}
+	}
+	
 	// NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
 	public func windowDidChangeOcclusionState(_ notification: Notification) {
 		self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
@@ -158,7 +179,6 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
 	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
-		self.closeHandler(self.conversation!.identifier)
 	}
 	
 	var conversation: IConversation? {
@@ -194,9 +214,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 							}
 						}
 						*/
-						self.listView.update()
 					}
 				}
+				self.animatedUpdate()
 			}
 			
 			/*
@@ -257,7 +277,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		button.title = altT
 		
 		// Forward the event.
-		self.muteHandler(button.state == NSOnState ? true : false, self.conversation!)
+		var cv = self.conversation as! ParrotServiceExtension.Conversation
+		cv.muted = (button.state == NSOnState ? true : false)
 	}
 	
     // MARK: Window notifications

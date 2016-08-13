@@ -15,20 +15,41 @@ public extension NSUserNotification {
 	
 	/// Provide a key below in the userInfo of an NSUserNotification when used with the
 	/// NotificationManager, regardless of the value, and that feature will be enabled.
-	public enum AuxOptions: String {
+	public enum Options: String {
+		
+		/// If this option is set, the notification will always be shown regardless of
+		/// whether the application is frontmost or not.
+		/// Note: the value of this option must be `true`.
 		case alwaysShow
+		
+		/// If this option is set, the notification will trigger a custom sound to be
+		/// played (in addition to the `soundName` property) but locally, from the app.
+		/// Note: the value of this option must be the path of the sound as a String.
 		case customSoundPath
+		
+		/// If this option is set, the notification will trigger a haptic feedback response.
+		/// Note: the value of this option must be `true`.
 		case vibrateForceTouch
+		
+		/// If this option is set, the notification will cause the app icon to bounce
+		/// in the dock, for a limited amount of time.
+		/// Note: the value of this option must be `true`.
 		case requestUserAttention
+		
+		/// If this option is set, the contents of the notification (title, subtitle, 
+		/// and informational text) will be spoken alound when the notification is presented.
+		/// Note: the value of this option must be `true`.
 		case speakContents
 	}
 	
-	public func set(option: AuxOptions, value: AnyObject) {
+	/// Sets the provided option as explained in `NSUserNotification.Options` directly.
+	public func set(option: Options, value: AnyObject) {
 		if self.userInfo == nil { self.userInfo = [:] }
 		self.userInfo?[option.rawValue] = value
 	}
 	
-	public func get(option: AuxOptions) -> AnyObject? {
+	/// Gets the provided option as explained in `NSUserNotification.Options` directly.
+	public func get(option: Options) -> AnyObject? {
 		return self.userInfo?[option.rawValue]
 	}
 }
@@ -80,12 +101,6 @@ public extension NSUserNotification {
 		get { return self.value(forKey: "_lockscreenOnly") as? Bool ?? false }
 		set { self.setValue(newValue, forKey: "_lockscreenOnly") }
 	}
-	
-	/// If `badgeCount` is set, the notification will trigger the badge count to be set.
-	public var badgeCount: Int {
-		get { return self.value(forKey: "_badgeCount") as? Int ?? 0 }
-		set { self.setValue(newValue, forKey: "_badgeCount") }
-	}
 }
 
 public extension NSUserNotification {
@@ -123,10 +138,16 @@ public extension NSUserNotification {
 
 private var _appProgress: Double?
 public extension NSApplication {
-	public var badgeCount: Int? {
-		get { return Int(NSApp.dockTile.badgeLabel ?? "") }
-		set { NSApp.dockTile.badgeLabel = newValue != nil ? "\(newValue!)" : nil }
+	
+	/// Displays a badge count for the app in the Dock with the provided count.
+	/// The acceptable range is [1, inf], and anything outside removes the badge.
+	public var badgeCount: UInt? {
+		get { return UInt(NSApp.dockTile.badgeLabel ?? "") }
+		set { NSApp.dockTile.badgeLabel = newValue != nil && newValue! > 1 ? "\(newValue!)" : nil }
 	}
+	
+	/// Displays a progress bar for the app in the Dock with the provided progress
+	/// value. Accepts the range [0.0, 1.0], and anything outside removes the bar.
 	public var appProgress: Double? {
 		get { return _appProgress }
 		set { _appProgress = (newValue >= 0.0 && newValue <= 1.0 ? newValue : nil) ;

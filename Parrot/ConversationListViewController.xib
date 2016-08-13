@@ -66,7 +66,7 @@
                     <toolbarItem implicitItemIdentifier="FA69EF72-F9B3-4B74-9C9C-44BA3BF0687C" label="Search" paletteLabel="Search" image="NSImageNameSearch" id="v8x-qQ-RRe">
                         <nil key="toolTip"/>
                         <size key="minSize" width="25" height="25"/>
-                        <size key="maxSize" width="25" height="25"/>
+                        <size key="maxSize" width="25" height="28"/>
                         <button key="view" verticalHuggingPriority="750" id="7vt-50-uaw">
                             <rect key="frame" x="10" y="14" width="25" height="28"/>
                             <autoresizingMask key="autoresizingMask"/>

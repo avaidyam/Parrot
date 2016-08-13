@@ -147,12 +147,12 @@ public class ListView: NSView {
 		return self.dataSourceProvider?() ?? []
 	}
 	
-	public func update(_ handler: () -> () = {}) {
+	public func update(animated: Bool = true, _ handler: () -> () = {}) {
 		DispatchQueue.main.async {
 			self.tableView.reloadData()
 			switch self.updateScrollDirection {
-			case .top: self.scroll(toRow: 0)
-			case .bottom: self.scroll(toRow: self.dataSource.count - 1)
+			case .top: self.scroll(toRow: 0, animated: animated)
+			case .bottom: self.scroll(toRow: self.dataSource.count - 1, animated: animated)
 			}
 			handler()
 		}

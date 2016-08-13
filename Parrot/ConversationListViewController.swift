@@ -58,7 +58,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			self.indicator.isHidden = false
 			self.indicator.startAnimation(nil)
 			
-			self.listView.update {
+			self.listView.update(animated: false) {
 				self.listView.animator().isHidden = false
 				self.indicator.animator().alphaValue = 0.0
 				
@@ -104,19 +104,18 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		}
 		
 		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
-		NSApp.badgeCount = unread
+		NSApp.badgeCount = UInt(unread)
 		
 		NotificationCenter.default().addObserver(forName: NSUserNotification.didActivateNotification) {
 			guard	let notification = $0.object as? NSUserNotification,
-					let conv = self.conversationList?.conversations[notification.identifier ?? ""]
+					var conv = self.conversationList?.conversations[notification.identifier ?? ""]
 			else { return }
 			
 			switch notification.activationType {
 			case .contentsClicked:
 				self.showConversation(conv as! IConversation)
 			case .actionButtonClicked:
-				log.error("Mute is currently disabled.")
-			//(conv as! IConversation).setConversationNotificationLevel(level: .Quiet)
+				conv.muted = true
 			case .replied where notification.response?.string != nil:
 				self.sendMessage(notification.response!.string, conv)
 			default: break
@@ -149,40 +148,49 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			var actions: [NSTableViewRowAction] = []
 			if edge == .leading { // Swipe Right Actions
 				actions = [
-					NSTableViewRowAction(style: .regular, title: "Mute", handler: { action, select in
+					NSTableViewRowAction(style: .regular, title: "Mute") { action, select in
 						log.info("Mute row:\(select)")
-					}),
-					NSTableViewRowAction(style: .destructive, title: "Block", handler: { action, select in
+						//self.sortedConversations[row].muted = true
+					},
+					NSTableViewRowAction(style: .destructive, title: "Block") { action, select in
 						log.info("Block row:\(select)")
-					})
+					}
 				]
 				
 				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = #colorLiteral(red: 0.06274510175, green: 0.360784322, blue: 0.7960784435, alpha: 1)
-				actions[1].backgroundColor = #colorLiteral(red: 1, green: 0.5607843399, blue: 0, alpha: 1)
+				actions[0].backgroundColor = #colorLiteral(red: 0, green: 0.4745098054, blue: 0.9098039269, alpha: 1)
+				actions[1].backgroundColor = #colorLiteral(red: 0.1843137294, green: 0.7098039389, blue: 1, alpha: 1)
 			} else if edge == .trailing { // Swipe Left Actions
 				actions = [
-					NSTableViewRowAction(style: .destructive, title: "Delete", handler: { action, select in
+					NSTableViewRowAction(style: .destructive, title: "Delete") { action, select in
 						log.info("Delete row:\(select)")
-					}),
-					NSTableViewRowAction(style: .regular, title: "Archive", handler: { action, select in
+					},
+					NSTableViewRowAction(style: .regular, title: "Archive") { action, select in
 						log.info("Archive row:\(select)")
-					})
+					}
 				]
 				
 				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = #colorLiteral(red: 1, green: 0.5607843399, blue: 0, alpha: 1)
-				actions[1].backgroundColor = #colorLiteral(red: 0.7882353067, green: 0.09019608051, blue: 0.1215686277, alpha: 1)
+				actions[0].backgroundColor = #colorLiteral(red: 1, green: 0.2117647082, blue: 0.2392156869, alpha: 1)
+				actions[1].backgroundColor = #colorLiteral(red: 0.7960784435, green: 0, blue: 0, alpha: 1)
 			}
 			return actions
 		}
 		self.listView.menuProvider = { rows in
-			let m = NSMenu(title: "")
-			m.addItem(withTitle: "Mute", action: nil, keyEquivalent: "")
-			m.addItem(withTitle: "Block", action: nil, keyEquivalent: "")
+			let m = NSMenu(title: "Settings")
+			m.addItem(title: "Mute") {
+				log.info("Mute rows:\(rows)")
+			}
+			m.addItem(title: "Block") {
+				log.info("Block rows:\(rows)")
+			}
 			m.addItem(NSMenuItem.separator())
-			m.addItem(withTitle: "Delete", action: nil, keyEquivalent: "")
-			m.addItem(withTitle: "Archive", action: nil, keyEquivalent: "")
+			m.addItem(title: "Delete") {
+				log.info("Delete rows:\(rows)")
+			}
+			m.addItem(title: "Archive") {
+				log.info("Archive rows:\(rows)")
+			}
 			return m
 		}
 		self.listView.pasteboardProvider = { row in
@@ -207,35 +215,41 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			wc.sendMessageHandler = { [weak self] message, conv2 in
 				self?.sendMessage(message, conv2)
 			}
-			wc.muteHandler = { muted, conv2 in
-				let level: NotificationLevel = muted ? .Quiet : .Ring
-				(conv2 as! IConversation).setConversationNotificationLevel(level: level, cb: nil)
-			}
-			wc.closeHandler = { [weak self] conv2 in
-				_ = self?.childConversations.removeValue(forKey: conv2)
-			}
-			//wc.parentController = self
 			self.childConversations[conv.identifier] = wc
-			
+			let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
+			NotificationCenter.default().addObserver(self, selector: sel,
+			                                         name: .NSWindowWillClose, object: wc.window)
 			wc.showWindow(nil)
 		}
 	}
 	
+	/// As we are about to display, configure our UI elements.
 	public override func showWindow(_ sender: AnyObject?) {
 		super.showWindow(sender)
-		self.wallclock?.resume()
 		
+		self.wallclock?.resume()
 		ParrotAppearance.registerInterfaceStyleListener(observer: self) { appearance in
 			self.window?.appearance = appearance.appearance()
 		}
 	}
 	
+	/// If we're notified that our child window has closed (that is, a conversation),
+	/// clean up by removing it from the `childConversations` dictionary.
+	public func childWindowWillClose(_ notification: Notification) {
+		guard	let win = notification.object as? NSWindow,
+				let ctrl = win.windowController as? MessageListViewController,
+				let conv2 = ctrl.conversation else { return }
+		
+		log.debug("closing for \(conv2.identifier)")
+		_ = self.childConversations.removeValue(forKey: conv2.identifier)
+		NotificationCenter.default().removeObserver(self, name: notification.name, object: win)
+	}
+	
+	/// If we need to close, make sure we clean up after ourselves, instead of deinit.
 	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
 		self.wallclock?.suspend()
 	}
-	
-	// MARK - Conversations
 	
 	func sendMessage(_ text: String, _ conversation: Conversation) {
 		func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
@@ -263,10 +277,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		sendQ.async(execute: operation)
 	}
 	
-	
-	// MARK - Delegate
-	
-	
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {
 		guard event is IChatMessageEvent else { return }
 		
@@ -274,7 +284,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		DispatchQueue.main.async {
 			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
-			NSApp.badgeCount = unread
+			NSApp.badgeCount = UInt(unread)
 		}
 		
 		// Forward the event to the conversation if it's open. Also, if the 
@@ -337,7 +347,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
-			NSApp.badgeCount = unread
+			NSApp.badgeCount = UInt(unread)
 		}
     }
 	
@@ -347,7 +357,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			self.listView.update()
 			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
-			NSApp.badgeCount = unread
+			NSApp.badgeCount = UInt(unread)
 		}
     }
 }

@@ -67,7 +67,7 @@ public extension NSNib {
 	}
 }
 
-extension NSWindowController: NSWindowDelegate {
+extension NSWindowController: NSWindowDelegate, NSDrawerDelegate, NSPopoverDelegate {
 	public func showWindow() {
 		DispatchQueue.main.async {
 			self.showWindow(nil)

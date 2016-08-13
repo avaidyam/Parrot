@@ -13,6 +13,7 @@
                 <outlet property="drawerView" destination="Pye-gy-Huh" id="jI9-8C-Iqi"/>
                 <outlet property="entryView" destination="A58-4G-SjV" id="Gzs-mB-jSL"/>
                 <outlet property="imageView" destination="S2O-bo-UO2" id="84S-DQ-Ja9"/>
+                <outlet property="indicator" destination="c1g-nC-vne" id="EDK-0c-mHz"/>
                 <outlet property="listView" destination="yMT-fg-2gH" id="SXU-Nq-yyB"/>
                 <outlet property="statusView" destination="eNL-fW-1Cx" id="gX1-VY-R6C"/>
                 <outlet property="window" destination="rqa-ia-OSc" id="fhe-7e-EqQ"/>
@@ -29,76 +30,92 @@
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="fR4-T5-vYX" userLabel="Contents">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
-                    </customView>
-                    <visualEffectView wantsLayer="YES" blendingMode="withinWindow" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
                         <subviews>
-                            <button translatesAutoresizingMaskIntoConstraints="NO" id="S2O-bo-UO2" userLabel="Image View">
-                                <rect key="frame" x="448" y="8" width="24" height="24"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="S2O-bo-UO2" secondAttribute="height" multiplier="1:1" id="Y9f-tR-8A4"/>
-                                    <constraint firstAttribute="width" constant="24" id="pP5-NL-Reg"/>
-                                </constraints>
-                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSUser" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="gwU-oa-jXA">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                            </button>
-                            <scrollView wantsLayer="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
-                                <rect key="frame" x="8" y="8" width="432" height="24"/>
-                                <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
-                                    <rect key="frame" x="0.0" y="0.0" width="432" height="24"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <textView wantsLayer="YES" drawsBackground="NO" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
+                            <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            </customView>
+                            <visualEffectView wantsLayer="YES" blendingMode="withinWindow" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
+                                <subviews>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="S2O-bo-UO2" userLabel="Image View">
+                                        <rect key="frame" x="448" y="8" width="24" height="24"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="S2O-bo-UO2" secondAttribute="height" multiplier="1:1" id="Y9f-tR-8A4"/>
+                                            <constraint firstAttribute="width" constant="24" id="pP5-NL-Reg"/>
+                                        </constraints>
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSUser" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="gwU-oa-jXA">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <scrollView wantsLayer="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
+                                        <rect key="frame" x="8" y="8" width="432" height="24"/>
+                                        <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
+                                            <rect key="frame" x="0.0" y="0.0" width="432" height="24"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <subviews>
+                                                <textView wantsLayer="YES" drawsBackground="NO" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <size key="minSize" width="432" height="24"/>
+                                                    <size key="maxSize" width="591" height="10000000"/>
+                                                    <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <size key="minSize" width="432" height="24"/>
+                                                    <size key="maxSize" width="591" height="10000000"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAlwaysPasteAsPlainText" value="YES"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="placeholderString" value="Send a message..."/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </textView>
+                                            </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="432" height="24"/>
-                                            <size key="maxSize" width="552" height="10000000"/>
-                                            <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="432" height="24"/>
-                                            <size key="maxSize" width="552" height="10000000"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAlwaysPasteAsPlainText" value="YES"/>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="placeholderString" value="Send a message..."/>
-                                            </userDefinedRuntimeAttributes>
-                                        </textView>
-                                    </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="fv6-Li-TQq">
-                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="glu-WV-IDk">
-                                    <rect key="frame" x="416" y="0.0" width="16" height="24"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                            </scrollView>
+                                        </clipView>
+                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="fv6-Li-TQq">
+                                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </scroller>
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="glu-WV-IDk">
+                                            <rect key="frame" x="416" y="0.0" width="16" height="24"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </scroller>
+                                    </scrollView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="leading" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="DMZ-XP-HrR"/>
+                                    <constraint firstAttribute="trailing" secondItem="S2O-bo-UO2" secondAttribute="trailing" constant="8" id="HVB-gx-E6m"/>
+                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="JLi-05-Zdg"/>
+                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" id="PTn-ns-aoi"/>
+                                    <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" constant="8" id="kNh-UA-vLQ"/>
+                                    <constraint firstAttribute="bottom" secondItem="S2O-bo-UO2" secondAttribute="bottom" constant="8" id="qfr-SP-QnO"/>
+                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="top" secondItem="61a-19-CQC" secondAttribute="top" id="rZQ-aV-2QU"/>
+                                </constraints>
+                            </visualEffectView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="S2O-bo-UO2" firstAttribute="leading" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="DMZ-XP-HrR"/>
-                            <constraint firstAttribute="trailing" secondItem="S2O-bo-UO2" secondAttribute="trailing" constant="8" id="HVB-gx-E6m"/>
-                            <constraint firstItem="S2O-bo-UO2" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="JLi-05-Zdg"/>
-                            <constraint firstItem="S2O-bo-UO2" firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" id="PTn-ns-aoi"/>
-                            <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" constant="8" id="kNh-UA-vLQ"/>
-                            <constraint firstAttribute="bottom" secondItem="S2O-bo-UO2" secondAttribute="bottom" constant="8" id="qfr-SP-QnO"/>
-                            <constraint firstItem="S2O-bo-UO2" firstAttribute="top" secondItem="61a-19-CQC" secondAttribute="top" id="rZQ-aV-2QU"/>
+                            <constraint firstAttribute="trailing" secondItem="eI1-ks-Z3P" secondAttribute="trailing" id="2ee-1l-sq2"/>
+                            <constraint firstAttribute="bottom" secondItem="yMT-fg-2gH" secondAttribute="bottom" id="7DE-0r-Vqj"/>
+                            <constraint firstAttribute="bottom" secondItem="eI1-ks-Z3P" secondAttribute="bottom" id="I1u-zF-CNs"/>
+                            <constraint firstItem="yMT-fg-2gH" firstAttribute="top" secondItem="fR4-T5-vYX" secondAttribute="top" id="Lz8-SG-zbi"/>
+                            <constraint firstItem="eI1-ks-Z3P" firstAttribute="leading" secondItem="fR4-T5-vYX" secondAttribute="leading" id="UkO-Ad-kDX"/>
+                            <constraint firstAttribute="trailing" secondItem="yMT-fg-2gH" secondAttribute="trailing" id="eEQ-CH-4MQ"/>
+                            <constraint firstItem="yMT-fg-2gH" firstAttribute="leading" secondItem="fR4-T5-vYX" secondAttribute="leading" id="fjR-hM-GfM"/>
                         </constraints>
-                    </visualEffectView>
+                    </customView>
+                    <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="c1g-nC-vne">
+                        <rect key="frame" x="224" y="119" width="32" height="32"/>
+                    </progressIndicator>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="yMT-fg-2gH" firstAttribute="top" secondItem="TjO-sk-yg0" secondAttribute="top" id="1Wm-ZV-NV1"/>
-                    <constraint firstAttribute="trailing" secondItem="eI1-ks-Z3P" secondAttribute="trailing" id="8Ds-Ok-H3a"/>
-                    <constraint firstItem="eI1-ks-Z3P" firstAttribute="leading" secondItem="TjO-sk-yg0" secondAttribute="leading" id="ROa-XC-VeJ"/>
-                    <constraint firstItem="yMT-fg-2gH" firstAttribute="leading" secondItem="TjO-sk-yg0" secondAttribute="leading" id="kmC-GX-4Yb"/>
-                    <constraint firstAttribute="bottom" secondItem="eI1-ks-Z3P" secondAttribute="bottom" id="oT8-xZ-tbH"/>
-                    <constraint firstAttribute="trailing" secondItem="yMT-fg-2gH" secondAttribute="trailing" id="pIw-XP-cGw"/>
-                    <constraint firstAttribute="bottom" secondItem="yMT-fg-2gH" secondAttribute="bottom" id="wee-IV-uKB"/>
+                    <constraint firstItem="c1g-nC-vne" firstAttribute="centerY" secondItem="TjO-sk-yg0" secondAttribute="centerY" id="ATg-vl-VBb"/>
+                    <constraint firstItem="fR4-T5-vYX" firstAttribute="leading" secondItem="TjO-sk-yg0" secondAttribute="leading" id="NyI-cE-pbZ"/>
+                    <constraint firstItem="fR4-T5-vYX" firstAttribute="top" secondItem="TjO-sk-yg0" secondAttribute="top" id="Ppl-or-808"/>
+                    <constraint firstAttribute="trailing" secondItem="fR4-T5-vYX" secondAttribute="trailing" id="cFQ-Tc-8ne"/>
+                    <constraint firstAttribute="bottom" secondItem="fR4-T5-vYX" secondAttribute="bottom" id="gUU-9D-b2y"/>
+                    <constraint firstItem="c1g-nC-vne" firstAttribute="centerX" secondItem="TjO-sk-yg0" secondAttribute="centerX" id="mXi-XQ-dSH"/>
                 </constraints>
             </view>
             <toolbar key="toolbar" implicitIdentifier="15DD37E4-A9CD-4FCB-B956-9C65DA208478" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="ffa-CI-zYk">
@@ -188,23 +205,47 @@
                         <action selector="toggleMute:" target="-2" id="Jmf-Fj-quQ"/>
                     </connections>
                 </button>
-                <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2rg-dH-n2k">
-                    <rect key="frame" x="7" y="59" width="147" height="19"/>
-                    <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectAny" id="fgk-A3-8nx">
-                        <font key="font" metaFont="smallSystem"/>
-                        <segments>
-                            <segment label="Archive" image="NSColumnViewTemplate"/>
-                            <segment label="Delete" image="NSColumnViewTemplate" tag="1"/>
-                        </segments>
-                    </segmentedCell>
-                </segmentedControl>
+                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9ft-Rg-mnA">
+                    <rect key="frame" x="32" y="196" width="96" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="96" id="lo7-ic-xQ6"/>
+                    </constraints>
+                    <buttonCell key="cell" type="roundTextured" title="Block" alternateTitle="Unblock" bezelStyle="texturedRounded" image="NSPathTemplate" imagePosition="left" alignment="center" alternateImage="NSListViewTemplate" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="suU-7R-sti">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="unT-iv-6FO">
+                    <rect key="frame" x="32" y="166" width="96" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="96" id="3JD-6L-yKa"/>
+                    </constraints>
+                    <buttonCell key="cell" type="roundTextured" title="Archive" alternateTitle="Unarchive" bezelStyle="texturedRounded" image="NSPathTemplate" imagePosition="left" alignment="center" alternateImage="NSListViewTemplate" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QGV-dh-geC">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gtY-6y-nj2">
+                    <rect key="frame" x="32" y="136" width="96" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="96" id="LIb-wb-jb5"/>
+                    </constraints>
+                    <buttonCell key="cell" type="roundTextured" title="Delete" alternateTitle="Undelete" bezelStyle="texturedRounded" image="NSPathTemplate" imagePosition="left" alignment="center" alternateImage="NSListViewTemplate" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tQy-vR-9GL">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
             </subviews>
             <constraints>
-                <constraint firstItem="Ppq-JF-FK1" firstAttribute="top" secondItem="2rg-dH-n2k" secondAttribute="bottom" constant="19" id="1SI-dS-vNJ"/>
+                <constraint firstItem="gtY-6y-nj2" firstAttribute="top" secondItem="unT-iv-6FO" secondAttribute="bottom" constant="8" id="4MZ-Hg-fE5"/>
                 <constraint firstItem="EhA-26-aSD" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="5Sw-jU-h5T"/>
+                <constraint firstItem="unT-iv-6FO" firstAttribute="top" secondItem="9ft-Rg-mnA" secondAttribute="bottom" constant="8" id="8cf-iw-Vl3"/>
                 <constraint firstItem="EhA-26-aSD" firstAttribute="top" secondItem="Pye-gy-Huh" secondAttribute="top" constant="20" id="GVH-b2-XJn"/>
                 <constraint firstItem="Ppq-JF-FK1" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="No8-nR-u1S"/>
-                <constraint firstItem="2rg-dH-n2k" firstAttribute="centerX" secondItem="Ppq-JF-FK1" secondAttribute="centerX" id="T9m-ea-dTU"/>
+                <constraint firstItem="9ft-Rg-mnA" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="QmE-jS-ytF"/>
+                <constraint firstItem="gtY-6y-nj2" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="ROT-cA-htv"/>
+                <constraint firstItem="unT-iv-6FO" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="c3l-Ct-gVb"/>
+                <constraint firstItem="9ft-Rg-mnA" firstAttribute="top" secondItem="EhA-26-aSD" secondAttribute="bottom" constant="8" id="mSI-iF-IQR"/>
                 <constraint firstAttribute="bottom" secondItem="Ppq-JF-FK1" secondAttribute="bottom" constant="20" id="xIA-Zt-TKI"/>
             </constraints>
             <point key="canvasLocation" x="406" y="-237"/>
@@ -230,10 +271,10 @@
         </drawer>
     </objects>
     <resources>
-        <image name="NSColumnViewTemplate" width="16" height="10"/>
         <image name="NSImageNameVolumeHigh" width="512" height="512"/>
         <image name="NSImageNameVolumeMute" width="512" height="512"/>
         <image name="NSListViewTemplate" width="14" height="10"/>
+        <image name="NSPathTemplate" width="16" height="10"/>
         <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>
