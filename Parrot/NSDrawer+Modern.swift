@@ -72,3 +72,38 @@ public extension NSDrawer {
 		w.hasShadow = false
 	}
 }
+
+private var NSPopover_preferredEdge_key: UnsafePointer<Void>? = nil
+private var NSPopover_positioningView_key: UnsafePointer<Void>? = nil
+
+public extension NSPopover {
+	
+	@IBInspectable var edgeIB: Int {
+		get { return Int(self.preferredEdge.rawValue) }
+		set { self.preferredEdge = NSRectEdge(rawValue: UInt(newValue))! }
+	}
+	
+	public var preferredEdge: NSRectEdge {
+		get { return NSRectEdge(rawValue: objc_getAssociatedObject(self, &NSPopover_preferredEdge_key) as? UInt ?? 0)! }
+		set { objc_setAssociatedObject(self, &NSPopover_preferredEdge_key, newValue.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	}
+	
+	@IBOutlet public var positioningView: NSView? {
+		get { return objc_getAssociatedObject(self, &NSPopover_positioningView_key) as? NSView }
+		set { objc_setAssociatedObject(self, &NSPopover_positioningView_key, newValue, .OBJC_ASSOCIATION_ASSIGN) }
+	}
+	
+	@IBAction public func performOpen(_ sender: AnyObject?) {
+		guard let posView = self.positioningView else { return }
+		log.debug("opening popover at \(posView) on edge \(self.preferredEdge.rawValue)")
+		self.show(relativeTo: self.positioningRect, of: posView, preferredEdge: self.preferredEdge)
+	}
+	
+	@IBAction public func performToggle(_ sender: AnyObject?) {
+		if self.isShown {
+			self.performClose(sender)
+		} else {
+			self.performOpen(sender)
+		}
+	}
+}

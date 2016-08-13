@@ -175,10 +175,20 @@
             </connections>
             <point key="canvasLocation" x="43" y="-237"/>
         </window>
-        <viewController id="Fnl-Yf-OK7" userLabel="Popover View Controller"/>
+        <viewController id="Fnl-Yf-OK7" userLabel="Popover View Controller">
+            <connections>
+                <outlet property="view" destination="CZV-km-5yB" id="475-Jc-sfH"/>
+            </connections>
+        </viewController>
         <popover id="ADy-nB-Aj1">
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="preferredEdgeIB">
+                    <integer key="value" value="3"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="contentViewController" destination="Fnl-Yf-OK7" id="5YB-Xa-qGE"/>
+                <outlet property="positioningView" destination="yMT-fg-2gH" id="w59-mZ-gGS"/>
             </connections>
         </popover>
         <customView wantsLayer="YES" id="Pye-gy-Huh" customClass="NSVisualEffectView">
@@ -234,6 +244,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="performToggle:" target="ADy-nB-Aj1" id="q1o-SX-Mjc"/>
+                    </connections>
                 </button>
             </subviews>
             <constraints>
@@ -269,6 +282,36 @@
                 <outlet property="parentWindow" destination="rqa-ia-OSc" id="492-CG-Jtv"/>
             </connections>
         </drawer>
+        <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="CZV-km-5yB">
+            <rect key="frame" x="0.0" y="0.0" width="240" height="135"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <clipView key="contentView" id="Zgx-JR-mFN">
+                <rect key="frame" x="1" y="1" width="238" height="133"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <textView importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="AMr-6Y-BT6">
+                        <rect key="frame" x="0.0" y="0.0" width="238" height="133"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <size key="minSize" width="238" height="133"/>
+                        <size key="maxSize" width="463" height="10000000"/>
+                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <size key="minSize" width="238" height="133"/>
+                        <size key="maxSize" width="463" height="10000000"/>
+                    </textView>
+                </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            </clipView>
+            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="PBV-1A-gw4">
+                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </scroller>
+            <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="qkC-fY-rwp">
+                <rect key="frame" x="223" y="1" width="16" height="133"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </scroller>
+            <point key="canvasLocation" x="412" y="92"/>
+        </scrollView>
     </objects>
     <resources>
         <image name="NSImageNameVolumeHigh" width="512" height="512"/>
