@@ -190,6 +190,16 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
 	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
+        if let w = self.window {
+            let old_rect = w.frame
+            var rect = w.frame
+            rect.origin.y = -(rect.height + 32)
+            
+            w.setFrame(rect, display: true, animate: true)
+            DispatchQueue.main.async {
+                w.setFrame(old_rect, display: false)
+            }
+        }
 	}
 	
 	var conversation: IConversation? {
