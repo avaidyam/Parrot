@@ -21,7 +21,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>v0.5.1-alpha</string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
+	<string>PRRT</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -33,6 +33,40 @@
 			<array>
 				<string>parrot</string>
 			</array>
+			<key>LSIsAppleDefaultForScheme</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>XMPP</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>xmpp</string>
+			</array>
+			<key>LSIsAppleDefaultForScheme</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>CPIM</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>im</string>
+			</array>
+			<key>LSIsAppleDefaultForScheme</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>AIM</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>aim</string>
+			</array>
+			<key>LSIsAppleDefaultForScheme</key>
+			<true/>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>

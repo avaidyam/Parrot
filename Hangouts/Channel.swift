@@ -136,7 +136,7 @@ public final class Channel : NSObject {
 				}
 				
 				// FIXME: Deadlocks here after network disconnection.
-				_ = s.wait(timeout: DispatchTime.distantFuture)
+				_ = s.wait(timeout: .distantFuture)
 				self.needsSID = false
             }
 

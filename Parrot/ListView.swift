@@ -1,6 +1,7 @@
 import AppKit
 
 /* TODO: Cell insets (or indents), separator insets/enabled/color/effects. */
+/* TODO: Support type-select. */
 
 /// Provides default size classes for displayed elements of a list.
 /// Any of the provided classes have an associated size.
@@ -74,8 +75,20 @@ public class ListViewCell: NSTableCellView {
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
 public class ListView: NSView {
+	
+	// TODO: Work in Progress here...
+	public struct Section {
+		let count: Int
+	}
+	
 	internal var scrollView: NSScrollView!
 	internal var tableView: NSExtendedTableView! // FIXME: Should be private...
+	
+	/// Provides the global header for all sections in the ListView.
+	@IBOutlet public var headerView: NSView?
+	
+	/// Provides the global footer for all sections in the ListView.
+	@IBOutlet public var footerView: NSView?
 	
 	// Override and patch in the default initializers to our init.
 	public override init(frame frameRect: NSRect) {
@@ -114,7 +127,17 @@ public class ListView: NSView {
 		self.addSubview(self.scrollView)
 		
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
+		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
 		self.tableView.sizeLastColumnToFit()
+		
+		
+		NotificationCenter.default().addObserver(self, selector: #selector(ListView.tableViewDidScroll(_:)),
+		                                         name: .NSViewBoundsDidChange,
+		                                         object: self.scrollView.contentView)
+	}
+	
+	deinit {
+		NotificationCenter.default().removeObserver(self)
 	}
 	
 	@IBInspectable // FIXME
@@ -195,6 +218,7 @@ public class ListView: NSView {
 	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
 	public var menuProvider: ((rows: [Int]) -> NSMenu?)? = nil
 	public var pasteboardProvider: ((row: Int) -> NSPasteboardItem?)? = nil
+	public var scrollbackProvider: ((direction: ScrollDirection) -> Void)? = nil
 }
 
 // Essential Support
@@ -202,7 +226,7 @@ extension ListView: NSExtendedTableViewDelegate {
 	
 	@objc(numberOfRowsInTableView:)
 	public func numberOfRows(in tableView: NSTableView) -> Int {
-		return self.dataSource.count
+		return self.dataSource.count //+ (self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0)
 	}
 	
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
@@ -218,6 +242,16 @@ extension ListView: NSExtendedTableViewDelegate {
 		let set = IndexSet(integersIn: 0..<self.dataSource.count)
 		tableView.noteHeightOfRows(withIndexesChanged: set)
 		NSAnimationContext.endGrouping()
+	}
+	
+	public func tableViewDidScroll(_ notification: Notification) {
+		guard let o = notification.object as? NSView where o == self.scrollView.contentView else { return }
+		if self.visibleRows.contains(0) {
+			self.scrollbackProvider?(direction: .top)
+		}
+		if self.visibleRows.contains(self.dataSource.count - 1) {
+			self.scrollbackProvider?(direction: .bottom)
+		}
 	}
 	
 	public func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {
@@ -371,6 +405,8 @@ public class NSExtendedTableView: NSTableView {
 		}
 	}
 }
+
+/* TODO: Implement this in ListViewCell. */
 
 public protocol NSTableRowViewProviding {
 	var selectionHighlightStyle: NSTableViewSelectionHighlightStyle { get }

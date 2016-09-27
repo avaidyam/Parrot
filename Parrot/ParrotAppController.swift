@@ -56,7 +56,6 @@ public class ParrotAppController: NSApplicationController {
 			let defaultC = ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]
 			Settings[Parrot.Completions] = defaultC
 		}
-		
 	}
 	
 	// First begin authentication and setup for any services.

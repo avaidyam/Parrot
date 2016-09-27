@@ -26,6 +26,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
 	
+	private var updateToken: Bool = false
 	private var userList: Directory?
 	private var wallclock: DispatchSourceTimer? = nil
 	private var childConversations = [String: MessageListViewController]()
@@ -39,6 +40,9 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			// FIXME: FORCE-CAST TO HANGOUTS
 			(conversationList as? Hangouts.ConversationList)?.delegate = self
 			self.animatedUpdate()
+			
+			let c = self.conversationList as? Hangouts.ConversationList
+			//c?.client._tester()
 		}
 	}
 	
@@ -143,35 +147,28 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			}
 		}
 		self.listView.rowActionProvider = { row, edge in
-			var actions: [NSTableViewRowAction] = []
-			if edge == .leading { // Swipe Right Actions
-				actions = [
-					NSTableViewRowAction(style: .regular, title: "Mute") { action, select in
-						log.info("Mute row:\(select)")
-						//self.sortedConversations[row].muted = true
-					},
-					NSTableViewRowAction(style: .destructive, title: "Block") { action, select in
-						log.info("Block row:\(select)")
-					}
-				]
-				
-				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = #colorLiteral(red: 0, green: 0.4745098054, blue: 0.9098039269, alpha: 1)
-				actions[1].backgroundColor = #colorLiteral(red: 0.1843137294, green: 0.7098039389, blue: 1, alpha: 1)
-			} else if edge == .trailing { // Swipe Left Actions
-				actions = [
-					NSTableViewRowAction(style: .destructive, title: "Delete") { action, select in
-						log.info("Delete row:\(select)")
-					},
-					NSTableViewRowAction(style: .regular, title: "Archive") { action, select in
-						log.info("Archive row:\(select)")
-					}
-				]
-				
-				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = #colorLiteral(red: 1, green: 0.2117647082, blue: 0.2392156869, alpha: 1)
-				actions[1].backgroundColor = #colorLiteral(red: 0.7960784435, green: 0, blue: 0, alpha: 1)
-			}
+			guard edge == .trailing else { return [] }
+			var actions = [
+				NSTableViewRowAction(style: .regular, title: "Delete") { action, select in
+					log.info("Delete row:\(select)")
+				},
+				NSTableViewRowAction(style: .regular, title: "Archive") { action, select in
+					log.info("Archive row:\(select)")
+				},
+				NSTableViewRowAction(style: .regular, title: "Block") { action, select in
+					log.info("Block row:\(select)")
+				},
+				NSTableViewRowAction(style: .destructive, title: "Mute") { action, select in
+					log.info("Mute row:\(select)")
+					//self.sortedConversations[row].muted = true
+				},
+			]
+			
+			// Fix the colors set by the given styles.
+			actions[0].backgroundColor = #colorLiteral(red: 0.7960784435, green: 0, blue: 0, alpha: 1)
+			actions[1].backgroundColor = #colorLiteral(red: 1, green: 0.2117647082, blue: 0.2392156869, alpha: 1)
+			actions[2].backgroundColor = #colorLiteral(red: 0.1843137294, green: 0.7098039389, blue: 1, alpha: 1)
+			actions[3].backgroundColor = #colorLiteral(red: 0, green: 0.4745098054, blue: 0.9098039269, alpha: 1)
 			return actions
 		}
 		self.listView.menuProvider = { rows in
@@ -197,6 +194,20 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			log.info("pb for row \(row)")
 			pb.setString("TEST", forType: "public.utf8-plain-text")
 			return pb
+		}
+		self.listView.scrollbackProvider = {
+			guard $0 == .bottom else { return }
+			guard self.updateToken == false else { return }
+			
+			let c = self.conversationList as? Hangouts.ConversationList
+			//c?.client._tester()
+			c?.client.syncRecentConversations(maxConversations: 1, maxEventsPer: 1, since: Date.from(UTC: 1474473751200143.0)) {
+				print($0)
+				self.updateToken = false
+			}
+			
+			log.debug("SCROLLBACK")
+			self.updateToken = true
 		}
 	}
 	

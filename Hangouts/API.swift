@@ -404,17 +404,52 @@ public extension Client {
 	}
 	
 	// Return info on recent conversations and their events.
-	public func syncRecentConversations(maxConversations: Int = 100, maxEventsPer: Int = 1,
+	// If since is nil, get latest.
+	public func syncRecentConversations(maxConversations: Int = 25,
+	                                    maxEventsPer: Int = 1,
+	                                    since: Date? = nil,
 	                                    cb: ((response: SyncRecentConversationsResponse?) -> Void)) {
 		let data = [
 			self.getRequestHeader(),
-			None,
+			since != nil ? since!.toUTC() : None, // if refreshing, provide timestamp?
 			maxConversations,
 			maxEventsPer,
-			[1]
+			[SyncFilter.Inbox.rawValue, 3, 4], // [3, 4] = ??
+			None, // ??
+			true, // ??
+			[] // ??
 		]
 		self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
 			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+		}
+	}
+	
+	public func _tester() {
+		let data = [
+			self.getRequestHeader(),
+			None, // if refreshing, provide timestamp?
+			25,
+			1,
+			[SyncFilter.Inbox.rawValue, 3, 4], // [3, 4] = ??
+			None, // ??
+			true, // ??
+			[] // ??
+		]
+		self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
+			print("GOT A:\n", String(bytes: r.data!, encoding: .utf8))
+		}
+		let data2 = [
+			self.getRequestHeader(),
+			None, // if refreshing, provide timestamp?
+			25,
+			1,
+			[SyncFilter.Inbox.rawValue, 3, 4], // [3, 4] = ??
+			None, // ??
+			true, // ??
+			[] // ??
+		]
+		self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data2, use_json: true) { r in
+			print("GOT B:\n", try? JSONSerialization.jsonObject(with: r.data!, options: .allowFragments))
 		}
 	}
 	

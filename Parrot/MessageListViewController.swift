@@ -3,7 +3,6 @@ import Hangouts
 import ParrotServiceExtension
 
 /* TODO: Re-enable link previews later when they're not terrible... */
-/* TODO: "Mention me when someone says [...]" option. */
 /* TODO: Use the PlaceholderMessage for sending messages. */
 /* TODO: When selecting text and typing a completion character, wrap the text. */
 
@@ -99,7 +98,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
 	public override func showWindow(_ sender: AnyObject?) {
 		super.showWindow(nil)
-		self.indicator.startAnimation(nil)
+        self.animatedUpdate(true)
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
 		
 		/*
@@ -156,24 +155,29 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     }
 	
 	// Performs a visual refresh of the conversation list.
-	private func animatedUpdate() {
+    // If preconfigure is true, it specifies that this is init stuff.
+	private func animatedUpdate(_ preconfigure: Bool = false) {
 		DispatchQueue.main.async {
-			self.listView.superview!.animator().isHidden = true
-			self.indicator.animator().alphaValue = 1.0
+			self.listView.superview!.isHidden = true
+			self.indicator.alphaValue = 1.0
 			self.indicator.isHidden = false
 			self.indicator.startAnimation(nil)
 			
+            if preconfigure { return }
 			self.listView.update(animated: false) {
 				self.listView.superview!.animator().isHidden = false
 				self.indicator.animator().alphaValue = 0.0
 				
-				let scaleIn = CAAnimation.scaleIn(forFrame: self.listView.layer!.frame)
+				let scaleIn = CAAnimation.scaleIn(forFrame: self.listView.superview!.layer!.frame)
 				self.listView.superview!.layer?.add(scaleIn, forKey: "updates")
 				
 				let durMS = Int(NSAnimationContext.current().duration * 1000.0)
 				DispatchQueue.main.after(when: .now() + .milliseconds(durMS)) {
 					self.indicator.stopAnimation(nil)
 					self.indicator.isHidden = true
+                    
+                    // Fixes the loss of responder when hiding the view.
+                    self.window?.makeFirstResponder(self.entryView)
 				}
 			}
 		}
@@ -295,7 +299,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 				.forEach { $0.remove() }
         }
 		
-        //  Delay here to ensure that small context switches don't send focus messages.
+        // Delay here to ensure that small context switches don't send focus messages.
 		DispatchQueue.main.after(when: .now() + .seconds(1)) {
             if let window = self.window where window.isKeyWindow {
 				self.conversation?.setFocus(true) // set it here too just in case.
@@ -411,10 +415,6 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		if _r.location == NSNotFound { _r.location = 0 } else { _r.location += 1 }
 		let userRange = NSMakeRange(_r.location, tString.length - _r.location)
 		let userStr = tString.substring(from: _r.location)
-		//log.debug("string is \(userStr)")
-		
-		// [BUG] If emojifying the first entry in the textView, and the user deletes
-		// the text, the font changes to ".Apple Color Emoji UI" on macOS Sierra.
 		
 		NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
 		if let r = Settings[Parrot.Completions]?[userStr] as? String {

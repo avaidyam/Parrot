@@ -19,8 +19,10 @@ public class ConversationCell: ListViewCell {
 			
 			let messageSender = conversation.messages.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
-			let firstParticipant = conversation.participants.filter { !$0.me }.first!
-			let photo = fetchImage(user: firstParticipant, conversation: conversation)
+			if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
+				let photo = fetchImage(user: firstParticipant, conversation: conversation)
+				self.photoView?.image = photo
+			}
 			// FIXME: Group conversation prefixing doesn't work yet.
 			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
 			//let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
@@ -28,7 +30,6 @@ public class ConversationCell: ListViewCell {
 			let time = conversation.messages.last?.timestamp ?? .origin
 			
 			self.time = time
-			self.photoView?.image = photo
 			self.nameLabel?.stringValue = conversation.name
 			self.nameLabel?.toolTip = conversation.name
 			self.textLabel?.stringValue = subtitle
