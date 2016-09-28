@@ -215,7 +215,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		if let wc = self.childConversations[conv.identifier] {
 			log.debug("Conversation found for id \(conv.identifier)")
 			wc.showWindow(nil)
-			
 		} else {
 			log.debug("Conversation NOT found for id \(conv.identifier)")
 			
@@ -224,7 +223,8 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			wc.sendMessageHandler = { [weak self] message, conv2 in
 				self?.sendMessage(message, conv2)
 			}
-			self.childConversations[conv.identifier] = wc
+            self.childConversations[conv.identifier] = wc
+            Settings["Parrot.OpenConversations"] = Array(self.childConversations.keys)
 			let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
 			NotificationCenter.default().addObserver(self, selector: sel,
 			                                         name: .NSWindowWillClose, object: wc.window)
@@ -250,8 +250,8 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 				let ctrl = win.windowController as? MessageListViewController,
 				let conv2 = ctrl.conversation else { return }
 		
-		log.debug("closing for \(conv2.identifier)")
-		_ = self.childConversations.removeValue(forKey: conv2.identifier)
+        _ = self.childConversations.removeValue(forKey: conv2.identifier)
+        Settings["Parrot.OpenConversations"] = Array(self.childConversations.keys)
 		NotificationCenter.default().removeObserver(self, name: notification.name, object: win)
 	}
 	

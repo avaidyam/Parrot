@@ -163,7 +163,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			self.indicator.isHidden = false
 			self.indicator.startAnimation(nil)
 			
-            if preconfigure { return }
+            //if preconfigure { return }
 			self.listView.update(animated: false) {
 				self.listView.superview!.animator().isHidden = false
 				self.indicator.animator().alphaValue = 0.0
@@ -187,19 +187,29 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public func windowDidChangeOcclusionState(_ notification: Notification) {
 		self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
 	}
-	
-	public func windowWillClose(_ notification: Notification) {
-		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
+    
+    public func windowShouldClose(_ sender: AnyObject) -> Bool {
+        //guard let self.
         if let w = self.window {
             let old_rect = w.frame
             var rect = w.frame
-            rect.origin.y = -(rect.height + 32)
+            rect.origin.y = -(rect.height)
             
-            w.setFrame(rect, display: true, animate: true)
-            DispatchQueue.main.async {
+            NSAnimationContext.runAnimationGroup({ ctx in
+                ctx.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+                w.animator().setFrame(rect, display: true)
+                w.animator().alphaValue = 0.0
+            }, completionHandler: {
                 w.setFrame(old_rect, display: false)
-            }
+                w.alphaValue = 1.0
+                w.close()
+            })
         }
+        return false
+    }
+	
+	public func windowWillClose(_ notification: Notification) {
+		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
 	}
 	
 	var conversation: IConversation? {
@@ -258,7 +268,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			switch (status) {
 			case TypingType.Started:
 				//let cell = self.listView.tableView.make(withIdentifier: "Typing", owner: nil)
-				self.popover.show(relativeTo: self.entryView!.bounds.offsetBy(dx: 0, dy: 16), of: self.entryView!, preferredEdge: .minY)
+				self.popover.show(relativeTo: self.entryView!.bounds.offsetBy(dx: 0, dy: -16), of: self.entryView!.superview!, preferredEdge: .minY)
 				self.statusView.stringValue = "Typing..."
 			case TypingType.Paused:
 				self.statusView.stringValue = "Entered text."
