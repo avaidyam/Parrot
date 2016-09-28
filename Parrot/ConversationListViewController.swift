@@ -43,6 +43,17 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			
 			let c = self.conversationList as? Hangouts.ConversationList
 			//c?.client._tester()
+            
+            // Open conversations that were previously open.
+            if let a = Settings["Parrot.OpenConversations"] as? [String] {
+                a.forEach {
+                    if let c = c?.conv_dict[$0] {
+                        DispatchQueue.main.async {
+                            self.showConversation(c)
+                        }
+                    }
+                }
+            }
 		}
 	}
 	
