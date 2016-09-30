@@ -419,8 +419,11 @@ public extension Client {
 			true, // ??
 			[] // ??
 		]
-		self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+        self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
+            let script = (NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue)! as String)
+            log.debug("got \(script)")
+            
+			//cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	

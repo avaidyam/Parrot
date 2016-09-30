@@ -8,19 +8,21 @@ public class Authenticator {
 	private static let ACCESS_TOKEN = "access_token"
 	private static let REFRESH_TOKEN = "refresh_token"
 	
-	private static let OAUTH2_SCOPE = "https://www.google.com/accounts/OAuthLogin"
+	private static let OAUTH2_SCOPE = "https%3A%2F%2Fwww.google.com%2Faccounts%2FOAuthLogin+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email"
+                                    //"https://www.google.com/accounts/OAuthLogin+https://www.googleapis.com/auth/userinfo.email"
 	private static let OAUTH2_CLIENT_ID = "936475272427.apps.googleusercontent.com"
 	private static let OAUTH2_CLIENT_SECRET = "KWsJlkaMn1jGLxQpWxMnOox-"
-	private static let OAUTH2_LOGIN_URL = "https://accounts.google.com/o/oauth2/auth?client_id=\(OAUTH2_CLIENT_ID)&scope=\(OAUTH2_SCOPE)&redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code"
+	private static let OAUTH2_LOGIN_URL = "https://accounts.google.com/o/oauth2/programmatic_auth?client_id=\(OAUTH2_CLIENT_ID)&scope=\(OAUTH2_SCOPE)"
 	private static let OAUTH2_TOKEN_REQUEST_URL = "https://accounts.google.com/o/oauth2/token"
 	
 	private static var window: NSWindow? = nil
 	private static var validURL: URL? = nil
-	private static var handler: ((URLRequest) -> Void)? = nil
+	private static var handler: ((oauth_code: String) -> Void)? = nil
 	private static var delegate = WebDelegate()
 	
-	class WebDelegate: NSObject, WebPolicyDelegate {
-		func webView(
+	class WebDelegate: NSObject, WebPolicyDelegate, WebResourceLoadDelegate {
+		/*
+        func webView(
 			_ webView: WebView!,
 			decidePolicyForNavigationAction actionInformation: [NSObject : AnyObject]!,
 			request: URLRequest!,
@@ -29,8 +31,9 @@ public class Authenticator {
 				guard	let url = request.url?.absoluteString,
 						let val = validURL?.absoluteString
 				else { listener.use(); return }
-			
-				if url.contains(val) {
+			// TEMP FIX
+            log.info("auth: \(url)")
+				if url.contains(val) && url.contains("from_login=1") {
 					listener.ignore()
 					handler?(request)
 					window?.close()
@@ -38,6 +41,16 @@ public class Authenticator {
 					listener.use()
 				}
 		}
+        */
+        
+        func webView(_ sender: WebView!, resource identifier: AnyObject!, didFinishLoadingFrom dataSource: WebDataSource!) {
+            guard   let cookiejar = dataSource.response as? HTTPURLResponse,
+                    let cookies = cookiejar.allHeaderFields["Set-Cookie"] as? String,
+                    let cookie = cookies.substring(between: "oauth_code=", and: ";")
+            else { return }
+            handler?(oauth_code: cookie ?? "")
+            sender.close()
+        }
 	}
 	
 	/**
@@ -101,52 +114,32 @@ public class Authenticator {
 					
 					var uberauth = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
 					uberauth.replaceSubrange(uberauth.index(uberauth.endIndex, offsetBy: -1) ..< uberauth.endIndex, with: "")
-					
-					var request = URLRequest(url: URL(string: "https://accounts.google.com/MergeSession")!)
-					request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
-					
-					session.request(request: request) {
-						guard let _ = $0.data else {
-							log.info("Request failed with error: \($0.error!)")
-							return
-						}
-						
-						let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
-						var request = URLRequest(url: URL(string: url)!)
-						request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
-						
-						session.request(request: request) {
-							guard let _ = $0.data else {
-								log.info("Request failed with error: \($0.error!)")
-								return
-							}
-							cb(configuration: session.configuration)
-						}
-					}
+                    
+                    let url = "https://accounts.google.com/MergeSession?service=mail&continue=http://www.google.com&uberauth=\(uberauth)"
+                    var request = URLRequest(url: URL(string: url)!)
+                    request.setValue("Bearer \(access_token)", forHTTPHeaderField: "Authorization")
+                    
+                    session.request(request: request) {
+                        guard let _ = $0.data else {
+                            log.info("Request failed with error: \($0.error!)")
+                            return
+                        }
+                        cb(configuration: session.configuration)
+                    }
 				}
 			}
 		} else {
 			
 			// Otherwise, we need to authenticate, so use the callback to do so.
 			let a = URL(string: OAUTH2_LOGIN_URL)!
-			let b = URL(string: "https://accounts.google.com/o/oauth2/approval")!
+			let b = URL(string: "https://accounts.google.com/o/oauth2/programmatic_auth")!
 			
-			prompt(url: a, valid: b) { request in
-				session.request(request: request) {
-					guard let data = $0.data else {
-						log.info("Request failed with error: \($0.error!)")
-						return
-					}
-					
-					let body = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
-					let auth_code = body.findAllOccurrences(matching: "value=\"(.+?)\"").first!
-					
-					//  - first: authenticate(auth_code)
-					authenticate(auth_code: auth_code, cb: { (access_token, refresh_token) in
-						saveTokens(access_token, refresh_token: refresh_token)
-						cb(configuration: session.configuration)
-					})
-				}
+			prompt(url: a, valid: b) { oauth_code in
+                //  - first: authenticate(auth_code)
+                authenticate(auth_code: oauth_code, cb: { (access_token, refresh_token) in
+                    saveTokens(access_token, refresh_token: refresh_token)
+                    cb(configuration: session.configuration)
+                })
 			}
 		}
 	}
@@ -169,7 +162,7 @@ public class Authenticator {
 		var req = URLRequest(url: URL(string: OAUTH2_TOKEN_REQUEST_URL)! as URL)
 		req.httpMethod = "POST"
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
-		req.httpBody = query(parameters: token_request_data).data(using: String.Encoding.utf8, allowLossyConversion: false)
+		req.httpBody = query(parameters: token_request_data).data(using: .utf8)
 		
 		URLSession.shared().request(request: req) {
 			guard let data = $0.data else {
@@ -182,7 +175,7 @@ public class Authenticator {
 				if let access = json[ACCESS_TOKEN] as? String, refresh = json[REFRESH_TOKEN] as? String  {
 					cb(access_token: access, refresh_token: refresh)
 				} else {
-					log.info("JSON was invalid: \(json)")
+					log.info("JSON was invalid (auth): \(json)")
 				}
 			} catch let error as NSError {
 				log.info("JSON returned invalid data: \(error.localizedDescription)")
@@ -208,7 +201,7 @@ public class Authenticator {
 		var req = URLRequest(url: URL(string: OAUTH2_TOKEN_REQUEST_URL)! as URL)
 		req.httpMethod = "POST"
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
-		req.httpBody = query(parameters: token_request_data).data(using: String.Encoding.utf8, allowLossyConversion: false)
+		req.httpBody = query(parameters: token_request_data).data(using: .utf8)
 		
 		session.request(request: req) {
 			guard let data = $0.data else {
@@ -221,7 +214,7 @@ public class Authenticator {
 				if let access = json[ACCESS_TOKEN] as? String  {
 					cb(access_token: access, refresh_token: refresh_token)
 				} else {
-					log.info("JSON was invalid: \(json)")
+					log.info("JSON was invalid (refresh): \(json)")
 				}
 			} catch let error as NSError {
 				log.info("JSON returned invalid data: \(error.localizedDescription)")
@@ -229,14 +222,14 @@ public class Authenticator {
 		}
 	}
 	
-	private class func prompt(url: URL, valid: URL, cb: (URLRequest) -> Void) {
+	private class func prompt(url: URL, valid: URL, cb: (oauth_code: String) -> Void) {
 		validURL = valid as URL
 		handler = cb
 		
 		let webView = WebView(frame: NSMakeRect(0, 0, 386, 512))
 		webView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
-		webView.policyDelegate = delegate
-		webView.mainFrame.load(URLRequest(url: url as URL))
+		//webView.policyDelegate = delegate
+        webView.resourceLoadDelegate = delegate
 		
 		window = NSWindow(contentRect: NSMakeRect(0, 0, 386, 512),
 			styleMask: [.titled, .closable],
@@ -251,5 +244,8 @@ public class Authenticator {
 		window?.standardWindowButton(.zoomButton)?.isHidden = true
 		window?.collectionBehavior = [.moveToActiveSpace, .transient, .ignoresCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
 		window?.makeKeyAndOrderFront(nil)
+        
+        // load at the end!
+        webView.mainFrame.load(URLRequest(url: url as URL))
 	}
 }

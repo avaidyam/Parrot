@@ -232,12 +232,16 @@ public final class Client: Service {
 	}
 	
 	public func buildUserConversationList(_ completionHandler: () -> Void = {}) {
-		
+        
 		// Retrieve recent conversations so we can preemptively look up their participants.
-		self.syncRecentConversations { response in
-			let conv_states = response!.conversationState
-			let sync_timestamp = response!.syncTimestamp// use current_server_time?
-			
+		self.syncRecentConversations { response2 in
+            guard let response = response2 else {
+                log.debug("failed: \(response2)")
+                return
+            }
+			let conv_states = response.conversationState
+			let sync_timestamp = response.syncTimestamp// use current_server_time?
+			log.debug("got data")
 			var required_user_ids = Set<User.ID>()
 			for conv_state in conv_states {
 				let participants = conv_state.conversation!.participantData
@@ -245,16 +249,19 @@ public final class Client: Service {
 					User.ID(chatID: $0.id!.chatId!, gaiaID: $0.id!.gaiaId!)
 				}))
 			}
-			
+            
+            log.debug("got participants")
 			var required_entities = [Entity]()
 			self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
 				required_entities = resp?.entityResult.flatMap { $0.entity } ?? []
-				
+                
+                log.debug("got entities")
 				// Let's request our own entity now.
 				self.getSelfInfo {
 					let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
 					var users = [selfUser]
-					
+                    
+                    log.debug("got self")
 					// Add each entity as a new User.
 					for entity in required_entities {
 						let user = User(entity: entity, selfUser: selfUser.id)
