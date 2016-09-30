@@ -339,7 +339,7 @@ public final class Channel : NSObject {
 		cb: (Result) -> Void
 		) {
 		let params = ["alt": use_json ? "json" : "protojson"]
-		let url = URL(string: (path + "?" + params.encodeURL()))!
+		let url = URL(string: (path + "?" + "key=AIzaSyAfFJCeph-euFSwtmqFZi0kaKk-cZ5wufM" + "&" + params.encodeURL()))!
 		let request = NSMutableURLRequest(url: url)
 		request.httpMethod = "POST"
 		request.httpBody = data
