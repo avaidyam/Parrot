@@ -4,6 +4,7 @@
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MessageListViewController" customModule="Parrot" customModuleProvider="target">
@@ -229,52 +230,45 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H5U-Fc-eFk">
-                    <rect key="frame" x="10" y="103" width="140" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Display Notification" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="cw2-be-cKZ">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                </button>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X0e-Wa-0GQ">
-                    <rect key="frame" x="10" y="83" width="140" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Play Sound" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FRK-Pk-CVa">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                </button>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Txk-ij-NB3">
-                    <rect key="frame" x="10" y="63" width="140" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Haptic Feedback" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="w4w-93-2XY">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                </button>
-                <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a6n-gH-ZT0" customClass="NSPopoverColorWell">
-                    <rect key="frame" x="12" y="20" width="44" height="23"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                </colorWell>
-                <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gwM-CF-3oD">
-                    <rect key="frame" x="43" y="41" width="76" height="26"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="gHQ-ol-lHW">
-                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="menu"/>
-                        <menu key="menu" id="dl1-sn-xyH">
-                            <items>
-                                <menuItem title="Item 1" id="oJ5-Qy-Wal"/>
-                                <menuItem title="Item 2" id="ewl-8s-n2W"/>
-                                <menuItem title="Item 3" id="OD7-Vg-f3l"/>
-                            </items>
-                        </menu>
-                    </popUpButtonCell>
-                </popUpButton>
+                <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rMj-gL-aS4">
+                    <rect key="frame" x="12" y="64" width="136" height="58"/>
+                    <subviews>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="H5U-Fc-eFk">
+                            <rect key="frame" x="-2" y="42" width="140" height="18"/>
+                            <buttonCell key="cell" type="check" title="Display Notification" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="cw2-be-cKZ">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                        </button>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="X0e-Wa-0GQ">
+                            <rect key="frame" x="-2" y="20" width="90" height="18"/>
+                            <buttonCell key="cell" type="check" title="Play Sound" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FRK-Pk-CVa">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                        </button>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="Txk-ij-NB3">
+                            <rect key="frame" x="-2" y="-2" width="125" height="18"/>
+                            <buttonCell key="cell" type="check" title="Haptic Feedback" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="w4w-93-2XY">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                        </button>
+                    </subviews>
+                    <visibilityPriorities>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                    </visibilityPriorities>
+                    <customSpacing>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                    </customSpacing>
+                </stackView>
             </subviews>
             <constraints>
+                <constraint firstItem="rMj-gL-aS4" firstAttribute="top" secondItem="gtY-6y-nj2" secondAttribute="bottom" constant="16" id="3Jr-eO-Wqk"/>
                 <constraint firstItem="gtY-6y-nj2" firstAttribute="top" secondItem="unT-iv-6FO" secondAttribute="bottom" constant="8" id="4MZ-Hg-fE5"/>
                 <constraint firstItem="EhA-26-aSD" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="5Sw-jU-h5T"/>
                 <constraint firstItem="unT-iv-6FO" firstAttribute="top" secondItem="9ft-Rg-mnA" secondAttribute="bottom" constant="8" id="8cf-iw-Vl3"/>
@@ -282,6 +276,7 @@
                 <constraint firstItem="Ppq-JF-FK1" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="No8-nR-u1S"/>
                 <constraint firstItem="9ft-Rg-mnA" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="QmE-jS-ytF"/>
                 <constraint firstItem="gtY-6y-nj2" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="ROT-cA-htv"/>
+                <constraint firstItem="rMj-gL-aS4" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="Yib-bL-PwL"/>
                 <constraint firstItem="unT-iv-6FO" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="c3l-Ct-gVb"/>
                 <constraint firstItem="9ft-Rg-mnA" firstAttribute="top" secondItem="EhA-26-aSD" secondAttribute="bottom" constant="8" id="mSI-iF-IQR"/>
                 <constraint firstAttribute="bottom" secondItem="Ppq-JF-FK1" secondAttribute="bottom" constant="20" id="xIA-Zt-TKI"/>

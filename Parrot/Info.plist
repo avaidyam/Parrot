@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>v0.5.1-alpha</string>
+	<string>v0.5.8-alpha</string>
 	<key>CFBundleSignature</key>
 	<string>PRRT</string>
 	<key>CFBundleURLTypes</key>
@@ -70,7 +70,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>292</string>
+	<string>315</string>
 	<key>GithubRepository</key>
 	<string>avaidyam/Parrot</string>
 	<key>LSApplicationCategoryType</key>
