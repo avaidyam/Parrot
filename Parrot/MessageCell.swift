@@ -126,9 +126,11 @@ public class MessageCell: ListViewCell {
 			NSParagraphStyleAttributeName: NSParagraphStyle.default()
 		])
 		
-		let ourWidth = width - 24.0 - 16.0 // to account for padding and icon
+		let ourWidth = width - 50.0 // to account for padding and icon: |- 4 - [icon (24)] - 4 - [4 - text - 4] - 8 -|
 		let box = attr.boundingRect(with: NSSize(width: ourWidth, height: .greatestFiniteMagnitude),
 		                            options: [.usesLineFragmentOrigin, .usesFontLeading])
-		return (box.size.height > 24.0 ? box.size.height : 24.0) + 16.0
+        
+        let expectedHeight = box.size.height + 16.0, defaultHeight = CGFloat(24.0) + 16.0
+		return (expectedHeight > defaultHeight ? expectedHeight : defaultHeight)
 	}
 }
