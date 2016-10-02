@@ -70,12 +70,24 @@ public class ParrotAppController: NSApplicationController {
 			NotificationCenter.default()
 				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
                     //AppActivity.start("Setup")
-					c.buildUserConversationList {
-                        
-                        // TODO: FIXME: THIS IS A TERRIBLE DIRTY DISGUSTING HAX, DON'T DO ITS!
-                        NotificationCenter.default().post(name: ServiceRegistry.didAddService, object: c)
-						//AppActivity.end("Setup")
-					}
+                    if c.conversationList == nil {
+                        c.buildUserConversationList {
+                            // When reconnecting, buildUserConversationList causes Client to then
+                            // re-create the entire userlist + conversationlist and reset it
+                            // but the old ones are still alive, and their delegate is set to the
+                            // conversations window; that means you'll receive double notifications.
+                            
+                            // TODO: FIXME: THIS IS A TERRIBLE DIRTY DISGUSTING HAX, DON'T DO ITS!
+                            NotificationCenter.default().post(name: ServiceRegistry.didAddService, object: c)
+                            //AppActivity.end("Setup")
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        let a = NSAlert()
+                        a.alertStyle = .critical
+                        a.messageText = "Parrot has connected."
+                        a.runModal()
+                    }
 			}
             NotificationCenter.default()
                 .addObserver(forName: Client.didDisconnectNotification, object: c, queue: nil) { _ in
@@ -86,7 +98,6 @@ public class ParrotAppController: NSApplicationController {
                     a.runModal()
                 }
             }
-			//_ = c.connect() {_ in}
             
             ServiceRegistry.add(service: c)
             self.net?.startListening()
