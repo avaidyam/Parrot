@@ -119,7 +119,7 @@
                     <constraint firstItem="c1g-nC-vne" firstAttribute="centerX" secondItem="TjO-sk-yg0" secondAttribute="centerX" id="mXi-XQ-dSH"/>
                 </constraints>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="15DD37E4-A9CD-4FCB-B956-9C65DA208478" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="ffa-CI-zYk">
+            <toolbar key="toolbar" implicitIdentifier="15DD37E4-A9CD-4FCB-B956-9C65DA208478" autosavesConfiguration="NO" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="ffa-CI-zYk">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="0BA82A9A-B384-4019-91E0-FF901AAB1BE3" label="Title" paletteLabel="Title" visibilityPriority="2" id="GTg-V7-Nyg" userLabel="Title">
                         <nil key="toolTip"/>

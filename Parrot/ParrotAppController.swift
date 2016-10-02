@@ -64,22 +64,50 @@ public class ParrotAppController: NSApplicationController {
 		log.verbose("Initializing Parrot...")
 		//AppActivity.start("Authenticate")
 		Authenticator.authenticateClient {
-			let c = Client(configuration: $0)
+            let c = Client(configuration: $0)
 			//AppActivity.end("Authenticate")
 			
 			NotificationCenter.default()
 				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
-					//AppActivity.start("Setup")
+                    //AppActivity.start("Setup")
 					c.buildUserConversationList {
+                        
+                        // TODO: FIXME: THIS IS A TERRIBLE DIRTY DISGUSTING HAX, DON'T DO ITS!
+                        NotificationCenter.default().post(name: ServiceRegistry.didAddService, object: c)
 						//AppActivity.end("Setup")
-						ServiceRegistry.add(service: c)
 					}
 			}
-			_ = c.connect() {_ in}
-			
+            NotificationCenter.default()
+                .addObserver(forName: Client.didDisconnectNotification, object: c, queue: nil) { _ in
+                DispatchQueue.main.async {
+                    let a = NSAlert()
+                    a.alertStyle = .critical
+                    a.messageText = "Parrot has disconnected."
+                    a.runModal()
+                }
+            }
+			//_ = c.connect() {_ in}
+            
+            ServiceRegistry.add(service: c)
+            self.net?.startListening()
 			self.conversationsController.showWindow()
 		}
-	}
+        
+        net?.listener = {
+            for (name, service) in ServiceRegistry.services {
+                switch $0 {
+                case .reachable(_) where !service.connected:
+                    log.debug("Connecting service <\(name)>...")
+                    _ = service.connect() {_ in}
+                case .notReachable where service.connected:
+                    log.debug("Disconnecting service <\(name)>...")
+                    _ = service.disconnect() {_ in}
+                default: continue
+                }
+            }
+        }
+    }
+    let net = NetworkReachabilityManager(host: "google.com")
 	
 	/// If the Conversations window is closed, tapping the dock icon will reopen it.
 	func applicationShouldHandleReopen(sender: NSApplication, flag: Bool) -> Bool {
@@ -154,4 +182,10 @@ public class ParrotAppController: NSApplicationController {
 	}
 }
 
+@objc(ParrotApplication)
+class ParrotApplication: NSApplication {
+    /*public override func orderFrontCharacterPalette(_ sender: AnyObject?) {
+        log.debug("CHARACTER PICKER DISABLED. \(self.keyWindow?.firstResponder)")
+    }*/
+}
 

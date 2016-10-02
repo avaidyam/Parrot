@@ -51,20 +51,17 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 		let a = _c.addObserver(forName: Client.didConnectNotification, object: client, queue: nil) { _ in
 			self.sync()
 		}
-		let b = _c.addObserver(forName: Client.didReconnectNotification, object: client, queue: nil) { _ in
-			self.sync()
-		}
-		let c = _c.addObserver(forName: Client.didDisconnectNotification, object: client, queue: nil) { _ in
+		let b = _c.addObserver(forName: Client.didDisconnectNotification, object: client, queue: nil) { _ in
 			// nothing here
 		}
-		let d = _c.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) { note in
+		let c = _c.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) { note in
 			if let val = (note.userInfo)?[Client.didUpdateStateKey.rawValue] as? Wrapper<StateUpdate> {
 				self.clientDidUpdateState(client: self.client, update: val.element)
 			} else {
 				log.error("Encountered an error! \(note)")
 			}
 		}
-		self.tokens.append(contentsOf: [a, b, c, d])
+		self.tokens.append(contentsOf: [a, b, c])
     }
 	
 	deinit {
@@ -151,7 +148,6 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
             self.conv_dict.removeValue(forKey: conv_id)
         }
     }
-	
 	
 	// Sync conversation state and events that could have been missed
     public func sync(cb: (() -> Void)? = nil) {

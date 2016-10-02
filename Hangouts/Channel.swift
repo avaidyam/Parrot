@@ -18,7 +18,6 @@ public final class Channel : NSObject {
 	
 	// NotificationCenter notification and userInfo keys.
 	public static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidConnect")
-	public static let didReconnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidReconnect")
 	public static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidDisconnect")
 	public static let didReceiveMessageNotification = Notification.Name(rawValue: "Hangouts.Channel.ReceiveMessage")
 	public static let didReceiveMessageKey = Notification.Name(rawValue: "Hangouts.Channel.ReceiveMessage.Key")
@@ -97,8 +96,8 @@ public final class Channel : NSObject {
 	internal var session = URLSession()
 	internal var proxy = URLSessionDelegateProxy()
 	
-    private var isConnected = false
-    private var onConnectCalled = false
+    internal var isConnected = false
+    internal var onConnectCalled = false
 	private var chunkParser: ChunkParser? = nil
     private var sidParam: String? = nil
     private var gSessionIDParam: String? = nil
@@ -114,56 +113,41 @@ public final class Channel : NSObject {
 	// Listen for messages on the backwards channel.
 	// This method only returns when the connection has been closed due to an error.
 	public func listen() {
-		self.needsSID = true
-		
-        if retries >= 0 {
-			
-			// After the first failed retry, back off exponentially longer each time.
-            if retries + 1 < Channel.maxRetries {
-                let backoff_seconds = UInt64(2 << (Channel.maxRetries - retries))
-                log.info("Backing off for \(backoff_seconds) seconds")
-                usleep(useconds_t(backoff_seconds * USEC_PER_SEC))
-			}
-
-            // Request a new SID if we don't have one yet, or the previous one
-            // became invalid.
-            if self.needsSID {
-				
-				let s = DispatchSemaphore(value: 0)
-				
-				self.fetchChannelSID {
-					s.signal()
-				}
-				
-				// FIXME: Deadlocks here after network disconnection.
-				_ = s.wait(timeout: .distantFuture)
-				self.needsSID = false
+        log.debug("listen invoked! needs SID? \(self.needsSID)")
+        
+        // Request a new SID if we don't have one yet, or the previous one became invalid.
+        if self.needsSID {
+            let s = DispatchSemaphore(value: 0)
+            self.fetchChannelSID {
+                s.signal()
             }
-
-            // Clear any previous push data, since if there was an error it
-            // could contain garbage.
-            self.chunkParser = ChunkParser()
-			self.longPollRequest()
-			
-			/* TODO: Catch the errors as shown here (pseudocode). */
-			/*
-			catch (UnknownSIDError, exceptions.NetworkError) { e in
-				log.error("Long-polling request failed: \(e)")
-				self.retries -= 1
-				if self.isConnected {
-					self.isConnected = false
-					self.delegate?.channelDidDisconnect(self)
-				}
-				if e is UnknownSIDError.self {
-					self.needsSID = true
-				}
-			}
-			*/
-			
-			// The connection closed successfully, so reset the number of retries.
-			retries = Channel.maxRetries
+            _ = s.wait(timeout: .distantFuture)
+            self.needsSID = false
         }
-	}
+        
+        log.debug("cleaned chunk parser and starting request...")
+        
+        // Clear any previous push data, since if there was an error it could contain garbage.
+        self.chunkParser = ChunkParser()
+        self.longPollRequest()
+    }
+    
+    // Creates a new channel for receiving push data.
+    // There's a separate API to get the gsessionid alone that Hangouts for
+    // Chrome uses, but if we don't send a gsessionid with this request, it
+    // will return a gsessionid as well as the SID.
+    private func fetchChannelSID(cb: ((Void) -> Void)? = nil) {
+        self.sidParam = nil
+        self.gSessionIDParam = nil
+        log.debug("sending maps...")
+        self.sendMaps {
+            let r = Channel.parseSIDResponse(res: $0)
+            log.debug("received response \(r)")
+            self.sidParam = r.sid
+            self.gSessionIDParam = r.gSessionID
+            cb?()
+        }
+    }
 	
 	// Sends a request to the server containing maps (dicts).
 	public func sendMaps(mapList: [[String: AnyObject]]? = nil, cb: ((Data) -> Void)? = nil) {
@@ -182,7 +166,7 @@ public final class Channel : NSObject {
 		var data_dict = [
 			"count": mapList?.count ?? 0,
 			"ofs": 0
-			] as [String: AnyObject]
+        ] as [String: AnyObject]
 		
 		if let mapList = mapList {
 			for (map_num, map_) in mapList.enumerated() {
@@ -202,11 +186,17 @@ public final class Channel : NSObject {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
+        log.debug("maps about to go out!")
+        // If the network is not connected at the time this request is made, 
+        // then the internal SPI logs: `[57] Socket not connected` without
+        // erroring up here. Therefore, you should always wait until the network 
+        // is connected or queue it.
 		self.session.request(request: request) {
 			guard let data = $0.data else {
-				log.error("Request failed with error: \($0.error!)")
+				log.error("(maps) Request failed with error: \($0.error!)")
 				return
 			}
+            log.debug("maps succeeded!")
 			cb?(data)
 		}
 	}
@@ -233,49 +223,42 @@ public final class Channel : NSObject {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
-		let task = self.session.dataTask(with: request)
+        log.debug("request val: \(request)")
+        
+		self.task = self.session.dataTask(with: request)
 		let p = URLSessionDataDelegateProxy()
 		p.didReceiveData = { _,_,data in
 			self.onPushData(data: data)
 		}
-		p.didComplete = { _,t,error in
+		p.didComplete = { [weak self] _,t,error in
 			let response = t.response
 			let r = response as? HTTPURLResponse
 			if r?.statusCode >= 400 {
-				/* TODO: Sometimes things fail here, not sure why yet. */
-				/* TODO: This should be moved out of here later on. */
 				log.error("Request failed with: \(error)")
-				self.needsSID = true
-				self.listen()
+                self?.disconnect()
 			} else if r?.statusCode == 200 {
-				//self.onPushData(response.result.value!) // why is this commented again??
-				self.longPollRequest()
-				
-				// we shouldn't call ourselves; the while loop thing should.
-				// doesn't work right though.
+                log.debug("200 OK: restart long-poll")
+				self?.longPollRequest()
 			} else {
 				log.error("Received unknown response code \(r?.statusCode)")
-				//log.info(NSString(data: response.data ?? Data(), encoding: 4)! as String)
+                self?.disconnect()
 			}
 		}
-		self.proxy[task] = p
-		task.resume()
+		self.proxy[self.task!] = p
+		self.task?.resume()
 	}
-	
-	// Creates a new channel for receiving push data.
-	// There's a separate API to get the gsessionid alone that Hangouts for
-	// Chrome uses, but if we don't send a gsessionid with this request, it
-	// will return a gsessionid as well as the SID.
-	private func fetchChannelSID(cb: ((Void) -> Void)? = nil) {
-		self.sidParam = nil
-		self.gSessionIDParam = nil
-		self.sendMaps {
-			let r = Channel.parseSIDResponse(res: $0)
-			self.sidParam = r.sid
-			self.gSessionIDParam = r.gSessionID
-			cb?()
-		}
-	}
+    
+    private var task: URLSessionDataTask? = nil
+    
+    public func disconnect() {
+        self.task?.cancel()
+        self.proxy[self.task!] = nil
+        if self.isConnected {
+            self.isConnected = false
+            NotificationCenter.default().post(name: Channel.didDisconnectNotification, object: self)
+        }
+        self.needsSID = true
+    }
 	
 	// Delay subscribing until first byte is received prevent "channel not
 	// ready" errors that appear to be caused by a race condition on the server.
@@ -288,7 +271,7 @@ public final class Channel : NSObject {
 				if self.onConnectCalled {
 					self.isConnected = true
 					NotificationCenter.default()
-						.post(name: Channel.didReconnectNotification, object: self)
+						.post(name: Channel.didConnectNotification, object: self)
 				} else {
 					self.onConnectCalled = true
 					self.isConnected = true
@@ -377,6 +360,7 @@ public final class Channel : NSObject {
 	//      [1,[{"gsid":"GSESSIONID_HERE"}]]]
 	internal class func parseSIDResponse(res: Data) -> (sid: String, gSessionID: String) {
 		if let firstSubmission = Channel.ChunkParser().getChunks(newBytes: res).first {
+            log.debug("chunk parsing...")
 			let val = PBLiteSerialization.sanitizedDecode(JSON: firstSubmission)!
 			let sid = ((val[0] as! NSArray)[1] as! NSArray)[1] as! String
 			let gSessionID = (((val[1] as! NSArray)[1] as! NSArray)[0] as! NSDictionary)["gsid"]! as! String

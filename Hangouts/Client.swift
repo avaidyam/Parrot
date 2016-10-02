@@ -10,7 +10,6 @@ public final class Client: Service {
 	
 	// NotificationCenter notification and userInfo keys.
 	public static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidConnect")
-	public static let didReconnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidReconnect")
 	public static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidDisconnect")
 	public static let didUpdateStateNotification = Notification.Name(rawValue: "Hangouts.Client.UpdateState")
 	public static let didUpdateStateKey = Notification.Name(rawValue: "Hangouts.Client.UpdateState.Key")
@@ -33,7 +32,36 @@ public final class Client: Service {
 	public private(set) var userList: UserList!
 	
 	public init(configuration: URLSessionConfiguration) {
-		self.config = configuration
+        self.config = configuration
+        self.channel = Channel(configuration: self.config)
+        
+        //
+        // A notification-based delegate replacement:
+        //
+        
+        let _c = NotificationCenter.default()
+        let a = _c.addObserver(forName: Channel.didConnectNotification, object: self.channel, queue: nil) { _ in
+            NotificationCenter.default().post(name: Client.didConnectNotification, object: self)
+        }
+        let b = _c.addObserver(forName: Channel.didDisconnectNotification, object: self.channel, queue: nil) { _ in
+            NotificationCenter.default().post(name: Client.didDisconnectNotification, object: self)
+        }
+        let c = _c.addObserver(forName: Channel.didReceiveMessageNotification, object: self.channel, queue: nil) { note in
+            if let val = (note.userInfo)?[Channel.didReceiveMessageKey.rawValue] as? [AnyObject] {
+                self.channel(channel: self.channel!, didReceiveMessage: val)
+            } else {
+                log.error("Encountered an error! \(note)")
+            }
+        }
+        self.tokens.append(contentsOf: [a, b, c])
+    }
+    
+    deinit {
+        
+        // Remove all the observers so we aren't receiving calls later on.
+        self.tokens.forEach {
+            NotificationCenter.default().removeObserver($0)
+        }
     }
 	
 	private var tokens = [NSObjectProtocol]()
@@ -48,32 +76,7 @@ public final class Client: Service {
 	
 	// Establish a connection to the chat server.
     public func connect(_ onConnect: (ErrorProtocol?) -> ()) {
-		self.channel = Channel(configuration: self.config)
-		//self.channel?.delegate = self
-		self.channel?.listen()
-		
-		// 
-		// A notification-based delegate replacement:
-		//
-		
-		let _c = NotificationCenter.default()
-		let a = _c.addObserver(forName: Channel.didConnectNotification, object: self.channel, queue: nil) { _ in
-			NotificationCenter.default().post(name: Client.didConnectNotification, object: self)
-		}
-		let b = _c.addObserver(forName: Channel.didReconnectNotification, object: self.channel, queue: nil) { _ in
-			NotificationCenter.default().post(name: Client.didReconnectNotification, object: self)
-		}
-		let c = _c.addObserver(forName: Channel.didDisconnectNotification, object: self.channel, queue: nil) { _ in
-			NotificationCenter.default().post(name: Client.didDisconnectNotification, object: self)
-		}
-		let d = _c.addObserver(forName: Channel.didReceiveMessageNotification, object: self.channel, queue: nil) { note in
-			if let val = (note.userInfo)?[Channel.didReceiveMessageKey.rawValue] as? [AnyObject] {
-				self.channel(channel: self.channel!, didReceiveMessage: val)
-			} else {
-				log.error("Encountered an error! \(note)")
-			}
-		}
-		self.tokens.append(contentsOf: [a, b, c, d])
+        self.channel?.listen()
     }
 	
 	///
@@ -89,15 +92,12 @@ public final class Client: Service {
 	/* TODO: Can't disconnect a Channel yet. */
 	// Gracefully disconnect from the server.
 	public func disconnect(_ onDisconnect: (ErrorProtocol?) -> ()) {
-		//self.channel?.disconnect()
-		
-		// Remove all the observers so we aren't receiving calls later on.
-		self.tokens.forEach {
-			NotificationCenter.default().removeObserver($0)
-		}
+		self.channel?.disconnect()
 	}
 	
-	public var connected: Bool = true
+    public var connected: Bool {
+        return self.channel?.isConnected ?? false
+    }
 	public func synchronize(_ onSynchronize: (ErrorProtocol?) -> ()) {
 		
 	}
@@ -241,7 +241,7 @@ public final class Client: Service {
             }
 			let conv_states = response.conversationState
 			let sync_timestamp = response.syncTimestamp// use current_server_time?
-			log.debug("got data")
+			
 			var required_user_ids = Set<User.ID>()
 			for conv_state in conv_states {
 				let participants = conv_state.conversation!.participantData
@@ -250,18 +250,15 @@ public final class Client: Service {
 				}))
 			}
             
-            log.debug("got participants")
 			var required_entities = [Entity]()
 			self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
 				required_entities = resp?.entityResult.flatMap { $0.entity } ?? []
                 
-                log.debug("got entities")
 				// Let's request our own entity now.
 				self.getSelfInfo {
 					let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
 					var users = [selfUser]
                     
-                    log.debug("got self")
 					// Add each entity as a new User.
 					for entity in required_entities {
 						let user = User(entity: entity, selfUser: selfUser.id)
