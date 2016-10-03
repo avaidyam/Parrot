@@ -141,6 +141,21 @@ public extension NSUserNotification {
 	}
 }
 
+public extension NSUserNotification {
+    
+    /// Convenience constructor for a pretty standard notification.
+    /// Note: identifier is required in this initializer for notification replacement.
+    public convenience init(identifier: String, title: String, subtitle: String? = nil,
+                            informativeText: String? = nil, contentImage: NSImage? = nil) {
+        self.init()
+        self.identifier = identifier
+        self.title = title
+        self.subtitle = subtitle
+        self.informativeText = informativeText
+        self.contentImage = contentImage
+    }
+}
+
 private var _appProgress: Double?
 public extension NSApplication {
 	

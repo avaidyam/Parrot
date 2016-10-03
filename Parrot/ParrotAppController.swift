@@ -71,7 +71,7 @@ public class ParrotAppController: NSApplicationController {
 				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
                     //AppActivity.start("Setup")
                     if c.conversationList == nil {
-                        c.buildUserConversationList2 {
+                        c.buildUserConversationList {
                             // When reconnecting, buildUserConversationList causes Client to then
                             // re-create the entire userlist + conversationlist and reset it
                             // but the old ones are still alive, and their delegate is set to the
@@ -82,21 +82,26 @@ public class ParrotAppController: NSApplicationController {
                             //AppActivity.end("Setup")
                         }
                     }
+                    
                     DispatchQueue.main.async {
                         let a = NSAlert()
                         a.alertStyle = .critical
                         a.messageText = "Parrot has connected."
                         a.runModal()
                     }
+                    //UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
+                    //                 contentImage: NSImage(named: NSImageNameCaution)).post()
 			}
             NotificationCenter.default()
                 .addObserver(forName: Client.didDisconnectNotification, object: c, queue: nil) { _ in
-                DispatchQueue.main.async {
-                    let a = NSAlert()
-                    a.alertStyle = .critical
-                    a.messageText = "Parrot has disconnected."
-                    a.runModal()
-                }
+                    DispatchQueue.main.async {
+                        let a = NSAlert()
+                        a.alertStyle = .critical
+                        a.messageText = "Parrot has disconnected."
+                        a.runModal()
+                    }
+                    //UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has disconnected.",
+                    //                 contentImage: NSImage(named: NSImageNameCaution)).post()
             }
             
             ServiceRegistry.add(service: c)

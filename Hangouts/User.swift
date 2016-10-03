@@ -148,23 +148,20 @@ public class UserList: Directory, Collection {
             self.me = selfUser
         }
     }
-	
+    
 	// Initialize the list of Users.
-	// Creates users from the given ClientEntity and
-	// ClientConversationParticipantData instances. The latter is used only as
-	// a fallback, because it doesn't include a real first_name.
 	public init(client: Client, me: User, users: [User] = []) {
 		var usersDict = Dictionary<User.ID, User>()
 		users.forEach { usersDict[$0.id] = $0 }
+        
 		self.users = usersDict
 		self.me = me
         self.client = client
-		
+        
 		self.observer = NotificationCenter.default()
 			.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) {
 				if  let userInfo = $0.userInfo, state_update = userInfo[Client.didUpdateStateKey.rawValue],
                     let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
-                    
 					self.addPeople(fromConversation: conversation)
 				}
 		}

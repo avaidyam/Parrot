@@ -28,14 +28,12 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     public let client: Client
     public var conv_dict = [String : IConversation]()
     public var sync_timestamp: Date = Date.from(UTC: 0)
-    public let user_list: UserList
 	
 	public var delegate: ConversationListDelegate?
 	private var tokens = [NSObjectProtocol]()
 
-    public init(client: Client, user_list: UserList) {
+    public init(client: Client) {
         self.client = client
-        self.user_list = user_list
         
         let _c = NotificationCenter.default()
         let a = _c.addObserver(forName: Client.didConnectNotification, object: client, queue: nil) { _ in
@@ -54,8 +52,8 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         self.tokens.append(contentsOf: [a, b, c])
     }
     
-    public convenience init(client: Client, conv_states: [ConversationState], user_list: UserList, sync_timestamp: UInt64?) {
-        self.init(client: client, user_list: user_list)
+    public convenience init(client: Client, conv_states: [ConversationState], sync_timestamp: UInt64?) {
+        self.init(client: client)
         self.sync_timestamp = Date.from(UTC: Double(sync_timestamp ?? 0))//.origin
 		
         // Initialize the list of conversations from Client's list of ClientConversationStates.
@@ -100,7 +98,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
             // Initialize the list of conversations from Client's list of ClientConversationStates.
             for conv_state in conv_states {
                 self.add_conversation(client_conversation: conv_state.conversation!, client_events: conv_state.event)
-                self.user_list.addPeople(fromConversation: conv_state.conversation!)
+                self.client.userList.addPeople(fromConversation: conv_state.conversation!)
             }
         }
         return nil
@@ -163,7 +161,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         let conv_id = client_conversation.conversationId!.id!
         let conv = IConversation(
             client: client,
-            user_list: user_list,
+            user_list: client.userList,
             conversation: client_conversation,
             events: client_events,
             conversationList: self
@@ -274,7 +272,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 		let conv_id = note.conversationId!.id!
 		if let conv = conv_dict[conv_id] {
 			let res = parseTypingStatusMessage(p: note)
-			let user = user_list[User.ID(
+			let user = self.client.userList[User.ID(
 				chatID: note.senderId!.chatId!,
 				gaiaID: note.senderId!.gaiaId!
 				)]

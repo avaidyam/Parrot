@@ -210,12 +210,12 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			guard $0 == .bottom else { return }
 			guard self.updateToken == false else { return }
 			
-			let c = self.conversationList as? Hangouts.ConversationList
+			//let c = self.conversationList as? Hangouts.ConversationList
 			//c?.client._tester()
-			c?.client.syncRecentConversations(maxConversations: 1, maxEventsPer: 1, since: Date.from(UTC: 1474473751200143.0)) {
+			/*c?.client.syncRecentConversations(maxConversations: 1, maxEventsPer: 1, since: Date.from(UTC: 1474473751200143.0)) {
 				print($0)
 				self.updateToken = false
-			}
+			}*/
 			
 			log.debug("SCROLLBACK")
 			self.updateToken = true

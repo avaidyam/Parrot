@@ -38,7 +38,6 @@
 		484E8CA01D37FF2500E1D1D5 /* EventStreamItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E8C9F1D37FF2500E1D1D5 /* EventStreamItems.swift */; };
 		48574F141D120314002375E1 /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
 		4866337E1C5822FA006C094B /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4866337D1C5822FA006C094B /* ListView.swift */; };
-		486907F71D1EE266007C2532 /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486907F61D1EE266007C2532 /* MulticastDelegate.swift */; };
 		48808EDD1C6463DD00236E96 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* PreferencesWindowController.swift */; };
 		488201B61D4A962B00C545F0 /* NSExtendedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */; };
 		488201B81D4A968F00C545F0 /* NSAntiScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */; };
@@ -276,7 +275,6 @@
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		48574F121D11F9FC002375E1 /* AppManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppManagement.swift; sourceTree = "<group>"; };
 		4866337D1C5822FA006C094B /* ListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
-		486907F61D1EE266007C2532 /* MulticastDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
@@ -660,7 +658,6 @@
 		48834E511C1B4380009BC442 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				486907F61D1EE266007C2532 /* MulticastDelegate.swift */,
 				4816872B1C3A340E0070EEF6 /* URLSession+Delegate.swift */,
 				481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */,
 			);
@@ -1212,7 +1209,6 @@
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
-				486907F71D1EE266007C2532 /* MulticastDelegate.swift in Sources */,
 				48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
 				48158E1F1D28690C00ED369C /* API.swift in Sources */,

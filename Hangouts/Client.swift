@@ -230,56 +230,12 @@ public final class Client: Service {
 			}
 		}
 	}
-	
-	public func buildUserConversationList(_ completionHandler: () -> Void = {}) {
-        
-		// Retrieve recent conversations so we can preemptively look up their participants.
-		self.syncRecentConversations { response2 in
-            guard let response = response2 else {
-                log.debug("failed: \(response2)")
-                return
-            }
-			let conv_states = response.conversationState
-			let sync_timestamp = response.syncTimestamp// use current_server_time?
-			
-			var required_user_ids = Set<User.ID>()
-			for conv_state in conv_states {
-				let participants = conv_state.conversation!.participantData
-				required_user_ids = required_user_ids.union(Set(participants.map {
-					User.ID(chatID: $0.id!.chatId!, gaiaID: $0.id!.gaiaId!)
-				}))
-			}
-            
-			var required_entities = [Entity]()
-			self.getEntitiesByID(chat_id_list: required_user_ids.map { $0.chatID }) { resp in
-				required_entities = resp?.entityResult.flatMap { $0.entity } ?? []
-                
-				// Let's request our own entity now.
-				self.getSelfInfo {
-					let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
-					var users = [selfUser]
-                    
-					// Add each entity as a new User.
-					for entity in required_entities {
-						let user = User(entity: entity, selfUser: selfUser.id)
-						users.append(user)
-					}
-					
-					let userList = UserList(client: self, me: selfUser, users: users)
-					let conversationList = ConversationList(client: self, conv_states: conv_states, user_list: userList, sync_timestamp: sync_timestamp)
-					self.conversationList = conversationList
-					self.userList = userList
-					completionHandler()
-				}
-			}
-		}
-	}
     
-    public func buildUserConversationList2(_ completionHandler: () -> Void = {}) {
+    public func buildUserConversationList(_ completionHandler: () -> Void = {}) {
         self.getSelfInfo {
             let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
             let userlist = UserList(client: self, me: selfUser)
-            let convlist = ConversationList(client: self, user_list: userlist)
+            let convlist = ConversationList(client: self)
             
             self.conversationList = convlist
             self.userList = userlist
