@@ -71,7 +71,7 @@ public class ParrotAppController: NSApplicationController {
 				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
                     //AppActivity.start("Setup")
                     if c.conversationList == nil {
-                        c.buildUserConversationList {
+                        c.buildUserConversationList2 {
                             // When reconnecting, buildUserConversationList causes Client to then
                             // re-create the entire userlist + conversationlist and reset it
                             // but the old ones are still alive, and their delegate is set to the

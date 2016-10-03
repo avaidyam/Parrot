@@ -274,4 +274,18 @@ public final class Client: Service {
 			}
 		}
 	}
+    
+    public func buildUserConversationList2(_ completionHandler: () -> Void = {}) {
+        self.getSelfInfo {
+            let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
+            let userlist = UserList(client: self, me: selfUser)
+            let convlist = ConversationList(client: self, user_list: userlist)
+            
+            self.conversationList = convlist
+            self.userList = userlist
+            
+            _ = convlist.syncConversations()
+            completionHandler()
+        }
+    }
 }

@@ -72,7 +72,7 @@ public extension Person {
 	}
 }
 
-public protocol Directory /*: Collection*/ {
+public protocol Directory: class /*: Collection*/ {
 	
 	/// Return the user currently logged into the Service.
 	var me: Person { get }
@@ -85,6 +85,9 @@ public protocol Directory /*: Collection*/ {
 	
 	/// Returns all the people blocked by the current user.
 	var blocked: [String: Person] { get }
+    
+    /// Return the Person identified the string provided.
+    subscript(_ identifier: String) -> Person { get }
 	
 	/// Search for users given a set of identifiers.
 	/// Identifiers can include anything including name components.

@@ -95,10 +95,11 @@ public struct User: Person, Hashable, Equatable {
 // Collection of User instances.
 public class UserList: Directory, Collection {
 	
-	private var observer: NSObjectProtocol? // for Notification
+	private var observer: NSObjectProtocol? /*Notification Token*/
 	private var users: [User.ID: User]
+    private let client: Client
 	
-	public let me: Person
+	public private(set) var me: Person
 	public var people: [String: Person] {
 		var dict = [String: Person]()
 		for (key, value) in self.users {
@@ -112,15 +113,14 @@ public class UserList: Directory, Collection {
 	public var blocked: [String: Person] {
 		return [:]
 	}
-	
-	// Returns all users as an array.
-	public var allUsers: [User] {
-		return Array(self.users.values)
-	}
+    
+    public subscript(_ identifier: String) -> Person {
+        return self[User.ID(chatID: identifier, gaiaID: identifier)]
+    }
 	
 	// Return a User by their User.ID.
 	// Logs and returns a placeholder User if not found.
-	public subscript(userID: User.ID) -> User {
+	internal subscript(userID: User.ID) -> User {
 		if let user = self.users[userID] {
 			return user
 		} else {
@@ -128,6 +128,26 @@ public class UserList: Directory, Collection {
 			return User(userID: userID)
 		}
 	}
+    
+    internal func addPeople(fromConversation conversation: Conversation) {
+        self.client.getEntitiesByID(chat_id_list: conversation.participantData.flatMap { $0.id?.chatId }) { response in
+            let entities = response?.entityResult.flatMap { $0.entity } ?? []
+            for entity in entities {
+                let user = User(entity: entity, selfUser: (self.me as! User).id)
+                if self.users[user.id] == nil {
+                    self.users[user.id] = user
+                }
+            }
+        }
+    }
+    
+    internal func getSelfInfo() {
+        self.client.getSelfInfo {
+            let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
+            self.users[selfUser.id] = selfUser
+            self.me = selfUser
+        }
+    }
 	
 	// Initialize the list of Users.
 	// Creates users from the given ClientEntity and
@@ -138,24 +158,14 @@ public class UserList: Directory, Collection {
 		users.forEach { usersDict[$0.id] = $0 }
 		self.users = usersDict
 		self.me = me
+        self.client = client
 		
 		self.observer = NotificationCenter.default()
 			.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) {
-				
-				if let userInfo = $0.userInfo,
-					state_update = userInfo[Client.didUpdateStateKey.rawValue] {
-					
-					if let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
-						client.getEntitiesByID(chat_id_list: conversation.participantData.flatMap { $0.id?.chatId }) { response in
-							let entities = response?.entityResult.flatMap { $0.entity } ?? []
-							for entity in entities {
-								let user = User(entity: entity, selfUser: (self.me as! User).id)
-								if self.users[user.id] == nil {
-									self.users[user.id] = user
-								}
-							}
-						}
-					}
+				if  let userInfo = $0.userInfo, state_update = userInfo[Client.didUpdateStateKey.rawValue],
+                    let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
+                    
+					self.addPeople(fromConversation: conversation)
 				}
 		}
 	}

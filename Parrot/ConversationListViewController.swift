@@ -343,7 +343,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			showNote = !(c.window?.isKeyWindow ?? false)
 		}
 		
-		if let user = (conv as? IConversation)?.user_list[event.userID] where !user.isSelf && showNote {
+		if let user = (conv as? IConversation)?.user_list[event.userID.gaiaID] where !user.me && showNote {
 			log.debug("Sending notification...")
 			
 			let text = (event as? IChatMessageEvent)?.text ?? "Event"
