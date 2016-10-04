@@ -1,6 +1,8 @@
 import Foundation
 import ParrotServiceExtension
 
+private let log = Logger(subsystem: "Hangouts.UserList")
+
 /// A chat user.
 public struct User: Person, Hashable, Equatable {
     public static let DEFAULT_NAME = "Unknown"

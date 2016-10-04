@@ -1,8 +1,7 @@
 import Foundation
 import ParrotServiceExtension
 
-/* TODO: Fix the retry semantics instead of what we have right now. */
-/* TODO: Auto-turn a callback into a blocking using semaphores. */
+private let log = Logger(subsystem: "Hangouts.Channel")
 
 public final class Channel : NSObject {
 	
@@ -114,7 +113,7 @@ public final class Channel : NSObject {
 	// Listen for messages on the backwards channel.
 	// This method only returns when the connection has been closed due to an error.
 	public func listen() {
-        log.debug("CHANNEL: listen invoked! needs SID? \(self.needsSID)")
+        log.debug("listen invoked! needs SID? \(self.needsSID)")
         
         // Request a new SID if we don't have one yet, or the previous one became invalid.
         if self.needsSID {
@@ -126,7 +125,7 @@ public final class Channel : NSObject {
             self.needsSID = false
         }
         
-        log.debug("CHANNEL: cleaned chunk parser and starting request...")
+        log.debug("cleaned chunk parser and starting request...")
         
         // Clear any previous push data, since if there was an error it could contain garbage.
         self.chunkParser = ChunkParser()
@@ -140,10 +139,10 @@ public final class Channel : NSObject {
     private func fetchChannelSID(cb: ((Void) -> Void)? = nil) {
         self.sidParam = nil
         self.gSessionIDParam = nil
-        log.debug("CHANNEL: sending maps...")
+        log.debug("sending maps...")
         self.sendMaps {
             let r = Channel.parseSIDResponse(res: $0)
-            log.debug("CHANNEL: received response \(r)")
+            log.debug("received response \(r)")
             self.sidParam = r.sid
             self.gSessionIDParam = r.gSessionID
             cb?()
@@ -187,7 +186,7 @@ public final class Channel : NSObject {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
-        log.debug("CHANNEL: maps about to go out!")
+        log.debug("maps about to go out!")
         // If the network is not connected at the time this request is made, 
         // then the internal SPI logs: `[57] Socket not connected` without
         // erroring up here. Therefore, you should always wait until the network 
@@ -197,7 +196,7 @@ public final class Channel : NSObject {
 				log.error("(maps) Request failed with error: \($0.error!)")
 				return
 			}
-            log.debug("CHANNEL: maps succeeded!")
+            log.debug("maps succeeded!")
 			cb?(data)
 		}
 	}
@@ -224,7 +223,7 @@ public final class Channel : NSObject {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
-        log.debug("CHANNEL: request val: \(request)")
+        log.debug("request val: \(request)")
         
 		self.task = self.session.dataTask(with: request)
 		let p = URLSessionDataDelegateProxy()
@@ -235,13 +234,13 @@ public final class Channel : NSObject {
 			let response = t.response
 			let r = response as? HTTPURLResponse
 			if r?.statusCode >= 400 {
-				log.error("CHANNEL: Request failed with: \(error)")
+				log.error("Request failed with: \(error)")
                 self?.disconnect()
 			} else if r?.statusCode == 200 {
-                log.debug("CHANNEL: 200 OK: restart long-poll")
+                log.debug("200 OK: restart long-poll")
 				self?.longPollRequest()
 			} else {
-				log.error("CHANNEL: Received unknown response code \(r?.statusCode)")
+				log.error("Received unknown response code \(r?.statusCode)")
                 self?.disconnect()
 			}
 		}

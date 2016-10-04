@@ -1,6 +1,8 @@
 import Foundation
 import ParrotServiceExtension
 
+private let log = Logger(subsystem: "Hangouts.ConversationList")
+
 public protocol ConversationListDelegate {
 	/*
 	conversationNotification(note)

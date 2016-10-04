@@ -185,7 +185,7 @@ public extension Client {
 	                          lastSeen: Bool = true,
 	                          cb: ((response: QueryPresenceResponse?) -> Void)) {
 		guard chat_ids.count > 0 else {
-			log.error("Cannot query presence for zero chat IDs!")
+			print("Cannot query presence for zero chat IDs!")
 			return
 		}
 		

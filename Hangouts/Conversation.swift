@@ -1,6 +1,8 @@
 import Foundation
 import ParrotServiceExtension
 
+private let log = Logger(subsystem: "Hangouts.Conversation")
+
 public protocol ConversationDelegate {
     func conversation(_ conversation: IConversation, didChangeTypingStatusForUser: User, toStatus: TypingType)
     func conversation(_ conversation: IConversation, didReceiveEvent: IEvent)

@@ -1,4 +1,7 @@
 import Foundation
+import ParrotServiceExtension
+
+private let log = Logger(subsystem: "Hangouts.Protobuf")
 
 // FIXME: syntax, imports, packages, map field types
 // TODO: Does not support: services, extensions, options, inner class, oneof

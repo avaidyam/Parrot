@@ -1,6 +1,8 @@
 import Foundation
 import ParrotServiceExtension
 
+private let log = Logger(subsystem: "Hangouts.Event")
+
 /* TODO: Refactor ChatMessageSegment to match hangups and Protobuf docs. */
 /* TODO: Include Markdown, HTML, and URL formatting parsers. */
 

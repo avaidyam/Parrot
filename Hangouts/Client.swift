@@ -1,7 +1,7 @@
 import Foundation
 import ParrotServiceExtension
 
-internal let log = Logger(subsystem: "com.avaidyam.Hangouts.global")
+private let log = Logger(subsystem: "Hangouts.Client")
 
 public final class Client: Service {
 	

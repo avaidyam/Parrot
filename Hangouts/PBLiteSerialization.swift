@@ -1,4 +1,7 @@
 import Foundation
+import ParrotServiceExtension
+
+private let log = Logger(subsystem: "Hangouts.PBLite")
 
 // PBLiteSerialization wrapper
 public class PBLiteSerialization {
