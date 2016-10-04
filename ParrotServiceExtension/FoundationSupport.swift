@@ -23,6 +23,19 @@ public extension Optional {
 	}
 }
 
+public extension Collection {
+    public func dictionaryMap<K, V>(transform: (element: Self.Iterator.Element) -> [K: V]) -> [K: V] {
+        var dictionary = [K: V]()
+        self.forEach {
+            let dict = transform(element: $0)
+            for (key, value) in dict {
+                dictionary[key] = value
+            }
+        }
+        return dictionary
+    }
+}
+
 // Needs to be fixed somehow to not use NSString stuff.
 public extension String {
 	

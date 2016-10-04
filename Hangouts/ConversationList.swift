@@ -90,18 +90,26 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     
     // Retrieve recent conversations so we can preemptively look up their participants.
     public func syncConversations(count: Int = 25) -> [String: ParrotServiceExtension.Conversation]? {
-        self.client.syncRecentConversations { response in
-            let conv_states = response!.conversationState
-            let sync_timestamp = response!.syncTimestamp// use current_server_time?
-            self.sync_timestamp = Date.from(UTC: Double(sync_timestamp ?? 0))//.origin
-            
-            // Initialize the list of conversations from Client's list of ClientConversationStates.
-            for conv_state in conv_states {
-                self.add_conversation(client_conversation: conv_state.conversation!, client_events: conv_state.event)
-                self.client.userList.addPeople(fromConversation: conv_state.conversation!)
+        let s = DispatchSemaphore(value: 0)
+        var ret = [IConversation]()
+        self.client.opQueue.sync {
+            self.client.syncRecentConversations { response in
+                let conv_states = response!.conversationState
+                let sync_timestamp = response!.syncTimestamp// use current_server_time?
+                self.sync_timestamp = Date.from(UTC: Double(sync_timestamp ?? 0))//.origin
+                
+                // Initialize the list of conversations from Client's list of ClientConversationStates.
+                for conv_state in conv_states {
+                    ret.append(self.add_conversation(client_conversation: conv_state.conversation!, client_events: conv_state.event))
+                }
+                _ = self.client.userList.addPeople(from: ret)
+                s.signal()
             }
         }
-        return nil
+        _ = s.wait(timeout: .distantFuture)
+        return ret.count > 0
+            ? ret.dictionaryMap { return [$0.id: $0 as ParrotServiceExtension.Conversation] }
+            : nil
     }
     
     public func begin(with: [Person]) -> ParrotServiceExtension.Conversation? {

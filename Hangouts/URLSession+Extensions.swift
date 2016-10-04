@@ -35,7 +35,7 @@ public enum Result {
 }
 
 // For creating tasks off the main thread but still one-by-one.
-private var q = DispatchQueue(label: "", attributes: .concurrent, target: nil)
+private var q = DispatchQueue(label: "Foundation.URLSession.Extensions", attributes: .concurrent, target: nil)
 
 public extension URLSession {
 	
@@ -52,17 +52,19 @@ public extension URLSession {
 	public func request(request: URLRequest, type: RequestType = .Data,
 						start: Bool = true, handler: (Result) -> Void) -> URLSessionTask
 	{
-		var task: URLSessionTask? = nil
+        var task: URLSessionTask? = nil
+        let cb: (Data?, URLResponse?, NSError?) -> Void = { data, response, error in
+            q.async {
+                if let error = error {
+                    handler(Result.Failure(error, response))
+                } else {
+                    handler(Result.Success(data!, response))
+                }
+            }
+        }
+        
+        /* TODO: Transparently use a dispatch queue for each session here! */
 		q.sync {
-			let cb: (Data?, URLResponse?, NSError?) -> Void = { data, response, error in
-				if let error = error {
-					handler(Result.Failure(error, response))
-				} else {
-					handler(Result.Success(data!, response))
-				}
-			}
-			
-			/* TODO: Transparently use a dispatch queue for each session here! */
 			switch type {
 			case .Data:
 				task = self.dataTask(with: request, completionHandler: cb)

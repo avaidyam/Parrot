@@ -8,6 +8,7 @@ public final class Channel : NSObject {
 	
 	// The prefix for any BrowserChannel endpoint.
 	private static let URLPrefix = "https://0.client-channel.google.com/client-channel"
+    private static let APIKey = "AIzaSyAfFJCeph-euFSwtmqFZi0kaKk-cZ5wufM"
 	
 	// Long-polling requests send heartbeats every 15 seconds,
 	// so if we miss two in a row, consider the connection dead.
@@ -113,7 +114,7 @@ public final class Channel : NSObject {
 	// Listen for messages on the backwards channel.
 	// This method only returns when the connection has been closed due to an error.
 	public func listen() {
-        log.debug("listen invoked! needs SID? \(self.needsSID)")
+        log.debug("CHANNEL: listen invoked! needs SID? \(self.needsSID)")
         
         // Request a new SID if we don't have one yet, or the previous one became invalid.
         if self.needsSID {
@@ -125,7 +126,7 @@ public final class Channel : NSObject {
             self.needsSID = false
         }
         
-        log.debug("cleaned chunk parser and starting request...")
+        log.debug("CHANNEL: cleaned chunk parser and starting request...")
         
         // Clear any previous push data, since if there was an error it could contain garbage.
         self.chunkParser = ChunkParser()
@@ -139,10 +140,10 @@ public final class Channel : NSObject {
     private func fetchChannelSID(cb: ((Void) -> Void)? = nil) {
         self.sidParam = nil
         self.gSessionIDParam = nil
-        log.debug("sending maps...")
+        log.debug("CHANNEL: sending maps...")
         self.sendMaps {
             let r = Channel.parseSIDResponse(res: $0)
-            log.debug("received response \(r)")
+            log.debug("CHANNEL: received response \(r)")
             self.sidParam = r.sid
             self.gSessionIDParam = r.gSessionID
             cb?()
@@ -186,7 +187,7 @@ public final class Channel : NSObject {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
-        log.debug("maps about to go out!")
+        log.debug("CHANNEL: maps about to go out!")
         // If the network is not connected at the time this request is made, 
         // then the internal SPI logs: `[57] Socket not connected` without
         // erroring up here. Therefore, you should always wait until the network 
@@ -196,7 +197,7 @@ public final class Channel : NSObject {
 				log.error("(maps) Request failed with error: \($0.error!)")
 				return
 			}
-            log.debug("maps succeeded!")
+            log.debug("CHANNEL: maps succeeded!")
 			cb?(data)
 		}
 	}
@@ -223,7 +224,7 @@ public final class Channel : NSObject {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
-        log.debug("request val: \(request)")
+        log.debug("CHANNEL: request val: \(request)")
         
 		self.task = self.session.dataTask(with: request)
 		let p = URLSessionDataDelegateProxy()
@@ -234,13 +235,13 @@ public final class Channel : NSObject {
 			let response = t.response
 			let r = response as? HTTPURLResponse
 			if r?.statusCode >= 400 {
-				log.error("Request failed with: \(error)")
+				log.error("CHANNEL: Request failed with: \(error)")
                 self?.disconnect()
 			} else if r?.statusCode == 200 {
-                log.debug("200 OK: restart long-poll")
+                log.debug("CHANNEL: 200 OK: restart long-poll")
 				self?.longPollRequest()
 			} else {
-				log.error("Received unknown response code \(r?.statusCode)")
+				log.error("CHANNEL: Received unknown response code \(r?.statusCode)")
                 self?.disconnect()
 			}
 		}
@@ -296,33 +297,32 @@ public final class Channel : NSObject {
 	// Send a Protocol Buffer or JSON formatted chat API request.
 	// endpoint is the chat API endpoint to use.
 	// request_pb: The request body as a Protocol Buffer message.
-	// response_pb: The response body as a Protocol Buffer message.
+    // response_pb: The response body as a Protocol Buffer message.
+    // Valid formats are: 'json' (JSON), 'protojson' (pblite), and 'proto'
+    // (binary Protocol Buffer). 'proto' requires manually setting an extra
+    // header 'X-Goog-Encode-Response-If-Executable: base64'.
 	internal func request(
 		endpoint: String,
 		body: AnyObject,
 		use_json: Bool = true,
+		content_type: String = "application/json+protobuf",
 		cb: (Result) -> Void
-		) {
-		base_request(path: "https://clients6.google.com/chat/v1/\(endpoint)",
-		             content_type: "application/json+protobuf",
-		             data: try! JSONSerialization.data(withJSONObject: body, options: []),
-		             use_json: use_json,
-		             cb: cb
+        ) {
+        log.debug("REQUEST: \(endpoint)")
+        let path = "https://clients6.google.com/chat/v1/\(endpoint)"
+        let data = try! JSONSerialization.data(withJSONObject: body, options: [])
+		base_request(path: path, data: data, use_json: use_json, cb: cb
 		)
 	}
-	
-	// Valid formats are: 'json' (JSON), 'protojson' (pblite), and 'proto'
-	// (binary Protocol Buffer). 'proto' requires manually setting an extra
-	// header 'X-Goog-Encode-Response-If-Executable: base64'.
 	internal func base_request(
 		path: String,
-		content_type: String,
+		content_type: String = "application/json+protobuf",
 		data: Data,
 		use_json: Bool = true,
 		cb: (Result) -> Void
 		) {
 		let params = ["alt": use_json ? "json" : "protojson"]
-		let url = URL(string: (path + "?" + "key=AIzaSyAfFJCeph-euFSwtmqFZi0kaKk-cZ5wufM" + "&" + params.encodeURL()))!
+		let url = URL(string: (path + "?key=" + Channel.APIKey + "&" + params.encodeURL()))!
 		let request = NSMutableURLRequest(url: url)
 		request.httpMethod = "POST"
 		request.httpBody = data

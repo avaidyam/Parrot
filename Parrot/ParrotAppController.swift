@@ -83,12 +83,12 @@ public class ParrotAppController: NSApplicationController {
                         }
                     }
                     
-                    DispatchQueue.main.async {
+                    /*DispatchQueue.main.async {
                         let a = NSAlert()
                         a.alertStyle = .critical
                         a.messageText = "Parrot has connected."
                         a.runModal()
-                    }
+                    }*/
                     //UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
                     //                 contentImage: NSImage(named: NSImageNameCaution)).post()
 			}

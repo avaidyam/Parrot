@@ -22,6 +22,7 @@ public final class Client: Service {
 	
 	public let config: URLSessionConfiguration
 	public var channel: Channel?
+    internal var opQueue = DispatchQueue(label: "Hangouts.Client", attributes: [.concurrent, .qosUserInitiated], target: nil)
 	
 	public var email: String?
 	public var client_id: String?

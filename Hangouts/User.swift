@@ -129,16 +129,34 @@ public class UserList: Directory, Collection {
 		}
 	}
     
-    internal func addPeople(fromConversation conversation: Conversation) {
-        self.client.getEntitiesByID(chat_id_list: conversation.participantData.flatMap { $0.id?.chatId }) { response in
-            let entities = response?.entityResult.flatMap { $0.entity } ?? []
-            for entity in entities {
-                let user = User(entity: entity, selfUser: (self.me as! User).id)
-                if self.users[user.id] == nil {
-                    self.users[user.id] = user
+    // Convenience for the latter method.
+    internal func addPeople(from conversations: [IConversation]) -> [Person] {
+        return self.addPeople(from: conversations.map { $0.conversation })
+    }
+    
+    internal func addPeople(from conversations: [Conversation]) -> [Person] {
+        var ret = [Person]()
+        let s = DispatchSemaphore(value: 0)
+        
+        // Prepare a set of all conversation participant data first to batch the query.
+        var required = Set<ConversationParticipantData>()
+        conversations.forEach { conv in conv.participantData.forEach { required.insert($0) } }
+        
+        self.client.opQueue.sync {
+            self.client.getEntitiesByID(chat_id_list: required.flatMap { $0.id?.chatId }) { response in
+                let entities = response?.entityResult.flatMap { $0.entity } ?? []
+                for entity in entities {
+                    let user = User(entity: entity, selfUser: (self.me as! User).id)
+                    if self.users[user.id] == nil {
+                        self.users[user.id] = user
+                    }
+                    ret.append(user as Person)
                 }
+                s.signal()
             }
         }
+        _ = s.wait(timeout: .distantFuture)
+        return ret
     }
     
     internal func getSelfInfo() {
@@ -162,7 +180,7 @@ public class UserList: Directory, Collection {
 			.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) {
 				if  let userInfo = $0.userInfo, state_update = userInfo[Client.didUpdateStateKey.rawValue],
                     let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
-					self.addPeople(fromConversation: conversation)
+					_ = self.addPeople(from: [conversation])
 				}
 		}
 	}
