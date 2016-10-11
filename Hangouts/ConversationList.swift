@@ -224,24 +224,34 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 	// Receive a ClientStateUpdate and fan out to Conversations
     public func clientDidUpdateState(client: Client, update: StateUpdate) {
         if let note = update.conversationNotification {
+            log.debug("clientDidUpdateState: conversationNotification")
             _conversationNotification(note)
-		} else if let note = update.eventNotification {
+        } else if let note = update.eventNotification {
+            log.debug("clientDidUpdateState: eventNotification")
 			_eventNotification(note)
-		} else if let note = update.focusNotification {
+        } else if let note = update.focusNotification {
+            log.debug("clientDidUpdateState: focusNotification")
 			_focusNotification(note)
-		} else if let note = update.typingNotification {
+        } else if let note = update.typingNotification {
+            log.debug("clientDidUpdateState: typingNotification")
 			_typingNotification(note)
-		} else if let note = update.notificationLevelNotification {
+        } else if let note = update.notificationLevelNotification {
+            log.debug("clientDidUpdateState: notificationLevelNotification")
 			_notificationLevelNotification(note)
-		} else if let note = update.watermarkNotification {
+        } else if let note = update.watermarkNotification {
+            log.debug("clientDidUpdateState: watermarkNotification")
 			_watermarkNotification(note)
-		} else if let note = update.viewModification {
+        } else if let note = update.viewModification {
+            log.debug("clientDidUpdateState: viewModification")
 			_viewModification(note)
-		} else if let note = update.selfPresenceNotification {
+        } else if let note = update.selfPresenceNotification {
+            log.debug("clientDidUpdateState: selfPresenceNotification")
 			_selfPresenceNotification(note)
-		} else if let note = update.deleteNotification {
+        } else if let note = update.deleteNotification {
+            log.debug("clientDidUpdateState: deleteNotification")
 			_deleteNotification(note)
-		} else if let note = update.presenceNotification {
+        } else if let note = update.presenceNotification {
+            log.debug("clientDidUpdateState: presenceNotification")
 			_presenceNotification(note)
 		}
 	}

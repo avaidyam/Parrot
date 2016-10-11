@@ -94,7 +94,8 @@ public final class Channel : NSObject {
 	
 	// For use in Client:
 	internal var session = URLSession()
-	internal var proxy = URLSessionDelegateProxy()
+    internal var proxy = URLSessionDelegateProxy()
+    internal var queue = DispatchQueue(label: "Hangouts.Channel", attributes: [.concurrent, .qosUserInitiated], target: nil)
 	
     internal var isConnected = false
     internal var onConnectCalled = false
@@ -112,24 +113,27 @@ public final class Channel : NSObject {
 	
 	// Listen for messages on the backwards channel.
 	// This method only returns when the connection has been closed due to an error.
-	public func listen() {
-        log.debug("listen invoked! needs SID? \(self.needsSID)")
-        
-        // Request a new SID if we don't have one yet, or the previous one became invalid.
-        if self.needsSID {
-            let s = DispatchSemaphore(value: 0)
-            self.fetchChannelSID {
-                s.signal()
-            }
-            _ = s.wait(timeout: .distantFuture)
-            self.needsSID = false
+    public func listen() {
+        func _firstListen() {
+            log.debug("cleaned chunk parser and starting request...")
+            
+            // Clear any previous push data, since if there was an error it could contain garbage.
+            self.chunkParser = ChunkParser()
+            self.longPollRequest()
         }
         
-        log.debug("cleaned chunk parser and starting request...")
-        
-        // Clear any previous push data, since if there was an error it could contain garbage.
-        self.chunkParser = ChunkParser()
-        self.longPollRequest()
+        log.debug("listen invoked! needs SID? \(self.needsSID)")
+        self.queue.async {
+            // Request a new SID if we don't have one yet, or the previous one became invalid.
+            if self.needsSID {
+                self.fetchChannelSID {
+                    _firstListen()
+                    self.needsSID = false
+                }
+            } else {
+                _firstListen()
+            }
+        }
     }
     
     // Creates a new channel for receiving push data.
