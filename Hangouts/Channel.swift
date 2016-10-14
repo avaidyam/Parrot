@@ -95,7 +95,7 @@ public final class Channel : NSObject {
 	// For use in Client:
 	internal var session = URLSession()
     internal var proxy = URLSessionDelegateProxy()
-    internal var queue = DispatchQueue(label: "Hangouts.Channel", attributes: [.concurrent, .qosUserInitiated], target: nil)
+    internal var queue = DispatchQueue(label: "Hangouts.Channel", attributes: [.serial, .qosUserInitiated], target: nil)
 	
     internal var isConnected = false
     internal var onConnectCalled = false
@@ -232,7 +232,9 @@ public final class Channel : NSObject {
 		self.task = self.session.dataTask(with: request)
 		let p = URLSessionDataDelegateProxy()
 		p.didReceiveData = { _,_,data in
-			self.onPushData(data: data)
+            self.queue.async {
+                self.onPushData(data: data)
+            }
 		}
 		p.didComplete = { [weak self] _,t,error in
 			let response = t.response
