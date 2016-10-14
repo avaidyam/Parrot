@@ -45,7 +45,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
             // nothing here
         }
         let c = _c.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) { note in
-            if let val = (note.userInfo)?[Client.didUpdateStateKey.rawValue] as? Wrapper<StateUpdate> {
+            if let val = (note.userInfo)?[Client.didUpdateStateKey] as? Wrapper<StateUpdate> {
                 self.clientDidUpdateState(client: self.client, update: val.element)
             } else {
                 log.error("Encountered an error! \(note)")

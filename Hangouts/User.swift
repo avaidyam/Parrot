@@ -181,7 +181,7 @@ public class UserList: Directory, Collection {
         
 		self.observer = NotificationCenter.default
 			.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) {
-				if  let userInfo = $0.userInfo, let state_update = userInfo[Client.didUpdateStateKey.rawValue],
+				if  let userInfo = $0.userInfo, let state_update = userInfo[Client.didUpdateStateKey],
                     let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
 					_ = self.addPeople(from: [conversation])
 				}

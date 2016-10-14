@@ -12,7 +12,7 @@ public final class Client: Service {
 	public static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidConnect")
 	public static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidDisconnect")
 	public static let didUpdateStateNotification = Notification.Name(rawValue: "Hangouts.Client.UpdateState")
-	public static let didUpdateStateKey = Notification.Name(rawValue: "Hangouts.Client.UpdateState.Key")
+	public static let didUpdateStateKey = "Hangouts.Client.UpdateState.Key"
 	
 	// Timeout to send for setactiveclient requests:
 	public static let ACTIVE_TIMEOUT_SECS = 120
@@ -48,7 +48,7 @@ public final class Client: Service {
             NotificationCenter.default.post(name: Client.didDisconnectNotification, object: self)
         }
         let c = _c.addObserver(forName: Channel.didReceiveMessageNotification, object: self.channel, queue: nil) { note in
-            if let val = (note.userInfo)?[Channel.didReceiveMessageKey.rawValue] as? [Any] {
+            if let val = (note.userInfo)?[Channel.didReceiveMessageKey] as? [Any] {
                 self.channel(channel: self.channel!, didReceiveMessage: val)
             } else {
                 log.error("Encountered an error! \(note)")
@@ -213,7 +213,7 @@ public final class Client: Service {
 		}
 		if let cbu = wrapper["2"] as? [String: Any] {
 			let val2 = (cbu["2"]! as! String).data(using: String.Encoding.utf8)
-			let payload = try! JSONSerialization.jsonObject(with: val2!, options: .allowFragments) as! [Any]
+			let payload = try! JSONSerialization.jsonObject(with: val2!, options: .allowFragments) as! [AnyObject]
 			
 			// This is a (Client)BatchUpdate containing StateUpdate messages.
 			// payload[1] is a list of state updates.

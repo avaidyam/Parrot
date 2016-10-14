@@ -20,7 +20,7 @@ public final class Channel : NSObject {
 	public static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidConnect")
 	public static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidDisconnect")
 	public static let didReceiveMessageNotification = Notification.Name(rawValue: "Hangouts.Channel.ReceiveMessage")
-	public static let didReceiveMessageKey = Notification.Name(rawValue: "Hangouts.Channel.ReceiveMessage.Key")
+	public static let didReceiveMessageKey = "Hangouts.Channel.ReceiveMessage.Key"
 	
 	// Parse data from the backward channel into chunks.
 	// Responses from the backward channel consist of a sequence of chunks which
