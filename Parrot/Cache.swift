@@ -29,7 +29,7 @@ public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> V
 	
 	// Case 4: We can request the resource -> return image.
 	let semaphore = DispatchSemaphore(value: 0)
-	URLSession.shared().request(request: URLRequest(url: url)) {
+	URLSession.shared.request(request: URLRequest(url: url)) {
 		if let data = $0.data {
 			_cache[id] = data
 			handler?(data)

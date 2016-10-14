@@ -17,7 +17,7 @@ public class Authenticator {
 	
 	private static var window: NSWindow? = nil
 	private static var validURL: URL? = nil
-	private static var handler: ((oauth_code: String) -> Void)? = nil
+	private static var handler: ((_ oauth_code: String) -> Void)? = nil
 	private static var delegate = WebDelegate()
 	
 	class WebDelegate: NSObject, WebPolicyDelegate, WebResourceLoadDelegate {
@@ -43,12 +43,12 @@ public class Authenticator {
 		}
         */
         
-        func webView(_ sender: WebView!, resource identifier: AnyObject!, didFinishLoadingFrom dataSource: WebDataSource!) {
+        func webView(_ sender: WebView!, resource identifier: Any!, didFinishLoadingFrom dataSource: WebDataSource!) {
             guard   let cookiejar = dataSource.response as? HTTPURLResponse,
                     let cookies = cookiejar.allHeaderFields["Set-Cookie"] as? String,
                     let cookie = cookies.substring(between: "oauth_code=", and: ";")
             else { return }
-            handler?(oauth_code: cookie ?? "")
+            handler?(cookie)
             sender.close()
         }
 	}
@@ -61,7 +61,7 @@ public class Authenticator {
 		let at = SecureSettings[ACCESS_TOKEN, domain: GROUP_DOMAIN] as? String
 		let rt = SecureSettings[REFRESH_TOKEN, domain: GROUP_DOMAIN] as? String
 		
-		if let at = at, rt = rt {
+		if let at = at, let rt = rt {
 			return (access_token: at, refresh_token: rt)
 		} else {
 			clearTokens()
@@ -87,11 +87,11 @@ public class Authenticator {
 		SecureSettings[REFRESH_TOKEN, domain: GROUP_DOMAIN] = nil
 	}
 	
-	public class func authenticateClient(_ cb: (configuration: URLSessionConfiguration) -> Void) {
+	public class func authenticateClient(_ cb: @escaping (_ configuration: URLSessionConfiguration) -> Void) {
 		
 		// Prepare the manager for any requests.
-		let cfg = URLSessionConfiguration.default()
-		cfg.httpCookieStorage = HTTPCookieStorage.shared()
+		let cfg = URLSessionConfiguration.default
+		cfg.httpCookieStorage = HTTPCookieStorage.shared
 		cfg.httpAdditionalHeaders = _defaultHTTPHeaders
 		let session = URLSession(configuration: cfg)
 		
@@ -124,7 +124,7 @@ public class Authenticator {
                             log.info("Request failed with error: \($0.error!)")
                             return
                         }
-                        cb(configuration: session.configuration)
+                        cb(session.configuration)
                     }
 				}
 			}
@@ -138,7 +138,7 @@ public class Authenticator {
                 //  - first: authenticate(auth_code)
                 authenticate(auth_code: oauth_code, cb: { (access_token, refresh_token) in
                     saveTokens(access_token, refresh_token: refresh_token)
-                    cb(configuration: session.configuration)
+                    cb(session.configuration)
                 })
 			}
 		}
@@ -149,7 +149,7 @@ public class Authenticator {
 	- parameter auth_code the authentication code
 	- parameter cb a callback to execute upon completion
 	*/
-	private class func authenticate(auth_code: String, cb: (access_token: String, refresh_token: String) -> Void) {
+	private class func authenticate(auth_code: String, cb: @escaping (_ access_token: String, _ refresh_token: String) -> Void) {
 		let token_request_data = [
 			"client_id": OAUTH2_CLIENT_ID,
 			"client_secret": OAUTH2_CLIENT_SECRET,
@@ -164,16 +164,16 @@ public class Authenticator {
 		req.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
 		req.httpBody = query(parameters: token_request_data).data(using: .utf8)
 		
-		URLSession.shared().request(request: req) {
+		URLSession.shared.request(request: req) {
 			guard let data = $0.data else {
 				log.info("Request failed with error: \($0.error!)")
 				return
 			}
 			
 			do {
-				let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
-				if let access = json[ACCESS_TOKEN] as? String, refresh = json[REFRESH_TOKEN] as? String  {
-					cb(access_token: access, refresh_token: refresh)
+				let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+				if let access = json[ACCESS_TOKEN] as? String, let refresh = json[REFRESH_TOKEN] as? String  {
+					cb(access, refresh)
 				} else {
 					log.info("JSON was invalid (auth): \(json)")
 				}
@@ -189,7 +189,7 @@ public class Authenticator {
 	- parameter refresh_token the specified refresh_token
 	- parameter cb a callback to execute upon completion
 	*/
-	private class func authenticate(session: URLSession, refresh_token: String, cb: (access_token: String, refresh_token: String) -> Void) {
+	private class func authenticate(session: URLSession, refresh_token: String, cb: @escaping (_ access_token: String, _ refresh_token: String) -> Void) {
 		let token_request_data = [
 			"client_id": OAUTH2_CLIENT_ID,
 			"client_secret": OAUTH2_CLIENT_SECRET,
@@ -210,9 +210,9 @@ public class Authenticator {
 			}
 			
 			do {
-				let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
+				let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
 				if let access = json[ACCESS_TOKEN] as? String  {
-					cb(access_token: access, refresh_token: refresh_token)
+					cb(access, refresh_token)
 				} else {
 					log.info("JSON was invalid (refresh): \(json)")
 				}
@@ -222,7 +222,7 @@ public class Authenticator {
 		}
 	}
 	
-	private class func prompt(url: URL, valid: URL, cb: (oauth_code: String) -> Void) {
+	private class func prompt(url: URL, valid: URL, cb: @escaping (_ oauth_code: String) -> Void) {
 		validURL = valid as URL
 		handler = cb
 		

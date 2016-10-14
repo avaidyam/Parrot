@@ -95,7 +95,7 @@ public final class Channel : NSObject {
 	// For use in Client:
 	internal var session = URLSession()
     internal var proxy = URLSessionDelegateProxy()
-    internal var queue = DispatchQueue(label: "Hangouts.Channel", attributes: [.serial, .qosUserInitiated], target: nil)
+    internal var queue = DispatchQueue(label: "Hangouts.Channel", qos: .userInitiated)
 	
     internal var isConnected = false
     internal var onConnectCalled = false
@@ -154,12 +154,12 @@ public final class Channel : NSObject {
     }
 	
 	// Sends a request to the server containing maps (dicts).
-	public func sendMaps(mapList: [[String: AnyObject]]? = nil, cb: ((Data) -> Void)? = nil) {
+	public func sendMaps(mapList: [[String: Any]]? = nil, cb: ((Data) -> Void)? = nil) {
 		var params = [
 			"VER":		8,			// channel protocol version
 			"RID":		81188,		// request identifier
 			"ctype":	"hangouts",	// client type
-		]
+		] as [String : Any]
 		if self.gSessionIDParam != nil {
 			params["gsessionid"] = self.gSessionIDParam!
 		}
@@ -170,7 +170,7 @@ public final class Channel : NSObject {
 		var data_dict = [
 			"count": mapList?.count ?? 0,
 			"ofs": 0
-        ] as [String: AnyObject]
+        ] as [String: Any]
 		
 		if let mapList = mapList {
 			for (map_num, map_) in mapList.enumerated() {
@@ -209,7 +209,7 @@ public final class Channel : NSObject {
 	// This method uses keep-alive to make re-opening the request faster, but
 	// the remote server will set the "Connection: close" header once an hour.
 	private func longPollRequest() {
-		let params: [String: AnyObject] = [
+		let params: [String: Any] = [
 			"VER": 8,  // channel protocol version
 			"gsessionid": self.gSessionIDParam ?? "",
 			"RID": "rpc",  // request identifier
@@ -239,7 +239,7 @@ public final class Channel : NSObject {
 		p.didComplete = { [weak self] _,t,error in
 			let response = t.response
 			let r = response as? HTTPURLResponse
-			if r?.statusCode >= 400 {
+			if (r?.statusCode)! >= 400 {
 				log.error("Request failed with: \(error)")
                 self?.disconnect()
 			} else if r?.statusCode == 200 {
@@ -261,7 +261,7 @@ public final class Channel : NSObject {
         self.proxy[self.task!] = nil
         if self.isConnected {
             self.isConnected = false
-            NotificationCenter.default().post(name: Channel.didDisconnectNotification, object: self)
+            NotificationCenter.default.post(name: Channel.didDisconnectNotification, object: self)
         }
         self.needsSID = true
     }
@@ -276,21 +276,21 @@ public final class Channel : NSObject {
 			if !self.isConnected {
 				if self.onConnectCalled {
 					self.isConnected = true
-					NotificationCenter.default()
+					NotificationCenter.default
 						.post(name: Channel.didConnectNotification, object: self)
 				} else {
 					self.onConnectCalled = true
 					self.isConnected = true
-					NotificationCenter.default()
+					NotificationCenter.default
 						.post(name: Channel.didConnectNotification, object: self)
 				}
 			}
 			
-			if let json = try? chunk.decodeJSON(), let container = json as? [AnyObject] {
+			if let json = try? chunk.decodeJSON(), let container = json as? [Any] {
 				for inner in container {
 					//let array_id = inner[0]
-					if let array = inner[1] as? [AnyObject] {
-						NotificationCenter.default()
+					if let _inner = inner as? [Any], let array = _inner[1] as? [Any] {
+						NotificationCenter.default
 							.post(name: Channel.didReceiveMessageNotification, object: self,
 								userInfo: [Channel.didReceiveMessageKey: array])
 					}
@@ -308,10 +308,10 @@ public final class Channel : NSObject {
     // header 'X-Goog-Encode-Response-If-Executable: base64'.
 	internal func request(
 		endpoint: String,
-		body: AnyObject,
+		body: Any,
 		use_json: Bool = true,
 		content_type: String = "application/json+protobuf",
-		cb: (Result) -> Void
+		cb: @escaping (Result) -> Void
         ) {
         log.debug("REQUEST: \(endpoint)")
         let path = "https://clients6.google.com/chat/v1/\(endpoint)"
@@ -324,7 +324,7 @@ public final class Channel : NSObject {
 		content_type: String = "application/json+protobuf",
 		data: Data,
 		use_json: Bool = true,
-		cb: (Result) -> Void
+		cb: @escaping (Result) -> Void
 		) {
 		let params = ["alt": use_json ? "json" : "protojson"]
 		let url = URL(string: (path + "?key=" + Channel.APIKey + "&" + params.encodeURL()))!
@@ -348,7 +348,7 @@ public final class Channel : NSObject {
 	
 	// Get the cookie value of the key given from the NSHTTPCookieStorage.
 	internal class func getCookieValue(key: String) -> String? {
-		if let c = HTTPCookieStorage.shared().cookies {
+		if let c = HTTPCookieStorage.shared.cookies {
 			if let match = (c.filter {
 				($0 as HTTPCookie).name == key &&
 					($0 as HTTPCookie).domain == ".google.com"

@@ -22,7 +22,7 @@ public final class Client: Service {
 	
 	public let config: URLSessionConfiguration
 	public var channel: Channel?
-    internal var opQueue = DispatchQueue(label: "Hangouts.Client", attributes: [.concurrent, .qosUserInitiated], target: nil)
+    internal var opQueue = DispatchQueue(label: "Hangouts.Client", qos: .userInitiated, attributes: .concurrent)
 	
 	public var email: String?
 	public var client_id: String?
@@ -40,15 +40,15 @@ public final class Client: Service {
         // A notification-based delegate replacement:
         //
         
-        let _c = NotificationCenter.default()
+        let _c = NotificationCenter.default
         let a = _c.addObserver(forName: Channel.didConnectNotification, object: self.channel, queue: nil) { _ in
-            NotificationCenter.default().post(name: Client.didConnectNotification, object: self)
+            NotificationCenter.default.post(name: Client.didConnectNotification, object: self)
         }
         let b = _c.addObserver(forName: Channel.didDisconnectNotification, object: self.channel, queue: nil) { _ in
-            NotificationCenter.default().post(name: Client.didDisconnectNotification, object: self)
+            NotificationCenter.default.post(name: Client.didDisconnectNotification, object: self)
         }
         let c = _c.addObserver(forName: Channel.didReceiveMessageNotification, object: self.channel, queue: nil) { note in
-            if let val = (note.userInfo)?[Channel.didReceiveMessageKey.rawValue] as? [AnyObject] {
+            if let val = (note.userInfo)?[Channel.didReceiveMessageKey.rawValue] as? [Any] {
                 self.channel(channel: self.channel!, didReceiveMessage: val)
             } else {
                 log.error("Encountered an error! \(note)")
@@ -61,7 +61,7 @@ public final class Client: Service {
         
         // Remove all the observers so we aren't receiving calls later on.
         self.tokens.forEach {
-            NotificationCenter.default().removeObserver($0)
+            NotificationCenter.default.removeObserver($0)
         }
     }
 	
@@ -76,7 +76,7 @@ public final class Client: Service {
 	}
 	
 	// Establish a connection to the chat server.
-    public func connect(_ onConnect: (ErrorProtocol?) -> ()) {
+    public func connect(_ onConnect: (Error?) -> ()) {
         self.channel?.listen()
     }
 	
@@ -92,14 +92,14 @@ public final class Client: Service {
 	
 	/* TODO: Can't disconnect a Channel yet. */
 	// Gracefully disconnect from the server.
-	public func disconnect(_ onDisconnect: (ErrorProtocol?) -> ()) {
+	public func disconnect(_ onDisconnect: (Error?) -> ()) {
 		self.channel?.disconnect()
 	}
 	
     public var connected: Bool {
         return self.channel?.isConnected ?? false
     }
-	public func synchronize(_ onSynchronize: (ErrorProtocol?) -> ()) {
+	public func synchronize(_ onSynchronize: (Error?) -> ()) {
 		
 	}
 	
@@ -125,7 +125,7 @@ public final class Client: Service {
 			// Update these immediately so if the function is called again
 			// before the API request finishes, we don't start extra requests.
 			active_client_state = ActiveClientState.IsActive
-			last_active_secs = Date().timeIntervalSince1970
+			last_active_secs = Date().timeIntervalSince1970 as NSNumber?
 			
 			
 			// The first time this is called, we need to retrieve the user's email address.
@@ -175,7 +175,7 @@ public final class Client: Service {
 	}
 	
 	// Parse channel array and call the appropriate events.
-	public func channel(channel: Channel, didReceiveMessage message: [AnyObject]) {
+	public func channel(channel: Channel, didReceiveMessage message: [Any]) {
 		
 		// Add services to the channel.
 		//
@@ -207,22 +207,22 @@ public final class Client: Service {
 		let wrapper = try! thr.decodeJSON()
 		
 		// Once client_id is received, the channel is ready to have services added.
-		if let id = wrapper["3"] as? [String: AnyObject] {
+		if let id = wrapper["3"] as? [String: Any] {
 			self.client_id = (id["2"] as! String)
 			addChannelServices()
 		}
-		if let cbu = wrapper["2"] as? [String: AnyObject] {
+		if let cbu = wrapper["2"] as? [String: Any] {
 			let val2 = (cbu["2"]! as! String).data(using: String.Encoding.utf8)
-			let payload = try! JSONSerialization.jsonObject(with: val2!, options: .allowFragments)
+			let payload = try! JSONSerialization.jsonObject(with: val2!, options: .allowFragments) as! [Any]
 			
 			// This is a (Client)BatchUpdate containing StateUpdate messages.
 			// payload[1] is a list of state updates.
 			if payload[0] as? String == "cbu" {
 				var b = BatchUpdate() as ProtoMessage
-				PBLiteSerialization.decode(message: &b, pblite: payload as! [AnyObject], ignoreFirstItem: true)
+				PBLiteSerialization.decode(message: &b, pblite: payload, ignoreFirstItem: true)
 				for state_update in (b as! BatchUpdate).stateUpdate {
 					self.active_client_state = state_update.stateUpdateHeader!.activeClientState!
-					NotificationCenter.default().post(
+					NotificationCenter.default.post(
 						name: Client.didUpdateStateNotification, object: self,
 						userInfo: [Client.didUpdateStateKey: Wrapper(state_update)])
 				}
@@ -232,7 +232,7 @@ public final class Client: Service {
 		}
 	}
     
-    public func buildUserConversationList(_ completionHandler: () -> Void = {}) {
+    public func buildUserConversationList(_ completionHandler: @escaping () -> Void = {}) {
         self.getSelfInfo {
             let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
             let userlist = UserList(client: self, me: selfUser)

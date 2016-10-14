@@ -39,7 +39,7 @@ public class AuthenticatorCLI {
 			}
 			
 			do {
-				let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
+				let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
 				if let access = json["access_token"] as? String  {
 					cb(access_token: access, refresh_token: refresh_token)
 				} else {

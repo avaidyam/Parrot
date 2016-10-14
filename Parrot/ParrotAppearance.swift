@@ -17,8 +17,8 @@ public struct ParrotAppearance {
 	/// into a locally stored default that can be observed normally.
 	private static let registerDarkModeActiveListener: NSObjectProtocol = {
 		DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("AppleInterfaceThemeChangedNotification")) { n in
-			let style = UserDefaults.standard().persistentDomain(forName: UserDefaults.globalDomain)?["AppleInterfaceStyle"]
-			let dark = (style != nil) && (style as? NSString != nil) && (style!.caseInsensitiveCompare("dark") == .orderedSame)
+			let style = UserDefaults.standard.persistentDomain(forName: UserDefaults.globalDomain)?["AppleInterfaceStyle"]
+			let dark = (style != nil) && (style as? NSString != nil) && ((style as! NSString).caseInsensitiveCompare("dark") == .orderedSame)
 			Settings[Parrot.SystemInterfaceStyle] = dark
 		}
 	}()
@@ -26,7 +26,7 @@ public struct ParrotAppearance {
 	/// Trampolines the UserDefaults.didChangeNotification notification and triggers any
 	/// registered listeners IFF the appearance has changed. [KVO doesn't work with UserDefaults.]
 	private static let registerNotificationChangeListener: NSObjectProtocol = {
-		NotificationCenter.default().addObserver(forName: UserDefaults.didChangeNotification) { n in
+		NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification) { n in
 			
 			// Detect InterfaceStyle changes.
 			let currentInterfaceStyle = ParrotAppearance.interfaceStyle()
@@ -54,7 +54,7 @@ public struct ParrotAppearance {
 	private class InterfaceStyleListener {
 		weak var object: AnyObject?
 		let handler: (InterfaceStyle) -> Void
-		private required init(object: AnyObject, handler: (InterfaceStyle) -> Void) {
+		fileprivate required init(object: AnyObject, handler: @escaping (InterfaceStyle) -> Void) {
 			self.object = object
 			self.handler = handler
 		}
@@ -64,7 +64,7 @@ public struct ParrotAppearance {
 	private class VibrancyStyleListener {
 		weak var object: AnyObject?
 		let handler: (VibrancyStyle) -> Void
-		private required init(object: AnyObject, handler: (VibrancyStyle) -> Void) {
+		fileprivate required init(object: AnyObject, handler: @escaping (VibrancyStyle) -> Void) {
 			self.object = object
 			self.handler = handler
 		}
@@ -108,9 +108,9 @@ public struct ParrotAppearance {
 		
 		public func visualEffectState() -> NSVisualEffectState {
 			switch self {
-			case Always: return .active
-			case Never: return .inactive
-			case Automatic: return .followsWindowActiveState
+			case .Always: return .active
+			case .Never: return .inactive
+			case .Automatic: return .followsWindowActiveState
 			}
 		}
 	}
@@ -149,7 +149,7 @@ public struct ParrotAppearance {
 	/// If invokeImmediately is true, the handler will be invoked immediately.
 	/// This is useful in case appearance update logic is unified and can be streamlined.
 	/// Note: this should be done when a view appears on-screen.
-	public static func registerInterfaceStyleListener(observer: AnyObject, invokeImmediately: Bool = false, handler: (InterfaceStyle) -> Void) {
+	public static func registerInterfaceStyleListener(observer: AnyObject, invokeImmediately: Bool = false, handler: @escaping (InterfaceStyle) -> Void) {
 		_ = registerDarkModeActiveListener; _ = registerNotificationChangeListener // SETUP
 		_interfaceStyleListeners.append(InterfaceStyleListener(object: observer, handler: handler))
 		if invokeImmediately {
@@ -172,7 +172,7 @@ public struct ParrotAppearance {
 	/// If invokeImmediately is true, the handler will be invoked immediately.
 	/// This is useful in case appearance update logic is unified and can be streamlined.
 	/// Note: this should be done when a view appears on-screen.
-	public static func registerVibrancyStyleListener(observer: AnyObject, invokeImmediately: Bool = false, handler: (VibrancyStyle) -> Void) {
+	public static func registerVibrancyStyleListener(observer: AnyObject, invokeImmediately: Bool = false, handler: @escaping (VibrancyStyle) -> Void) {
 		_ = registerDarkModeActiveListener; _ = registerNotificationChangeListener // SETUP
 		_vibrancyStyleListeners.append(VibrancyStyleListener(object: observer, handler: handler))
 		if invokeImmediately {

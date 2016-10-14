@@ -31,14 +31,14 @@ public struct AppActivity {
 	public var logger: Logger! = nil
 	
 	public static func start(_ string: String, cancellable: Bool = false) {
-		let holder = ProcessInfo.processInfo().beginActivity(mode, reason: string)
+		let holder = ProcessInfo.processInfo.beginActivity(options: mode, reason: string)
 		activities[string] = holder
 		log.info("Starting activity \"\(string)\"")
 	}
 	
 	public static func end(_ string: String) {
 		if let act = activities[string] {
-			ProcessInfo.processInfo().endActivity(act)
+			ProcessInfo.processInfo.endActivity(act)
 			log.info("Ending activity \"\(string)\"")
 		}
 	}

@@ -151,7 +151,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			default_medium = r
 		}
 		for medium_option in medium_options! {
-			if let m = medium_option.currentDefault where m {
+			if let m = medium_option.currentDefault, m {
 				default_medium = medium_option.deliveryMedium!; break
 			}
 		}
@@ -196,6 +196,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	
 	public var muted: Bool {
 		get {
+            log.debug("NOT IMPLEMENTED: Conversation.muted.get!")
 			return false
 			//return self.setConversationNotificationLevel(level: <#T##NotificationLevel#>, cb: nil)
 		}
@@ -223,7 +224,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         cb: (() -> Void)? = nil
     ) {
         let otr_status = (is_off_the_record ? OffTheRecordStatus.OffTheRecord : OffTheRecordStatus.OnTheRecord)
-        if let image_data = image_data, image_name = image_name {
+        if let image_data = image_data, let image_name = image_name {
 			client.uploadImage(data: image_data, filename: image_name) { photoID in
 				self.client.sendChatMessage(conversation_id: self.id,
 					segments: segments.map { $0.serialize() },

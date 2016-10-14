@@ -185,7 +185,7 @@ extension ParrotViewController: NCWidgetProviding {
 	func widgetMarginInsets(forProposedMarginInsets defaultMarginInset: EdgeInsets) -> EdgeInsets {
 		return NSEdgeInsetsZero
 	}
-	func widgetPerformUpdate(completionHandler: ((NCUpdateResult) -> Void)) {
+	func widgetPerformUpdate(completionHandler: @escaping ((NCUpdateResult) -> Void)) {
 		completionHandler(.newData)
 	}
 	var widgetAllowsEditing: Bool {

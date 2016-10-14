@@ -10,7 +10,7 @@ import Foundation
 
 struct Callback<Value> {
     let onFulfilled: (Value) -> ()
-    let onRejected: (ErrorProtocol) -> ()
+    let onRejected: (Error) -> ()
     let queue: DispatchQueue
     
     func callFulfill(_ value: Value) {
@@ -19,7 +19,7 @@ struct Callback<Value> {
         })
     }
     
-    func callReject(_ error: ErrorProtocol) {
+    func callReject(_ error: Error) {
         queue.async(execute: {
             self.onRejected(error)
         })
@@ -38,7 +38,7 @@ enum State<Value>: CustomStringConvertible {
     
     /// The promise failed with the included error.
     /// Will not transition to any other state.
-    case rejected(error: ErrorProtocol)
+    case rejected(error: Error)
     
     
     var isPending: Bool {
@@ -72,7 +72,7 @@ enum State<Value>: CustomStringConvertible {
         return nil
     }
     
-    var error: ErrorProtocol? {
+    var error: Error? {
         if case let .rejected(error) = self {
             return error
         }
@@ -92,11 +92,11 @@ enum State<Value>: CustomStringConvertible {
     }
 }
 
-private let lockQueue = DispatchQueue(label: "promise_lock_queue", attributes: [.qosUserInitiated], target: nil)
 
 public final class Promise<Value> {
     
     private var state: State<Value>
+    private let lockQueue = DispatchQueue(label: "promise_lock_queue", qos: .userInitiated)
     private var callbacks: [Callback<Value>] = []
     
     public init() {
@@ -107,12 +107,11 @@ public final class Promise<Value> {
         state = .fulfilled(value: value)
     }
     
-    public init(error: ErrorProtocol) {
+    public init(error: Error) {
         state = .rejected(error: error)
     }
     
-    public convenience init(queue: DispatchQueue = DispatchQueue.global(attributes: .qosUserInitiated),
-                            work: ((Value) -> Void, (ErrorProtocol) -> Void) throws -> Void) {
+    public convenience init(queue: DispatchQueue = DispatchQueue.global(qos: .userInitiated), work: @escaping (_ fulfill: @escaping (Value) -> (), _ reject: @escaping (Error) -> () ) throws -> ()) {
         self.init()
         queue.async(execute: {
             do {
@@ -122,16 +121,16 @@ public final class Promise<Value> {
             }
         })
     }
-
+    
     /// - note: This one is "flatMap"
     @discardableResult
-    public func then<NewValue>(on queue: DispatchQueue = .main, _ onFulfilled: (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
+    public func then<NewValue>(on queue: DispatchQueue = .main, _ onFulfilled: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
         return Promise<NewValue>(work: { fulfill, reject in
             self.addCallbacks(
                 on: queue,
                 onFulfilled: { value in
                     do {
-                        try onFulfilled(value).then(on: .main, fulfill, reject)
+                        try onFulfilled(value).then(fulfill, reject)
                     } catch let error {
                         reject(error)
                     }
@@ -143,7 +142,7 @@ public final class Promise<Value> {
     
     /// - note: This one is "map"
     @discardableResult
-    public func then<NewValue>(on queue: DispatchQueue = .main, _ onFulfilled: (Value) throws -> NewValue) -> Promise<NewValue> {
+    public func then<NewValue>(on queue: DispatchQueue = .main, _ onFulfilled: @escaping (Value) throws -> NewValue) -> Promise<NewValue> {
         return then(on: queue, { (value) -> Promise<NewValue> in
             do {
                 return Promise<NewValue>(value: try onFulfilled(value))
@@ -154,7 +153,7 @@ public final class Promise<Value> {
     }
     
     @discardableResult
-    public func then(on queue: DispatchQueue = .main, _ onFulfilled: (Value) -> Void, _ onRejected: (ErrorProtocol) -> Void) -> Promise<Value> {
+    public func then(on queue: DispatchQueue = .main, _ onFulfilled: @escaping (Value) -> (), _ onRejected: @escaping (Error) -> ()) -> Promise<Value> {
         return Promise<Value>(work: { fulfill, reject in
             self.addCallbacks(
                 on: queue,
@@ -169,22 +168,22 @@ public final class Promise<Value> {
             )
         })
     }
-
+    
     @discardableResult
-    public func then(on queue: DispatchQueue = .main, _ onFulfilled: (Value) -> Void) -> Promise<Value> {
+    public func then(on queue: DispatchQueue = DispatchQueue.main, _ onFulfilled: @escaping (Value) -> ()) -> Promise<Value> {
         return then(on: queue, onFulfilled, { _ in })
     }
     
-    public func `catch`(on queue: DispatchQueue, _ onRejected: (ErrorProtocol) -> Void) -> Promise<Value> {
+    public func `catch`(on queue: DispatchQueue, _ onRejected: @escaping (Error) -> ()) -> Promise<Value> {
         return then(on: queue, { _ in }, onRejected)
     }
     
     @discardableResult
-    public func `catch`(_ onRejected: (ErrorProtocol) -> Void) -> Promise<Value> {
+    public func `catch`(_ onRejected: @escaping (Error) -> ()) -> Promise<Value> {
         return then(on: DispatchQueue.main, { _ in }, onRejected)
     }
     
-    public func reject(_ error: ErrorProtocol) {
+    public func reject(_ error: Error) {
         updateState(.rejected(error: error))
     }
     
@@ -212,8 +211,8 @@ public final class Promise<Value> {
         return result
     }
     
-    public var error: ErrorProtocol? {
-        var result: ErrorProtocol?
+    public var error: Error? {
+        var result: Error?
         lockQueue.sync(execute: {
             result = self.state.error
         })
@@ -228,7 +227,7 @@ public final class Promise<Value> {
         fireCallbacksIfCompleted()
     }
     
-    private func addCallbacks(on queue: DispatchQueue, onFulfilled: (Value) -> Void, onRejected: (ErrorProtocol) -> ()) {
+    private func addCallbacks(on queue: DispatchQueue, onFulfilled: @escaping (Value) -> (), onRejected: @escaping (Error) -> ()) {
         let callback = Callback(onFulfilled: onFulfilled, onRejected: onRejected, queue: queue)
         lockQueue.async(execute: {
             self.callbacks.append(callback)
@@ -263,7 +262,7 @@ extension Promise {
             guard !promises.isEmpty else { fulfill([]); return }
             for promise in promises {
                 promise.then({ value in
-                    if !promises.contains({ $0.isRejected || $0.isPending }) {
+                    if !promises.contains(where: { $0.isRejected || $0.isPending }) {
                         fulfill(promises.flatMap({ $0.value }))
                     }
                 }).catch({ error in
@@ -277,9 +276,9 @@ extension Promise {
     /// - parameter delay: In seconds
     public static func delay(_ delay: TimeInterval) -> Promise<()> {
         return Promise<()>(work: { fulfill, reject in
-            DispatchQueue.main.after(when: .now() + delay) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
                 fulfill(())
-            }
+            })
         })
     }
     
@@ -298,7 +297,7 @@ extension Promise {
         return Promise<T>(work: { fulfill, reject in
             guard !promises.isEmpty else { fatalError() }
             for promise in promises {
-                promise.then(on: .main, fulfill, reject)
+                promise.then(fulfill, reject)
             }
         })
     }
@@ -307,7 +306,7 @@ extension Promise {
     }
     
     @discardableResult
-    public func always(on queue: DispatchQueue, _ onComplete: () -> ()) -> Promise<Value> {
+    public func always(on queue: DispatchQueue, _ onComplete: @escaping () -> ()) -> Promise<Value> {
         return then(on: queue, { _ in
             onComplete()
             }, { _ in
@@ -316,12 +315,12 @@ extension Promise {
     }
     
     @discardableResult
-    public func always(_ onComplete: () -> ()) -> Promise<Value> {
+    public func always(_ onComplete: @escaping () -> ()) -> Promise<Value> {
         return always(on: DispatchQueue.main, onComplete)
     }
     
-    /*
-    public func recover(_ recovery: (ErrorProtocol) -> Promise<Value>) -> Promise<Value> {
+    
+    public func recover(_ recovery: @escaping (Error) -> Promise<Value>) -> Promise<Value> {
         return Promise(work: { fulfill, reject in
             self.then(fulfill).catch({ error in
                 recovery(error).then(fulfill, reject)
@@ -329,7 +328,8 @@ extension Promise {
         })
     }
     
-    public static func retry<T>(count: Int, delay: TimeInterval, generate: () -> Promise<T>) -> Promise<T> {
+    
+    public static func retry<T>(count: Int, delay: TimeInterval, generate: @escaping () -> Promise<T>) -> Promise<T> {
         if count <= 0 {
             return generate()
         }
@@ -341,7 +341,6 @@ extension Promise {
             }).then(fulfill).catch(reject)
         })
     }
-    */
     
     public static func zip<T, U>(_ first: Promise<T>, and second: Promise<U>) -> Promise<(T, U)> {
         return Promise<(T, U)>(work: { fulfill, reject in
@@ -350,8 +349,8 @@ extension Promise {
                     fulfill((firstValue, secondValue))
                 }
             }
-            first.then(on: .main, resolver, reject)
-            second.then(on: .main, resolver, reject)
+            first.then(resolver, reject)
+            second.then(resolver, reject)
         })
     }
 }

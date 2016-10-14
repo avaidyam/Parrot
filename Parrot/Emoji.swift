@@ -1,28 +1,28 @@
 import Foundation
 
 private var emojiDescriptors: [String: String] = {
-	guard let url = Bundle.main().urlForResource("emoji_descriptors",
+	guard let url = Bundle.main.url(forResource: "emoji_descriptors",
 	                                             withExtension: "plist")
 		else { return [:] }
 	return NSDictionary(contentsOf: url) as? [String: String] ?? [:]
 }()
 
 internal var emoticonDescriptors: [String: String] = {
-	guard let url = Bundle.main().urlForResource("emoji_emoticons",
+	guard let url = Bundle.main.url(forResource: "emoji_emoticons",
 	                                             withExtension: "plist",
 	                                             subdirectory: "Emoji")
 		else { return [:] }
 	return NSDictionary(contentsOf: url) as? [String: String] ?? [:]
 }()
 
-private let emojiDescriptorRegex = try! RegularExpression(pattern: "(?<=[\\s]|^)(:[a-z0-9-+_]+:)(?=[\\s]|$)",
-                                                          options: .caseInsensitive)
+private let emojiDescriptorRegex = try! NSRegularExpression(pattern: "(?<=[\\s]|^)(:[a-z0-9-+_]+:)(?=[\\s]|$)",
+                                                            options: .caseInsensitive)
 
 public extension String {
 	
 	/// Replace a Unicode Emoji descriptor (:emoji_name:) with its pictographical representation.
 	public func applyGithubEmoji() -> String {
-		var resultText = self
+		let resultText = self
 		/*emojiDescriptorRegex.enumerateMatches(in: self, options: .reportCompletion,
 		                                      range: NSMakeRange(0, self.endIndex)) { result, flags, stop in
 				if ((result != nil) && (result!.resultType == .regularExpression)) {
@@ -86,7 +86,7 @@ public extension CharacterSet {
 	
 	///
 	public static var emojiCharacters: CharacterSet? {
-		guard	let url = Bundle.main().urlForResource("emoji_charset", withExtension: "bitmap"),
+		guard	let url = Bundle.main.url(forResource: "emoji_charset", withExtension: "bitmap"),
 				let data = try? Data(contentsOf: url)
 		else { return nil }
 		return CharacterSet(bitmapRepresentation: data)

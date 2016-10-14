@@ -27,9 +27,9 @@ public class AboutViewController: NSViewController {
 		}
 		
 		self.appIcon?.image = NSApp.applicationIconImage
-		self.appName?.stringValue = Bundle.main().objectForInfoDictionaryKey("CFBundleName") as! String
-		self.appVersion?.stringValue = Bundle.main().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
-		self.copyright?.stringValue = Bundle.main().objectForInfoDictionaryKey("NSHumanReadableCopyright") as! String
+		self.appName?.stringValue = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
+		self.appVersion?.stringValue = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+		self.copyright?.stringValue = Bundle.main.object(forInfoDictionaryKey: "NSHumanReadableCopyright") as! String
 	}
 	
 	public override func viewDidDisappear() {

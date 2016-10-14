@@ -7,7 +7,7 @@ public class URLSessionTaskDelegateProxy: NSObject, URLSessionTaskDelegate {
 	public var didReceiveChallenge: ((URLSession, URLSessionTask, URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?))?
 	public var needNewBodyStream: ((URLSession, URLSessionTask) -> InputStream?)?
 	public var didSendBodyData: ((URLSession, URLSessionTask, Int64, Int64, Int64) -> Void)?
-	public var didComplete: ((URLSession, URLSessionTask, NSError?) -> Void)?
+	public var didComplete: ((URLSession, URLSessionTask, Error?) -> Void)?
 	
 	// Proxying delegate methods follow:
 	public func urlSession(
@@ -15,7 +15,7 @@ public class URLSessionTaskDelegateProxy: NSObject, URLSessionTaskDelegate {
 		task: URLSessionTask,
 		willPerformHTTPRedirection response: HTTPURLResponse,
 		newRequest request: URLRequest,
-		completionHandler: ((URLRequest?) -> Void))
+		completionHandler: @escaping ((URLRequest?) -> Void))
 	{
 		var redirectRequest: URLRequest? = request
 		if let willPerformHTTPRedirection = willPerformHTTPRedirection {
@@ -28,7 +28,7 @@ public class URLSessionTaskDelegateProxy: NSObject, URLSessionTaskDelegate {
 		_ session: URLSession,
 		task: URLSessionTask,
 		didReceive challenge: URLAuthenticationChallenge,
-		completionHandler: ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void))
+		completionHandler: @escaping ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void))
 	{
 		if let didReceiveChallenge = didReceiveChallenge {
 			let (a, c) = didReceiveChallenge(session, task, challenge)
@@ -39,7 +39,7 @@ public class URLSessionTaskDelegateProxy: NSObject, URLSessionTaskDelegate {
 	public func urlSession(
 		_ session: URLSession,
 		task: URLSessionTask,
-		needNewBodyStream completionHandler: ((InputStream?) -> Void))
+		needNewBodyStream completionHandler: @escaping ((InputStream?) -> Void))
 	{
 		if let needNewBodyStream = needNewBodyStream {
 			completionHandler(needNewBodyStream(session, task))
@@ -61,7 +61,7 @@ public class URLSessionTaskDelegateProxy: NSObject, URLSessionTaskDelegate {
 	public func urlSession(
 		_ session: URLSession,
 		task: URLSessionTask,
-		didCompleteWithError error: NSError?)
+		didCompleteWithError error: Error?)
 	{
 		if let didComplete = didComplete {
 			didComplete(session, task, error)
@@ -82,7 +82,7 @@ public class URLSessionDataDelegateProxy: URLSessionTaskDelegateProxy, URLSessio
 		_ session: URLSession,
 		dataTask: URLSessionDataTask,
 		didReceive response: URLResponse,
-		completionHandler: ((URLSession.ResponseDisposition) -> Void))
+		completionHandler: @escaping ((URLSession.ResponseDisposition) -> Void))
 	{
 		var disposition: URLSession.ResponseDisposition = .allow
 		if let didReceiveResponse = didReceiveResponse {
@@ -115,7 +115,7 @@ public class URLSessionDataDelegateProxy: URLSessionTaskDelegateProxy, URLSessio
 		_ session: URLSession,
 		dataTask: URLSessionDataTask,
 		willCacheResponse proposedResponse: CachedURLResponse,
-		completionHandler: ((CachedURLResponse?) -> Void))
+		completionHandler: @escaping ((CachedURLResponse?) -> Void))
 	{
 		if let willCacheResponse = willCacheResponse {
 			completionHandler(willCacheResponse(session, dataTask, proposedResponse))
@@ -188,14 +188,14 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 	
 	// Closure forms corresponding to each of the delegate methods.
 	// Note that this takes priority over a provided subdelegate.
-	public var sessionDidBecomeInvalidWithError: ((URLSession, NSError?) -> Void)?
+	public var sessionDidBecomeInvalidWithError: ((URLSession, Error?) -> Void)?
 	public var sessionDidReceiveChallenge: ((URLSession, URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?))?
 	public var sessionDidFinishEventsForBackgroundURLSession: ((URLSession) -> Void)?
 	public var taskWillPerformHTTPRedirection: ((URLSession, URLSessionTask, HTTPURLResponse, URLRequest) -> URLRequest?)?
 	public var taskDidReceiveChallenge: ((URLSession, URLSessionTask, URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?))?
 	public var taskNeedNewBodyStream: ((URLSession, URLSessionTask) -> InputStream?)?
 	public var taskDidSendBodyData: ((URLSession, URLSessionTask, Int64, Int64, Int64) -> Void)?
-	public var taskDidComplete: ((URLSession, URLSessionTask, NSError?) -> Void)?
+	public var taskDidComplete: ((URLSession, URLSessionTask, Error?) -> Void)?
 	public var dataTaskDidReceiveResponse: ((URLSession, URLSessionDataTask, URLResponse) -> URLSession.ResponseDisposition)?
 	public var dataTaskDidBecomeDownloadTask: ((URLSession, URLSessionDataTask, URLSessionDownloadTask) -> Void)?
 	public var dataTaskDidReceiveData: ((URLSession, URLSessionDataTask, Data) -> Void)?
@@ -208,14 +208,14 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 	// Proxying delegate methods follow:
 	//
 	
-	public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: NSError?) {
+	public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
 		sessionDidBecomeInvalidWithError?(session, error)
 	}
 	
 	public func urlSession(
 		_ session: URLSession,
 		didReceive challenge: URLAuthenticationChallenge,
-		completionHandler: ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void))
+		completionHandler: @escaping ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void))
 	{
 		var disposition: URLSession.AuthChallengeDisposition = .performDefaultHandling
 		var credential: URLCredential?
@@ -248,7 +248,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 		task: URLSessionTask,
 		willPerformHTTPRedirection response: HTTPURLResponse,
 		newRequest request: URLRequest,
-		completionHandler: ((URLRequest?) -> Void))
+		completionHandler: @escaping ((URLRequest?) -> Void))
 	{
 		var redirectRequest: URLRequest? = request
 		
@@ -263,7 +263,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 		_ session: URLSession,
 		task: URLSessionTask,
 		didReceive challenge: URLAuthenticationChallenge,
-		completionHandler: ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void))
+		completionHandler: @escaping ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void))
 	{
 		if let taskDidReceiveChallenge = taskDidReceiveChallenge {
 			let (a, c) = taskDidReceiveChallenge(session, task, challenge)
@@ -283,7 +283,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 	public func urlSession(
 		_ session: URLSession,
 		task: URLSessionTask,
-		needNewBodyStream completionHandler: ((InputStream?) -> Void))
+		needNewBodyStream completionHandler: @escaping ((InputStream?) -> Void))
 	{
 		if let taskNeedNewBodyStream = taskNeedNewBodyStream {
 			completionHandler(taskNeedNewBodyStream(session, task))
@@ -316,7 +316,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 	public func urlSession(
 		_ session: URLSession,
 		task: URLSessionTask,
-		didCompleteWithError error: NSError?)
+		didCompleteWithError error: Error?)
 	{
 		if let taskDidComplete = taskDidComplete {
 			taskDidComplete(session, task, error)
@@ -331,7 +331,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 		_ session: URLSession,
 		dataTask: URLSessionDataTask,
 		didReceive response: URLResponse,
-		completionHandler: ((URLSession.ResponseDisposition) -> Void))
+		completionHandler: @escaping ((URLSession.ResponseDisposition) -> Void))
 	{
 		var disposition: URLSession.ResponseDisposition = .allow
 		
@@ -371,7 +371,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 		_ session: URLSession,
 		dataTask: URLSessionDataTask,
 		willCacheResponse proposedResponse: CachedURLResponse,
-		completionHandler: ((CachedURLResponse?) -> Void))
+		completionHandler: @escaping ((CachedURLResponse?) -> Void))
 	{
 		if let dataTaskWillCacheResponse = dataTaskWillCacheResponse {
 			completionHandler(dataTaskWillCacheResponse(session, dataTask, proposedResponse))
@@ -443,7 +443,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 		case #selector(URLSessionDataDelegate.urlSession(_:dataTask:didReceive:completionHandler:)):
 			return dataTaskDidReceiveResponse != nil
 		default:
-			return self.dynamicType.instancesRespond(to: selector)
+			return type(of: self).instancesRespond(to: selector)
 		}
 	}
 }

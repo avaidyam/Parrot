@@ -16,7 +16,7 @@ public func imageForString(forString source: String, size: NSSize = NSSize(width
 		let font = NSFont.systemFont(ofSize: rect.size.width * 0.75)
 		let attrs = [
 			NSFontAttributeName: font,
-			NSForegroundColorAttributeName: NSColor.white(),
+			NSForegroundColorAttributeName: NSColor.white,
 			NSParagraphStyleAttributeName: textStyle
 		]
 		

@@ -45,7 +45,7 @@ public final class DispatchTask<Result> {
 }
 
 /*
-public class DispatchOperation<Input, Output, Error: ErrorProtocol> {
+public class DispatchOperation<Input, Output, Error: Error> {
 	/* [.barrier, .detached, .assignCurrentContext, .noQoS, .inheritQoS, .enforceQoS] */
 	
 	private var workItem: DispatchWorkItem

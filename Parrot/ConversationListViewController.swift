@@ -6,8 +6,8 @@ import protocol ParrotServiceExtension.Conversation
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
 /* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
 
-let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", attributes: [.serial, .qosUserInteractive])
-let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", attributes: [.serial, .qosUserInitiated])
+let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
+let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
 public class ConversationListViewController: NSWindowController, ConversationListDelegate {
 	
@@ -81,7 +81,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 				self.listView.layer?.add(scaleIn, forKey: "updates")
 				
 				let durMS = Int(NSAnimationContext.current().duration * 1000.0)
-				DispatchQueue.main.after(when: .now() + .milliseconds(durMS)) {
+				DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(durMS)) {
 					self.indicator.stopAnimation(nil)
 					self.indicator.isHidden = true
 				}
@@ -105,7 +105,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		self.listView.updateScrollDirection = .top
 		self.listView.viewClassProvider = { row in ConversationCell.self }
 		
-		NotificationCenter.default().addObserver(forName: ServiceRegistry.didAddService) { note in
+		NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService) { note in
 			let c = note.object as! Hangouts.Client
 			self.userList = c.userList
 			self.conversationList = c.conversationList
@@ -116,10 +116,10 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			}
 		}
 		
-		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
+		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
 		NSApp.badgeCount = UInt(unread)
 		
-		NotificationCenter.default().addObserver(forName: NSUserNotification.didActivateNotification) {
+		NotificationCenter.default.addObserver(forName: NSUserNotification.didActivateNotification) {
 			guard	let notification = $0.object as? NSUserNotification,
 					var conv = self.conversationList?.conversations[notification.identifier ?? ""]
 			else { return }
@@ -135,7 +135,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			}
 		}
 		
-		self.wallclock = DispatchSource.timer(flags: [], queue: DispatchQueue.main)
+		self.wallclock = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
 		self.wallclock?.scheduleRepeating(wallDeadline: .now() + Date().nearestMinute().timeIntervalSinceNow, interval: 60.0, leeway: .seconds(3))
 		self.wallclock?.setEventHandler {
 			log.verbose("Updated visible timestamp for Conversations.")
@@ -153,7 +153,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			let conv = (self.sortedConversations[row] as! IConversation)
 			self.showConversation(conv)
 			
-			DispatchQueue.main.after(when: .now() + .milliseconds(150)) {
+			DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(150)) {
 				self.listView.tableView.animator().selectRowIndexes(IndexSet(), byExtendingSelection: false)
 			}
 		}
@@ -237,14 +237,14 @@ public class ConversationListViewController: NSWindowController, ConversationLis
             self.childConversations[conv.identifier] = wc
             Settings["Parrot.OpenConversations"] = Array(self.childConversations.keys)
 			let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
-			NotificationCenter.default().addObserver(self, selector: sel,
+			NotificationCenter.default.addObserver(self, selector: sel,
 			                                         name: .NSWindowWillClose, object: wc.window)
 			wc.showWindow(nil)
 		}
 	}
 	
 	/// As we are about to display, configure our UI elements.
-	public override func showWindow(_ sender: AnyObject?) {
+	public override func showWindow(_ sender: Any?) {
 		super.showWindow(sender)
 		self.indicator.startAnimation(nil)
 		
@@ -263,7 +263,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		
         _ = self.childConversations.removeValue(forKey: conv2.identifier)
         Settings["Parrot.OpenConversations"] = Array(self.childConversations.keys)
-		NotificationCenter.default().removeObserver(self, name: notification.name, object: win)
+		NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
 	}
 	
 	/// If we need to close, make sure we clean up after ourselves, instead of deinit.
@@ -304,7 +304,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		// pls fix :(
 		DispatchQueue.main.async {
 			self.listView.update()
-			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
+			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
 			NSApp.badgeCount = UInt(unread)
 		}
 		
@@ -343,7 +343,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			showNote = !(c.window?.isKeyWindow ?? false)
 		}
 		
-		if let user = (conv as? IConversation)?.user_list[event.userID.gaiaID] where !user.me && showNote {
+		if let user = (conv as? IConversation)?.user_list[event.userID.gaiaID] , !user.me && showNote {
 			log.debug("Sending notification...")
 			
 			let text = (event as? IChatMessageEvent)?.text ?? "Event"
@@ -393,7 +393,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		DispatchQueue.main.async {
 			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			self.listView.update()
-			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
+			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
 			NSApp.badgeCount = UInt(unread)
 		}
     }
@@ -403,7 +403,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		DispatchQueue.main.async {
 			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 			self.listView.update()
-			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, combine: +)
+			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
 			NSApp.badgeCount = UInt(unread)
 		}
     }

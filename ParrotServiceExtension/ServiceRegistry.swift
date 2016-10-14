@@ -24,20 +24,20 @@ public enum ServiceRegistry {
 	/// Discovers and adds a Service to the ServiceRegistry.
 	/// Note: `connect()` is not invoked on this Service.
 	public static func add(service: Service) {
-		let id = service.dynamicType.identifier
+		let id = type(of: service).identifier
 		guard ServiceRegistry.services[id] == nil else { return }
 		
 		ServiceRegistry.services[id] = service
-		NotificationCenter.default().post(name: ServiceRegistry.didAddService, object: service)
+		NotificationCenter.default.post(name: ServiceRegistry.didAddService, object: service)
 	}
 	
 	/// Removes a Service from the ServiceRegistry.
 	/// Note: `disconnect()` is not invoked on this Service.
 	public static func remove(service: Service) {
-		let id = service.dynamicType.identifier
+		let id = type(of: service).identifier
 		guard ServiceRegistry.services[id] != nil else { return }
 		
 		ServiceRegistry.services.removeValue(forKey: id)
-		NotificationCenter.default().post(name: ServiceRegistry.didRemoveService, object: service)
+		NotificationCenter.default.post(name: ServiceRegistry.didRemoveService, object: service)
 	}
 }

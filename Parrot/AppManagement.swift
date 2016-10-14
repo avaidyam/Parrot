@@ -22,11 +22,11 @@ public struct GithubRelease {
 			return URL(string: "https://api.github.com/repos/\(repo)/releases" + (latest ? "/latest" : ""))!
 		}
 		
-		func _get(_ url: URL, method: String = "GET") -> (Data?, URLResponse?, NSError?) {
-			return URLSession.shared().synchronousRequest(url, method: method)
+		func _get(_ url: URL, method: String = "GET") -> (Data?, URLResponse?, Error?) {
+			return URLSession.shared.synchronousRequest(url, method: method)
 		}
 		
-		guard let repo = Bundle.main().infoDictionary?["GithubRepository"] as? String else { return nil }
+		guard let repo = Bundle.main.infoDictionary?["GithubRepository"] as? String else { return nil }
 		let url = _url(repo: repo, latest: !prerelease)
 		
 		// Ensure we can both download and deserialize the response.
@@ -35,15 +35,16 @@ public struct GithubRelease {
 		else { return nil }
 		
 		// If we're in pre-release mode, ensure we have at least one entry.
-		if let js = json as? [AnyObject] where prerelease {
+		if let js = json as? [Any], prerelease {
 			json = js[0]
 		} else if prerelease { return nil }
 		
-		guard	let releaseName = json["name"] as? String,
-				let buildTag = json["tag_name"] as? String,
-				let releaseNotes = json["body"] as? String,
-				let appUpdate = json["zipball_url"] as? String,
-				let githubURL = json["html_url"] as? String
+		guard   let _json = json as? [String: Any],
+                let releaseName = _json["name"] as? String,
+				let buildTag = _json["tag_name"] as? String,
+				let releaseNotes = _json["body"] as? String,
+				let appUpdate = _json["zipball_url"] as? String,
+				let githubURL = _json["html_url"] as? String
 		else { return nil }
 		
 		return GithubRelease(releaseName: releaseName, buildTag: buildTag,

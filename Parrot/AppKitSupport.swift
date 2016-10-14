@@ -58,7 +58,7 @@ public extension NSPopover {
 */
 
 public extension NSNib {
-	public func instantiate(_ owner: AnyObject?) -> [AnyObject] {
+	public func instantiate(_ owner: Any?) -> [AnyObject] {
 		var stuff: NSArray = []
 		if self.instantiate(withOwner: nil, topLevelObjects: &stuff) {
 			return stuff as [AnyObject]
@@ -80,39 +80,39 @@ public extension Date {
 	public func relativeString(numeric: Bool = false, seconds: Bool = false) -> String {
 		
 		let date = self, now = Date()
-		let calendar = Calendar.current()
+		let calendar = Calendar.current
 		let earliest = (now as NSDate).earlierDate(date) as Date
 		let latest = (earliest == now) ? date : now
-		let units: Calendar.Unit = [.second, .minute, .hour, .day, .weekOfYear, .month, .year]
-		let components = calendar.components(units, from: earliest, to: latest, options: Calendar.Options())
+		let units = Set<Calendar.Component>([.second, .minute, .hour, .day, .weekOfYear, .month, .year])
+		let components = calendar.dateComponents(units, from: earliest, to: latest)
 		
-		if components.year > 45 {
+		if components.year ?? -1 > 45 {
 			return "a while ago"
-		} else if (components.year >= 2) {
+		} else if (components.year ?? -1 >= 2) {
 			return "\(components.year!) years ago"
-		} else if (components.year >= 1) {
+		} else if (components.year ?? -1 >= 1) {
 			return numeric ? "1 year ago" : "last year"
-		} else if (components.month >= 2) {
+		} else if (components.month ?? -1 >= 2) {
 			return "\(components.month!) months ago"
-		} else if (components.month >= 1) {
+		} else if (components.month ?? -1 >= 1) {
 			return numeric ? "1 month ago" : "last month"
-		} else if (components.weekOfYear >= 2) {
+		} else if (components.weekOfYear ?? -1 >= 2) {
 			return "\(components.weekOfYear!) weeks ago"
-		} else if (components.weekOfYear >= 1) {
+		} else if (components.weekOfYear ?? -1 >= 1) {
 			return numeric ? "1 week ago" : "last week"
-		} else if (components.day >= 2) {
+		} else if (components.day ?? -1 >= 2) {
 			return "\(components.day!) days ago"
-		} else if (components.day >= 1) {
+		} else if (components.day ?? -1 >= 1) {
 			return numeric ? "1 day ago" : "a day ago"
-		} else if (components.hour >= 2) {
+		} else if (components.hour ?? -1 >= 2) {
 			return "\(components.hour!) hours ago"
-		} else if (components.hour >= 1){
+		} else if (components.hour ?? -1 >= 1){
 			return numeric ? "1 hour ago" : "an hour ago"
-		} else if (components.minute >= 2) {
+		} else if (components.minute ?? -1 >= 2) {
 			return "\(components.minute!) minutes ago"
-		} else if (components.minute >= 1) {
+		} else if (components.minute ?? -1 >= 1) {
 			return numeric ? "1 minute ago" : "a minute ago"
-		} else if (components.second >= 3 && seconds) {
+		} else if (components.second ?? -1 >= 3 && seconds) {
 			return "\(components.second!) seconds ago"
 		} else {
 			return "just now"
@@ -121,8 +121,8 @@ public extension Date {
 	
 	private static var formatter: DateFormatter = {
 		let formatter = DateFormatter()
-		formatter.dateStyle = .fullStyle
-		formatter.timeStyle = .longStyle
+		formatter.dateStyle = .full
+		formatter.timeStyle = .long
 		return formatter
 	}()
 	
@@ -131,9 +131,10 @@ public extension Date {
 	}
 	
 	public func nearestMinute() -> Date {
-		let c = Calendar.current()
-		let next = c.component(.minute, from: self) + 1
-		return c.nextDate(after: self, matching: .minute, value: next, options: .matchStrictly) ?? self
+		let c = Calendar.current
+		var next = c.dateComponents(Set<Calendar.Component>([.minute]), from: self)
+        next.minute = (next.minute ?? -1) + 1
+		return c.nextDate(after: self, matching: next, matchingPolicy: .strict) ?? self
 	}
 }
 
@@ -170,7 +171,7 @@ public extension NSFont {
 	
 	/// Load an NSFont from a provided URL.
 	public static func from(_ fontURL: URL, size: CGFloat) -> NSFont? {
-		let desc = CTFontManagerCreateFontDescriptorsFromURL(fontURL)
+		let desc = CTFontManagerCreateFontDescriptorsFromURL(fontURL as CFURL)
 		guard let item = (desc as? NSArray)?[0] else { return nil }
 		return CTFontCreateWithFontDescriptor(item as! CTFontDescriptor, size, nil)
 	}
@@ -188,7 +189,7 @@ public class Wrapper<T> {
 }
 
 public func runSelectionPanel(for window: NSWindow, fileTypes: [String],
-                              multiple: Bool = false, _ handler: ([URL]) -> () = {_ in}) {
+                              multiple: Bool = false, _ handler: @escaping ([URL]) -> () = {_ in}) {
 	let p = NSOpenPanel()
 	p.allowsMultipleSelection = multiple
 	p.canChooseDirectories = false

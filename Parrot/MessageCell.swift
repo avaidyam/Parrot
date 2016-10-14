@@ -17,13 +17,13 @@ public class MessageCell: ListViewCell {
 			
 			let user = o.sender
 			
-			let str = AttributedString(string: o.text as String)
+			let str = NSAttributedString(string: o.text as String)
 			//self.orientation = o.sender!.me ? .rightToLeft : .leftToRight // FIXME
 			//self.textLabel?.alignment = o.sender!.me ? .right : .left // FIXME
 			
 			//self.color = o.color
 			self.textLabel?.textStorage?.setAttributedString(str)
-			self.textLabel?.toolTip = "\((o.timestamp ?? .origin).fullString())"
+			self.textLabel?.toolTip = "\((o.timestamp /*?? .origin*/).fullString())"
 			let img: NSImage = fetchImage(user: user!)
 			self.photoView?.image = img
 			//self.photoView?.toolTip = o.caption
@@ -47,25 +47,25 @@ public class MessageCell: ListViewCell {
 			// backing view's appearance changes, so we need to set it each time.
 			// In addition, make sure links aren't blue as usual.
 			// Also, expand the text size if it's purely emoji.
-			text.textColor = NSColor.labelColor()
+			text.textColor = NSColor.labelColor
 			text.font = NSFont.systemFont(ofSize: 12.0 * (text.string!.isEmoji ? 3 : 1))
 			text.typingAttributes = [
 				NSForegroundColorAttributeName: text.textColor!,
 				NSFontAttributeName: text.font!
 			]
 			text.linkTextAttributes = [
-				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSForegroundColorAttributeName: NSColor.labelColor,
 				NSCursorAttributeName: NSCursor.pointingHand(),
 				NSUnderlineStyleAttributeName: 1,
 			]
 			text.selectedTextAttributes = [
 				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.effectiveAppearance),
-				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSForegroundColorAttributeName: NSColor.labelColor,
 				NSUnderlineStyleAttributeName: 0,
 			]
 			text.markedTextAttributes = [
 				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.effectiveAppearance),
-				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSForegroundColorAttributeName: NSColor.labelColor,
 				NSUnderlineStyleAttributeName: 0,
 			]
 			
@@ -73,7 +73,7 @@ public class MessageCell: ListViewCell {
 			if !text.string!.isEmoji {
 				text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
 			} else {
-				text.layer?.backgroundColor = NSColor.clear().cgColor
+				text.layer?.backgroundColor = NSColor.clear.cgColor
 			}
 		}
 	}
@@ -120,8 +120,8 @@ public class MessageCell: ListViewCell {
 	*/
 	
 	public override class func cellHeight(forWidth width: CGFloat, cellValue: Any?) -> CGFloat {
-		let text = (cellValue as! Message).text ?? ""
-		let attr = AttributedString(string: text, attributes: [
+		let text = (cellValue as! Message).text //?? ""
+		let attr = NSAttributedString(string: text, attributes: [
 			NSFontAttributeName: NSFont.systemFont(ofSize: 12.0 * (text.isEmoji ? 3 : 1)),
 			NSParagraphStyleAttributeName: NSParagraphStyle.default()
 		])

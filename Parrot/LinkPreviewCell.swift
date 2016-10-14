@@ -18,12 +18,12 @@ public class LinkPreviewCell: ListViewCell {//, QLPreviewPanelDataSource, QLPrev
 			case .link(let linkmeta):
 				var url = linkmeta.icon.first ?? ""
 				if url.hasPrefix("//") { url = "https:\(url)" }
-				if let dl = URLSession.shared().synchronousRequest(URL(string: url)!).0 {
+				if let dl = URLSession.shared.synchronousRequest(URL(string: url)!).0 {
 					self.faviconView?.image = NSImage(data: dl)
 				}
 				
 				url = linkmeta.image.first ?? ""
-				if let dl = URLSession.shared().synchronousRequest(URL(string: url)!).0 {
+				if let dl = URLSession.shared.synchronousRequest(URL(string: url)!).0 {
 					self.photoView?.image = NSImage(data: dl)
 				}
 				
@@ -37,7 +37,7 @@ public class LinkPreviewCell: ListViewCell {//, QLPreviewPanelDataSource, QLPrev
 	
 	public override var backgroundStyle: NSBackgroundStyle {
 		didSet {
-			let color: NSColor = (self.effectiveAppearance.name == NSAppearanceNameVibrantDark) ? .white() : .black()
+			let color: NSColor = (self.effectiveAppearance.name == NSAppearanceNameVibrantDark) ? .white : .black
 			self.titleView?.textColor = color
 			self.descView?.textColor = color.withAlphaComponent(0.75)
 		}

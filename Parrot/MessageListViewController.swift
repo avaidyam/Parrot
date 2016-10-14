@@ -95,8 +95,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			text.frame = text.enclosingScrollView!.bounds
 		}
     }
-	
-	public override func showWindow(_ sender: AnyObject?) {
+    
+	public override func showWindow(_ sender: Any?) {
 		super.showWindow(nil)
         self.animatedUpdate(true)
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
@@ -106,7 +106,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			self.windowDidBecomeKey(Notification(name: "" as Notification.Name))
 		}
 		*/
-		self.windowDidChangeOcclusionState(Notification(name: "" as Notification.Name))
+		self.windowDidChangeOcclusionState(Notification(name: Notification.Name("")))
 		
 		// Set up dark/light notifications.
 		ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
@@ -121,25 +121,25 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			text.layer?.cornerRadius = 2.0
 			text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.window!.effectiveAppearance).cgColor
 			
-			text.textColor = NSColor.labelColor()
+			text.textColor = NSColor.labelColor
 			text.font = NSFont.systemFont(ofSize: 12.0)
 			text.typingAttributes = [
 				NSForegroundColorAttributeName: text.textColor!,
 				NSFontAttributeName: text.font!
 			]
 			text.linkTextAttributes = [
-				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSForegroundColorAttributeName: NSColor.labelColor,
 				NSCursorAttributeName: NSCursor.pointingHand(),
 				NSUnderlineStyleAttributeName: 1,
 			]
 			text.selectedTextAttributes = [
 				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.window!.effectiveAppearance),
-				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSForegroundColorAttributeName: NSColor.labelColor,
 				NSUnderlineStyleAttributeName: 0,
 			]
 			text.markedTextAttributes = [
 				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.window!.effectiveAppearance),
-				NSForegroundColorAttributeName: NSColor.labelColor(),
+				NSForegroundColorAttributeName: NSColor.labelColor,
 				NSUnderlineStyleAttributeName: 0,
 			]
 			/*text.placeholderTextAttributes = [
@@ -172,7 +172,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 				self.listView.superview!.layer?.add(scaleIn, forKey: "updates")
 				
 				let durMS = Int(NSAnimationContext.current().duration * 1000.0)
-				DispatchQueue.main.after(when: .now() + .milliseconds(durMS)) {
+				DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(durMS)) {
 					self.indicator.stopAnimation(nil)
 					self.indicator.isHidden = true
                     
@@ -331,8 +331,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
         }
 		
         // Delay here to ensure that small context switches don't send focus messages.
-		DispatchQueue.main.after(when: .now() + .seconds(1)) {
-            if let window = self.window where window.isKeyWindow {
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            if let window = self.window , window.isKeyWindow {
 				self.conversation?.setFocus(true) // set it here too just in case.
             }
 			self.conversation?.updateReadTimestamp()
@@ -400,8 +400,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		
         lastTypingTimestamp = now
 		let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-		DispatchQueue.main.after(when: dt) {
-            if let ts = self.lastTypingTimestamp where Date().timeIntervalSince(ts) > typingTimeout {
+		DispatchQueue.main.asyncAfter(deadline: dt) {
+            if let ts = self.lastTypingTimestamp , Date().timeIntervalSince(ts) > typingTimeout {
                 self.conversation?.setTyping(typing: TypingType.Stopped)
 			} else {
 				self.conversation?.setTyping(typing: TypingType.Paused)
@@ -415,21 +415,21 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		switch commandSelector {
 			
 		case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
-			guard let text = entryView.string where text.characters.count > 0 else { return true }
+			guard let text = entryView.string , text.characters.count > 0 else { return true }
 			NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
 			self.entryView.string = ""
 			self.sendMessageHandler(text, self.conversation!)
 			//self.parentController?.sendMessage(text, self.conversation!)
 			
 		case #selector(NSResponder.insertTab(_:)):
-			textView.textStorage?.append(AttributedString(string: "    ", attributes: textView.typingAttributes))
+			textView.textStorage?.append(NSAttributedString(string: "    ", attributes: textView.typingAttributes))
 			
 		default: return false
 		}; return true
 	}
 	
 	private var insertToken = false
-	public func textView(_ textView: NSTextView, didInsertText string: AnyObject, replacementRange: NSRange) {
+	public func textView(_ textView: NSTextView, didInsertText string: Any, replacementRange: NSRange) {
 		guard !insertToken else { insertToken = false; return }
 		
 		/* // Only deal with actual Strings, not AttributedStrings.
@@ -442,13 +442,13 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		
 		// Use the user's last entered word as the entry.
 		let tString = textView.attributedString().string as NSString
-		var _r = tString.range(of: " ", options: .backwardsSearch)
+		var _r = tString.range(of: " ", options: .backwards)
 		if _r.location == NSNotFound { _r.location = 0 } else { _r.location += 1 }
 		let userRange = NSMakeRange(_r.location, tString.length - _r.location)
 		let userStr = tString.substring(from: _r.location)
 		
 		NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
-		if let r = Settings[Parrot.Completions]?[userStr] as? String {
+		if let s = Settings[Parrot.Completions] as? [String: Any], let r = s[userStr] as? String {
 			insertToken = true // prevent re-entrance
 			
 			// If the entered text was a completion character, place the matching
@@ -463,7 +463,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			insertToken = true // prevent re-entrance
 			
 			// Handle emoticon replacement.
-			let attr = AttributedString(string: found, attributes: textView.typingAttributes)
+			let attr = NSAttributedString(string: found, attributes: textView.typingAttributes)
 			textView.insertText(attr, replacementRange: userRange)
 			let range = NSMakeRange(_r.location, 1)
 			NSSpellChecker.shared().showCorrectionIndicator(

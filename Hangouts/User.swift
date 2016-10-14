@@ -50,7 +50,8 @@ public struct User: Person, Hashable, Equatable {
     }
 	
 	// Parse and initialize a User from an Entity.
-	// Note: If selfUser is nil, assume this is the self user.
+	// Note: If selfUser is nil, assume this is the self user. 
+    // FIXME: crash in here for unwrapping a nil optional...
     public init(entity: Entity, selfUser: User.ID?) {
 		
 		// Parse User ID and self status.
@@ -66,8 +67,8 @@ public struct User: Person, Hashable, Equatable {
 		
 		// Parse possible phone numbers.
 		var phoneI18N: String? = nil // just use I18N and reformat it if needed.
-		if	let r = props._unknownFields[14] as? [AnyObject] where r.count > 0 {
-			if let d = r[0][0][1] as? [AnyObject] { // retrieve the I18nData
+		if	let r = props._unknownFields[14] as? [Any], r.count > 0 {
+			if let a = r[0] as? [Any], let b = a[0] as? [Any], let d = b[1] as? [Any] { // retrieve the I18nData
 				phoneI18N = d[1] as? String
 			}
 		}
@@ -98,7 +99,7 @@ public struct User: Person, Hashable, Equatable {
 public class UserList: Directory, Collection {
 	
 	private var observer: NSObjectProtocol? /*Notification Token*/
-	private var users: [User.ID: User]
+	fileprivate var users: [User.ID: User]
     private let client: Client
 	
 	public private(set) var me: Person
@@ -178,9 +179,9 @@ public class UserList: Directory, Collection {
 		self.me = me
         self.client = client
         
-		self.observer = NotificationCenter.default()
+		self.observer = NotificationCenter.default
 			.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) {
-				if  let userInfo = $0.userInfo, state_update = userInfo[Client.didUpdateStateKey.rawValue],
+				if  let userInfo = $0.userInfo, let state_update = userInfo[Client.didUpdateStateKey.rawValue],
                     let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
 					_ = self.addPeople(from: [conversation])
 				}
@@ -188,7 +189,7 @@ public class UserList: Directory, Collection {
 	}
 	
 	deinit {
-		NotificationCenter.default().removeObserver(self.observer!)
+		NotificationCenter.default.removeObserver(self.observer!)
 	}
 }
 

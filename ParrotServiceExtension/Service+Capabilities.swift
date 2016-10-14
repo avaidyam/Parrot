@@ -17,16 +17,16 @@ public protocol Service: class {
 	
 	/// Connects the service to its server/host.
 	/// Returns true if connection succeeded, or false if it failed.
-	func connect(_ onConnect: (ErrorProtocol?) -> ())
+	func connect(_ onConnect: (Error?) -> ())
 	
 	/// Disconnects the service from its service/host.
 	/// Returns true if the disconnection succeeded, or false if it failed.
-	func disconnect(_ onDisconnect: (ErrorProtocol?) -> ())
+	func disconnect(_ onDisconnect: (Error?) -> ())
 	
 	/// Synchronizes events and dispatches a didReceiveUpdate event upon completion.
 	/// This is required in case network connection is lost or switched.
 	/// Returns true if synchronization succeeded, or false if it failed.
-	func synchronize(_ onSynchronize: (ErrorProtocol?) -> ())
+	func synchronize(_ onSynchronize: (Error?) -> ())
 	
 	/// The current connection state of the service.
 	/// See connect() and disconnect().

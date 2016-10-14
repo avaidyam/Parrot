@@ -11,7 +11,7 @@ public final class ShareViewController: SLComposeServiceViewController {
     public override func didSelectPost() {
         let inputItem = self.extensionContext!.inputItems[0] as! NSExtensionItem
         let outputItem = inputItem.copy() as! NSExtensionItem
-        outputItem.attributedContentText = AttributedString(string: self.contentText)
+        outputItem.attributedContentText = NSAttributedString(string: self.contentText)
         self.extensionContext!.completeRequest(returningItems: [outputItem], completionHandler: nil)
     }
 	

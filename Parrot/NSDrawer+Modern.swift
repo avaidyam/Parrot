@@ -73,8 +73,8 @@ public extension NSDrawer {
 	}
 }
 
-private var NSPopover_preferredEdge_key: UnsafePointer<Void>? = nil
-private var NSPopover_positioningView_key: UnsafePointer<Void>? = nil
+private var NSPopover_preferredEdge_key: UnsafeRawPointer? = nil
+private var NSPopover_positioningView_key: UnsafeRawPointer? = nil
 
 
 public extension NSPopover {

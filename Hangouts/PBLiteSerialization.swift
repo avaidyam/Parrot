@@ -11,7 +11,7 @@ public class PBLiteSerialization {
 			let val = !_cast ? value : field.type._cast(value: value)
 			try message.set(id: field.id, value: val)
 		} catch let error {
-			log.error("Failed to set \(field.id):\(field.name) of \(_typeName(message.dynamicType)) due to \(error)")
+			log.error("Failed to set \(field.id):\(field.name) of \(_typeName(type(of: message))) due to \(error)")
 			message._unknownFields[field.id] = value // store it anyway
 		}
 	}
@@ -21,7 +21,7 @@ public class PBLiteSerialization {
 			let val = !_cast ? value : field.type._cast(value: value)
 			try message.set(id: field.id, value: val, at: index)
 		} catch let error {
-			log.error("Failed to set \(field.id):\(field.name) of \(_typeName(message.dynamicType)) due to \(error)")
+			log.error("Failed to set \(field.id):\(field.name) of \(_typeName(type(of: message))) due to \(error)")
 			message._unknownFields[field.id] = value // store it anyway
 		}
 	}
@@ -33,18 +33,18 @@ public class PBLiteSerialization {
 		switch field.type {
 		case .prototype(let str):
 			if let t = _protoMessages[str] {
-				if let value = value as? [AnyObject] {
+				if let value = value as? [Any] {
 					var q = t.init()
 					decode(message: &q, pblite: value)
 					_setField(message: &message, field: field, value: q)
 				} else {
-					log.warning("message \(t) expected [Any] values but got \(value.dynamicType) instead.")
+					log.warning("message \(t) expected [Any] values but got \(type(of: value)) instead.")
 				}
 			} else if let e = _protoEnums[str] {
 				if let value = value as? Int {
 					_setField(message: &message, field: field, value: e.init(value))
 				} else {
-					log.warning("enum \(e) expected Int but got \(value.dynamicType) instead.")
+					log.warning("enum \(e) expected Int but got \(type(of: value)) instead.")
 				}
 			} else {
 				// nil case
@@ -69,13 +69,13 @@ public class PBLiteSerialization {
 						decode(message: &q, pblite: x)
 						_setField(message: &message, field: field, value: q, index: -1)
 					} else {
-						log.warning("message \(t) expected [Any] values but got \(x.dynamicType) instead.")
+						log.warning("message \(t) expected [Any] values but got \(type(of: x)) instead.")
 					}
 				} else if let e = _protoEnums[str] {
 					if let x = x as? Int {
 						_setField(message: &message, field: field, value: e.init(x), index: -1)
 					} else {
-						log.warning("enum \(e) expected Int but got \(x.dynamicType) instead.")
+						log.warning("enum \(e) expected Int but got \(type(of: x)) instead.")
 					}
 				} else {
 					// nil case
@@ -87,13 +87,13 @@ public class PBLiteSerialization {
 		}
 	}
 	
-	public class func decode(message: inout ProtoMessage, pblite pblite2: [AnyObject], ignoreFirstItem: Bool = false) {
+	public class func decode(message: inout ProtoMessage, pblite pblite2: [Any], ignoreFirstItem: Bool = false) {
 		guard pblite2.count > (ignoreFirstItem ? 1 : 0) else { return }
 		var pblite = ignoreFirstItem ? Array(pblite2.dropFirst()) : pblite2
 		
 		// Extract
 		var extra_fields = [(Int, Any?)]()
-		if let dict = pblite.last as? NSDictionary where pblite.count > 0 {
+		if let dict = pblite.last as? NSDictionary, pblite.count > 0 {
 			extra_fields = dict.map { (Int($0.key as! String)!, $0.value) }
 			pblite = Array(pblite.dropLast())
 		}
@@ -113,7 +113,7 @@ public class PBLiteSerialization {
 		}
 	}
 	
-	public class func _parse<T: ProtoMessage>(_ class: T.Type, input: [AnyObject]) -> T? {
+	public class func _parse<T: ProtoMessage>(_ class: T.Type, input: [Any]) -> T? {
 		var msg = T.init() as ProtoMessage
 		decode(message: &msg, pblite: input, ignoreFirstItem: false)
 		return msg as? T
@@ -121,7 +121,7 @@ public class PBLiteSerialization {
 	
 	public class func parseProtoJSON<T: ProtoMessage>(input: Data) -> T? {
 		let script = (NSString(data: input, encoding: String.Encoding.utf8.rawValue)! as String)
-		if let parsedObject = sanitizedDecode(JSON: script) as? [AnyObject] {
+		if let parsedObject = sanitizedDecode(JSON: script) as? [Any] {
 			var msg = T.init() as ProtoMessage
 			decode(message: &msg, pblite: parsedObject, ignoreFirstItem: true)
 			return msg as? T
@@ -130,7 +130,7 @@ public class PBLiteSerialization {
 	}
 	
 	// Precompile the regex so we don't fiddle around with slow loading times.
-	private static let reg = try! RegularExpression(pattern: "(?<=,|\\[)(\\s)*(?=,)", options: [])
+	private static let reg = try! NSRegularExpression(pattern: "(?<=,|\\[)(\\s)*(?=,)", options: [])
 	
 	/// Sanitize and decode JSON from a server PBLite response.
 	/// Note: This assumes the output will always be an array.

@@ -52,7 +52,7 @@ public class ParrotAppController: NSApplicationController {
 		)
 		
 		// Register the default completions if none are in the user settings.
-		if let c = Settings[Parrot.Completions] as? NSDictionary where c.count > 0 {} else {
+		if let c = Settings[Parrot.Completions] as? NSDictionary , c.count > 0 {} else {
 			let defaultC = ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]
 			Settings[Parrot.Completions] = defaultC
 		}
@@ -67,7 +67,7 @@ public class ParrotAppController: NSApplicationController {
             let c = Client(configuration: $0)
 			//AppActivity.end("Authenticate")
 			
-			NotificationCenter.default()
+			NotificationCenter.default
 				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
                     //AppActivity.start("Setup")
                     if c.conversationList == nil {
@@ -78,7 +78,7 @@ public class ParrotAppController: NSApplicationController {
                             // conversations window; that means you'll receive double notifications.
                             
                             // TODO: FIXME: THIS IS A TERRIBLE DIRTY DISGUSTING HAX, DON'T DO ITS!
-                            NotificationCenter.default().post(name: ServiceRegistry.didAddService, object: c)
+                            NotificationCenter.default.post(name: ServiceRegistry.didAddService, object: c)
                             //AppActivity.end("Setup")
                         }
                     }
@@ -92,7 +92,7 @@ public class ParrotAppController: NSApplicationController {
                     //UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
                     //                 contentImage: NSImage(named: NSImageNameCaution)).post()
 			}
-            NotificationCenter.default()
+            NotificationCenter.default
                 .addObserver(forName: Client.didDisconnectNotification, object: c, queue: nil) { _ in
                     DispatchQueue.main.async {
                         let a = NSAlert()
@@ -154,7 +154,7 @@ public class ParrotAppController: NSApplicationController {
 		
 		/// If the URL host is a Service we have registered, comprehend it.
 		if let service = ServiceRegistry.services[(url.host ?? "")] {
-			let name = url.lastPathComponent?.removingPercentEncoding ?? ""
+			let name = url.lastPathComponent.removingPercentEncoding ?? ""
 			let convs = Array(service.conversations.conversations.values)
 			if let found = (convs.filter { $0.name == name }).first {
 				
@@ -183,7 +183,7 @@ public class ParrotAppController: NSApplicationController {
 	
 	/// If the user requests logging out, clear the authentication tokens.
 	@IBAction func logoutSelected(_ sender: AnyObject) {
-		let cookieStorage = HTTPCookieStorage.shared()
+		let cookieStorage = HTTPCookieStorage.shared
 		if let cookies = cookieStorage.cookies {
 			for cookie in cookies {
 				cookieStorage.deleteCookie(cookie)

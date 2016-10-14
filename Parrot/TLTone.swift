@@ -12,7 +12,7 @@ public extension NSSound {
 	public static var systemSounds: [String: Path] = {
 		var _systemSoundsCache = [String: Path]()
 		let library = "/System/Library/Sounds"
-		let sounds = FileManager.default().deepSearch(path: library).filter { $0.conformsToUTI(kUTTypeAudio) }
+		let sounds = FileManager.default.deepSearch(path: library).filter { $0.conformsToUTI(kUTTypeAudio) }
 		for s in sounds {
 			let name = ((s as NSString).deletingPathExtension as NSString).lastPathComponent
 			_systemSoundsCache[name] = s
@@ -30,7 +30,7 @@ public extension NSSound {
 	public static var alertTones: [String: Path] = {
 		var _alertToneCache = [String: Path]()
 		let library = "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources"
-		let tones = FileManager.default().deepSearch(path: library).filter { $0.conformsToUTI(kUTTypeAudio) }
+		let tones = FileManager.default.deepSearch(path: library).filter { $0.conformsToUTI(kUTTypeAudio) }
 		for t in tones {
 			let name = ((t as NSString).deletingPathExtension as NSString).lastPathComponent
 			if t.contains("AlertTones") {
@@ -50,7 +50,7 @@ public extension NSSound {
 	public static var ringTones: [String: Path] = {
 		var _ringToneCache = [String: Path]()
 		let library = "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources"
-		let tones = FileManager.default().deepSearch(path: library).filter { $0.conformsToUTI(kUTTypeAudio) }
+		let tones = FileManager.default.deepSearch(path: library).filter { $0.conformsToUTI(kUTTypeAudio) }
 		for t in tones {
 			let name = ((t as NSString).deletingPathExtension as NSString).lastPathComponent
 			if t.contains("Ringtones") {
@@ -68,7 +68,7 @@ public extension String {
 	/// a separate UTI class wrapper.
 	public func conformsToUTI(_ UTI: CFString) -> Bool {
 		let ext = (self as NSString).pathExtension
-		let fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext, nil)!.takeRetainedValue()
+		let fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)!.takeRetainedValue()
 		return UTTypeConformsTo(fileUTI, UTI)
 	}
 }
@@ -80,14 +80,14 @@ public extension FileManager {
 	public func deepSearch(path: String) -> [String] {
 		func _fileIsDir(_ file: String) -> Bool {
 			var isDir: ObjCBool = false;
-			FileManager.default().fileExists(atPath: file, isDirectory: &isDir)
-			return Bool(isDir);
+			FileManager.default.fileExists(atPath: file, isDirectory: &isDir)
+			return isDir.boolValue
 		}
 		func _fileFix(_ path: String, _ file: String) -> String {
 			return (path as NSString).appendingPathComponent(file) as String
 		}
 		
-		let _files = try? FileManager.default().contentsOfDirectory(atPath: path)
+		let _files = try? FileManager.default.contentsOfDirectory(atPath: path)
 		guard let files = _files else { return [] }
 		return files
 			.map { _fileFix(path, $0) }

@@ -3,7 +3,7 @@ import Foundation
 /* TODO: Use NSLinguisticTagger to identify nouns and search them and provide data. */
 /* TODO: Support meta[name="theme-color"] tags for background color tint. */
 
-public enum LinkPreviewError: ErrorProtocol {
+public enum LinkPreviewError: Error {
 	case invalidUrl(String)
 	case unsafeUrl(URL)
 	case invalidHeaders(URL, Int)
@@ -59,30 +59,30 @@ public struct LinkPreviewParser {
 	private static let _YTDomains = ["youtu.be", "www.youtube.com", "youtube.com"]
 	
 	// Precompile all the regex so we save on time a little.
-	private static let TITLE_REGEX = try! RegularExpression(pattern: "(?<=<title>)(?:[\\s\\S]*?)(?=<\\/title>)",
+	private static let TITLE_REGEX = try! NSRegularExpression(pattern: "(?<=<title>)(?:[\\s\\S]*?)(?=<\\/title>)",
 	                                                        options: .caseInsensitive)
-	private static let META_REGEX = try! RegularExpression(pattern: "(?:\\<meta)([\\s\\S]*?)(?:>)",
+	private static let META_REGEX = try! NSRegularExpression(pattern: "(?:\\<meta)([\\s\\S]*?)(?:>)",
 	                                                       options: .caseInsensitive)
-	private static let LINK_REGEX = try! RegularExpression(pattern: "(?:\\<link)([\\s\\S]*?)(?:>)",
+	private static let LINK_REGEX = try! NSRegularExpression(pattern: "(?:\\<link)([\\s\\S]*?)(?:>)",
 	                                                       options: .caseInsensitive)
-	private static let NAME_REGEX = try! RegularExpression(pattern: "(?<=name=\\\")[\\s\\S]+?(?=\\\")",
+	private static let NAME_REGEX = try! NSRegularExpression(pattern: "(?<=name=\\\")[\\s\\S]+?(?=\\\")",
 	                                                       options: .caseInsensitive)
-	private static let PROP_REGEX = try! RegularExpression(pattern: "(?<=property=\\\")[\\s\\S]+?(?=\\\")",
+	private static let PROP_REGEX = try! NSRegularExpression(pattern: "(?<=property=\\\")[\\s\\S]+?(?=\\\")",
 	                                                       options: .caseInsensitive)
-	private static let CONT_REGEX = try! RegularExpression(pattern: "(?<=content=\\\")[\\s\\S]+?(?=\\\")",
+	private static let CONT_REGEX = try! NSRegularExpression(pattern: "(?<=content=\\\")[\\s\\S]+?(?=\\\")",
 	                                                       options: .caseInsensitive)
-	private static let REL_REGEX = try! RegularExpression(pattern: "(?<=rel=\\\")[\\s\\S]+?(?=\\\")",
+	private static let REL_REGEX = try! NSRegularExpression(pattern: "(?<=rel=\\\")[\\s\\S]+?(?=\\\")",
 	                                                       options: .caseInsensitive)
-	private static let HREF_REGEX = try! RegularExpression(pattern: "(?<=href=\\\")[\\s\\S]+?(?=\\\")",
+	private static let HREF_REGEX = try! NSRegularExpression(pattern: "(?<=href=\\\")[\\s\\S]+?(?=\\\")",
 	                                                       options: .caseInsensitive)
 	
-	private static func _get(_ url: URL, method: String = "GET") -> (Data?, URLResponse?, NSError?) {
-		return URLSession.shared().synchronousRequest(url, method: method)
+	private static func _get(_ url: URL, method: String = "GET") -> (Data?, URLResponse?, Error?) {
+		return URLSession.shared.synchronousRequest(url, method: method)
 	}
 	
 	private static func _extractTitle(from str: String) -> String {
 		let o = str.find(matching: TITLE_REGEX)
-		let q = CFXMLCreateStringByUnescapingEntities(nil, (o.first ?? ""), nil) as String
+		let q = CFXMLCreateStringByUnescapingEntities(nil, (o.first as CFString!), nil) as String
 		return q.trimmingCharacters(in: .whitespacesAndNewlines)
 	}
 	
@@ -93,7 +93,7 @@ public struct LinkPreviewParser {
 			var vals = s.find(matching: CONT_REGEX)
 			keys = keys.flatMap { $0.components(separatedBy: " ") }
 			vals = vals.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-			vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0, nil) as String }
+			vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0 as CFString!, nil) as String }
 			keys.forEach { tags[$0] = (vals.first ?? "") }
 		}
 		return tags
@@ -108,14 +108,14 @@ public struct LinkPreviewParser {
 			//vals = vals.map { $0.trimmingCharacters(in: .whitespacesAndNewlines()) }
 			//vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0, nil) as String }
 			if keys.contains("icon") || keys.contains("apple-touch-icon") || keys.contains("apple-touch-icon-precomposed") {
-				icons.append(vals.first! ?? "")
+				icons.append(vals.first! )
 			}
 		}
 		return icons
 	}
 	
 	private static func _verifyLink(_ url: URL) -> (safe: Bool, error: Bool) {
-		let url2 = URL(string: SBURL + url.absoluteString!)!
+		let url2 = URL(string: SBURL + url.absoluteString)!
 		let out = _get(url2, method: "HEAD")
 		let resp = (out.1 as? HTTPURLResponse)?.statusCode ?? 0
 		return (safe: (resp == 204), error: !(resp == 200 || resp == 204))
@@ -179,10 +179,10 @@ public struct LinkPreviewParser {
 		let type = headers.mimeType ?? ""
 		if _YTDomains.contains(url.host ?? "") {
 			var id = ""
-			if let loc = url.absoluteString?.range(of: "youtu.be/") {
-				id = (url.absoluteString?.substring(from: loc.upperBound))!
-			} else if let loc = url.absoluteString?.range(of: "youtube.com/watch?v=") {
-				id = (url.absoluteString?.substring(from: loc.upperBound))!
+			if let loc = url.absoluteString.range(of: "youtu.be/") {
+				id = (url.absoluteString.substring(from: loc.upperBound))
+			} else if let loc = url.absoluteString.range(of: "youtube.com/watch?v=") {
+				id = (url.absoluteString.substring(from: loc.upperBound))
 			} else { throw LinkPreviewError.unhandleableUrl(url, id) }
 			
 			// domain-specialized case (not MIME type)

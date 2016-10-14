@@ -5,10 +5,10 @@ class SequentialTextSelectionManager: NSResponder {
 	private private(set) var textViews = [String: TextViewMetadata]()
 	private private(set) var sortedTextViews = NSMutableOrderedSet()
 	private var currentSession: TextViewSelectionSession?
-	private lazy var cachedAttributedText: AttributedString? = {
+	private lazy var cachedAttributedText: NSAttributedString? = {
 		return self.buildAttributedStringForCurrentSession()
 	}()
-	private var eventMonitor: AnyObject?
+	private var eventMonitor: Any?
 	private var firstResponder: Bool = false
 	
 	
@@ -29,7 +29,7 @@ class SequentialTextSelectionManager: NSResponder {
 	/// Register an NSTextView with the SequentialTextSelectionManager.
 	/// Note that each NSTextView must have a unique identifier when registered.
 	func register(textView: NSTextView, withUniqueIdentifier identifier: String,
-	              transformer block: ((AttributedString) -> AttributedString)?) {
+	              transformer block: ((NSAttributedString) -> NSAttributedString)?) {
 		
 		self.unregister(textView: textView)
 		textView.selectionIdentifier = identifier
@@ -74,7 +74,7 @@ class SequentialTextSelectionManager: NSResponder {
 	}
 	
 	/// Begin monitoring for mouse events that indicate dragging of text.
-	private func addLocalEventMonitor() -> AnyObject {
+	private func addLocalEventMonitor() -> Any {
 		let ev: NSEventMask = [.leftMouseDown, .leftMouseDragged, .leftMouseUp, .rightMouseDown]
 		return NSEvent.addLocalMonitorForEvents(matching: ev) { event in
 			switch event.type {
@@ -88,7 +88,7 @@ class SequentialTextSelectionManager: NSResponder {
 				return self.handleRightMouseDown(event: event) ? nil : event
 			default: return event
 			}
-			}!
+        }!
 	}
 	
 	/// Determine whether the event matches a valid and registered text view.
@@ -99,7 +99,7 @@ class SequentialTextSelectionManager: NSResponder {
 		
 		if  let textView = view as? NSTextView,
 			let identifier = textView.selectionIdentifier
-			where textView.isSelectable() {
+			, textView.isSelectable {
 			
 			return (self.textViews[identifier] != nil) ? textView : nil
 		} else { return nil }
@@ -110,7 +110,7 @@ class SequentialTextSelectionManager: NSResponder {
 		guard event.clickCount == 1 else { return false }
 		self.endSession()
 		if	let textView = self.validTextView(event: event)
-			where textView.window?.firstResponder != textView {
+			, textView.window?.firstResponder != textView {
 			
 			self.currentSession = TextViewSelectionSession(textView: textView, event: event)
 			return true
@@ -125,7 +125,7 @@ class SequentialTextSelectionManager: NSResponder {
 		event.window?.makeFirstResponder(self)
 		if	let textView = self.validTextView(event: event),
 			let index = CharacterIndexForTextViewEvent(event, textView)
-			where Int(index) < (textView.string! as NSString).length {
+			, Int(index) < (textView.string! as NSString).length {
 			
 			var attributes = textView.attributedString().attributes(at: Int(index), effectiveRange: nil)
 			if let link = attributes[NSLinkAttributeName] {
@@ -143,7 +143,7 @@ class SequentialTextSelectionManager: NSResponder {
 			textView.window!.makeFirstResponder(textView)
 			let identifier = self.currentSession?.textViewIdentifier
 			
-			let affinity: NSSelectionAffinity = (event.locationInWindow.y < self.currentSession?.windowPoint.y) ? .downstream : .upstream
+			let affinity: NSSelectionAffinity = (event.locationInWindow.y < self.currentSession!.windowPoint.y) ? .downstream : .upstream
 			self.currentSession?.windowPoint = event.locationInWindow
 			
 			var current: UInt
@@ -298,7 +298,7 @@ class SequentialTextSelectionManager: NSResponder {
 		
 		var subarray: [NSTextView]? = nil
 		if subrange.location == NSNotFound {
-			let views = self.sortedTextViews.mutableCopy()
+			let views = self.sortedTextViews.mutableCopy() as! NSMutableOrderedSet
 			views.remove(textView)
 			subarray = views.array as? [NSTextView]
 		} else {
@@ -311,7 +311,7 @@ class SequentialTextSelectionManager: NSResponder {
 				if affinity == NSSelectionAffinity.downstream {
 					range = NSMakeRange(currentRange!.location, (tv.string! as NSString).length - currentRange!.location)
 				} else {
-					range = NSMakeRange(0, NSMaxRange(currentRange!) ?? (tv.string! as NSString).length)
+					range = NSMakeRange(0, NSMaxRange(currentRange!))// ?? (tv.string! as NSString).length)
 				}
 			} else {
 				range = NSMakeRange(0, 0)
@@ -328,7 +328,7 @@ class SequentialTextSelectionManager: NSResponder {
 		self.cachedAttributedText = nil
 	}
 	
-	func buildAttributedStringForCurrentSession() -> AttributedString? {
+	func buildAttributedStringForCurrentSession() -> NSAttributedString? {
 		if self.currentSession == nil {
 			return nil
 		}
@@ -351,7 +351,7 @@ class SequentialTextSelectionManager: NSResponder {
 			string.append(fragment!)
 			if string.length > 0 /*&& idx != keys.count - 1*/ { // FIXME
 				let attributes = string.attributes(at: string.length - 1, effectiveRange: nil)
-				let newline = AttributedString(string: "\n", attributes: attributes)
+				let newline = NSAttributedString(string: "\n", attributes: attributes)
 				string.append(newline)
 			}
 		}
@@ -360,9 +360,9 @@ class SequentialTextSelectionManager: NSResponder {
 	}
 	
 	func textViewComparator() -> Comparator {
-		return { obj1, obj2 in //(obj1: NSTextView, obj2: NSTextView) -> ComparisonResult in
-			let frame1 = (obj1 as! NSTextView).convert(obj1.bounds, to: nil)
-			let frame2 = (obj2 as! NSTextView).convert(obj2.bounds, to: nil)
+		return { (obj1: NSTextView, obj2: NSTextView) -> ComparisonResult in
+			let frame1 = obj1.convert(obj1.bounds, to: nil)
+			let frame2 = obj2.convert(obj2.bounds, to: nil)
 			let y1 = NSMinY(frame1)
 			let y2 = NSMinY(frame2)
 			
@@ -373,7 +373,7 @@ class SequentialTextSelectionManager: NSResponder {
 			} else {
 				return .orderedSame
 			}
-		}
+		} as! Comparator
 	}
 	
 	func sortTextViews() {
@@ -396,7 +396,7 @@ class AttributeRange: NSObject {
 class TextViewSelectionRange: NSObject {
 	private(set) var textViewIdentifier: String
 	private(set) var range: NSRange
-	private(set) var attributedText: AttributedString
+	private(set) var attributedText: NSAttributedString
 	
 	init(textView: NSTextView, selectedRange range: NSRange) {
 		self.textViewIdentifier = textView.selectionIdentifier!
@@ -428,9 +428,9 @@ class TextViewSelectionSession: NSObject {
 
 class TextViewMetadata: NSObject {
 	private(set) var textView: NSTextView
-	private(set) var transformationBlock: ((AttributedString) -> AttributedString)?
+	private(set) var transformationBlock: ((NSAttributedString) -> NSAttributedString)?
 	
-	init(textView: NSTextView, transformationBlock: ((AttributedString) -> AttributedString)?) {
+	init(textView: NSTextView, transformationBlock: ((NSAttributedString) -> NSAttributedString)?) {
 		self.textView = textView
 		self.transformationBlock = transformationBlock
 	}
@@ -485,7 +485,7 @@ extension NSTextView {
 		self.stsm_highlightedRange = range
 		var selectedColor: NSColor? = nil
 		if active {
-			selectedColor = self.selectedTextAttributes[NSBackgroundColorAttributeName] as? NSColor ?? NSColor.selectedTextBackgroundColor()
+			selectedColor = self.selectedTextAttributes[NSBackgroundColorAttributeName] as? NSColor ?? NSColor.selectedTextBackgroundColor
 		}
 		else {
 			selectedColor = NSColor(deviceRed:0.83, green:0.83, blue:0.83, alpha:1.0)
@@ -504,7 +504,7 @@ extension NSTextView {
 			if value == nil {
 				return
 			}
-			let attrRange: AttributeRange = AttributeRange(attribute: attribute, value: value!, range: range)
+			let attrRange: AttributeRange = AttributeRange(attribute: attribute, value: value! as AnyObject, range: range)
 			ranges.append(attrRange)
 		})
 		self.stsm_backgroundColorRanges = ranges

@@ -7,7 +7,7 @@ public typealias UserNotification = NSUserNotification
 
 /// Customized NSUserNotificationCenter with easier access.
 private let UserNotificationCenter: NSUserNotificationCenter = {
-	let s = NSUserNotificationCenter.default()
+	let s = NSUserNotificationCenter.default
 	s.delegate = s; return s
 }()
 
@@ -48,13 +48,13 @@ public extension NSUserNotification {
 	}
 	
 	/// Sets the provided option as explained in `NSUserNotification.Options` directly.
-	public func set(option: Options, value: AnyObject) {
+	public func set(option: Options, value: Any?) {
 		if self.userInfo == nil { self.userInfo = [:] }
 		self.userInfo?[option.rawValue] = value
 	}
 	
 	/// Gets the provided option as explained in `NSUserNotification.Options` directly.
-	public func get(option: Options) -> AnyObject? {
+	public func get(option: Options) -> Any? {
 		return self.userInfo?[option.rawValue]
 	}
 }
@@ -170,7 +170,7 @@ public extension NSApplication {
 	/// value. Accepts the range [0.0, 1.0], and anything outside removes the bar.
 	public var appProgress: Double? {
 		get { return _appProgress }
-		set { _appProgress = (newValue >= 0.0 && newValue <= 1.0 ? newValue : nil) ;
+		set { _appProgress = (newValue != nil && (newValue! >= 0.0 && newValue! <= 1.0) ? newValue : nil);
 			
 			let progress = _appProgress != nil ? _appProgress! : -1.0
 			NSApp.perform(Selector(("_displayProgressNotification:isIndeterminate:")),
@@ -181,14 +181,14 @@ public extension NSApplication {
 
 extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 	public func userNotificationCenter(_ center: NSUserNotificationCenter, didDeliver notification: NSUserNotification) {
-		NotificationCenter.default().post(name: UserNotification.didDeliverNotification, object: notification)
+		NotificationCenter.default.post(name: UserNotification.didDeliverNotification, object: notification)
 		guard notification.isPresented else { return }
 		
-		if let alert = notification.get(option: .customSoundPath) as? String where alert.conformsToUTI(kUTTypeAudio) {
+		if let alert = notification.get(option: .customSoundPath) as? String , alert.conformsToUTI(kUTTypeAudio) {
 			NSSound(contentsOfFile: alert, byReference: true)?.play()
 		}
 		
-		if let s = notification.get(option: .vibrateForceTouch) as? Bool where s {
+		if let s = notification.get(option: .vibrateForceTouch) as? Bool , s {
 			let vibrate = Settings[Parrot.VibrateForceTouch] as? Bool ?? false
 			let interval = Settings[Parrot.VibrateInterval] as? Int ?? 10
 			let length = Settings[Parrot.VibrateLength] as? Int ?? 1000
@@ -203,14 +203,14 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 			NSApp.requestUserAttention(r)
 		}
 		
-		if let s = notification.get(option: .speakContents) as? Bool where s {
+		if let s = notification.get(option: .speakContents) as? Bool , s {
 			let text = (notification.title ?? "") + (notification.subtitle ?? "") + (notification.informativeText ?? "")
 			NSApp.perform(Selector(("speakString:")), with: text)
 		}
 	}
 	
 	public func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
-		NotificationCenter.default().post(name: UserNotification.didActivateNotification, object: notification)
+		NotificationCenter.default.post(name: UserNotification.didActivateNotification, object: notification)
 	}
 	
 	public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {

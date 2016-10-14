@@ -18,16 +18,16 @@ public func ??= <T>(lhs: inout T?,  rhs: @autoclosure () -> T) {
 // Because warnings are bad.
 public extension Optional {
 	@discardableResult
-	public func _flatMap<U>(_ f: @noescape (Wrapped) throws -> U?) rethrows -> U? {
+	public func _flatMap<U>(_ f: (Wrapped) throws -> U?) rethrows -> U? {
 		return try flatMap(f)
 	}
 }
 
 public extension Collection {
-    public func dictionaryMap<K, V>(transform: (element: Self.Iterator.Element) -> [K: V]) -> [K: V] {
+    public func dictionaryMap<K, V>(transform: (_ element: Self.Iterator.Element) -> [K: V]) -> [K: V] {
         var dictionary = [K: V]()
         self.forEach {
-            let dict = transform(element: $0)
+            let dict = transform($0)
             for (key, value) in dict {
                 dictionary[key] = value
             }
@@ -67,7 +67,7 @@ public extension String {
 		let options: JSONSerialization.ReadingOptions = [.allowFragments, .mutableContainers, .mutableLeaves]
 		do {
 			let obj = try JSONSerialization.jsonObject(with: _str!, options: options)
-			return obj
+			return obj as AnyObject
 		} catch {
 			throw error
 		}
@@ -102,13 +102,13 @@ public extension String {
 	}
 	
 	public mutating func replaceAllOccurrences(matching regex: String, with: String) {
-		while let range = self.range(of: regex, options: .regularExpressionSearch) {
+		while let range = self.range(of: regex, options: .regularExpression) {
 			self = self.replacingCharacters(in: range, with: with)
 		}
 	}
 	
 	public func findAllOccurrences(matching regex: String, all: Bool = false) -> [String] {
-		let nsregex = try! RegularExpression(pattern: regex, options: .caseInsensitive)
+		let nsregex = try! NSRegularExpression(pattern: regex, options: .caseInsensitive)
 		let results = nsregex.matches(in: self, options:[],
 		                              range:NSMakeRange(0, self.characters.count))
 		
@@ -118,12 +118,12 @@ public extension String {
 			}
 		} else {
 			return results.map {
-				self.substring(with: NSRangeToRange(s: self, r: $0.range(at: 1)))
+				self.substring(with: NSRangeToRange(s: self, r: $0.rangeAt(1)))
 			}
 		}
 	}
 	
-	public func find(matching regex: RegularExpression) -> [String] {
+	public func find(matching regex: NSRegularExpression) -> [String] {
 		return regex.matches(in: self, options:[], range:NSMakeRange(0, self.characters.count)).map {
 			self.substring(with: NSRangeToRange(s: self, r: $0.range))
 		}
@@ -187,12 +187,12 @@ public extension DispatchSemaphore {
 public extension NotificationCenter {
 	
 	@nonobjc @discardableResult
-	public func addObserver(forName name: NSNotification.Name, object obj: AnyObject? = nil, using block: (Notification) -> Swift.Void) -> NSObjectProtocol {
+	public func addObserver(forName name: NSNotification.Name, object obj: AnyObject? = nil, using block: @escaping (Notification) -> Swift.Void) -> NSObjectProtocol {
 		return self.addObserver(forName: name, object: obj, queue: nil, using: block)
 	}
 	
 	@nonobjc @discardableResult
-	public func addObserver(forName name: String, object obj: AnyObject? = nil, using block: (Notification) -> Swift.Void) -> NSObjectProtocol {
+	public func addObserver(forName name: String, object obj: AnyObject? = nil, using block: @escaping (Notification) -> Swift.Void) -> NSObjectProtocol {
 		return self.addObserver(forName: Notification.Name(rawValue: name), object: obj, queue: nil, using: block)
 	}
 }

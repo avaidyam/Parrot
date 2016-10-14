@@ -16,7 +16,7 @@ public protocol ProtoEnum {
 	init(_ rawValue: Int)
 }
 
-public protocol ProtoEnumExtensor: ProtoEnum, IntegerLiteralConvertible, RawRepresentable, Hashable, Equatable {}
+public protocol ProtoEnumExtensor: ProtoEnum, ExpressibleByIntegerLiteral, RawRepresentable, Hashable, Equatable {}
 public extension ProtoEnumExtensor {
 	public init(integerLiteral value: Int) {
 		self.init(value)
@@ -96,7 +96,7 @@ public struct ProtoFieldDescriptor {
 		let comps = self.name.components(separatedBy: "_")
 		return comps.dropFirst()
 			.map { $0.capitalized }
-			.reduce(comps.first!, combine: +)
+			.reduce(comps.first!, +)
 	}
 }
 
@@ -141,16 +141,16 @@ public enum ProtoFieldType {
 	
 	public var type: (String, Any.Type) {
 		switch self {
-		case string: return ("String", String.self)
-		case bytes: return ("String", String.self)
-		case bool: return ("Bool", Bool.self)
-		case double: return ("Double", Double.self)
-		case float: return ("Float", Float.self)
-		case uint32, fixed32: return ("UInt32", UInt32.self)
-		case uint64, fixed64: return ("UInt64", UInt64.self)
-		case int32, sint32, sfixed32: return ("Int32", Int32.self)
-		case int64, sint64, sfixed64: return ("Int64", Int64.self)
-		case prototype(let name): return (name, Any.self)
+		case .string: return ("String", String.self)
+		case .bytes: return ("String", String.self)
+		case .bool: return ("Bool", Bool.self)
+		case .double: return ("Double", Double.self)
+		case .float: return ("Float", Float.self)
+		case .uint32, .fixed32: return ("UInt32", UInt32.self)
+		case .uint64, .fixed64: return ("UInt64", UInt64.self)
+		case .int32, .sint32, .sfixed32: return ("Int32", Int32.self)
+		case .int64, .sint64, .sfixed64: return ("Int64", Int64.self)
+		case .prototype(let name): return (name, Any.self)
 		}
 	}
 	
@@ -163,12 +163,12 @@ public enum ProtoFieldType {
 		guard value2 != nil else { return value2 }
 		let value = "\(value2!)"
 		switch self {
-		case double: return Double(value)!
-		case float: return Float(value)!
-		case uint32, fixed32: return UInt32(value)!
-		case uint64, fixed64: return UInt64(value)!
-		case int32, sint32, sfixed32: return Int32(value)!
-		case int64, sint64, sfixed64: return Int64(value)!
+		case .double: return Double(value)!
+		case .float: return Float(value)!
+		case .uint32, .fixed32: return UInt32(value)!
+		case .uint64, .fixed64: return UInt64(value)!
+		case .int32, .sint32, .sfixed32: return Int32(value)!
+		case .int64, .sint64, .sfixed64: return Int64(value)!
 		default: return value2 /* CANNOT CAST */
 		}
 	}
@@ -182,7 +182,7 @@ public enum ProtoFieldType {
 	}
 }
 
-public enum ProtoError: ErrorProtocol {
+public enum ProtoError: Error {
 	case typeMismatchError
 	case requiredFieldError
 	case fieldNameNotFoundError
@@ -220,8 +220,8 @@ public struct ProtoEnumDescriptor {
 			let comps = v.components(separatedBy: "_")
 			let name = comps.dropFirst()
 				.map { $0.capitalized }
-				.reduce(comps.first!.capitalized, combine: +)
-				.replacingOccurrences(of: self.name, with: "", options: .caseInsensitiveSearch)
+				.reduce(comps.first!.capitalized, +)
+				.replacingOccurrences(of: self.name, with: "", options: .caseInsensitive)
 			
 			output += "\tpublic static let \(name): \(self.name) = \(k)\n"
 		}
@@ -363,8 +363,8 @@ public struct ProtoFileDescriptor {
 	
 	public func toString() -> String {
 		var output = ""
-		output += self.enums.map { $0.toString() + "\n\n" }.reduce("", combine: +)
-		output += self.messages.map { $0.toString() + "\n\n" }.reduce("", combine: +)
+		output += self.enums.map { $0.toString() + "\n\n" }.reduce("", +)
+		output += self.messages.map { $0.toString() + "\n\n" }.reduce("", +)
 		output += "let _protoEnums: [String: ProtoEnum.Type] = [\n"
 		for e in self.enums {
 			output += "\t\"\(e.name)\": \(e.name).self,\n"
@@ -386,7 +386,7 @@ public func translateProtoFile(filename: String) {
 	}
 	
 	do {
-		let content = try String(contentsOfFile: Process.arguments[1], encoding: String.Encoding.utf8)
+		let content = try String(contentsOfFile: CommandLine.arguments[1], encoding: String.Encoding.utf8)
 		let output = try! ProtoFileDescriptor.fromString(string: content).toString()
 		
 		do {

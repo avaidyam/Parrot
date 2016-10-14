@@ -37,7 +37,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     public init(client: Client) {
         self.client = client
         
-        let _c = NotificationCenter.default()
+        let _c = NotificationCenter.default
         let a = _c.addObserver(forName: Client.didConnectNotification, object: client, queue: nil) { _ in
             self.sync()
         }
@@ -68,7 +68,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 		
 		// Remove all the observers so we aren't receiving calls later on.
 		self.tokens.forEach {
-			NotificationCenter.default().removeObserver($0)
+			NotificationCenter.default.removeObserver($0)
 		}
 	}
     
@@ -195,7 +195,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
                 if let conv = self.conv_dict[conv_state.conversationId!.id!] {
                     conv.update_conversation(conversation: conv_state.conversation!)
                     for event in conv_state.event {
-                        if event.timestamp > UInt64(self.sync_timestamp.toUTC()) {
+                        if event.timestamp! > UInt64(self.sync_timestamp.toUTC()) {
                             
                             // This updates the sync_timestamp for us, as well as triggering events.
                             //self._eventNotification(event: event)

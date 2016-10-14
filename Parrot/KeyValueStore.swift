@@ -6,13 +6,13 @@ import Foundation
 /// A KeyValueStore is a container layer that stores values for given keys
 /// and supports specific application-defined or special/protected domains.
 public protocol KeyValueStore {
-	subscript(key: String) -> AnyObject? { get set }
-	subscript(key: String, domain domain: String) -> AnyObject? { get set }
+	subscript(key: String) -> Any? { get set }
+	subscript(key: String, domain domain: String) -> Any? { get set }
 }
 
 /// A KeyValueStore that encodes its contents in the OS defaults database.
 public final class SettingsStore: KeyValueStore {
-	private init() {}
+	fileprivate init() {}
 	
 	/// A special protected SettingsStore domain.
 	/// In case this is used as the domain for the SettingsStore, it will read from
@@ -26,21 +26,21 @@ public final class SettingsStore: KeyValueStore {
 	
 	/// Set or get a  key's value with the default domain (global search list).
 	/// Note: setting a key's value to nil will delete the key from the store.
-	public subscript(key: String) -> AnyObject? {
+	public subscript(key: String) -> Any? {
 		get {
-			return UserDefaults.standard().value(forKey: key)
+			return UserDefaults.standard.value(forKey: key)
 		}
 		set (value) {
-			UserDefaults.standard().setValue(value, forKey: key)
+			UserDefaults.standard.setValue(value, forKey: key)
 		}
 	}
 	
 	/// Set or get a key's value with a custom specified domain.
 	/// Note: setting a key's value to nil will delete the key from the store.
-	public subscript(key: String, domain domain: String) -> AnyObject? {
+	public subscript(key: String, domain domain: String) -> Any? {
 		get {
 			if domain == SettingsStore.globalDomain {
-				return UserDefaults.standard().persistentDomain(forName: UserDefaults.globalDomain)?[key]
+				return UserDefaults.standard.persistentDomain(forName: UserDefaults.globalDomain)?[key]
 			} else if domain == SettingsStore.ubiquitousDomain {
 				NSUbiquitousKeyValueStore.default().synchronize()
 				return NSUbiquitousKeyValueStore.default().object(forKey: key)
@@ -63,12 +63,12 @@ public final class SettingsStore: KeyValueStore {
 
 /// A KeyValueStore that securely encodes its contents in the OS keychain.
 public final class SecureSettingsStore: KeyValueStore {
-	private init() {}
-	private var _defaultDomain = Bundle.main().bundleIdentifier ?? "SecureSettings:ERR"
+	fileprivate init() {}
+	private var _defaultDomain = Bundle.main.bundleIdentifier ?? "SecureSettings:ERR"
 	
 	/// Set or get a secure key's value with the default domain (the bundle identifier).
 	/// Note: setting a key's value to nil will delete the key from the store.
-	public subscript(key: String) -> AnyObject? {
+	public subscript(key: String) -> Any? {
 		get {
 			return self[key, domain: _defaultDomain]
 		}
@@ -79,10 +79,10 @@ public final class SecureSettingsStore: KeyValueStore {
 	
 	/// Set or get a secure key's value with a custom specified domain.
 	/// Note: setting a key's value to nil will delete the key from the store.
-	public subscript(key: String, domain domain: String) -> AnyObject? {
+	public subscript(key: String, domain domain: String) -> Any? {
 		get {
 			var passwordLength: UInt32 = 0
-			var passwordPtr: UnsafeMutablePointer<Void>? = nil
+			var passwordPtr: UnsafeMutableRawPointer? = nil
 			let status = SecKeychainFindGenericPassword(nil,
 			                                            UInt32(domain.utf8.count), domain,
 			                                            UInt32(key.utf8.count), key,
@@ -101,7 +101,7 @@ public final class SecureSettingsStore: KeyValueStore {
 				                                            UInt32(domain.utf8.count), domain,
 				                                            UInt32(key.utf8.count), key,
 				                                            nil, nil, &itemRef)
-				if let item = itemRef where status == OSStatus(errSecSuccess) {
+				if let item = itemRef , status == OSStatus(errSecSuccess) {
 					SecKeychainItemDelete(item)
 				}
 			} else {

@@ -2,7 +2,7 @@ import AppKit
 
 @objc public protocol NSTextViewExtendedDelegate: NSTextViewDelegate {
 	@objc(textView:didInsertText:replacementRange:)
-	optional func textView(_ textView: NSTextView, didInsertText: AnyObject, replacementRange: NSRange)
+	optional func textView(_ textView: NSTextView, didInsertText: Any, replacementRange: NSRange)
 }
 
 @IBDesignable
@@ -14,9 +14,9 @@ public class NSExtendedTextView: NSTextView {
 	// Apparently this property has been private on macOS since 10.7.
 	@IBInspectable
 	public var placeholderString: String? = nil
-	public var placeholderAttributedString: AttributedString? = nil
+	public var placeholderAttributedString: NSAttributedString? = nil
 	
-	public override func insertText(_ string: AnyObject, replacementRange: NSRange) {
+	public override func insertText(_ string: Any, replacementRange: NSRange) {
 		super.insertText(string, replacementRange: replacementRange)
 		
 		if let d = self.delegate as? NSTextViewExtendedDelegate {
@@ -24,7 +24,7 @@ public class NSExtendedTextView: NSTextView {
 		}
 	}
 	
-	public override func paste(_ sender: AnyObject?) {
+	public override func paste(_ sender: Any?) {
 		if self.shouldAlwaysPasteAsPlainText {
 			self.pasteAsPlainText(sender)
 		} else {

@@ -131,13 +131,13 @@ public class ListView: NSView {
 		self.tableView.sizeLastColumnToFit()
 		
 		
-		NotificationCenter.default().addObserver(self, selector: #selector(ListView.tableViewDidScroll(_:)),
+		NotificationCenter.default.addObserver(self, selector: #selector(ListView.tableViewDidScroll(_:)),
 		                                         name: .NSViewBoundsDidChange,
 		                                         object: self.scrollView.contentView)
 	}
 	
 	deinit {
-		NotificationCenter.default().removeObserver(self)
+		NotificationCenter.default.removeObserver(self)
 	}
 	
 	@IBInspectable // FIXME
@@ -166,11 +166,11 @@ public class ListView: NSView {
 	/*public var dataSource: [Wrapper<Any>]! {
 		didSet { self.update() }
 	}*/
-	private var dataSource: [Any] {
+	fileprivate var dataSource: [Any] {
 		return self.dataSourceProvider?() ?? []
 	}
 	
-	public func update(animated: Bool = true, _ handler: () -> () = {}) {
+	public func update(animated: Bool = true, _ handler: @escaping () -> () = {}) {
 		DispatchQueue.main.async {
 			self.tableView.reloadData()
 			switch self.updateScrollDirection {
@@ -183,7 +183,7 @@ public class ListView: NSView {
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
 		DispatchQueue.main.async {
-			guard let clip = self.tableView.superview as? NSClipView where animated else {
+			guard let clip = self.tableView.superview as? NSClipView , animated else {
 				self.tableView.scrollRowToVisible(row); return
 			}
 			
@@ -211,14 +211,14 @@ public class ListView: NSView {
 	}
 	
 	public var dataSourceProvider: (() -> [Any])? = nil
-	public var viewClassProvider: ((row: Int) -> ListViewCell.Type)? = nil
-	public var dynamicHeightProvider: ((row: Int) -> Double)? = nil
-	public var clickedRowProvider: ((row: Int) -> Void)? = nil
-	public var selectionProvider: ((row: Int) -> Void)? = nil
-	public var rowActionProvider: ((row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
-	public var menuProvider: ((rows: [Int]) -> NSMenu?)? = nil
-	public var pasteboardProvider: ((row: Int) -> NSPasteboardItem?)? = nil
-	public var scrollbackProvider: ((direction: ScrollDirection) -> Void)? = nil
+	public var viewClassProvider: ((_ row: Int) -> ListViewCell.Type)? = nil
+	public var dynamicHeightProvider: ((_ row: Int) -> Double)? = nil
+	public var clickedRowProvider: ((_ row: Int) -> Void)? = nil
+	public var selectionProvider: ((_ row: Int) -> Void)? = nil
+	public var rowActionProvider: ((_ row: Int, _ edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
+	public var menuProvider: ((_ rows: [Int]) -> NSMenu?)? = nil
+	public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil
+	public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
 }
 
 // Essential Support
@@ -231,7 +231,7 @@ extension ListView: NSExtendedTableViewDelegate {
 	
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return CGFloat(self.sizeClass.calculate {
-			let cellClass = (self.viewClassProvider?(row: row) ?? ListViewCell.self)
+			let cellClass = (self.viewClassProvider?(row) ?? ListViewCell.self)
 			return cellClass.cellHeight(forWidth: self.bounds.size.width, cellValue: self.dataSource[row]).native
 		})
 	}
@@ -245,12 +245,12 @@ extension ListView: NSExtendedTableViewDelegate {
 	}
 	
 	public func tableViewDidScroll(_ notification: Notification) {
-		guard let o = notification.object as? NSView where o == self.scrollView.contentView else { return }
+		guard let o = notification.object as? NSView , o == self.scrollView.contentView else { return }
 		if self.visibleRows.contains(0) {
-			self.scrollbackProvider?(direction: .top)
+			self.scrollbackProvider?(.top)
 		}
 		if self.visibleRows.contains(self.dataSource.count - 1) {
-			self.scrollbackProvider?(direction: .bottom)
+			self.scrollbackProvider?(.bottom)
 		}
 	}
 	
@@ -260,12 +260,12 @@ extension ListView: NSExtendedTableViewDelegate {
 	}
 	
 	public func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
-		return self.rowActionProvider?(row: row, edge: edge) ?? []
+		return self.rowActionProvider?(row, edge) ?? []
 	}
 	
 	@objc(tableView:viewForTableColumn:row:)
 	public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		let cellClass = self.viewClassProvider?(row: row) ?? ListViewCell.self
+		let cellClass = self.viewClassProvider?(row) ?? ListViewCell.self
 		var view = self.tableView.make(withIdentifier: cellClass.className(), owner: self) as? ListViewCell
 		if view == nil {
 			log.warning("Cell class \(cellClass) not registered!")
@@ -310,7 +310,7 @@ extension ListView /*: NSExtendedTableViewDelegate*/ {
 	}
 	
 	public func tableViewSelectionDidChange(_ notification: Notification) {
-		self.selectionProvider?(row: self.tableView.selectedRow)
+		self.selectionProvider?(self.tableView.selectedRow)
 	}
 	
 	public func tableViewSelectionIsChanging(_ notification: Notification) {
@@ -318,11 +318,11 @@ extension ListView /*: NSExtendedTableViewDelegate*/ {
 	}
 	
 	public func tableView(_ tableView: NSTableView, menuForRows rows: IndexSet) -> NSMenu? {
-		return self.menuProvider?(rows: rows.map { $0 })
+		return self.menuProvider?(rows.map { $0 })
 	}
 	
 	public func tableView(_: NSTableView, didClickRow row: Int) {
-		self.clickedRowProvider?(row: row)
+		self.clickedRowProvider?(row)
 	}
 }
 
@@ -330,7 +330,7 @@ extension ListView /*: NSExtendedTableViewDelegate*/ {
 extension ListView /*: NSExtendedTableViewDelegate*/ {
 	
 	public func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-		return self.pasteboardProvider?(row: row)
+		return self.pasteboardProvider?(row)
 	}
 	
 	@objc(tableView:draggingSession:willBeginAtPoint:forRowIndexes:)
@@ -395,12 +395,12 @@ public class NSExtendedTableView: NSTableView {
 		return super.menu(for: event)
 	}
 	
-	public override func mouseDown(_ event: NSEvent) {
+	public override func mouseDown(with event: NSEvent) {
 		let loc = self.convert(event.locationInWindow, from: nil)
 		let row = self.row(at: loc)
 		
-		super.mouseDown(event)
-		if let d = self.delegate as? NSExtendedTableViewDelegate where row != -1 {
+		super.mouseDown(with: event)
+		if let d = self.delegate as? NSExtendedTableViewDelegate , row != -1 {
 			d.tableView?(self, didClickRow: row)
 		}
 	}

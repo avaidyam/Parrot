@@ -6,7 +6,7 @@ private func random64(_ upper_bound: UInt64) -> UInt64 {
 	let range = UInt64.max - UInt64.max % upper_bound
 	var rnd: UInt64 = 0
 	repeat {
-		arc4random_buf(&rnd, sizeofValue(rnd))
+		arc4random_buf(&rnd, MemoryLayout.size(ofValue: rnd))
 	} while rnd >= range
 	return rnd % upper_bound
 }
@@ -15,20 +15,20 @@ private func random64(_ upper_bound: UInt64) -> UInt64 {
 internal let None = NSNull()
 
 /// Client API Operation Support
-private extension Client {
+fileprivate extension Client {
 	
 	// Use this method for constructing request messages when calling Hangouts APIs.
-	private func getRequestHeader() -> [AnyObject] {
+	fileprivate func getRequestHeader() -> [Any] {
 		return [
 			[None /* 6 */, None /* 3 */, "parrot", None, None, None],
-			[self.client_id ?? None, None],
+			[(self.client_id ?? None) as Any, None],
 			None,
 			"en"
 		]
 	}
 	
 	// Use this method for constructing request messages when calling Hangouts APIs.
-	private func generateClientID() -> UInt64 {
+	fileprivate func generateClientID() -> UInt64 {
 		return random64(UInt64(pow(2.0, 32.0)))
 	}
 }
@@ -39,7 +39,7 @@ public extension Client {
 	// Add user to existing conversation.
 	// conversation_id must be a valid conversation ID.
 	// chat_id_list is list of users which should be invited to conversation.
-	public func addUser(conversation_id: String, chat_id_list: [String], cb: ((response: AddUserResponse?) -> Void)? = nil) {
+    public func addUser(conversation_id: String, chat_id_list: [String], cb: @escaping (AddUserResponse?) -> Void = {_ in}) {
 		let each = chat_id_list.map { [$0, None, None, "unknown", None, []] }
 		let data = [
 			self.getRequestHeader(),
@@ -51,16 +51,16 @@ public extension Client {
 				NSNumber(value: self.generateClientID()),
 				2, None, 4
 			]
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/adduser", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Create new conversation.
 	// chat_id_list is list of users which should be invited to conversation (except from yourself).
 	public func createConversation(chat_id_list: [String], force_group: Bool = false,
-	                               cb: ((response: CreateConversationResponse?) -> Void)? = nil) {
+	                               cb: @escaping (CreateConversationResponse?) -> Void = {_ in}) {
 		let each = chat_id_list.map { [$0, None, None, "unknown", None, []] }
 		let data = [
 			self.getRequestHeader(),
@@ -68,15 +68,15 @@ public extension Client {
 			NSNumber(value: self.generateClientID()),
 			None,
 			each
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/createconversation", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Delete one-to-one conversation.
 	// conversation_id must be a valid conversation ID.
-	public func deleteConversation(conversation_id: String, cb: ((response: DeleteConversationResponse?) -> Void)? = nil) {
+	public func deleteConversation(conversation_id: String, cb: @escaping (DeleteConversationResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
@@ -86,21 +86,21 @@ public extension Client {
 			NSNumber(value: UInt64(Date().toUTC())),
 			None,
 			[]
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/deleteconversation", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Send a easteregg to a conversation.
-	public func sendEasterEgg(conversation_id: String, easteregg: String, cb: ((response: EasterEggResponse?) -> Void)? = nil) {
+	public func sendEasterEgg(conversation_id: String, easteregg: String, cb: @escaping (EasterEggResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
 			[easteregg, None, 1],
-			]
+        ] as [Any]
 		self.channel?.request(endpoint: "conversations/easteregg", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -113,7 +113,7 @@ public extension Client {
 		event_timestamp: Date,
 		includeMetadata: Bool = true,
 		max_events: Int = 50,
-		cb: (response: GetConversationResponse?) -> Void)
+		cb: @escaping (GetConversationResponse?) -> Void)
 	{
 		let data = [
 			self.getRequestHeader(),
@@ -131,48 +131,48 @@ public extension Client {
 				None,  // storageContinuationToken
 				NSNumber(value: UInt64(event_timestamp.toUTC()))//to_timestamp(date: event_timestamp),  // eventTimestamp
 			] // eventContinuationToken (specifying timestamp is sufficient)
-		]
+		] as [Any]
 		
 		self.channel?.request(endpoint: "conversations/getconversation", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Return information about a list of contacts.
-	public func getEntitiesByID(chat_id_list: [String], cb: (response: GetEntityByIdResponse?) -> Void) {
-		guard chat_id_list.count > 0 else { cb(response: nil); return }
+	public func getEntitiesByID(chat_id_list: [String], cb: @escaping (GetEntityByIdResponse?) -> Void) {
+		guard chat_id_list.count > 0 else { cb(nil); return }
 		let data = [
 			self.getRequestHeader(),
 			None,
 			chat_id_list.map { [$0] }
-		]
+		] as [Any]
 		/*
 		self.request(endpoint: "contacts/getentitybyid", body: data) { r in
 		log.info("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue))")
 		}*/
 		self.channel?.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
-	public func getSelfInfo(cb: ((response: GetSelfInfoResponse?) -> Void)) {
+	public func getSelfInfo(cb: @escaping ((GetSelfInfoResponse?) -> Void)) {
 		let data = [
 			self.getRequestHeader()
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "contacts/getselfinfo", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
-	public func getSuggestedEntities(max_count: Int, cb: ((response: GetSuggestedEntitiesResponse?) -> Void)) {
+	public func getSuggestedEntities(max_count: Int, cb: @escaping ((GetSuggestedEntitiesResponse?) -> Void)) {
 		let data = [
 			self.getRequestHeader(),
 			None,
 			None,
 			max_count
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "contacts/getsuggestedentities", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -183,7 +183,7 @@ public extension Client {
 	                          inCall: Bool = true,
 	                          device: Bool = true,
 	                          lastSeen: Bool = true,
-	                          cb: ((response: QueryPresenceResponse?) -> Void)) {
+	                          cb: @escaping ((QueryPresenceResponse?) -> Void)) {
 		guard chat_ids.count > 0 else {
 			print("Cannot query presence for zero chat IDs!")
 			return
@@ -193,15 +193,15 @@ public extension Client {
 			self.getRequestHeader(),
 			[chat_ids],
 			[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // what are FieldMasks 4, 5, 8, 9?
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "presence/querypresence", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Leave group conversation.
 	// conversation_id must be a valid conversation ID.
-	public func removeUser(conversation_id: String, cb: ((response: RemoveUserResponse?) -> Void)? = nil) {
+    public func removeUser(conversation_id: String, cb: @escaping (RemoveUserResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			None,
@@ -212,14 +212,14 @@ public extension Client {
 				NSNumber(value: self.generateClientID()),
 				2
 			],
-			]
+        ] as [Any]
 		self.channel?.request(endpoint: "conversations/removeuser", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Set the name of a conversation.
-	public func renameConversation(conversation_id: String, name: String, cb: ((response: RenameConversationResponse?) -> Void)? = nil) {
+	public func renameConversation(conversation_id: String, name: String, cb: @escaping (RenameConversationResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			None,
@@ -230,22 +230,22 @@ public extension Client {
 				NSNumber(value: self.generateClientID()),
 				1
 			]
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/renameconversation", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Search for people.
-	public func searchEntities(search_string: String, max_results: Int, cb: ((response: SearchEntitiesResponse?) -> Void)? = nil) {
+	public func searchEntities(search_string: String, max_results: Int, cb: @escaping (SearchEntitiesResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			[],
 			search_string,
 			max_results,
-			]
+        ] as [Any]
 		self.channel?.request(endpoint: "conversations/searchentities", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -260,15 +260,15 @@ public extension Client {
 	// Client.upload_image. If provided, the image will be attached to the
 	// message.
 	public func sendChatMessage(conversation_id: String,
-	                            segments: [NSArray],
+	                            segments: [[Any]],
 	                            image_id: String? = nil,
 	                            image_user_id: String? = nil,
 	                            otr_status: OffTheRecordStatus = .OnTheRecord,
 	                            delivery_medium: DeliveryMediumType = .Babel,
-	                            cb: ((response: SendChatMessageResponse?) -> Void)? = nil)
+	                            cb: @escaping (SendChatMessageResponse?) -> Void = {_ in})
 	{
 		// Support sending images from other user id's.
-		var a: NSObject
+		var a: Any
 		if image_id != nil {
 			if image_user_id != nil {
 				a = [[image_id!, false, image_user_id!, true]]
@@ -297,56 +297,56 @@ public extension Client {
 				[NSNumber(value: delivery_medium.rawValue), None],
 				NSNumber(value: delivery_medium == .Babel ? EventType.RegularChatMessage.rawValue : EventType.Sms.rawValue)
 			]
-		]
+		] as [Any]
 		
 		self.channel?.request(endpoint: "conversations/sendchatmessage", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	public func setActiveClient(is_active: Bool, timeout_secs: Int,
-	                            cb: ((response: SetActiveClientResponse?) -> Void)? = nil) {
+	                            cb: @escaping (SetActiveClientResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			is_active, // whether the client is active or not
 			"\(self.email!)/" + (self.client_id ?? ""), // full_jid: user@domain/resource
 			timeout_secs // timeout in seconds for this client to be active
-		]
+		] as [Any]
 		
 		// Set the active client.
 		self.channel?.request(endpoint: "clients/setactiveclient", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	public func setConversationNotificationLevel(conversation_id: String, level: NotificationLevel = .Ring,
-	                                             cb: ((response: SetConversationNotificationLevelResponse?) -> Void)? = nil) {
+	                                             cb: @escaping (SetConversationNotificationLevelResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
 			level.rawValue
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/setconversationnotificationlevel", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Set focus (occurs whenever you give focus to a client).
 	public func setFocus(conversation_id: String, focused: Bool = true,
-	                     cb: ((response: SetFocusResponse?) -> Void)? = nil) {
+	                     cb: @escaping (SetFocusResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
 			focused ? 1 : 2,
 			20
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/setfocus", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	public func setPresence(online: Bool, mood: String?,
-	                        cb: ((response: SetPresenceResponse?) -> Void)? = nil) {
+	                        cb: @escaping (SetPresenceResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			[
@@ -361,29 +361,29 @@ public extension Client {
 			None,
 			None,
 			[!online], // True if going offline, False if coming online
-			[mood ?? None] // UTF-8 smiley like 0x1f603
-		]
+			[(mood ?? None) as Any] // UTF-8 smiley like 0x1f603
+		] as [Any]
 		self.channel?.request(endpoint: "presence/setpresence", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// Send typing notification.
 	public func setTyping(conversation_id: String, typing: TypingType = TypingType.Started,
-	                      cb: ((response: SetTypingResponse?) -> Void)? = nil) {
+	                      cb: @escaping (SetTypingResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			[conversation_id],
 			NSNumber(value: typing.rawValue)
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/settyping", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
 	// List all events occurring at or after a timestamp.
-	public func syncAllNewEvents(timestamp: Date, cb: (response: SyncAllNewEventsResponse?) -> Void) {
-		let data: NSArray = [
+	public func syncAllNewEvents(timestamp: Date, cb: @escaping (SyncAllNewEventsResponse?) -> Void) {
+		let data = [
 			self.getRequestHeader(),
 			NSNumber(value: UInt64(timestamp.toUTC())),//to_timestamp(date: timestamp),
 			[],
@@ -392,9 +392,9 @@ public extension Client {
 			false,
 			[],
 			1048576 // max_response_size_bytes
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/syncallnewevents", body: data, use_json: false) { r in
-			cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 		
 		// This method requests protojson rather than json so we have one chat
@@ -408,19 +408,19 @@ public extension Client {
 	public func syncRecentConversations(maxConversations: Int = 25,
 	                                    maxEventsPer: Int = 1,
 	                                    since: Date? = nil,
-	                                    cb: ((response: SyncRecentConversationsResponse?) -> Void)) {
+	                                    cb: @escaping ((SyncRecentConversationsResponse?) -> Void)) {
 		let data = [
 			self.getRequestHeader(),
-			since != nil ? since!.toUTC() : None, // if refreshing, provide timestamp?
+			(since?.toUTC() ?? None) as Any, // if refreshing, provide timestamp?
 			maxConversations,
 			maxEventsPer,
 			[SyncFilter.Inbox.rawValue, 3, 4], // [3, 4] = ??
 			None, // ??
 			true, // ??
 			[] // ??
-		]
+		] as [Any]
         self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
-            cb(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+            cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 	
@@ -434,7 +434,7 @@ public extension Client {
 			None, // ??
 			true, // ??
 			[] // ??
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
 			print("GOT A:\n", String(bytes: r.data!, encoding: .utf8))
 		}
@@ -447,21 +447,21 @@ public extension Client {
 			None, // ??
 			true, // ??
 			[] // ??
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data2, use_json: true) { r in
 			print("GOT B:\n", try? JSONSerialization.jsonObject(with: r.data!, options: .allowFragments))
 		}
 	}
 	
 	// Update the watermark (read timestamp) for a conversation.
-	public func updateWatermark(conv_id: String, read_timestamp: Date, cb: ((response: UpdateWatermarkResponse?) -> Void)? = nil) {
+	public func updateWatermark(conv_id: String, read_timestamp: Date, cb: @escaping (UpdateWatermarkResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
 			[conv_id], // conversation_id
 			NSNumber(value: UInt64(read_timestamp.toUTC()))//to_timestamp(date: ), // latest_read_timestamp
-		]
+		] as [Any]
 		self.channel?.request(endpoint: "conversations/updatewatermark", body: data, use_json: false) { r in
-			cb?(response: PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}
 	}
 }

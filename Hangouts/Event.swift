@@ -92,8 +92,8 @@ public class IChatMessageEvent: IEvent, Message {
 						attachments.append(data)
 				}
 			} else if attachment.embedItem!.type.contains(438) { // VOICE_PHOTO
-				if let data = attachment.embedItem!._unknownFields[62101782] as? [AnyObject],
-					zeroth = data[0] as? [AnyObject], url = zeroth[0] as? String {
+				if let data = attachment.embedItem!._unknownFields[62101782] as? [Any],
+					let zeroth = data[0] as? [Any], let url = zeroth[0] as? String {
 					attachments.append(url)
 				}
 			} else if attachment.embedItem!.type == [.Place, .PlaceV2, .Thing] { // FIXME this is bad swift
@@ -206,7 +206,7 @@ public class IChatMessageSegment {
 	}
 	
 	// Serialize the segment to pblite.
-	public func serialize() -> [AnyObject] {
+	public func serialize() -> [Any] {
 		return [
 			0,//self.type.representation,
 			self.text,
@@ -216,7 +216,7 @@ public class IChatMessageSegment {
 				self.strikethrough ? 1 : 0,
 				self.underline ? 1 : 0,
 			],
-			[self.linkTarget ?? None]
+			[(self.linkTarget ?? None) as Any]
 		]
 	}
 }
