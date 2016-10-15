@@ -29,9 +29,11 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	private var updateToken: Bool = false
 	private var userList: Directory?
 	private var wallclock: DispatchSourceTimer? = nil
+    private var wallclockStarted: Bool = false
 	private var childConversations = [String: MessageListViewController]()
 	
 	deinit {
+        self.wallclockStarted = false
 		self.wallclock?.cancel()
 	}
 	
@@ -248,7 +250,10 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		super.showWindow(sender)
 		self.indicator.startAnimation(nil)
 		
-		self.wallclock?.resume()
+        if !self.wallclockStarted {
+            self.wallclock?.resume()
+            self.wallclockStarted = true
+        }
 		ParrotAppearance.registerInterfaceStyleListener(observer: self) { appearance in
 			self.window?.appearance = appearance.appearance()
 		}
@@ -269,7 +274,9 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	/// If we need to close, make sure we clean up after ourselves, instead of deinit.
 	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
-		self.wallclock?.suspend()
+        if self.wallclockStarted {
+            self.wallclock?.suspend()
+        }
 	}
 	
 	func sendMessage(_ text: String, _ conversation: Conversation) {
@@ -286,7 +293,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		
 		// Create an operation to process the message and then send it.
 		let operation = DispatchWorkItem(qos: .userInteractive, flags: .enforceQoS) {
-			let s = DispatchSemaphore.mutex
+			let s = DispatchSemaphore(value: 0)
 			(conversation as! IConversation).sendMessage(segments: txt) { s.signal() }
 			s.wait()
 		}

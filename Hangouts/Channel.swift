@@ -237,16 +237,17 @@ public final class Channel : NSObject {
             }
 		}
 		p.didComplete = { [weak self] _,t,error in
-			let response = t.response
-			let r = response as? HTTPURLResponse
-			if (r?.statusCode)! >= 400 {
+            guard let r = t.response as? HTTPURLResponse else {
+                return
+            }
+			if r.statusCode >= 400 {
 				log.error("Request failed with: \(error)")
                 self?.disconnect()
-			} else if r?.statusCode == 200 {
+			} else if r.statusCode == 200 {
                 log.debug("200 OK: restart long-poll")
 				self?.longPollRequest()
 			} else {
-				log.error("Received unknown response code \(r?.statusCode)")
+				log.error("Received unknown response code \(r.statusCode)")
                 self?.disconnect()
 			}
 		}

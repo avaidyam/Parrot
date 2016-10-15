@@ -178,12 +178,6 @@ public extension Date {
 	}
 }
 
-public extension DispatchSemaphore {
-	public static var mutex: DispatchSemaphore {
-		return DispatchSemaphore(value: 0)
-	}
-}
-
 public extension NotificationCenter {
 	
 	@nonobjc @discardableResult

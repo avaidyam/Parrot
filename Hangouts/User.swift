@@ -1,7 +1,7 @@
 import Foundation
 import ParrotServiceExtension
 
-private let log = Logger(subsystem: "Hangouts.UserList")
+private let log = Logger(subsystem: "Hangouts.Users")
 
 /// A chat user.
 public struct User: Person, Hashable, Equatable {
@@ -50,10 +50,9 @@ public struct User: Person, Hashable, Equatable {
     }
 	
 	// Parse and initialize a User from an Entity.
-	// Note: If selfUser is nil, assume this is the self user. 
-    // FIXME: crash in here for unwrapping a nil optional...
+	// Note: If selfUser is nil, assume this is the self user.
     public init(entity: Entity, selfUser: User.ID?) {
-		
+        
 		// Parse User ID and self status.
 		let userID = User.ID(chatID: entity.id!.chatId!,
 			gaiaID: entity.id!.gaiaId!)
@@ -149,6 +148,7 @@ public class UserList: Directory, Collection {
             self.client.getEntitiesByID(chat_id_list: required.flatMap { $0.id?.chatId }) { response in
                 let entities = response?.entityResult.flatMap { $0.entity } ?? []
                 for entity in entities {
+                    guard entity.id != nil else { continue } // if no id, we can't use it!
                     let user = User(entity: entity, selfUser: (self.me as! User).id)
                     if self.users[user.id] == nil {
                         self.users[user.id] = user
@@ -158,7 +158,7 @@ public class UserList: Directory, Collection {
                 s.signal()
             }
         }
-        _ = s.wait(timeout: .distantFuture)
+        s.wait()
         return ret
     }
     
@@ -194,25 +194,27 @@ public class UserList: Directory, Collection {
 }
 
 
+// EXTENSIONS:
+
+
 /// User.ID: Hashable
 public extension User.ID {
 	public var hashValue: Int {
 		return chatID.hashValue &+ gaiaID.hashValue
 	}
+    public static func ==(lhs: User.ID, rhs: User.ID) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
 }
-/// User.ID: Equatable
-public func ==(lhs: User.ID, rhs: User.ID) -> Bool {
-	return lhs.hashValue == rhs.hashValue
-}
+
 /// User: Hashable
 public extension User {
 	public var hashValue: Int {
 		return self.id.hashValue
 	}
-}
-/// User: Equatable
-public func ==(lhs: User, rhs: User) -> Bool {
-	return lhs.id == rhs.id
+    public static func ==(lhs: User, rhs: User) -> Bool {
+        return lhs.id == rhs.id
+    }
 }
 
 /// UserList: Collection

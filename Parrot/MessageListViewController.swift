@@ -8,14 +8,44 @@ import ParrotServiceExtension
 
 public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate {
 	
-	// This is instantly shown to the user when they send a message. It will
-	// be updated automatically when the status of the message is known.
+	/// This is instantly shown to the user when they send a message. It will
+	/// be updated automatically when the status of the message is known.
 	public struct PlaceholderMessage: Message {
 		public let sender: Person?
 		public let timestamp: Date
 		public let text: String
 		public var failed: Bool = false
 	}
+    
+    /// Transient mode is to be used when the conversation should be shown modally
+    /// for a temporary period of time; any interaction outside of the window should
+    /// return the window to normal mode, and sending a message should do the same.
+    ///
+    /// This is useful in cases such as implementing a BETTER "Reply" button for
+    /// the macOS notifications; you'd be able to see conversations to some depth and
+    /// compose a rich reply instead of a single text box reply.
+    ///
+    /// If the conversation is already open, it should bounce into its transient mode
+    /// and instead of closing itself, it should bounce back to its old position.
+    /// Also, the frame should be set to a standard size and centered temporarily.
+    public var transient: Bool = false {
+        didSet {
+            if transient {
+                self.window?.isMovable = false
+                self.drawer.close(nil)
+                self.window?.level = Int(CGWindowLevelForKey(.floatingWindow))
+                if let v = self.window?.standardWindowButton(.closeButton)?.superview {
+                    v.isHidden = true
+                }
+            } else {
+                self.window?.isMovable = true
+                self.window?.level = Int(CGWindowLevelForKey(.desktopWindow))
+                if let v = self.window?.standardWindowButton(.closeButton)?.superview {
+                    v.isHidden = false
+                }
+            }
+        }
+    }
 	
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
@@ -178,6 +208,10 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
                     
                     // Fixes the loss of responder when hiding the view.
                     self.window?.makeFirstResponder(self.entryView)
+                    /*DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
+                        log.debug("TESTING TRANSIENT MODE")
+                        self.transient = true
+                    }*/
 				}
 			}
 		}
@@ -240,7 +274,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
 					self.dataSource.append(chat)
-					linkQ.async {
+					//linkQ.async {
 						/*
 						let d = try! NSDataDetector(types: TextCheckingResult.CheckingType.link.rawValue)
 						let t = chat.text
@@ -256,7 +290,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 							}
 						}
 						*/
-					}
+					//}
 				}
 				self.animatedUpdate()
 			}
@@ -303,6 +337,12 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public func conversationDidUpdateEvents(_ conversation: IConversation) {}
     public func conversationDidUpdate(conversation: IConversation) {}
 	
+    public override func cancelOperation(_ sender: Any?) {
+        if self.transient {
+            self.window?.performClose(nil)
+        }
+    }
+    
 	@IBAction public func toggleMute(_ sender: AnyObject?) {
 		guard let button = sender as? NSButton else { return }
 		
@@ -420,6 +460,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			self.entryView.string = ""
 			self.sendMessageHandler(text, self.conversation!)
 			//self.parentController?.sendMessage(text, self.conversation!)
+            if self.transient {
+                self.window?.performClose(nil)
+            }
 			
 		case #selector(NSResponder.insertTab(_:)):
 			textView.textStorage?.append(NSAttributedString(string: "    ", attributes: textView.typingAttributes))

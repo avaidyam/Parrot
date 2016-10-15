@@ -28,6 +28,9 @@ public final class Client: Service {
 	public var client_id: String?
 	public var last_active_secs: NSNumber? = 0
 	public var active_client_state: ActiveClientState?
+    
+    /// The last logged time that we received a BatchUpdate from the server.
+    private var lastUpdate: UInt64 = 0
 	
 	public private(set) var conversationList: ConversationList!
 	public private(set) var userList: UserList!
@@ -43,6 +46,7 @@ public final class Client: Service {
         let _c = NotificationCenter.default
         let a = _c.addObserver(forName: Channel.didConnectNotification, object: self.channel, queue: nil) { _ in
             NotificationCenter.default.post(name: Client.didConnectNotification, object: self)
+            self.synchronize()
         }
         let b = _c.addObserver(forName: Channel.didDisconnectNotification, object: self.channel, queue: nil) { _ in
             NotificationCenter.default.post(name: Client.didDisconnectNotification, object: self)
@@ -99,8 +103,37 @@ public final class Client: Service {
     public var connected: Bool {
         return self.channel?.isConnected ?? false
     }
-	public func synchronize(_ onSynchronize: (Error?) -> ()) {
-		
+    public func synchronize(_ onSynchronize: (Error?) -> () = {_ in}) {
+        guard self.lastUpdate > 0 else { return }
+        self.syncAllNewEvents(timestamp: Date.from(UTC: Double(self.lastUpdate))) { res in
+            guard let response = res else { return }
+            log.debug("response: \(res?.conversationState)")
+            for conv_state in response.conversationState {
+                if let conv = self.conversationList.conv_dict[conv_state.conversationId!.id!] {
+                    conv.update_conversation(conversation: conv_state.conversation!)
+                    for event in conv_state.event {
+                        
+                        // This updates the sync_timestamp for us, as well as triggering events.
+                        //self._eventNotification(event: event) // FIXME
+                        //if event.timestamp! > self.lastUpdate {
+                        //    self.lastUpdate = event.timestamp!
+                            
+                            if let conv = self.conversationList.conv_dict[event.conversationId!.id!] {
+                                let conv_event = conv.add_event(event: event)
+                                
+                                self.conversationList.delegate?.conversationList(self.conversationList, didReceiveEvent: conv_event)
+                                conv.handleEvent(event: conv_event)
+                            } else {
+                                log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
+                            }
+                        //}
+                    }
+                } else {
+                    self.conversationList.add_conversation(client_conversation: conv_state.conversation!, client_events: conv_state.event)
+                }
+            }
+            self.lastUpdate = response.syncTimestamp!
+        }
 	}
 	
 	// Set this client as active.
@@ -222,6 +255,8 @@ public final class Client: Service {
 				PBLiteSerialization.decode(message: &b, pblite: payload, ignoreFirstItem: true)
 				for state_update in (b as! BatchUpdate).stateUpdate {
 					self.active_client_state = state_update.stateUpdateHeader!.activeClientState!
+                    self.lastUpdate = state_update.stateUpdateHeader!.currentServerTime!
+                    
 					NotificationCenter.default.post(
 						name: Client.didUpdateStateNotification, object: self,
 						userInfo: [Client.didUpdateStateKey: Wrapper(state_update)])

@@ -39,7 +39,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         
         let _c = NotificationCenter.default
         let a = _c.addObserver(forName: Client.didConnectNotification, object: client, queue: nil) { _ in
-            self.sync()
+            //self.sync()
         }
         let b = _c.addObserver(forName: Client.didDisconnectNotification, object: client, queue: nil) { _ in
             // nothing here
@@ -108,7 +108,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
                 s.signal()
             }
         }
-        _ = s.wait(timeout: .distantFuture)
+        s.wait()
         return ret.count > 0
             ? ret.dictionaryMap { return [$0.id: $0 as ParrotServiceExtension.Conversation] }
             : nil
@@ -189,7 +189,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 	
 	// Sync conversation state and events that could have been missed
     public func sync(cb: (() -> Void)? = nil) {
-        client.syncAllNewEvents(timestamp: sync_timestamp) { res in
+        self.client.syncAllNewEvents(timestamp: sync_timestamp) { res in
             guard let response = res else { return }
             for conv_state in response.conversationState {
                 if let conv = self.conv_dict[conv_state.conversationId!.id!] {
