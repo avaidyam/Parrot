@@ -191,6 +191,35 @@ public extension NotificationCenter {
 	}
 }
 
+public struct Subscription {
+    fileprivate let token: NSObjectProtocol
+    fileprivate init(token: NSObjectProtocol) {
+        self.token = token
+    }
+    
+    public func stop() {
+        NotificationCenter.default.removeObserver(self.token)
+    }
+}
+
+public func listen(name: Notification.Name, source: Any? = nil, handler: @escaping (_ data: [AnyHashable: Any]?) -> Void) -> Subscription {
+    return Subscription(token: NotificationCenter.default.addObserver(forName: name, object: source, queue: nil) {
+        handler($0.userInfo)
+    })
+}
+
+public func post(name: Notification.Name, source: Any?, data: [AnyHashable: Any]? = nil) {
+    NotificationCenter.default.post(name: name, object: source, userInfo: data)
+}
+
+public func listen(name: String, source: Any? = nil, handler: @escaping (_ data: [AnyHashable: Any]?) -> Void) -> Subscription {
+    return listen(name: Notification.Name(name), source: source, handler: handler)
+}
+
+public func post(name: String, source: Any?, data: [AnyHashable: Any]? = nil) {
+    post(name: Notification.Name(name), source: source, data: data)
+}
+
 /// Can hold any (including non-object) type as an object type.
 public class Wrapper<T> {
 	public let element: T

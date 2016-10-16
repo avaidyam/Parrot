@@ -29,47 +29,22 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 	
     public let client: Client
     public var conv_dict = [String : IConversation]()
-    public var sync_timestamp: Date = Date.from(UTC: 0)
-	
 	public var delegate: ConversationListDelegate?
-	private var tokens = [NSObjectProtocol]()
+	private var token: NSObjectProtocol? = nil
 
     public init(client: Client) {
         self.client = client
-        
-        let _c = NotificationCenter.default
-        let a = _c.addObserver(forName: Client.didConnectNotification, object: client, queue: nil) { _ in
-            //self.sync()
-        }
-        let b = _c.addObserver(forName: Client.didDisconnectNotification, object: client, queue: nil) { _ in
-            // nothing here
-        }
-        let c = _c.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) { note in
+        self.token = NotificationCenter.default.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) { note in
             if let val = (note.userInfo)?[Client.didUpdateStateKey] as? Wrapper<StateUpdate> {
                 self.clientDidUpdateState(client: self.client, update: val.element)
             } else {
                 log.error("Encountered an error! \(note)")
             }
         }
-        self.tokens.append(contentsOf: [a, b, c])
-    }
-    
-    public convenience init(client: Client, conv_states: [ConversationState], sync_timestamp: UInt64?) {
-        self.init(client: client)
-        self.sync_timestamp = Date.from(UTC: Double(sync_timestamp ?? 0))//.origin
-		
-        // Initialize the list of conversations from Client's list of ClientConversationStates.
-		for conv_state in conv_states {
-            self.add_conversation(client_conversation: conv_state.conversation!, client_events: conv_state.event)
-        }
     }
 	
 	deinit {
-		
-		// Remove all the observers so we aren't receiving calls later on.
-		self.tokens.forEach {
-			NotificationCenter.default.removeObserver($0)
-		}
+		NotificationCenter.default.removeObserver(self.token)
 	}
     
     
@@ -87,7 +62,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     }
     
     public subscript(_ identifier: String) -> ParrotServiceExtension.Conversation? {
-        return self.conversations[identifier]
+        return self.conv_dict[identifier] as? ParrotServiceExtension.Conversation
     }
     
     // Retrieve recent conversations so we can preemptively look up their participants.
@@ -97,8 +72,8 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         self.client.opQueue.sync {
             self.client.syncRecentConversations { response in
                 let conv_states = response!.conversationState
-                let sync_timestamp = response!.syncTimestamp// use current_server_time?
-                self.sync_timestamp = Date.from(UTC: Double(sync_timestamp ?? 0))//.origin
+                //let sync_timestamp = response!.syncTimestamp// use current_server_time?
+                //self.sync_timestamp = Date.from(UTC: Double(sync_timestamp ?? 0))//.origin
                 
                 // Initialize the list of conversations from Client's list of ClientConversationStates.
                 for conv_state in conv_states {
@@ -130,41 +105,17 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     ///
     ///
     ///
-    
-    
-    
-    public var _conversations: [IConversation] {
-        get {
-            let all = conv_dict.values.filter { !$0.is_archived }
-            return all.sorted { $0.last_modified > $1.last_modified }
-        }
-    }
-
-    public var all_conversations: [IConversation] {
-        get {
-            return conv_dict.values.sorted { $0.last_modified > $1.last_modified }
-        }
-    }
 	
-	// Return a Conversation from its ID.
-    public func get(conv_id: String) -> IConversation? {
-        return conv_dict[conv_id]
-    }
-
-    public var unreadEventCount: Int {
-        get {
-            return _conversations.flatMap { $0.unread_events }.count
-        }
-    }
-	
-	public var unreadCount: Int {
-		return self.unreadEventCount
+    public var unreadCount: Int {
+        return Array(self.conv_dict.values)
+            .filter { !$0.is_archived && $0.unread_events.count > 0 }
+            .count
 	}
 	
 	
 	// Add new conversation from Conversation
 	@discardableResult
-    public func add_conversation(
+    internal func add_conversation(
         client_conversation: Conversation,
         client_events: [Event] = []
     ) -> IConversation {
@@ -181,41 +132,15 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     }
 	
 	// Leave conversation and remove it from ConversationList
-    public func leave_conversation(conv_id: String) {
+    /*public func leave_conversation(conv_id: String) {
         conv_dict[conv_id]!.leave {
             self.conv_dict.removeValue(forKey: conv_id)
         }
-    }
-	
-	// Sync conversation state and events that could have been missed
-    public func sync(cb: (() -> Void)? = nil) {
-        self.client.syncAllNewEvents(timestamp: sync_timestamp) { res in
-            guard let response = res else { return }
-            for conv_state in response.conversationState {
-                if let conv = self.conv_dict[conv_state.conversationId!.id!] {
-                    conv.update_conversation(conversation: conv_state.conversation!)
-                    for event in conv_state.event {
-                        if event.timestamp! > UInt64(self.sync_timestamp.toUTC()) {
-                            
-                            // This updates the sync_timestamp for us, as well as triggering events.
-                            //self._eventNotification(event: event)
-                            self.sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
-                            if let conv = self.conv_dict[event.conversationId!.id!] {
-                                let conv_event = conv.add_event(event: event)
-                                
-                                self.delegate?.conversationList(self, didReceiveEvent: conv_event)
-                                conv.handleEvent(event: conv_event)
-                            } else {
-                                log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
-                            }
-                        }
-                    }
-                } else {
-                    self.add_conversation(client_conversation: conv_state.conversation!, client_events: conv_state.event)
-                }
-            }
-        }
-    }
+    }*/
+    
+    ///
+    ///
+    ///
 	
     public func conversationDidUpdate(conversation: IConversation) {
 		delegate?.conversationList(self, didUpdateConversation: conversation)
@@ -276,7 +201,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 		let event = note.event!
 		
         // Be sure to maintain the event sync_timestamp for sync'ing.
-        sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
+        //sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
         
 		if let conv = conv_dict[event.conversationId!.id!] {
 			let conv_event = conv.add_event(event: event)

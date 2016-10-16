@@ -106,33 +106,28 @@ public final class Client: Service {
     public func synchronize(_ onSynchronize: (Error?) -> () = {_ in}) {
         guard self.lastUpdate > 0 else { return }
         self.syncAllNewEvents(timestamp: Date.from(UTC: Double(self.lastUpdate))) { res in
-            guard let response = res else { return }
-            log.debug("response: \(res?.conversationState)")
-            for conv_state in response.conversationState {
+            for conv_state in res!.conversationState {
                 if let conv = self.conversationList.conv_dict[conv_state.conversationId!.id!] {
                     conv.update_conversation(conversation: conv_state.conversation!)
                     for event in conv_state.event {
+                        guard event.timestamp! > self.lastUpdate else { continue }
                         
-                        // This updates the sync_timestamp for us, as well as triggering events.
-                        //self._eventNotification(event: event) // FIXME
-                        //if event.timestamp! > self.lastUpdate {
-                        //    self.lastUpdate = event.timestamp!
+                        if let conv = self.conversationList.conv_dict[event.conversationId!.id!] {2
+                            let conv_event = conv.add_event(event: event)
                             
-                            if let conv = self.conversationList.conv_dict[event.conversationId!.id!] {
-                                let conv_event = conv.add_event(event: event)
-                                
-                                self.conversationList.delegate?.conversationList(self.conversationList, didReceiveEvent: conv_event)
-                                conv.handleEvent(event: conv_event)
-                            } else {
-                                log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
-                            }
-                        //}
+                            self.conversationList.delegate?.conversationList(self.conversationList, didReceiveEvent: conv_event)
+                            conv.handleEvent(event: conv_event)
+                        } else {
+                            log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
+                        }
                     }
                 } else {
                     self.conversationList.add_conversation(client_conversation: conv_state.conversation!, client_events: conv_state.event)
                 }
             }
-            self.lastUpdate = response.syncTimestamp!
+            
+            // Update the sync timestamp otherwise if we lose connectivity again, we re-sync everything.
+            self.lastUpdate = res!.syncTimestamp!
         }
 	}
 	

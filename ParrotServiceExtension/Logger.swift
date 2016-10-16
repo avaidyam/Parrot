@@ -31,7 +31,12 @@ public final class Logger {
 		/// Channel.ASL uses the Apple System Logging facility to submit the message.
 		/// Note: ASL may not accept the message flow if its configuration severity
 		/// is at a different level than what is set here.
-		public static let ASL = Channel { message, severity, subsystem in
+        public static let ASL = Channel { message, severity, subsystem in
+            var output = ""
+            _ = severity >= .info
+                ? debugPrint(message, terminator: "", to: &output)
+                : Swift.print(subsystem, terminator: "", to: &output)
+            output = "[\(subsystem)] [\(severity)]: "  + output
 			withVaList([]) { ignore in
 				var s = ASL_LEVEL_DEBUG
 				switch severity {
@@ -43,7 +48,7 @@ public final class Logger {
 				case .debug: s = ASL_LEVEL_INFO
 				case .verbose: s = ASL_LEVEL_DEBUG
 				}
-				asl_vlog(nil, nil, s, message, ignore)
+				asl_vlog(nil, nil, s, output, ignore)
 			}
 		}
 	}

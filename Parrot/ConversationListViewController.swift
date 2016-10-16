@@ -49,7 +49,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
             // Open conversations that were previously open.
             if let a = Settings["Parrot.OpenConversations"] as? [String] {
                 a.forEach {
-                    if let c = c?.conv_dict[$0] {
+                    if let c = c?[$0] {
                         DispatchQueue.main.async {
                             self.showConversation(c)
                         }
@@ -224,7 +224,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		}
 	}
 	
-	private func showConversation(_ conv: IConversation) {
+	private func showConversation(_ conv: Conversation) {
 		if let wc = self.childConversations[conv.identifier] {
 			log.debug("Conversation found for id \(conv.identifier)")
 			wc.showWindow(nil)
@@ -232,7 +232,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			log.debug("Conversation NOT found for id \(conv.identifier)")
 			
 			let wc = MessageListViewController(windowNibName: "MessageListViewController")
-			wc.conversation = conv
+			wc.conversation = (conv as! IConversation)
 			wc.sendMessageHandler = { [weak self] message, conv2 in
 				self?.sendMessage(message, conv2)
 			}
