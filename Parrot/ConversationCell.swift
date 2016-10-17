@@ -10,9 +10,9 @@ public class ConversationCell: ListViewCell {
 	@IBOutlet private var separator: NSView?
 	
 	// Upon assignment of the represented object, configure the subview contents.
-	public override var cellValue: Any? {
+	public override var representedObject: Any? {
 		didSet {
-			guard let conversation = self.cellValue as? Conversation else {
+			guard let conversation = self.representedObject as? Conversation else {
 				log.warning("ConversationCell encountered faulty cellValue!")
 				return
 			}
@@ -54,14 +54,14 @@ public class ConversationCell: ListViewCell {
 	// Note that we hide the separator and show it again after snapshot.
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
 		self.separator?.isHidden = true
-		let ret = [self.draggingComponent("Person")]
+		let ret = [self.view.draggingComponent("Person")]
 		self.separator?.isHidden = false
 		return ret
 	}
 	
 	// Allows the photo view's circle crop to dynamically match size.
-	public override func layout() {
-		super.layout()
+	public func layout() {
+		//super.layout()
 		if let photo = self.photoView, let layer = photo.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = photo.bounds.width / 2.0

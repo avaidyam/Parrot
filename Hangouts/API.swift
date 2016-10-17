@@ -424,35 +424,6 @@ public extension Client {
 		}
 	}
 	
-	public func _tester() {
-		let data = [
-			self.getRequestHeader(),
-			None, // if refreshing, provide timestamp?
-			25,
-			1,
-			[SyncFilter.Inbox.rawValue, 3, 4], // [3, 4] = ??
-			None, // ??
-			true, // ??
-			[] // ??
-		] as [Any]
-		self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
-			print("GOT A:\n", String(bytes: r.data!, encoding: .utf8))
-		}
-		let data2 = [
-			self.getRequestHeader(),
-			None, // if refreshing, provide timestamp?
-			25,
-			1,
-			[SyncFilter.Inbox.rawValue, 3, 4], // [3, 4] = ??
-			None, // ??
-			true, // ??
-			[] // ??
-		] as [Any]
-		self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data2, use_json: true) { r in
-			print("GOT B:\n", try? JSONSerialization.jsonObject(with: r.data!, options: .allowFragments))
-		}
-	}
-	
 	// Update the watermark (read timestamp) for a conversation.
 	public func updateWatermark(conv_id: String, read_timestamp: Date, cb: @escaping (UpdateWatermarkResponse?) -> Void = {_ in}) {
 		let data = [

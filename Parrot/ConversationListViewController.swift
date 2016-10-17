@@ -42,16 +42,13 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			// FIXME: FORCE-CAST TO HANGOUTS
 			(conversationList as? Hangouts.ConversationList)?.delegate = self
 			self.animatedUpdate()
-			
-			let c = self.conversationList as? Hangouts.ConversationList
-			//c?.client._tester()
             
             // Open conversations that were previously open.
             if let a = Settings["Parrot.OpenConversations"] as? [String] {
                 a.forEach {
-                    if let c = c?[$0] {
+                    if let c = self.conversationList?[$0] {
                         DispatchQueue.main.async {
-                            self.showConversation(c)
+                            //self.showConversation(c)
                         }
                     }
                 }
@@ -108,9 +105,9 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		self.listView.viewClassProvider = { row in ConversationCell.self }
 		
 		NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService) { note in
-			let c = note.object as! Hangouts.Client
-			self.userList = c.userList
-			self.conversationList = c.conversationList
+            guard let c = note.object as? Service else { return }
+			self.userList = c.directory
+			self.conversationList = c.conversations
 			
 			DispatchQueue.main.async {
 				//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
@@ -141,11 +138,10 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		self.wallclock?.scheduleRepeating(wallDeadline: .now() + Date().nearestMinute().timeIntervalSinceNow, interval: 60.0, leeway: .seconds(3))
 		self.wallclock?.setEventHandler {
 			log.verbose("Updated visible timestamp for Conversations.")
-			for row in self.listView.visibleRows {
-				if let cell = self.listView.tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ConversationCell {
-					cell.updateTimestamp()
-				}
-			}
+            // FIXME: THIS IS BAD!
+            self.listView.collectionView.visibleItems().forEach {
+                ($0 as? ConversationCell)?.updateTimestamp()
+            }
 		}
 		
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
@@ -156,7 +152,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			self.showConversation(conv)
 			
 			DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(150)) {
-				self.listView.tableView.animator().selectRowIndexes(IndexSet(), byExtendingSelection: false)
+                self.listView.collectionView.animator().selectItems(at: Set<IndexPath>([]), scrollPosition: .top)
 			}
 		}
 		self.listView.rowActionProvider = { row, edge in
@@ -212,13 +208,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			guard $0 == .bottom else { return }
 			guard self.updateToken == false else { return }
 			
-			//let c = self.conversationList as? Hangouts.ConversationList
-			//c?.client._tester()
-			/*c?.client.syncRecentConversations(maxConversations: 1, maxEventsPer: 1, since: Date.from(UTC: 1474473751200143.0)) {
-				print($0)
-				self.updateToken = false
-			}*/
-			
 			log.debug("SCROLLBACK")
 			self.updateToken = true
 		}
@@ -250,7 +239,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		super.showWindow(sender)
 		self.indicator.startAnimation(nil)
 		
-        if !self.wallclockStarted {
+        if !self.wallclockStarted { // "BUG IN LIBDISPATCH: Over-resume of object"
             self.wallclock?.resume()
             self.wallclockStarted = true
         }
@@ -278,6 +267,12 @@ public class ConversationListViewController: NSWindowController, ConversationLis
             self.wallclock?.suspend()
         }
 	}
+    
+    public func windowDidChangeOcclusionState(_ notification: Notification) {
+        for (_, s) in ServiceRegistry.services {
+            s.userInteractionState = true // FIXME
+        }
+    }
 	
 	func sendMessage(_ text: String, _ conversation: Conversation) {
 		func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {

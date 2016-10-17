@@ -327,9 +327,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
 		guard let e = event as? IChatMessageEvent else { return }
 		self.dataSource.append(e)
-		let idx = IndexSet(integer: self.dataSource.count - 1)
+		let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
 		DispatchQueue.main.async {
-			self.listView.tableView.insertRows(at: idx, withAnimation: [.effectFade, .slideUp])
+            self.listView.collectionView.insertItems(at: Set<IndexPath>([idx])) //animation: [.effectFade, .slideUp]
 		}
 		self.listView.scroll(toRow: idx.first!)
     }

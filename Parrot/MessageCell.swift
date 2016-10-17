@@ -8,9 +8,9 @@ public class MessageCell: ListViewCell {
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
 	
 	// Upon assignment of the represented object, configure the subview contents.
-	public override var cellValue: Any? {
+	public override var representedObject: Any? {
 		didSet {
-			guard let o = self.cellValue as? Message else {
+			guard let o = self.representedObject as? Message else {
 				log.warning("MessageCell encountered faulty cellValue!")
 				return
 			}
@@ -39,7 +39,8 @@ public class MessageCell: ListViewCell {
 		}
 	}
 	
-	public override var backgroundStyle: NSBackgroundStyle {
+    /*
+	public var backgroundStyle: NSBackgroundStyle {
 		didSet {
 			guard let text = self.textLabel else { return }
 			
@@ -59,28 +60,28 @@ public class MessageCell: ListViewCell {
 				NSUnderlineStyleAttributeName: 1,
 			]
 			text.selectedTextAttributes = [
-				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.effectiveAppearance),
+				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.appearance!),
 				NSForegroundColorAttributeName: NSColor.labelColor,
 				NSUnderlineStyleAttributeName: 0,
 			]
 			text.markedTextAttributes = [
-				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.effectiveAppearance),
+				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.appearance!),
 				NSForegroundColorAttributeName: NSColor.labelColor,
 				NSUnderlineStyleAttributeName: 0,
 			]
 			
 			// Only clip the text if the text isn't purely Emoji.
 			if !text.string!.isEmoji {
-				text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.effectiveAppearance).cgColor
+				text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.view.appearance!).cgColor
 			} else {
 				text.layer?.backgroundColor = NSColor.clear.cgColor
 			}
 		}
-	}
+	}*/
 	
 	// Allows the circle crop to dynamically change.
-	public override func layout() {
-		super.layout()
+	public func layout() {
+		//super.layout()
 		//self.userInterfaceLayoutDirection = self.orientation // FIXME
 		if let layer = self.photoView?.layer {
 			layer.masksToBounds = true

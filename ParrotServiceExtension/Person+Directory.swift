@@ -20,6 +20,9 @@ public protocol Person /*: Hashable, Equatable*/ {
 	
 	/// The Person's unique identifier (specific to the Service).
 	var identifier: String { get }
+    
+    // a handle...
+    //var resource: String { get }
 	
 	/// The Person's name as an array of components.
 	/// For example, the first element of the array provides the first name,

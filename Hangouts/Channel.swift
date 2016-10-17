@@ -238,6 +238,8 @@ public final class Channel : NSObject {
 		}
 		p.didComplete = { [weak self] _,t,error in
             guard let r = t.response as? HTTPURLResponse else {
+                log.error("Received no response...")
+                self?.disconnect()
                 return
             }
 			if r.statusCode >= 400 {

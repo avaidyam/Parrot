@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A294a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11521.1" systemVersion="16B2548a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-2" userLabel="File's Owner" customClass="ConversationCell" customModule="Parrot" customModuleProvider="target">
+            <connections>
+                <outlet property="nameLabel" destination="Bul-Yb-hpg" id="xwg-h3-fjB"/>
+                <outlet property="photoView" destination="N7p-DV-XCL" id="rJm-NJ-6Av"/>
+                <outlet property="separator" destination="yWE-Nd-iCe" id="D1o-0c-GAz"/>
+                <outlet property="textLabel" destination="Nw5-Um-35D" id="Qm0-Lt-4VU"/>
+                <outlet property="timeLabel" destination="98f-We-Vvp" id="CTO-eb-ron"/>
+                <outlet property="view" destination="c22-O7-iKe" id="lpo-CA-4Gb"/>
+            </connections>
+        </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView identifier="Parrot.ConversationCell" wantsLayer="YES" id="c22-O7-iKe" customClass="ConversationCell" customModule="Parrot" customModuleProvider="target">
+        <customView wantsLayer="YES" id="c22-O7-iKe">
             <rect key="frame" x="0.0" y="0.0" width="327" height="64"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
@@ -45,11 +55,8 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <box wantsLayer="YES" verticalHuggingPriority="750" alphaValue="0.5" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="yWE-Nd-iCe">
+                <box wantsLayer="YES" verticalHuggingPriority="750" alphaValue="0.5" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="yWE-Nd-iCe">
                     <rect key="frame" x="64" y="-2" width="263" height="5"/>
-                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <font key="titleFont" metaFont="system"/>
                 </box>
             </subviews>
             <constraints>
@@ -71,13 +78,6 @@
                 <constraint firstAttribute="trailing" secondItem="yWE-Nd-iCe" secondAttribute="trailing" id="vkM-Aw-jDp"/>
                 <constraint firstAttribute="height" relation="greaterThanOrEqual" secondItem="N7p-DV-XCL" secondAttribute="height" constant="16" id="wd1-jU-Oqk"/>
             </constraints>
-            <connections>
-                <outlet property="nameLabel" destination="Bul-Yb-hpg" id="VVQ-KB-7Wy"/>
-                <outlet property="photoView" destination="N7p-DV-XCL" id="6Pw-6n-SCK"/>
-                <outlet property="separator" destination="yWE-Nd-iCe" id="Cti-WH-pKc"/>
-                <outlet property="textLabel" destination="Nw5-Um-35D" id="b9L-cF-4Cb"/>
-                <outlet property="timeLabel" destination="98f-We-Vvp" id="Mw8-Ct-2Fw"/>
-            </connections>
             <point key="canvasLocation" x="-31" y="-460"/>
         </customView>
     </objects>

@@ -7,9 +7,9 @@ public class LinkPreviewCell: ListViewCell {//, QLPreviewPanelDataSource, QLPrev
 	@IBOutlet var descView: NSTextField?
 	@IBOutlet var photoView: NSImageView?
 	
-	public override var cellValue: Any? {
+	public override var representedObject: Any? {
 		didSet {
-			guard let preview = self.cellValue as? LinkPreviewType else {
+			guard let preview = self.representedObject as? LinkPreviewType else {
 				log.warning("LinkPreviewCell encountered faulty cellValue!")
 				return
 			}
@@ -35,13 +35,14 @@ public class LinkPreviewCell: ListViewCell {//, QLPreviewPanelDataSource, QLPrev
 		}
 	}
 	
-	public override var backgroundStyle: NSBackgroundStyle {
+    /*
+	public var backgroundStyle: NSBackgroundStyle {
 		didSet {
-			let color: NSColor = (self.effectiveAppearance.name == NSAppearanceNameVibrantDark) ? .white : .black
+			let color: NSColor = (self.view.appearance!.name == NSAppearanceNameVibrantDark) ? .white : .black
 			self.titleView?.textColor = color
 			self.descView?.textColor = color.withAlphaComponent(0.75)
 		}
-	}
+	}*/
 	
 	/*
 	public override func quickLook(with event: NSEvent) {

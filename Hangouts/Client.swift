@@ -166,6 +166,19 @@ public final class Client: Service {
 			setActiveClient(is_active: true, timeout_secs: Client.ACTIVE_TIMEOUT_SECS)
         }
 	}
+    
+    public var userInteractionState: Bool {
+        get {
+            return (active_client_state == ActiveClientState.IsActive)
+        }
+        set {
+            if userInteractionState {
+                self.setActive()
+            } else {
+                // uh just let it expire...
+            }
+        }
+    }
 	
 	// Upload an image that can be later attached to a chat message.
 	// The name of the uploaded file may be changed by specifying the filename argument.

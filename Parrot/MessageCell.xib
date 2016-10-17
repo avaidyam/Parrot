@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16B2338c" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11521.1" systemVersion="16B2548a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-2" userLabel="File's Owner" customClass="MessageCell" customModule="Parrot" customModuleProvider="target">
+            <connections>
+                <outlet property="photoView" destination="wEL-KW-aRK" id="olw-6X-X9L"/>
+                <outlet property="textLabel" destination="1dL-oQ-fiX" id="pb4-PZ-UEq"/>
+                <outlet property="view" destination="c22-O7-iKe" id="Cb3-XJ-J1Q"/>
+            </connections>
+        </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView identifier="Parrot.MessageCell" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe" customClass="MessageCell" customModule="Parrot" customModuleProvider="target">
+        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe">
             <rect key="frame" x="0.0" y="0.0" width="491" height="77"/>
             <subviews>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="wEL-KW-aRK">
@@ -29,7 +35,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="61"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <size key="minSize" width="0.0" height="61"/>
+                                <size key="minSize" width="443" height="61"/>
                                 <size key="maxSize" width="10000000" height="10000000"/>
                                 <attributedString key="textStorage">
                                     <fragment content="Cheers, love! The cavalry's here!">
@@ -40,8 +46,6 @@
                                     </fragment>
                                 </attributedString>
                                 <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                <size key="minSize" width="0.0" height="61"/>
-                                <size key="maxSize" width="10000000" height="10000000"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -65,10 +69,6 @@
                 <constraint firstItem="QLh-pw-ow3" firstAttribute="leading" secondItem="wEL-KW-aRK" secondAttribute="trailing" constant="8" id="pTh-S1-EeS"/>
                 <constraint firstAttribute="trailing" secondItem="QLh-pw-ow3" secondAttribute="trailing" priority="996" constant="8" id="wW0-s2-GFD"/>
             </constraints>
-            <connections>
-                <outlet property="photoView" destination="wEL-KW-aRK" id="CDZ-Os-RaC"/>
-                <outlet property="textLabel" destination="1dL-oQ-fiX" id="FEM-Gg-mvy"/>
-            </connections>
             <point key="canvasLocation" x="-588.5" y="85.5"/>
         </customView>
     </objects>

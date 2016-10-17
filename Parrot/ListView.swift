@@ -56,17 +56,9 @@ public enum ScrollDirection {
 
 // FIXME: ListViewDelegate
 
-public class ListViewCell: NSTableCellView {
-	public var cellValue: Any?
-	public required override init(frame frameRect: NSRect) {
-		super.init(frame: frameRect)
-	}
-	public required init?(coder: NSCoder) {
-		super.init(coder: coder)
-	}
-	
+public class ListViewCell: NSCollectionViewItem {
 	public class func cellHeight(forWidth: CGFloat, cellValue: Any?) -> CGFloat {
-		return 0.0
+		return 20.0
 	}
 }
 
@@ -74,16 +66,16 @@ public class ListViewCell: NSTableCellView {
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
-public class ListView: NSView {
+public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionViewDataSource {
 	
 	// TODO: Work in Progress here...
 	public struct Section {
 		let count: Int
 	}
 	
-	internal var scrollView: NSScrollView!
-	internal var tableView: NSExtendedTableView! // FIXME: Should be private...
-	
+	internal var scrollView: NSScrollView! // FIXME: Should be private...
+	internal var collectionView: NSCollectionView! // FIXME: Should be private...
+    
 	/// Provides the global header for all sections in the ListView.
 	@IBOutlet public var headerView: NSView?
 	
@@ -103,35 +95,35 @@ public class ListView: NSView {
 	private func commonInit() {
 		self.scrollView = NSScrollView(frame: self.bounds)
 		self.scrollView.automaticallyAdjustsContentInsets = false
-		self.tableView = NSExtendedTableView(frame: self.scrollView.bounds)
-		self.tableView.delegate = self
-		self.tableView.dataSource = self
-		
-		let col = NSTableColumn(identifier: "")
-		col.resizingMask = .autoresizingMask
-		col.isEditable = false
-		self.tableView.addTableColumn(col)
-		self.tableView.headerView = nil
-		self.tableView.menu = NSMenu(title: "")
+        self.collectionView = NSCollectionView(frame: self.scrollView.bounds)
+        self.collectionView.dataSource = self
+        self.collectionView.delegate = self
+        
+        let l = NSCollectionViewFlowLayout()
+        l.minimumInteritemSpacing = 0
+        l.minimumLineSpacing = 0
+        l.scrollDirection = .vertical
+        l.sectionInset = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        l.itemSize = CGSize(width: 200, height: 80)
+        
+        self.collectionView.collectionViewLayout = l
 		
 		self.scrollView.drawsBackground = false
-		self.scrollView.borderType = .noBorder
-		self.tableView.allowsEmptySelection = true
-		self.tableView.selectionHighlightStyle = .sourceList
-		self.tableView.floatsGroupRows = true
-		self.tableView.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
-		self.tableView.intercellSpacing = NSSize(width: 0, height: 0)
+        self.scrollView.borderType = .noBorder
+        self.collectionView.allowsEmptySelection = true
+        self.collectionView.isSelectable = true
+        self.collectionView.backgroundColors = []
+        self.collectionView.maxItemSize = NSSize(width: 0, height: 0)
 		
-		self.scrollView.documentView = self.tableView
+		self.scrollView.documentView = self.collectionView
 		self.scrollView.hasVerticalScroller = true
 		self.addSubview(self.scrollView)
 		
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
-		self.tableView.sizeLastColumnToFit()
 		
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(ListView.tableViewDidScroll(_:)),
+		NotificationCenter.default.addObserver(self, selector: #selector(ListView.collectionViewDidScroll(_:)),
 		                                         name: .NSViewBoundsDidChange,
 		                                         object: self.scrollView.contentView)
 	}
@@ -158,7 +150,7 @@ public class ListView: NSView {
 	public override var wantsLayer: Bool {
 		didSet {
 			self.scrollView.wantsLayer = self.wantsLayer
-			self.tableView.wantsLayer = self.wantsLayer
+			self.collectionView.wantsLayer = self.wantsLayer
 		}
 	}
 	
@@ -172,7 +164,7 @@ public class ListView: NSView {
 	
 	public func update(animated: Bool = true, _ handler: @escaping () -> () = {}) {
 		DispatchQueue.main.async {
-			self.tableView.reloadData()
+			self.collectionView.reloadData()
 			switch self.updateScrollDirection {
 			case .top: self.scroll(toRow: 0, animated: animated)
 			case .bottom: self.scroll(toRow: self.dataSource.count - 1, animated: animated)
@@ -182,12 +174,14 @@ public class ListView: NSView {
 	}
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
-		DispatchQueue.main.async {
-			guard let clip = self.tableView.superview as? NSClipView , animated else {
-				self.tableView.scrollRowToVisible(row); return
+        DispatchQueue.main.async {
+            log.debug("might scroll to \(row) and has \(self.collectionView.numberOfItems(inSection: 0))")
+			guard let clip = self.collectionView.superview as? NSClipView , animated else {
+				//self.collectionView.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: .top); 
+                return
 			}
 			
-			let rowRect = self.tableView.rect(ofRow: row)
+			let rowRect = self.collectionView.frameForItem(at: row)
 			var origin = rowRect.origin
 			origin.y = (origin.y - (clip.frame.height * 0.5)) + (rowRect.height * 0.5)
 			
@@ -198,16 +192,15 @@ public class ListView: NSView {
 	
 	public func register(nibName: String, forClass: ListViewCell.Type) {
 		let nib = NSNib(nibNamed: nibName, bundle: nil)
-		self.tableView.register(nib, forIdentifier: forClass.className())
+		self.collectionView.register(nib, forItemWithIdentifier: forClass.className())
 	}
 	
 	public var selection: [Int] {
-		return self.tableView.selectedRowIndexes.map { $0 }
+		return self.collectionView.selectionIndexPaths.map { $0.item }
 	}
 	
 	public var visibleRows: [Int] {
-		let r = self.tableView.rows(in: self.tableView.visibleRect)
-		return Array(r.location..<r.location+r.length)
+        return self.collectionView.indexPathsForVisibleItems().map { $0.item }
 	}
 	
 	public var dataSourceProvider: (() -> [Any])? = nil
@@ -221,6 +214,186 @@ public class ListView: NSView {
 	public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
 }
 
+// Essential Support
+extension ListView  {
+    
+    @objc(numberOfSectionsInCollectionView:)
+    public func numberOfSections(in collectionView: NSCollectionView) -> Int {
+        return 1
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.dataSource.count //+ (self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0)
+    }
+    
+    @objc(collectionView:itemForRepresentedObjectAtIndexPath:)
+    public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        log.debug("TEST \(#function)")
+        let cellClass = self.viewClassProvider?(indexPath.item) ?? ListViewCell.self
+        var item = self.collectionView.makeItem(withIdentifier: cellClass.className(), for: indexPath) as? ListViewCell
+        if item == nil {
+            log.warning("Cell class \(cellClass) not registered!")
+            item = cellClass.init()
+            item!.identifier = cellClass.className()
+        }
+        log.debug("MADE CLASS \(item))")
+        //item.representedObject = self.dataSource[indexPath.item]
+        log.debug("PROVIDED VALUE \(indexPath) => \(self.dataSource[indexPath.item])")
+        return item!
+    }
+    
+    public func collectionViewDidScroll(_ notification: Notification) {
+        guard let o = notification.object as? NSView , o == self.scrollView.contentView else { return }
+        if self.visibleRows.contains(0) {
+            self.scrollbackProvider?(.top)
+        }
+        if self.visibleRows.contains(self.dataSource.count - 1) {
+            self.scrollbackProvider?(.bottom)
+        }
+    }
+    
+    @objc(collectionView:layout:sizeForItemAtIndexPath:)
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
+        let cellClass = (self.viewClassProvider?(indexPath.item) ?? ListViewCell.self)
+        let h = cellClass.cellHeight(forWidth: self.bounds.size.width, cellValue: self.dataSource[indexPath.item])
+        log.debug("height: \(h) width: \(self.bounds.width)")
+        return NSSize(width: self.bounds.width, height: h)
+    }
+    
+    /*@objc(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)
+    public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> NSView {
+        
+    }*/
+    
+}
+
+// Sizing Support
+/*extension ListView {
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, insetForSectionAt section: Int) -> EdgeInsets
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> NSSize
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForFooterInSection section: Int) -> NSSize
+}*/
+
+// Drag & Drop Support
+/*extension ListView {
+    
+    @objc(collectionView:canDragItemsAtIndexPaths:withEvent:)
+    public func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
+        
+    }
+    
+    @objc(collectionView:writeItemsAtIndexPaths:toPasteboard:)
+    public func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
+        
+    }
+
+    @objc(collectionView:namesOfPromisedFilesDroppedAtDestination:forDraggedItemsAtIndexPaths:)
+    public func collectionView(_ collectionView: NSCollectionView, namesOfPromisedFilesDroppedAtDestination dropURL: URL, forDraggedItemsAt indexPaths: Set<IndexPath>) -> [String] {
+        
+    }
+    
+    @objc(collectionView:draggingImageForItemsAtIndexPaths:withEvent:offset:)
+    public func collectionView(_ collectionView: NSCollectionView, draggingImageForItemsAt indexPaths: Set<IndexPath>, with event: NSEvent, offset dragImageOffset: NSPointPointer) -> NSImage {
+        
+    }
+
+    public func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
+        return [.copy]
+    }
+
+    public func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionViewDropOperation) -> Bool {
+        return true
+    }
+
+    @objc(collectionView:pasteboardWriterForItemAtIndexPath:)
+    public func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
+        return self.pasteboardProvider?(row)
+    }
+
+    @objc(collectionView:draggingSession:willBeginAtPoint:forItemsAtIndexPaths:)
+    public func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItemsAt indexPaths: Set<IndexPath>) {
+        
+    }
+
+    @objc(collectionView:draggingSession:endedAtPoint:dragOperation:)
+    public func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
+        
+    }
+
+    public func collectionView(_ collectionView: NSCollectionView, updateDraggingItemsForDrag draggingInfo: NSDraggingInfo) {
+        
+    }
+    
+}
+
+// Selection & Transition Support
+extension ListView {
+
+    @objc(collectionView:shouldChangeItemsAtIndexPaths:toHighlightState:)
+    public func collectionView(_ collectionView: NSCollectionView, shouldChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) -> Set<IndexPath> {
+        
+    }
+    
+    @objc(collectionView:didChangeItemsAtIndexPaths:toHighlightState:)
+    public func collectionView(_ collectionView: NSCollectionView, didChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) {
+        
+    }
+    
+    @objc(collectionView:shouldSelectItemsAtIndexPaths:)
+    public func collectionView(_ collectionView: NSCollectionView, shouldSelectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
+        
+    }
+    
+    @objc(collectionView:shouldDeselectItemsAtIndexPaths:)
+    public func collectionView(_ collectionView: NSCollectionView, shouldDeselectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
+        
+    }
+    
+    @objc(collectionView:didSelectItemsAtIndexPaths:)
+    public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
+        
+    }
+    
+    @objc(collectionView:didDeselectItemsAtIndexPaths:)
+    public func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
+        
+    }
+    
+    @objc(collectionView:willDisplayItem:forRepresentedObjectAtIndexPath:)
+    public func collectionView(_ collectionView: NSCollectionView, willDisplay item: NSCollectionViewItem, forRepresentedObjectAt indexPath: IndexPath) {
+        
+    }
+    
+    @objc(collectionView:willDisplaySupplementaryView:forElementKind:atIndexPath:)
+    public func collectionView(_ collectionView: NSCollectionView, willDisplaySupplementaryView view: NSView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        
+    }
+    
+    @objc(collectionView:didEndDisplayingItem:forRepresentedObjectAtIndexPath:)
+    public func collectionView(_ collectionView: NSCollectionView, didEndDisplaying item: NSCollectionViewItem, forRepresentedObjectAt indexPath: IndexPath) {
+        
+    }
+    
+    @objc(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)
+    public func collectionView(_ collectionView: NSCollectionView, didEndDisplayingSupplementaryView view: NSView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+        
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, transitionLayoutForOldLayout fromLayout: NSCollectionViewLayout, newLayout toLayout: NSCollectionViewLayout) -> NSCollectionViewTransitionLayout {
+        
+    }
+}*/
+
+/*
 // Essential Support
 extension ListView: NSExtendedTableViewDelegate {
 	
@@ -266,7 +439,7 @@ extension ListView: NSExtendedTableViewDelegate {
 	@objc(tableView:viewForTableColumn:row:)
 	public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		let cellClass = self.viewClassProvider?(row) ?? ListViewCell.self
-		var view = self.tableView.make(withIdentifier: cellClass.className(), owner: self) as? ListViewCell
+		var view = self.collectionView.make(withIdentifier: cellClass.className(), owner: self) as? ListViewCell
 		if view == nil {
 			log.warning("Cell class \(cellClass) not registered!")
 			view = cellClass.init(frame: .zero)
@@ -310,7 +483,7 @@ extension ListView /*: NSExtendedTableViewDelegate*/ {
 	}
 	
 	public func tableViewSelectionDidChange(_ notification: Notification) {
-		self.selectionProvider?(self.tableView.selectedRow)
+		self.selectionProvider?(self.collectionView.selectedRow)
 	}
 	
 	public func tableViewSelectionIsChanging(_ notification: Notification) {
@@ -326,100 +499,4 @@ extension ListView /*: NSExtendedTableViewDelegate*/ {
 	}
 }
 
-// Drag & Drop Support
-extension ListView /*: NSExtendedTableViewDelegate*/ {
-	
-	public func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-		return self.pasteboardProvider?(row)
-	}
-	
-	@objc(tableView:draggingSession:willBeginAtPoint:forRowIndexes:)
-	public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession,
-	                      willBeginAt screenPoint: NSPoint, forRowIndexes rowIndexes: IndexSet) {
-		// BEGIN DRAG
-	}
-	
-	@objc(tableView:draggingSession:endedAtPoint:operation:)
-	public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession,
-	                      endedAt screenPoint: NSPoint, operation: NSDragOperation) {
-		// END DRAG
-	}
-	
-	public func tableView(_ tableView: NSTableView, updateDraggingItemsForDrag draggingInfo: NSDraggingInfo) {
-		// Rely on the ListViewCell implementation
-	}
-	
-	public func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int,
-	                      proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-		log.info("Unimplemented \(#function)")
-		return [.copy]
-	}
-	
-	public func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo,
-	                      row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
-		log.info("Unimplemented \(#function)")
-		return true
-	}
-}
-
-// Support for per-row and multi-select menus.
-@objc public protocol NSExtendedTableViewDelegate: NSTableViewDataSource, NSTableViewDelegate {
-	@objc(tableView:menuForRows:)
-	optional func tableView(_: NSTableView, menuForRows: IndexSet) -> NSMenu?
-	@objc(tableView:didClickRow:)
-	optional func tableView(_: NSTableView, didClickRow: Int)
-}
-public class NSExtendedTableView: NSTableView {
-	
-	// Support for per-row and multi-select menus.
-	public override func menu(for event: NSEvent) -> NSMenu? {
-		let loc = self.convert(event.locationInWindow, from: nil)
-		let row = self.row(at: loc)
-		guard row >= 0 && event.type == .rightMouseDown else {
-			return super.menu(for: event)
-		}
-		
-		var selected = self.selectedRowIndexes
-		if !selected.contains(row) {
-			selected = IndexSet(integer: row)
-			// Enable this to select the row upon menu-click.
-			//self.selectRowIndexes(selected, byExtendingSelection: false)
-		}
-		
-		// As a last resort, if the row was selected alone, ask the view.
-		//let view = self.view(atColumn: 0, row: row, makeIfNecessary: false)
-		
-		if let d = self.delegate as? NSExtendedTableViewDelegate {
-			return d.tableView?(self, menuForRows: selected) ?? super.menu(for: event)
-		}
-		return super.menu(for: event)
-	}
-	
-	public override func mouseDown(with event: NSEvent) {
-		let loc = self.convert(event.locationInWindow, from: nil)
-		let row = self.row(at: loc)
-		
-		super.mouseDown(with: event)
-		if let d = self.delegate as? NSExtendedTableViewDelegate , row != -1 {
-			d.tableView?(self, didClickRow: row)
-		}
-	}
-}
-
-/* TODO: Implement this in ListViewCell. */
-
-public protocol NSTableRowViewProviding {
-	var selectionHighlightStyle: NSTableViewSelectionHighlightStyle { get }
-	var isEmphasized: Bool { get }
-	var isSelected: Bool { get }
-	var backgroundColor: NSColor { get }
-	
-	var isTargetForDropOperation: Bool { get }
-	var draggingDestinationFeedbackStyle: NSTableViewDraggingDestinationFeedbackStyle { get }
-	var indentationForDropOperation: CGFloat { get }
-	
-	func drawBackground(in dirtyRect: NSRect)
-	func drawSelection(in dirtyRect: NSRect)
-	func drawSeparator(in dirtyRect: NSRect)
-	func drawDraggingDestinationFeedback(in dirtyRect: NSRect)
-}
+*/
