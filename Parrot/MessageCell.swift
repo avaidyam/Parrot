@@ -42,49 +42,9 @@ public class MessageCell: ListViewCell {
 		}
 	}
 	
-    /*
-	public var backgroundStyle: NSBackgroundStyle {
-		didSet {
-			guard let text = self.textLabel else { return }
-			
-			// NSTextView doesn't automatically change its text color when the
-			// backing view's appearance changes, so we need to set it each time.
-			// In addition, make sure links aren't blue as usual.
-			// Also, expand the text size if it's purely emoji.
-			text.textColor = NSColor.labelColor
-			text.font = NSFont.systemFont(ofSize: 12.0 * (text.string!.isEmoji ? 3 : 1))
-			text.typingAttributes = [
-				NSForegroundColorAttributeName: text.textColor!,
-				NSFontAttributeName: text.font!
-			]
-			text.linkTextAttributes = [
-				NSForegroundColorAttributeName: NSColor.labelColor,
-				NSCursorAttributeName: NSCursor.pointingHand(),
-				NSUnderlineStyleAttributeName: 1,
-			]
-			text.selectedTextAttributes = [
-				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.appearance!),
-				NSForegroundColorAttributeName: NSColor.labelColor,
-				NSUnderlineStyleAttributeName: 0,
-			]
-			text.markedTextAttributes = [
-				NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.appearance!),
-				NSForegroundColorAttributeName: NSColor.labelColor,
-				NSUnderlineStyleAttributeName: 0,
-			]
-			
-			// Only clip the text if the text isn't purely Emoji.
-			if !text.string!.isEmoji {
-				text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.view.appearance!).cgColor
-			} else {
-				text.layer?.backgroundColor = NSColor.clear.cgColor
-			}
-		}
-	}*/
-	
 	// Allows the circle crop to dynamically change.
-	public override func updateViewConstraints() {
-		//super.layout()
+	public override func viewWillLayout() {
+		super.viewWillLayout()
 		//self.userInterfaceLayoutDirection = self.orientation // FIXME
 		if let layer = self.photoView?.layer {
 			layer.masksToBounds = true
@@ -103,6 +63,42 @@ public class MessageCell: ListViewCell {
 				if rectDiff > 0 { text.textContainerInset.height = rectDiff / 2.0 }
 			}
 		}
+        
+        guard let text = self.textLabel else { return }
+        let appearance = self.view.appearance ?? NSAppearance.current()
+        
+        // NSTextView doesn't automatically change its text color when the
+        // backing view's appearance changes, so we need to set it each time.
+        // In addition, make sure links aren't blue as usual.
+        // Also, expand the text size if it's purely emoji.
+        text.textColor = NSColor.labelColor
+        text.font = NSFont.systemFont(ofSize: 12.0 * (text.string!.isEmoji ? 3 : 1))
+        text.typingAttributes = [
+            NSForegroundColorAttributeName: text.textColor!,
+            NSFontAttributeName: text.font!
+        ]
+        text.linkTextAttributes = [
+            NSForegroundColorAttributeName: NSColor.labelColor,
+            NSCursorAttributeName: NSCursor.pointingHand(),
+            NSUnderlineStyleAttributeName: 1,
+        ]
+        text.selectedTextAttributes = [
+            NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: appearance),
+            NSForegroundColorAttributeName: NSColor.labelColor,
+            NSUnderlineStyleAttributeName: 0,
+        ]
+        text.markedTextAttributes = [
+            NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: appearance),
+            NSForegroundColorAttributeName: NSColor.labelColor,
+            NSUnderlineStyleAttributeName: 0,
+        ]
+        
+        // Only clip the text if the text isn't purely Emoji.
+        if !text.string!.isEmoji {
+            text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: appearance).cgColor
+        } else {
+            text.layer?.backgroundColor = NSColor.clear.cgColor
+        }
 	}
 	
 	/*

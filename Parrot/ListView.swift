@@ -233,7 +233,6 @@ extension ListView  {
             item = cellClass.init()
             item!.identifier = "\(cellClass)"
         }
-        log.debug("here with \(self.dataSource[indexPath.item])")
         item!.representedObject = self.dataSource[indexPath.item]
         return item!
     }
@@ -262,7 +261,7 @@ extension ListView  {
             let cellClass = (self.viewClassProvider?(indexPath.item) ?? ListViewCell.self)
             return cellClass.cellHeight(forWidth: collectionView.bounds.size.width, cellValue: self.dataSource[indexPath.item]).native
         })
-        return NSSize(width: collectionView.bounds.width, height: 64.0)
+        return NSSize(width: collectionView.bounds.width, height: h)
     }
     
     /*@objc(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)

@@ -64,7 +64,6 @@ public class ConversationCell: ListViewCell {
 		return ret
 	}
 	
-    
 	// Allows the photo view's circle crop to dynamically match size.
 	public override func viewWillLayout() {
 		super.viewWillLayout()
