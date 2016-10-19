@@ -10,13 +10,7 @@ public class MessageCell: ListViewCell {
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var representedObject: Any? {
         didSet {
-            guard self.representedObject != nil else {
-                return // the cell is being reset
-            }
-			guard let o = self.representedObject as? Message else {
-				log.warning("MessageCell encountered faulty cellValue! \(self.representedObject)")
-				return
-			}
+            guard let o = self.representedObject as? Message else { return }
 			
 			let user = o.sender
 			let str = NSAttributedString(string: o.text as String)
@@ -99,6 +93,13 @@ public class MessageCell: ListViewCell {
 		}
 	}
 	
+    // TODO: not called.
+    public override func preferredLayoutAttributesFitting(_ attr: NSCollectionViewLayoutAttributes) -> NSCollectionViewLayoutAttributes {
+        let h = MessageCell.cellHeight(forWidth: attr.size.width, cellValue: self.representedObject)
+        attr.size = NSSize(width: attr.size.width, height: h)
+        return attr
+    }
+    
 	/*
 	private static var abc: NSLayoutManager = {
 		var textStorage = NSTextStorage()

@@ -30,7 +30,16 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	private var userList: Directory?
 	private var wallclock: DispatchSourceTimer? = nil
     private var wallclockStarted: Bool = false
-	private var childConversations = [String: MessageListViewController]()
+    
+    /// The childConversations keeps track of all open conversations and when the
+    /// list is updated, it is cached and the list selection is synchronized.
+    private var childConversations = [String: MessageListViewController]() {
+        didSet {
+            log.debug("Updating childConversations... \(Array(self.childConversations.keys))")
+            Settings["Parrot.OpenConversations"] = Array(self.childConversations.keys)
+            self.updateSelectionIndexes()
+        }
+    }
 	
 	deinit {
         self.wallclockStarted = false
@@ -39,19 +48,13 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	
 	var conversationList: ParrotServiceExtension.ConversationList? {
 		didSet {
-			// FIXME: FORCE-CAST TO HANGOUTS
-			(conversationList as? Hangouts.ConversationList)?.delegate = self
-			self.animatedUpdate()
+            (conversationList as? Hangouts.ConversationList)?.delegate = self // FIXME: FORCE-CAST TO HANGOUTS
             
             // Open conversations that were previously open.
-            if let a = Settings["Parrot.OpenConversations"] as? [String] {
-                a.forEach {
-                    if let c = self.conversationList?[$0] {
-                        DispatchQueue.main.async {
-                            //self.showConversation(c)
-                        }
-                    }
-                }
+            self.animatedUpdate {
+                (Settings["Parrot.OpenConversations"] as? [String])?
+                    .flatMap { self.conversationList?[$0] }
+                    .forEach { self.showConversation($0) }
             }
 		}
 	}
@@ -65,7 +68,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	}
 	
 	// Performs a visual refresh of the conversation list.
-	private func animatedUpdate() {
+    private func animatedUpdate(handler: @escaping () -> () = {}) {
 		DispatchQueue.main.async {
 			self.listView.animator().isHidden = true
 			self.indicator.animator().alphaValue = 1.0
@@ -83,6 +86,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 				DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(durMS)) {
 					self.indicator.stopAnimation(nil)
 					self.indicator.isHidden = true
+                    handler()
 				}
 			}
 		}
@@ -110,8 +114,8 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			self.conversationList = c.conversations
 			
 			DispatchQueue.main.async {
-				//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
 				self.listView.update()
+                self.updateSelectionIndexes()
 			}
 		}
 		
@@ -146,14 +150,8 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
 		self.listView.clickedRowProvider = { row in
-			guard row >= 0 else { return }
-			
 			let conv = (self.sortedConversations[row] as! IConversation)
 			self.showConversation(conv)
-			
-			DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(150)) {
-                self.listView.collectionView.animator().selectItems(at: Set<IndexPath>([]), scrollPosition: .top)
-			}
 		}
 		self.listView.rowActionProvider = { row, edge in
 			guard edge == .trailing else { return [] }
@@ -216,23 +214,32 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	private func showConversation(_ conv: Conversation) {
 		if let wc = self.childConversations[conv.identifier] {
 			log.debug("Conversation found for id \(conv.identifier)")
-			wc.showWindow(nil)
+            DispatchQueue.main.async {
+                wc.showWindow(nil)
+            }
 		} else {
 			log.debug("Conversation NOT found for id \(conv.identifier)")
-			
-			let wc = MessageListViewController(windowNibName: "MessageListViewController")
-			wc.conversation = (conv as! IConversation)
-			wc.sendMessageHandler = { [weak self] message, conv2 in
-				self?.sendMessage(message, conv2)
-			}
-            self.childConversations[conv.identifier] = wc
-            Settings["Parrot.OpenConversations"] = Array(self.childConversations.keys)
-			let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
-			NotificationCenter.default.addObserver(self, selector: sel,
-			                                         name: .NSWindowWillClose, object: wc.window)
-			wc.showWindow(nil)
+            DispatchQueue.main.async {
+                let wc = MessageListViewController(windowNibName: "MessageListViewController")
+                wc.conversation = (conv as! IConversation)
+                wc.sendMessageHandler = { [weak self] message, conv2 in
+                    self?.sendMessage(message, conv2)
+                }
+                self.childConversations[conv.identifier] = wc
+                let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
+                NotificationCenter.default.addObserver(self, selector: sel,
+                                                       name: .NSWindowWillClose, object: wc.window)
+                wc.showWindow(nil)
+            }
 		}
 	}
+    
+    private func updateSelectionIndexes() {
+        let paths = self.childConversations.keys
+            .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
+            .map { IndexPath(item: $0, section: 0) }
+        self.listView.collectionView.animator().selectionIndexPaths = Set(paths)
+    }
 	
 	/// As we are about to display, configure our UI elements.
 	public override func showWindow(_ sender: Any?) {
@@ -255,9 +262,8 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 				let ctrl = win.windowController as? MessageListViewController,
 				let conv2 = ctrl.conversation else { return }
 		
-        _ = self.childConversations.removeValue(forKey: conv2.identifier)
-        Settings["Parrot.OpenConversations"] = Array(self.childConversations.keys)
-		NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
+        self.childConversations[conv2.identifier] = nil
+        NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
 	}
 	
 	/// If we need to close, make sure we clean up after ourselves, instead of deinit.
@@ -304,11 +310,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		guard event is IChatMessageEvent else { return }
 		
 		// pls fix :(
-		DispatchQueue.main.async {
-			self.listView.update()
-			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
-			NSApp.badgeCount = UInt(unread)
-		}
+		self.updateList()
 		
 		let conv = self.conversationList?.conversations[event.conversation_id]
 		
@@ -392,21 +394,21 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	
 	/* TODO: Just update the row that is updated. */
     public func conversationList(didUpdate list: Hangouts.ConversationList) {
-		DispatchQueue.main.async {
-			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
-			self.listView.update()
-			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
-			NSApp.badgeCount = UInt(unread)
-		}
+		self.updateList()
     }
 	
 	/* TODO: Just update the row that is updated. */
     public func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
-		DispatchQueue.main.async {
-			//self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
-			self.listView.update()
-			let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
-			NSApp.badgeCount = UInt(unread)
-		}
+		self.updateList()
+    }
+    
+    private func updateList() {
+        DispatchQueue.main.async {
+            //self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
+            self.listView.update()
+            let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
+            NSApp.badgeCount = UInt(unread)
+            self.updateSelectionIndexes()
+        }
     }
 }

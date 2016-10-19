@@ -12,13 +12,7 @@ public class ConversationCell: ListViewCell {
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var representedObject: Any? {
 		didSet {
-            guard self.representedObject != nil else {
-                return // the cell is being reset
-            }
-			guard let conversation = self.representedObject as? Conversation else {
-				log.warning("ConversationCell encountered faulty cellValue! \(self.representedObject)")
-				return
-			}
+            guard let conversation = self.representedObject as? Conversation else { return }
 			
 			let messageSender = conversation.messages.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
@@ -52,6 +46,19 @@ public class ConversationCell: ListViewCell {
 	public func updateTimestamp() {
 		self.timeLabel?.stringValue = self.prefix + self.time.relativeString()
 	}
+    
+    public override var isSelected: Bool {
+        didSet {
+            //let appearance = self.view.appearance ?? NSAppearance.current()
+            if self.isSelected {
+                self.view.layer?.backgroundColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1).cgColor
+                self.separator?.animator().isHidden = true
+            } else {
+                self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
+                self.separator?.animator().isHidden = false
+            }
+        }
+    }
 	
 	// Return a complete dragging component for this ConversationView.
 	// Note that we hide the separator and show it again after snapshot.
@@ -71,4 +78,10 @@ public class ConversationCell: ListViewCell {
 			layer.cornerRadius = photo.bounds.width / 2.0
 		}
 	}
+    
+    // TODO: not called.
+    public override func preferredLayoutAttributesFitting(_ attr: NSCollectionViewLayoutAttributes) -> NSCollectionViewLayoutAttributes {
+        attr.size = NSSize(width: attr.size.width, height: 64.0)
+        return attr
+    }
 }
