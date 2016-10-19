@@ -104,16 +104,14 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
         l.minimumLineSpacing = 0
         l.scrollDirection = .vertical
         l.sectionInset = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        l.itemSize = CGSize(width: 200, height: 80)
-        
+        //l.estimatedItemSize = CGSize(width: 200, height: 64) // FIXME: causes weird render issues...
         self.collectionView.collectionViewLayout = l
 		
 		self.scrollView.drawsBackground = false
         self.scrollView.borderType = .noBorder
         self.collectionView.allowsEmptySelection = true
         self.collectionView.isSelectable = true
-        self.collectionView.backgroundColors = []
-        self.collectionView.maxItemSize = NSSize(width: 0, height: 0)
+        self.collectionView.backgroundColors = [NSColor.clear]
 		
 		self.scrollView.documentView = self.collectionView
 		self.scrollView.hasVerticalScroller = true
@@ -121,7 +119,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 		
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
-		
+        self.collectionView.addGestureRecognizer(NSClickGestureRecognizer(target: self, action: #selector(ListView.collectionViewWasClicked(gesture:))))
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(ListView.collectionViewDidScroll(_:)),
 		                                         name: .NSViewBoundsDidChange,
@@ -174,10 +172,10 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	}
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
-        DispatchQueue.main.async {
+        /*DispatchQueue.main.async {
             log.debug("might scroll to \(row) and has \(self.collectionView.numberOfItems(inSection: 0))")
 			guard let clip = self.collectionView.superview as? NSClipView , animated else {
-				//self.collectionView.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: .top); 
+				self.collectionView.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: .top);
                 return
 			}
 			
@@ -187,12 +185,12 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 			
 			self.scrollView?.flashScrollers()
 			clip.animator().setBoundsOrigin(origin)
-		}
+		}*/
 	}
 	
 	public func register(nibName: String, forClass: ListViewCell.Type) {
 		let nib = NSNib(nibNamed: nibName, bundle: nil)
-		self.collectionView.register(nib, forItemWithIdentifier: forClass.className())
+		self.collectionView.register(nib, forItemWithIdentifier: "\(forClass)")
 	}
 	
 	public var selection: [Int] {
@@ -205,12 +203,12 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	
 	public var dataSourceProvider: (() -> [Any])? = nil
 	public var viewClassProvider: ((_ row: Int) -> ListViewCell.Type)? = nil
-	public var dynamicHeightProvider: ((_ row: Int) -> Double)? = nil
+	public var dynamicHeightProvider: ((_ row: Int) -> Double)? = nil // FIXME?
 	public var clickedRowProvider: ((_ row: Int) -> Void)? = nil
-	public var selectionProvider: ((_ row: Int) -> Void)? = nil
-	public var rowActionProvider: ((_ row: Int, _ edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil
-	public var menuProvider: ((_ rows: [Int]) -> NSMenu?)? = nil
-	public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil
+	public var selectionProvider: ((_ row: Int) -> Void)? = nil // FIXME?
+	public var rowActionProvider: ((_ row: Int, _ edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil // FIXME?
+	public var menuProvider: ((_ rows: [Int]) -> NSMenu?)? = nil // FIXME?
+	public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil // FIXME?
 	public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
 }
 
@@ -223,22 +221,20 @@ extension ListView  {
     }
     
     public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.dataSource.count //+ (self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0)
+        return self.dataSource.count
     }
     
     @objc(collectionView:itemForRepresentedObjectAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        log.debug("TEST \(#function)")
         let cellClass = self.viewClassProvider?(indexPath.item) ?? ListViewCell.self
-        var item = self.collectionView.makeItem(withIdentifier: cellClass.className(), for: indexPath) as? ListViewCell
+        var item = self.collectionView.makeItem(withIdentifier: "\(cellClass)", for: indexPath) as? ListViewCell
         if item == nil {
             log.warning("Cell class \(cellClass) not registered!")
             item = cellClass.init()
-            item!.identifier = cellClass.className()
+            item!.identifier = "\(cellClass)"
         }
-        log.debug("MADE CLASS \(item))")
-        //item.representedObject = self.dataSource[indexPath.item]
-        log.debug("PROVIDED VALUE \(indexPath) => \(self.dataSource[indexPath.item])")
+        log.debug("here with \(self.dataSource[indexPath.item])")
+        item!.representedObject = self.dataSource[indexPath.item]
         return item!
     }
     
@@ -252,12 +248,21 @@ extension ListView  {
         }
     }
     
+    public func collectionViewWasClicked(gesture: NSGestureRecognizer) {
+        let loc = gesture.location(in: self.collectionView)
+        let idx = self.collectionView.indexPathForItem(at: loc)
+        if let idx = idx {
+            self.clickedRowProvider?(idx.item)
+        }
+    }
+    
     @objc(collectionView:layout:sizeForItemAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
-        let cellClass = (self.viewClassProvider?(indexPath.item) ?? ListViewCell.self)
-        let h = cellClass.cellHeight(forWidth: self.bounds.size.width, cellValue: self.dataSource[indexPath.item])
-        log.debug("height: \(h) width: \(self.bounds.width)")
-        return NSSize(width: self.bounds.width, height: h)
+        let h = CGFloat(self.sizeClass.calculate {
+            let cellClass = (self.viewClassProvider?(indexPath.item) ?? ListViewCell.self)
+            return cellClass.cellHeight(forWidth: collectionView.bounds.size.width, cellValue: self.dataSource[indexPath.item]).native
+        })
+        return NSSize(width: collectionView.bounds.width, height: 64.0)
     }
     
     /*@objc(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)

@@ -145,7 +145,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		}
 		
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
-		self.listView.selectionProvider = { row in
+		self.listView.clickedRowProvider = { row in
 			guard row >= 0 else { return }
 			
 			let conv = (self.sortedConversations[row] as! IConversation)

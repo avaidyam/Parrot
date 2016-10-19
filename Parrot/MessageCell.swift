@@ -9,9 +9,12 @@ public class MessageCell: ListViewCell {
 	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var representedObject: Any? {
-		didSet {
+        didSet {
+            guard self.representedObject != nil else {
+                return // the cell is being reset
+            }
 			guard let o = self.representedObject as? Message else {
-				log.warning("MessageCell encountered faulty cellValue!")
+				log.warning("MessageCell encountered faulty cellValue! \(self.representedObject)")
 				return
 			}
 			
@@ -80,7 +83,7 @@ public class MessageCell: ListViewCell {
 	}*/
 	
 	// Allows the circle crop to dynamically change.
-	public func layout() {
+	public override func updateViewConstraints() {
 		//super.layout()
 		//self.userInterfaceLayoutDirection = self.orientation // FIXME
 		if let layer = self.photoView?.layer {

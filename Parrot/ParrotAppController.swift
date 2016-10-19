@@ -40,9 +40,9 @@ public class ParrotAppController: NSApplicationController {
 		super.init()
 		
 		// Check for updates if any are available.
-		checkForUpdates("v0.6-alpha") {
-			NSWorkspace.shared().open($0.githubURL)
-		}
+		//checkForUpdates("v0.6-alpha") {
+		//	NSWorkspace.shared().open($0.githubURL)
+		//}
 		
 		// Register for AppleEvents that follow our URL scheme.
 		NSAppleEventManager.shared().setEventHandler(self,

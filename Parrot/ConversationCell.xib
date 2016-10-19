@@ -11,7 +11,6 @@
             <connections>
                 <outlet property="nameLabel" destination="Bul-Yb-hpg" id="xwg-h3-fjB"/>
                 <outlet property="photoView" destination="N7p-DV-XCL" id="rJm-NJ-6Av"/>
-                <outlet property="separator" destination="yWE-Nd-iCe" id="D1o-0c-GAz"/>
                 <outlet property="textLabel" destination="Nw5-Um-35D" id="Qm0-Lt-4VU"/>
                 <outlet property="timeLabel" destination="98f-We-Vvp" id="CTO-eb-ron"/>
                 <outlet property="view" destination="c22-O7-iKe" id="lpo-CA-4Gb"/>
@@ -21,17 +20,18 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView wantsLayer="YES" id="c22-O7-iKe">
             <rect key="frame" x="0.0" y="0.0" width="327" height="64"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
             <subviews>
-                <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="N7p-DV-XCL">
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="N7p-DV-XCL">
                     <rect key="frame" x="8" y="8" width="48" height="48"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="48" id="2ML-un-cZY"/>
+                        <constraint firstAttribute="height" constant="48" id="cbt-FQ-shg"/>
                         <constraint firstAttribute="width" secondItem="N7p-DV-XCL" secondAttribute="height" multiplier="1:1" id="qS7-Td-1wo"/>
                     </constraints>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="pyV-Ol-A2T"/>
                 </imageView>
-                <textField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bul-Yb-hpg">
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bul-Yb-hpg">
                     <rect key="frame" x="62" y="39" width="211" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="John Smith" placeholderString="Anonymous" id="KKh-aC-jq2">
                         <font key="font" metaFont="systemMedium" size="13"/>
@@ -39,7 +39,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="98f-We-Vvp">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="98f-We-Vvp">
                     <rect key="frame" x="273" y="39" width="48" height="17"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="just now" placeholderString="a while ago" id="0ne-BI-seh">
                         <font key="font" metaFont="smallSystem"/>
@@ -47,7 +47,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Nw5-Um-35D">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Nw5-Um-35D">
                     <rect key="frame" x="62" y="8" width="259" height="27"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="You: What's up today?" placeholderString="[⚠️ No message.]" id="FpG-OA-Cag">
                         <font key="font" metaFont="smallSystem"/>
@@ -55,9 +55,6 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <box wantsLayer="YES" verticalHuggingPriority="750" alphaValue="0.5" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="yWE-Nd-iCe">
-                    <rect key="frame" x="64" y="-2" width="263" height="5"/>
-                </box>
             </subviews>
             <constraints>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="614-Mt-nc3"/>
@@ -71,11 +68,8 @@
                 <constraint firstItem="Bul-Yb-hpg" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="8" id="ekM-qu-jmL"/>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="centerY" secondItem="Bul-Yb-hpg" secondAttribute="centerY" id="hfP-e9-RCT"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="leading" secondItem="N7p-DV-XCL" secondAttribute="trailing" constant="8" id="n6G-VK-XVZ"/>
-                <constraint firstItem="yWE-Nd-iCe" firstAttribute="leading" secondItem="Nw5-Um-35D" secondAttribute="leading" id="nwT-wf-8uc"/>
                 <constraint firstAttribute="trailing" secondItem="Nw5-Um-35D" secondAttribute="trailing" constant="8" id="pYv-6v-EBj"/>
-                <constraint firstAttribute="bottom" secondItem="yWE-Nd-iCe" secondAttribute="bottom" id="tfC-YZ-qgL"/>
                 <constraint firstAttribute="bottom" secondItem="Nw5-Um-35D" secondAttribute="bottom" constant="8" id="tvp-gd-SXn"/>
-                <constraint firstAttribute="trailing" secondItem="yWE-Nd-iCe" secondAttribute="trailing" id="vkM-Aw-jDp"/>
                 <constraint firstAttribute="height" relation="greaterThanOrEqual" secondItem="N7p-DV-XCL" secondAttribute="height" constant="16" id="wd1-jU-Oqk"/>
             </constraints>
             <point key="canvasLocation" x="-31" y="-460"/>
