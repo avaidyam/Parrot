@@ -189,8 +189,10 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	}
 	
 	public func register(nibName: String, forClass: ListViewCell.Type) {
-		let nib = NSNib(nibNamed: nibName, bundle: nil)
-		self.collectionView.register(nib, forItemWithIdentifier: "\(forClass)")
+		self.collectionView.register(forClass, forItemWithIdentifier: "\(forClass)")
+        //let nib = NSNib(nibNamed: nibName, bundle: nil)
+        //log.debug("Registering nib \(nib) for \(forClass).")
+		//self.collectionView.register(nib, forItemWithIdentifier: "\(forClass)")
 	}
 	
 	public var selection: [Int] {
@@ -255,6 +257,7 @@ extension ListView  {
         }
     }
     
+    
     @objc(collectionView:layout:sizeForItemAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
         let h = CGFloat(self.sizeClass.calculate {
@@ -270,22 +273,6 @@ extension ListView  {
     }*/
     
 }
-
-// Sizing Support
-/*extension ListView {
-    
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize
-    
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, insetForSectionAt section: Int) -> EdgeInsets
-    
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat
-    
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat
-    
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> NSSize
-    
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForFooterInSection section: Int) -> NSSize
-}*/
 
 // Drag & Drop Support
 /*extension ListView {
@@ -338,10 +325,10 @@ extension ListView  {
     }
     
 }
-
+*/
 // Selection & Transition Support
 extension ListView {
-
+    /*
     @objc(collectionView:shouldChangeItemsAtIndexPaths:toHighlightState:)
     public func collectionView(_ collectionView: NSCollectionView, shouldChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) -> Set<IndexPath> {
         
@@ -360,7 +347,7 @@ extension ListView {
     @objc(collectionView:shouldDeselectItemsAtIndexPaths:)
     public func collectionView(_ collectionView: NSCollectionView, shouldDeselectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
         
-    }
+    }*/
     
     @objc(collectionView:didSelectItemsAtIndexPaths:)
     public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
@@ -372,7 +359,7 @@ extension ListView {
         
     }
     
-    @objc(collectionView:willDisplayItem:forRepresentedObjectAtIndexPath:)
+    /*@objc(collectionView:willDisplayItem:forRepresentedObjectAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, willDisplay item: NSCollectionViewItem, forRepresentedObjectAt indexPath: IndexPath) {
         
     }
@@ -394,8 +381,8 @@ extension ListView {
     
     public func collectionView(_ collectionView: NSCollectionView, transitionLayoutForOldLayout fromLayout: NSCollectionViewLayout, newLayout toLayout: NSCollectionViewLayout) -> NSCollectionViewTransitionLayout {
         
-    }
-}*/
+    }*/
+}
 
 /*
 // Essential Support

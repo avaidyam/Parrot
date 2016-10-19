@@ -11,6 +11,7 @@
             <connections>
                 <outlet property="nameLabel" destination="Bul-Yb-hpg" id="xwg-h3-fjB"/>
                 <outlet property="photoView" destination="N7p-DV-XCL" id="rJm-NJ-6Av"/>
+                <outlet property="separator" destination="9DZ-wE-PAP" id="MFF-Dx-YVh"/>
                 <outlet property="textLabel" destination="Nw5-Um-35D" id="Qm0-Lt-4VU"/>
                 <outlet property="timeLabel" destination="98f-We-Vvp" id="CTO-eb-ron"/>
                 <outlet property="view" destination="c22-O7-iKe" id="lpo-CA-4Gb"/>
@@ -55,13 +56,22 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <box wantsLayer="YES" verticalHuggingPriority="750" alphaValue="0.75" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="9DZ-wE-PAP">
+                    <rect key="frame" x="64" y="-2" width="263" height="5"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="2bh-VJ-8OO"/>
+                    </constraints>
+                </box>
             </subviews>
             <constraints>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="614-Mt-nc3"/>
                 <constraint firstItem="Bul-Yb-hpg" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="8kk-Tz-SAE"/>
                 <constraint firstItem="N7p-DV-XCL" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="Fb2-9Y-vG3"/>
+                <constraint firstAttribute="trailing" secondItem="9DZ-wE-PAP" secondAttribute="trailing" id="KZ0-Bf-iTN"/>
                 <constraint firstAttribute="trailing" secondItem="98f-We-Vvp" secondAttribute="trailing" constant="8" id="UiQ-u1-4QI"/>
+                <constraint firstAttribute="bottom" secondItem="9DZ-wE-PAP" secondAttribute="bottom" id="Vvp-ql-yNp"/>
                 <constraint firstItem="N7p-DV-XCL" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="WT8-Yq-ee6"/>
+                <constraint firstItem="9DZ-wE-PAP" firstAttribute="leading" secondItem="Nw5-Um-35D" secondAttribute="leading" id="Z1i-t6-GKR"/>
                 <constraint firstItem="98f-We-Vvp" firstAttribute="leading" secondItem="Bul-Yb-hpg" secondAttribute="trailing" constant="4" id="b4Q-j2-cQm"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="top" secondItem="Bul-Yb-hpg" secondAttribute="bottom" constant="4" id="cNz-zg-drJ"/>
                 <constraint firstItem="Nw5-Um-35D" firstAttribute="top" secondItem="98f-We-Vvp" secondAttribute="bottom" constant="4" id="ce9-fP-ntK"/>

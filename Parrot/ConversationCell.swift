@@ -40,8 +40,6 @@ public class ConversationCell: ListViewCell {
 			self.timeLabel?.stringValue = self.prefix + time.relativeString()
 			self.timeLabel?.toolTip = "\(time.fullString())"
             
-            //self.view.canDrawSubviewsIntoLayer = true
-			
 			if conversation.unreadCount > 0 {
 				self.timeLabel?.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
 			}
@@ -67,6 +65,7 @@ public class ConversationCell: ListViewCell {
 	// Allows the photo view's circle crop to dynamically match size.
 	public override func viewWillLayout() {
 		super.viewWillLayout()
+        self.separator?.layer?.backgroundColor = NSColor.labelColor.cgColor
 		if let photo = self.photoView, let layer = photo.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = photo.bounds.width / 2.0
