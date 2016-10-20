@@ -329,9 +329,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		self.dataSource.append(e)
 		let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
 		DispatchQueue.main.async {
-            self.listView.collectionView.insertItems(at: Set<IndexPath>([idx])) //animation: [.effectFade, .slideUp]
+            self.listView.collectionView.animator().insertItems(at: Set<IndexPath>([idx])) //animation: [.effectFade, .slideUp]
+            self.listView.scroll(toRow: idx.item)
 		}
-		self.listView.scroll(toRow: idx.first!)
     }
 	public func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {}
 	public func conversationDidUpdateEvents(_ conversation: IConversation) {}

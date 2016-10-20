@@ -54,6 +54,19 @@ public enum ScrollDirection {
 	//case index(Int)
 }
 
+public class AnimatingFlowLayout: NSCollectionViewFlowLayout {
+    public override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+        let x = self.layoutAttributesForItem(at: itemIndexPath)
+        x?.alpha = 0.0
+        x?.frame.origin.y -= x!.frame.height
+        return x
+    }
+    
+    public override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+        return nil
+    }
+}
+
 // FIXME: ListViewDelegate
 
 public class ListViewCell: NSCollectionViewItem {
@@ -99,7 +112,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         
-        let l = NSCollectionViewFlowLayout()
+        let l = AnimatingFlowLayout()
         l.minimumInteritemSpacing = 0
         l.minimumLineSpacing = 0
         l.scrollDirection = .vertical
@@ -122,7 +135,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
         
         let g = NSClickGestureRecognizer(target: self, action: #selector(ListView.collectionViewMenuClick(gesture:)))
         g.buttonMask = 0x2
-        self.collectionView.addGestureRecognizer(g)
+        //self.collectionView.addGestureRecognizer(g)
 	}
 	
 	@IBInspectable // FIXME
@@ -167,20 +180,10 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	}
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
-        /*DispatchQueue.main.async {
-            log.debug("might scroll to \(row) and has \(self.collectionView.numberOfItems(inSection: 0))")
-			guard let clip = self.collectionView.superview as? NSClipView , animated else {
-				self.collectionView.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: .top);
-                return
-			}
-			
-			let rowRect = self.collectionView.frameForItem(at: row)
-			var origin = rowRect.origin
-			origin.y = (origin.y - (clip.frame.height * 0.5)) + (rowRect.height * 0.5)
-			
-			self.scrollView?.flashScrollers()
-			clip.animator().setBoundsOrigin(origin)
-		}*/
+        log.debug("trying to scroll to \(row)")
+        guard row >= 0 && row <= self.dataSource.count - 1 else { return }
+        let obj = animated ? self.collectionView.animator() : self.collectionView
+        obj!.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: .bottom)
 	}
 	
 	public func register(nibName: String, forClass: ListViewCell.Type) {
@@ -207,6 +210,12 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	public var menuProvider: ((_ rows: [Int]) -> NSMenu?)? = nil // FIXME?
 	public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil // FIXME?
 	public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
+    
+    public override func layout() {
+        super.layout()
+        //let c = self.collectionView.collectionViewLayout?.invalidationContext(forBoundsChange: self.collectionView.bounds)
+        self.collectionView.collectionViewLayout?.invalidateLayout()
+    }
 }
 
 // Essential Support

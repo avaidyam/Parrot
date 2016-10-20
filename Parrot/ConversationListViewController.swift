@@ -150,50 +150,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
 		self.listView.selectionProvider = { row in
-			let conv = (self.sortedConversations[row] as! IConversation)
-			self.showConversation(conv)
-		}
-		self.listView.rowActionProvider = { row, edge in
-			guard edge == .trailing else { return [] }
-			var actions = [
-				NSTableViewRowAction(style: .regular, title: "Delete") { action, select in
-					log.info("Delete row:\(select)")
-				},
-				NSTableViewRowAction(style: .regular, title: "Archive") { action, select in
-					log.info("Archive row:\(select)")
-				},
-				NSTableViewRowAction(style: .regular, title: "Block") { action, select in
-					log.info("Block row:\(select)")
-				},
-				NSTableViewRowAction(style: .destructive, title: "Mute") { action, select in
-					log.info("Mute row:\(select)")
-					//self.sortedConversations[row].muted = true
-				},
-			]
-			
-			// Fix the colors set by the given styles.
-			actions[0].backgroundColor = #colorLiteral(red: 0.7960784435, green: 0, blue: 0, alpha: 1)
-			actions[1].backgroundColor = #colorLiteral(red: 1, green: 0.2117647082, blue: 0.2392156869, alpha: 1)
-			actions[2].backgroundColor = #colorLiteral(red: 0.1843137294, green: 0.7098039389, blue: 1, alpha: 1)
-			actions[3].backgroundColor = #colorLiteral(red: 0, green: 0.4745098054, blue: 0.9098039269, alpha: 1)
-			return actions
-		}
-		self.listView.menuProvider = { rows in
-			let m = NSMenu(title: "Settings")
-			m.addItem(title: "Mute") {
-				log.info("Mute rows:\(rows)")
-			}
-			m.addItem(title: "Block") {
-				log.info("Block rows:\(rows)")
-			}
-			m.addItem(NSMenuItem.separator())
-			m.addItem(title: "Delete") {
-				log.info("Delete rows:\(rows)")
-			}
-			m.addItem(title: "Archive") {
-				log.info("Archive rows:\(rows)")
-			}
-			return m
+			self.showConversation(self.sortedConversations[row])
 		}
 		self.listView.pasteboardProvider = { row in
 			let pb = NSPasteboardItem()

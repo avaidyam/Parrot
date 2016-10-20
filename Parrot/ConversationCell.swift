@@ -59,6 +59,25 @@ public class ConversationCell: ListViewCell {
             }
         }
     }
+    
+    public override func rightMouseUp(with event: NSEvent) {
+        guard let conversation = self.representedObject as? Conversation else { return }
+        let m = NSMenu(title: "Settings")
+        m.addItem(title: "Mute") {
+            log.info("Mute conv: \(conversation.identifier)")
+        }
+        m.addItem(title: "Block") {
+            log.info("Block conv: \(conversation.identifier)")
+        }
+        m.addItem(NSMenuItem.separator())
+        m.addItem(title: "Delete") {
+            log.info("Delete conv: \(conversation.identifier)")
+        }
+        m.addItem(title: "Archive") {
+            log.info("Archive conv: \(conversation.identifier)")
+        }
+        m.popUp(positioning: nil, at: self.view.convert(event.locationInWindow, from: nil), in: self.view)
+    }
 	
 	// Return a complete dragging component for this ConversationView.
 	// Note that we hide the separator and show it again after snapshot.
