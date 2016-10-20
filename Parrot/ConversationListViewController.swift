@@ -149,7 +149,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		}
 		
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
-		self.listView.clickedRowProvider = { row in
+		self.listView.selectionProvider = { row in
 			let conv = (self.sortedConversations[row] as! IConversation)
 			self.showConversation(conv)
 		}
@@ -208,6 +208,10 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			
 			log.debug("SCROLLBACK")
 			self.updateToken = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+                log.info("updateToken is automatically being cleared. THIS IS A BUG. Please fix it.")
+                self.updateToken = false
+            }
 		}
 	}
 	

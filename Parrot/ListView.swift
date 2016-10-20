@@ -119,15 +119,10 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 		
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
-        self.collectionView.addGestureRecognizer(NSClickGestureRecognizer(target: self, action: #selector(ListView.collectionViewWasClicked(gesture:))))
-		
-		NotificationCenter.default.addObserver(self, selector: #selector(ListView.collectionViewDidScroll(_:)),
-		                                         name: .NSViewBoundsDidChange,
-		                                         object: self.scrollView.contentView)
-	}
-	
-	deinit {
-		NotificationCenter.default.removeObserver(self)
+        
+        let g = NSClickGestureRecognizer(target: self, action: #selector(ListView.collectionViewMenuClick(gesture:)))
+        g.buttonMask = 0x2
+        self.collectionView.addGestureRecognizer(g)
 	}
 	
 	@IBInspectable // FIXME
@@ -239,24 +234,23 @@ extension ListView  {
         return item!
     }
     
-    public func collectionViewDidScroll(_ notification: Notification) {
-        guard let o = notification.object as? NSView , o == self.scrollView.contentView else { return }
-        if self.visibleRows.contains(0) {
+    @objc(collectionView:willDisplayItem:forRepresentedObjectAtIndexPath:)
+    public func collectionView(_ collectionView: NSCollectionView, willDisplay item: NSCollectionViewItem, forRepresentedObjectAt indexPath: IndexPath) {
+        if indexPath.item == 0 {
             self.scrollbackProvider?(.top)
         }
-        if self.visibleRows.contains(self.dataSource.count - 1) {
+        if indexPath.item == self.dataSource.count - 1 {
             self.scrollbackProvider?(.bottom)
         }
     }
     
-    public func collectionViewWasClicked(gesture: NSGestureRecognizer) {
+    public func collectionViewMenuClick(gesture: NSGestureRecognizer) {
         let loc = gesture.location(in: self.collectionView)
         let idx = self.collectionView.indexPathForItem(at: loc)
         if let idx = idx {
-            self.clickedRowProvider?(idx.item)
+            self.menuProvider?([idx.item])?.popUp(positioning: nil, at: loc, in: gesture.view)
         }
     }
-    
     
     @objc(collectionView:layout:sizeForItemAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
@@ -351,7 +345,7 @@ extension ListView {
     
     @objc(collectionView:didSelectItemsAtIndexPaths:)
     public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-        
+        indexPaths.forEach { self.selectionProvider?($0.item) }
     }
     
     @objc(collectionView:didDeselectItemsAtIndexPaths:)
