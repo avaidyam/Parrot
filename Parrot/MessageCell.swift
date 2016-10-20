@@ -92,6 +92,12 @@ public class MessageCell: ListViewCell {
             text.layer?.cornerRadius = 2.0
 		}
 	}
+    
+    public override func rightMouseUp(with event: NSEvent) {
+        self.textLabel?.selectAll(nil)
+        self.textLabel?.menu(for: event)?.popUp(positioning: nil, at: self.view.convert(event.locationInWindow, from: nil), in: self.view)
+        self.textLabel?.setSelectedRange(NSRange())
+    }
 	
     // TODO: not called.
     public override func preferredLayoutAttributesFitting(_ attr: NSCollectionViewLayoutAttributes) -> NSCollectionViewLayoutAttributes {

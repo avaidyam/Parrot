@@ -110,6 +110,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
 		
 		self.listView.sizeClass = .dynamic
+        self.listView.updateScrollDirection = .bottom
 		self.entryView.delegate = self
 		
 		if let me = self.conversation?.client.userList.me {

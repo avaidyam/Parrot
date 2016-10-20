@@ -55,15 +55,54 @@ public enum ScrollDirection {
 }
 
 public class AnimatingFlowLayout: NSCollectionViewFlowLayout {
+    public var appearEffect: NSTableViewAnimationOptions = []
+    public var disappearEffect: NSTableViewAnimationOptions = []
+    
+    public override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        if newBounds.size != self.collectionView!.bounds.size {
+            return true
+        }
+        return false
+    }
+    
+    public override func invalidationContext(forBoundsChange newBounds: NSRect) -> NSCollectionViewLayoutInvalidationContext {
+        let x = super.invalidationContext(forBoundsChange: newBounds)
+        x.contentSizeAdjustment = self.collectionView!.bounds.size
+        return x
+    }
+    
     public override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
         let x = self.layoutAttributesForItem(at: itemIndexPath)
-        x?.alpha = 0.0
-        x?.frame.origin.y -= x!.frame.height
+        if self.appearEffect.contains(.effectFade) {
+            x?.alpha = 0.0
+        }
+        if self.appearEffect.contains(.slideUp) {
+            x?.frame.origin.y -= x!.frame.height
+        } else if self.appearEffect.contains(.slideDown) {
+            x?.frame.origin.y += x!.frame.height
+        } else if self.appearEffect.contains(.slideLeft) {
+            x?.frame.origin.x += x!.frame.width
+        } else if self.appearEffect.contains(.slideRight) {
+            x?.frame.origin.x -= x!.frame.width
+        }
         return x
     }
     
     public override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
-        return nil
+        let x = self.layoutAttributesForItem(at: itemIndexPath)
+        if self.disappearEffect.contains(.effectFade) {
+            x?.alpha = 0.0
+        }
+        if self.appearEffect.contains(.slideUp) {
+            x?.frame.origin.y -= x!.frame.height
+        } else if self.appearEffect.contains(.slideDown) {
+            x?.frame.origin.y += x!.frame.height
+        } else if self.appearEffect.contains(.slideLeft) {
+            x?.frame.origin.x += x!.frame.width
+        } else if self.appearEffect.contains(.slideRight) {
+            x?.frame.origin.x -= x!.frame.width
+        }
+        return x
     }
 }
 
@@ -113,10 +152,11 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
         self.collectionView.delegate = self
         
         let l = AnimatingFlowLayout()
+        l.appearEffect = [.effectFade, .slideUp]
+        l.disappearEffect = [.effectFade, .slideDown]
         l.minimumInteritemSpacing = 0
         l.minimumLineSpacing = 0
         l.scrollDirection = .vertical
-        l.sectionInset = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         //l.estimatedItemSize = CGSize(width: 200, height: 64) // FIXME: causes weird render issues...
         self.collectionView.collectionViewLayout = l
 		
@@ -132,10 +172,6 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 		
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
-        
-        let g = NSClickGestureRecognizer(target: self, action: #selector(ListView.collectionViewMenuClick(gesture:)))
-        g.buttonMask = 0x2
-        //self.collectionView.addGestureRecognizer(g)
 	}
 	
 	@IBInspectable // FIXME
@@ -214,7 +250,15 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
     public override func layout() {
         super.layout()
         //let c = self.collectionView.collectionViewLayout?.invalidationContext(forBoundsChange: self.collectionView.bounds)
-        self.collectionView.collectionViewLayout?.invalidateLayout()
+        //self.collectionView.collectionViewLayout?.invalidateLayout()
+        //self.collectionView.reloadData()
+        if let c = self.collectionView.collectionViewLayout as? NSCollectionViewFlowLayout {
+            c.invalidateLayout(with: c.invalidationContext(forBoundsChange: self.collectionView.bounds))
+            self.collectionView.needsLayout = true
+            self.collectionView.layoutSubtreeIfNeeded()
+        }
+        //self.collectionView.reloadItems(at: self.collectionView.visibleItems())
+        log.debug("INVALIDATING LAYOUT")
     }
 }
 
@@ -267,6 +311,7 @@ extension ListView  {
             let cellClass = (self.viewClassProvider?(indexPath.item) ?? ListViewCell.self)
             return cellClass.cellHeight(forWidth: collectionView.bounds.size.width, cellValue: self.dataSource[indexPath.item]).native
         })
+        log.debug("LAYOUT CALC \(collectionView.bounds.width)")
         return NSSize(width: collectionView.bounds.width, height: h)
     }
     

@@ -61,20 +61,24 @@ public class ConversationCell: ListViewCell {
     }
     
     public override func rightMouseUp(with event: NSEvent) {
-        guard let conversation = self.representedObject as? Conversation else { return }
+        guard var conversation = self.representedObject as? Conversation else { return }
         let m = NSMenu(title: "Settings")
-        m.addItem(title: "Mute") {
+        m.addItem(title: conversation.muted ? "Unmute" : "Mute") {
             log.info("Mute conv: \(conversation.identifier)")
+            conversation.muted = !conversation.muted
         }
         m.addItem(title: "Block") {
             log.info("Block conv: \(conversation.identifier)")
+            //conversation.participants.first?.blocked = true
         }
         m.addItem(NSMenuItem.separator())
         m.addItem(title: "Delete") {
             log.info("Delete conv: \(conversation.identifier)")
+            //conversation.delete()
         }
         m.addItem(title: "Archive") {
             log.info("Archive conv: \(conversation.identifier)")
+            //conversation.move(to: .archive)
         }
         m.popUp(positioning: nil, at: self.view.convert(event.locationInWindow, from: nil), in: self.view)
     }
