@@ -42,7 +42,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
                                 <subviews>
                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="S2O-bo-UO2" userLabel="Image View">
-                                        <rect key="frame" x="448" y="8" width="24" height="24"/>
+                                        <rect key="frame" x="8" y="8" width="24" height="24"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="S2O-bo-UO2" secondAttribute="height" multiplier="1:1" id="Y9f-tR-8A4"/>
                                             <constraint firstAttribute="width" constant="24" id="pP5-NL-Reg"/>
@@ -53,7 +53,7 @@
                                         </buttonCell>
                                     </button>
                                     <scrollView wantsLayer="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
-                                        <rect key="frame" x="8" y="8" width="432" height="24"/>
+                                        <rect key="frame" x="40" y="8" width="432" height="24"/>
                                         <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
                                             <rect key="frame" x="0.0" y="0.0" width="432" height="24"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -85,13 +85,13 @@
                                     </scrollView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="leading" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="DMZ-XP-HrR"/>
-                                    <constraint firstAttribute="trailing" secondItem="S2O-bo-UO2" secondAttribute="trailing" constant="8" id="HVB-gx-E6m"/>
                                     <constraint firstItem="S2O-bo-UO2" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="JLi-05-Zdg"/>
-                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" id="PTn-ns-aoi"/>
-                                    <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" constant="8" id="kNh-UA-vLQ"/>
+                                    <constraint firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" constant="8" id="ZVJ-gm-5WQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="ams-j0-piv"/>
+                                    <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="i8W-Jh-F5b"/>
+                                    <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="S2O-bo-UO2" secondAttribute="trailing" constant="8" id="pqW-Jm-9mr"/>
                                     <constraint firstAttribute="bottom" secondItem="S2O-bo-UO2" secondAttribute="bottom" constant="8" id="qfr-SP-QnO"/>
-                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="top" secondItem="61a-19-CQC" secondAttribute="top" id="rZQ-aV-2QU"/>
+                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" constant="8" id="ui8-1I-GaV"/>
                                 </constraints>
                             </visualEffectView>
                         </subviews>

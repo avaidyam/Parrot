@@ -1,7 +1,7 @@
 import AppKit
 import Quartz
 
-public class LinkPreviewCell: ListViewCell {//, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
+public class LinkPreviewCell: NSCollectionViewItem {//, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
 	@IBOutlet var faviconView: NSImageView?
 	@IBOutlet var titleView: NSTextField?
 	@IBOutlet var descView: NSTextField?
@@ -78,7 +78,4 @@ public class LinkPreviewCell: ListViewCell {//, QLPreviewPanelDataSource, QLPrev
 	}
 	*/
 	
-	public override class func cellHeight(forWidth: CGFloat, cellValue: Any?) -> CGFloat {
-		return 96
-	}
 }

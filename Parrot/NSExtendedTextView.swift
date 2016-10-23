@@ -40,6 +40,7 @@ public class NSExtendedTextView: NSTextView {
 	public override func didChangeText() {
 		super.didChangeText()
 		self.invalidateIntrinsicContentSize()
+        self.needsLayout = true
 	}
 	public override func becomeFirstResponder() -> Bool {
 		self.needsDisplay = true

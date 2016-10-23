@@ -1,5 +1,5 @@
 import AppKit
 
-public class FocusCell: ListViewCell {
+public class FocusCell: NSCollectionViewItem {
 	
 }

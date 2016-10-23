@@ -127,12 +127,6 @@ public class AnimatingFlowLayout: NSCollectionViewFlowLayout {
 
 // FIXME: ListViewDelegate
 
-public class ListViewCell: NSCollectionViewItem {
-	public class func cellHeight(forWidth: CGFloat, cellValue: Any?) -> CGFloat {
-		return 20.0
-	}
-}
-
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
@@ -173,7 +167,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
         let l = AnimatingFlowLayout()
         l.appearEffect = [.effectFade, .slideDown]
         l.disappearEffect = [.effectFade, .slideUp]
-        l.minimumInteritemSpacing = 0
+        l.minimumInteritemSpacing = 100000000
         l.minimumLineSpacing = 0
         l.scrollDirection = .vertical
         self.collectionView.collectionViewLayout = l
@@ -244,7 +238,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
         obj!.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: [.centeredVertically, .centeredHorizontally])
 	}
 	
-	public func register(nibName: String, forClass: ListViewCell.Type) {
+	public func register(nibName: String, forClass: NSCollectionViewItem.Type) {
 		self.collectionView.register(forClass, forItemWithIdentifier: "\(forClass)")
         //let nib = NSNib(nibNamed: nibName, bundle: nil)
         //log.debug("Registering nib \(nib) for \(forClass).")
@@ -260,7 +254,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	}
 	
 	public var dataSourceProvider: (() -> [Any])? = nil
-	public var viewClassProvider: ((_ row: Int) -> ListViewCell.Type)? = nil
+	public var viewClassProvider: ((_ row: Int) -> NSCollectionViewItem.Type)? = nil
 	public var dynamicHeightProvider: ((_ row: Int) -> Double)? = nil // FIXME?
 	public var clickedRowProvider: ((_ row: Int) -> Void)? = nil
 	public var selectionProvider: ((_ row: Int) -> Void)? = nil // FIXME?
@@ -269,9 +263,16 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil // FIXME?
 	public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
     
-    // FIXME: This is a terrible hack to get automatic resizing to work. :(
     public override func layout() {
         super.layout()
+        if !self.inLiveResize {
+            // FIXME: This is a terrible hack to get automatic resizing to work. :(
+            self.collectionView.performUpdate()
+        }
+    }
+    
+    // Mitigates the terrible resizing performance by only snapping at the very end.
+    public override func viewDidEndLiveResize() {
         self.collectionView.performUpdate()
     }
     
@@ -282,8 +283,8 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 extension ListView  {
     
     private func create(_ indexPath: IndexPath) -> NSCollectionViewItem {
-        let cellClass = self.viewClassProvider?(indexPath.item) ?? ListViewCell.self
-        var item = self.collectionView.makeItem(withIdentifier: "\(cellClass)", for: indexPath) as? ListViewCell
+        let cellClass = self.viewClassProvider?(indexPath.item) ?? NSCollectionViewItem.self
+        var item = self.collectionView.makeItem(withIdentifier: "\(cellClass)", for: indexPath) as? NSCollectionViewItem
         if item == nil {
             log.warning("Cell class \(cellClass) not registered!")
             item = cellClass.init()
@@ -324,7 +325,7 @@ extension ListView  {
         if sz != 0 { return NSSize(width: collectionView.bounds.width.native, height: sz) }
         
         
-        let cellClass = self.viewClassProvider?(indexPath.item) ?? ListViewCell.self
+        let cellClass = self.viewClassProvider?(indexPath.item) ?? NSCollectionViewItem.self
         var proto = self.prototypes["\(cellClass)"]
         if proto == nil {
             let item = cellClass.init()

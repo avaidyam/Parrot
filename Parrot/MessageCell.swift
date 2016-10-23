@@ -4,7 +4,7 @@ import protocol ParrotServiceExtension.Message
 
 /* TODO: Use NSPanGestureRecognizer or Force Touch to expand links. */
 
-public class MessageCell: ListViewCell, NSTextViewDelegate {
+public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft

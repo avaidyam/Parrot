@@ -78,6 +78,22 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		super.loadWindow()
 		self.drawer.__setupModernDrawer()
 		
+        // Since we struggle with IB shoving the NSScrollView down our throats,
+        // remove the scroll view entirely and re-constrain the text view.
+        let scroll = self.entryView?.enclosingScrollView
+        self.entryView?.removeFromSuperview()
+        self.moduleView.addSubview(self.entryView)
+        scroll?.removeFromSuperview()
+        
+        // Match the same constraints that the scroll view had in IB and turn off autoresizing.
+        self.entryView?.translatesAutoresizingMaskIntoConstraints = false
+        self.entryView?.leadingAnchor.constraint(equalTo: self.imageView!.trailingAnchor, constant: 8).isActive = true
+        self.entryView?.trailingAnchor.constraint(equalTo: self.moduleView.trailingAnchor, constant: -8).isActive = true
+        self.entryView?.topAnchor.constraint(equalTo: self.moduleView.topAnchor, constant: 8).isActive = true
+        self.entryView?.bottomAnchor.constraint(equalTo: self.moduleView.bottomAnchor, constant: -8).isActive = true
+        self.entryView?.heightAnchor.constraint(greaterThanOrEqualTo: self.imageView!.heightAnchor).isActive = true
+        
+        
 		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
 		self.window?.titleVisibility = .hidden
@@ -106,7 +122,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 				return LinkPreviewCell.self
 			} else {
 				log.debug("\(row) OMG GOT NOTHING \(cls)")
-				return ListViewCell.self
+				return NSCollectionViewItem.self
 			}
 		}
 		
@@ -122,10 +138,6 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			self.imageView.image = fetchImage(user: me as! User, conversation: self.conversation!)
 		}
 		
-		// [BUG] [macOS 12] NSTextView doesn't fill width if layer-backed?
-		if let text = self.entryView {
-			text.frame = text.enclosingScrollView!.bounds
-        }
         //self.moduleView.layer?.cornerRadius = 5.0
     }
     

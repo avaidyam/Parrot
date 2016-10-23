@@ -2,7 +2,7 @@ import Cocoa
 import protocol ParrotServiceExtension.Conversation
 
 // A visual representation of a Conversation in a ListView.
-public class ConversationCell: ListViewCell {
+public class ConversationCell: NSCollectionViewItem {
 	@IBOutlet private var photoView: NSImageView?
 	@IBOutlet private var nameLabel: NSTextField?
 	@IBOutlet private var textLabel: NSTextField?
