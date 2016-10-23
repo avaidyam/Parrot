@@ -25,7 +25,7 @@
                     </constraints>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="NSUser" id="pE0-nd-e80"/>
                 </imageView>
-                <scrollView wantsLayer="YES" verticalHuggingPriority="248" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="QLh-pw-ow3" customClass="NSAntiScrollView" customModule="Parrot" customModuleProvider="target">
+                <scrollView wantsLayer="YES" verticalHuggingPriority="248" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="24" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="QLh-pw-ow3" customClass="NSAntiScrollView" customModule="Parrot" customModuleProvider="target">
                     <rect key="frame" x="40" y="8" width="443" height="24"/>
                     <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="ISP-1s-HMH" customClass="NSAntiClipView" customModule="Parrot" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="443" height="24"/>
@@ -35,7 +35,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <size key="minSize" width="443" height="24"/>
+                                <size key="minSize" width="60" height="24"/>
                                 <size key="maxSize" width="10000000" height="10000000"/>
                                 <attributedString key="textStorage">
                                     <fragment content="Cheers, love! The cavalry's here!">
@@ -73,7 +73,7 @@
                 <constraint firstItem="QLh-pw-ow3" firstAttribute="leading" secondItem="wEL-KW-aRK" secondAttribute="trailing" constant="8" id="pTh-S1-EeS"/>
                 <constraint firstAttribute="trailing" secondItem="QLh-pw-ow3" secondAttribute="trailing" priority="996" constant="8" id="wW0-s2-GFD"/>
             </constraints>
-            <point key="canvasLocation" x="-588.5" y="85.5"/>
+            <point key="canvasLocation" x="-761.5" y="30"/>
         </customView>
     </objects>
     <resources>

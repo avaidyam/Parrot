@@ -39,7 +39,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                             </customView>
                             <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="appearanceBased" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="56"/>
                                 <subviews>
                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="S2O-bo-UO2" userLabel="Image View">
                                         <rect key="frame" x="8" y="8" width="24" height="24"/>
@@ -52,18 +52,18 @@
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                     </button>
-                                    <scrollView wantsLayer="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
-                                        <rect key="frame" x="40" y="8" width="432" height="24"/>
-                                        <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o">
-                                            <rect key="frame" x="0.0" y="0.0" width="432" height="24"/>
+                                    <scrollView wantsLayer="YES" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="40" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC" customClass="NSAntiScrollView" customModule="Parrot" customModuleProvider="target">
+                                        <rect key="frame" x="40" y="8" width="432" height="40"/>
+                                        <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o" customClass="NSAntiClipView" customModule="Parrot" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="432" height="40"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <textView wantsLayer="YES" drawsBackground="NO" continuousSpellChecking="YES" allowsUndo="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
+                                                <textView wantsLayer="YES" drawsBackground="NO" verticallyResizable="NO" continuousSpellChecking="YES" allowsUndo="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <size key="minSize" width="432" height="24"/>
+                                                    <size key="minSize" width="432" height="40"/>
                                                     <size key="maxSize" width="591" height="10000000"/>
                                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <userDefinedRuntimeAttributes>
@@ -78,17 +78,18 @@
                                             <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="glu-WV-IDk">
-                                            <rect key="frame" x="416" y="0.0" width="16" height="24"/>
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="glu-WV-IDk">
+                                            <rect key="frame" x="416" y="0.0" width="16" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="JLi-05-Zdg"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="250" id="4kn-D9-yrA"/>
+                                    <constraint firstItem="61a-19-CQC" firstAttribute="height" relation="greaterThanOrEqual" secondItem="S2O-bo-UO2" secondAttribute="height" id="BXF-On-A5E"/>
+                                    <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="E9w-Hu-DQ3"/>
                                     <constraint firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" constant="8" id="ZVJ-gm-5WQ"/>
                                     <constraint firstAttribute="trailing" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="ams-j0-piv"/>
-                                    <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="i8W-Jh-F5b"/>
                                     <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="S2O-bo-UO2" secondAttribute="trailing" constant="8" id="pqW-Jm-9mr"/>
                                     <constraint firstAttribute="bottom" secondItem="S2O-bo-UO2" secondAttribute="bottom" constant="8" id="qfr-SP-QnO"/>
                                     <constraint firstItem="S2O-bo-UO2" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" constant="8" id="ui8-1I-GaV"/>

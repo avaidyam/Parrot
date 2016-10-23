@@ -89,10 +89,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
         self.entryView?.translatesAutoresizingMaskIntoConstraints = false
         self.entryView?.leadingAnchor.constraint(equalTo: self.imageView!.trailingAnchor, constant: 8).isActive = true
         self.entryView?.trailingAnchor.constraint(equalTo: self.moduleView.trailingAnchor, constant: -8).isActive = true
-        self.entryView?.topAnchor.constraint(equalTo: self.moduleView.topAnchor, constant: 8).isActive = true
         self.entryView?.bottomAnchor.constraint(equalTo: self.moduleView.bottomAnchor, constant: -8).isActive = true
+        self.entryView?.topAnchor.constraint(equalTo: self.moduleView.topAnchor, constant: 8).isActive = true
         self.entryView?.heightAnchor.constraint(greaterThanOrEqualTo: self.imageView!.heightAnchor).isActive = true
-        
         
 		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
@@ -434,7 +433,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
     // MARK: NSTextFieldDelegate
     var lastTypingTimestamp: Date?
-	public func textDidChange(_ obj: Notification) {
+    public func textDidChange(_ obj: Notification) {
+        self.entryView?.invalidateIntrinsicContentSize()
+        self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: self.moduleView.frame.height, right: 0)
         if entryView.string == "" {
 			entryView.font = NSFont.systemFont(ofSize: 12.0)
             return
