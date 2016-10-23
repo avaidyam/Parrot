@@ -131,7 +131,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     
 	public override func showWindow(_ sender: Any?) {
 		super.showWindow(nil)
-        self.animatedUpdate(true)
+        //self.animatedUpdate(true)
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
 		
 		/*
@@ -449,6 +449,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			} else {
 				self.conversation?.setTyping(typing: TypingType.Paused)
 			}
+            self.listView.scroll(toRow: 14)
         }
     }
 	

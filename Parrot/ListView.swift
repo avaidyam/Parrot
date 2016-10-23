@@ -226,18 +226,23 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	}
 	
 	public func update(animated: Bool = true, _ handler: @escaping () -> () = {}) {
-		DispatchQueue.main.async {
-			self.collectionView.reloadData()
-			switch self.updateScrollDirection {
-			case .top: self.scroll(toRow: 0, animated: animated)
-			case .bottom: self.scroll(toRow: self.dataSource.count - 1, animated: animated)
-			}
-			handler()
-		}
+        self.collectionView.performBatchUpdates({
+            self.collectionView.reloadData()
+        }) { _ in
+            switch self.updateScrollDirection {
+            case .top: self.scroll(toRow: 0, animated: animated)
+            case .bottom: self.scroll(toRow: self.dataSource.count - 1, animated: animated)
+            }
+            DispatchQueue.main.async {
+                handler()
+            }
+        }
+        
+        // BUG: Unless a second batch update is performed, the first one doesn't complete. :(
+        self.collectionView.performBatchUpdates({}, completionHandler: nil)
 	}
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
-        log.debug("trying to scroll to \(row) with \(self.collectionView.numberOfItems(inSection: 0))")
         guard row >= 0 && row <= self.dataSource.count - 1 else { return }
         let obj = animated ? self.collectionView.animator() : self.collectionView
         obj!.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: [.centeredVertically, .centeredHorizontally])
@@ -271,10 +276,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
     // FIXME: This is a terrible hack to get automatic resizing to work. :(
     public override func layout() {
         super.layout()
-        self.collectionView.performBatchUpdates({
-            self.collectionView.collectionViewLayout?.invalidateLayout()
-            self.collectionView.animator().collectionViewLayout = self.collectionView.collectionViewLayout
-        }, completionHandler: nil)
+        self.collectionView.performBatchUpdates({}, completionHandler: nil)
     }
 }
 
@@ -327,7 +329,6 @@ extension ListView  {
             let cellClass = (self.viewClassProvider?(indexPath.item) ?? ListViewCell.self)
             return cellClass.cellHeight(forWidth: collectionView.bounds.size.width, cellValue: self.dataSource[indexPath.item]).native
         })
-        log.debug("LAYOUT CALC \(collectionView.bounds.width)")
         return NSSize(width: collectionView.bounds.width, height: h)
     }
     
