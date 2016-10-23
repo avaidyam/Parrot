@@ -104,6 +104,7 @@ public class ConversationCell: ListViewCell {
     
     // TODO: not called.
     public override func preferredLayoutAttributesFitting(_ attr: NSCollectionViewLayoutAttributes) -> NSCollectionViewLayoutAttributes {
+        log.debug("TESTING ABC")
         attr.size = NSSize(width: attr.size.width, height: 64.0)
         return attr
     }

@@ -54,6 +54,18 @@ public enum ScrollDirection {
 	//case index(Int)
 }
 
+public class NSFocusableView: NSView {
+    public override var acceptsFirstResponder: Bool {
+        return true
+    }
+    public override func drawFocusRingMask() {
+        NSRectFill(self.focusRingMaskBounds)
+    }
+    public override var focusRingMaskBounds: NSRect {
+        return self.bounds
+    }
+}
+
 public class AnimatingFlowLayout: NSCollectionViewFlowLayout {
     public var appearEffect: NSTableViewAnimationOptions = []
     public var disappearEffect: NSTableViewAnimationOptions = []
@@ -70,6 +82,13 @@ public class AnimatingFlowLayout: NSCollectionViewFlowLayout {
         x.contentSizeAdjustment = self.collectionView!.bounds.size
         return x
     }
+    
+    /*
+    public override func layoutAttributesForItem(at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+        let c = super.layoutAttributesForItem(at: indexPath)
+        let i = self.collectionView?.item(at: indexPath)
+        return i?.preferredLayoutAttributesFitting(c!)
+    }*/
     
     public override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
         let x = self.layoutAttributesForItem(at: itemIndexPath)
@@ -157,6 +176,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
         l.minimumInteritemSpacing = 0
         l.minimumLineSpacing = 0
         l.scrollDirection = .vertical
+        //l.perform(Selector(("_setSingleColumnOrRow:")), with: true)
         //l.estimatedItemSize = CGSize(width: 200, height: 64) // FIXME: causes weird render issues...
         self.collectionView.collectionViewLayout = l
 		
@@ -172,6 +192,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 		
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
+        //self.scrollView.horizontalScrollElasticity = .allowed
 	}
 	
 	@IBInspectable // FIXME
@@ -216,10 +237,10 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	}
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
-        log.debug("trying to scroll to \(row)")
+        log.debug("trying to scroll to \(row) with \(self.collectionView.numberOfItems(inSection: 0))")
         guard row >= 0 && row <= self.dataSource.count - 1 else { return }
         let obj = animated ? self.collectionView.animator() : self.collectionView
-        obj!.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: .bottom)
+        obj!.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: [.centeredVertically, .centeredHorizontally])
 	}
 	
 	public func register(nibName: String, forClass: ListViewCell.Type) {
@@ -247,18 +268,13 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil // FIXME?
 	public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
     
+    // FIXME: This is a terrible hack to get automatic resizing to work. :(
     public override func layout() {
         super.layout()
-        //let c = self.collectionView.collectionViewLayout?.invalidationContext(forBoundsChange: self.collectionView.bounds)
-        //self.collectionView.collectionViewLayout?.invalidateLayout()
-        //self.collectionView.reloadData()
-        if let c = self.collectionView.collectionViewLayout as? NSCollectionViewFlowLayout {
-            c.invalidateLayout(with: c.invalidationContext(forBoundsChange: self.collectionView.bounds))
-            self.collectionView.needsLayout = true
-            self.collectionView.layoutSubtreeIfNeeded()
-        }
-        //self.collectionView.reloadItems(at: self.collectionView.visibleItems())
-        log.debug("INVALIDATING LAYOUT")
+        self.collectionView.performBatchUpdates({
+            self.collectionView.collectionViewLayout?.invalidateLayout()
+            self.collectionView.animator().collectionViewLayout = self.collectionView.collectionViewLayout
+        }, completionHandler: nil)
     }
 }
 

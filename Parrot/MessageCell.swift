@@ -2,7 +2,7 @@ import Cocoa
 import AddressBook
 import protocol ParrotServiceExtension.Message
 
-public class MessageCell: ListViewCell {
+public class MessageCell: ListViewCell, NSTextViewDelegate {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
@@ -93,10 +93,19 @@ public class MessageCell: ListViewCell {
 		}
 	}
     
+    /// If we're right-clicked outside of the text view, just popUp the textView's menu.
+    /// Note: make sure we SELECT ALL and then DESELECT ALL after the popUp menu.
     public override func rightMouseUp(with event: NSEvent) {
         self.textLabel?.selectAll(nil)
         self.textLabel?.menu(for: event)?.popUp(positioning: nil, at: self.view.convert(event.locationInWindow, from: nil), in: self.view)
         self.textLabel?.setSelectedRange(NSRange())
+    }
+    
+    /// Modify the textView menu to display the message's time.
+    public func textView(_ view: NSTextView, menu: NSMenu, for event: NSEvent, at charIndex: Int) -> NSMenu? {
+        menu.insertItem(NSMenuItem(title: "Sent at " + (self.textLabel?.toolTip ?? ""), action: nil, keyEquivalent: ""), at: 0)
+        menu.insertItem(NSMenuItem.separator(), at: 1)
+        return menu
     }
 	
     // TODO: not called.

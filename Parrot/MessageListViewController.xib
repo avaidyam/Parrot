@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16B2338c" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11521.1" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -16,6 +16,7 @@
                 <outlet property="imageView" destination="S2O-bo-UO2" id="84S-DQ-Ja9"/>
                 <outlet property="indicator" destination="c1g-nC-vne" id="EDK-0c-mHz"/>
                 <outlet property="listView" destination="yMT-fg-2gH" id="SXU-Nq-yyB"/>
+                <outlet property="moduleView" destination="eI1-ks-Z3P" id="idG-hc-uzf"/>
                 <outlet property="statusView" destination="eNL-fW-1Cx" id="gX1-VY-R6C"/>
                 <outlet property="window" destination="rqa-ia-OSc" id="fhe-7e-EqQ"/>
             </connections>
@@ -37,7 +38,7 @@
                             <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                             </customView>
-                            <visualEffectView wantsLayer="YES" blendingMode="withinWindow" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
+                            <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="appearanceBased" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
                                 <subviews>
                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="S2O-bo-UO2" userLabel="Image View">
@@ -57,7 +58,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="432" height="24"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <textView wantsLayer="YES" drawsBackground="NO" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
+                                                <textView wantsLayer="YES" drawsBackground="NO" continuousSpellChecking="YES" allowsUndo="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -65,8 +66,6 @@
                                                     <size key="minSize" width="432" height="24"/>
                                                     <size key="maxSize" width="591" height="10000000"/>
                                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                    <size key="minSize" width="432" height="24"/>
-                                                    <size key="maxSize" width="591" height="10000000"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAlwaysPasteAsPlainText" value="YES"/>
                                                         <userDefinedRuntimeAttribute type="string" keyPath="placeholderString" value="Send a message..."/>

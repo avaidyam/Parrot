@@ -51,7 +51,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	@IBOutlet var indicator: NSProgressIndicator!
     @IBOutlet var entryView: NSTextView!
 	@IBOutlet var statusView: NSTextField!
-	@IBOutlet var imageView: NSButton!
+    @IBOutlet var imageView: NSButton!
+    @IBOutlet var moduleView: NSView!
 	@IBOutlet var drawer: NSDrawer!
 	@IBOutlet var drawerButton: NSButton!
 	@IBOutlet var drawerView: NSView!
@@ -124,7 +125,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		// [BUG] [macOS 12] NSTextView doesn't fill width if layer-backed?
 		if let text = self.entryView {
 			text.frame = text.enclosingScrollView!.bounds
-		}
+        }
+        //self.moduleView.layer?.cornerRadius = 5.0
     }
     
 	public override func showWindow(_ sender: Any?) {
