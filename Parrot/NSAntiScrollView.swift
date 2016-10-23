@@ -17,8 +17,11 @@ public class NSAntiScrollView: NSScrollView {
 	public override func scrollWheel(with theEvent: NSEvent) {
 		self.nextResponder?.scrollWheel(with: theEvent)
 	}
+    public override var fittingSize: NSSize {
+        return self.documentView?.fittingSize ?? NSSize(width: 0, height: 0)
+    }
 	public override var intrinsicContentSize: NSSize {
-		return self.documentView?.intrinsicContentSize ?? NSSize(width: -1, height: -1)
+		return self.documentView?.intrinsicContentSize ?? NSSize(width: NSViewNoIntrinsicMetric, height: NSViewNoIntrinsicMetric)
 	}
 }
 

@@ -449,7 +449,6 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			} else {
 				self.conversation?.setTyping(typing: TypingType.Paused)
 			}
-            self.listView.scroll(toRow: 14)
         }
     }
 	

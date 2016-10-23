@@ -2,19 +2,40 @@ import Cocoa
 import AddressBook
 import protocol ParrotServiceExtension.Message
 
+/* TODO: Use NSPanGestureRecognizer or Force Touch to expand links. */
+
 public class MessageCell: ListViewCell, NSTextViewDelegate {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
     
-	// Upon assignment of the represented object, configure the subview contents.
+    public override func loadView() {
+        super.loadView()
+        
+        // Since we struggle with IB shoving the NSScrollView down our throats, 
+        // remove the scroll view entirely and re-constrain the text view.
+        let scroll = self.textLabel?.enclosingScrollView
+        self.textLabel?.removeFromSuperview()
+        self.view.addSubview(self.textLabel!)
+        scroll?.removeFromSuperview()
+        
+        // Match the same constraints that the scroll view had in IB and turn off autoresizing.
+        self.textLabel?.translatesAutoresizingMaskIntoConstraints = false
+        self.textLabel?.leadingAnchor.constraint(equalTo: self.photoView!.trailingAnchor, constant: 8).isActive = true
+        self.textLabel?.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8).isActive = true
+        self.textLabel?.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8).isActive = true
+        self.textLabel?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -8).isActive = true
+        self.textLabel?.heightAnchor.constraint(greaterThanOrEqualTo: self.photoView!.heightAnchor).isActive = true
+    }
+    
+	/// Upon assignment of the represented object, configure the subview contents.
 	public override var representedObject: Any? {
         didSet {
             guard let o = self.representedObject as? Message else { return }
 			
 			let user = o.sender
 			let str = NSAttributedString(string: o.text as String)
-			//self.orientation = o.sender!.me ? .rightToLeft : .leftToRight // FIXME
+            self.orientation = o.sender!.me ? .rightToLeft : .leftToRight // FIXME
 			//self.textLabel?.alignment = o.sender!.me ? .right : .left // FIXME
 			//self.color = o.color
 			self.textLabel?.textStorage?.setAttributedString(str)
@@ -37,6 +58,8 @@ public class MessageCell: ListViewCell, NSTextViewDelegate {
             // Also, expand the text size if it's purely emoji.
             text.textColor = NSColor.labelColor
             text.font = NSFont.systemFont(ofSize: 12.0 * (text.string!.isEmoji ? 3 : 1))
+            text.invalidateIntrinsicContentSize()
+            
             text.typingAttributes = [
                 NSForegroundColorAttributeName: text.textColor!,
                 NSFontAttributeName: text.font!
@@ -65,29 +88,15 @@ public class MessageCell: ListViewCell, NSTextViewDelegate {
             }
 		}
 	}
-	
-	// Allows the circle crop to dynamically change.
-	public override func viewWillLayout() {
-		super.viewWillLayout()
-		//self.userInterfaceLayoutDirection = self.orientation // FIXME
+    
+	/// Allows the circle crop and masking to dynamically change.
+	public override func viewDidLayout() {
+        super.viewDidLayout()
 		if let layer = self.photoView?.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = layer.bounds.width / 2.0
 		}
 		if let text = self.textLabel {
-			
-			// [BUG] [macOS 12] NSTextView doesn't fill width if layer-backed?
-			text.frame = text.enclosingScrollView!.bounds
-			
-			// Vertically center text which can fit in the bounds of the text view.
-			// Note: only do this if the text isn't Emoji.
-			if !text.string!.isEmoji && text.bounds.height <= 24.0 {
-				let charRect = text.characterRect()
-				let rectDiff = text.bounds.height - charRect.height
-				if rectDiff > 0 { text.textContainerInset.height = rectDiff / 2.0 }
-            }
-            
-            // Set background masking.
             text.layer?.masksToBounds = true
             text.layer?.cornerRadius = 2.0
 		}
@@ -107,44 +116,4 @@ public class MessageCell: ListViewCell, NSTextViewDelegate {
         menu.insertItem(NSMenuItem.separator(), at: 1)
         return menu
     }
-	
-    // TODO: not called.
-    public override func preferredLayoutAttributesFitting(_ attr: NSCollectionViewLayoutAttributes) -> NSCollectionViewLayoutAttributes {
-        let h = MessageCell.cellHeight(forWidth: attr.size.width, cellValue: self.representedObject)
-        attr.size = NSSize(width: attr.size.width, height: h)
-        return attr
-    }
-    
-	/*
-	private static var abc: NSLayoutManager = {
-		var textStorage = NSTextStorage()
-		var layoutManager = NSLayoutManager()
-		textStorage.addLayoutManager(layoutManager)
-		var textContainer = NSTextContainer()
-		layoutManager.addTextContainer(textContainer)
-		return layoutManager
-	}()
-	public static func _hAbc(_ width: CGFloat, _ attr: AttributedString) -> CGFloat {
-		abc.textContainers[0].containerSize = NSSize(width: width, height: 10000000)
-		abc.textStorage?.setAttributedString(attr)
-		let glyphRange = NSMakeRange(0, abc.numberOfGlyphs)
-		let glyphRect = abc.boundingRect(forGlyphRange: glyphRange, in: abc.textContainers[0])
-		return (glyphRect.size.height > 24.0 ? glyphRect.size.height : 24.0) + 16.0
-	}
-	*/
-	
-	public override class func cellHeight(forWidth width: CGFloat, cellValue: Any?) -> CGFloat {
-		let text = (cellValue as! Message).text //?? ""
-		let attr = NSAttributedString(string: text, attributes: [
-			NSFontAttributeName: NSFont.systemFont(ofSize: 12.0 * (text.isEmoji ? 3 : 1)),
-			NSParagraphStyleAttributeName: NSParagraphStyle.default()
-		])
-		
-		let ourWidth = width - 50.0 // to account for padding and icon: |- 4 - [icon (24)] - 4 - [4 - text - 4] - 8 -|
-		let box = attr.boundingRect(with: NSSize(width: ourWidth, height: .greatestFiniteMagnitude),
-		                            options: [.usesLineFragmentOrigin, .usesFontLeading])
-        
-        let expectedHeight = box.size.height + 16.0, defaultHeight = CGFloat(24.0) + 16.0
-		return (expectedHeight > defaultHeight ? expectedHeight : defaultHeight)
-	}
 }

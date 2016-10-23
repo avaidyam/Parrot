@@ -171,13 +171,11 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
         self.collectionView.delegate = self
         
         let l = AnimatingFlowLayout()
-        l.appearEffect = [.effectFade, .slideUp]
-        l.disappearEffect = [.effectFade, .slideDown]
+        l.appearEffect = [.effectFade, .slideDown]
+        l.disappearEffect = [.effectFade, .slideUp]
         l.minimumInteritemSpacing = 0
         l.minimumLineSpacing = 0
         l.scrollDirection = .vertical
-        //l.perform(Selector(("_setSingleColumnOrRow:")), with: true)
-        //l.estimatedItemSize = CGSize(width: 200, height: 64) // FIXME: causes weird render issues...
         self.collectionView.collectionViewLayout = l
 		
 		self.scrollView.drawsBackground = false
@@ -233,13 +231,11 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
             case .top: self.scroll(toRow: 0, animated: animated)
             case .bottom: self.scroll(toRow: self.dataSource.count - 1, animated: animated)
             }
-            DispatchQueue.main.async {
-                handler()
-            }
+            handler()
         }
         
         // BUG: Unless a second batch update is performed, the first one doesn't complete. :(
-        self.collectionView.performBatchUpdates({}, completionHandler: nil)
+        self.collectionView.performUpdate()
 	}
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
@@ -276,12 +272,25 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
     // FIXME: This is a terrible hack to get automatic resizing to work. :(
     public override func layout() {
         super.layout()
-        self.collectionView.performBatchUpdates({}, completionHandler: nil)
+        self.collectionView.performUpdate()
     }
+    
+    fileprivate var prototypes = [String: NSCollectionViewItem]()
 }
 
 // Essential Support
 extension ListView  {
+    
+    private func create(_ indexPath: IndexPath) -> NSCollectionViewItem {
+        let cellClass = self.viewClassProvider?(indexPath.item) ?? ListViewCell.self
+        var item = self.collectionView.makeItem(withIdentifier: "\(cellClass)", for: indexPath) as? ListViewCell
+        if item == nil {
+            log.warning("Cell class \(cellClass) not registered!")
+            item = cellClass.init()
+            item!.identifier = "\(cellClass)"
+        }
+        return item!
+    }
     
     @objc(numberOfSectionsInCollectionView:)
     public func numberOfSections(in collectionView: NSCollectionView) -> Int {
@@ -294,15 +303,9 @@ extension ListView  {
     
     @objc(collectionView:itemForRepresentedObjectAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let cellClass = self.viewClassProvider?(indexPath.item) ?? ListViewCell.self
-        var item = self.collectionView.makeItem(withIdentifier: "\(cellClass)", for: indexPath) as? ListViewCell
-        if item == nil {
-            log.warning("Cell class \(cellClass) not registered!")
-            item = cellClass.init()
-            item!.identifier = "\(cellClass)"
-        }
-        item!.representedObject = self.dataSource[indexPath.item]
-        return item!
+        let item = self.create(indexPath)
+        item.representedObject = self.dataSource[indexPath.item]
+        return item
     }
     
     @objc(collectionView:willDisplayItem:forRepresentedObjectAtIndexPath:)
@@ -315,21 +318,26 @@ extension ListView  {
         }
     }
     
-    public func collectionViewMenuClick(gesture: NSGestureRecognizer) {
-        let loc = gesture.location(in: self.collectionView)
-        let idx = self.collectionView.indexPathForItem(at: loc)
-        if let idx = idx {
-            self.menuProvider?([idx.item])?.popUp(positioning: nil, at: loc, in: gesture.view)
-        }
-    }
-    
     @objc(collectionView:layout:sizeForItemAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
-        let h = CGFloat(self.sizeClass.calculate {
-            let cellClass = (self.viewClassProvider?(indexPath.item) ?? ListViewCell.self)
-            return cellClass.cellHeight(forWidth: collectionView.bounds.size.width, cellValue: self.dataSource[indexPath.item]).native
-        })
-        return NSSize(width: collectionView.bounds.width, height: h)
+        let sz = self.sizeClass.calculate(nil)
+        if sz != 0 { return NSSize(width: collectionView.bounds.width.native, height: sz) }
+        
+        
+        let cellClass = self.viewClassProvider?(indexPath.item) ?? ListViewCell.self
+        var proto = self.prototypes["\(cellClass)"]
+        if proto == nil {
+            let item = cellClass.init()
+            item.loadView()
+            item.identifier = "\(cellClass)"
+            self.prototypes["\(cellClass)"] = item
+            proto = item
+        }
+        
+        proto?.view.frame = NSRect(x: 0, y: 0, width: self.bounds.width, height: 20.0)
+        proto?.representedObject = self.dataSource[indexPath.item]
+        proto?.view.layoutSubtreeIfNeeded()
+        return NSSize(width: self.bounds.width, height: proto!.view.fittingSize.height)
     }
     
     /*@objc(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)

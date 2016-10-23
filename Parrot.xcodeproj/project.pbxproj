@@ -42,7 +42,6 @@
 		48808EDD1C6463DD00236E96 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* PreferencesWindowController.swift */; };
 		488201B61D4A962B00C545F0 /* NSExtendedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */; };
 		488201B81D4A968F00C545F0 /* NSAntiScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */; };
-		488201BA1D4A96C200C545F0 /* NSExtendedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B91D4A96C200C545F0 /* NSExtendedMenu.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
 		488239A31C455CED00C5E8EB /* AppKitSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488239A21C455CED00C5E8EB /* AppKitSupport.swift */; };
 		48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ParrotAppController.swift */; };
@@ -282,7 +281,6 @@
 		48808EDC1C6463DD00236E96 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
 		488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSExtendedTextView.swift; sourceTree = "<group>"; };
 		488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSAntiScrollView.swift; sourceTree = "<group>"; };
-		488201B91D4A96C200C545F0 /* NSExtendedMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSExtendedMenu.swift; sourceTree = "<group>"; };
 		488201BB1D4A970400C545F0 /* PersonaImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonaImage.swift; sourceTree = "<group>"; };
 		488239A21C455CED00C5E8EB /* AppKitSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitSupport.swift; sourceTree = "<group>"; };
 		48834D921C1B3602009BC442 /* Parrot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parrot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -509,7 +507,6 @@
 				4835ECB31C1C672900193EBC /* UserNotification+Extensions.swift */,
 				488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */,
 				488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */,
-				488201B91D4A96C200C545F0 /* NSExtendedMenu.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1193,7 +1190,6 @@
 				4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */,
 				4835ECBA1C1C672900193EBC /* Emoji.swift in Sources */,
 				489018AE1D3EA2DB00CFCA5F /* LinkPreviewCell.swift in Sources */,
-				488201BA1D4A96C200C545F0 /* NSExtendedMenu.swift in Sources */,
 				48BFAE5D1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift in Sources */,
 				489018A61D3C13A400CFCA5F /* FocusCell.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,

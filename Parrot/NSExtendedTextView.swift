@@ -33,7 +33,6 @@ public class NSExtendedTextView: NSTextView {
 	}
 	
 	// FOR AUTOLAYOUT:
-	/*
 	public override var intrinsicContentSize: NSSize {
 		self.layoutManager?.ensureLayout(for: self.textContainer!)
 		return (self.layoutManager?.usedRect(for: self.textContainer!).size)!
@@ -50,7 +49,6 @@ public class NSExtendedTextView: NSTextView {
 		self.needsDisplay = true
 		return super.resignFirstResponder()
 	}
-	*/
 }
 
 public extension NSTextView {
