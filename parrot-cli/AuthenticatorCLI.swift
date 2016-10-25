@@ -1,6 +1,7 @@
 import Foundation
 import Hangouts
 
+/*
 public class AuthenticatorCLI {
 	
 	private static let OAUTH2_CLIENT_ID = "936475272427.apps.googleusercontent.com"
@@ -8,17 +9,17 @@ public class AuthenticatorCLI {
 	private static let OAUTH2_TOKEN_REQUEST_URL = "https://accounts.google.com/o/oauth2/token"
 	
 	private class func loadTokens() -> (access_token: String, refresh_token: String)? {
-		let at = UserDefaults.standard().string(forKey: "access_token")
-		let rt = UserDefaults.standard().string(forKey: "refresh_token")
+		let at = UserDefaults.standard.string(forKey: "access_token")
+		let rt = UserDefaults.standard.string(forKey: "refresh_token")
 		
-		if let at = at, rt = rt {
+		if let at = at, let rt = rt {
 			return (access_token: at, refresh_token: rt)
 		} else {
 			return nil
 		}
 	}
 	
-	private static func authenticate(session: URLSession, refresh_token: String, cb: (access_token: String, refresh_token: String) -> Void) {
+	private static func authenticate(session: URLSession, refresh_token: String, cb: @escaping (_ access_token: String, _ refresh_token: String) -> Void) {
 		let token_request_data = [
 			"client_id": OAUTH2_CLIENT_ID,
 			"client_secret": OAUTH2_CLIENT_SECRET,
@@ -51,9 +52,9 @@ public class AuthenticatorCLI {
 		}
 	}
 	
-	public static func authenticateClient(cb: (configuration: URLSessionConfiguration) -> Void) {
-		let cfg = URLSessionConfiguration.default()
-		cfg.httpCookieStorage = HTTPCookieStorage.shared()
+	public static func authenticateClient(cb: @escaping (_ configuration: URLSessionConfiguration) -> Void) {
+		let cfg = URLSessionConfiguration.default
+		cfg.httpCookieStorage = HTTPCookieStorage.shared
 		cfg.httpAdditionalHeaders = _defaultHTTPHeaders
 		let session = URLSession(configuration: cfg)
 		
@@ -104,4 +105,4 @@ public class AuthenticatorCLI {
 			}
 		}
 	}
-}
+}*/

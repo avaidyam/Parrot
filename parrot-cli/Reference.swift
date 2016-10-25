@@ -1,5 +1,6 @@
 import Darwin.ncurses
 
+/*
 // For dimensions of various things.
 typealias Point = (x: Int, y: Int)
 typealias Size = (w: Int, h: Int)
@@ -323,3 +324,4 @@ struct Border {
 		return create(values)
 	}
 }
+*/

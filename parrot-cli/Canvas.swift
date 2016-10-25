@@ -16,6 +16,7 @@ public extension Array where Element : Equatable {
 	}
 }
 
+/*
 class Canvas {
 	
 	// Underlying structures that communicate with ncurses.
@@ -281,9 +282,9 @@ class Canvas {
 			if c == ERR || c == 10 /* \n */ || c == EOF {
 				break
 			}
-			chars.append(UnicodeScalar(Int(c)))
+			chars.append(UnicodeScalar(Int(c))!)
 		}
-		return String(chars)
+		return String(describing: chars)
 	}
 	
 	// Allows the subcanvas heirarchy to redraw itself.
@@ -309,3 +310,4 @@ class Canvas {
 		}
 	}
 }
+*/

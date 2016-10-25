@@ -1,5 +1,140 @@
 import Hangouts
 
+var curCol: Int32 = 0, curRune: Int32 = 0
+var backbuf = [tb_cell]()
+var bbw: Int32 = 0, bbh: Int32 = 0
+
+let runes: [UInt32] = [
+    0x20, // ' '
+    0x2591, // '░'
+    0x2592, // '▒'
+    0x2593, // '▓'
+    0x2588, // '█'
+]
+
+let colors: [Int32] = [
+    TB_BLACK,
+    TB_RED,
+    TB_GREEN,
+    TB_YELLOW,
+    TB_BLUE,
+    TB_MAGENTA,
+    TB_CYAN,
+    TB_WHITE,
+]
+
+func updateAndDrawButtons(_ current: inout Int32, _ x: Int32, _ y: Int32, _ mx: Int32, _ my: Int32, _ n: Int32, _ attrFunc: (Int32, inout UInt32, inout UInt16, inout UInt16) -> ()) {
+    var lx = x;
+    var ly = y;
+    for i in 0..<n {
+        if (lx <= mx && mx <= lx+3 && ly <= my && my <= ly+1) {
+            current = i
+        }
+        var r: UInt32 = 0
+        var fg: UInt16 = 0, bg: UInt16 = 0
+        attrFunc(i, &r, &fg, &bg)
+        tb_change_cell(lx+0, ly+0, r, fg, bg)
+        tb_change_cell(lx+1, ly+0, r, fg, bg)
+        tb_change_cell(lx+2, ly+0, r, fg, bg)
+        tb_change_cell(lx+3, ly+0, r, fg, bg)
+        tb_change_cell(lx+0, ly+1, r, fg, bg)
+        tb_change_cell(lx+1, ly+1, r, fg, bg)
+        tb_change_cell(lx+2, ly+1, r, fg, bg)
+        tb_change_cell(lx+3, ly+1, r, fg, bg)
+        lx += 4;
+    }
+    lx = x;
+    ly = y;
+    for i in 0..<n {
+        if (current == i) {
+            let fg: UInt16 = UInt16(TB_RED | TB_BOLD)
+            let bg: UInt16 = UInt16(TB_DEFAULT)
+            tb_change_cell(lx+0, ly+2, UInt32("^".unicodeScalars.first!), fg, bg)
+            tb_change_cell(lx+1, ly+2, UInt32("^".unicodeScalars.first!), fg, bg)
+            tb_change_cell(lx+2, ly+2, UInt32("^".unicodeScalars.first!), fg, bg)
+            tb_change_cell(lx+3, ly+2, UInt32("^".unicodeScalars.first!), fg, bg)
+        }
+        lx += 4
+    }
+}
+
+func runeAttrFunc(_ i: Int32, _ r: inout UInt32, _ fg: inout UInt16, _ bg: inout UInt16) {
+    r = runes[Int(i)]
+    fg = UInt16(TB_DEFAULT)
+    bg = UInt16(TB_DEFAULT)
+}
+
+func colorAttrFunc(_ i: Int32, _ r: inout UInt32, _ fg: inout UInt16, _ bg: inout UInt16) {
+    r = UInt32(" ".unicodeScalars.first!)
+    fg = UInt16(TB_DEFAULT)
+    bg = UInt16(colors[Int(i)])
+}
+
+func updateAndRedrawAll(_ mx: Int32, _ my: Int32) {
+    tb_clear()
+    if mx != -1 && my != -1 {
+        backbuf[Int(bbw*my+mx)].ch = runes[Int(curRune)]
+        backbuf[Int(bbw*my+mx)].fg = UInt16(colors[Int(curCol)])
+    }
+    memcpy(tb_cell_buffer(), backbuf, Int(MemoryLayout<tb_cell>.size)*Int(bbw)*Int(bbh))
+    let h = tb_height()
+    updateAndDrawButtons(&curRune, 0, 0, mx, my, Int32(runes.count), runeAttrFunc)
+    updateAndDrawButtons(&curCol, 0, h-3, mx, my, Int32(colors.count), colorAttrFunc)
+    tb_present();
+}
+
+func reallocBackBuffer(_ w: Int32, _ h: Int32) {
+    bbw = w; bbh = h
+    //if backbuf != nil {
+    //    free(&backbuf)
+    //}
+    //backbuf = UnsafeMutablePointer<tb_cell>.allocate(capacity: )//calloc(sizeof(tb_cell), Int(w)*Int(h))
+}
+
+if tb_init() < 0 {
+    fatalError("termbox failed to initialize!")
+}
+
+tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE)
+let w: Int32 = tb_width()
+let h: Int32 = tb_height()
+reallocBackBuffer(w, h)
+updateAndRedrawAll(-1, -1)
+
+while true {
+    var ev = tb_event()
+    var mx: Int32 = -1, my: Int32 = -1
+    switch tb_poll_event(&ev) {
+    case -1:
+        tb_shutdown()
+        fatalError("termbox poll event error!")
+    case TB_EVENT_KEY:
+        if (Int32(ev.key) == TB_KEY_ESC) {
+            tb_shutdown(); exit(0)
+        }
+    case TB_EVENT_MOUSE:
+        if (ev.key == /*TB_KEY_MOUSE_LEFT*/(0xFFFF-22)) {
+            mx = ev.x; my = ev.y
+        }
+    case TB_EVENT_RESIZE:
+        reallocBackBuffer(ev.w, ev.h)
+    default: break
+    }
+    updateAndRedrawAll(mx, my)
+}
+
+
+
+/*
+
+
+
+
+
+
+*/
+
+/*
 let sem = DispatchSemaphore(value: 0)
 print("Initializing...")
 
@@ -108,3 +243,5 @@ Terminal.interactive {
 	Terminal.bell()
 	Terminal.wait(key: KeyCode(27))
 }
+
+*/

@@ -1,6 +1,7 @@
 import Dispatch
 import Darwin.ncurses
 
+/*
 // To allow for a Terminal resize handler.
 private var _resizeHandler: (Void) -> Void = {}
 private func _redraw(sig: Int32) {
@@ -73,7 +74,7 @@ struct Terminal {
 		if !_cursesActive {
 			reset_prog_mode();
 			signal(SIGWINCH, _redraw)
-			_redraw(sig: Int32(0))
+			_redraw(Int32(0))
 			_cursesActive = true
 		}
 	}
@@ -197,7 +198,7 @@ struct Terminal {
 	
 	// Sets a handler that is called whenever the terminal is resized.
 	// If call is true, the handler will also be called immediately.
-	static func onResize(draw: (Void) -> Void) {
+	static func onResize(draw: @escaping (Void) -> Void) {
 		_resizeHandler = draw
 		signal(SIGWINCH, _redraw)
 	}
@@ -234,4 +235,4 @@ class EventLoop {
 		handler()
 		source.resume()
 	}
-}
+}*/

@@ -12,7 +12,6 @@
 		4813004B1D26BD4900768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		4813004C1D26BD4900768D79 /* ParrotServiceExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		481300511D26BD7700768D79 /* Conversation+List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482E21381C23F5F500A4C7B3 /* Conversation+List.swift */; };
-		481300521D26BD9400768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		481300531D26BD9800768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		481300541D26BD9D00768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		481300551D26BDA000768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
@@ -76,7 +75,6 @@
 		48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4F1C37DACE00ACA29B /* Reference.swift */; };
 		48BFAE5D1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BFAE5C1D1AE10E00ADBA3A /* SequentialTextSelectionManager.swift */; };
 		48BFD0351D13850B00DAE29E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
-		48CA70211C50252F0026270E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
 		48CA70231C502B6A0026270E /* AuthenticatorCLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA70221C502B6A0026270E /* AuthenticatorCLI.swift */; };
 		48D4C9FE1DBD5F2F001CF7AD /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D4C9FD1DBD5F2F001CF7AD /* Notification+Extensions.swift */; };
 		48D4CA011DBE657D001CF7AD /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D4C9FD1DBD5F2F001CF7AD /* Notification+Extensions.swift */; };
@@ -103,6 +101,8 @@
 		48EA55CC1D26CDD600C3BC80 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */; };
 		48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
 		48F84D451D0DEC1E00E77AD9 /* LinkPreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48F84D441D0DEC1E00E77AD9 /* LinkPreviewCell.xib */; };
+		48FB444D1DBF5288004BE55A /* termbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FB444B1DBF5288004BE55A /* termbox.c */; };
+		48FB444E1DBF5288004BE55A /* utf8.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FB444C1DBF5288004BE55A /* utf8.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -351,6 +351,13 @@
 		48EB54F51D209DD100F77C2C /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Cache.swift; path = Parrot/Cache.swift; sourceTree = SOURCE_ROOT; };
 		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
 		48F84D441D0DEC1E00E77AD9 /* LinkPreviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LinkPreviewCell.xib; sourceTree = "<group>"; };
+		48FB44451DBF4FF1004BE55A /* libtermbox.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtermbox.1.0.0.dylib; path = "../../../Desktop/termbox-master/usr/local/lib/libtermbox.1.0.0.dylib"; sourceTree = "<group>"; };
+		48FB44471DBF5018004BE55A /* termbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = termbox.h; sourceTree = "<group>"; };
+		48FB44481DBF5288004BE55A /* bytebuffer.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bytebuffer.inl; sourceTree = "<group>"; };
+		48FB44491DBF5288004BE55A /* input.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.inl; sourceTree = "<group>"; };
+		48FB444A1DBF5288004BE55A /* term.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = term.inl; sourceTree = "<group>"; };
+		48FB444B1DBF5288004BE55A /* termbox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = termbox.c; sourceTree = "<group>"; };
+		48FB444C1DBF5288004BE55A /* utf8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utf8.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,8 +365,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				481300521D26BD9400768D79 /* ParrotServiceExtension.framework in Frameworks */,
-				48CA70211C50252F0026270E /* Hangouts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,6 +675,12 @@
 		48BA5B511C37DB2900ACA29B /* Curses */ = {
 			isa = PBXGroup;
 			children = (
+				48FB44471DBF5018004BE55A /* termbox.h */,
+				48FB44481DBF5288004BE55A /* bytebuffer.inl */,
+				48FB44491DBF5288004BE55A /* input.inl */,
+				48FB444A1DBF5288004BE55A /* term.inl */,
+				48FB444B1DBF5288004BE55A /* termbox.c */,
+				48FB444C1DBF5288004BE55A /* utf8.c */,
 				48BA5B4C1C37ABB600ACA29B /* ncurses.h */,
 				48BA5B4A1C37A55A00ACA29B /* Terminal.swift */,
 				48BA5B4F1C37DACE00ACA29B /* Reference.swift */,
@@ -711,6 +722,7 @@
 		48DE52DD1C1CC1D300647C63 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				48FB44451DBF4FF1004BE55A /* libtermbox.1.0.0.dylib */,
 				48467B131D54407800DAB836 /* ToneKit.framework */,
 				4814E3B61D2C973D0079C3DB /* kelvin.py */,
 				48BA5B481C379CCF00ACA29B /* libncurses.tbd */,
@@ -965,11 +977,13 @@
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 2754ZHC8VE;
 						DevelopmentTeamName = "Aditya Vaidyam (Personal Team)";
+						LastSwiftMigration = 0810;
 					};
 					481300431D26BD4900768D79 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 2754ZHC8VE;
 						DevelopmentTeamName = "Aditya Vaidyam (Personal Team)";
+						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 					};
 					48834D911C1B3602009BC442 = {
@@ -1150,6 +1164,8 @@
 				48B3AD781C38043B0023FAA3 /* Canvas.swift in Sources */,
 				48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */,
 				4803639D1C1D08490008E9F5 /* main.swift in Sources */,
+				48FB444E1DBF5288004BE55A /* utf8.c in Sources */,
+				48FB444D1DBF5288004BE55A /* termbox.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1342,7 +1358,8 @@
 					"-lpanel",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/parrot-cli/ncurses.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/parrot-cli/termbox.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1357,8 +1374,9 @@
 					"-lpanel",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/parrot-cli/ncurses.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/parrot-cli/termbox.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
