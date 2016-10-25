@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A313a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11521.1" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ConversationListViewController" customModule="Parrot" customModuleProvider="target">
@@ -19,15 +19,25 @@
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <rect key="contentRect" x="163" y="205" width="276" height="574"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
-            <view key="contentView" id="pkY-JK-KNL" customClass="NSVisualEffectView">
+            <view key="contentView" wantsLayer="YES" id="pkY-JK-KNL" customClass="NSVisualEffectView">
                 <rect key="frame" x="0.0" y="0.0" width="276" height="574"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="wFw-qM-P7g">
                         <rect key="frame" x="122" y="271" width="32" height="32"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                <integer key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </progressIndicator>
                     <view wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9lt-ER-yzx" userLabel="Conversation List" customClass="ListView" customModule="Parrot" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="276" height="574"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                <integer key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
                 <constraints>
@@ -38,6 +48,11 @@
                     <constraint firstItem="wFw-qM-P7g" firstAttribute="centerY" secondItem="pkY-JK-KNL" secondAttribute="centerY" id="PGu-BM-ltt"/>
                     <constraint firstAttribute="trailing" secondItem="9lt-ER-yzx" secondAttribute="trailing" id="dYK-zT-cxR"/>
                 </constraints>
+                <userDefinedRuntimeAttributes>
+                    <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                        <integer key="value" value="1"/>
+                    </userDefinedRuntimeAttribute>
+                </userDefinedRuntimeAttributes>
             </view>
             <toolbar key="toolbar" implicitIdentifier="31E8C674-0470-44C3-A383-A0C79BE00807" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="u5g-cC-p8p">
                 <allowedToolbarItems>
@@ -53,6 +68,11 @@
                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="self.window.title" id="EKO-Ei-E3G">
                                     <dictionary key="options">
@@ -74,6 +94,11 @@
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </button>
                     </toolbarItem>
                 </allowedToolbarItems>

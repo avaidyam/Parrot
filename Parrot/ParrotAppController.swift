@@ -27,6 +27,8 @@ public enum Parrot {
 @NSApplicationMain
 public class ParrotAppController: NSApplicationController {
 	
+    private var bleh: Any? = nil
+    
 	/// Lazy-init for the main conversations NSWindowController.
 	private lazy var conversationsController: NSWindowController = {
 		ConversationListViewController(windowNibName: "ConversationListViewController")
@@ -50,6 +52,10 @@ public class ParrotAppController: NSApplicationController {
 			forEventClass: UInt32(kInternetEventClass),
 			andEventID: UInt32(kAEGetURL)
 		)
+        
+        self.bleh = subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.giveConversations")) {
+            log.debug("RESULTS: \($0)")
+        }
 		
 		// Register the default completions if none are in the user settings.
 		if let c = Settings[Parrot.Completions] as? NSDictionary , c.count > 0 {} else {

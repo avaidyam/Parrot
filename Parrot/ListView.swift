@@ -54,18 +54,6 @@ public enum ScrollDirection {
 	//case index(Int)
 }
 
-public class NSFocusableView: NSView {
-    public override var acceptsFirstResponder: Bool {
-        return true
-    }
-    public override func drawFocusRingMask() {
-        NSRectFill(self.focusRingMaskBounds)
-    }
-    public override var focusRingMaskBounds: NSRect {
-        return self.bounds
-    }
-}
-
 public class AnimatingFlowLayout: NSCollectionViewFlowLayout {
     public var appearEffect: NSTableViewAnimationOptions = []
     public var disappearEffect: NSTableViewAnimationOptions = []
@@ -185,6 +173,14 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
         //self.scrollView.horizontalScrollElasticity = .allowed
+        
+        self.scrollView.wantsLayer = true
+        self.collectionView.wantsLayer = true
+        self.wantsLayer = true
+        
+        self.scrollView.layerContentsRedrawPolicy = .onSetNeedsDisplay
+        self.collectionView.layerContentsRedrawPolicy = .onSetNeedsDisplay
+        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
 	}
 	
 	@IBInspectable // FIXME
@@ -253,7 +249,8 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
         return self.collectionView.indexPathsForVisibleItems().map { $0.item }
 	}
 	
-	public var dataSourceProvider: (() -> [Any])? = nil
+    public var dataSourceProvider: (() -> [Any])? = nil
+    public var dataSourceAdjustProvider: ((_ row: Int) -> Any)? = nil
 	public var viewClassProvider: ((_ row: Int) -> NSCollectionViewItem.Type)? = nil
 	public var dynamicHeightProvider: ((_ row: Int) -> Double)? = nil // FIXME?
 	public var clickedRowProvider: ((_ row: Int) -> Void)? = nil
@@ -282,17 +279,6 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 // Essential Support
 extension ListView  {
     
-    private func create(_ indexPath: IndexPath) -> NSCollectionViewItem {
-        let cellClass = self.viewClassProvider?(indexPath.item) ?? NSCollectionViewItem.self
-        var item = self.collectionView.makeItem(withIdentifier: "\(cellClass)", for: indexPath) as? NSCollectionViewItem
-        if item == nil {
-            log.warning("Cell class \(cellClass) not registered!")
-            item = cellClass.init()
-            item!.identifier = "\(cellClass)"
-        }
-        return item!
-    }
-    
     @objc(numberOfSectionsInCollectionView:)
     public func numberOfSections(in collectionView: NSCollectionView) -> Int {
         return 1
@@ -304,8 +290,9 @@ extension ListView  {
     
     @objc(collectionView:itemForRepresentedObjectAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let item = self.create(indexPath)
-        item.representedObject = self.dataSource[indexPath.item]
+        let cellClass = self.viewClassProvider?(indexPath.item) ?? NSCollectionViewItem.self
+        let item = self.collectionView.makeItem(withIdentifier: "\(cellClass)", for: indexPath)
+        item.representedObject = self.dataSourceAdjustProvider?(indexPath.item) ?? self.dataSource[indexPath.item]
         return item
     }
     
@@ -321,8 +308,8 @@ extension ListView  {
     
     @objc(collectionView:layout:sizeForItemAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
-        let sz = self.sizeClass.calculate(nil)
-        if sz != 0 { return NSSize(width: collectionView.bounds.width.native, height: sz) }
+        //let sz = self.sizeClass.calculate(nil)
+        //if sz != 0 { return NSSize(width: collectionView.bounds.width.native, height: sz) }
         
         
         let cellClass = self.viewClassProvider?(indexPath.item) ?? NSCollectionViewItem.self
@@ -336,7 +323,7 @@ extension ListView  {
         }
         
         proto?.view.frame = NSRect(x: 0, y: 0, width: self.bounds.width, height: 20.0)
-        proto?.representedObject = self.dataSource[indexPath.item]
+        proto?.representedObject = self.dataSourceAdjustProvider?(indexPath.item) ?? self.dataSource[indexPath.item]
         proto?.view.layoutSubtreeIfNeeded()
         return NSSize(width: self.bounds.width, height: proto!.view.fittingSize.height)
     }
@@ -418,10 +405,11 @@ extension ListView {
         
     }
     
+    */
     @objc(collectionView:shouldDeselectItemsAtIndexPaths:)
     public func collectionView(_ collectionView: NSCollectionView, shouldDeselectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
-        
-    }*/
+        return Set<IndexPath>()
+    }
     
     @objc(collectionView:didSelectItemsAtIndexPaths:)
     public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {

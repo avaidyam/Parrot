@@ -6,7 +6,8 @@ public class ConversationCell: NSCollectionViewItem {
 	@IBOutlet private var photoView: NSImageView?
 	@IBOutlet private var nameLabel: NSTextField?
 	@IBOutlet private var textLabel: NSTextField?
-	@IBOutlet private var timeLabel: NSTextField?
+    @IBOutlet private var timeLabel: NSTextField?
+    @IBOutlet private var effect: NSVisualEffectView?
 	@IBOutlet private var separator: NSView?
 	
 	// Upon assignment of the represented object, configure the subview contents.
@@ -51,10 +52,12 @@ public class ConversationCell: NSCollectionViewItem {
         didSet {
             //let appearance = self.view.appearance ?? NSAppearance.current()
             if self.isSelected {
-                self.view.layer?.backgroundColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1).cgColor
+                //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0.1997270976).cgColor
+                self.effect?.animator().isHidden = false
                 self.separator?.animator().isHidden = true
             } else {
-                self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
+                //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
+                self.effect?.animator().isHidden = true
                 self.separator?.animator().isHidden = false
             }
         }

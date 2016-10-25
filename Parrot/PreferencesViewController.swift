@@ -6,7 +6,7 @@ public class PreferencesViewController: NSTabViewController {
 	
 	public override func viewWillAppear() {
 		super.viewWillAppear()
-		if let w = self.view.window, let t = w.toolbar {
+        if let w = self.view.window, let t = w.toolbar {
 			w.appearance = ParrotAppearance.interfaceStyle().appearance()
 			w.titleVisibility = .hidden
 			

@@ -433,7 +433,7 @@ public final class URLSessionDelegateProxy: NSObject, URLSessionDelegate, URLSes
 	}
 	
 	public override func responds(to selector: Selector!) -> Bool {
-		switch selector {
+		switch selector! {
 		case #selector(URLSessionDelegate.urlSession(_:didBecomeInvalidWithError:)):
 			return sessionDidBecomeInvalidWithError != nil
 		case #selector(URLSessionDelegate.urlSession(_:didReceive:completionHandler:)):

@@ -30,6 +30,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	private var userList: Directory?
 	private var wallclock: DispatchSourceTimer? = nil
     private var wallclockStarted: Bool = false
+    private var bleh: Any? = nil
     
     /// The childConversations keeps track of all open conversations and when the
     /// list is updated, it is cached and the list selection is synchronized.
@@ -44,6 +45,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	deinit {
         self.wallclockStarted = false
 		self.wallclock?.cancel()
+        unsubscribe(self.bleh)
 	}
 	
 	var conversationList: ParrotServiceExtension.ConversationList? {
@@ -55,6 +57,11 @@ public class ConversationListViewController: NSWindowController, ConversationLis
                 (Settings["Parrot.OpenConversations"] as? [String])?
                     .flatMap { self.conversationList?[$0] }
                     .forEach { self.showConversation($0) }
+            }
+            
+            self.bleh = subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.getConversations")) {
+                log.debug("received \($0)")
+                publish(on: .system, Notification(name: Notification.Name("com.avaidyam.Parrot.Service.giveConversations"), object: nil, userInfo: ["abc":"def"]))
             }
 		}
 	}
@@ -176,7 +183,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		if let wc = self.childConversations[conv.identifier] {
 			log.debug("Conversation found for id \(conv.identifier)")
             DispatchQueue.main.async {
-                wc.showWindow(nil)
+                wc.showWindow()
             }
 		} else {
 			log.debug("Conversation NOT found for id \(conv.identifier)")
@@ -190,7 +197,19 @@ public class ConversationListViewController: NSWindowController, ConversationLis
                 let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
                 NotificationCenter.default.addObserver(self, selector: sel,
                                                        name: .NSWindowWillClose, object: wc.window)
-                wc.showWindow(nil)
+                wc.showWindow()
+                
+                // TODO: This plus some window snapping and sizing would allow for a UI mode.
+                // Also, remove the drawer and add popover if in single window mode.
+                //self.window?.addChildWindow(wc.window!, ordered: .below)
+                //wc.window?.isResizable = false
+                //wc.window?.standardWindowButton(.closeButton)?.isHidden = true
+                //wc.window?.standardWindowButton(.miniaturizeButton)?.isHidden = true
+                //wc.window?.standardWindowButton(.zoomButton)?.isHidden = true
+                //wc.window?.standardWindowButton(.toolbarButton)?.isHidden = true
+                //wc.window?.standardWindowButton(.documentIconButton)?.isHidden = true
+                //wc.window?.standardWindowButton(.documentVersionsButton)?.isHidden = true
+                //wc.window?.standardWindowButton(.fullScreenButton)?.isHidden = true
             }
 		}
 	}

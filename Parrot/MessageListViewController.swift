@@ -6,6 +6,12 @@ import ParrotServiceExtension
 /* TODO: Use the PlaceholderMessage for sending messages. */
 /* TODO: When selecting text and typing a completion character, wrap the text. */
 
+
+public struct EventStreamItemBundle {
+    public let current: EventStreamItem
+    public let previous: EventStreamItem?
+}
+
 public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate {
 	
 	/// This is instantly shown to the user when they send a message. It will
@@ -112,6 +118,10 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		self.listView.dataSourceProvider = { // watch for invalid Collection: count differed in successive traversals
 			return self.dataSource.map { $0 as Any }
 		}
+        self.listView.dataSourceAdjustProvider = { row in
+            let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
+            return EventStreamItemBundle(current: self.dataSource[row], previous: prev ? self.dataSource[row - 1] : nil) as Any
+        }
 		
 		self.listView.viewClassProvider = { row in
 			let cls = self.listView.dataSourceProvider!()[row]
@@ -137,7 +147,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			self.imageView.image = fetchImage(user: me as! User, conversation: self.conversation!)
 		}
 		
-        //self.moduleView.layer?.cornerRadius = 5.0
+        // TODO: In the future, this might be pretty interesting to allow:
+        //self.moduleView.superview?.layer?.contents = NSImage(contentsOfFile: "/Users/aditya/Documents/Wallpapers/Antarctic Mountains.jpg")
     }
     
 	public override func showWindow(_ sender: Any?) {
@@ -162,7 +173,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			// In addition, make sure links aren't blue as usual.
 			guard let text = self.entryView else { return }
 			text.layer?.masksToBounds = true
-			text.layer?.cornerRadius = 2.0
+			text.layer?.cornerRadius = 10.0
 			text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.window!.effectiveAppearance).cgColor
 			
 			text.textColor = NSColor.labelColor
@@ -230,6 +241,14 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			}
 		}
 	}
+    
+    @IBAction public func colorWellSelected(_ sender: AnyObject?) {
+        guard let sender = sender as? NSColorWell else { return }
+        let q = [sender.color.redComponent, sender.color.greenComponent, sender.color.blueComponent]
+        Settings["com.avaidyam.Parrot.ConversationColor"] = q /*".\(self.conversation!.identifier)"*/
+        self.listView.collectionView.performUpdate()
+        //publish(Notification(name: Notification.Name("_ColorChanged")))
+    }
 	
 	// NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
 	public func windowDidChangeOcclusionState(_ notification: Notification) {
@@ -423,6 +442,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public func drawerWillOpen(_ notification: Notification) {
 		self.drawerButton.state = NSOnState
 		self.drawer.window?.animator().alphaValue = 1.0
+        
+        publish(on: .system, Notification(name: Notification.Name("com.avaidyam.Parrot.Service.getConversations")))
 	}
 	public func drawerWillClose(_ notification: Notification) {
 		self.drawerButton.state = NSOffState
@@ -434,7 +455,11 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     // MARK: NSTextFieldDelegate
     var lastTypingTimestamp: Date?
     public func textDidChange(_ obj: Notification) {
-        self.entryView?.invalidateIntrinsicContentSize()
+        NSAnimationContext.runAnimationGroup({ ctx in // TODO: FIX THIS
+            self.entryView?.invalidateIntrinsicContentSize()
+            self.entryView?.superview?.needsLayout = true
+            self.entryView?.superview?.layoutSubtreeIfNeeded()
+        }, completionHandler: nil)
         self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: self.moduleView.frame.height, right: 0)
         if entryView.string == "" {
 			entryView.font = NSFont.systemFont(ofSize: 12.0)

@@ -32,15 +32,15 @@ public class NSExtendedTextView: NSTextView {
 		}
 	}
 	
-	// FOR AUTOLAYOUT:
 	public override var intrinsicContentSize: NSSize {
 		self.layoutManager?.ensureLayout(for: self.textContainer!)
-		return (self.layoutManager?.usedRect(for: self.textContainer!).size)!
+		let size = (self.layoutManager?.usedRect(for: self.textContainer!).size)!
+        return NSSize(width: size.width + 2 * self.textContainerInset.width,
+                      height: size.height + 2 * self.textContainerInset.height)
 	}
 	public override func didChangeText() {
 		super.didChangeText()
 		self.invalidateIntrinsicContentSize()
-        self.needsLayout = true
 	}
 	public override func becomeFirstResponder() -> Bool {
 		self.needsDisplay = true

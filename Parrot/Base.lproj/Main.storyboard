@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11521.1" systemVersion="16B2548a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
         <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
     </dependencies>
@@ -1006,9 +1007,9 @@
                                 </middleViews>
                                 <endViews>
                                     <box wantsLayer="YES" misplaced="YES" borderType="bezel" title="Conversations" translatesAutoresizingMaskIntoConstraints="NO" id="7zy-3f-KnC">
-                                        <rect key="frame" x="175.5" y="34" width="99" height="18"/>
+                                        <rect key="frame" x="175" y="34" width="100" height="18"/>
                                         <view key="contentView" wantsLayer="YES" id="8q7-rw-E8j">
-                                            <rect key="frame" x="3" y="3" width="93" height="0.0"/>
+                                            <rect key="frame" x="3" y="3" width="94" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <customView wantsLayer="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Xx-sN-qUn" customClass="ConversationCell" customModule="Parrot" customModuleProvider="target">
@@ -1080,9 +1081,9 @@
                                         </view>
                                     </box>
                                     <box wantsLayer="YES" misplaced="YES" borderType="bezel" title="Messages" translatesAutoresizingMaskIntoConstraints="NO" id="NLu-7n-fcK">
-                                        <rect key="frame" x="186.5" y="12" width="77" height="18"/>
+                                        <rect key="frame" x="186" y="12" width="78" height="18"/>
                                         <view key="contentView" wantsLayer="YES" id="bCA-4s-3g9">
-                                            <rect key="frame" x="3" y="3" width="71" height="0.0"/>
+                                            <rect key="frame" x="3" y="3" width="72" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <customView identifier="Parrot.MessageCell" wantsLayer="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="99m-ep-qa7" customClass="MessageCell" customModule="Parrot" customModuleProvider="target">
@@ -1107,7 +1108,7 @@
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                        <size key="minSize" width="338" height="24"/>
+                                                                        <size key="minSize" width="0.0" height="24"/>
                                                                         <size key="maxSize" width="10000000" height="10000000"/>
                                                                         <attributedString key="textStorage">
                                                                             <fragment content="What's up today?">

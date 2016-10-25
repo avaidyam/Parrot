@@ -37,6 +37,11 @@
                         <subviews>
                             <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </customView>
                             <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="appearanceBased" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="56"/>
@@ -51,6 +56,11 @@
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </button>
                                     <scrollView wantsLayer="YES" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="40" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC" customClass="NSAntiScrollView" customModule="Parrot" customModuleProvider="target">
                                         <rect key="frame" x="40" y="8" width="432" height="40"/>
@@ -69,6 +79,12 @@
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAlwaysPasteAsPlainText" value="YES"/>
                                                         <userDefinedRuntimeAttribute type="string" keyPath="placeholderString" value="Send a message..."/>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                                            <integer key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="size" keyPath="textContainerInset">
+                                                            <size key="value" width="4" height="4"/>
+                                                        </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </textView>
                                             </subviews>
@@ -82,6 +98,11 @@
                                             <rect key="frame" x="416" y="0.0" width="16" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </scrollView>
                                 </subviews>
                                 <constraints>
@@ -94,6 +115,11 @@
                                     <constraint firstAttribute="bottom" secondItem="S2O-bo-UO2" secondAttribute="bottom" constant="8" id="qfr-SP-QnO"/>
                                     <constraint firstItem="S2O-bo-UO2" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" constant="8" id="ui8-1I-GaV"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </visualEffectView>
                         </subviews>
                         <constraints>
@@ -105,9 +131,19 @@
                             <constraint firstAttribute="trailing" secondItem="yMT-fg-2gH" secondAttribute="trailing" id="eEQ-CH-4MQ"/>
                             <constraint firstItem="yMT-fg-2gH" firstAttribute="leading" secondItem="fR4-T5-vYX" secondAttribute="leading" id="fjR-hM-GfM"/>
                         </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                <integer key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </customView>
                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="c1g-nC-vne">
                         <rect key="frame" x="224" y="119" width="32" height="32"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                <integer key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </progressIndicator>
                 </subviews>
                 <constraints>
@@ -118,6 +154,11 @@
                     <constraint firstAttribute="bottom" secondItem="fR4-T5-vYX" secondAttribute="bottom" id="gUU-9D-b2y"/>
                     <constraint firstItem="c1g-nC-vne" firstAttribute="centerX" secondItem="TjO-sk-yg0" secondAttribute="centerX" id="mXi-XQ-dSH"/>
                 </constraints>
+                <userDefinedRuntimeAttributes>
+                    <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                        <integer key="value" value="1"/>
+                    </userDefinedRuntimeAttribute>
+                </userDefinedRuntimeAttributes>
             </view>
             <toolbar key="toolbar" implicitIdentifier="15DD37E4-A9CD-4FCB-B956-9C65DA208478" autosavesConfiguration="NO" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="ffa-CI-zYk">
                 <allowedToolbarItems>
@@ -185,6 +226,11 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EhA-26-aSD">
                     <rect key="frame" x="32" y="226" width="96" height="25"/>
@@ -195,6 +241,11 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="toggleMute:" target="-2" id="Jmf-Fj-quQ"/>
                     </connections>
@@ -208,6 +259,11 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="unT-iv-6FO">
                     <rect key="frame" x="32" y="166" width="96" height="25"/>
@@ -218,6 +274,11 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gtY-6y-nj2">
                     <rect key="frame" x="32" y="136" width="96" height="25"/>
@@ -228,30 +289,50 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </button>
-                <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rMj-gL-aS4">
+                <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rMj-gL-aS4">
                     <rect key="frame" x="12" y="64" width="136" height="58"/>
                     <subviews>
-                        <button translatesAutoresizingMaskIntoConstraints="NO" id="H5U-Fc-eFk">
+                        <button wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H5U-Fc-eFk">
                             <rect key="frame" x="-2" y="42" width="140" height="18"/>
                             <buttonCell key="cell" type="check" title="Display Notification" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="cw2-be-cKZ">
                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </button>
-                        <button translatesAutoresizingMaskIntoConstraints="NO" id="X0e-Wa-0GQ">
+                        <button wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X0e-Wa-0GQ">
                             <rect key="frame" x="-2" y="20" width="90" height="18"/>
                             <buttonCell key="cell" type="check" title="Play Sound" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FRK-Pk-CVa">
                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </button>
-                        <button translatesAutoresizingMaskIntoConstraints="NO" id="Txk-ij-NB3">
+                        <button wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Txk-ij-NB3">
                             <rect key="frame" x="-2" y="-2" width="125" height="18"/>
                             <buttonCell key="cell" type="check" title="Haptic Feedback" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="w4w-93-2XY">
                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </button>
                     </subviews>
                     <visibilityPriorities>
@@ -264,7 +345,20 @@
                         <real value="3.4028234663852886e+38"/>
                         <real value="3.4028234663852886e+38"/>
                     </customSpacing>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </stackView>
+                <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bdo-cG-CSB" customClass="NSPopoverColorWell">
+                    <rect key="frame" x="96" y="20" width="44" height="23"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <connections>
+                        <action selector="colorWellSelected:" target="-2" id="Wm2-Of-yAQ"/>
+                    </connections>
+                </colorWell>
             </subviews>
             <constraints>
                 <constraint firstItem="rMj-gL-aS4" firstAttribute="top" secondItem="gtY-6y-nj2" secondAttribute="bottom" constant="16" id="3Jr-eO-Wqk"/>
@@ -280,6 +374,11 @@
                 <constraint firstItem="9ft-Rg-mnA" firstAttribute="top" secondItem="EhA-26-aSD" secondAttribute="bottom" constant="8" id="mSI-iF-IQR"/>
                 <constraint firstAttribute="bottom" secondItem="Ppq-JF-FK1" secondAttribute="bottom" constant="20" id="xIA-Zt-TKI"/>
             </constraints>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                    <integer key="value" value="1"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
             <point key="canvasLocation" x="406" y="-237"/>
         </customView>
         <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
@@ -290,6 +389,11 @@
                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
             </textFieldCell>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
+                    <integer key="value" value="1"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
             <point key="canvasLocation" x="43" y="-41"/>
         </textField>
         <drawer leadingOffset="40" trailingOffset="12" id="RR8-NV-Gpy">
