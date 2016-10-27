@@ -17,12 +17,10 @@ public let materialColorList: NSColorList = {
 }()
 
 public extension NSColor {
-    public var suitableTextColor: NSColor {
-        var r = CGFloat(0), g = CGFloat(0), b = CGFloat(0)
-        self.getRed(&r, green: &g, blue: &b, alpha: nil)
-        let l = 1.0 - ((0.299 * r) + (0.587 * g) + (0.114 * b)) / 255.0
-        let d = CGFloat(l < 0.5 ? 0 : 255)
-        return NSColor(red: d, green: d, blue: d, alpha: 1.0)
+    func isLight() -> Bool {
+        let p3 = self.usingColorSpace(NSColorSpace.deviceRGB)!
+        let brightness = (p3.redComponent * 299) + (p3.greenComponent * 587) + (p3.blueComponent * 114)
+        return !(brightness < 500)
     }
 }
 

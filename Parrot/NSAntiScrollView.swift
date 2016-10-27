@@ -1,21 +1,31 @@
 import AppKit
 
 /// For Interface Builder to not screw with NSTextView embedding.
-public class NSAntiScrollView: NSScrollView {
-	public override init(frame frameRect: NSRect) {
+public class NSAntiScrollView: NSScrollView {	public override init(frame frameRect: NSRect) {
 		super.init(frame: frameRect)
 		hideScrollers()
 	}
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 		hideScrollers()
-	}
+    }
+    @IBInspectable
+    public var passthroughScrollEvents: Bool = false {
+        didSet {
+            self.hasHorizontalScroller = !self.passthroughScrollEvents
+            self.hasVerticalScroller = !self.passthroughScrollEvents
+        }
+    }
 	private func hideScrollers() {
 		hasHorizontalScroller = false
 		hasVerticalScroller = false
 	}
 	public override func scrollWheel(with theEvent: NSEvent) {
-		self.nextResponder?.scrollWheel(with: theEvent)
+        if self.passthroughScrollEvents {
+            self.nextResponder?.scrollWheel(with: theEvent)
+        } else {
+            super.scrollWheel(with: theEvent)
+        }
 	}
     public override var fittingSize: NSSize {
         return self.documentView?.fittingSize ?? NSSize(width: 0, height: 0)

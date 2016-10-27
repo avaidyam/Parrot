@@ -6,18 +6,19 @@ import Foundation
 // - press (i) to show conversations list
 // - select = show a new conversation
 
-public enum MessageType {
-	case text
-	case richText
-	case image
-	case audio
-	case video
-	case link
-	case snippet
-	case summary
+public enum ContentType: String {
+	case text = "com.avaidyam.Parrot.MessageType.text"
+	case richText = "com.avaidyam.Parrot.MessageType.richText"
+	case image = "com.avaidyam.Parrot.MessageType.image"
+	case audio = "com.avaidyam.Parrot.MessageType.audio"
+	case video = "com.avaidyam.Parrot.MessageType.video"
+	case link = "com.avaidyam.Parrot.MessageType.link"
+	case snippet = "com.avaidyam.Parrot.MessageType.snippet"
+	case summary = "com.avaidyam.Parrot.MessageType.summary"
 }
 
 public protocol Message: EventStreamItem {
+    var contentType: ContentType { get }
 	var text: String { get }
 }
 

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11521.1" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <objects>
@@ -26,17 +27,17 @@
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="documentWindow" frameAutosaveName="" tabbingMode="disallowed" id="rqa-ia-OSc">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenAuxiliary="YES"/>
-            <rect key="contentRect" x="163" y="205" width="480" height="270"/>
+            <rect key="contentRect" x="163" y="205" width="480" height="332"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
             <view key="contentView" wantsLayer="YES" id="TjO-sk-yg0" customClass="NSVisualEffectView">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="332"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="fR4-T5-vYX" userLabel="Contents">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="332"/>
                         <subviews>
                             <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="332"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
                                         <integer key="value" value="1"/>
@@ -68,12 +69,12 @@
                                             <rect key="frame" x="0.0" y="0.0" width="432" height="40"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <textView wantsLayer="YES" drawsBackground="NO" verticallyResizable="NO" continuousSpellChecking="YES" allowsUndo="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
+                                                <textView wantsLayer="YES" drawsBackground="NO" continuousSpellChecking="YES" allowsUndo="YES" allowsImageEditing="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="0.0" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <size key="minSize" width="432" height="40"/>
+                                                    <size key="minSize" width="0.0" height="40"/>
                                                     <size key="maxSize" width="591" height="10000000"/>
                                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <userDefinedRuntimeAttributes>
@@ -102,6 +103,7 @@
                                             <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
                                                 <integer key="value" value="1"/>
                                             </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="passthroughScrollEvents" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                     </scrollView>
                                 </subviews>
@@ -138,7 +140,7 @@
                         </userDefinedRuntimeAttributes>
                     </customView>
                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="c1g-nC-vne">
-                        <rect key="frame" x="224" y="119" width="32" height="32"/>
+                        <rect key="frame" x="224" y="150" width="32" height="32"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
                                 <integer key="value" value="1"/>
@@ -214,10 +216,10 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="8Xy-aO-97X"/>
             </connections>
-            <point key="canvasLocation" x="43" y="-237"/>
+            <point key="canvasLocation" x="-143.5" y="-260"/>
         </window>
         <customView wantsLayer="YES" id="Pye-gy-Huh" customClass="NSVisualEffectView">
-            <rect key="frame" x="0.0" y="0.0" width="160" height="270"/>
+            <rect key="frame" x="0.0" y="0.0" width="160" height="307"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ppq-JF-FK1">
@@ -233,7 +235,7 @@
                     </userDefinedRuntimeAttributes>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EhA-26-aSD">
-                    <rect key="frame" x="32" y="226" width="96" height="25"/>
+                    <rect key="frame" x="32" y="263" width="96" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="96" id="2C0-JW-GFY"/>
                     </constraints>
@@ -251,7 +253,7 @@
                     </connections>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9ft-Rg-mnA">
-                    <rect key="frame" x="32" y="196" width="96" height="25"/>
+                    <rect key="frame" x="32" y="233" width="96" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="96" id="lo7-ic-xQ6"/>
                     </constraints>
@@ -266,7 +268,7 @@
                     </userDefinedRuntimeAttributes>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="unT-iv-6FO">
-                    <rect key="frame" x="32" y="166" width="96" height="25"/>
+                    <rect key="frame" x="32" y="203" width="96" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="96" id="3JD-6L-yKa"/>
                     </constraints>
@@ -281,7 +283,7 @@
                     </userDefinedRuntimeAttributes>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gtY-6y-nj2">
-                    <rect key="frame" x="32" y="136" width="96" height="25"/>
+                    <rect key="frame" x="32" y="173" width="96" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="96" id="LIb-wb-jb5"/>
                     </constraints>
@@ -296,7 +298,7 @@
                     </userDefinedRuntimeAttributes>
                 </button>
                 <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rMj-gL-aS4">
-                    <rect key="frame" x="12" y="64" width="136" height="58"/>
+                    <rect key="frame" x="12" y="101" width="136" height="58"/>
                     <subviews>
                         <button wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H5U-Fc-eFk">
                             <rect key="frame" x="-2" y="42" width="140" height="18"/>
@@ -352,13 +354,53 @@
                     </userDefinedRuntimeAttributes>
                 </stackView>
                 <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bdo-cG-CSB" customClass="NSPopoverColorWell">
-                    <rect key="frame" x="96" y="20" width="44" height="23"/>
+                    <rect key="frame" x="96" y="57" width="44" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="emptyColorEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="colorWellSelected:" target="-2" id="Wm2-Of-yAQ"/>
+                        <binding destination="DAL-JI-MqR" name="value" keyPath="values.com.avaidyam.Parrot.ConversationIncomingColor" id="2CI-bL-MY7">
+                            <dictionary key="options">
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                            </dictionary>
+                        </binding>
                     </connections>
                 </colorWell>
+                <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n2Y-vS-NyF" customClass="NSPopoverColorWell">
+                    <rect key="frame" x="12" y="57" width="44" height="23"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="emptyColorEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <binding destination="DAL-JI-MqR" name="value" keyPath="values.com.avaidyam.Parrot.ConversationOutgoingColor" id="OOt-DK-kJ3">
+                            <dictionary key="options">
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </colorWell>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3w6-4X-dSe">
+                    <rect key="frame" x="95" y="7" width="48" height="48"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="axesIndependently" imageFrameStyle="grayBezel" id="ocm-qR-FJ7"/>
+                    <connections>
+                        <binding destination="DAL-JI-MqR" name="data" keyPath="values.Parrot.ConversationBackground" id="lvg-Ae-cQk">
+                            <dictionary key="options">
+                                <bool key="NSAlwaysPresentsApplicationModalAlerts" value="YES"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </imageView>
             </subviews>
             <constraints>
                 <constraint firstItem="rMj-gL-aS4" firstAttribute="top" secondItem="gtY-6y-nj2" secondAttribute="bottom" constant="16" id="3Jr-eO-Wqk"/>
@@ -379,7 +421,7 @@
                     <integer key="value" value="1"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
-            <point key="canvasLocation" x="406" y="-237"/>
+            <point key="canvasLocation" x="406" y="-218.5"/>
         </customView>
         <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
             <rect key="frame" x="0.0" y="0.0" width="112" height="22"/>
@@ -394,7 +436,7 @@
                     <integer key="value" value="1"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
-            <point key="canvasLocation" x="43" y="-41"/>
+            <point key="canvasLocation" x="43" y="-17"/>
         </textField>
         <drawer leadingOffset="40" trailingOffset="12" id="RR8-NV-Gpy">
             <size key="contentSize" width="160" height="10000"/>
@@ -406,6 +448,7 @@
                 <outlet property="parentWindow" destination="rqa-ia-OSc" id="492-CG-Jtv"/>
             </connections>
         </drawer>
+        <userDefaultsController representsSharedInstance="YES" id="DAL-JI-MqR"/>
     </objects>
     <resources>
         <image name="NSImageNameVolumeHigh" width="512" height="512"/>

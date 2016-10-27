@@ -10,13 +10,15 @@ import ParrotServiceExtension
 public struct EventStreamItemBundle {
     public let current: EventStreamItem
     public let previous: EventStreamItem?
+    public let next: EventStreamItem?
 }
 
 public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate {
 	
 	/// This is instantly shown to the user when they send a message. It will
 	/// be updated automatically when the status of the message is known.
-	public struct PlaceholderMessage: Message {
+    public struct PlaceholderMessage: Message {
+        public var contentType: ContentType = .text
 		public let sender: Person?
 		public let timestamp: Date
 		public let text: String
@@ -120,7 +122,10 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
         self.listView.dataSourceAdjustProvider = { row in
             let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
-            return EventStreamItemBundle(current: self.dataSource[row], previous: prev ? self.dataSource[row - 1] : nil) as Any
+            let next = (row + 1) < self.dataSource.count && (row + 1) < 0
+            return EventStreamItemBundle(current: self.dataSource[row],
+                                         previous: prev ? self.dataSource[row - 1] : nil,
+                                         next: next ? self.dataSource[row + 1] : nil) as Any
         }
 		
 		self.listView.viewClassProvider = { row in
@@ -148,7 +153,10 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
 		
         // TODO: In the future, this might be pretty interesting to allow:
-        //self.moduleView.superview?.layer?.contents = NSImage(contentsOfFile: "/Users/aditya/Documents/Wallpapers/Antarctic Mountains.jpg")
+        if  let dat = Settings["Parrot.ConversationBackground"] as? NSData,
+            let img = NSImage(data: dat as Data) {
+            self.moduleView.superview?.layer?.contents = img
+        }
     }
     
 	public override func showWindow(_ sender: Any?) {
@@ -242,13 +250,10 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
 	}
     
-    @IBAction public func colorWellSelected(_ sender: AnyObject?) {
+    /*@IBAction public func colorWellSelected(_ sender: AnyObject?) {
         guard let sender = sender as? NSColorWell else { return }
-        let q = [sender.color.redComponent, sender.color.greenComponent, sender.color.blueComponent]
-        Settings["com.avaidyam.Parrot.ConversationColor"] = q /*".\(self.conversation!.identifier)"*/
-        self.listView.collectionView.performUpdate()
-        //publish(Notification(name: Notification.Name("_ColorChanged")))
-    }
+        publish(Notification(name: Notification.Name("_ColorChanged")))
+    }*/
 	
 	// NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
 	public func windowDidChangeOcclusionState(_ notification: Notification) {
@@ -346,7 +351,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			switch (status) {
 			case TypingType.Started:
 				//let cell = self.listView.tableView.make(withIdentifier: "Typing", owner: nil)
-				self.popover.show(relativeTo: self.entryView!.bounds.offsetBy(dx: 0, dy: -16), of: self.entryView!.superview!, preferredEdge: .minY)
+                let b = self.window?.standardWindowButton(.closeButton)?.superview!
+				self.popover.show(relativeTo: b!.bounds.offsetBy(dx: 0, dy: -16), of: b!, preferredEdge: .minY)
 				self.statusView.stringValue = "Typing..."
 			case TypingType.Paused:
 				self.statusView.stringValue = "Entered text."

@@ -51,6 +51,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             
             // Hide your own icon and hide the icon of a repeating message.
             self.photoView?.isHidden = /*(o.sender?.me ?? false) || */(b.previous?.sender?.identifier == o.sender?.identifier)
+            self.textLabel?.alignment = (o.sender?.me ?? false) ? .right : .left
             
             // Enable automatic links and data detectors.
             self.textLabel?.isEditable = true
@@ -59,19 +60,25 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             
             guard let text = self.textLabel else { return }
             let appearance = self.view.appearance ?? NSAppearance.current()
+            text.textColor = NSColor.labelColor
             
             // Only clip the text if the text isn't purely Emoji.
             if !text.string!.isEmoji {
                 var color = NSColor.darkOverlay(forAppearance: appearance)
-                if let q = Settings["com.avaidyam.Parrot.ConversationColor"] as? [CGFloat] {
-                    let c = NSColor(red: q[0], green: q[1], blue: q[2], alpha: 1.0)
+                let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
+                if  let q = Settings[setting] as? Data,
+                    let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
+                    c.alphaComponent > 0.0 {
                     color = c
+                    
+                    // This automatically adjusts labelColor to the right XOR mask.
+                    text.appearance = NSAppearance(named: color.isLight() ? NSAppearanceNameVibrantLight : NSAppearanceNameVibrantDark)
+                } else {
+                    text.appearance = self.view.appearance
                 }
-                text.textColor = color.suitableTextColor
                 text.layer?.backgroundColor = color.cgColor
             } else {
                 text.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
-                text.textColor = NSColor.labelColor
             }
             
             // NSTextView doesn't automatically change its text color when the

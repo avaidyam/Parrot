@@ -133,7 +133,7 @@ public struct ParrotAppearance {
 		case PopoverDetail
 		///
 		case OverlayBubble
-	}
+	}//document, utility, shoebox
 	
 	/// Returns the current user preferential InterfaceStyle (light, dark, system).
 	public static func interfaceStyle() -> InterfaceStyle {

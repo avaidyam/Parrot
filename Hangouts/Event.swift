@@ -52,6 +52,10 @@ public func ==(lhs: IEvent, rhs: IEvent) -> Bool {
 
 // An event containing a chat message.
 public class IChatMessageEvent: IEvent, Message {
+    
+    public var contentType: ContentType {
+        return .text
+    }
 	
 	// A textual representation of the message.
     public lazy var text: String = {
