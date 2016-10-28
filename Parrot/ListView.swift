@@ -54,72 +54,13 @@ public enum ScrollDirection {
 	//case index(Int)
 }
 
-public class AnimatingFlowLayout: NSCollectionViewFlowLayout {
-    public var appearEffect: NSTableViewAnimationOptions = []
-    public var disappearEffect: NSTableViewAnimationOptions = []
-    
-    public override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        if newBounds.size != self.collectionView!.bounds.size {
-            return true
-        }
-        return false
-    }
-    
-    public override func invalidationContext(forBoundsChange newBounds: NSRect) -> NSCollectionViewLayoutInvalidationContext {
-        let x = super.invalidationContext(forBoundsChange: newBounds)
-        x.contentSizeAdjustment = self.collectionView!.bounds.size
-        return x
-    }
-    
-    /*
-    public override func layoutAttributesForItem(at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
-        let c = super.layoutAttributesForItem(at: indexPath)
-        let i = self.collectionView?.item(at: indexPath)
-        return i?.preferredLayoutAttributesFitting(c!)
-    }*/
-    
-    public override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
-        let x = self.layoutAttributesForItem(at: itemIndexPath)
-        if self.appearEffect.contains(.effectFade) {
-            x?.alpha = 0.0
-        }
-        if self.appearEffect.contains(.slideUp) {
-            x?.frame.origin.y -= x!.frame.height
-        } else if self.appearEffect.contains(.slideDown) {
-            x?.frame.origin.y += x!.frame.height
-        } else if self.appearEffect.contains(.slideLeft) {
-            x?.frame.origin.x += x!.frame.width
-        } else if self.appearEffect.contains(.slideRight) {
-            x?.frame.origin.x -= x!.frame.width
-        }
-        return x
-    }
-    
-    public override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
-        let x = self.layoutAttributesForItem(at: itemIndexPath)
-        if self.disappearEffect.contains(.effectFade) {
-            x?.alpha = 0.0
-        }
-        if self.appearEffect.contains(.slideUp) {
-            x?.frame.origin.y -= x!.frame.height
-        } else if self.appearEffect.contains(.slideDown) {
-            x?.frame.origin.y += x!.frame.height
-        } else if self.appearEffect.contains(.slideLeft) {
-            x?.frame.origin.x += x!.frame.width
-        } else if self.appearEffect.contains(.slideRight) {
-            x?.frame.origin.x -= x!.frame.width
-        }
-        return x
-    }
-}
-
 // FIXME: ListViewDelegate
 
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
-public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionViewDataSource {
+public class ListView: NSView {
 	
 	// TODO: Work in Progress here...
 	public struct Section {
@@ -127,7 +68,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	}
 	
 	internal var scrollView: NSScrollView! // FIXME: Should be private...
-	internal var collectionView: NSCollectionView! // FIXME: Should be private...
+	internal var tableView: NSTableView! // FIXME: Should be private...
     
 	/// Provides the global header for all sections in the ListView.
 	@IBOutlet public var headerView: NSView?
@@ -148,38 +89,42 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	private func commonInit() {
 		self.scrollView = NSScrollView(frame: self.bounds)
 		self.scrollView.automaticallyAdjustsContentInsets = false
-        self.collectionView = NSCollectionView(frame: self.scrollView.bounds)
-        self.collectionView.dataSource = self
-        self.collectionView.delegate = self
+        self.tableView = NSExtendedTableView(frame: self.scrollView.bounds)
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
         
-        let l = AnimatingFlowLayout()
-        l.appearEffect = [.effectFade, .slideDown]
-        l.disappearEffect = [.effectFade, .slideUp]
-        l.minimumInteritemSpacing = 100000000
-        l.minimumLineSpacing = 0
-        l.scrollDirection = .vertical
-        self.collectionView.collectionViewLayout = l
+        let col = NSTableColumn(identifier: "")
+        col.resizingMask = .autoresizingMask
+        col.isEditable = false
+        self.tableView.addTableColumn(col)
+        self.tableView.headerView = nil
+        self.tableView.menu = NSMenu(title: "")
 		
 		self.scrollView.drawsBackground = false
         self.scrollView.borderType = .noBorder
-        self.collectionView.allowsEmptySelection = true
-        self.collectionView.isSelectable = true
-        self.collectionView.backgroundColors = [NSColor.clear]
+        self.tableView.allowsEmptySelection = true
+        self.tableView.backgroundColor = NSColor.clear
+        
+        self.tableView.allowsEmptySelection = true
+        self.tableView.selectionHighlightStyle = .sourceList
+        self.tableView.floatsGroupRows = true
+        self.tableView.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
+        self.tableView.intercellSpacing = NSSize(width: 0, height: 0)
 		
-		self.scrollView.documentView = self.collectionView
+		self.scrollView.documentView = self.tableView
 		self.scrollView.hasVerticalScroller = true
 		self.addSubview(self.scrollView)
 		
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
+        self.tableView.sizeLastColumnToFit()
         //self.scrollView.horizontalScrollElasticity = .allowed
         
         self.scrollView.wantsLayer = true
-        self.collectionView.wantsLayer = true
+        self.tableView.wantsLayer = true
         self.wantsLayer = true
-        
         self.scrollView.layerContentsRedrawPolicy = .onSetNeedsDisplay
-        self.collectionView.layerContentsRedrawPolicy = .onSetNeedsDisplay
+        self.tableView.layerContentsRedrawPolicy = .onSetNeedsDisplay
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
 	}
 	
@@ -201,7 +146,7 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	public override var wantsLayer: Bool {
 		didSet {
 			self.scrollView.wantsLayer = self.wantsLayer
-			self.collectionView.wantsLayer = self.wantsLayer
+			self.tableView.wantsLayer = self.wantsLayer
 		}
 	}
 	
@@ -214,44 +159,48 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	}
 	
 	public func update(animated: Bool = true, _ handler: @escaping () -> () = {}) {
-        self.collectionView.performBatchUpdates({
-            self.collectionView.reloadData()
-        }) { _ in
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
             switch self.updateScrollDirection {
             case .top: self.scroll(toRow: 0, animated: animated)
             case .bottom: self.scroll(toRow: self.dataSource.count - 1, animated: animated)
             }
             handler()
         }
-        
-        // BUG: Unless a second batch update is performed, the first one doesn't complete. :(
-        self.collectionView.performUpdate()
 	}
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
         guard row >= 0 && row <= self.dataSource.count - 1 else { return }
-        let obj = animated ? self.collectionView.animator() : self.collectionView
-        obj!.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: [.centeredVertically, .centeredHorizontally])
+        NSAnimationContext.runAnimationGroup({ ctx in
+            ctx.allowsImplicitAnimation = true
+            self.tableView.scrollRowToVisible(row)
+        }, completionHandler: nil)
+        
+        //let obj = animated ? self.collectionView.animator() : self.collectionView
+        //obj!.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: [.centeredVertically, .centeredHorizontally])
 	}
 	
-	public func register(nibName: String, forClass: NSCollectionViewItem.Type) {
-		self.collectionView.register(forClass, forItemWithIdentifier: "\(forClass)")
-        //let nib = NSNib(nibNamed: nibName, bundle: nil)
-        //log.debug("Registering nib \(nib) for \(forClass).")
-		//self.collectionView.register(nib, forItemWithIdentifier: "\(forClass)")
+	public func register(nibName: String, forClass: NSTableCellView.Type) {
+        let nib = NSNib(nibNamed: nibName, bundle: nil)
+        self.tableView.register(nib, forIdentifier: "\(forClass)")
 	}
 	
 	public var selection: [Int] {
-		return self.collectionView.selectionIndexPaths.map { $0.item }
+		return self.tableView.selectedRowIndexes.map { $0 }
 	}
 	
 	public var visibleRows: [Int] {
-        return self.collectionView.indexPathsForVisibleItems().map { $0.item }
+        let r = self.tableView.rows(in: self.tableView.visibleRect)
+        return Array(r.location..<r.location+r.length)
 	}
+    
+    public var visibleCells: [NSTableCellView] {
+        return self.visibleRows.flatMap { (self.tableView as NSTableView).view(atColumn: 0, row: $0, makeIfNecessary: false) as? NSTableCellView }
+    }
 	
     public var dataSourceProvider: (() -> [Any])? = nil
     public var dataSourceAdjustProvider: ((_ row: Int) -> Any)? = nil
-	public var viewClassProvider: ((_ row: Int) -> NSCollectionViewItem.Type)? = nil
+	public var viewClassProvider: ((_ row: Int) -> NSTableCellView.Type)? = nil
 	public var dynamicHeightProvider: ((_ row: Int) -> Double)? = nil // FIXME?
 	public var clickedRowProvider: ((_ row: Int) -> Void)? = nil
 	public var selectionProvider: ((_ row: Int) -> Void)? = nil // FIXME?
@@ -260,22 +209,10 @@ public class ListView: NSView, NSCollectionViewDelegateFlowLayout, NSCollectionV
 	public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil // FIXME?
 	public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
     
-    public override func layout() {
-        super.layout()
-        if !self.inLiveResize {
-            // FIXME: This is a terrible hack to get automatic resizing to work. :(
-            self.collectionView.performUpdate()
-        }
-    }
-    
-    // Mitigates the terrible resizing performance by only snapping at the very end.
-    public override func viewDidEndLiveResize() {
-        self.collectionView.performUpdate()
-    }
-    
-    fileprivate var prototypes = [String: NSCollectionViewItem]()
+    fileprivate var prototypes = [String: NSTableCellView]()
 }
 
+/*
 // Essential Support
 extension ListView  {
     
@@ -291,7 +228,7 @@ extension ListView  {
     @objc(collectionView:itemForRepresentedObjectAtIndexPath:)
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let cellClass = self.viewClassProvider?(indexPath.item) ?? NSCollectionViewItem.self
-        let item = self.collectionView.makeItem(withIdentifier: "\(cellClass)", for: indexPath)
+        let item = self.tableView.makeItem(withIdentifier: "\(cellClass)", for: indexPath)
         item.representedObject = self.dataSourceAdjustProvider?(indexPath.item) ?? self.dataSource[indexPath.item]
         return item
     }
@@ -334,121 +271,11 @@ extension ListView  {
     }*/
     
 }
-
-// Drag & Drop Support
-/*extension ListView {
-    
-    @objc(collectionView:canDragItemsAtIndexPaths:withEvent:)
-    public func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
-        
-    }
-    
-    @objc(collectionView:writeItemsAtIndexPaths:toPasteboard:)
-    public func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
-        
-    }
-
-    @objc(collectionView:namesOfPromisedFilesDroppedAtDestination:forDraggedItemsAtIndexPaths:)
-    public func collectionView(_ collectionView: NSCollectionView, namesOfPromisedFilesDroppedAtDestination dropURL: URL, forDraggedItemsAt indexPaths: Set<IndexPath>) -> [String] {
-        
-    }
-    
-    @objc(collectionView:draggingImageForItemsAtIndexPaths:withEvent:offset:)
-    public func collectionView(_ collectionView: NSCollectionView, draggingImageForItemsAt indexPaths: Set<IndexPath>, with event: NSEvent, offset dragImageOffset: NSPointPointer) -> NSImage {
-        
-    }
-
-    public func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
-        return [.copy]
-    }
-
-    public func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionViewDropOperation) -> Bool {
-        return true
-    }
-
-    @objc(collectionView:pasteboardWriterForItemAtIndexPath:)
-    public func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
-        return self.pasteboardProvider?(row)
-    }
-
-    @objc(collectionView:draggingSession:willBeginAtPoint:forItemsAtIndexPaths:)
-    public func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItemsAt indexPaths: Set<IndexPath>) {
-        
-    }
-
-    @objc(collectionView:draggingSession:endedAtPoint:dragOperation:)
-    public func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
-        
-    }
-
-    public func collectionView(_ collectionView: NSCollectionView, updateDraggingItemsForDrag draggingInfo: NSDraggingInfo) {
-        
-    }
-    
-}
 */
-// Selection & Transition Support
-extension ListView {
-    /*
-    @objc(collectionView:shouldChangeItemsAtIndexPaths:toHighlightState:)
-    public func collectionView(_ collectionView: NSCollectionView, shouldChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) -> Set<IndexPath> {
-        
-    }
-    
-    @objc(collectionView:didChangeItemsAtIndexPaths:toHighlightState:)
-    public func collectionView(_ collectionView: NSCollectionView, didChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) {
-        
-    }
-    
-    @objc(collectionView:shouldSelectItemsAtIndexPaths:)
-    public func collectionView(_ collectionView: NSCollectionView, shouldSelectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
-        
-    }
-    
-    */
-    @objc(collectionView:shouldDeselectItemsAtIndexPaths:)
-    public func collectionView(_ collectionView: NSCollectionView, shouldDeselectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
-        return Set<IndexPath>()
-    }
-    
-    @objc(collectionView:didSelectItemsAtIndexPaths:)
-    public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-        indexPaths.forEach { self.selectionProvider?($0.item) }
-    }
-    
-    @objc(collectionView:didDeselectItemsAtIndexPaths:)
-    public func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
-        
-    }
-    
-    /*@objc(collectionView:willDisplayItem:forRepresentedObjectAtIndexPath:)
-    public func collectionView(_ collectionView: NSCollectionView, willDisplay item: NSCollectionViewItem, forRepresentedObjectAt indexPath: IndexPath) {
-        
-    }
-    
-    @objc(collectionView:willDisplaySupplementaryView:forElementKind:atIndexPath:)
-    public func collectionView(_ collectionView: NSCollectionView, willDisplaySupplementaryView view: NSView, forElementKind elementKind: String, at indexPath: IndexPath) {
-        
-    }
-    
-    @objc(collectionView:didEndDisplayingItem:forRepresentedObjectAtIndexPath:)
-    public func collectionView(_ collectionView: NSCollectionView, didEndDisplaying item: NSCollectionViewItem, forRepresentedObjectAt indexPath: IndexPath) {
-        
-    }
-    
-    @objc(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)
-    public func collectionView(_ collectionView: NSCollectionView, didEndDisplayingSupplementaryView view: NSView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
-        
-    }
-    
-    public func collectionView(_ collectionView: NSCollectionView, transitionLayoutForOldLayout fromLayout: NSCollectionViewLayout, newLayout toLayout: NSCollectionViewLayout) -> NSCollectionViewTransitionLayout {
-        
-    }*/
-}
 
-/*
+
 // Essential Support
-extension ListView: NSExtendedTableViewDelegate {
+extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	
 	@objc(numberOfRowsInTableView:)
 	public func numberOfRows(in tableView: NSTableView) -> Int {
@@ -456,10 +283,22 @@ extension ListView: NSExtendedTableViewDelegate {
 	}
 	
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-		return CGFloat(self.sizeClass.calculate {
-			let cellClass = (self.viewClassProvider?(row) ?? ListViewCell.self)
-			return cellClass.cellHeight(forWidth: self.bounds.size.width, cellValue: self.dataSource[row]).native
-		})
+        let cellClass = self.viewClassProvider?(row) ?? NSTableCellView.self
+        var proto = self.prototypes["\(cellClass)"]
+        if proto == nil {
+            let stuff = NSNib(nibNamed: "\(cellClass)", bundle: nil)?.instantiate(self).flatMap { $0 as? NSTableCellView }
+            proto = stuff?.first//cellClass.init() // FIXME: doesn't work
+            if proto == nil {
+                return -1
+            }
+            proto?.identifier = "\(cellClass)"
+            self.prototypes["\(cellClass)"] = proto!
+        }
+        
+        proto?.frame = NSRect(x: 0, y: 0, width: self.bounds.width, height: 20.0)
+        proto?.objectValue = self.dataSourceAdjustProvider?(row) ?? self.dataSource[row]
+        proto?.layoutSubtreeIfNeeded()
+        return proto!.fittingSize.height
 	}
 	
 	public func tableViewColumnDidResize(_ notification: Notification) {
@@ -491,15 +330,15 @@ extension ListView: NSExtendedTableViewDelegate {
 	
 	@objc(tableView:viewForTableColumn:row:)
 	public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		let cellClass = self.viewClassProvider?(row) ?? ListViewCell.self
-		var view = self.collectionView.make(withIdentifier: cellClass.className(), owner: self) as? ListViewCell
+		let cellClass = self.viewClassProvider?(row) ?? NSTableCellView.self
+		var view = self.tableView.make(withIdentifier: "\(cellClass)", owner: self) as? NSTableCellView
 		if view == nil {
 			log.warning("Cell class \(cellClass) not registered!")
 			view = cellClass.init(frame: .zero)
 			view!.identifier = cellClass.className()
 		}
 		
-		view!.cellValue = self.dataSource[row]
+		view!.objectValue = self.dataSourceAdjustProvider?(row) ?? self.dataSource[row]//[row]
 		//tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
 		return view
 	}
@@ -536,7 +375,7 @@ extension ListView /*: NSExtendedTableViewDelegate*/ {
 	}
 	
 	public func tableViewSelectionDidChange(_ notification: Notification) {
-		self.selectionProvider?(self.collectionView.selectedRow)
+		self.selectionProvider?(self.tableView.selectedRow)
 	}
 	
 	public func tableViewSelectionIsChanging(_ notification: Notification) {
@@ -552,4 +391,41 @@ extension ListView /*: NSExtendedTableViewDelegate*/ {
 	}
 }
 
-*/
+public class NSExtendedTableView: NSTableView {
+    
+    // Support for per-row and multi-select menus.
+    public override func menu(for event: NSEvent) -> NSMenu? {
+        let row = self.row(at: self.convert(event.locationInWindow, from: nil))
+        guard row >= 0 && event.type == .rightMouseDown else {
+            return super.menu(for: event)
+        }
+        
+        var selected = self.selectedRowIndexes
+        if !selected.contains(row) {
+            selected = IndexSet(integer: row)
+            // Enable this to select the row upon menu-click.
+            //self.selectRowIndexes(selected, byExtendingSelection: false)
+        }
+        
+        // As a last resort, if the row was selected alone, ask the view.
+        if let view = self.view(atColumn: 0, row: row, makeIfNecessary: false) {
+            return view.menu(for: event)
+        }
+        
+        /*if let d = self.delegate as? NSExtendedTableViewDelegate {
+            return d.tableView?(self, menuForRows: selected) ?? super.menu(for: event)
+        }*/
+        return super.menu(for: event)
+    }
+    
+    /*
+    public override func mouseDown(with event: NSEvent) {
+        let loc = self.convert(event.locationInWindow, from: nil)
+        let row = self.row(at: loc)
+        
+        super.mouseDown(with: event)
+        if let d = self.delegate as? NSExtendedTableViewDelegate , row != -1 {
+            d.tableView?(self, didClickRow: row)
+        }
+    }*/
+}

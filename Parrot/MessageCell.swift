@@ -4,14 +4,14 @@ import protocol ParrotServiceExtension.Message
 
 /* TODO: Use NSPanGestureRecognizer or Force Touch to expand links. */
 
-public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
+public class MessageCell: NSTableCellView, NSTextViewDelegate {
 	@IBOutlet var photoView: NSImageView?
 	@IBOutlet var textLabel: NSTextView?
     private var outline: CAShapeLayer?
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
     
-    public override func loadView() {
-        super.loadView()
+    public override func awakeFromNib() {
+        super.awakeFromNib()
         
         //self.outline = CAShapeLayer()
         //self.outline?.fillColor = NSColor.red.cgColor
@@ -20,22 +20,22 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         // remove the scroll view entirely and re-constrain the text view.
         let scroll = self.textLabel?.enclosingScrollView
         self.textLabel?.removeFromSuperview()
-        self.view.addSubview(self.textLabel!)
+        self.addSubview(self.textLabel!)
         scroll?.removeFromSuperview()
         
         // Match the same constraints that the scroll view had in IB and turn off autoresizing.
         self.textLabel?.translatesAutoresizingMaskIntoConstraints = false
         self.textLabel?.leadingAnchor.constraint(equalTo: self.photoView!.trailingAnchor, constant: 8).isActive = true
-        self.textLabel?.trailingAnchor.constraint(lessThanOrEqualTo: self.view.trailingAnchor, constant: -8).isActive = true
-        self.textLabel?.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 4).isActive = true
-        self.textLabel?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -4).isActive = true
+        self.textLabel?.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -8).isActive = true
+        self.textLabel?.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
+        self.textLabel?.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4).isActive = true
         self.textLabel?.heightAnchor.constraint(greaterThanOrEqualTo: self.photoView!.heightAnchor).isActive = true
     }
     
 	/// Upon assignment of the represented object, configure the subview contents.
-	public override var representedObject: Any? {
+	public override var objectValue: Any? {
         didSet {
-            guard let b = self.representedObject as? EventStreamItemBundle else { return }
+            guard let b = self.objectValue as? EventStreamItemBundle else { return }
             guard let o = b.current as? Message else { return }
 			
 			let user = o.sender
@@ -59,7 +59,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             self.textLabel?.isEditable = false
             
             guard let text = self.textLabel else { return }
-            let appearance = self.view.appearance ?? NSAppearance.current()
+            let appearance = self.appearance ?? NSAppearance.current()
             text.textColor = NSColor.labelColor
             
             // Only clip the text if the text isn't purely Emoji.
@@ -74,7 +74,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
                     // This automatically adjusts labelColor to the right XOR mask.
                     text.appearance = NSAppearance(named: color.isLight() ? NSAppearanceNameVibrantLight : NSAppearanceNameVibrantDark)
                 } else {
-                    text.appearance = self.view.appearance
+                    text.appearance = self.appearance
                 }
                 text.layer?.backgroundColor = color.cgColor
             } else {
@@ -111,8 +111,8 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
 	}
     
 	/// Allows the circle crop and masking to dynamically change.
-	public override func viewDidLayout() {
-        super.viewDidLayout()
+	public override func layout() {
+        super.layout()
 		if let layer = self.photoView?.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = layer.bounds.width / 2.0
@@ -125,10 +125,10 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
     
     /// If we're right-clicked outside of the text view, just popUp the textView's menu.
     /// Note: make sure we SELECT ALL and then DESELECT ALL after the popUp menu.
-    public override func rightMouseUp(with event: NSEvent) {
+    public override func menu(for event: NSEvent) -> NSMenu? {
         self.textLabel?.selectAll(nil)
-        self.textLabel?.menu(for: event)?.popUp(positioning: nil, at: self.view.convert(event.locationInWindow, from: nil), in: self.view)
-        self.textLabel?.setSelectedRange(NSRange())
+        return self.textLabel?.menu(for: event)
+        //self.textLabel?.setSelectedRange(NSRange())
     }
     
     /// Modify the textView menu to display the message's time.

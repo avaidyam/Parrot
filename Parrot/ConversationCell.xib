@@ -7,20 +7,10 @@
         <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ConversationCell" customModule="Parrot" customModuleProvider="target">
-            <connections>
-                <outlet property="effect" destination="DIq-U0-P7j" id="Y1C-4b-5b1"/>
-                <outlet property="nameLabel" destination="Bul-Yb-hpg" id="xwg-h3-fjB"/>
-                <outlet property="photoView" destination="N7p-DV-XCL" id="rJm-NJ-6Av"/>
-                <outlet property="separator" destination="9DZ-wE-PAP" id="MFF-Dx-YVh"/>
-                <outlet property="textLabel" destination="Nw5-Um-35D" id="Qm0-Lt-4VU"/>
-                <outlet property="timeLabel" destination="98f-We-Vvp" id="CTO-eb-ron"/>
-                <outlet property="view" destination="c22-O7-iKe" id="lpo-CA-4Gb"/>
-            </connections>
-        </customObject>
+        <customObject id="-2" userLabel="File's Owner"/>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe">
+        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe" customClass="ConversationCell" customModule="Parrot" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="327" height="64"/>
             <subviews>
                 <visualEffectView hidden="YES" appearanceType="vibrantLight" blendingMode="behindWindow" material="menu" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="DIq-U0-P7j">
@@ -125,6 +115,14 @@
                     <integer key="value" value="1"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="effect" destination="DIq-U0-P7j" id="fo0-jx-CJx"/>
+                <outlet property="nameLabel" destination="Bul-Yb-hpg" id="fCX-zz-s8c"/>
+                <outlet property="photoView" destination="N7p-DV-XCL" id="1MH-wC-RUo"/>
+                <outlet property="separator" destination="9DZ-wE-PAP" id="ly7-vY-O8O"/>
+                <outlet property="textLabel" destination="Nw5-Um-35D" id="46S-JX-eAK"/>
+                <outlet property="timeLabel" destination="98f-We-Vvp" id="UoE-eh-PLG"/>
+            </connections>
             <point key="canvasLocation" x="-31" y="-460"/>
         </customView>
     </objects>

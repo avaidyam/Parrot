@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11521.1" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
-        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="MessageCell" customModule="Parrot" customModuleProvider="target">
-            <connections>
-                <outlet property="photoView" destination="wEL-KW-aRK" id="olw-6X-X9L"/>
-                <outlet property="textLabel" destination="1dL-oQ-fiX" id="pb4-PZ-UEq"/>
-                <outlet property="view" destination="c22-O7-iKe" id="Cb3-XJ-J1Q"/>
-            </connections>
-        </customObject>
+        <customObject id="-2" userLabel="File's Owner" customClass="MessageCell" customModule="Parrot" customModuleProvider="target"/>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe">
+        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe" customClass="MessageCell" customModule="Parrot" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="491" height="32"/>
             <subviews>
                 <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="wEL-KW-aRK">
@@ -61,7 +54,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <outlet property="delegate" destination="-2" id="CSR-Tz-ysx"/>
+                                    <outlet property="delegate" destination="c22-O7-iKe" id="oG1-9o-eCK"/>
                                 </connections>
                             </textView>
                         </subviews>
@@ -98,6 +91,10 @@
                     <integer key="value" value="1"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="photoView" destination="wEL-KW-aRK" id="0XG-oc-oZC"/>
+                <outlet property="textLabel" destination="1dL-oQ-fiX" id="de0-b0-75D"/>
+            </connections>
             <point key="canvasLocation" x="-761.5" y="30"/>
         </customView>
     </objects>

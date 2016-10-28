@@ -2,7 +2,7 @@ import Cocoa
 import protocol ParrotServiceExtension.Conversation
 
 // A visual representation of a Conversation in a ListView.
-public class ConversationCell: NSCollectionViewItem {
+public class ConversationCell: NSTableCellView {
 	@IBOutlet private var photoView: NSImageView?
 	@IBOutlet private var nameLabel: NSTextField?
 	@IBOutlet private var textLabel: NSTextField?
@@ -11,9 +11,9 @@ public class ConversationCell: NSCollectionViewItem {
 	@IBOutlet private var separator: NSView?
 	
 	// Upon assignment of the represented object, configure the subview contents.
-	public override var representedObject: Any? {
+	public override var objectValue: Any? {
 		didSet {
-            guard let conversation = self.representedObject as? Conversation else { return }
+            guard let conversation = self.objectValue as? Conversation else { return }
 			
 			let messageSender = conversation.messages.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
@@ -48,7 +48,7 @@ public class ConversationCell: NSCollectionViewItem {
 		self.timeLabel?.stringValue = self.prefix + self.time.relativeString()
 	}
     
-    public override var isSelected: Bool {
+    public var isSelected: Bool = false {
         didSet {
             //let appearance = self.view.appearance ?? NSAppearance.current()
             if self.isSelected {
@@ -63,8 +63,8 @@ public class ConversationCell: NSCollectionViewItem {
         }
     }
     
-    public override func rightMouseUp(with event: NSEvent) {
-        guard var conversation = self.representedObject as? Conversation else { return }
+    public override func menu(for event: NSEvent) -> NSMenu? {
+        guard var conversation = self.objectValue as? Conversation else { return nil }
         let m = NSMenu(title: "Settings")
         m.addItem(title: conversation.muted ? "Unmute" : "Mute") {
             log.info("Mute conv: \(conversation.identifier)")
@@ -83,32 +83,26 @@ public class ConversationCell: NSCollectionViewItem {
             log.info("Archive conv: \(conversation.identifier)")
             //conversation.move(to: .archive)
         }
-        m.popUp(positioning: nil, at: self.view.convert(event.locationInWindow, from: nil), in: self.view)
+        return m
+        //m.popUp(positioning: nil, at: self.convert(event.locationInWindow, from: nil), in: self)
     }
 	
 	// Return a complete dragging component for this ConversationView.
 	// Note that we hide the separator and show it again after snapshot.
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
 		self.separator?.isHidden = true
-		let ret = [self.view.draggingComponent("Person")]
+		let ret = [self.draggingComponent("Person")]
 		self.separator?.isHidden = false
 		return ret
 	}
 	
 	// Allows the photo view's circle crop to dynamically match size.
-	public override func viewWillLayout() {
-		super.viewWillLayout()
+	public override func layout() {
+		super.layout()
         self.separator?.layer?.backgroundColor = NSColor.labelColor.cgColor
 		if let photo = self.photoView, let layer = photo.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = photo.bounds.width / 2.0
 		}
 	}
-    
-    // TODO: not called.
-    public override func preferredLayoutAttributesFitting(_ attr: NSCollectionViewLayoutAttributes) -> NSCollectionViewLayoutAttributes {
-        log.debug("TESTING ABC")
-        attr.size = NSSize(width: attr.size.width, height: 64.0)
-        return attr
-    }
 }

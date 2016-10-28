@@ -113,8 +113,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
 		
 		self.listView.register(nibName: "MessageCell", forClass: MessageCell.self)
-		self.listView.register(nibName: "FocusCell", forClass: FocusCell.self)
-		self.listView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
+		//self.listView.register(nibName: "FocusCell", forClass: FocusCell.self)
+		//self.listView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
 		
 		// oh lawd pls forgibs my sins
 		self.listView.dataSourceProvider = { // watch for invalid Collection: count differed in successive traversals
@@ -132,11 +132,11 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			let cls = self.listView.dataSourceProvider!()[row]
 			if cls is Message {
 				return MessageCell.self
-			} else if cls is LinkPreviewType {
-				return LinkPreviewCell.self
+			//} else if cls is LinkPreviewType {
+			//	return LinkPreviewCell.self
 			} else {
 				log.debug("\(row) OMG GOT NOTHING \(cls)")
-				return NSCollectionViewItem.self
+				return NSTableCellView.self
 			}
 		}
 		
@@ -366,10 +366,11 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
 		guard let e = event as? IChatMessageEvent else { return }
 		self.dataSource.append(e)
-		let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
 		DispatchQueue.main.async {
-            self.listView.collectionView.animator().insertItems(at: Set<IndexPath>([idx])) //animation: [.effectFade, .slideUp]
-            self.listView.scroll(toRow: idx.item)
+            self.listView.tableView.insertRows(at: IndexSet(integer: self.dataSource.count - 1), withAnimation: [.effectFade, .slideUp])
+            self.listView.scroll(toRow: self.dataSource.count - 1)
+            //let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
+            //self.listView.tableView.animator().insertItems(at: Set<IndexPath>([idx])) //animation: [.effectFade, .slideUp]
 		}
     }
 	public func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {}

@@ -150,7 +150,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		self.wallclock?.setEventHandler {
 			log.verbose("Updated visible timestamp for Conversations.")
             // FIXME: THIS IS BAD!
-            self.listView.collectionView.visibleItems().forEach {
+            self.listView.visibleCells.forEach {
                 ($0 as? ConversationCell)?.updateTimestamp()
             }
 		}
@@ -215,10 +215,13 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 	}
     
     private func updateSelectionIndexes() {
-        let paths = self.childConversations.keys
-            .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
-            .map { IndexPath(item: $0, section: 0) }
-        self.listView.collectionView.animator().selectionIndexPaths = Set(paths)
+        //let paths = Array(self.childConversations.keys)
+        //    .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
+        //    .reduce(IndexSet()) { set, elem in set.insert(elem) }
+        
+        
+        //self.listView.tableView.selectedRowIndexes = IndexSet()
+        //self.listView.collectionView.animator().selectionIndexPaths = Set(paths)
     }
 	
 	/// As we are about to display, configure our UI elements.
