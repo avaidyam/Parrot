@@ -462,11 +462,11 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     // MARK: NSTextFieldDelegate
     var lastTypingTimestamp: Date?
     public func textDidChange(_ obj: Notification) {
-        NSAnimationContext.runAnimationGroup({ ctx in // TODO: FIX THIS
+        NSAnimationContext.animate { // TODO: FIX THIS
             self.entryView?.invalidateIntrinsicContentSize()
             self.entryView?.superview?.needsLayout = true
             self.entryView?.superview?.layoutSubtreeIfNeeded()
-        }, completionHandler: nil)
+        }
         self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: self.moduleView.frame.height, right: 0)
         if entryView.string == "" {
 			entryView.font = NSFont.systemFont(ofSize: 12.0)

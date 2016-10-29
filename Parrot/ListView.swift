@@ -171,13 +171,9 @@ public class ListView: NSView {
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
         guard row >= 0 && row <= self.dataSource.count - 1 else { return }
-        NSAnimationContext.runAnimationGroup({ ctx in
-            ctx.allowsImplicitAnimation = true
+        NSAnimationContext.animate {
             self.tableView.scrollRowToVisible(row)
-        }, completionHandler: nil)
-        
-        //let obj = animated ? self.collectionView.animator() : self.collectionView
-        //obj!.scrollToItems(at: Set([IndexPath(item: row, section: 0)]), scrollPosition: [.centeredVertically, .centeredHorizontally])
+        }
 	}
 	
 	public func register(nibName: String, forClass: NSTableCellView.Type) {
@@ -301,12 +297,12 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         return proto!.fittingSize.height
 	}
 	
+    /// Whenever the NSTableColumn resizes, we know the parent view resizes, so automatically 
+    /// retile the rows. Note: turn off animations while doing this.
 	public func tableViewColumnDidResize(_ notification: Notification) {
-		NSAnimationContext.beginGrouping()
-		NSAnimationContext.current().duration = 0
-		let set = IndexSet(integersIn: 0..<self.dataSource.count)
-		tableView.noteHeightOfRows(withIndexesChanged: set)
-		NSAnimationContext.endGrouping()
+        NSAnimationContext.disableAnimations {
+            tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integersIn: 0..<self.dataSource.count))
+        }
 	}
 	
 	public func tableViewDidScroll(_ notification: Notification) {
@@ -350,13 +346,14 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	
 	@objc(tableView:didAddRowView:forRow:)
 	public func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int) {
-		//log.info("Unimplemented \(__FUNCTION__)")
+		log.debug("ADD ROW \(row)")
 		rowView.canDrawSubviewsIntoLayer = true
 		rowView.isEmphasized = false
 	}
 	
 	@objc(tableView:didRemoveRowView:forRow:)
 	public func tableView(_ tableView: NSTableView, didRemove rowView: NSTableRowView, forRow row: Int) {
+        log.debug("DEL ROW \(row)")
 		//log.info("Unimplemented \(__FUNCTION__)")
 	}
 }
