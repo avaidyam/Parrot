@@ -107,7 +107,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
         return self.sortedConversations[Int(at.item)]
     }
     
-    public func itemClass(in: ListView, at: ListView.Index) -> NSTableCellView.Type {
+    public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
         return ConversationCell.self
     }
 	

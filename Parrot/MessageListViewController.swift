@@ -95,7 +95,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
                                      next: next ? self.dataSource[row + 1] : nil) as Any
     }
     
-    public func itemClass(in: ListView, at: ListView.Index) -> NSTableCellView.Type {
+    public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
         return MessageCell.self
     }
     

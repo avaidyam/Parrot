@@ -13,7 +13,7 @@ public protocol ListViewDataSource {
     func object(in: ListView, at: ListView.Index) -> Any?
     
     /// Returns the type of NSViewController to use for the list cell.
-    func itemClass(in: ListView, at: ListView.Index) -> NSTableCellView.Type
+    func itemClass(in: ListView, at: ListView.Index) -> NSView.Type
 }
 
 /// Generic container type for any view presenting a list of elements.
@@ -115,7 +115,7 @@ public class ListView: NSView {
         }
 	}
 	
-	public func register(nibName: String, forClass: NSTableCellView.Type) {
+	public func register(nibName: String, forClass: NSView.Type) {
         let nib = NSNib(nibNamed: nibName, bundle: nil)
         self.tableView.register(nib, forIdentifier: "\(forClass)")
 	}
@@ -129,13 +129,13 @@ public class ListView: NSView {
         return Array(r.location..<r.location+r.length)
 	}
     
-    public var visibleCells: [NSTableCellView] {
-        return self.visibleRows.flatMap { (self.tableView as NSTableView).view(atColumn: 0, row: $0, makeIfNecessary: false) as? NSTableCellView }
+    public var visibleCells: [NSView] {
+        return self.visibleRows.flatMap { (self.tableView as NSTableView).view(atColumn: 0, row: $0, makeIfNecessary: false) }
     }
 	
     //public var dataSourceProvider: (() -> [Any])? = nil
     //public var dataSourceAdjustProvider: ((_ row: Int) -> Any)? = nil
-	//public var viewClassProvider: ((_ row: Int) -> NSTableCellView.Type)? = nil
+	//public var viewClassProvider: ((_ row: Int) -> NSView.Type)? = nil
     
 	//public var clickedRowProvider: ((_ row: Int) -> Void)? = nil
 	//public var selectionProvider: ((_ row: Int) -> Void)? = nil // FIXME?
@@ -147,7 +147,7 @@ public class ListView: NSView {
     ///
     ///
     
-    fileprivate var prototypes = [String: NSTableCellView]()
+    fileprivate var prototypes = [String: NSView]()
     
     fileprivate var __rows: Int {
         return Int(self.dataSource?.numberOfItems(in: self).reduce(0, +) ?? 0)
@@ -245,10 +245,10 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         let index = __fromRow(UInt(row))
-        let cellClass = self.dataSource?.itemClass(in: self, at: index) ?? NSTableCellView.self
+        let cellClass = self.dataSource?.itemClass(in: self, at: index) ?? NSView.self
         var proto = self.prototypes["\(cellClass)"]
         if proto == nil {
-            let stuff = NSNib(nibNamed: "\(cellClass)", bundle: nil)?.instantiate(self).flatMap { $0 as? NSTableCellView }
+            let stuff = NSNib(nibNamed: "\(cellClass)", bundle: nil)?.instantiate(self).flatMap { $0 as? NSView }
             proto = stuff?.first//cellClass.init() // FIXME: doesn't work
             if proto == nil {
                 return -1
@@ -258,7 +258,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         }
         
         proto?.frame = NSRect(x: 0, y: 0, width: self.bounds.width, height: 20.0)
-        proto?.objectValue = self.dataSource?.object(in: self, at: index)
+        (proto as? NSTableCellView)?.objectValue = self.dataSource?.object(in: self, at: index)
         proto?.layoutSubtreeIfNeeded()
         return proto!.fittingSize.height
 	}
@@ -294,31 +294,26 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	@objc(tableView:viewForTableColumn:row:)
     public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let index = __fromRow(UInt(row))
-		let cellClass = self.dataSource?.itemClass(in: self, at: index) ?? NSTableCellView.self
-		var view = self.tableView.make(withIdentifier: "\(cellClass)", owner: self) as? NSTableCellView
+		let cellClass = self.dataSource?.itemClass(in: self, at: index) ?? NSView.self
+		var view = self.tableView.make(withIdentifier: "\(cellClass)", owner: self)
 		if view == nil {
 			log.warning("Cell class \(cellClass) not registered!")
 			view = cellClass.init(frame: .zero)
 			view!.identifier = cellClass.className()
 		}
 		
-		view!.objectValue = self.dataSource?.object(in: self, at: index)
-		//tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
+		(view as? NSTableCellView)?.objectValue = self.dataSource?.object(in: self, at: index)
 		return view
 	}
 	
     public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
         let _ = __fromRow(UInt(row))
-		//log.info("Unimplemented \(__FUNCTION__)")
-		return nil // no default row yet
+		return NSExtendedTableRowView(frame: .zero) // FIXME
 	}
 	
 	@objc(tableView:didAddRowView:forRow:)
     public func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int) {
         let _ = __fromRow(UInt(row))
-		//log.debug("ADD ROW \(row)")
-		rowView.canDrawSubviewsIntoLayer = true
-		rowView.isEmphasized = false
 	}
 	
 	@objc(tableView:didRemoveRowView:forRow:)
@@ -340,6 +335,13 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	public func tableViewSelectionDidChange(_ notification: Notification) {
 		//self.selectionProvider?(self.tableView.selectedRow)
 	}
+}
+
+public class NSExtendedTableRowView: NSTableRowView {
+    public override var isEmphasized: Bool {
+        get { return false }
+        set { }
+    }
 }
 
 public class NSExtendedTableView: NSTableView {
