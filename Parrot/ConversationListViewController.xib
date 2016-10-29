@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ConversationListViewController" customModule="Parrot" customModuleProvider="target">
@@ -39,14 +40,46 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="appearanceBased" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="WIg-bU-XHd">
+                        <rect key="frame" x="0.0" y="0.0" width="276" height="32"/>
+                        <subviews>
+                            <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Psg-uO-jtv">
+                                <rect key="frame" x="38" y="7" width="232" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Firstname Lastname" id="Htc-Ia-dDd">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wZH-5k-n21">
+                                <rect key="frame" x="8" y="4" width="24" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="wZH-5k-n21" secondAttribute="height" multiplier="1:1" id="QyS-tc-M32"/>
+                                    <constraint firstAttribute="width" constant="24" id="y2E-1o-1BC"/>
+                                </constraints>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSApplicationIcon" id="sgt-sS-rzl"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Psg-uO-jtv" secondAttribute="trailing" constant="8" id="4dj-MK-VjG"/>
+                            <constraint firstItem="Psg-uO-jtv" firstAttribute="leading" secondItem="wZH-5k-n21" secondAttribute="trailing" constant="8" id="Jsb-WG-P0x"/>
+                            <constraint firstAttribute="height" constant="32" id="Vlt-AC-GwB"/>
+                            <constraint firstItem="wZH-5k-n21" firstAttribute="centerY" secondItem="WIg-bU-XHd" secondAttribute="centerY" id="Zb8-W8-bZh"/>
+                            <constraint firstItem="Psg-uO-jtv" firstAttribute="centerY" secondItem="WIg-bU-XHd" secondAttribute="centerY" id="gRS-Sr-D7g"/>
+                            <constraint firstItem="wZH-5k-n21" firstAttribute="leading" secondItem="WIg-bU-XHd" secondAttribute="leading" constant="8" id="wjx-wP-Nd0"/>
+                        </constraints>
+                    </visualEffectView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="9lt-ER-yzx" firstAttribute="leading" secondItem="pkY-JK-KNL" secondAttribute="leading" id="3FZ-en-Jio"/>
                     <constraint firstAttribute="bottom" secondItem="9lt-ER-yzx" secondAttribute="bottom" id="9bs-yw-8cC"/>
                     <constraint firstItem="wFw-qM-P7g" firstAttribute="centerX" secondItem="pkY-JK-KNL" secondAttribute="centerX" id="D5n-2I-jfe"/>
+                    <constraint firstItem="WIg-bU-XHd" firstAttribute="leading" secondItem="pkY-JK-KNL" secondAttribute="leading" id="IiQ-kh-YEu"/>
                     <constraint firstItem="9lt-ER-yzx" firstAttribute="top" secondItem="pkY-JK-KNL" secondAttribute="top" id="PBX-vv-UhA"/>
                     <constraint firstItem="wFw-qM-P7g" firstAttribute="centerY" secondItem="pkY-JK-KNL" secondAttribute="centerY" id="PGu-BM-ltt"/>
                     <constraint firstAttribute="trailing" secondItem="9lt-ER-yzx" secondAttribute="trailing" id="dYK-zT-cxR"/>
+                    <constraint firstAttribute="trailing" secondItem="WIg-bU-XHd" secondAttribute="trailing" id="oHA-bg-g6g"/>
+                    <constraint firstAttribute="bottom" secondItem="WIg-bU-XHd" secondAttribute="bottom" id="xe1-JM-61H"/>
                 </constraints>
                 <userDefinedRuntimeAttributes>
                     <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
@@ -114,8 +147,29 @@
             </connections>
             <point key="canvasLocation" x="235" y="382"/>
         </window>
+        <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="appearanceBased" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="r95-hW-Zec">
+            <rect key="frame" x="0.0" y="0.0" width="276" height="32"/>
+            <subviews>
+                <searchField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Hz7-Fv-Jk4">
+                    <rect key="frame" x="8" y="5" width="260" height="22"/>
+                    <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Find Conversation..." usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" sendsWholeSearchString="YES" maximumRecents="5" recentsAutosaveName="Parrot.ConversationSearch" id="irV-Ea-crb">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </searchFieldCell>
+                </searchField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="Hz7-Fv-Jk4" firstAttribute="leading" secondItem="r95-hW-Zec" secondAttribute="leading" constant="8" id="4ug-xQ-HGL"/>
+                <constraint firstAttribute="height" constant="32" id="JE1-se-EVG"/>
+                <constraint firstAttribute="trailing" secondItem="Hz7-Fv-Jk4" secondAttribute="trailing" constant="8" id="uaR-Kd-PFk"/>
+                <constraint firstItem="Hz7-Fv-Jk4" firstAttribute="centerY" secondItem="r95-hW-Zec" secondAttribute="centerY" id="uqd-Qg-5mz"/>
+            </constraints>
+            <point key="canvasLocation" x="235" y="42"/>
+        </visualEffectView>
     </objects>
     <resources>
+        <image name="NSApplicationIcon" width="128" height="128"/>
         <image name="NSImageNameSearch" width="192" height="192"/>
     </resources>
 </document>

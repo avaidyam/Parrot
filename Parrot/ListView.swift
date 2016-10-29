@@ -3,78 +3,38 @@ import AppKit
 /* TODO: Cell insets (or indents), separator insets/enabled/color/effects. */
 /* TODO: Support type-select. */
 
-/// Provides default size classes for displayed elements of a list.
-/// Any of the provided classes have an associated size.
-/// However, .Dynamic implies that the size class will be computed
-/// at runtime based on the runtime size of the list elements.
-public enum SizeClass {
-	case xSmall// = 16.0
-	case small// = 32.0
-	case medium// = 48.0
-	case large// = 64.0
-	case xLarge// = 96.0
-	case custom(Double)
-	case dynamic
-	
-	var size: Double {
-		switch self {
-		case .xSmall: return 16.0
-		case .small: return 32.0
-		case .medium: return 48.0
-		case .large: return 64.0
-		case .xLarge: return 96.0
-		case .custom(let value): return value
-		case .dynamic: return 0.0
-		}
-	}
-	
-	func calculate(_ dynamic: (() -> Double)?) -> Double {
-		switch self {
-		case .dynamic where dynamic != nil: return dynamic!()
-		default: return self.size
-		}
-	}
+public protocol ListViewDataSource {
+    
+    /// Returns the number of items per section. The array count is number of sections
+    /// and the integer in each section is the number of items in that section.
+    func numberOfItems(in: ListView) -> [UInt]
+    
+    /// Returns the object for the section and item path given.
+    func object(in: ListView, at: ListView.Index) -> Any?
+    
+    /// Returns the type of NSViewController to use for the list cell.
+    func itemClass(in: ListView, at: ListView.Index) -> NSTableCellView.Type
 }
-
-/// Provides selection capabilities for selectable elements of a list.
-/// .None implies no user selection capability.
-/// .One implies single element user selection capability.
-/// .Any implies multiple element user selection capability.
-public enum SelectionCapability {
-	case none
-	case one
-	case any
-}
-
-/// Determines the scroll direction of the ListView upon update.
-/// Currently, only top and bottom are supported.
-public enum ScrollDirection {
-	case top
-	case bottom
-	//case index(Int)
-}
-
-// FIXME: ListViewDelegate
 
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
 public class ListView: NSView {
-	
-	// TODO: Work in Progress here...
-	public struct Section {
-		let count: Int
-	}
-	
-	internal var scrollView: NSScrollView! // FIXME: Should be private...
-	internal var tableView: NSTableView! // FIXME: Should be private...
+    
+    public typealias Index = (section: UInt, item: UInt)
+    
+	fileprivate var scrollView: NSScrollView! // FIXME: Should be private...
+	fileprivate var tableView: NSTableView! // FIXME: Should be private...
     
 	/// Provides the global header for all sections in the ListView.
 	@IBOutlet public var headerView: NSView?
 	
 	/// Provides the global footer for all sections in the ListView.
 	@IBOutlet public var footerView: NSView?
+    
+    /// Provides the information about each section and items in the sections.
+    /*@IBOutlet*/ public var dataSource: ListViewDataSource?
 	
 	// Override and patch in the default initializers to our init.
 	public override init(frame frameRect: NSRect) {
@@ -88,7 +48,10 @@ public class ListView: NSView {
 	
 	private func commonInit() {
 		self.scrollView = NSScrollView(frame: self.bounds)
-		self.scrollView.automaticallyAdjustsContentInsets = false
+        self.scrollView.automaticallyAdjustsContentInsets = false
+        self.scrollView.drawsBackground = false
+        self.scrollView.borderType = .noBorder
+        
         self.tableView = NSExtendedTableView(frame: self.scrollView.bounds)
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -99,50 +62,34 @@ public class ListView: NSView {
         self.tableView.addTableColumn(col)
         self.tableView.headerView = nil
         self.tableView.menu = NSMenu(title: "")
-		
-		self.scrollView.drawsBackground = false
-        self.scrollView.borderType = .noBorder
-        self.tableView.allowsEmptySelection = true
-        self.tableView.backgroundColor = NSColor.clear
         
+        self.tableView.backgroundColor = NSColor.clear
         self.tableView.allowsEmptySelection = true
+        self.tableView.allowsMultipleSelection = true
         self.tableView.selectionHighlightStyle = .sourceList
         self.tableView.floatsGroupRows = true
         self.tableView.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
         self.tableView.intercellSpacing = NSSize(width: 0, height: 0)
+        self.tableView.layerContentsRedrawPolicy = .onSetNeedsDisplay
 		
 		self.scrollView.documentView = self.tableView
 		self.scrollView.hasVerticalScroller = true
 		self.addSubview(self.scrollView)
-		
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
         self.tableView.sizeLastColumnToFit()
-        //self.scrollView.horizontalScrollElasticity = .allowed
-        
-        self.scrollView.wantsLayer = true
-        self.tableView.wantsLayer = true
-        self.wantsLayer = true
-        self.scrollView.layerContentsRedrawPolicy = .onSetNeedsDisplay
-        self.tableView.layerContentsRedrawPolicy = .onSetNeedsDisplay
-        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
 	}
 	
 	@IBInspectable // FIXME
-	public var sizeClass: SizeClass = .large
-	@IBInspectable // FIXME
-	public var selectionCapability: SelectionCapability = .none
-	@IBInspectable // FIXME
-	public var updateScrollDirection: ScrollDirection = .bottom
+	public var updateToBottom: Bool = false
 	
 	// Allow accessing the insets from the scroll view.
-	@IBInspectable // FIXME
 	public var insets: EdgeInsets {
 		get { return self.scrollView.contentInsets }
 		set { self.scrollView.contentInsets = newValue }
 	}
 	
-	// Forward the layer-backing down to our subviews.
+    // Forward the layer-backing down to our subviews.
 	public override var wantsLayer: Bool {
 		didSet {
 			self.scrollView.wantsLayer = self.wantsLayer
@@ -150,27 +97,19 @@ public class ListView: NSView {
 		}
 	}
 	
-	/* TODO: Monitor actual addition/removal changes. */
-	/*public var dataSource: [Wrapper<Any>]! {
-		didSet { self.update() }
-	}*/
-	fileprivate var dataSource: [Any] {
-		return self.dataSourceProvider?() ?? []
-	}
-	
 	public func update(animated: Bool = true, _ handler: @escaping () -> () = {}) {
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            switch self.updateScrollDirection {
-            case .top: self.scroll(toRow: 0, animated: animated)
-            case .bottom: self.scroll(toRow: self.dataSource.count - 1, animated: animated)
+            switch !self.updateToBottom {
+            case true: self.scroll(toRow: 0, animated: animated)
+            case false: self.scroll(toRow: self.__rows - 1, animated: animated)
             }
             handler()
         }
 	}
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
-        guard row >= 0 && row <= self.dataSource.count - 1 else { return }
+        guard row >= 0 && row <= __rows - 1 else { return }
         NSAnimationContext.animate {
             self.tableView.scrollRowToVisible(row)
         }
@@ -194,18 +133,44 @@ public class ListView: NSView {
         return self.visibleRows.flatMap { (self.tableView as NSTableView).view(atColumn: 0, row: $0, makeIfNecessary: false) as? NSTableCellView }
     }
 	
-    public var dataSourceProvider: (() -> [Any])? = nil
-    public var dataSourceAdjustProvider: ((_ row: Int) -> Any)? = nil
-	public var viewClassProvider: ((_ row: Int) -> NSTableCellView.Type)? = nil
-	public var dynamicHeightProvider: ((_ row: Int) -> Double)? = nil // FIXME?
-	public var clickedRowProvider: ((_ row: Int) -> Void)? = nil
-	public var selectionProvider: ((_ row: Int) -> Void)? = nil // FIXME?
-	public var rowActionProvider: ((_ row: Int, _ edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil // FIXME?
-	public var menuProvider: ((_ rows: [Int]) -> NSMenu?)? = nil // FIXME?
-	public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil // FIXME?
-	public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
+    //public var dataSourceProvider: (() -> [Any])? = nil
+    //public var dataSourceAdjustProvider: ((_ row: Int) -> Any)? = nil
+	//public var viewClassProvider: ((_ row: Int) -> NSTableCellView.Type)? = nil
+    
+	//public var clickedRowProvider: ((_ row: Int) -> Void)? = nil
+	//public var selectionProvider: ((_ row: Int) -> Void)? = nil // FIXME?
+	//public var rowActionProvider: ((_ row: Int, _ edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil // FIXME?
+	//public var menuProvider: ((_ rows: [Int]) -> NSMenu?)? = nil // FIXME?
+	//public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil // FIXME?
+	//public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
+    
+    ///
+    ///
     
     fileprivate var prototypes = [String: NSTableCellView]()
+    
+    fileprivate var __rows: Int {
+        return Int(self.dataSource?.numberOfItems(in: self).reduce(0, +) ?? 0)
+            //+ (self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0)
+    }
+    
+    fileprivate func __fromRow(_ val: UInt) -> ListView.Index {
+        func sectionForRow(row: UInt, counts: [UInt]) -> ListView.Index {
+            var c = counts[0]
+            for section in 0..<counts.count {
+                if (section > 0) {
+                    c = c + counts[section]
+                }
+                if (row >= c - counts[section]) && row < c {
+                    return (section: UInt(section), item: row - (c - counts[section]))
+                }
+            }
+            return (section: 0, item: 0)
+        }
+        
+        let curr = val //- ((self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0))
+        return sectionForRow(row: curr, counts: self.dataSource?.numberOfItems(in: self) ?? [])
+    }
 }
 
 /*
@@ -275,11 +240,12 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	
 	@objc(numberOfRowsInTableView:)
 	public func numberOfRows(in tableView: NSTableView) -> Int {
-		return self.dataSource.count //+ (self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0)
+		return __rows
 	}
 	
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        let cellClass = self.viewClassProvider?(row) ?? NSTableCellView.self
+        let index = __fromRow(UInt(row))
+        let cellClass = self.dataSource?.itemClass(in: self, at: index) ?? NSTableCellView.self
         var proto = self.prototypes["\(cellClass)"]
         if proto == nil {
             let stuff = NSNib(nibNamed: "\(cellClass)", bundle: nil)?.instantiate(self).flatMap { $0 as? NSTableCellView }
@@ -292,7 +258,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         }
         
         proto?.frame = NSRect(x: 0, y: 0, width: self.bounds.width, height: 20.0)
-        proto?.objectValue = self.dataSourceAdjustProvider?(row) ?? self.dataSource[row]
+        proto?.objectValue = self.dataSource?.object(in: self, at: index)
         proto?.layoutSubtreeIfNeeded()
         return proto!.fittingSize.height
 	}
@@ -301,32 +267,34 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
     /// retile the rows. Note: turn off animations while doing this.
 	public func tableViewColumnDidResize(_ notification: Notification) {
         NSAnimationContext.disableAnimations {
-            tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integersIn: 0..<self.dataSource.count))
+            self.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integersIn: 0..<__rows))
         }
 	}
 	
 	public func tableViewDidScroll(_ notification: Notification) {
-		guard let o = notification.object as? NSView , o == self.scrollView.contentView else { return }
+		guard let o = notification.object as? NSView , o == self.tableView.enclosingScrollView?.contentView else { return }
 		if self.visibleRows.contains(0) {
-			self.scrollbackProvider?(.top)
+			//self.scrollbackProvider?(.top)
 		}
-		if self.visibleRows.contains(self.dataSource.count - 1) {
-			self.scrollbackProvider?(.bottom)
+		if self.visibleRows.contains(__rows - 1) {
+			//self.scrollbackProvider?(.bottom)
 		}
 	}
 	
-	public func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {
+    public func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {
+        let _ = __fromRow(UInt(row))
 		//log.info("Unimplemented \(__FUNCTION__)")
 		return false
 	}
 	
 	public func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
-		return self.rowActionProvider?(row, edge) ?? []
+		return []//self.rowActionProvider?(row, edge) ?? []
 	}
 	
 	@objc(tableView:viewForTableColumn:row:)
-	public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		let cellClass = self.viewClassProvider?(row) ?? NSTableCellView.self
+    public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        let index = __fromRow(UInt(row))
+		let cellClass = self.dataSource?.itemClass(in: self, at: index) ?? NSTableCellView.self
 		var view = self.tableView.make(withIdentifier: "\(cellClass)", owner: self) as? NSTableCellView
 		if view == nil {
 			log.warning("Cell class \(cellClass) not registered!")
@@ -334,57 +302,43 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 			view!.identifier = cellClass.className()
 		}
 		
-		view!.objectValue = self.dataSourceAdjustProvider?(row) ?? self.dataSource[row]//[row]
+		view!.objectValue = self.dataSource?.object(in: self, at: index)
 		//tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
 		return view
 	}
 	
-	public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+    public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        let _ = __fromRow(UInt(row))
 		//log.info("Unimplemented \(__FUNCTION__)")
 		return nil // no default row yet
 	}
 	
 	@objc(tableView:didAddRowView:forRow:)
-	public func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int) {
-		log.debug("ADD ROW \(row)")
+    public func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int) {
+        let _ = __fromRow(UInt(row))
+		//log.debug("ADD ROW \(row)")
 		rowView.canDrawSubviewsIntoLayer = true
 		rowView.isEmphasized = false
 	}
 	
 	@objc(tableView:didRemoveRowView:forRow:)
-	public func tableView(_ tableView: NSTableView, didRemove rowView: NSTableRowView, forRow row: Int) {
-        log.debug("DEL ROW \(row)")
+    public func tableView(_ tableView: NSTableView, didRemove rowView: NSTableRowView, forRow row: Int) {
+        let _ = __fromRow(UInt(row))
+        //log.debug("DEL ROW \(row)")
 		//log.info("Unimplemented \(__FUNCTION__)")
 	}
-}
-
-// Selection Support
-extension ListView /*: NSExtendedTableViewDelegate*/ {
 	
 	@objc(selectionShouldChangeInTableView:)
 	public func selectionShouldChange(in tableView: NSTableView) -> Bool {
-		return self.selectionProvider != nil
+		return true//self.selectionProvider != nil
 	}
 	
 	public func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: IndexSet) -> IndexSet {
-		log.info("Unimplemented \(#function)")
 		return proposedSelectionIndexes
 	}
 	
 	public func tableViewSelectionDidChange(_ notification: Notification) {
-		self.selectionProvider?(self.tableView.selectedRow)
-	}
-	
-	public func tableViewSelectionIsChanging(_ notification: Notification) {
-		log.info("Unimplemented \(#function)")
-	}
-	
-	public func tableView(_ tableView: NSTableView, menuForRows rows: IndexSet) -> NSMenu? {
-		return self.menuProvider?(rows.map { $0 })
-	}
-	
-	public func tableView(_: NSTableView, didClickRow row: Int) {
-		self.clickedRowProvider?(row)
+		//self.selectionProvider?(self.tableView.selectedRow)
 	}
 }
 

@@ -13,7 +13,7 @@ public struct EventStreamItemBundle {
     public let next: EventStreamItem?
 }
 
-public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate {
+public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate, ListViewDataSource {
 	
 	/// This is instantly shown to the user when they send a message. It will
 	/// be updated automatically when the status of the message is known.
@@ -81,7 +81,24 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	}()
 	
 	private var dataSource: [EventStreamItem] = []
-	
+    
+    public func numberOfItems(in: ListView) -> [UInt] {
+        return [UInt(self.dataSource.count)]
+    }
+    
+    public func object(in: ListView, at: ListView.Index) -> Any? {
+        let row = Int(at.item)
+        let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
+        let next = (row + 1) < self.dataSource.count && (row + 1) < 0
+        return EventStreamItemBundle(current: self.dataSource[row],
+                                     previous: prev ? self.dataSource[row - 1] : nil,
+                                     next: next ? self.dataSource[row + 1] : nil) as Any
+    }
+    
+    public func itemClass(in: ListView, at: ListView.Index) -> NSTableCellView.Type {
+        return MessageCell.self
+    }
+    
 	public override func loadWindow() {
 		super.loadWindow()
 		self.drawer.__setupModernDrawer()
@@ -112,36 +129,11 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			vev2.state = style.visualEffectState()
 		}
 		
+        self.listView.dataSource = self
 		self.listView.register(nibName: "MessageCell", forClass: MessageCell.self)
 		//self.listView.register(nibName: "FocusCell", forClass: FocusCell.self)
 		//self.listView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
 		
-		// oh lawd pls forgibs my sins
-		self.listView.dataSourceProvider = { // watch for invalid Collection: count differed in successive traversals
-			return self.dataSource.map { $0 as Any }
-		}
-        self.listView.dataSourceAdjustProvider = { row in
-            let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
-            let next = (row + 1) < self.dataSource.count && (row + 1) < 0
-            return EventStreamItemBundle(current: self.dataSource[row],
-                                         previous: prev ? self.dataSource[row - 1] : nil,
-                                         next: next ? self.dataSource[row + 1] : nil) as Any
-        }
-		
-		self.listView.viewClassProvider = { row in
-			let cls = self.listView.dataSourceProvider!()[row]
-			if cls is Message {
-				return MessageCell.self
-			//} else if cls is LinkPreviewType {
-			//	return LinkPreviewCell.self
-			} else {
-				log.debug("\(row) OMG GOT NOTHING \(cls)")
-				return NSTableCellView.self
-			}
-		}
-		
-		self.listView.sizeClass = .dynamic
-        self.listView.updateScrollDirection = .bottom
 		self.entryView.delegate = self
 		
 		if let me = self.conversation?.client.userList.me {
@@ -367,7 +359,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		guard let e = event as? IChatMessageEvent else { return }
 		self.dataSource.append(e)
 		DispatchQueue.main.async {
-            self.listView.tableView.insertRows(at: IndexSet(integer: self.dataSource.count - 1), withAnimation: [.effectFade, .slideUp])
+            //self.listView.tableView.insertRows(at: IndexSet(integer: self.dataSource.count - 1), withAnimation: [.effectFade, .slideUp])
             self.listView.scroll(toRow: self.dataSource.count - 1)
             //let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
             //self.listView.tableView.animator().insertItems(at: Set<IndexPath>([idx])) //animation: [.effectFade, .slideUp]

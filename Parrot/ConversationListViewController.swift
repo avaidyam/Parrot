@@ -9,7 +9,7 @@ import protocol ParrotServiceExtension.Conversation
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
-public class ConversationListViewController: NSWindowController, ConversationListDelegate {
+public class ConversationListViewController: NSWindowController, ConversationListDelegate, ListViewDataSource {
 	
 	// How to sort the conversation list: by recency or name, or manually.
 	enum SortMode {
@@ -98,6 +98,18 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			}
 		}
 	}
+    
+    public func numberOfItems(in: ListView) -> [UInt] {
+        return [UInt(self.sortedConversations.count)]
+    }
+    
+    public func object(in: ListView, at: ListView.Index) -> Any? {
+        return self.sortedConversations[Int(at.item)]
+    }
+    
+    public func itemClass(in: ListView, at: ListView.Index) -> NSTableCellView.Type {
+        return ConversationCell.self
+    }
 	
 	public override func loadWindow() {
 		super.loadWindow()
@@ -109,11 +121,8 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			vev.state = style.visualEffectState()
 		}
 		
-		self.listView.dataSourceProvider = { self.sortedConversations.map { $0 as Any } }
+        self.listView.dataSource = self
 		self.listView.register(nibName: "ConversationCell", forClass: ConversationCell.self)
-		
-		self.listView.updateScrollDirection = .top
-		self.listView.viewClassProvider = { row in ConversationCell.self }
 		
 		NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService) { note in
             guard let c = note.object as? Service else { return }
@@ -156,7 +165,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		}
 		
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
-		self.listView.selectionProvider = { row in
+		/*self.listView.selectionProvider = { row in
 			self.showConversation(self.sortedConversations[row])
 		}
 		self.listView.pasteboardProvider = { row in
@@ -176,7 +185,7 @@ public class ConversationListViewController: NSWindowController, ConversationLis
                 log.info("updateToken is automatically being cleared. THIS IS A BUG. Please fix it.")
                 self.updateToken = false
             }
-		}
+		}*/
 	}
 	
 	private func showConversation(_ conv: Conversation) {
