@@ -13,7 +13,7 @@ public struct EventStreamItemBundle {
     public let next: EventStreamItem?
 }
 
-public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate, ListViewDataSource {
+public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate, ListViewDataDelegate {
 	
 	/// This is instantly shown to the user when they send a message. It will
 	/// be updated automatically when the status of the message is known.
@@ -129,7 +129,6 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			vev2.state = style.visualEffectState()
 		}
 		
-        self.listView.dataSource = self
 		self.listView.register(nibName: "MessageCell", forClass: MessageCell.self)
 		//self.listView.register(nibName: "FocusCell", forClass: FocusCell.self)
 		//self.listView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)

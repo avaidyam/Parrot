@@ -38,7 +38,12 @@
                             <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
                                 <integer key="value" value="1"/>
                             </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="multipleSelect" value="YES"/>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="emptySelect" value="YES"/>
                         </userDefinedRuntimeAttributes>
+                        <connections>
+                            <outlet property="delegate" destination="-2" id="ezv-hE-snq"/>
+                        </connections>
                     </view>
                     <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="appearanceBased" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="WIg-bU-XHd">
                         <rect key="frame" x="0.0" y="0.0" width="276" height="32"/>

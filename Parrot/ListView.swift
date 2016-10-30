@@ -3,7 +3,7 @@ import AppKit
 /* TODO: Cell insets (or indents), separator insets/enabled/color/effects. */
 /* TODO: Support type-select. */
 
-public protocol ListViewDataSource {
+public protocol ListViewDataDelegate {
     
     /// Returns the number of items per section. The array count is number of sections
     /// and the integer in each section is the number of items in that section.
@@ -16,16 +16,24 @@ public protocol ListViewDataSource {
     func itemClass(in: ListView, at: ListView.Index) -> NSView.Type
 }
 
+public protocol ListViewSelectionDelegate {
+    
+    /// The ListView presents the possible selections and allows the delegate to modify
+    /// the selection before it happens.
+    func proposedSelection(in: ListView, at: [ListView.Index]) -> [ListView.Index]
+    
+    /// The user has changed the selection of an item and the delegate will be notified.
+    func selectionChanged(in: ListView, is: [ListView.Index])
+}
+
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
 @IBDesignable
 public class ListView: NSView {
     
+    ///
     public typealias Index = (section: UInt, item: UInt)
-    
-	fileprivate var scrollView: NSScrollView! // FIXME: Should be private...
-	fileprivate var tableView: NSTableView! // FIXME: Should be private...
     
 	/// Provides the global header for all sections in the ListView.
 	@IBOutlet public var headerView: NSView?
@@ -34,9 +42,40 @@ public class ListView: NSView {
 	@IBOutlet public var footerView: NSView?
     
     /// Provides the information about each section and items in the sections.
-    /*@IBOutlet*/ public var dataSource: ListViewDataSource?
+    @IBOutlet public var delegate: AnyObject?
+    
+    /// Determines whether an update causes the ListView to scroll to the top or bottom.
+    @IBInspectable public var updateToBottom: Bool = false
+    
+    /// Determines whether more than one item may be selected in the ListView.
+    @IBInspectable public var multipleSelect: Bool {
+        get { return self.tableView.allowsMultipleSelection }
+        set { self.tableView.allowsMultipleSelection = newValue }
+    }
+    
+    /// Determines whether no items may be selected in the ListView.
+    @IBInspectable public var emptySelect: Bool {
+        get { return self.tableView.allowsEmptySelection }
+        set { self.tableView.allowsEmptySelection = newValue }
+    }
+    
+    /// Sets the ListView's scrolling insets.
+    @IBInspectable public var insets: EdgeInsets {
+        get { return self.scrollView.contentInsets }
+        set { self.scrollView.contentInsets = newValue }
+    }
+    
+    /// Forward the layer-backing down to our subviews.
+    public override var wantsLayer: Bool {
+        didSet {
+            self.scrollView.wantsLayer = self.wantsLayer
+            self.tableView.wantsLayer = self.wantsLayer
+        }
+    }
+    
+    fileprivate var scrollView: NSScrollView! // FIXME: Should be private...
+    internal var tableView: NSTableView! // FIXME: Should be private...
 	
-	// Override and patch in the default initializers to our init.
 	public override init(frame frameRect: NSRect) {
 		super.init(frame: frameRect)
 		self.commonInit()
@@ -80,23 +119,6 @@ public class ListView: NSView {
         self.tableView.sizeLastColumnToFit()
 	}
 	
-	@IBInspectable // FIXME
-	public var updateToBottom: Bool = false
-	
-	// Allow accessing the insets from the scroll view.
-	public var insets: EdgeInsets {
-		get { return self.scrollView.contentInsets }
-		set { self.scrollView.contentInsets = newValue }
-	}
-	
-    // Forward the layer-backing down to our subviews.
-	public override var wantsLayer: Bool {
-		didSet {
-			self.scrollView.wantsLayer = self.wantsLayer
-			self.tableView.wantsLayer = self.wantsLayer
-		}
-	}
-	
 	public func update(animated: Bool = true, _ handler: @escaping () -> () = {}) {
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -120,41 +142,34 @@ public class ListView: NSView {
         self.tableView.register(nib, forIdentifier: "\(forClass)")
 	}
 	
-	public var selection: [Int] {
-		return self.tableView.selectedRowIndexes.map { $0 }
+	public var selection: [ListView.Index] {
+		return self.tableView.selectedRowIndexes.map { __fromRow(UInt($0)) }
 	}
 	
-	public var visibleRows: [Int] {
+	public var visibleIndexes: [ListView.Index] {
         let r = self.tableView.rows(in: self.tableView.visibleRect)
-        return Array(r.location..<r.location+r.length)
+        return Array(r.location..<r.location+r.length).map { __fromRow(UInt($0)) }
 	}
     
     public var visibleCells: [NSView] {
-        return self.visibleRows.flatMap { (self.tableView as NSTableView).view(atColumn: 0, row: $0, makeIfNecessary: false) }
+        return self.tableView.selectedRowIndexes.flatMap {
+            (self.tableView as NSTableView).view(atColumn: 0, row: $0, makeIfNecessary: false)
+        }
     }
-	
-    //public var dataSourceProvider: (() -> [Any])? = nil
-    //public var dataSourceAdjustProvider: ((_ row: Int) -> Any)? = nil
-	//public var viewClassProvider: ((_ row: Int) -> NSView.Type)? = nil
-    
-	//public var clickedRowProvider: ((_ row: Int) -> Void)? = nil
-	//public var selectionProvider: ((_ row: Int) -> Void)? = nil // FIXME?
-	//public var rowActionProvider: ((_ row: Int, _ edge: NSTableRowActionEdge) -> [NSTableViewRowAction])? = nil // FIXME?
-	//public var menuProvider: ((_ rows: [Int]) -> NSMenu?)? = nil // FIXME?
-	//public var pasteboardProvider: ((_ row: Int) -> NSPasteboardItem?)? = nil // FIXME?
-	//public var scrollbackProvider: ((_ direction: ScrollDirection) -> Void)? = nil
-    
-    ///
-    ///
     
     fileprivate var prototypes = [String: NSView]()
+}
+
+fileprivate extension ListView {
     
     fileprivate var __rows: Int {
-        return Int(self.dataSource?.numberOfItems(in: self).reduce(0, +) ?? 0)
-            //+ (self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0)
+        guard let d = self.delegate as? ListViewDataDelegate else { return 0 }
+        return Int(d.numberOfItems(in: self).reduce(0, +))
+        //+ (self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0)
     }
     
     fileprivate func __fromRow(_ val: UInt) -> ListView.Index {
+        guard let d = self.delegate as? ListViewDataDelegate else { return (section: 0, item: 0) }
         func sectionForRow(row: UInt, counts: [UInt]) -> ListView.Index {
             var c = counts[0]
             for section in 0..<counts.count {
@@ -169,71 +184,28 @@ public class ListView: NSView {
         }
         
         let curr = val //- ((self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0))
-        return sectionForRow(row: curr, counts: self.dataSource?.numberOfItems(in: self) ?? [])
+        return sectionForRow(row: curr, counts: d.numberOfItems(in: self))
+    }
+    
+    fileprivate func __toRow(_ val: ListView.Index) -> UInt {
+        guard let d = self.delegate as? ListViewDataDelegate else { return 0 }
+        let counts = d.numberOfItems(in: self)
+        let running = (0..<val.section).map { counts[Int($0)] }.reduce(0, +) + val.item
+        let curr = running //- ((self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0))
+        return curr
     }
 }
 
 /*
-// Essential Support
-extension ListView  {
-    
-    @objc(numberOfSectionsInCollectionView:)
-    public func numberOfSections(in collectionView: NSCollectionView) -> Int {
-        return 1
+fileprivate extension ListView {
+    fileprivate var dataDelegate: ListViewDataDelegate? {
+        return self.delegate as? ListViewDataDelegate
     }
-    
-    public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.dataSource.count
+    fileprivate var selectionDelegate: ListViewSelectionDelegate? {
+        return self.delegate as? ListViewSelectionDelegate
     }
-    
-    @objc(collectionView:itemForRepresentedObjectAtIndexPath:)
-    public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let cellClass = self.viewClassProvider?(indexPath.item) ?? NSCollectionViewItem.self
-        let item = self.tableView.makeItem(withIdentifier: "\(cellClass)", for: indexPath)
-        item.representedObject = self.dataSourceAdjustProvider?(indexPath.item) ?? self.dataSource[indexPath.item]
-        return item
-    }
-    
-    @objc(collectionView:willDisplayItem:forRepresentedObjectAtIndexPath:)
-    public func collectionView(_ collectionView: NSCollectionView, willDisplay item: NSCollectionViewItem, forRepresentedObjectAt indexPath: IndexPath) {
-        if indexPath.item == 0 {
-            self.scrollbackProvider?(.top)
-        }
-        if indexPath.item == self.dataSource.count - 1 {
-            self.scrollbackProvider?(.bottom)
-        }
-    }
-    
-    @objc(collectionView:layout:sizeForItemAtIndexPath:)
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
-        //let sz = self.sizeClass.calculate(nil)
-        //if sz != 0 { return NSSize(width: collectionView.bounds.width.native, height: sz) }
-        
-        
-        let cellClass = self.viewClassProvider?(indexPath.item) ?? NSCollectionViewItem.self
-        var proto = self.prototypes["\(cellClass)"]
-        if proto == nil {
-            let item = cellClass.init()
-            item.loadView()
-            item.identifier = "\(cellClass)"
-            self.prototypes["\(cellClass)"] = item
-            proto = item
-        }
-        
-        proto?.view.frame = NSRect(x: 0, y: 0, width: self.bounds.width, height: 20.0)
-        proto?.representedObject = self.dataSourceAdjustProvider?(indexPath.item) ?? self.dataSource[indexPath.item]
-        proto?.view.layoutSubtreeIfNeeded()
-        return NSSize(width: self.bounds.width, height: proto!.view.fittingSize.height)
-    }
-    
-    /*@objc(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)
-    public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> NSView {
-        
-    }*/
-    
 }
-*/
-
+ */
 
 // Essential Support
 extension ListView: NSTableViewDataSource, NSTableViewDelegate {
@@ -245,7 +217,9 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         let index = __fromRow(UInt(row))
-        let cellClass = self.dataSource?.itemClass(in: self, at: index) ?? NSView.self
+        guard let d = self.delegate as? ListViewDataDelegate else { return 0.0 }
+        
+        let cellClass = d.itemClass(in: self, at: index)
         var proto = self.prototypes["\(cellClass)"]
         if proto == nil {
             let stuff = NSNib(nibNamed: "\(cellClass)", bundle: nil)?.instantiate(self).flatMap { $0 as? NSView }
@@ -258,7 +232,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         }
         
         proto?.frame = NSRect(x: 0, y: 0, width: self.bounds.width, height: 20.0)
-        (proto as? NSTableCellView)?.objectValue = self.dataSource?.object(in: self, at: index)
+        (proto as? NSTableCellView)?.objectValue = d.object(in: self, at: index)
         proto?.layoutSubtreeIfNeeded()
         return proto!.fittingSize.height
 	}
@@ -271,15 +245,15 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         }
 	}
 	
-	public func tableViewDidScroll(_ notification: Notification) {
+	/*public func tableViewDidScroll(_ notification: Notification) {
 		guard let o = notification.object as? NSView , o == self.tableView.enclosingScrollView?.contentView else { return }
-		if self.visibleRows.contains(0) {
+		if self.visibleIndexes.contains(0) {
 			//self.scrollbackProvider?(.top)
 		}
 		if self.visibleRows.contains(__rows - 1) {
 			//self.scrollbackProvider?(.bottom)
 		}
-	}
+	}*/
 	
     public func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {
         let _ = __fromRow(UInt(row))
@@ -294,7 +268,9 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	@objc(tableView:viewForTableColumn:row:)
     public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let index = __fromRow(UInt(row))
-		let cellClass = self.dataSource?.itemClass(in: self, at: index) ?? NSView.self
+        guard let d = self.delegate as? ListViewDataDelegate else { return nil }
+        
+		let cellClass = d.itemClass(in: self, at: index)
 		var view = self.tableView.make(withIdentifier: "\(cellClass)", owner: self)
 		if view == nil {
 			log.warning("Cell class \(cellClass) not registered!")
@@ -302,41 +278,52 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 			view!.identifier = cellClass.className()
 		}
 		
-		(view as? NSTableCellView)?.objectValue = self.dataSource?.object(in: self, at: index)
+		(view as? NSTableCellView)?.objectValue = d.object(in: self, at: index)
 		return view
 	}
 	
     public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-        let _ = __fromRow(UInt(row))
+        //let _ = __fromRow(UInt(row))
 		return NSExtendedTableRowView(frame: .zero) // FIXME
 	}
 	
+    /*
 	@objc(tableView:didAddRowView:forRow:)
     public func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int) {
-        let _ = __fromRow(UInt(row))
+        //let _ = __fromRow(UInt(row))
 	}
 	
 	@objc(tableView:didRemoveRowView:forRow:)
     public func tableView(_ tableView: NSTableView, didRemove rowView: NSTableRowView, forRow row: Int) {
-        let _ = __fromRow(UInt(row))
+        //let _ = __fromRow(UInt(row))
         //log.debug("DEL ROW \(row)")
 		//log.info("Unimplemented \(__FUNCTION__)")
 	}
+    */
 	
 	@objc(selectionShouldChangeInTableView:)
-	public func selectionShouldChange(in tableView: NSTableView) -> Bool {
-		return true//self.selectionProvider != nil
+    public func selectionShouldChange(in tableView: NSTableView) -> Bool {
+        guard let _ = self.delegate as? ListViewSelectionDelegate else { return false }
+		return true
 	}
 	
-	public func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: IndexSet) -> IndexSet {
-		return proposedSelectionIndexes
+    public func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: IndexSet) -> IndexSet {
+        guard let d = self.delegate as? ListViewSelectionDelegate else { return IndexSet() }
+        let proposed = proposedSelectionIndexes.map { __fromRow(UInt($0)) }
+        let ret = d.proposedSelection(in: self, at: proposed)
+        var set = IndexSet()
+        ret.map { __toRow($0) }.forEach { set.insert(Int($0)) }
+        return set
 	}
 	
-	public func tableViewSelectionDidChange(_ notification: Notification) {
-		//self.selectionProvider?(self.tableView.selectedRow)
+    public func tableViewSelectionDidChange(_ notification: Notification) {
+        guard let d = self.delegate as? ListViewSelectionDelegate else { return }
+        d.selectionChanged(in: self, is: self.selection)
 	}
 }
 
+
+/// Support for disabling emphasis to allow vibrancy.
 public class NSExtendedTableRowView: NSTableRowView {
     public override var isEmphasized: Bool {
         get { return false }
@@ -344,9 +331,8 @@ public class NSExtendedTableRowView: NSTableRowView {
     }
 }
 
+/// Support for per-row and multi-select menus.
 public class NSExtendedTableView: NSTableView {
-    
-    // Support for per-row and multi-select menus.
     public override func menu(for event: NSEvent) -> NSMenu? {
         let row = self.row(at: self.convert(event.locationInWindow, from: nil))
         guard row >= 0 && event.type == .rightMouseDown else {
@@ -364,21 +350,6 @@ public class NSExtendedTableView: NSTableView {
         if let view = self.view(atColumn: 0, row: row, makeIfNecessary: false) {
             return view.menu(for: event)
         }
-        
-        /*if let d = self.delegate as? NSExtendedTableViewDelegate {
-            return d.tableView?(self, menuForRows: selected) ?? super.menu(for: event)
-        }*/
         return super.menu(for: event)
     }
-    
-    /*
-    public override func mouseDown(with event: NSEvent) {
-        let loc = self.convert(event.locationInWindow, from: nil)
-        let row = self.row(at: loc)
-        
-        super.mouseDown(with: event)
-        if let d = self.delegate as? NSExtendedTableViewDelegate , row != -1 {
-            d.tableView?(self, didClickRow: row)
-        }
-    }*/
 }

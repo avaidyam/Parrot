@@ -9,7 +9,7 @@ import protocol ParrotServiceExtension.Conversation
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
-public class ConversationListViewController: NSWindowController, ConversationListDelegate, ListViewDataSource {
+public class ConversationListViewController: NSWindowController, ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate {
 	
 	// How to sort the conversation list: by recency or name, or manually.
 	enum SortMode {
@@ -110,6 +110,28 @@ public class ConversationListViewController: NSWindowController, ConversationLis
     public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
         return ConversationCell.self
     }
+    
+    public func proposedSelection(in list: ListView, at: [ListView.Index]) -> [ListView.Index] {
+        return list.selection + at
+    }
+    
+    public func selectionChanged(in: ListView, is selection: [ListView.Index]) {
+        let src = self.sortedConversations
+        let dest = Set(self.childConversations.keys)
+        let convs = Set(selection.map { src[Int($0.item)].identifier })
+        
+        // Conversations selected that we don't already have. --> ADD
+        convs.subtracting(dest).forEach { id in
+            log.debug("ADD: \(id)")
+            let conv = self.sortedConversations.filter { $0.identifier == id }.first!
+            self.showConversation(conv)
+        }
+        // Conversations we have that are not selected. --> REMOVE
+        dest.subtracting(convs).forEach { id in
+            log.debug("REMOVE: \(id)")
+            self.childConversations[id]?.window?.performClose(nil)
+        }
+    }
 	
 	public override func loadWindow() {
 		super.loadWindow()
@@ -121,7 +143,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 			vev.state = style.visualEffectState()
 		}
 		
-        self.listView.dataSource = self
 		self.listView.register(nibName: "ConversationCell", forClass: ConversationCell.self)
 		
 		NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService) { note in
@@ -222,16 +243,6 @@ public class ConversationListViewController: NSWindowController, ConversationLis
             }
 		}
 	}
-    
-    private func updateSelectionIndexes() {
-        //let paths = Array(self.childConversations.keys)
-        //    .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
-        //    .reduce(IndexSet()) { set, elem in set.insert(elem) }
-        
-        
-        //self.listView.tableView.selectedRowIndexes = IndexSet()
-        //self.listView.collectionView.animator().selectionIndexPaths = Set(paths)
-    }
 	
 	/// As we are about to display, configure our UI elements.
 	public override func showWindow(_ sender: Any?) {
@@ -402,5 +413,13 @@ public class ConversationListViewController: NSWindowController, ConversationLis
             NSApp.badgeCount = UInt(unread)
             self.updateSelectionIndexes()
         }
+    }
+    
+    private func updateSelectionIndexes() {
+        var set = IndexSet()
+        Array(self.childConversations.keys)
+            .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
+            .forEach { set.insert($0) }
+        self.listView.tableView.animator().selectRowIndexes(set, byExtendingSelection: false)
     }
 }

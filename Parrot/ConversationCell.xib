@@ -74,7 +74,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </textField>
-                <box wantsLayer="YES" verticalHuggingPriority="750" alphaValue="0.75" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="9DZ-wE-PAP">
+                <box verticalHuggingPriority="750" alphaValue="0.75" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="9DZ-wE-PAP">
                     <rect key="frame" x="64" y="-2" width="263" height="5"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="2bh-VJ-8OO"/>

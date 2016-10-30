@@ -42,7 +42,12 @@
                                         <integer key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="updateToBottom" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="multipleSelect" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="emptySelect" value="YES"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="-2" id="Ucg-7G-Rrx"/>
+                                </connections>
                             </customView>
                             <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="appearanceBased" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="56"/>
@@ -214,7 +219,7 @@
                 </defaultToolbarItems>
             </toolbar>
             <connections>
-                <outlet property="delegate" destination="-2" id="8Xy-aO-97X"/>
+                <outlet property="delegate" destination="-2" id="Emm-hR-Hpn"/>
             </connections>
             <point key="canvasLocation" x="-143.5" y="-260"/>
         </window>
