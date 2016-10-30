@@ -416,10 +416,9 @@ public class ConversationListViewController: NSWindowController, ConversationLis
     }
     
     private func updateSelectionIndexes() {
-        var set = IndexSet()
-        Array(self.childConversations.keys)
+        let paths = Array(self.childConversations.keys)
             .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
-            .forEach { set.insert($0) }
-        self.listView.tableView.animator().selectRowIndexes(set, byExtendingSelection: false)
+            .map { (section: UInt(0), item: UInt($0)) }
+        self.listView.selection = paths
     }
 }

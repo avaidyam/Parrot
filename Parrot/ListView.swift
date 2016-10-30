@@ -32,7 +32,7 @@ public protocol ListViewSelectionDelegate {
 @IBDesignable
 public class ListView: NSView {
     
-    ///
+    /// The ListView is indexed by a combination of section and item, to allow grouping.
     public typealias Index = (section: UInt, item: UInt)
     
 	/// Provides the global header for all sections in the ListView.
@@ -142,10 +142,6 @@ public class ListView: NSView {
         self.tableView.register(nib, forIdentifier: "\(forClass)")
 	}
 	
-	public var selection: [ListView.Index] {
-		return self.tableView.selectedRowIndexes.map { __fromRow(UInt($0)) }
-	}
-	
 	public var visibleIndexes: [ListView.Index] {
         let r = self.tableView.rows(in: self.tableView.visibleRect)
         return Array(r.location..<r.location+r.length).map { __fromRow(UInt($0)) }
@@ -155,6 +151,11 @@ public class ListView: NSView {
         return self.tableView.selectedRowIndexes.flatMap {
             (self.tableView as NSTableView).view(atColumn: 0, row: $0, makeIfNecessary: false)
         }
+    }
+    
+    public var selection: [ListView.Index] {
+        get { return self.tableView.selectedRowIndexes.map { __fromRow(UInt($0)) } }
+        set { self.tableView.selectRowIndexes(__fromRows(newValue), byExtendingSelection: false) }
     }
     
     fileprivate var prototypes = [String: NSView]()
@@ -185,6 +186,12 @@ fileprivate extension ListView {
         
         let curr = val //- ((self.headerView != nil ? 1 : 0) + (self.footerView != nil ? 1 : 0))
         return sectionForRow(row: curr, counts: d.numberOfItems(in: self))
+    }
+    
+    fileprivate func __fromRows(_ ret: [ListView.Index]) -> IndexSet {
+        var set = IndexSet()
+        ret.map { __toRow($0) }.forEach { set.insert(Int($0)) }
+        return set
     }
     
     fileprivate func __toRow(_ val: ListView.Index) -> UInt {
@@ -311,9 +318,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         guard let d = self.delegate as? ListViewSelectionDelegate else { return IndexSet() }
         let proposed = proposedSelectionIndexes.map { __fromRow(UInt($0)) }
         let ret = d.proposedSelection(in: self, at: proposed)
-        var set = IndexSet()
-        ret.map { __toRow($0) }.forEach { set.insert(Int($0)) }
-        return set
+        return __fromRows(ret)
 	}
 	
     public func tableViewSelectionDidChange(_ notification: Notification) {
