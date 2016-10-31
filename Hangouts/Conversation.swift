@@ -341,7 +341,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			
             if events.first!.id != event_id {
                 if let indexOfEvent = self.events.index(where: { $0 == conv_event }) {
-                    cb?(Array(self.events[indexOfEvent...self.events.endIndex]))
+                    cb?(Array(self.events[indexOfEvent..<self.events.endIndex]))
                     return
                 }
             }

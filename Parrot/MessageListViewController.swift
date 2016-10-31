@@ -13,7 +13,7 @@ public struct EventStreamItemBundle {
     public let next: EventStreamItem?
 }
 
-public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate, ListViewDataDelegate {
+public class MessageListViewController: NSWindowController, NSTextViewExtendedDelegate, ConversationDelegate, ListViewDataDelegate, ListViewScrollbackDelegate {
 	
 	/// This is instantly shown to the user when they send a message. It will
 	/// be updated automatically when the status of the message is known.
@@ -66,7 +66,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	@IBOutlet var drawerView: NSView!
 	
 	// TODO: BEGONE!
-	public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
+    public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
+    private var updateToken: Bool = false
 	
 	var _previews = [String: [LinkPreviewType]]()
 	var _focusRow = -1
@@ -97,6 +98,30 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     
     public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
         return MessageCell.self
+    }
+    
+    public func reachedEdge(in: ListView, edge: NSRectEdge) {
+        func scrollback() {
+            guard self.updateToken == false else { return }
+            let first = self.dataSource[0] as? IChatMessageEvent
+            log.debug("SCROLLBACK \(first?.event.eventId)")
+            self.conversation?.getEvents(event_id: first?.event.eventId, max_events: 50) { events in
+                let count = self.dataSource.count
+                self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent }, at: 0)
+                DispatchQueue.main.async {
+                    self.listView.tableView.insertRows(at: IndexSet(integersIn: 0..<(self.dataSource.count - count)),
+                                                       withAnimation: .slideDown)
+                    self.updateToken = false
+                }
+            }
+            self.updateToken = true
+        }
+        
+        // Driver/filter here:
+        switch edge {
+        case .maxY: scrollback()
+        default: break
+        }
     }
     
 	public override func loadWindow() {

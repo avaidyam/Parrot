@@ -284,8 +284,9 @@ public final class Client: Service {
             self.conversationList = convlist
             self.userList = userlist
             
-            _ = convlist.syncConversations()
-            completionHandler()
+            _ = convlist.syncConversations { _ in
+                completionHandler()
+            }
         }
     }
 }

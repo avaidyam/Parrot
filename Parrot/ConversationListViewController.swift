@@ -9,7 +9,8 @@ import protocol ParrotServiceExtension.Conversation
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
-public class ConversationListViewController: NSWindowController, ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate {
+public class ConversationListViewController: NSWindowController, ConversationListDelegate,
+ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
 	// How to sort the conversation list: by recency or name, or manually.
 	enum SortMode {
@@ -132,6 +133,25 @@ public class ConversationListViewController: NSWindowController, ConversationLis
             self.childConversations[id]?.window?.performClose(nil)
         }
     }
+    
+    public func reachedEdge(in: ListView, edge: NSRectEdge) {
+        func scrollback() {
+            guard self.updateToken == false else { return }
+            let _ = self.conversationList?.syncConversations(count: 25, since: self.conversationList!.syncTimestamp) { val in
+                DispatchQueue.main.async {
+                    self.listView.tableView.noteNumberOfRowsChanged()
+                    self.updateToken = false
+                }
+            }
+            self.updateToken = true
+        }
+        
+        // Driver/filter here:
+        switch edge {
+        case .minY: scrollback()
+        default: break
+        }
+    }
 	
 	public override func loadWindow() {
 		super.loadWindow()
@@ -186,26 +206,12 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 		}
 		
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
-		/*self.listView.selectionProvider = { row in
-			self.showConversation(self.sortedConversations[row])
-		}
-		self.listView.pasteboardProvider = { row in
+		/*self.listView.pasteboardProvider = { row in
 			let pb = NSPasteboardItem()
 			//NSPasteboardTypeRTF, NSPasteboardTypeString, NSPasteboardTypeTabularText
 			log.info("pb for row \(row)")
 			pb.setString("TEST", forType: "public.utf8-plain-text")
 			return pb
-		}
-		self.listView.scrollbackProvider = {
-			guard $0 == .bottom else { return }
-			guard self.updateToken == false else { return }
-			
-			log.debug("SCROLLBACK")
-			self.updateToken = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-                log.info("updateToken is automatically being cleared. THIS IS A BUG. Please fix it.")
-                self.updateToken = false
-            }
 		}*/
 	}
 	

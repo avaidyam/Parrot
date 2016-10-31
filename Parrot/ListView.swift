@@ -26,6 +26,13 @@ public protocol ListViewSelectionDelegate {
     func selectionChanged(in: ListView, is: [ListView.Index])
 }
 
+public protocol ListViewScrollbackDelegate {
+    
+    /// Indicates that the ListView has reached the start or end of its content.
+    /// The only possible values for `edge` will be `.maxY` or `.minY`.
+    func reachedEdge(in: ListView, edge: NSRectEdge)
+}
+
 /// Generic container type for any view presenting a list of elements.
 /// In subclassing, modify the Element and Container aliases.
 /// This way, a lot of behavior will be defaulted, unless custom behavior is needed.
@@ -116,8 +123,17 @@ public class ListView: NSView {
 		self.addSubview(self.scrollView)
 		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
+        self.scrollView.contentView.postsBoundsChangedNotifications = true
         self.tableView.sizeLastColumnToFit()
-	}
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(ListView.tableViewDidScroll(_:)),
+                                               name: .NSViewBoundsDidChange,
+                                               object: self.scrollView.contentView)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 	
 	public func update(animated: Bool = true, _ handler: @escaping () -> () = {}) {
         DispatchQueue.main.async {
@@ -203,16 +219,18 @@ fileprivate extension ListView {
     }
 }
 
-/*
-fileprivate extension ListView {
+/// Delegate selection support.
+/*fileprivate extension ListView {
     fileprivate var dataDelegate: ListViewDataDelegate? {
         return self.delegate as? ListViewDataDelegate
     }
     fileprivate var selectionDelegate: ListViewSelectionDelegate? {
         return self.delegate as? ListViewSelectionDelegate
     }
-}
- */
+    fileprivate var scrollbackDelegate: ListViewScrollbackDelegate? {
+        return self.delegate as? ListViewScrollbackDelegate
+    }
+}*/
 
 // Essential Support
 extension ListView: NSTableViewDataSource, NSTableViewDelegate {
@@ -252,15 +270,30 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         }
 	}
 	
-	/*public func tableViewDidScroll(_ notification: Notification) {
-		guard let o = notification.object as? NSView , o == self.tableView.enclosingScrollView?.contentView else { return }
-		if self.visibleIndexes.contains(0) {
-			//self.scrollbackProvider?(.top)
+	public func tableViewDidScroll(_ notification: Notification) {
+        guard let o = notification.object as? NSView , o == self.scrollView.contentView else { return }
+        guard let d = self.delegate as? ListViewScrollbackDelegate else { return }
+        
+        // FIXME: Don't do visible row calculation; just simple math. This doesn't work right now.
+        /*
+        let current = self.scrollView.visibleRect
+        let content = self.tableView.bounds.height - 16
+        if current.minY > content {
+            log.debug("triggered path A")
+        }
+        if current.maxY < 16 {
+            log.debug("triggered path B")
+        }
+        */
+        
+        let visibleRows = self.tableView.rows(in: self.tableView.visibleRect).toRange()!
+		if visibleRows.contains(0) {
+            d.reachedEdge(in: self, edge: .maxY)
 		}
-		if self.visibleRows.contains(__rows - 1) {
-			//self.scrollbackProvider?(.bottom)
-		}
-	}*/
+        if visibleRows.contains(__rows - 1) {
+            d.reachedEdge(in: self, edge: .minY)
+        }
+	}
 	
     public func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {
         let _ = __fromRow(UInt(row))

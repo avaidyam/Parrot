@@ -63,7 +63,11 @@ public protocol ConversationList: class /*: Collection*/ {
     /// If nil is returned, it can be assumed that there are no more conversations
     /// left to cache. The results of this method append the `conversations`
     /// set and are indexed by conversation ID.
-    func syncConversations(count: Int) -> [String: Conversation]?
+    func syncConversations(count: Int, since: Date?, handler: @escaping ([String: Conversation]?) -> ())
+    
+    /// The last timestamp for the conversations synchronized; this can be used
+    /// to synchronize more conversations.
+    var syncTimestamp: Date? { get }
     
 	/// Begin a new conversation with the people provided.
 	/// Note that this may be a one-on-one conversation if only one exists.
