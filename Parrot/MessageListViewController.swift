@@ -241,6 +241,10 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
 	}
     
+    @IBAction func colorChanged(_ sender: AnyObject?) {
+        post(name: "com.avaidyam.Parrot.UpdateColors", source: sender)
+    }
+    
     /*@IBAction public func colorWellSelected(_ sender: AnyObject?) {
         guard let sender = sender as? NSColorWell else { return }
         publish(Notification(name: Notification.Name("_ColorChanged")))
@@ -358,7 +362,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		guard let e = event as? IChatMessageEvent else { return }
 		self.dataSource.append(e)
 		DispatchQueue.main.async {
-            //self.listView.tableView.insertRows(at: IndexSet(integer: self.dataSource.count - 1), withAnimation: [.effectFade, .slideUp])
+            self.listView.tableView.insertRows(at: IndexSet(integer: self.dataSource.count - 1), withAnimation: [.effectFade, .slideUp])
             self.listView.scroll(toRow: self.dataSource.count - 1)
             //let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
             //self.listView.tableView.animator().insertItems(at: Set<IndexPath>([idx])) //animation: [.effectFade, .slideUp]
@@ -453,7 +457,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     // MARK: NSTextFieldDelegate
     var lastTypingTimestamp: Date?
     public func textDidChange(_ obj: Notification) {
-        NSAnimationContext.animate { // TODO: FIX THIS
+        NSAnimationContext.animate(duration: 0.6) { // TODO: FIX THIS
             self.entryView?.invalidateIntrinsicContentSize()
             self.entryView?.superview?.needsLayout = true
             self.entryView?.superview?.layoutSubtreeIfNeeded()

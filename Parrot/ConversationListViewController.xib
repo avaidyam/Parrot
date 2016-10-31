@@ -40,6 +40,7 @@
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="multipleSelect" value="YES"/>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="emptySelect" value="YES"/>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="updateToBottom" value="NO"/>
                         </userDefinedRuntimeAttributes>
                         <connections>
                             <outlet property="delegate" destination="-2" id="ezv-hE-snq"/>

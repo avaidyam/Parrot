@@ -366,6 +366,7 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="emptyColorEnabled" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <action selector="colorChanged:" target="-2" id="TYp-fw-idT"/>
                         <binding destination="DAL-JI-MqR" name="value" keyPath="values.com.avaidyam.Parrot.ConversationIncomingColor" id="2CI-bL-MY7">
                             <dictionary key="options">
                                 <bool key="NSConditionallySetsEnabled" value="NO"/>
@@ -383,6 +384,7 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="emptyColorEnabled" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <action selector="colorChanged:" target="-2" id="hJ3-kh-lOO"/>
                         <binding destination="DAL-JI-MqR" name="value" keyPath="values.com.avaidyam.Parrot.ConversationOutgoingColor" id="OOt-DK-kJ3">
                             <dictionary key="options">
                                 <bool key="NSConditionallySetsEnabled" value="NO"/>
@@ -397,6 +399,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="axesIndependently" imageFrameStyle="grayBezel" id="ocm-qR-FJ7"/>
                     <connections>
+                        <action selector="colorChanged:" target="-2" id="fEA-4g-OnE"/>
                         <binding destination="DAL-JI-MqR" name="data" keyPath="values.Parrot.ConversationBackground" id="lvg-Ae-cQk">
                             <dictionary key="options">
                                 <bool key="NSAlwaysPresentsApplicationModalAlerts" value="YES"/>

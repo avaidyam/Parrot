@@ -10,11 +10,12 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     private var outline: CAShapeLayer?
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
     
+    private var token: Any? = nil
     public override func awakeFromNib() {
         super.awakeFromNib()
-        
-        //self.outline = CAShapeLayer()
-        //self.outline?.fillColor = NSColor.red.cgColor
+        self.token = subscribe(source: nil, Notification.Name("com.avaidyam.Parrot.UpdateColors")) { n in
+            self.setColors()
+        }
         
         // Since we struggle with IB shoving the NSScrollView down our throats, 
         // remove the scroll view entirely and re-constrain the text view.
@@ -30,6 +31,10 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         self.textLabel?.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
         self.textLabel?.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4).isActive = true
         self.textLabel?.heightAnchor.constraint(greaterThanOrEqualTo: self.photoView!.heightAnchor).isActive = true
+    }
+    
+    deinit {
+        unsubscribe(self.token)
     }
     
 	/// Upon assignment of the represented object, configure the subview contents.
@@ -61,25 +66,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
             guard let text = self.textLabel else { return }
             let appearance = self.appearance ?? NSAppearance.current()
             text.textColor = NSColor.labelColor
-            
-            // Only clip the text if the text isn't purely Emoji.
-            if !text.string!.isEmoji {
-                var color = NSColor.darkOverlay(forAppearance: appearance)
-                let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
-                if  let q = Settings[setting] as? Data,
-                    let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
-                    c.alphaComponent > 0.0 {
-                    color = c
-                    
-                    // This automatically adjusts labelColor to the right XOR mask.
-                    text.appearance = NSAppearance(named: color.isLight() ? NSAppearanceNameVibrantLight : NSAppearanceNameVibrantDark)
-                } else {
-                    text.appearance = self.appearance
-                }
-                text.layer?.backgroundColor = color.cgColor
-            } else {
-                text.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
-            }
+            self.setColors()
             
             // NSTextView doesn't automatically change its text color when the
             // backing view's appearance changes, so we need to set it each time.
@@ -109,6 +96,32 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
             ]
 		}
 	}
+    
+    private func setColors() {
+        guard let b = self.objectValue as? EventStreamItemBundle else { return }
+        guard let o = b.current as? Message else { return }
+        guard let text = self.textLabel else { return }
+        let appearance = self.appearance ?? NSAppearance.current()
+        
+        // Only clip the text if the text isn't purely Emoji.
+        if !text.string!.isEmoji {
+            var color = NSColor.darkOverlay(forAppearance: appearance)
+            let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
+            if  let q = Settings[setting] as? Data,
+                let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
+                c.alphaComponent > 0.0 {
+                color = c
+                
+                // This automatically adjusts labelColor to the right XOR mask.
+                text.appearance = NSAppearance(named: color.isLight() ? NSAppearanceNameVibrantLight : NSAppearanceNameVibrantDark)
+            } else {
+                text.appearance = self.appearance
+            }
+            text.layer?.backgroundColor = color.cgColor
+        } else {
+            text.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
+        }
+    }
     
 	/// Allows the circle crop and masking to dynamically change.
 	public override func layout() {
