@@ -13,7 +13,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     private var token: Any? = nil
     public override func awakeFromNib() {
         super.awakeFromNib()
-        self.token = subscribe(source: nil, Notification.Name("com.avaidyam.Parrot.UpdateColors")) { n in
+        self.token = subscribe(source: nil, Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             self.setColors()
         }
         

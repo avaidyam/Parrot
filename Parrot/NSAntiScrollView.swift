@@ -1,7 +1,8 @@
 import AppKit
 
 /// For Interface Builder to not screw with NSTextView embedding.
-public class NSAntiScrollView: NSScrollView {	public override init(frame frameRect: NSRect) {
+public class NSAntiScrollView: NSScrollView {
+    public override init(frame frameRect: NSRect) {
 		super.init(frame: frameRect)
 		hideScrollers()
 	}

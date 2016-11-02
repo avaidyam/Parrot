@@ -46,6 +46,7 @@ public func subscribe(on center: NotificationCenterType = .local, queue: Dispatc
 }
 
 /// Unsubscribe from a Notification on the chosen NotificationCenter, removing the sink.
-public func unsubscribe(on center: NotificationCenterType = .local, _ subscription: Any) {
-    center.underlyingCenter.removeObserver(subscription)
+public func unsubscribe(on center: NotificationCenterType = .local, _ subscription: Any?) {
+    guard subscription != nil else { return }
+    center.underlyingCenter.removeObserver(subscription!)
 }

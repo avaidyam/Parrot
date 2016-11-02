@@ -142,6 +142,21 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
         self.entryView?.bottomAnchor.constraint(equalTo: self.moduleView.bottomAnchor, constant: -8).isActive = true
         self.entryView?.topAnchor.constraint(equalTo: self.moduleView.topAnchor, constant: 8).isActive = true
         self.entryView?.heightAnchor.constraint(greaterThanOrEqualTo: self.imageView!.heightAnchor).isActive = true
+        //*/
+        
+        /*
+        let view = self.entryView!
+        let scroll = self.entryView!.enclosingScrollView!
+        let clip = scroll.contentView
+        //scroll.translatesAutoresizingMaskIntoConstraints = false
+        //clip.translatesAutoresizingMaskIntoConstraints = false
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.leadingAnchor.constraint(equalTo: clip.leadingAnchor, constant: 0).isActive = true
+        view.trailingAnchor.constraint(equalTo: clip.trailingAnchor, constant: 0).isActive = true
+        //view.topAnchor.constraint(equalTo: clip.topAnchor, constant: 0).isActive = true
+        view.bottomAnchor.constraint(equalTo: clip.bottomAnchor, constant: 0).isActive = true
+        clip.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, constant: 0).isActive = true
+        */
         
 		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
@@ -168,11 +183,23 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			self.imageView.image = fetchImage(user: me as! User, conversation: self.conversation!)
 		}
 		
-        // TODO: In the future, this might be pretty interesting to allow:
+        self.token = subscribe(source: nil, Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
+            self.setBackground()
+        }
+        setBackground()
+    }
+    
+    private var token: Any? = nil
+    public func setBackground() {
         if  let dat = Settings["Parrot.ConversationBackground"] as? NSData,
             let img = NSImage(data: dat as Data) {
             self.moduleView.superview?.layer?.contents = img
+        } else {
+            self.moduleView.superview?.layer?.contents = nil
         }
+    }
+    deinit {
+        unsubscribe(self.token)
     }
     
 	public override func showWindow(_ sender: Any?) {
