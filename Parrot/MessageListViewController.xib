@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
@@ -80,7 +80,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <size key="minSize" width="0.0" height="40"/>
+                                                    <size key="minSize" width="432" height="40"/>
                                                     <size key="maxSize" width="591" height="10000000"/>
                                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <userDefinedRuntimeAttributes>
@@ -358,7 +358,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </stackView>
-                <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bdo-cG-CSB" customClass="NSPopoverColorWell">
+                <colorWell identifier="MyBubbleColor" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bdo-cG-CSB" customClass="NSPopoverColorWell">
                     <rect key="frame" x="96" y="57" width="44" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -376,7 +376,7 @@
                         </binding>
                     </connections>
                 </colorWell>
-                <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n2Y-vS-NyF" customClass="NSPopoverColorWell">
+                <colorWell identifier="TheirBubbleColor" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n2Y-vS-NyF" customClass="NSPopoverColorWell">
                     <rect key="frame" x="12" y="57" width="44" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -394,7 +394,7 @@
                         </binding>
                     </connections>
                 </colorWell>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3w6-4X-dSe">
+                <imageView identifier="BackgroundImage" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3w6-4X-dSe">
                     <rect key="frame" x="95" y="7" width="48" height="48"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="axesIndependently" imageFrameStyle="grayBezel" id="ocm-qR-FJ7"/>

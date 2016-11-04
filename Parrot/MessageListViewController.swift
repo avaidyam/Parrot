@@ -187,6 +187,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
             self.setBackground()
         }
         setBackground()
+        if let s = self.window?.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView {
+            s.state = .active
+        }
     }
     
     private var token: Any? = nil
@@ -294,7 +297,14 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	}
     
     @IBAction func colorChanged(_ sender: AnyObject?) {
-        post(name: "com.avaidyam.Parrot.UpdateColors", source: sender)
+        /*if let well = sender as? NSColorWell, well.identifier == "MyBubbleColor" {
+            
+        } else if let well = sender as? NSColorWell, well.identifier == "TheirBubbleColor" {
+            
+        } else if let img = sender as? NSImageView, img.identifier == "BackgroundImage" {
+            
+        }*/
+        post(name: "com.avaidyam.Parrot.UpdateColors", source: self)
     }
     
     /*@IBAction public func colorWellSelected(_ sender: AnyObject?) {
