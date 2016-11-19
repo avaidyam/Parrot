@@ -237,15 +237,17 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
                 
                 // TODO: This plus some window snapping and sizing would allow for a UI mode.
                 // Also, remove the drawer and add popover if in single window mode.
-                //self.window?.addChildWindow(wc.window!, ordered: .below)
+                /*
+                self.window?.addChildWindow(wc.window!, ordered: .above)
                 //wc.window?.isResizable = false
-                //wc.window?.standardWindowButton(.closeButton)?.isHidden = true
-                //wc.window?.standardWindowButton(.miniaturizeButton)?.isHidden = true
-                //wc.window?.standardWindowButton(.zoomButton)?.isHidden = true
-                //wc.window?.standardWindowButton(.toolbarButton)?.isHidden = true
-                //wc.window?.standardWindowButton(.documentIconButton)?.isHidden = true
-                //wc.window?.standardWindowButton(.documentVersionsButton)?.isHidden = true
-                //wc.window?.standardWindowButton(.fullScreenButton)?.isHidden = true
+                wc.window?.standardWindowButton(.closeButton)?.isHidden = true
+                wc.window?.standardWindowButton(.miniaturizeButton)?.isHidden = true
+                wc.window?.standardWindowButton(.zoomButton)?.isHidden = true
+                wc.window?.standardWindowButton(.toolbarButton)?.isHidden = true
+                wc.window?.standardWindowButton(.documentIconButton)?.isHidden = true
+                wc.window?.standardWindowButton(.documentVersionsButton)?.isHidden = true
+                wc.window?.standardWindowButton(.fullScreenButton)?.isHidden = true
+                */
             }
 		}
 	}
