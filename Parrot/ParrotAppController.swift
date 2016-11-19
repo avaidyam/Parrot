@@ -131,9 +131,9 @@ public class ParrotAppController: NSApplicationController {
         }
     }
     let net = NetworkReachabilityManager(host: "google.com")
-	
-	/// If the Conversations window is closed, tapping the dock icon will reopen it.
-	func applicationShouldHandleReopen(sender: NSApplication, flag: Bool) -> Bool {
+    
+    /// If the Conversations window is closed, tapping the dock icon will reopen it.
+    public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
 		self.conversationsController.showWindow()
 		return true
 	}
