@@ -38,6 +38,7 @@
 		4866337E1C5822FA006C094B /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4866337D1C5822FA006C094B /* ListView.swift */; };
 		486E7DEE1DA8556300C1953B /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486E7DED1DA8556300C1953B /* Promise.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
+		4871ED961DE529E400FD8509 /* NSWindowScaleAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4871ED951DE529E400FD8509 /* NSWindowScaleAnimation.swift */; };
 		48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */; };
 		488201B61D4A962B00C545F0 /* NSExtendedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */; };
 		488201B81D4A968F00C545F0 /* NSAntiScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */; };
@@ -279,6 +280,7 @@
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
+		4871ED951DE529E400FD8509 /* NSWindowScaleAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSWindowScaleAnimation.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSExtendedTextView.swift; sourceTree = "<group>"; };
 		488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSAntiScrollView.swift; sourceTree = "<group>"; };
@@ -513,6 +515,7 @@
 				48D4C9FD1DBD5F2F001CF7AD /* Notification+Extensions.swift */,
 				488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */,
 				488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */,
+				4871ED951DE529E400FD8509 /* NSWindowScaleAnimation.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1188,6 +1191,7 @@
 				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
 				48E0E8201D584FCC00EE4464 /* NSDrawer+Modern.swift in Sources */,
 				4814E3BB1D2ECB4F0079C3DB /* DispatchTask.swift in Sources */,
+				4871ED961DE529E400FD8509 /* NSWindowScaleAnimation.swift in Sources */,
 				488201B81D4A968F00C545F0 /* NSAntiScrollView.swift in Sources */,
 				488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */,
 				48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */,

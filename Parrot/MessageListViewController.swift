@@ -324,15 +324,14 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
             var rect = w.frame
             rect.origin.y = -(rect.height)
             
-            /* // It's a good idea but also needs some work.
-            let animT = NSClassFromString("NSWindowScaleAnimation") as! NSAnimation.Type,
-                anim = animT.init(duration: 0.25, animationCurve: .easeIn)
-            anim.setValue(w, forKey: "window")
-            anim.setValue(1.0, forKey: "startScale")
-            anim.setValue(0.5, forKey: "endScale")
+            // It's a good idea but also needs some work.
+            let anim = NSWindowScaleAnimation(duration: 0.25, animationCurve: .easeIn)
+            anim.window = w
+            anim.endScale = 0.5
+            anim.normalizedAnchorPoint = CGPoint(x: 0.5, y: 0.5)
             anim.animationBlockingMode = .nonblocking
             anim.start()
-            */
+            
             //DispatchQueue.main.after(when: .now() + .milliseconds(250)) {
                 NSAnimationContext.runAnimationGroup({ ctx in
                     ctx.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
