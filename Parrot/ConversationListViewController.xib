@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11521.1" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11760" systemVersion="16C41b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11760"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ConversationListViewController" customModule="Parrot" customModuleProvider="target">
@@ -32,7 +33,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </progressIndicator>
-                    <view wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9lt-ER-yzx" userLabel="Conversation List" customClass="ListView" customModule="Parrot" customModuleProvider="target">
+                    <view wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9lt-ER-yzx" userLabel="Conversation List" customClass="ListView" customModule="MochaUI">
                         <rect key="frame" x="0.0" y="0.0" width="276" height="574"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">

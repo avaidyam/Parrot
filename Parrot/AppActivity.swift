@@ -1,5 +1,6 @@
 import Foundation
-import class ParrotServiceExtension.Logger
+
+private let log = Logger(subsystem: "MochaUI.AppActivity")
 
 /* TODO: Create Services using NSBackgroundActivityScheduler. */
 /* TODO: Finish DispatchOperation. */

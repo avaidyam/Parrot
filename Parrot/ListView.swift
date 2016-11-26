@@ -1,4 +1,7 @@
 import AppKit
+import Mocha
+
+private let log = Logger(subsystem: "MochaUI.ListView")
 
 /* TODO: Cell insets (or indents), separator insets/enabled/color/effects. */
 /* TODO: Support type-select. */
@@ -81,7 +84,7 @@ public class ListView: NSView {
     }
     
     fileprivate var scrollView: NSScrollView! // FIXME: Should be private...
-    internal var tableView: NSTableView! // FIXME: Should be private...
+    public var tableView: NSTableView! // FIXME: Should be private...
 	
 	public override init(frame frameRect: NSRect) {
 		super.init(frame: frameRect)
@@ -153,8 +156,7 @@ public class ListView: NSView {
         }
 	}
 	
-	public func register(nibName: String, forClass: NSView.Type) {
-        let nib = NSNib(nibNamed: nibName, bundle: nil)
+	public func register(nib: NSNib, forClass: NSView.Type) {
         self.tableView.register(nib, forIdentifier: "\(forClass)")
 	}
 	

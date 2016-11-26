@@ -1,6 +1,4 @@
 import Foundation
-import class AppKit.NSAlert
-import class AppKit.NSTextField
 
 /* TODO: Finish Semver comparison and handle app update mechanism. */
 let SEMVER_REGEX = "\\bv?(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?:-[\\da-z\\-]+(?:\\.[\\da-z\\-]+)*)?(?:\\+[\\da-z\\-]+(?:\\.[\\da-z\\-]+)*)?\\b"
@@ -73,27 +71,5 @@ public struct Semver {
 		}
 		// handle .orderedDescending
 		return .orderedSame
-	}
-}
-
-// For initial release alerts.
-// FIXME: Don't hardcode things.
-public func checkForUpdates(_ buildTag: String, _ updateHandler: (GithubRelease) -> Void = {_ in}) {
-	guard let release = GithubRelease.latest(prerelease: true) else { return }
-	guard release.buildTag == buildTag else { return }
-	
-	let a = NSAlert()
-	a.alertStyle = .informational
-	a.messageText = "\(release.releaseName) available"
-	a.informativeText = release.releaseNotes
-	a.addButton(withTitle: "Update")
-	a.addButton(withTitle: "Ignore")
-	a.showsSuppressionButton = true // FIXME
-	
-	a.layout()
-	a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
-	a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
-	if a.runModal() == 1000 /*NSAlertFirstButtonReturn*/ {
-		updateHandler(release)
 	}
 }

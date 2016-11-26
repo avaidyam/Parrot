@@ -189,10 +189,10 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 		}
 		
 		if let s = notification.get(option: .vibrateForceTouch) as? Bool , s {
-			let vibrate = Settings[Parrot.VibrateForceTouch] as? Bool ?? false
-			let interval = Settings[Parrot.VibrateInterval] as? Int ?? 10
-			let length = Settings[Parrot.VibrateLength] as? Int ?? 1000
-			if vibrate { NSHapticFeedbackManager.vibrate(length: length, interval: interval) }
+			//let vibrate = Settings["Parrot.VibrateForceTouch"] as? Bool ?? false
+			//let interval = Settings["Parrot.VibrateInterval"] as? Int ?? 10
+			//let length = Settings["Parrot.VibrateLength"] as? Int ?? 1000
+			NSHapticFeedbackManager.vibrate(length: 1000, interval: 10)
 		}
 		
 		if let a = notification.get(option: .runAppleScript) as? String, let url = URL(string: a) {

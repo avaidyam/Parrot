@@ -1,4 +1,5 @@
 import Foundation
+import Mocha
 
 // Generate 64-bit random value in a range that is divisible by upper_bound:
 // from @martin-r: http://stackoverflow.com/questions/26549830/swift-random-number-for-64-bit-integers

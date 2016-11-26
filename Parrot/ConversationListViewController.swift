@@ -1,4 +1,6 @@
 import Cocoa
+import Mocha
+import MochaUI
 import Hangouts
 import ParrotServiceExtension
 import protocol ParrotServiceExtension.Conversation
@@ -163,7 +165,8 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 			vev.state = style.visualEffectState()
 		}
 		
-		self.listView.register(nibName: "ConversationCell", forClass: ConversationCell.self)
+        let nib = NSNib(nibNamed: "ConversationCell", bundle: nil)!
+		self.listView.register(nib: nib, forClass: ConversationCell.self)
 		
 		NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService) { note in
             guard let c = note.object as? Service else { return }

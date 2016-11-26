@@ -1,4 +1,5 @@
 import Foundation
+import Mocha
 import ParrotServiceExtension
 
 private let log = Logger(subsystem: "Hangouts.Protobuf")

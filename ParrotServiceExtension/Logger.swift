@@ -1,5 +1,4 @@
 import Foundation.NSDate
-import asl
 
 /* TODO: Support Logger hierarchies like NSProgress. */
 /* TODO: Support same parameters as Swift's print() or debugPrint(). */
@@ -18,6 +17,9 @@ public final class Logger {
 	/// facility, or even displayed to the user visually if needed.
 	public struct Channel {
 		public let operation: (Message, Severity, Subsystem) -> ()
+        public init(operation: @escaping (Message, Severity, Subsystem) -> ()) {
+            self.operation = operation
+        }
 		
 		/// Channel.print sends the message to stdout, with a debugging-suitable transformation.
 		public static let print = Channel {
@@ -26,30 +28,6 @@ public final class Logger {
 				? debugPrint($0, terminator: "", to: &output)
 				: Swift.print($0, terminator: "", to: &output)
 			Swift.print("[\($2)] [\($1)]: \(output)")
-		}
-		
-		/// Channel.ASL uses the Apple System Logging facility to submit the message.
-		/// Note: ASL may not accept the message flow if its configuration severity
-		/// is at a different level than what is set here.
-        public static let ASL = Channel { message, severity, subsystem in
-            var output = ""
-            _ = severity >= .info
-                ? debugPrint(message, terminator: "", to: &output)
-                : Swift.print(subsystem, terminator: "", to: &output)
-            output = "[\(subsystem)] [\(severity)]: "  + output
-			withVaList([]) { ignore in
-				var s = ASL_LEVEL_DEBUG
-				switch severity {
-				case .fatal: s = ASL_LEVEL_EMERG
-				case .critical: s = ASL_LEVEL_CRIT
-				case .error: s = ASL_LEVEL_ERR
-				case .warning: s = ASL_LEVEL_WARNING
-				case .info: s = ASL_LEVEL_NOTICE
-				case .debug: s = ASL_LEVEL_INFO
-				case .verbose: s = ASL_LEVEL_DEBUG
-				}
-				asl_vlog(nil, nil, s, output, ignore)
-			}
 		}
 	}
 	

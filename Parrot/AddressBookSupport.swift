@@ -1,4 +1,5 @@
 import Foundation
+import Mocha
 import AddressBook
 import protocol ParrotServiceExtension.Person
 
@@ -21,3 +22,26 @@ public func searchContacts(person user: Person) -> [ABPerson] {
 	)!.flatMap { $0 as? ABPerson }
 	return records
 }
+
+// For initial release alerts.
+// FIXME: Don't hardcode things.
+public func checkForUpdates(_ buildTag: String, _ updateHandler: (GithubRelease) -> Void = {_ in}) {
+    guard let release = GithubRelease.latest(prerelease: true) else { return }
+    guard release.buildTag == buildTag else { return }
+    
+    let a = NSAlert()
+    a.alertStyle = .informational
+    a.messageText = "\(release.releaseName) available"
+    a.informativeText = release.releaseNotes
+    a.addButton(withTitle: "Update")
+    a.addButton(withTitle: "Ignore")
+    a.showsSuppressionButton = true // FIXME
+    
+    a.layout()
+    a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
+    a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
+    if a.runModal() == 1000 /*NSAlertFirstButtonReturn*/ {
+        updateHandler(release)
+    }
+}
+

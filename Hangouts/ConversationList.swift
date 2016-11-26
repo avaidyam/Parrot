@@ -1,4 +1,5 @@
 import Foundation
+import Mocha
 import ParrotServiceExtension
 
 fileprivate let log = Logger(subsystem: "Hangouts.ConversationList")

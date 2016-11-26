@@ -7,7 +7,7 @@ private var emojiDescriptors: [String: String] = {
 	return NSDictionary(contentsOf: url) as? [String: String] ?? [:]
 }()
 
-internal var emoticonDescriptors: [String: String] = {
+public var emoticonDescriptors: [String: String] = {
 	guard let url = Bundle.main.url(forResource: "emoji_emoticons",
 	                                             withExtension: "plist",
 	                                             subdirectory: "Emoji")

@@ -164,6 +164,22 @@ public extension DispatchData {
 	}
 }
 
+public extension URLSession {
+    public func synchronousRequest(_ url: URL, method: String = "GET") -> (Data?, URLResponse?, Error?) {
+        var data: Data?, response: URLResponse?, error: Error?
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = method
+        self.dataTask(with: request) {
+            data = $0; response = $1; error = $2
+            semaphore.signal()
+            }.resume()
+        
+        _ = semaphore.wait(timeout: .distantFuture)
+        return (data, response, error)
+    }
+}
 
 // Microseconds
 // Convert a microsecond timestamp to an Date instance.

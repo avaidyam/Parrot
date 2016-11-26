@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11521.1" systemVersion="16B2553a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11760" systemVersion="16C41b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11521.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11760"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MessageCell" customModule="Parrot" customModuleProvider="target"/>
@@ -24,13 +25,13 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </imageView>
-                <scrollView wantsLayer="YES" verticalHuggingPriority="248" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="24" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="QLh-pw-ow3" customClass="NSAntiScrollView" customModule="Parrot" customModuleProvider="target">
+                <scrollView wantsLayer="YES" verticalHuggingPriority="248" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="24" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="QLh-pw-ow3" customClass="NSAntiScrollView" customModule="MochaUI">
                     <rect key="frame" x="40" y="4" width="443" height="24"/>
-                    <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="ISP-1s-HMH" customClass="NSAntiClipView" customModule="Parrot" customModuleProvider="target">
+                    <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="ISP-1s-HMH" customClass="NSAntiClipView" customModule="MochaUI">
                         <rect key="frame" x="0.0" y="0.0" width="443" height="24"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView wantsLayer="YES" horizontalCompressionResistancePriority="751" editable="NO" drawsBackground="NO" importsGraphics="NO" verticallyResizable="NO" allowsDocumentBackgroundColorChange="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" smartInsertDelete="YES" id="1dL-oQ-fiX" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
+                            <textView wantsLayer="YES" horizontalCompressionResistancePriority="751" editable="NO" drawsBackground="NO" importsGraphics="NO" verticallyResizable="NO" allowsDocumentBackgroundColorChange="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" smartInsertDelete="YES" id="1dL-oQ-fiX" customClass="NSExtendedTextView" customModule="MochaUI">
                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

@@ -1,4 +1,5 @@
 import AppKit
+import Mocha
 
 /* TODO: Localization support for NSDateFormatter stuff. */
 
@@ -181,7 +182,7 @@ public extension NSView {
 			                  width: detail["Width"] as? Int ?? 0, height: detail["Height"] as? Int ?? 0)
 			//guard rect.contains(selfRect) else { continue }
 			let intersected = self.window!.convertFromScreen(rect.intersection(selfRect))
-			log.info("intersect => \(intersected)")
+			Swift.print("intersect => \(intersected)")
 			
 			//log.info("alpha: \(window[kCGWindowAlpha as String])")
 		}
@@ -204,7 +205,7 @@ public extension NSFont {
 }
 
 /// A "typealias" for the traditional NSApplication delegation.
-public class NSApplicationController: NSObject, NSApplicationDelegate {}
+open class NSApplicationController: NSObject, NSApplicationDelegate {}
 
 /// Can hold any (including non-object) type as an object type.
 public class Wrapper<T> {

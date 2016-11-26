@@ -1,4 +1,6 @@
 import Cocoa
+import Mocha
+import MochaUI
 import Hangouts
 import ParrotServiceExtension
 
@@ -168,8 +170,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			guard let vev2 = self.drawer.contentView as? NSVisualEffectView else { return }
 			vev2.state = style.visualEffectState()
 		}
-		
-		self.listView.register(nibName: "MessageCell", forClass: MessageCell.self)
+        
+        let nib = NSNib(nibNamed: "MessageCell", bundle: nil)!
+		self.listView.register(nib: nib, forClass: MessageCell.self)
 		//self.listView.register(nibName: "FocusCell", forClass: FocusCell.self)
 		//self.listView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
 		

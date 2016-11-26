@@ -14,6 +14,16 @@
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
+		<key>Mocha.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
+		<key>MochaUI.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>9</integer>
+		</dict>
 		<key>Parrot.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -93,6 +103,16 @@
 			<true/>
 		</dict>
 		<key>48834E101C1B38B9009BC442</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>48D3CCE11DE94433003D6C02</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>48D3CCF41DE9446D003D6C02</key>
 		<dict>
 			<key>primary</key>
 			<true/>

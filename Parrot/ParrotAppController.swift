@@ -1,4 +1,6 @@
 import Cocoa
+import Mocha
+import MochaUI
 import Hangouts
 import WebKit
 import ParrotServiceExtension

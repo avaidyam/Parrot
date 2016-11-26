@@ -36,7 +36,7 @@
                     <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fR4-T5-vYX" userLabel="Contents">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="414"/>
                         <subviews>
-                            <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="Parrot" customModuleProvider="target">
+                            <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-fg-2gH" customClass="ListView" customModule="MochaUI">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="414"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
@@ -71,16 +71,16 @@
                                     </button>
                                     <scrollView wantsLayer="YES" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="40" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
                                         <rect key="frame" x="40" y="8" width="432" height="40"/>
-                                        <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o" customClass="NSAntiClipView" customModule="Parrot" customModuleProvider="target">
+                                        <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o" customClass="NSAntiClipView" customModule="MochaUI">
                                             <rect key="frame" x="0.0" y="0.0" width="432" height="40"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <textView wantsLayer="YES" drawsBackground="NO" continuousSpellChecking="YES" allowsUndo="YES" allowsImageEditing="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="Parrot" customModuleProvider="target">
+                                                <textView wantsLayer="YES" drawsBackground="NO" continuousSpellChecking="YES" allowsUndo="YES" allowsImageEditing="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="MochaUI">
                                                     <rect key="frame" x="0.0" y="0.0" width="0.0" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <size key="minSize" width="0.0" height="40"/>
+                                                    <size key="minSize" width="432" height="40"/>
                                                     <size key="maxSize" width="591" height="10000000"/>
                                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <userDefinedRuntimeAttributes>
