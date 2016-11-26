@@ -35,7 +35,7 @@ public class ParrotAppController: NSApplicationController {
 	}()
 	
 	public static override func initialize() {
-		NSDrawer.__activateModernDrawers()
+		NSDrawer.modernize()
 	}
 	
 	public override init() {

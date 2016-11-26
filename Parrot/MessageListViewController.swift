@@ -126,7 +126,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     
 	public override func loadWindow() {
 		super.loadWindow()
-		self.drawer.__setupModernDrawer()
+		//self.drawer.__setupModernDrawer()
 		
         // Since we struggle with IB shoving the NSScrollView down our throats,
         // remove the scroll view entirely and re-constrain the text view.
@@ -328,21 +328,22 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
             let anim = NSWindowScaleAnimation(duration: 0.25, animationCurve: .easeIn)
             anim.window = w
             anim.endScale = 0.5
-            anim.normalizedAnchorPoint = CGPoint(x: 0.5, y: 0.5)
+            anim.anchorPoint = CGPoint(x: 0.5, y: 0.5)
             anim.animationBlockingMode = .nonblocking
             anim.start()
             
-            //DispatchQueue.main.after(when: .now() + .milliseconds(250)) {
-                NSAnimationContext.runAnimationGroup({ ctx in
-                    ctx.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                    w.animator().setFrame(rect, display: true)
-                    w.animator().alphaValue = 0.0
-                }, completionHandler: {
+            NSAnimationContext.runAnimationGroup({ ctx in
+                ctx.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                w.animator().setFrame(rect, display: true)
+                w.animator().alphaValue = 0.0
+            }, completionHandler: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
                     w.setFrame(old_rect, display: false)
                     w.alphaValue = 1.0
+                    w.scale()
                     w.close()
-                })
-            //}
+                }
+            })
         }
         return false
     }
