@@ -51,12 +51,6 @@ public extension CAAnimation {
 	}
 }
 
-/*
-public extension NSPopover {
-	public dynamic var anchorEdge: NSRectEdge
-}
-*/
-
 // TODO: Switch for actually using NSUIAnimator or the animator() proxy.
 public extension NSAnimationContext {
     

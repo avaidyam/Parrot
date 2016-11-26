@@ -3,6 +3,7 @@ import Cocoa
 @objc fileprivate protocol _NSWindowPrivate {
     func _setTransformForAnimation(_: CGAffineTransform, anchorPoint: CGPoint)
 }
+
 public extension NSWindow {
     public func scale(to scale: Double = 1.0, by anchorPoint: CGPoint = CGPoint(x: 0.5, y: 0.5)) {
         let p = anchorPoint
@@ -17,6 +18,7 @@ public extension NSWindow {
             ._setTransformForAnimation(a, anchorPoint: q)
     }
 }
+
 public class NSWindowScaleAnimation: NSAnimation {
     
     public var window: NSWindow!

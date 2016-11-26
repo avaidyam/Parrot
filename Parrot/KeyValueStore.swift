@@ -1,13 +1,19 @@
 import Foundation
+import Security
 
-/* TODO: More extensive support for Keychain attributes. */
-/* TODO: InternetSettings to wrap SecKeychain*InternetPassword. */
+/* TODO: Switch KeyValueStore to strongly-typed struct instead of String for Key. */
+/* TODO: Find a way to do SecKeychain* snapshot(). */
+/* TODO: Switch to SecItem API instead of SecKeychain API. */
+/* TODO: Use kSecAttrSynchronizable for iCloud Keychain. */
 
 /// A KeyValueStore is a container layer that stores values for given keys
 /// and supports specific application-defined or special/protected domains.
 public protocol KeyValueStore {
 	subscript(key: String) -> Any? { get set }
-	subscript(key: String, domain domain: String) -> Any? { get set }
+    subscript(key: String, domain domain: String) -> Any? { get set }
+    
+    func snapshot() -> [String : Any]
+    func snapshot(domain: String) -> [String : Any]
 }
 
 /// A KeyValueStore that encodes its contents in the OS defaults database.
@@ -59,6 +65,21 @@ public final class SettingsStore: KeyValueStore {
 			}
 		}
 	}
+    
+    public func snapshot() -> [String : Any] {
+        return UserDefaults.standard.dictionaryRepresentation()
+    }
+    
+    public func snapshot(domain: String) -> [String : Any] {
+        if domain == SettingsStore.globalDomain {
+            return UserDefaults.standard.persistentDomain(forName: UserDefaults.globalDomain) ?? [:]
+        } else if domain == SettingsStore.ubiquitousDomain {
+            NSUbiquitousKeyValueStore.default().synchronize()
+            return NSUbiquitousKeyValueStore.default().dictionaryRepresentation
+        } else {
+            return UserDefaults(suiteName: domain)?.dictionaryRepresentation() ?? [:]
+        }
+    }
 }
 
 /// A KeyValueStore that securely encodes its contents in the OS keychain.
@@ -114,6 +135,44 @@ public final class SecureSettingsStore: KeyValueStore {
 			}
 		}
 	}
+    
+    public func snapshot() -> [String : Any] {
+        return snapshot(domain: _defaultDomain)
+    }
+    
+    public func snapshot(domain: String) -> [String : Any] {
+        NSLog("SecureSettingsStore: SecKeychain cannot be queried for a snapshot!")
+        return [:]
+    }
+}
+
+public final class FileStore: KeyValueStore {
+    private let infoPlist = Bundle.main.bundlePath + "/Contents/Info.plist"
+    
+    public subscript(key: String) -> Any? {
+        get { return self[key, domain: infoPlist] }
+        set { self[key, domain: infoPlist] = newValue }
+    }
+
+    public subscript(key: String, domain domain: String) -> Any? {
+        get {
+            return NSDictionary(contentsOfFile: domain)?[key]
+        }
+        set {
+            if let dict = NSDictionary(contentsOfFile: domain) {
+                dict.setValue(newValue, forKey: key)
+                dict.write(toFile: domain, atomically: true)
+            }
+        }
+    }
+    
+    public func snapshot() -> [String : Any] {
+        return snapshot(domain: infoPlist)
+    }
+    
+    public func snapshot(domain: String) -> [String : Any] {
+        return (NSDictionary(contentsOfFile: domain) as? [String: Any]) ?? [:]
+    }
 }
 
 /// Aliased singleton for SettingsStore.
