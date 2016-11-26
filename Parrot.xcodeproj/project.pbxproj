@@ -65,11 +65,9 @@
 		48BA5B4B1C37A55A00ACA29B /* Terminal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4A1C37A55A00ACA29B /* Terminal.swift */; };
 		48BA5B501C37DACE00ACA29B /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4F1C37DACE00ACA29B /* Reference.swift */; };
 		48BFD0351D13850B00DAE29E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
-		48D3CCE61DE94433003D6C02 /* Mocha.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D3CCE41DE94433003D6C02 /* Mocha.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D3CCE91DE94433003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		48D3CCEA1DE94433003D6C02 /* Mocha.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48D3CCEF1DE9444F003D6C02 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCEE1DE9444F003D6C02 /* Foundation.framework */; };
-		48D3CCF91DE9446D003D6C02 /* MochaUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D3CCF71DE9446D003D6C02 /* MochaUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D3CCFC1DE9446D003D6C02 /* MochaUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCF51DE9446D003D6C02 /* MochaUI.framework */; };
 		48D3CCFD1DE9446D003D6C02 /* MochaUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCF51DE9446D003D6C02 /* MochaUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48D3CD031DE94490003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
@@ -279,7 +277,6 @@
 		481300391D25B54300768D79 /* ServiceRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceRegistry.swift; sourceTree = "<group>"; };
 		481300441D26BD4900768D79 /* ParrotServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ParrotServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481300481D26BD4900768D79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		481300581D26C00800768D79 /* ParrotServiceExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParrotServiceExtension.h; sourceTree = "<group>"; };
 		4814E3B61D2C973D0079C3DB /* kelvin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = kelvin.py; path = ../../../Desktop/Other/LEDENET/kelvin.py; sourceTree = "<group>"; };
 		4814E3BA1D2ECB4F0079C3DB /* DispatchTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchTask.swift; sourceTree = "<group>"; };
 		48158E1E1D28690C00ED369C /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
@@ -358,11 +355,9 @@
 		48BFD0341D13694900DAE29E /* hangouts.proto */ = {isa = PBXFileReference; lastKnownFileType = text; path = hangouts.proto; sourceTree = "<group>"; };
 		48D3CCDB1DE93248003D6C02 /* NSPopover+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPopover+Extensions.swift"; sourceTree = "<group>"; };
 		48D3CCE21DE94433003D6C02 /* Mocha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Mocha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		48D3CCE41DE94433003D6C02 /* Mocha.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mocha.h; sourceTree = "<group>"; };
 		48D3CCE51DE94433003D6C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48D3CCEE1DE9444F003D6C02 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		48D3CCF51DE9446D003D6C02 /* MochaUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MochaUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		48D3CCF71DE9446D003D6C02 /* MochaUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MochaUI.h; sourceTree = "<group>"; };
 		48D3CCF81DE9446D003D6C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48D3CD0A1DE9459E003D6C02 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		48D3CD201DE94C71003D6C02 /* Mocha+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Mocha+Bridge.swift"; sourceTree = "<group>"; };
@@ -515,7 +510,6 @@
 		481300501D26BD6700768D79 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				481300581D26C00800768D79 /* ParrotServiceExtension.h */,
 				481300481D26BD4900768D79 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -771,7 +765,6 @@
 		48D3CD071DE944B7003D6C02 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				48D3CCE41DE94433003D6C02 /* Mocha.h */,
 				48D3CCE51DE94433003D6C02 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -780,7 +773,6 @@
 		48D3CD081DE944C2003D6C02 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				48D3CCF71DE9446D003D6C02 /* MochaUI.h */,
 				48D3CCF81DE9446D003D6C02 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -890,7 +882,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48D3CCE61DE94433003D6C02 /* Mocha.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -898,7 +889,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48D3CCF91DE9446D003D6C02 /* MochaUI.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1884,6 +1874,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1910,6 +1902,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Mocha;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1938,6 +1932,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1964,6 +1960,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.MochaUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
