@@ -159,7 +159,9 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 		super.loadWindow()
 		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
-		self.window?.titleVisibility = .hidden
+        self.window?.titleVisibility = .hidden
+        self.window?.contentView?.superview?.wantsLayer = true
+        
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
 			vev.state = style.visualEffectState()

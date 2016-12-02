@@ -163,6 +163,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
 		self.window?.titleVisibility = .hidden
+        self.window?.contentView?.superview?.wantsLayer = true
 		
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
@@ -516,17 +517,21 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		self.drawerButton.state = NSOffState
 		self.drawer.window?.animator().alphaValue = 0.0
 	}
+    
+    private func resizeModule() {
+        NSAnimationContext.animate(duration: 0.6) { // TODO: FIX THIS
+            self.entryView?.invalidateIntrinsicContentSize()
+            self.entryView?.superview?.needsLayout = true
+            self.entryView?.superview?.layoutSubtreeIfNeeded()
+        }
+    }
 	
 	//func textViewDidChangeText?
 	
     // MARK: NSTextFieldDelegate
     var lastTypingTimestamp: Date?
     public func textDidChange(_ obj: Notification) {
-        NSAnimationContext.animate(duration: 0.6) { // TODO: FIX THIS
-            self.entryView?.invalidateIntrinsicContentSize()
-            self.entryView?.superview?.needsLayout = true
-            self.entryView?.superview?.layoutSubtreeIfNeeded()
-        }
+        self.resizeModule()
         self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: self.moduleView.frame.height, right: 0)
         if entryView.string == "" {
 			entryView.font = NSFont.systemFont(ofSize: 12.0)
@@ -565,17 +570,17 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
 			guard let text = entryView.string , text.characters.count > 0 else { return true }
 			NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
-			self.entryView.string = ""
+            self.entryView.string = ""
+            self.resizeModule()
 			self.sendMessageHandler(text, self.conversation!)
-			//self.parentController?.sendMessage(text, self.conversation!)
             if self.transient {
                 self.window?.performClose(nil)
             }
 			
 		case #selector(NSResponder.insertTab(_:)):
 			textView.textStorage?.append(NSAttributedString(string: "    ", attributes: textView.typingAttributes))
-			
-		default: return false
+		
+        default: return false
 		}; return true
 	}
 	

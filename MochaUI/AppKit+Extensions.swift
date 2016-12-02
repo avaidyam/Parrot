@@ -243,6 +243,16 @@ public extension NSMenu {
     }
 }
 
+public extension NSHapticFeedbackManager {
+    public static func vibrate(length: Int = 1000, interval: Int = 10) {
+        let hp = NSHapticFeedbackManager.defaultPerformer()
+        for _ in 1...(length/interval) {
+            hp.perform(.generic, performanceTime: .now)
+            usleep(UInt32(interval * 1000))
+        }
+    }
+}
+
 public func runSelectionPanel(for window: NSWindow, fileTypes: [String],
                               multiple: Bool = false, _ handler: @escaping ([URL]) -> () = {_ in}) {
 	let p = NSOpenPanel()
