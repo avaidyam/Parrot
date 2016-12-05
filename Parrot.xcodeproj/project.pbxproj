@@ -24,6 +24,8 @@
 		4819BF611D52D78800CF609C /* emoji_descriptors.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191E1D37D16C001F969E /* emoji_descriptors.plist */; };
 		4819BF621D52D78800CF609C /* emoji_emoticons.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191F1D37D16C001F969E /* emoji_emoticons.plist */; };
 		4819BF631D52D78800CF609C /* emoji_equivalences.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 484019201D37D16C001F969E /* emoji_equivalences.plist */; };
+		481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */; };
+		481D933E1DF5D7D100EB23A1 /* Wallclock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933D1DF5D7D100EB23A1 /* Wallclock.swift */; };
 		4822951D1D417B5E00A34B1B /* AddressBookSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */; };
 		4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageCell.swift */; };
 		4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA81C1C620000193EBC /* ConversationCell.swift */; };
@@ -282,6 +284,8 @@
 		481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+Extensions.swift"; sourceTree = "<group>"; };
 		4816872B1C3A340E0070EEF6 /* URLSession+Delegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+Delegate.swift"; sourceTree = "<group>"; };
 		48196B9A1D4805D9001D4BAA /* AboutWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutWindowController.swift; sourceTree = "<group>"; };
+		481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayLink.swift; sourceTree = "<group>"; };
+		481D933D1DF5D7D100EB23A1 /* Wallclock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wallclock.swift; sourceTree = "<group>"; };
 		4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookSupport.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation+List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Conversation+List.swift"; sourceTree = "<group>"; };
 		4835ECA61C1C620000193EBC /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
@@ -753,6 +757,7 @@
 				48BFAECF1D1CF19100ADBA3A /* AppActivity.swift */,
 				48D4C9FD1DBD5F2F001CF7AD /* Notification+Extensions.swift */,
 				48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */,
+				481D933D1DF5D7D100EB23A1 /* Wallclock.swift */,
 				48D3CD071DE944B7003D6C02 /* Supporting Files */,
 			);
 			path = Mocha;
@@ -772,6 +777,7 @@
 				488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */,
 				483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */,
 				48403CA01DF0B9930009897A /* Changeset.swift */,
+				481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */,
 				48403CA21DF0BF6B0009897A /* Interpolate.swift */,
 				489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */,
 				489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */,
@@ -1416,6 +1422,7 @@
 				48D3CD061DE944AA003D6C02 /* Logger.swift in Sources */,
 				48D3CD1C1DE94BBD003D6C02 /* Emoji.swift in Sources */,
 				48D3CD1F1DE94BEC003D6C02 /* Notification+Extensions.swift in Sources */,
+				481D933E1DF5D7D100EB23A1 /* Wallclock.swift in Sources */,
 				48D3CD041DE944A2003D6C02 /* Promise.swift in Sources */,
 				48D3CD1E1DE94BD9003D6C02 /* AppActivity.swift in Sources */,
 				48D3CD1D1DE94BD0003D6C02 /* AppManagement.swift in Sources */,
@@ -1436,6 +1443,7 @@
 				48403CA31DF0BF6B0009897A /* Interpolate.swift in Sources */,
 				48D3CD191DE945C1003D6C02 /* NetworkReachability.swift in Sources */,
 				48403CA11DF0B9930009897A /* Changeset.swift in Sources */,
+				481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */,
 				48D3CD0F1DE945C1003D6C02 /* NSPopover+Extensions.swift in Sources */,
 				489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */,
 				48D3CD0E1DE945C1003D6C02 /* NSDrawer+Extensions.swift in Sources */,

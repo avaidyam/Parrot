@@ -362,6 +362,11 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	}
 }
 
+public protocol NSTableViewCellProtocol {
+    var objectValue: Any? { get set }
+    var draggingImageComponents: [NSDraggingImageComponent] { get }
+    var isSelected: Bool { get set }
+}
 
 /// Support for disabling emphasis to allow vibrancy.
 public class NSExtendedTableRowView: NSTableRowView {
@@ -369,21 +374,28 @@ public class NSExtendedTableRowView: NSTableRowView {
         get { return false }
         set { }
     }
+    public override var isSelected: Bool {
+        didSet {
+            guard self.subviews.count > 0 else { return }
+            if var cell = self.view(atColumn: 0) as? NSTableViewCellProtocol {
+                cell.isSelected = self.isSelected
+            }
+        }
+    }
 }
 
 /// Support for per-row and multi-select menus.
 public class NSExtendedTableView: NSTableView {
+    public var expandSelectionOnMenuClick = false
     public override func menu(for event: NSEvent) -> NSMenu? {
         let row = self.row(at: self.convert(event.locationInWindow, from: nil))
         guard row >= 0 && event.type == .rightMouseDown else {
             return super.menu(for: event)
         }
         
-        var selected = self.selectedRowIndexes
-        if !selected.contains(row) {
-            selected = IndexSet(integer: row)
-            // Enable this to select the row upon menu-click.
-            //self.selectRowIndexes(selected, byExtendingSelection: false)
+        let selected = self.selectedRowIndexes
+        if !selected.contains(row) && expandSelectionOnMenuClick {
+            self.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
         }
         
         // As a last resort, if the row was selected alone, ask the view.

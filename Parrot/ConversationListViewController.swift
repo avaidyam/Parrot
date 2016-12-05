@@ -31,8 +31,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
 	private var updateToken: Bool = false
 	private var userList: Directory?
-	private var wallclock: DispatchSourceTimer? = nil
-    private var wallclockStarted: Bool = false
     private var bleh: Any? = nil
     
     /// The childConversations keeps track of all open conversations and when the
@@ -46,8 +44,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
     }
 	
 	deinit {
-        self.wallclockStarted = false
-		self.wallclock?.cancel()
         unsubscribe(self.bleh)
 	}
 	
@@ -212,16 +208,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 			}
 		}
 		
-		self.wallclock = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
-		self.wallclock?.scheduleRepeating(wallDeadline: .now() + Date().nearestMinute().timeIntervalSinceNow, interval: 60.0, leeway: .seconds(3))
-		self.wallclock?.setEventHandler {
-			log.verbose("Updated visible timestamp for Conversations.")
-            // FIXME: THIS IS BAD!
-            self.listView.visibleCells.forEach {
-                ($0 as? ConversationCell)?.updateTimestamp()
-            }
-		}
-		
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
 		/*self.listView.pasteboardProvider = { row in
 			let pb = NSPasteboardItem()
@@ -273,11 +259,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	public override func showWindow(_ sender: Any?) {
 		super.showWindow(sender)
 		self.indicator.startAnimation(nil)
-		
-        if !self.wallclockStarted { // "BUG IN LIBDISPATCH: Over-resume of object"
-            self.wallclock?.resume()
-            self.wallclockStarted = true
-        }
 		ParrotAppearance.registerInterfaceStyleListener(observer: self) { appearance in
 			self.window?.appearance = appearance.appearance()
 		}
@@ -297,9 +278,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	/// If we need to close, make sure we clean up after ourselves, instead of deinit.
 	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
-        if self.wallclockStarted {
-            self.wallclock?.suspend()
-        }
 	}
     
     public func windowDidChangeOcclusionState(_ notification: Notification) {

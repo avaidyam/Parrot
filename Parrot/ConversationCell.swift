@@ -1,8 +1,14 @@
 import Cocoa
+import Mocha
+import MochaUI
 import protocol ParrotServiceExtension.Conversation
 
 // A visual representation of a Conversation in a ListView.
-public class ConversationCell: NSTableCellView {
+public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
+    
+    private static var wallclock = Wallclock()
+    private var id = UUID() // for wallclock
+    
 	@IBOutlet private var photoView: NSImageView?
 	@IBOutlet private var nameLabel: NSTextField?
 	@IBOutlet private var textLabel: NSTextField?
@@ -52,13 +58,15 @@ public class ConversationCell: NSTableCellView {
         didSet {
             //let appearance = self.view.appearance ?? NSAppearance.current()
             if self.isSelected {
+                //self.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
                 //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0.1997270976).cgColor
-                self.effect?.animator().isHidden = false
-                self.separator?.animator().isHidden = true
+                //self.effect?.animator().isHidden = false
+                //self.separator?.animator().isHidden = true
             } else {
+                //self.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
                 //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
-                self.effect?.animator().isHidden = true
-                self.separator?.animator().isHidden = false
+                //self.effect?.animator().isHidden = true
+                //self.separator?.animator().isHidden = false
             }
         }
     }
@@ -105,4 +113,12 @@ public class ConversationCell: NSTableCellView {
 			layer.cornerRadius = photo.bounds.width / 2.0
 		}
 	}
+    
+    public override func viewDidMoveToSuperview() {
+        if let _ = self.superview { // onscreen
+            ConversationCell.wallclock.add(target: (self, self.id, self.updateTimestamp))
+        } else { // offscreen
+            ConversationCell.wallclock.remove(target: (self, self.id, self.updateTimestamp))
+        }
+    }
 }

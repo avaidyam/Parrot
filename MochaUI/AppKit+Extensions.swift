@@ -82,69 +82,6 @@ public extension NSNib {
 	}
 }
 
-/// from @jack205: https://gist.github.com/jacks205/4a77fb1703632eb9ae79
-public extension Date {
-	public func relativeString(numeric: Bool = false, seconds: Bool = false) -> String {
-		
-		let date = self, now = Date()
-		let calendar = Calendar.current
-		let earliest = (now as NSDate).earlierDate(date) as Date
-		let latest = (earliest == now) ? date : now
-		let units = Set<Calendar.Component>([.second, .minute, .hour, .day, .weekOfYear, .month, .year])
-		let components = calendar.dateComponents(units, from: earliest, to: latest)
-		
-		if components.year ?? -1 > 45 {
-			return "a while ago"
-		} else if (components.year ?? -1 >= 2) {
-			return "\(components.year!) years ago"
-		} else if (components.year ?? -1 >= 1) {
-			return numeric ? "1 year ago" : "last year"
-		} else if (components.month ?? -1 >= 2) {
-			return "\(components.month!) months ago"
-		} else if (components.month ?? -1 >= 1) {
-			return numeric ? "1 month ago" : "last month"
-		} else if (components.weekOfYear ?? -1 >= 2) {
-			return "\(components.weekOfYear!) weeks ago"
-		} else if (components.weekOfYear ?? -1 >= 1) {
-			return numeric ? "1 week ago" : "last week"
-		} else if (components.day ?? -1 >= 2) {
-			return "\(components.day!) days ago"
-		} else if (components.day ?? -1 >= 1) {
-			return numeric ? "1 day ago" : "a day ago"
-		} else if (components.hour ?? -1 >= 2) {
-			return "\(components.hour!) hours ago"
-		} else if (components.hour ?? -1 >= 1){
-			return numeric ? "1 hour ago" : "an hour ago"
-		} else if (components.minute ?? -1 >= 2) {
-			return "\(components.minute!) minutes ago"
-		} else if (components.minute ?? -1 >= 1) {
-			return numeric ? "1 minute ago" : "a minute ago"
-		} else if (components.second ?? -1 >= 3 && seconds) {
-			return "\(components.second!) seconds ago"
-		} else {
-			return "just now"
-		}
-	}
-	
-	private static var formatter: DateFormatter = {
-		let formatter = DateFormatter()
-		formatter.dateStyle = .full
-		formatter.timeStyle = .long
-		return formatter
-	}()
-	
-	public func fullString() -> String {
-		return Date.formatter.string(from: self)
-	}
-	
-	public func nearestMinute() -> Date {
-		let c = Calendar.current
-		var next = c.dateComponents(Set<Calendar.Component>([.minute]), from: self)
-        next.minute = (next.minute ?? -1) + 1
-		return c.nextDate(after: self, matching: next, matchingPolicy: .strict) ?? self
-	}
-}
-
 public extension NSWindowOcclusionState {
 	public static let invisible = NSWindowOcclusionState(rawValue: 0)
 }
