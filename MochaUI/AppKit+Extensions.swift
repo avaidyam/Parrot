@@ -52,6 +52,25 @@ public extension CAAnimation {
 	}
 }
 
+@objc fileprivate protocol _NSWindowPrivate {
+    func _setTransformForAnimation(_: CGAffineTransform, anchorPoint: CGPoint)
+}
+
+public extension NSWindow {
+    public func scale(to scale: Double = 1.0, by anchorPoint: CGPoint = CGPoint(x: 0.5, y: 0.5)) {
+        let p = anchorPoint
+        assert((p.x >= 0.0 && p.x <= 1.0) && (p.y >= 0.0 && p.y <= 1.0),
+               "Anchor point coordinates must be between 0 and 1!")
+        let q = CGPoint(x: p.x * self.frame.size.width,
+                        y: p.y * self.frame.size.height)
+        
+        // Apply the transformation by transparently using CGSSetWindowTransformAtPlacement()
+        let a = CGAffineTransform(scaleX: CGFloat(1.0 / scale), y: CGFloat(1.0 / scale))
+        unsafeBitCast(self, to: _NSWindowPrivate.self)
+            ._setTransformForAnimation(a, anchorPoint: q)
+    }
+}
+
 // TODO: Switch for actually using NSUIAnimator or the animator() proxy.
 public extension NSAnimationContext {
     

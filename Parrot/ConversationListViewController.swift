@@ -76,30 +76,38 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 		let all = self.conversationList?.conversations.map { $1 as! IConversation }.filter { !$0.is_archived }
 		return all!.sorted { $0.last_modified > $1.last_modified }.map { $0 as ParrotServiceExtension.Conversation }
 	}
-	
+    
 	// Performs a visual refresh of the conversation list.
     private func animatedUpdate(handler: @escaping () -> () = {}) {
-		DispatchQueue.main.async {
-			self.listView.animator().isHidden = true
-			self.indicator.animator().alphaValue = 1.0
-			self.indicator.isHidden = false
-			self.indicator.startAnimation(nil)
-			
-			self.listView.update(animated: false) {
-				self.listView.animator().isHidden = false
-				self.indicator.animator().alphaValue = 0.0
-				
-				let scaleIn = CAAnimation.scaleIn(forFrame: self.listView.layer!.frame)
-				self.listView.layer?.add(scaleIn, forKey: "updates")
-				
-				let durMS = Int(NSAnimationContext.current().duration * 1000.0)
-				DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(durMS)) {
-					self.indicator.stopAnimation(nil)
-					self.indicator.isHidden = true
-                    handler()
-				}
-			}
-		}
+        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { alpha in
+            self.listView.alphaValue = CGFloat(alpha)
+            self.indicator.alphaValue = CGFloat(1.0 - alpha)
+        }
+        indicatorAnim.add(at: 0.0) {
+            DispatchQueue.main.async {
+                self.indicator.isHidden = false
+                self.indicator.startAnimation(nil)
+            }
+        }
+        indicatorAnim.add(at: 1.0) {
+            DispatchQueue.main.async {
+                self.indicator.stopAnimation(nil)
+                self.indicator.isHidden = true
+            }
+        }
+        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { scale in
+            self.listView.layer!.setAffineTransform(scale)
+        }
+        let group = Interpolate.group(indicatorAnim, scaleAnim)
+        indicatorAnim.handlerRunPolicy = .always
+        group.add(handler: handler)
+        
+        DispatchQueue.main.async {
+            self.listView.alphaValue = 0.0
+            self.listView.update(animated: false) {
+                group.animate(duration: 0.5)
+            }
+        }
 	}
     
     public func numberOfItems(in: ListView) -> [UInt] {
@@ -161,6 +169,10 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
         self.window?.titleVisibility = .hidden
         self.window?.contentView?.superview?.wantsLayer = true
+        
+        let frame = self.listView.layer!.frame
+        self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        self.listView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
         
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }

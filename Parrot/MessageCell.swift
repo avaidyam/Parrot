@@ -103,11 +103,10 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         guard let b = self.objectValue as? EventStreamItemBundle else { return }
         guard let o = b.current as? Message else { return }
         guard let text = self.textLabel else { return }
-        let appearance = self.appearance ?? NSAppearance.current()
         
         // Only clip the text if the text isn't purely Emoji.
         if !text.string!.isEmoji {
-            var color = NSColor.darkOverlay(forAppearance: appearance)
+            var color = NSColor.tertiaryLabelColor
             let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
             if  let q = Settings[setting] as? Data,
                 let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,

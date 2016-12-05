@@ -210,7 +210,8 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     }
     
 	public override func showWindow(_ sender: Any?) {
-		super.showWindow(nil)
+        super.showWindow(nil)
+        self.indicator.startAnimation(nil)
         //self.animatedUpdate(true)
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
 		
@@ -270,34 +271,35 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	// Performs a visual refresh of the conversation list.
     // If preconfigure is true, it specifies that this is init stuff.
 	private func animatedUpdate(_ preconfigure: Bool = false) {
-		DispatchQueue.main.async {
-			self.listView.superview!.isHidden = true
-			self.indicator.alphaValue = 1.0
-			self.indicator.isHidden = false
-			self.indicator.startAnimation(nil)
-			
-            //if preconfigure { return }
-			self.listView.update(animated: false) {
-				self.listView.superview!.animator().isHidden = false
-				self.indicator.animator().alphaValue = 0.0
-				
-				let scaleIn = CAAnimation.scaleIn(forFrame: self.listView.superview!.layer!.frame)
-				self.listView.superview!.layer?.add(scaleIn, forKey: "updates")
-				
-				let durMS = Int(NSAnimationContext.current().duration * 1000.0)
-				DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(durMS)) {
-					self.indicator.stopAnimation(nil)
-					self.indicator.isHidden = true
-                    
-                    // Fixes the loss of responder when hiding the view.
-                    self.window?.makeFirstResponder(self.entryView)
-                    /*DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
-                        log.debug("TESTING TRANSIENT MODE")
-                        self.transient = true
-                    }*/
-				}
-			}
-		}
+        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { alpha in
+            self.listView.alphaValue = CGFloat(alpha)
+            self.indicator.alphaValue = CGFloat(1.0 - alpha)
+        }
+        indicatorAnim.add(at: 0.0) {
+            DispatchQueue.main.async {
+                self.indicator.isHidden = false
+                self.indicator.startAnimation(nil)
+            }
+        }
+        indicatorAnim.add(at: 1.0) {
+            DispatchQueue.main.async {
+                self.indicator.stopAnimation(nil)
+                self.indicator.isHidden = true
+            }
+        }
+        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { scale in
+            self.listView.layer!.setAffineTransform(scale)
+        }
+        let group = Interpolate.group(indicatorAnim, scaleAnim)
+        indicatorAnim.handlerRunPolicy = .always
+        
+        DispatchQueue.main.async {
+            self.listView.alphaValue = 0.0
+            self.listView.update(animated: false) {
+                group.animate(duration: 0.5)
+                self.window?.makeFirstResponder(self.entryView)
+            }
+        }
 	}
     
     @IBAction func colorChanged(_ sender: AnyObject?) {
@@ -322,33 +324,33 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	}
     
     public func windowShouldClose(_ sender: AnyObject) -> Bool {
-        //guard let self.
-        if let w = self.window {
-            let old_rect = w.frame
-            var rect = w.frame
-            rect.origin.y = -(rect.height)
-            
-            // It's a good idea but also needs some work.
-            let anim = NSWindowScaleAnimation(duration: 0.25, animationCurve: .easeIn)
-            anim.window = w
-            anim.endScale = 0.5
-            anim.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-            anim.animationBlockingMode = .nonblocking
-            anim.start()
-            
-            NSAnimationContext.runAnimationGroup({ ctx in
-                ctx.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                w.animator().setFrame(rect, display: true)
-                w.animator().alphaValue = 0.0
-            }, completionHandler: {
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
-                    w.setFrame(old_rect, display: false)
-                    w.alphaValue = 1.0
-                    w.scale()
-                    w.close()
-                }
-            })
+        guard let w = self.window else { return false }
+        
+        let old_rect = w.frame
+        var rect = w.frame
+        rect.origin.y = -(rect.height)
+        
+        let scale = Interpolate(from: 1.0, to: 0.5, interpolator: EaseInOutInterpolator()) { scale in
+            w.scale(to: scale, by: CGPoint(x: 0.5, y: 0.5))
         }
+        let alpha = Interpolate(from: 1.0, to: 0.0, interpolator: EaseInInterpolator()) { alpha in
+            w.alphaValue = alpha
+        }
+        let frame = Interpolate(from: old_rect, to: rect, interpolator: EaseInInterpolator()) { frame in
+            w.setFrame(frame, display: false)
+        }
+        
+        let group = Interpolate.group(scale, alpha, frame)
+        group.add {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
+                w.setFrame(old_rect, display: false)
+                w.alphaValue = 1.0
+                w.scale()
+                w.close()
+            }
+        }
+        
+        group.animate(duration: 0.25)
         return false
     }
 	
