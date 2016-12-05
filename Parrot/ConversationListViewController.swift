@@ -236,7 +236,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 		if let wc = self.childConversations[conv.identifier] {
 			log.debug("Conversation found for id \(conv.identifier)")
             DispatchQueue.main.async {
-                wc.showWindow()
+                wc.showWindow(nil)
             }
 		} else {
 			log.debug("Conversation NOT found for id \(conv.identifier)")
@@ -250,7 +250,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
                 let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
                 NotificationCenter.default.addObserver(self, selector: sel,
                                                        name: .NSWindowWillClose, object: wc.window)
-                wc.showWindow()
+                wc.showWindow(nil)
                 
                 // TODO: This plus some window snapping and sizing would allow for a UI mode.
                 // Also, remove the drawer and add popover if in single window mode.

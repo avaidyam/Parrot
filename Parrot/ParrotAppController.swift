@@ -115,7 +115,7 @@ public class ParrotAppController: NSApplicationController {
             
             ServiceRegistry.add(service: c)
             self.net?.startListening()
-			self.conversationsController.showWindow()
+			self.conversationsController.showWindow(nil)
 		}
         
         net?.listener = {
@@ -136,7 +136,7 @@ public class ParrotAppController: NSApplicationController {
     
     /// If the Conversations window is closed, tapping the dock icon will reopen it.
     public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-		self.conversationsController.showWindow()
+		self.conversationsController.showWindow(nil)
 		return true
 	}
 	
@@ -182,7 +182,7 @@ public class ParrotAppController: NSApplicationController {
 		let menu = NSMenu(title: "Parrot")
 		menu.addItem(title: "Open Conversations") {
 			log.info("Open Conversations")
-			self.conversationsController.showWindow()
+			self.conversationsController.showWindow(nil)
 		}
 		menu.addItem(withTitle: "Log Out...",
 		             action: #selector(self.logoutSelected(_:)),
