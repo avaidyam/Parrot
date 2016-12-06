@@ -425,7 +425,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
                 guard !self.showingFocus else { return }
                 self.showingFocus = true
                 self.listView.insert(at: [(section: 1, item: 0)])
-                //self.listView.scroll(toRow: self.dataSource.count)
+                self.listView.scroll(toRow: self.dataSource.count)
             case TypingType.Stopped: fallthrough
             default: // TypingType.Unknown:
                 log.debug("typing stop")
@@ -444,9 +444,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
             log.debug("section 0: \(self.dataSource.count), section 1: \(self.showingFocus)")
             
             self.listView.insert(at: [(section: 0, item: UInt(self.dataSource.count - 1))])
-            //self.listView.scroll(toRow: self.dataSource.count - 1)
-            //let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
-            //self.listView.tableView.animator().insertItems(at: Set<IndexPath>([idx])) //animation: [.effectFade, .slideUp]
+            self.listView.scroll(toRow: self.dataSource.count - 1)
 		}
     }
 	public func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {}

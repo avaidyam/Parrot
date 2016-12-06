@@ -41,9 +41,11 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 			self.timeLabel?.stringValue = self.prefix + time.relativeString()
 			self.timeLabel?.toolTip = "\(time.fullString())"
             
-			if conversation.unreadCount > 0 {
+			if conversation.unreadCount > 0 && (messageSender != selfSender) {
 				self.timeLabel?.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
-			}
+            } else {
+                self.timeLabel?.textColor = .tertiaryLabelColor
+            }
 		}
 	}
 	
