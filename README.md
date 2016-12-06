@@ -1,4 +1,4 @@
-![Parrot](https://raw.githubusercontent.com/avaidyam/Parrot/master/Documentation/images/icon/AppIcon_128x128@2x.png "Parrot")
+![Parrot Icon](https://raw.githubusercontent.com/wiki/avaidyam/Parrot/assets/images/icon/AppIcon_128x128@2x.png "Parrot Icon")
 
 # Introduction
 
@@ -6,8 +6,9 @@ Parrot is an extensible cross-platform instant messaging architecture (currently
 
 ----------
 # Images
-![Parrot](https://raw.githubusercontent.com/avaidyam/Parrot/master/Documentation/images/Parrot.png "Parrot")
-![parrot-cli](https://raw.githubusercontent.com/avaidyam/Parrot/master/Documentation/images/parrot-cli.png "parrot-cli")
+![Parrot Light UI](https://raw.githubusercontent.com/wiki/avaidyam/Parrot/assets/images/ui/Parrot-Light.png "Parrot Light UI")
+![Parrot Dark UI](https://raw.githubusercontent.com/wiki/avaidyam/Parrot/assets/images/ui/Parrot-Dark.png "Parrot Dark UI")
+![Parrot Themes](https://raw.githubusercontent.com/wiki/avaidyam/Parrot/assets/images/ui/Parrot-Theme.png "Parrot Themes")
 
 ----------
 # Acknowledgements

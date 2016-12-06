@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2015 Aditya Vaidyam
+Copyright (c) 2015 - 2016 Aditya Vaidyam
 Portions Copyright (c) 2015 Peter Sobot
 Portions Copyright (c) 2015 Tom Dryer
 
