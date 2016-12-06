@@ -70,6 +70,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	// TODO: BEGONE!
     public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
     private var updateToken: Bool = false
+    private var showingFocus: Bool = false
 	
 	var _previews = [String: [LinkPreviewType]]()
 	var _focusRow = -1
@@ -86,10 +87,14 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	private var dataSource: [EventStreamItem] = []
     
     public func numberOfItems(in: ListView) -> [UInt] {
-        return [UInt(self.dataSource.count)]
+        return [UInt(self.dataSource.count), UInt(self.showingFocus ? 1 : 0)]
     }
     
     public func object(in: ListView, at: ListView.Index) -> Any? {
+        if at.section == 1 { // focus
+            return "testing item"
+        }
+        
         let row = Int(at.item)
         let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
         let next = (row + 1) < self.dataSource.count && (row + 1) < 0
@@ -99,6 +104,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     }
     
     public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
+        if at.section == 1 { // focus
+            return WatermarkCell.self
+        }
         return MessageCell.self
     }
     
@@ -173,7 +181,9 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		}
         
         let nib = NSNib(nibNamed: "MessageCell", bundle: nil)!
-		self.listView.register(nib: nib, forClass: MessageCell.self)
+        let nib2 = NSNib(nibNamed: "WatermarkCell", bundle: nil)!
+        self.listView.register(nib: nib, forClass: MessageCell.self)
+        self.listView.register(nib: nib2, forClass: WatermarkCell.self)
 		//self.listView.register(nibName: "FocusCell", forClass: FocusCell.self)
 		//self.listView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
 		
@@ -410,28 +420,34 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	
     public func conversation(_ conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
 		guard !user.isSelf else { return }
-		DispatchQueue.main.async {
-			switch (status) {
-			case TypingType.Started:
-				//let cell = self.listView.tableView.make(withIdentifier: "Typing", owner: nil)
-                let b = self.window?.standardWindowButton(.closeButton)?.superview!
-				self.popover.show(relativeTo: b!.bounds.offsetBy(dx: 0, dy: -16), of: b!, preferredEdge: .minY)
-				self.statusView.stringValue = "Typing..."
-			case TypingType.Paused:
-				self.statusView.stringValue = "Entered text."
-			case TypingType.Stopped: fallthrough
-			default: // TypingType.Unknown:
-				self.popover.performClose(self)
-				self.statusView.stringValue = ""
-			}
-		}
+        DispatchQueue.main.async {
+            switch (status) {
+            case TypingType.Started: fallthrough
+            case TypingType.Paused:
+                log.debug("typing start")
+                guard !self.showingFocus else { return }
+                self.showingFocus = true
+                self.listView.insert(at: [(section: 1, item: 0)])
+                //self.listView.scroll(toRow: self.dataSource.count)
+            case TypingType.Stopped: fallthrough
+            default: // TypingType.Unknown:
+                log.debug("typing stop")
+                guard self.showingFocus else { return }
+                self.showingFocus = false
+                self.listView.remove(at: [(section: 1, item: 0)])
+            }
+        }
     }
 	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
 		guard let e = event as? IChatMessageEvent else { return }
 		self.dataSource.append(e)
-		DispatchQueue.main.async {
-            self.listView.tableView.insertRows(at: IndexSet(integer: self.dataSource.count - 1), withAnimation: [.effectFade, .slideUp])
-            self.listView.scroll(toRow: self.dataSource.count - 1)
+        DispatchQueue.main.async {
+            log.debug("message in")
+            
+            log.debug("section 0: \(self.dataSource.count), section 1: \(self.showingFocus)")
+            
+            self.listView.insert(at: [(section: 0, item: UInt(self.dataSource.count - 1))])
+            //self.listView.scroll(toRow: self.dataSource.count - 1)
             //let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
             //self.listView.tableView.animator().insertItems(at: Set<IndexPath>([idx])) //animation: [.effectFade, .slideUp]
 		}

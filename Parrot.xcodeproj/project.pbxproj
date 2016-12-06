@@ -61,6 +61,8 @@
 		489018AC1D3C8FE400CFCA5F /* Person+Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */; };
 		489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */; };
 		489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */; };
+		489FB0671DF5FBD400AEBD1D /* WatermarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */; };
+		489FB0691DF5FBE400AEBD1D /* WatermarkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 489FB0681DF5FBE400AEBD1D /* WatermarkCell.xib */; };
 		48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
 		48B3AD781C38043B0023FAA3 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B3AD771C38043B0023FAA3 /* Canvas.swift */; };
 		48BA5B4B1C37A55A00ACA29B /* Terminal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BA5B4A1C37A55A00ACA29B /* Terminal.swift */; };
@@ -344,6 +346,8 @@
 		489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Person+Directory.swift"; sourceTree = "<group>"; };
 		489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolators.swift"; sourceTree = "<group>"; };
 		489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolatable.swift"; sourceTree = "<group>"; };
+		489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatermarkCell.swift; sourceTree = "<group>"; };
+		489FB0681DF5FBE400AEBD1D /* WatermarkCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WatermarkCell.xib; sourceTree = "<group>"; };
 		48A452261D19B16500CB588A /* TLTone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLTone.swift; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyValueStore.swift; path = Mocha/KeyValueStore.swift; sourceTree = SOURCE_ROOT; };
 		48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPreviewParser.swift; sourceTree = "<group>"; };
@@ -532,6 +536,7 @@
 			children = (
 				48D3CD411DEA8752003D6C02 /* Receive */,
 				481D932E1DF535A100EB23A1 /* Send */,
+				489FB06A1DF5FBEF00AEBD1D /* Watermark */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -716,6 +721,15 @@
 				481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		489FB06A1DF5FBEF00AEBD1D /* Watermark */ = {
+			isa = PBXGroup;
+			children = (
+				489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */,
+				489FB0681DF5FBE400AEBD1D /* WatermarkCell.xib */,
+			);
+			name = Watermark;
 			sourceTree = "<group>";
 		};
 		48BA5B511C37DB2900ACA29B /* Curses */ = {
@@ -1275,6 +1289,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				489FB0691DF5FBE400AEBD1D /* WatermarkCell.xib in Resources */,
 				4884929B1D0B59370003D522 /* MessageCell.xib in Resources */,
 				488492741D0B392A0003D522 /* ConversationListViewController.xib in Resources */,
 				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
@@ -1372,6 +1387,7 @@
 				488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */,
 				48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */,
 				4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */,
+				489FB0671DF5FBD400AEBD1D /* WatermarkCell.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* MessageListViewController.swift in Sources */,
 				4822951D1D417B5E00A34B1B /* AddressBookSupport.swift in Sources */,
 				48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */,

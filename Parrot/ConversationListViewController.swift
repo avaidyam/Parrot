@@ -14,24 +14,34 @@ let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiate
 public class ConversationListViewController: NSWindowController, ConversationListDelegate,
 ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
-	// How to sort the conversation list: by recency or name, or manually.
-	enum SortMode {
-		enum Direction {
-			case ascending
-			case descending
-		}
-		
-		case none
-		case recent(Direction)
-		case name(Direction)
-	}
-	
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
 	
 	private var updateToken: Bool = false
 	private var userList: Directory?
-    private var bleh: Any? = nil
+    
+    private lazy var updateInterpolation: Interpolate = {
+        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { alpha in
+            self.listView.alphaValue = CGFloat(alpha)
+            self.indicator.alphaValue = CGFloat(1.0 - alpha)
+        }
+        indicatorAnim.add(at: 0.0) {
+            DispatchQueue.main.async {
+                self.indicator.startAnimation(nil)
+            }
+        }
+        indicatorAnim.add(at: 1.0) {
+            DispatchQueue.main.async {
+                self.indicator.stopAnimation(nil)
+            }
+        }
+        indicatorAnim.handlerRunPolicy = .always
+        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { scale in
+            self.listView.layer!.setAffineTransform(scale)
+        }
+        let group = Interpolate.group(indicatorAnim, scaleAnim)
+        return group
+    }()
     
     /// The childConversations keeps track of all open conversations and when the
     /// list is updated, it is cached and the list selection is synchronized.
@@ -43,10 +53,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         }
     }
 	
-	deinit {
-        unsubscribe(self.bleh)
-	}
-	
 	var conversationList: ParrotServiceExtension.ConversationList? {
 		didSet {
             (conversationList as? Hangouts.ConversationList)?.delegate = self // FIXME: FORCE-CAST TO HANGOUTS
@@ -56,11 +62,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
                 (Settings["Parrot.OpenConversations"] as? [String])?
                     .flatMap { self.conversationList?[$0] }
                     .forEach { self.showConversation($0) }
-            }
-            
-            self.bleh = subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.getConversations")) {
-                log.debug("received \($0)")
-                publish(on: .system, Notification(name: Notification.Name("com.avaidyam.Parrot.Service.giveConversations"), object: nil, userInfo: ["abc":"def"]))
             }
 		}
 	}
@@ -75,29 +76,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
     
 	// Performs a visual refresh of the conversation list.
     private func animatedUpdate(handler: @escaping () -> () = {}) {
-        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { alpha in
-            self.listView.alphaValue = CGFloat(alpha)
-            self.indicator.alphaValue = CGFloat(1.0 - alpha)
-        }
-        indicatorAnim.add(at: 0.0) {
-            DispatchQueue.main.async {
-                self.indicator.isHidden = false
-                self.indicator.startAnimation(nil)
-            }
-        }
-        indicatorAnim.add(at: 1.0) {
-            DispatchQueue.main.async {
-                self.indicator.stopAnimation(nil)
-                self.indicator.isHidden = true
-            }
-        }
-        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { scale in
-            self.listView.layer!.setAffineTransform(scale)
-        }
-        let group = Interpolate.group(indicatorAnim, scaleAnim)
-        indicatorAnim.handlerRunPolicy = .always
-        group.add(handler: handler)
-        
+        let group = self.updateInterpolation
         DispatchQueue.main.async {
             self.listView.alphaValue = 0.0
             self.listView.update(animated: false) {

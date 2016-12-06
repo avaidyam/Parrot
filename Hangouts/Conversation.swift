@@ -18,8 +18,7 @@ public protocol ConversationDelegate {
 public struct IFocus: Focus {
 	public let sender: Person?
 	public let timestamp: Date
-	public let typing: TypingProgress
-	public let present: Bool
+	public let mode: FocusMode
 }
 
 // Wrapper around Client for working with a single chat conversation.
@@ -189,7 +188,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			let person = self.client.directory.people[r.participantId!.gaiaId!]
 			let read = Date.from(UTC: Double(r.latestReadTimestamp!))
 			//let t = self.typingStatuses[id]
-			let f = IFocus(sender: person, timestamp: read, typing: .away, present: false)
+			let f = IFocus(sender: person, timestamp: read, mode: .away)
 			focuses.append(f)
 		}
 		return focuses

@@ -148,6 +148,32 @@ public class ListView: NSView {
             handler()
         }
 	}
+    
+    public func perform(updates: () -> ()) {
+        self.tableView.beginUpdates()
+        updates()
+        self.tableView.endUpdates()
+    }
+    
+    public func insert(at indexes: [ListView.Index], animation: NSTableViewAnimationOptions = [.effectFade, .slideUp]) {
+        DispatchQueue.main.async {
+            self.tableView.insertRows(at: self.__fromRows(indexes), withAnimation: animation)
+        }
+    }
+    
+    public func remove(at indexes: [ListView.Index], animation: NSTableViewAnimationOptions = [.effectFade, .slideDown]) {
+        DispatchQueue.main.async {
+            self.tableView.removeRows(at: self.__fromRows(indexes), withAnimation: animation)
+        }
+    }
+    
+    public func move(from origin: ListView.Index, to dest: ListView.Index) {
+        DispatchQueue.main.async {
+            self.tableView.moveRow(at: Int(self.__toRow(origin)), to: Int(self.__toRow(dest)))
+        }
+    }
+    
+    //hide, unhide, hiddenrows
 	
 	public func scroll(toRow row: Int, animated: Bool = true) {
         guard row >= 0 && row <= __rows - 1 else { return }

@@ -28,7 +28,7 @@ public protocol EventStreamItem {
 	var timestamp: Date { get }
 }
 
-public enum TypingProgress { // FIXME: FocusType
+public enum FocusMode {
 	case away
 	case here
 	case typing
@@ -41,13 +41,5 @@ public enum TypingProgress { // FIXME: FocusType
 
 /// A Peron's focus indicates their activity in a Conversation.
 public protocol Focus: EventStreamItem {
-	var typing: TypingProgress { get }
-	var present: Bool { get }
-}
-
-
-public enum EventStreamNotification {
-	case message
-	case focus
-	
+	var mode: FocusMode { get }
 }
