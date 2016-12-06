@@ -3,9 +3,27 @@ import AppKit
 public extension NSDrawer {
 	
 	/// The NSDrawer's window; that is, not its parent window, but the drawer's frame.
-	public var window: NSWindow? {
-		return self.contentView?.window
-	}
+	public var drawerWindow: NSWindow? {
+		return self.perform(Selector(("_drawerWindow"))).takeUnretainedValue() as? NSWindow
+    }
+    
+    public var resizableAxis: NSEventGestureAxis {
+        get {
+            guard let w = self.drawerWindow else { return .none }
+            let s = w.resizeIncrements
+            if s.width == .greatestFiniteMagnitude && s.height != .greatestFiniteMagnitude {
+                return .vertical
+            } else if s.width != .greatestFiniteMagnitude && s.height == .greatestFiniteMagnitude {
+                return .horizontal
+            }
+            return .none
+        }
+        set (axis) {
+            guard let w = self.drawerWindow else { return }
+            w.resizeIncrements = NSSize(width: (axis == .horizontal ? 1.0 : .greatestFiniteMagnitude),
+                                        height: (axis == .vertical ? 1.0 : .greatestFiniteMagnitude))
+        }
+    }
 	
 	/// This function must be invoked to enable the modern drawer theme for macOS 10.10+.
 	/// Note: must be invoked at app launch with +initialize.
@@ -48,11 +66,13 @@ fileprivate extension NSDrawer {
     /// This function must be invoked in addition to `__activateModernDrawers()` to enable
     /// modern drawers on macOS 10.10+. Note: must be invoked before drawer is displayed.
     func __setupModernDrawer() {
-        guard let w = self.window else { return }
+        guard let w = self.drawerWindow else { return }
         w.titlebarAppearsTransparent = true
         w.titleVisibility = .hidden
-        w.styleMask = [w.styleMask, .fullSizeContentView] // .resizable
+        w.styleMask = [w.styleMask, .fullSizeContentView, .resizable]
         w.isMovable = false
         w.hasShadow = false
+        w.resizeIncrements = NSSize(width: CGFloat.greatestFiniteMagnitude, height: .greatestFiniteMagnitude)
+        w.standardWindowButton(.zoomButton)?.superview?.isHidden = true
     }
 }

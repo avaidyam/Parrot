@@ -58,10 +58,14 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
             (conversationList as? Hangouts.ConversationList)?.delegate = self // FIXME: FORCE-CAST TO HANGOUTS
             
             // Open conversations that were previously open.
-            self.animatedUpdate {
-                (Settings["Parrot.OpenConversations"] as? [String])?
-                    .flatMap { self.conversationList?[$0] }
-                    .forEach { self.showConversation($0) }
+            let group = self.updateInterpolation
+            DispatchQueue.main.async {
+                self.listView.update(animated: false) {
+                    group.animate(duration: 0.5)
+                    (Settings["Parrot.OpenConversations"] as? [String])?
+                        .flatMap { self.conversationList?[$0] }
+                        .forEach { self.showConversation($0) }
+                }
             }
 		}
 	}
@@ -72,17 +76,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 		// FIXME: FORCE-CAST TO HANGOUTS
 		let all = self.conversationList?.conversations.map { $1 as! IConversation }.filter { !$0.is_archived }
 		return all!.sorted { $0.last_modified > $1.last_modified }.map { $0 as ParrotServiceExtension.Conversation }
-	}
-    
-	// Performs a visual refresh of the conversation list.
-    private func animatedUpdate(handler: @escaping () -> () = {}) {
-        let group = self.updateInterpolation
-        DispatchQueue.main.async {
-            self.listView.alphaValue = 0.0
-            self.listView.update(animated: false) {
-                group.animate(duration: 0.5)
-            }
-        }
 	}
     
     public func numberOfItems(in: ListView) -> [UInt] {
@@ -140,6 +133,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
 	public override func loadWindow() {
 		super.loadWindow()
+        
 		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
         self.window?.titleVisibility = .hidden
@@ -148,6 +142,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         let frame = self.listView.layer!.frame
         self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         self.listView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
+        self.listView.alphaValue = 0.0
         
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }

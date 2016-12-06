@@ -65,7 +65,30 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
     @IBOutlet var moduleView: NSView!
 	@IBOutlet var drawer: NSDrawer!
 	@IBOutlet var drawerButton: NSButton!
-	@IBOutlet var drawerView: NSView!
+    @IBOutlet var drawerView: NSView!
+    
+    private lazy var updateInterpolation: Interpolate = {
+        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { alpha in
+            self.listView.alphaValue = CGFloat(alpha)
+            self.indicator.alphaValue = CGFloat(1.0 - alpha)
+        }
+        indicatorAnim.add(at: 0.0) {
+            DispatchQueue.main.async {
+                self.indicator.startAnimation(nil)
+            }
+        }
+        indicatorAnim.add(at: 1.0) {
+            DispatchQueue.main.async {
+                self.indicator.stopAnimation(nil)
+            }
+        }
+        indicatorAnim.handlerRunPolicy = .always
+        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { scale in
+            self.listView.layer!.setAffineTransform(scale)
+        }
+        let group = Interpolate.group(indicatorAnim, scaleAnim)
+        return group
+    }()
 	
 	// TODO: BEGONE!
     public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
@@ -222,6 +245,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	public override func showWindow(_ sender: Any?) {
         super.showWindow(nil)
         self.indicator.startAnimation(nil)
+        self.listView.alphaValue = 0.0
         //self.animatedUpdate(true)
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
 		
@@ -235,7 +259,7 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 		// Set up dark/light notifications.
 		ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
 			self.window?.appearance = interface.appearance()
-			self.drawer.window?.appearance = interface.appearance()
+			self.drawer.drawerWindow?.appearance = interface.appearance()
 			
 			// NSTextView doesn't automatically change its text color when the
 			// backing view's appearance changes, so we need to set it each time.
@@ -277,40 +301,6 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 			log.debug("received \($0)")
 		}*/
     }
-	
-	// Performs a visual refresh of the conversation list.
-    // If preconfigure is true, it specifies that this is init stuff.
-	private func animatedUpdate(_ preconfigure: Bool = false) {
-        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { alpha in
-            self.listView.alphaValue = CGFloat(alpha)
-            self.indicator.alphaValue = CGFloat(1.0 - alpha)
-        }
-        indicatorAnim.add(at: 0.0) {
-            DispatchQueue.main.async {
-                self.indicator.isHidden = false
-                self.indicator.startAnimation(nil)
-            }
-        }
-        indicatorAnim.add(at: 1.0) {
-            DispatchQueue.main.async {
-                self.indicator.stopAnimation(nil)
-                self.indicator.isHidden = true
-            }
-        }
-        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { scale in
-            self.listView.layer!.setAffineTransform(scale)
-        }
-        let group = Interpolate.group(indicatorAnim, scaleAnim)
-        indicatorAnim.handlerRunPolicy = .always
-        
-        DispatchQueue.main.async {
-            self.listView.alphaValue = 0.0
-            self.listView.update(animated: false) {
-                group.animate(duration: 0.5)
-                self.window?.makeFirstResponder(self.entryView)
-            }
-        }
-	}
     
     @IBAction func colorChanged(_ sender: AnyObject?) {
         /*if let well = sender as? NSColorWell, well.identifier == "MyBubbleColor" {
@@ -403,7 +393,14 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 						*/
 					//}
 				}
-				self.animatedUpdate()
+                
+                let group = self.updateInterpolation
+                DispatchQueue.main.async {
+                    self.listView.update(animated: false) {
+                        group.animate(duration: 0.5)
+                        self.window?.makeFirstResponder(self.entryView)
+                    }
+                }
 			}
 			
 			/*
@@ -527,13 +524,13 @@ public class MessageListViewController: NSWindowController, NSTextViewExtendedDe
 	// Bind the drawer state to the button that toggles it.
 	public func drawerWillOpen(_ notification: Notification) {
 		self.drawerButton.state = NSOnState
-		self.drawer.window?.animator().alphaValue = 1.0
+		self.drawer.drawerWindow?.animator().alphaValue = 1.0
         
         publish(on: .system, Notification(name: Notification.Name("com.avaidyam.Parrot.Service.getConversations")))
 	}
 	public func drawerWillClose(_ notification: Notification) {
 		self.drawerButton.state = NSOffState
-		self.drawer.window?.animator().alphaValue = 0.0
+		self.drawer.drawerWindow?.animator().alphaValue = 0.0
 	}
     
     private func resizeModule() {
