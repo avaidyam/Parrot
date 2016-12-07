@@ -170,6 +170,86 @@ public extension NSHapticFeedbackManager {
     }
 }
 
+// from @nilium: https://github.com/nilium/SwiftSchemer/blob/master/SwiftSchemer/NSView%2BReplacement.swift
+public extension NSView {
+    
+    /// Replaces the receiver with `view` in its superview. If
+    /// `preservingConstraints` is true, any constraints referencing the
+    /// receiver in its superview will be rewritten to reference `view`.
+    public func replaceInSuperview(with view: NSView, preservingConstraints: Bool = true) {
+        assert(superview != nil, "Cannot replace self without a superview!")
+        if preservingConstraints {
+            superview!.replaceSubviewsPreservingConstraints([self: view])
+        } else {
+            superview!.replaceSubview(self, with: view)
+        }
+    }
+    
+    /// Replaces subviews in the receiver while preserving their constraints.
+    /// Accepts a dictionary of [NSView: NSView] objects, where the key is the
+    /// view to be replaced and its value the replacement.
+    func replaceSubviewsPreservingConstraints(_ replacements: [NSView: NSView]) {
+        if replacements.isEmpty {
+            return
+        }
+        let currentConstraints = constraints as [NSLayoutConstraint]
+        var removedConstraints = [NSLayoutConstraint]()
+        var newConstraints     = [NSLayoutConstraint]()
+        
+        for current in currentConstraints {
+            var firstItem: AnyObject?  = current.firstItem
+            var secondItem: AnyObject? = current.secondItem
+            
+            if let firstView = firstItem as? NSView {
+                if let replacement = replacements[firstView] {
+                    firstItem = replacement
+                    replacement.frame = firstView.frame
+                }
+            }
+            if let secondView = secondItem as? NSView {
+                if let replacement = replacements[secondView] {
+                    secondItem = replacement
+                    replacement.frame = secondView.frame
+                }
+            }
+            if firstItem === current.firstItem && secondItem === current.secondItem {
+                continue
+            }
+            
+            let updated = NSLayoutConstraint(
+                item: firstItem!,
+                attribute: current.firstAttribute,
+                relatedBy: current.relation,
+                toItem: secondItem!,
+                attribute: current.secondAttribute,
+                multiplier: current.multiplier,
+                constant: current.constant
+            )
+            
+            updated.shouldBeArchived = current.shouldBeArchived
+            updated.identifier = current.identifier
+            updated.priority = current.priority
+            
+            removedConstraints.append(current)
+            newConstraints.append(updated)
+        }
+        if !removedConstraints.isEmpty {
+            removeConstraints(removedConstraints)
+        }
+        for (subview, replacement) in replacements {
+            replaceSubview(subview, with: replacement)
+        }
+        if !newConstraints.isEmpty {
+            addConstraints(newConstraints)
+        }
+    }
+    
+    /// Wrapper for replaceSuviewsPreservingConstraints([subview: replacement])
+    public func replaceSubviewPreservingConstraints(subview: NSView, replacement: NSView) {
+        replaceSubviewsPreservingConstraints([subview: replacement])
+    }
+}
+
 public func runSelectionPanel(for window: NSWindow, fileTypes: [String],
                               multiple: Bool = false, _ handler: @escaping ([URL]) -> () = {_ in}) {
 	let p = NSOpenPanel()

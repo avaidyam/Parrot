@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11760" systemVersion="16C41b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11760" systemVersion="16C53a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11760"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -13,11 +12,10 @@
                 <outlet property="drawer" destination="RR8-NV-Gpy" id="kGZ-B7-HUp"/>
                 <outlet property="drawerButton" destination="5ZG-rS-xYQ" id="5CL-aP-pi4"/>
                 <outlet property="drawerView" destination="Pye-gy-Huh" id="jI9-8C-Iqi"/>
-                <outlet property="entryView" destination="A58-4G-SjV" id="Gzs-mB-jSL"/>
-                <outlet property="imageView" destination="S2O-bo-UO2" id="84S-DQ-Ja9"/>
                 <outlet property="indicator" destination="c1g-nC-vne" id="EDK-0c-mHz"/>
                 <outlet property="listView" destination="yMT-fg-2gH" id="SXU-Nq-yyB"/>
                 <outlet property="moduleView" destination="eI1-ks-Z3P" id="idG-hc-uzf"/>
+                <outlet property="placeholderView" destination="62j-3o-DEj" id="vvn-O3-hO6"/>
                 <outlet property="statusView" destination="eNL-fW-1Cx" id="gX1-VY-R6C"/>
                 <outlet property="window" destination="rqa-ia-OSc" id="fhe-7e-EqQ"/>
             </connections>
@@ -51,76 +49,18 @@
                                 </connections>
                             </customView>
                             <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="appearanceBased" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="eI1-ks-Z3P">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="56"/>
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="32"/>
                                 <subviews>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="S2O-bo-UO2" userLabel="Image View">
-                                        <rect key="frame" x="8" y="8" width="24" height="24"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="S2O-bo-UO2" secondAttribute="height" multiplier="1:1" id="Y9f-tR-8A4"/>
-                                            <constraint firstAttribute="width" constant="24" id="pP5-NL-Reg"/>
-                                        </constraints>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSUser" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="gwU-oa-jXA">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                                                <integer key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
-                                    <scrollView wantsLayer="YES" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="40" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61a-19-CQC">
-                                        <rect key="frame" x="40" y="8" width="432" height="40"/>
-                                        <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="HQI-pZ-D0o" customClass="NSAntiClipView" customModule="MochaUI">
-                                            <rect key="frame" x="0.0" y="0.0" width="432" height="40"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <subviews>
-                                                <textView wantsLayer="YES" drawsBackground="NO" continuousSpellChecking="YES" allowsUndo="YES" allowsImageEditing="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="A58-4G-SjV" customClass="NSExtendedTextView" customModule="MochaUI">
-                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="40"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <size key="minSize" width="432" height="40"/>
-                                                    <size key="maxSize" width="591" height="10000000"/>
-                                                    <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAlwaysPasteAsPlainText" value="YES"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="placeholderString" value="Send a message..."/>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                                                            <integer key="value" value="1"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="size" keyPath="textContainerInset">
-                                                            <size key="value" width="4" height="4"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                </textView>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </clipView>
-                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="fv6-Li-TQq">
-                                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="glu-WV-IDk">
-                                            <rect key="frame" x="416" y="0.0" width="16" height="40"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </scroller>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                                                <integer key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </scrollView>
+                                    <customView placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="32" translatesAutoresizingMaskIntoConstraints="NO" id="62j-3o-DEj">
+                                        <rect key="frame" x="0.0" y="0.0" width="480" height="32"/>
+                                    </customView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="250" id="4kn-D9-yrA"/>
-                                    <constraint firstItem="61a-19-CQC" firstAttribute="height" relation="greaterThanOrEqual" secondItem="S2O-bo-UO2" secondAttribute="height" id="BXF-On-A5E"/>
-                                    <constraint firstItem="61a-19-CQC" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" constant="8" id="E9w-Hu-DQ3"/>
-                                    <constraint firstAttribute="bottom" secondItem="61a-19-CQC" secondAttribute="bottom" constant="8" id="ZVJ-gm-5WQ"/>
-                                    <constraint firstAttribute="trailing" secondItem="61a-19-CQC" secondAttribute="trailing" constant="8" id="ams-j0-piv"/>
-                                    <constraint firstItem="61a-19-CQC" firstAttribute="leading" secondItem="S2O-bo-UO2" secondAttribute="trailing" constant="8" id="pqW-Jm-9mr"/>
-                                    <constraint firstAttribute="bottom" secondItem="S2O-bo-UO2" secondAttribute="bottom" constant="8" id="qfr-SP-QnO"/>
-                                    <constraint firstItem="S2O-bo-UO2" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" constant="8" id="ui8-1I-GaV"/>
+                                    <constraint firstAttribute="bottom" secondItem="62j-3o-DEj" secondAttribute="bottom" id="Zcp-iD-JO9"/>
+                                    <constraint firstAttribute="trailing" secondItem="62j-3o-DEj" secondAttribute="trailing" id="cPo-Hg-N4L"/>
+                                    <constraint firstItem="62j-3o-DEj" firstAttribute="top" secondItem="eI1-ks-Z3P" secondAttribute="top" id="pQx-VB-5J0"/>
+                                    <constraint firstItem="62j-3o-DEj" firstAttribute="leading" secondItem="eI1-ks-Z3P" secondAttribute="leading" id="yrk-5k-iPi"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
@@ -463,6 +403,5 @@
         <image name="NSImageNameVolumeMute" width="512" height="512"/>
         <image name="NSListViewTemplate" width="14" height="10"/>
         <image name="NSPathTemplate" width="16" height="10"/>
-        <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>

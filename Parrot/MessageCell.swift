@@ -19,20 +19,8 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
             self.setColors()
         }
         
-        // Since we struggle with IB shoving the NSScrollView down our throats, 
-        // remove the scroll view entirely and re-constrain the text view.
-        let scroll = self.textLabel?.enclosingScrollView
-        self.textLabel?.removeFromSuperview()
-        self.addSubview(self.textLabel!)
-        scroll?.removeFromSuperview()
-        
-        // Match the same constraints that the scroll view had in IB and turn off autoresizing.
         self.textLabel?.translatesAutoresizingMaskIntoConstraints = false
-        self.textLabel?.leadingAnchor.constraint(equalTo: self.photoView!.trailingAnchor, constant: 8).isActive = true
-        self.textLabel?.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -8).isActive = true
-        self.textLabel?.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
-        self.textLabel?.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4).isActive = true
-        self.textLabel?.heightAnchor.constraint(greaterThanOrEqualTo: self.photoView!.heightAnchor).isActive = true
+        self.textLabel?.enclosingScrollView?.replaceInSuperview(with: self.textLabel!)
     }
     
     deinit {
