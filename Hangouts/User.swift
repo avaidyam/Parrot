@@ -171,6 +171,22 @@ public class UserList: Directory, Collection {
         }
     }
     
+    public func lookup(by: [String]) -> [Person] {
+        return lookup(by: by, limit: 10)
+    }
+    public func lookup(by: [String], limit: Int) -> [Person] {
+        var ret = [Person]()
+        let s = DispatchSemaphore(value: 0)
+        self.client.opQueue.sync {
+            self.client.getSuggestedEntities(max_count: limit) { r in
+                log.debug("got \(r)")
+                s.signal()
+            }
+        }
+        s.wait()
+        return ret
+    }
+    
 	// Initialize the list of Users.
 	public init(client: Client, me: User, users: [User] = []) {
 		var usersDict = Dictionary<User.ID, User>()

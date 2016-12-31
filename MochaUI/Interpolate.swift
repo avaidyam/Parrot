@@ -181,6 +181,7 @@ open class Interpolate {
      Next function used by animation(). Increments fractionComplete based on the duration.
      */
     @objc fileprivate func next(_ fps: Double = 60.0) {
+        
         let direction: CGFloat = (targetProgress > fractionComplete) ? 1.0 : -1.0
         let oldProgress = fractionComplete
         var newProgress = fractionComplete + 1 / (self.duration * CGFloat(fps)) * direction // FIXME: Don't use fps...

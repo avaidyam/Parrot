@@ -19,6 +19,11 @@ public struct IFocus: Focus {
 	public let sender: Person?
 	public let timestamp: Date
 	public let mode: FocusMode
+    public init(sender: Person?, timestamp: Date, mode: FocusMode) {
+        self.sender = sender
+        self.timestamp = timestamp
+        self.mode = mode
+    }
 }
 
 // Wrapper around Client for working with a single chat conversation.
@@ -117,7 +122,17 @@ public class IConversation: ParrotServiceExtension.Conversation {
             return _cachedEvents!
         }
     }
-	
+    
+    public var archived: Bool {
+        get {
+            return self.is_archived
+        }
+        set {
+            // FIXME:
+            //self.client.setView(self.conversation, archived)
+        }
+    }
+    
 	// Add a ClientEvent to the Conversation.
 	// Returns an instance of Event or subclass.
 	@discardableResult
@@ -400,8 +415,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		return self.id
 	}
 	
-	
-	public var messages: [Message] {
+	public var eventStream: [EventStreamItem] {
 		return self._messages.map { $0 as Message }
 	}
 
@@ -429,7 +443,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		}
     }
 
-    public var last_modified: Date {
+    public var timestamp: Date {
         get {
 			return Date.from(UTC: Double(conversation.selfConversationState?.sortTimestamp ?? 0))
 			//.origin

@@ -167,9 +167,15 @@ public class ListView: NSView {
         }
     }
     
-    public func move(from origin: ListView.Index, to dest: ListView.Index) {
+    public func move(from origin: [ListView.Index], to dest: [ListView.Index]) {
+        assert(origin.count == dest.count, "Move operation origin and destination must have same number of indexes!")
         DispatchQueue.main.async {
-            self.tableView.moveRow(at: Int(self.__toRow(origin)), to: Int(self.__toRow(dest)))
+            for (idx, origin2) in origin.enumerated() {
+                let dest2 = dest[idx]
+                log.debug("moving from \(origin2) to \(dest2)")
+                log.debug("TRNASLATE: \(Int(self.__toRow(origin2))) to \(Int(self.__toRow(dest2)))")
+                self.tableView.moveRow(at: Int(self.__toRow(origin2)), to: Int(self.__toRow(dest2)))
+            }
         }
     }
     

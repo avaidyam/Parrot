@@ -95,5 +95,6 @@ public protocol Directory: class /*: Collection*/ {
 	/// Search for users given a set of identifiers.
 	/// Identifiers can include anything including name components.
 	/// Returns a set of users that could be possible matches.
-	//func search(for: [String]) -> [Person]
+    func lookup(by: [String]) -> [Person]
+    func lookup(by: [String], limit: Int) -> [Person]
 }

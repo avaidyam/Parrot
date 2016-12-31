@@ -24,7 +24,7 @@ public struct PlaceholderMessage: Message {
     public var failed: Bool = false
 }
 
-public class MessageListViewController: NSWindowController, TextInputHost, ConversationDelegate, ListViewDataDelegate, ListViewScrollbackDelegate {
+public class MessageListViewController: NSWindowController, TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
     /// Transient mode is to be used when the conversation should be shown modally
     /// for a temporary period of time; any interaction outside of the window should
@@ -64,31 +64,31 @@ public class MessageListViewController: NSWindowController, TextInputHost, Conve
 	@IBOutlet var drawer: NSDrawer!
 	@IBOutlet var drawerButton: NSButton!
     @IBOutlet var drawerView: NSView!
-    private var typingHelper: TypingHelper? = nil
     
+    private var typingHelper: TypingHelper? = nil
     lazy var textInputCell: TextInputCell = {
         let t = TextInputCell(nibName: "TextInputCell", bundle: Bundle.main)!
         t.host = self; return t
     }()
     
     private lazy var updateInterpolation: Interpolate = {
-        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { alpha in
-            self.listView.alphaValue = CGFloat(alpha)
-            self.indicator.alphaValue = CGFloat(1.0 - alpha)
+        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
+            self?.listView.alphaValue = CGFloat(alpha)
+            self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
-        indicatorAnim.add(at: 0.0) {
+        indicatorAnim.add(at: 0.0) { [weak self] in
             DispatchQueue.main.async {
-                self.indicator.startAnimation(nil)
+                self?.indicator.startAnimation(nil)
             }
         }
-        indicatorAnim.add(at: 1.0) {
+        indicatorAnim.add(at: 1.0) { [weak self] in
             DispatchQueue.main.async {
-                self.indicator.stopAnimation(nil)
+                self?.indicator.stopAnimation(nil)
             }
         }
         indicatorAnim.handlerRunPolicy = .always
-        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { scale in
-            self.listView.layer!.setAffineTransform(scale)
+        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { [weak self] scale in
+            self?.listView.layer!.setAffineTransform(scale)
         }
         let group = Interpolate.group(indicatorAnim, scaleAnim)
         return group
@@ -100,7 +100,6 @@ public class MessageListViewController: NSWindowController, TextInputHost, Conve
     private var showingFocus: Bool = false
 	
 	var _previews = [String: [LinkPreviewType]]()
-	var _focusRow = -1
 	var _note: NSObjectProtocol!
 	lazy var popover: NSPopover = {
 		let p = NSPopover()
@@ -112,17 +111,16 @@ public class MessageListViewController: NSWindowController, TextInputHost, Conve
 	}()
     
 	private var dataSource: [EventStreamItem] = []
-    
     public func numberOfItems(in: ListView) -> [UInt] {
-        return [UInt(self.dataSource.count), UInt(self.showingFocus ? 1 : 0)]
+        return [UInt(self.dataSource.count)]
     }
     
     public func object(in: ListView, at: ListView.Index) -> Any? {
-        if at.section == 1 { // focus
-            return "testing item"
+        let row = Int(at.item)
+        if let f = self.dataSource[row] as? Focus {
+            return f
         }
         
-        let row = Int(at.item)
         let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
         let next = (row + 1) < self.dataSource.count && (row + 1) < 0
         return EventStreamItemBundle(current: self.dataSource[row],
@@ -131,7 +129,8 @@ public class MessageListViewController: NSWindowController, TextInputHost, Conve
     }
     
     public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
-        if at.section == 1 { // focus
+        let row = Int(at.item)
+        if let _ = self.dataSource[row] as? Focus {
             return WatermarkCell.self
         }
         return MessageCell.self
@@ -181,8 +180,6 @@ public class MessageListViewController: NSWindowController, TextInputHost, Conve
         let nib2 = NSNib(nibNamed: "WatermarkCell", bundle: nil)!
         self.listView.register(nib: nib, forClass: MessageCell.self)
         self.listView.register(nib: nib2, forClass: WatermarkCell.self)
-		//self.listView.register(nibName: "FocusCell", forClass: FocusCell.self)
-		//self.listView.register(nibName: "LinkPreviewCell", forClass: LinkPreviewCell.self)
 		
         self.token = subscribe(source: nil, Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             self.setBackground()
@@ -294,6 +291,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, Conve
         group.animate(duration: 0.25)
         return false
     }
+    
 	
 	public func windowWillClose(_ notification: Notification) {
 		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
@@ -356,39 +354,60 @@ public class MessageListViewController: NSWindowController, TextInputHost, Conve
 		}
 	}
 	
-    public func conversation(_ conversation: IConversation, didChangeTypingStatusForUser user: User, toStatus status: TypingType) {
-		guard !user.isSelf else { return }
+	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
+		guard let e = event as? IChatMessageEvent else { return }
         DispatchQueue.main.async {
-            switch (status) {
-            case TypingType.Started: fallthrough
-            case TypingType.Paused:
-                log.debug("typing start")
-                guard !self.showingFocus else { return }
-                self.showingFocus = true
-                self.listView.insert(at: [(section: 1, item: 0)])
-                self.listView.scroll(toRow: self.dataSource.count)
-            case TypingType.Stopped: fallthrough
-            default: // TypingType.Unknown:
-                log.debug("typing stop")
-                guard self.showingFocus else { return }
-                self.showingFocus = false
-                self.listView.remove(at: [(section: 1, item: 0)])
+            self.dataSource.append(e)
+            log.debug("section 0: \(self.dataSource.count)")
+            self.listView.insert(at: [(section: 0, item: UInt(self.dataSource.count - 1))])
+            //self.listView.scroll(toRow: self.dataSource.count - 1)
+		}
+    }
+    
+    private var lastWatermarkIdx = -1
+    public func watermarkEvent(_ focus: Focus) {
+        guard let s = focus.sender, !s.me else { return }
+        DispatchQueue.main.async {
+            let oldWatermarkIdx = self.lastWatermarkIdx
+            if oldWatermarkIdx > 0 {
+                self.dataSource.remove(at: oldWatermarkIdx)
+            }
+            self.dataSource.append(focus)
+            self.lastWatermarkIdx = self.dataSource.count - 1
+            
+            if oldWatermarkIdx > 0 && self.lastWatermarkIdx > 0 {
+                log.debug("MOVE WATERMARK")
+                //self.listView.remove(at: [(section: 0, item: UInt(oldWatermarkIdx))])
+                //self.listView.insert(at: [(section: 0, item: UInt(self.lastWatermarkIdx))])
+                self.listView.move(from: [(section: 0, item: UInt(oldWatermarkIdx))],
+                                   to: [(section: 0, item: UInt(self.lastWatermarkIdx))])
+            } else if self.lastWatermarkIdx > 0 {
+                log.debug("ADD WATERMARK")
+                self.listView.insert(at: [(section: 0, item: UInt(self.lastWatermarkIdx))])
             }
         }
     }
-	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
-		guard let e = event as? IChatMessageEvent else { return }
-		self.dataSource.append(e)
+    
+    public func focusModeChanged(_ focus: Focus) {
+        guard let s = focus.sender, !s.me else { return }
         DispatchQueue.main.async {
-            log.debug("section 0: \(self.dataSource.count), section 1: \(self.showingFocus)")
-            
-            self.listView.insert(at: [(section: 0, item: UInt(self.dataSource.count - 1))])
-            self.listView.scroll(toRow: self.dataSource.count - 1)
-		}
+            switch focus.mode {
+            case .typing: fallthrough
+            case .enteredText:
+                log.debug("typing start")
+                guard !self.showingFocus else { return }
+                self.showingFocus = true
+                //self.listView.insert(at: [(section: 1, item: 0)])
+                //self.listView.scroll(toRow: self.dataSource.count)
+            case .here: fallthrough
+            case .away:
+                log.debug("typing stop")
+                guard self.showingFocus else { return }
+                self.showingFocus = false
+                //self.listView.remove(at: [(section: 1, item: 0)])
+            }
+        }
     }
-	public func conversation(_ conversation: IConversation, didReceiveWatermarkNotification: IWatermarkNotification) {}
-	public func conversationDidUpdateEvents(_ conversation: IConversation) {}
-    public func conversationDidUpdate(conversation: IConversation) {}
 	
     public override func cancelOperation(_ sender: Any?) {
         if self.transient {
@@ -437,24 +456,6 @@ public class MessageListViewController: NSWindowController, TextInputHost, Conve
 				//log.debug("conv => { conv: \(self.conversation!.conversation) }")
 				log.debug("state => { person: \(person.nameComponents), timestamp: \(timestamp) }")
 			}
-			
-			// Find the last visible row that was sent by the user.
-			/*
-			var lastR: Int = -1
-			for r in self.listView.visibleRows {
-				if self.conversation!._messages[r].sender.me {
-					lastR = r
-				}
-			}
-			
-			// If we found a row, set the focus.
-			if lastR > 0 {
-				if let c = self.listView.tableView.view(atColumn: 0, row: lastR, makeIfNecessary: false) as? MessageCell {
-					c.setFocus(true)
-					self._focusRow = lastR
-					self.listView.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: lastR))
-				}
-			}*/
         }
     }
 	

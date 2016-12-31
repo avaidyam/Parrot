@@ -12,7 +12,7 @@ let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteract
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
 public class ConversationListViewController: NSWindowController, ConversationListDelegate,
-ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
+ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSWindowDelegate {
 	
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
@@ -21,23 +21,23 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	private var userList: Directory?
     
     private lazy var updateInterpolation: Interpolate = {
-        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { alpha in
-            self.listView.alphaValue = CGFloat(alpha)
-            self.indicator.alphaValue = CGFloat(1.0 - alpha)
+        let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
+            self?.listView.alphaValue = CGFloat(alpha)
+            self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
-        indicatorAnim.add(at: 0.0) {
+        indicatorAnim.add(at: 0.0) { [weak self] in
             DispatchQueue.main.async {
-                self.indicator.startAnimation(nil)
+                self?.indicator.startAnimation(nil)
             }
         }
-        indicatorAnim.add(at: 1.0) {
+        indicatorAnim.add(at: 1.0) { [weak self] in
             DispatchQueue.main.async {
-                self.indicator.stopAnimation(nil)
+                self?.indicator.stopAnimation(nil)
             }
         }
         indicatorAnim.handlerRunPolicy = .always
-        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { scale in
-            self.listView.layer!.setAffineTransform(scale)
+        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { [weak self] scale in
+            self?.listView.layer!.setAffineTransform(scale)
         }
         let group = Interpolate.group(indicatorAnim, scaleAnim)
         return group
@@ -58,10 +58,9 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
             (conversationList as? Hangouts.ConversationList)?.delegate = self // FIXME: FORCE-CAST TO HANGOUTS
             
             // Open conversations that were previously open.
-            let group = self.updateInterpolation
-            DispatchQueue.main.async {
-                self.listView.update(animated: false) {
-                    group.animate(duration: 0.5)
+            self.listView.update(animated: false) {
+                self.updateInterpolation.animate(duration: 1.5)
+                self.updateInterpolation.add(at: 1.0) {
                     (Settings["Parrot.OpenConversations"] as? [String])?
                         .flatMap { self.conversationList?[$0] }
                         .forEach { self.showConversation($0) }
@@ -72,10 +71,9 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
 	var sortedConversations: [ParrotServiceExtension.Conversation] {
 		guard self.conversationList != nil else { return [] }
-		
-		// FIXME: FORCE-CAST TO HANGOUTS
-		let all = self.conversationList?.conversations.map { $1 as! IConversation }.filter { !$0.is_archived }
-		return all!.sorted { $0.last_modified > $1.last_modified }.map { $0 as ParrotServiceExtension.Conversation }
+        return self.conversationList!.conversations.values
+            .filter { !$0.archived }
+            .sorted { $0.timestamp > $1.timestamp }
 	}
     
     public func numberOfItems(in: ListView) -> [UInt] {
@@ -181,7 +179,8 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 			default: break
 			}
 		}
-		
+        
+        self.indicator.usesThreadedAnimation = true
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
 		/*self.listView.pasteboardProvider = { row in
 			let pb = NSPasteboardItem()
@@ -199,7 +198,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
                 wc.showWindow(nil)
             }
 		} else {
-			log.debug("Conversation NOT found for id \(conv.identifier)")
+            log.debug("Conversation NOT found for id \(conv.identifier)")
             DispatchQueue.main.async {
                 let wc = MessageListViewController(windowNibName: "MessageListViewController")
                 wc.conversation = (conv as! IConversation)
@@ -211,32 +210,66 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
                 NotificationCenter.default.addObserver(self, selector: sel,
                                                        name: .NSWindowWillClose, object: wc.window)
                 wc.showWindow(nil)
-                
-                // TODO: This plus some window snapping and sizing would allow for a UI mode.
-                // Also, remove the drawer and add popover if in single window mode.
-                /*
-                self.window?.addChildWindow(wc.window!, ordered: .above)
-                //wc.window?.isResizable = false
-                wc.window?.standardWindowButton(.closeButton)?.isHidden = true
-                wc.window?.standardWindowButton(.miniaturizeButton)?.isHidden = true
-                wc.window?.standardWindowButton(.zoomButton)?.isHidden = true
-                wc.window?.standardWindowButton(.toolbarButton)?.isHidden = true
-                wc.window?.standardWindowButton(.documentIconButton)?.isHidden = true
-                wc.window?.standardWindowButton(.documentVersionsButton)?.isHidden = true
-                wc.window?.standardWindowButton(.fullScreenButton)?.isHidden = true
-                */
             }
+            
+            // TODO: This plus some window snapping and sizing would allow for a UI mode.
+            // Also, remove the drawer and add popover if in single window mode.
+            /*
+             self.window?.addChildWindow(wc.window!, ordered: .above)
+             //wc.window?.isResizable = false
+             wc.window?.standardWindowButton(.closeButton)?.isHidden = true
+             wc.window?.standardWindowButton(.miniaturizeButton)?.isHidden = true
+             wc.window?.standardWindowButton(.zoomButton)?.isHidden = true
+             wc.window?.standardWindowButton(.toolbarButton)?.isHidden = true
+             wc.window?.standardWindowButton(.documentIconButton)?.isHidden = true
+             wc.window?.standardWindowButton(.documentVersionsButton)?.isHidden = true
+             wc.window?.standardWindowButton(.fullScreenButton)?.isHidden = true
+             */
 		}
 	}
 	
 	/// As we are about to display, configure our UI elements.
 	public override func showWindow(_ sender: Any?) {
-		super.showWindow(sender)
-		self.indicator.startAnimation(nil)
+        let scale = Interpolate(from: 0.25, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] scale in
+            self?.window?.scale(to: scale, by: CGPoint(x: 0.5, y: 0.5))
+        }
+        let alpha = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
+            self?.window?.alphaValue = CGFloat(alpha)
+        }
+        
+        self.window?.scale(to: 0.25, by: CGPoint(x: 0.5, y: 0.5))
+        self.window?.alphaValue = 0.0
+        self.window?.makeKeyAndOrderFront(nil)
+        DispatchQueue.main.async {
+            self.indicator.startAnimation(nil)
+        }
+        
+        let group = Interpolate.group(scale, alpha)
+        group.animate(duration: 0.35)
+        
 		ParrotAppearance.registerInterfaceStyleListener(observer: self) { appearance in
 			self.window?.appearance = appearance.appearance()
 		}
 	}
+    
+    public func windowShouldClose(_ sender: AnyObject) -> Bool {
+        guard let w = self.window else { return false }
+        
+        let scale = Interpolate(from: 1.0, to: 0.25, interpolator: EaseInOutInterpolator()) { scale in
+            w.scale(to: scale, by: CGPoint(x: 0.5, y: 0.5))
+        }
+        let alpha = Interpolate(from: 1.0, to: 0.0, interpolator: EaseInOutInterpolator()) { alpha in
+            w.alphaValue = CGFloat(alpha)
+        }
+        let group = Interpolate.group(scale, alpha)
+        group.add(at: 1.0) {
+            DispatchQueue.main.async {
+                w.close()
+            }
+        }
+        group.animate(duration: 0.35)
+        return false
+    }
 	
 	/// If we're notified that our child window has closed (that is, a conversation),
 	/// clean up by removing it from the `childConversations` dictionary.
@@ -248,6 +281,8 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         self.childConversations[conv2.identifier] = nil
         NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
 	}
+    
+    
 	
 	/// If we need to close, make sure we clean up after ourselves, instead of deinit.
 	public func windowWillClose(_ notification: Notification) {
@@ -358,18 +393,26 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	}
 	
     public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: ITypingStatusMessage, forUser: User) {
-		if let c = self.childConversations[status.convID] {
-			//if (c.window?.isKeyWindow ?? false) {
-				c.conversation(c.conversation!, didChangeTypingStatusForUser: forUser, toStatus: status.status)
-			//}
+        if let c = self.childConversations[status.convID] {
+            var mode = FocusMode.here
+            switch status.status {
+            case TypingType.Started:
+                mode = .typing
+            case TypingType.Paused:
+                mode = .enteredText
+            case TypingType.Stopped: fallthrough
+            default: // TypingType.Unknown:
+                mode = .here
+            }
+            c.focusModeChanged(IFocus(sender: forUser, timestamp: Date(), mode: mode))
 		}
 	}
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
-		/*if let c = self.childConversations[status.convID] {
-			if (c.window?.isKeyWindow ?? false) {
-				c.conversation(c.conversation!, didChangeTypingStatusForUser: forUser, toStatus: status.status)
-			}
-		}*/
+        log.debug("watermark for \(status.convID) from \(status.userID.gaiaID)")
+        if let c = self.childConversations[status.convID], let person = self.userList?.people[status.userID.gaiaID] {
+            log.debug("passthrough")
+            c.watermarkEvent(IFocus(sender: person, timestamp: status.readTimestamp, mode: .here))
+		}
 	}
 	
 	/* TODO: Just update the row that is updated. */

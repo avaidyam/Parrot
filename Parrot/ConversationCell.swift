@@ -1,6 +1,7 @@
 import Cocoa
 import Mocha
 import MochaUI
+import protocol ParrotServiceExtension.Message
 import protocol ParrotServiceExtension.Conversation
 
 /* TODO: Selection: Overlay with NSVisualEffectView per-cell. */
@@ -24,7 +25,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 		didSet {
             guard let conversation = self.objectValue as? Conversation else { return }
 			
-			let messageSender = conversation.messages.last?.sender?.identifier ?? ""
+			let messageSender = conversation.eventStream.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
 			if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
 				let photo = fetchImage(user: firstParticipant, conversation: conversation)
@@ -33,8 +34,9 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 			// FIXME: Group conversation prefixing doesn't work yet.
 			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
 			//let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
-			let subtitle = (conversation.messages.last?.text ?? "")
-			let time = conversation.messages.last?.timestamp ?? .origin
+            let _m = conversation.eventStream.last as? Message
+			let subtitle = (_m?.text ?? "")
+			let time = conversation.eventStream.last?.timestamp ?? .origin
 			
 			self.time = time
 			self.nameLabel?.stringValue = conversation.name

@@ -87,7 +87,7 @@ public final class Client: Service {
 	
 	///
 	public var directory: Directory {
-		return self.userList
+		return self.userList // FIXME: DEATH OVER HERE!
 	}
 	
 	///

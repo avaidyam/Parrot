@@ -19,13 +19,18 @@ public protocol Conversation /*: Hashable, Equatable*/ {
 	var focus: [Focus] { get }
 	
 	/// The set of all events in this Conversation.
-	var messages: [Message] { get }
+	var eventStream: [EventStreamItem] { get }
 	
 	/// The number of messages that are unread for this Conversation.
 	var unreadCount: Int { get }
 	
 	/// Whether the conversation's notifications will be presented to the user.
 	var muted: Bool { get set }
+    
+    var archived: Bool { get set }
+    
+    var timestamp: Date { get }
+    
 	
 	//var myFocus
 	
