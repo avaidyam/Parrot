@@ -1,4 +1,5 @@
-// from @dduan: https://github.com/dduan/Termbox
+import Dispatch
+// [modified] from @dduan: https://github.com/dduan/Termbox
 
 public struct Key: Equatable {
 
@@ -243,7 +244,43 @@ public enum OutputMode: Int32 {
     case grayscale = 4
 }
 
+public struct Point {
+    public var x: Int
+    public var y: Int
+}
+
+public struct Size {
+    public var width: Int
+    public var height: Int
+}
+
+public struct Rect {
+    public var origin: Point
+    public var size: Size
+}
+
+extension String {
+    
+    // Let's see how that works with a function that prints a line of text:
+    /// - Parameters:
+    ///   - at:         (x,y) location of the text.
+    ///   - foreground: what attributes should the text have for its foreground.
+    ///   - background: what attributes should the text have for its background.
+    func draw(at pt: Point, foreground: Attributes = .default, background: Attributes = .default) {
+        let border = Termbox.size.width
+        
+        // We can update characters on the screen one at a time with, each with a
+        // distinct style. Here we are going to start at `x` and set characters in
+        // `text` until we run out of horizontal space in row `y`.
+        for (c, xi) in zip(self.unicodeScalars, pt.x..<border) {
+            Termbox.put(x: Int32(xi), y: Int32(pt.y), character: c,
+                        foreground: foreground, background: background)
+        }
+    }
+}
+
 public struct Termbox {
+    
     /// Initializes the termbox library. This function should be called before
     /// any other functions. Function initialize is same as
     /// `initialize(file: "/dev/tty")`.  After successful initialization, the
@@ -269,18 +306,30 @@ public struct Termbox {
     public static func shutdown() {
         tb_shutdown()
     }
+    
+    public static func app(inputModes: InputModes = [], outputMode: OutputMode = .normal, _ handler: () -> ()) {
+        do {
+            try Termbox.initialize()
+            Termbox.inputModes = inputModes
+            Termbox.outputMode = outputMode
+            
+            handler()
+        } catch let error {
+            print(error)
+            exit(1)
+        }
+        defer {
+            Termbox.shutdown()
+        }
+    }
 
     /// Returns the size of the internal back buffer (which is the same as
     /// terminal's window size in characters). The internal buffer can be
     /// resized after `clear()` or `present()` function calls. Both
     /// dimensions have an unspecified negative value when called before
     /// initialization or after shutdown.
-    public static var width: Int32 {
-        return Int32(tb_width())
-    }
-
-    public static var height: Int32 {
-        return Int32(tb_height())
+    public static var size: Size {
+        return Size(width: Int(tb_width()), height: Int(tb_height()))
     }
 
     /// Clears the internal back buffer using default color.
@@ -289,14 +338,12 @@ public struct Termbox {
     }
 
     /// Clears the internal back buffer using specified color/attributes.
-    public static func clear(withForeground foreground: Attributes,
-        background: Attributes)
-    {
+    public static func clear(withForeground foreground: Attributes, background: Attributes) {
         tb_set_clear_attributes(foreground.rawValue, background.rawValue)
     }
 
     /// Synchronizes the internal back buffer with the terminal.
-    public static func present() {
+    public static func refresh() {
         tb_present()
     }
 
@@ -321,8 +368,7 @@ public struct Termbox {
     /// Changes cell's parameters in the internal back buffer at the specified
     /// position.
     public static func put(x: Int32, y: Int32, character: UnicodeScalar,
-        foreground: Attributes = .default, background: Attributes = .default)
-    {
+        foreground: Attributes = .default, background: Attributes = .default) {
         tb_change_cell(x, y, character.value, foreground.rawValue,
                        background.rawValue)
     }
@@ -334,7 +380,7 @@ public struct Termbox {
     /// the top.
     public static var unsafeCellBuffer: UnsafeMutableBufferPointer<Cell> {
         return UnsafeMutableBufferPointer(start: tb_cell_buffer(),
-                                          count: Int(self.width * self.height))
+                                          count: self.size.width * self.size.height)
     }
 
     /// The termbox input mode. Termbox has two input modes:
@@ -354,12 +400,8 @@ public struct Termbox {
     /// Default termbox input mode is `.esc`.
 
     public static var inputModes: InputModes {
-        get {
-            return InputModes(rawValue: tb_select_input_mode(0))
-        }
-        set {
-            tb_select_input_mode(newValue.rawValue)
-        }
+        get { return InputModes(rawValue: tb_select_input_mode(0)) }
+        set { tb_select_input_mode(newValue.rawValue) }
     }
 
     // Sets the termbox output mode. Termbox has three output options:
@@ -394,31 +436,23 @@ public struct Termbox {
     // Default termbox output mode is `.normal`.
     //
     public static var outputMode: OutputMode {
-        get {
-            return OutputMode(rawValue: tb_select_output_mode(0))!
-        }
-        set {
-            tb_select_output_mode(newValue.rawValue)
-        }
+        get { return OutputMode(rawValue: tb_select_output_mode(0))! }
+        set { tb_select_output_mode(newValue.rawValue) }
     }
 
     /// Wait for an event up to 'timeout' milliseconds and fill the 'event'
     /// structure with it, when the event is available.
-    public static func peekEvent(timoutInMilliseconds timeout: Int32)
-        -> Event?
-    {
+    public static func peek(timoutInMilliseconds timeout: Int32) -> Event? {
         var tbEvent = tb_event()
         switch tb_peek_event(&tbEvent, timeout) {
-        case 0:
-            return .timeout
-        default:
-            return Event(tbEvent)
+        case 0: return .timeout
+        default: return Event(tbEvent)
         }
     }
 
     // Wait for an event forever and fill the 'event' structure with it when the
     // event is available.
-    public static func pollEvent() -> Event? {
+    public static func poll() -> Event? {
         var tbEvent = tb_event()
         tb_poll_event(&tbEvent)
         return Event(tbEvent)
