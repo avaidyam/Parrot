@@ -36,6 +36,14 @@ func pad(_ frame: Rect, _ pad: Size) -> Rect {
             size: (width: frame.size.width - (2 * pad.width), height: frame.size.height - (2 * pad.height)))
 }
 
+let runes: [UInt32] = [
+    0x20,   // ' '
+    0x2591, // '░'
+    0x2592, // '▒'
+    0x2593, // '▓'
+    0x2588, // '█'
+]
+
 public extension String {
     
     // Let's see how that works with a function that prints a line of text:
@@ -44,6 +52,7 @@ public extension String {
     ///   - foreground: what attributes should the text have for its foreground.
     ///   - background: what attributes should the text have for its background.
     public func draw(at pt: Point, foreground: Attributes = .default, background: Attributes = .default) {
+        guard pt.y < Termbox.size.height else { return }
         
         // We can update characters on the screen one at a time with, each with a
         // distinct style. Here we are going to start at `x` and set characters in
@@ -53,4 +62,27 @@ public extension String {
                         foreground: foreground, background: background)
         }
     }
+}
+
+public func drawBorder(_ rect: Rect, foreground: Attributes = .default, background: Attributes = .default) {
+    for i in 1..<rect.size.height-1 {
+        Termbox.put(x: Int32(rect.origin.x), y: Int32(i), character: "║",
+                    foreground: foreground, background: background)
+        Termbox.put(x: Int32(rect.size.width - 1), y: Int32(i), character: "║",
+                    foreground: foreground, background: background)
+    }
+    for i in 1..<rect.size.width-1 {
+        Termbox.put(x: Int32(i), y: Int32(rect.origin.y), character: "═",
+                    foreground: foreground, background: background)
+        Termbox.put(x: Int32(i), y: Int32(rect.size.height - 1), character: "═",
+                    foreground: foreground, background: background)
+    }
+    Termbox.put(x: Int32(rect.origin.x), y: Int32(rect.origin.y), character: "╔",
+                foreground: foreground, background: background)
+    Termbox.put(x: Int32(rect.size.width - 1), y: Int32(rect.origin.y), character: "╗",
+                foreground: foreground, background: background)
+    Termbox.put(x: Int32(rect.origin.x), y: Int32(rect.size.height - 1), character: "╚",
+                foreground: foreground, background: background)
+    Termbox.put(x: Int32(rect.size.width - 1), y: Int32(rect.size.height - 1), character: "╝",
+                foreground: foreground, background: background)
 }

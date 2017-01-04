@@ -57,3 +57,21 @@ public class View: Drawable, Orderable, Respondable {
         return false
     }
 }
+
+// TODO FIXME
+public struct Window {
+    
+    public var frame: Rect
+    public var foreground: Attributes
+    public var background: Attributes
+    
+    public init(frame: Rect, foreground: Attributes, background: Attributes) {
+        self.frame = frame
+        self.foreground = foreground
+        self.background = background
+    }
+    
+    public func draw() {
+        
+    }
+}
