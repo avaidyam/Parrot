@@ -27,7 +27,11 @@
 		481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */; };
 		481D933E1DF5D7D100EB23A1 /* Wallclock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933D1DF5D7D100EB23A1 /* Wallclock.swift */; };
 		4822951D1D417B5E00A34B1B /* AddressBookSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */; };
-		482323D71E1776DC00318380 /* Termbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D61E1776DC00318380 /* Termbox.swift */; };
+		482323D71E1776DC00318380 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D61E1776DC00318380 /* Event.swift */; };
+		482323D91E1CBBA100318380 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D81E1CBBA100318380 /* Application.swift */; };
+		482323DB1E1CBBE000318380 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323DA1E1CBBE000318380 /* Drawing.swift */; };
+		482323DD1E1CBC1000318380 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323DC1E1CBC1000318380 /* Cell.swift */; };
+		482323E01E1CBD3A00318380 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323DF1E1CBD3A00318380 /* View.swift */; };
 		4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageCell.swift */; };
 		4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA81C1C620000193EBC /* ConversationCell.swift */; };
 		4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */; };
@@ -290,7 +294,11 @@
 		481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayLink.swift; sourceTree = "<group>"; };
 		481D933D1DF5D7D100EB23A1 /* Wallclock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wallclock.swift; sourceTree = "<group>"; };
 		4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookSupport.swift; sourceTree = "<group>"; };
-		482323D61E1776DC00318380 /* Termbox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Termbox.swift; sourceTree = "<group>"; };
+		482323D61E1776DC00318380 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		482323D81E1CBBA100318380 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
+		482323DA1E1CBBE000318380 /* Drawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drawing.swift; sourceTree = "<group>"; };
+		482323DC1E1CBC1000318380 /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
+		482323DF1E1CBD3A00318380 /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation+List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Conversation+List.swift"; sourceTree = "<group>"; };
 		4835ECA61C1C620000193EBC /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		4835ECA81C1C620000193EBC /* ConversationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
@@ -496,7 +504,7 @@
 			isa = PBXGroup;
 			children = (
 				4803639C1C1D08490008E9F5 /* main.swift */,
-				482323D61E1776DC00318380 /* Termbox.swift */,
+				482323DE1E1CBC3E00318380 /* Termbox */,
 				48BA5B511C37DB2900ACA29B /* ctermbox */,
 			);
 			path = "parrot-cli";
@@ -559,6 +567,18 @@
 				488492781D0B3F370003D522 /* ConversationCell.xib */,
 			);
 			name = Display;
+			sourceTree = "<group>";
+		};
+		482323DE1E1CBC3E00318380 /* Termbox */ = {
+			isa = PBXGroup;
+			children = (
+				482323D61E1776DC00318380 /* Event.swift */,
+				482323D81E1CBBA100318380 /* Application.swift */,
+				482323DA1E1CBBE000318380 /* Drawing.swift */,
+				482323DC1E1CBC1000318380 /* Cell.swift */,
+				482323DF1E1CBD3A00318380 /* View.swift */,
+			);
+			name = Termbox;
 			sourceTree = "<group>";
 		};
 		4835ECA51C1C61F300193EBC /* Conversation List */ = {
@@ -1361,7 +1381,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				482323D71E1776DC00318380 /* Termbox.swift in Sources */,
+				482323E01E1CBD3A00318380 /* View.swift in Sources */,
+				482323D91E1CBBA100318380 /* Application.swift in Sources */,
+				482323D71E1776DC00318380 /* Event.swift in Sources */,
+				482323DD1E1CBC1000318380 /* Cell.swift in Sources */,
+				482323DB1E1CBBE000318380 /* Drawing.swift in Sources */,
 				4803639D1C1D08490008E9F5 /* main.swift in Sources */,
 				48FB444E1DBF5288004BE55A /* utf8.c in Sources */,
 				48FB444D1DBF5288004BE55A /* termbox.c in Sources */,

@@ -207,7 +207,7 @@ extern "C" {
      */
     SO_IMPORT void tb_set_cursor(int cx, int cy);
     
-    /* Changes cell's parameters in the internal back buffer at the specifiejjjc
+    /* Changes cell's parameters in the internal back buffer at the specified
      * position.
      */
     SO_IMPORT void tb_put_cell(int x, int y, const struct tb_cell *cell);
