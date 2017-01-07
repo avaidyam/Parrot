@@ -79,8 +79,8 @@ public struct Termbox {
             
             handler()
         } catch let error {
+            Termbox.shutdown()
             print(error)
-            exit(1)
         }
         defer {
             Termbox.shutdown()
@@ -102,14 +102,10 @@ public struct Termbox {
         return Size(width: Int(tb_width()), height: Int(tb_height()))
     }
     
-    /// Clears the internal back buffer using default color.
-    public static func clear() {
-        tb_clear()
-    }
-    
     /// Clears the internal back buffer using specified color/attributes.
-    public static func clear(foreground: Attributes, background: Attributes) {
+    public static func clear(foreground: Attributes = .default, background: Attributes = .default) {
         tb_set_clear_attributes(foreground.rawValue, background.rawValue)
+        tb_clear()
     }
     
     /// Synchronizes the internal back buffer with the terminal.
@@ -119,17 +115,9 @@ public struct Termbox {
     
     /// Changes cell's parameters in the internal back buffer at the specified
     /// position.
-    public static func put(x: Int32, y: Int32, cell: Cell) {
-        var cell = cell
-        tb_put_cell(x, y, &cell)
-    }
-    
-    /// Changes cell's parameters in the internal back buffer at the specified
-    /// position.
-    public static func put(x: Int32, y: Int32, character: UnicodeScalar,
-                           foreground: Attributes = .default, background: Attributes = .default) {
-        tb_change_cell(x, y, character.value, foreground.rawValue,
-                       background.rawValue)
+    public static func put(at: Point, cell: Cell) {
+        tb_change_cell(Int32(at.x), Int32(at.y), cell.character.value,
+                       cell.foreground.rawValue, cell.background.rawValue)
     }
     
     /// Returns a pointer to internal cell back buffer. You can get its
@@ -137,7 +125,7 @@ public struct Termbox {
     /// valid as long as no `clear()` and `present()` calls are made. The
     /// buffer is one-dimensional buffer containing lines of cells starting from
     /// the top.
-    public static var unsafeCellBuffer: UnsafeMutableBufferPointer<Cell> {
+    public static var unsafeCellBuffer: UnsafeMutableBufferPointer<tb_cell> {
         return UnsafeMutableBufferPointer(start: tb_cell_buffer(),
                                           count: self.size.width * self.size.height)
     }

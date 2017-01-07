@@ -58,31 +58,31 @@ public extension String {
         // distinct style. Here we are going to start at `x` and set characters in
         // `text` until we run out of horizontal space in row `y`.
         for (c, xi) in zip(self.unicodeScalars, pt.x..<Termbox.size.width) {
-            Termbox.put(x: Int32(xi), y: Int32(pt.y), character: c,
-                        foreground: foreground, background: background)
+            Termbox.put(at: Point(x: xi, y: pt.y),
+                        cell: Cell(character: c, foreground: foreground, background: background))
         }
     }
 }
 
 public func drawBorder(_ rect: Rect, foreground: Attributes = .default, background: Attributes = .default) {
     for i in 1..<rect.size.height-1 {
-        Termbox.put(x: Int32(rect.origin.x), y: Int32(i), character: "║",
-                    foreground: foreground, background: background)
-        Termbox.put(x: Int32(rect.size.width - 1), y: Int32(i), character: "║",
-                    foreground: foreground, background: background)
+        Termbox.put(at: Point(x: rect.origin.x, y: i),
+                    cell: Cell(character: "║", foreground: foreground, background: background))
+        Termbox.put(at: Point(x: rect.size.width - 1, y: i),
+                    cell: Cell(character: "║", foreground: foreground, background: background))
     }
     for i in 1..<rect.size.width-1 {
-        Termbox.put(x: Int32(i), y: Int32(rect.origin.y), character: "═",
-                    foreground: foreground, background: background)
-        Termbox.put(x: Int32(i), y: Int32(rect.size.height - 1), character: "═",
-                    foreground: foreground, background: background)
+        Termbox.put(at: Point(x: i, y: rect.origin.y),
+                    cell: Cell(character: "═", foreground: foreground, background: background))
+        Termbox.put(at: Point(x: i, y: rect.size.height - 1),
+                    cell: Cell(character: "═", foreground: foreground, background: background))
     }
-    Termbox.put(x: Int32(rect.origin.x), y: Int32(rect.origin.y), character: "╔",
-                foreground: foreground, background: background)
-    Termbox.put(x: Int32(rect.size.width - 1), y: Int32(rect.origin.y), character: "╗",
-                foreground: foreground, background: background)
-    Termbox.put(x: Int32(rect.origin.x), y: Int32(rect.size.height - 1), character: "╚",
-                foreground: foreground, background: background)
-    Termbox.put(x: Int32(rect.size.width - 1), y: Int32(rect.size.height - 1), character: "╝",
-                foreground: foreground, background: background)
+    Termbox.put(at: Point(x: rect.origin.x, y: rect.origin.y),
+                cell: Cell(character: "╔", foreground: foreground, background: background))
+    Termbox.put(at: Point(x: rect.size.width - 1, y: rect.origin.y),
+                cell: Cell(character: "╗", foreground: foreground, background: background))
+    Termbox.put(at: Point(x: rect.origin.x, y: rect.size.height - 1),
+                cell: Cell(character: "╚", foreground: foreground, background: background))
+    Termbox.put(at: Point(x: rect.size.width - 1, y: rect.size.height - 1),
+                cell: Cell(character: "╝", foreground: foreground, background: background))
 }

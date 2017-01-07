@@ -4,6 +4,13 @@ import Dispatch
 // Sign in first.
 let client = Auth.signin()
 
+if !CommandLine.arguments.contains("--interactive") {
+    client.conversationList.conversations.forEach {
+        print($0.value.identifier + "\t" + $0.value.name)
+    }
+    exit(0)
+}
+
 // Block CTRL-C in favor of our `q` action.
 signal(SIGTERM) { _ in }
 signal(SIGINT) { _ in }
@@ -17,7 +24,7 @@ Termbox.app(inputMode: [.esc, .mouse]) {
                                    foreground: .white, background: .red)
     }
     "✖\u{20DD} Conversations".draw(at: Point(x: 1, y: 0),
-                                     foreground: .white, background: .red)
+                                     foreground: [.white, .bold], background: .red)
     
     Termbox.refresh()
     outer: while true {

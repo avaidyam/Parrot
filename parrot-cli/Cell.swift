@@ -36,41 +36,17 @@ public struct Attributes: OptionSet {
 ///  - 'fg' foreground color and attributes
 ///  - 'bg' background color and attributes
 ///
-public typealias Cell = tb_cell
-public extension Cell {
+public struct Cell {
+    
+    public var character: UnicodeScalar
+    public var foreground: Attributes
+    public var background: Attributes
+    
     /// Creates a cell with a character, foreground and background.
     public init(character: UnicodeScalar, foreground: Attributes = .default,
-                background: Attributes = .default)
-    {
-        self.ch = character.value
-        self.fg = foreground.rawValue
-        self.bg = background.rawValue
-    }
-    
-    public var character: UnicodeScalar {
-        get {
-            return UnicodeScalar(self.ch)!
-        }
-        set {
-            self.ch = newValue.value
-        }
-    }
-    
-    public var foreground: Attributes {
-        get {
-            return Attributes(rawValue: self.fg)
-        }
-        set {
-            self.fg = newValue.rawValue
-        }
-    }
-    
-    public var background: Attributes {
-        get {
-            return Attributes(rawValue: self.bg)
-        }
-        set {
-            self.bg = newValue.rawValue
-        }
+                background: Attributes = .default) {
+        self.character = character
+        self.foreground = foreground
+        self.background = background
     }
 }
