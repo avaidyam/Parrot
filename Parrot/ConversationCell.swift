@@ -28,7 +28,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 			let messageSender = conversation.eventStream.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
 			if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
-				let photo = fetchImage(user: firstParticipant, conversation: conversation)
+				let photo = fetchImage(user: firstParticipant, monogram: true)
 				self.photoView?.image = photo
 			}
 			// FIXME: Group conversation prefixing doesn't work yet.

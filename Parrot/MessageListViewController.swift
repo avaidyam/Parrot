@@ -473,7 +473,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
     
     public var image: NSImage? {
         if let me = self.conversation?.client.userList.me {
-            return fetchImage(user: me as! User, conversation: self.conversation!)
+            return fetchImage(user: me as! User, monogram: true)
         }
         return nil
     }

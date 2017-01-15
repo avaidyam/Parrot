@@ -16,6 +16,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 	
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
+    @IBOutlet var imageView: NSImageView!
 	
 	private var updateToken: Bool = false
 	private var userList: Directory?
@@ -155,7 +156,12 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 			self.userList = c.directory
 			self.conversationList = c.conversations
 			
-			DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                self.window?.title = c.directory.me.fullName
+                self.imageView.layer?.masksToBounds = true
+                self.imageView.layer?.cornerRadius = self.imageView.bounds.width / 2
+                self.imageView.image = fetchImage(user: c.directory.me, monogram: true)
+                
 				self.listView.update()
                 self.updateSelectionIndexes()
 			}
@@ -377,7 +383,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 			notification.hasReplyButton = true
 			notification.otherButtonTitle = "Mute"
 			notification.responsePlaceholder = "Send a message..."
-			notification.identityImage = fetchImage(user: user, conversation: conv!)
+			notification.identityImage = fetchImage(user: user, monogram: true)
 			notification.identityStyle = .circle
 			//notification.soundName = "texttone:Bamboo" // this works!!
 			notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
