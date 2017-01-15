@@ -16,6 +16,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 	
 	@IBOutlet var listView: ListView!
 	@IBOutlet var indicator: NSProgressIndicator!
+	@IBOutlet weak var nameTextField: NSTextField!
 	
 	private var updateToken: Bool = false
 	private var userList: Directory?
@@ -156,6 +157,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 			self.conversationList = c.conversations
 			
 			DispatchQueue.main.async {
+				self.nameTextField.stringValue = self.userList?.me.fullName ?? ""
 				self.listView.update()
                 self.updateSelectionIndexes()
 			}
@@ -181,7 +183,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 		}
         
         self.indicator.usesThreadedAnimation = true
-		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
+		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 32.0, right: 0)
 		/*self.listView.pasteboardProvider = { row in
 			let pb = NSPasteboardItem()
 			//NSPasteboardTypeRTF, NSPasteboardTypeString, NSPasteboardTypeTabularText
@@ -252,7 +254,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 		}
 	}
     
-    public func windowShouldClose(_ sender: AnyObject) -> Bool {
+    public func windowShouldClose(_ sender: Any) -> Bool {
         guard let w = self.window else { return false }
         
         let scale = Interpolate(from: 1.0, to: 0.25, interpolator: EaseInOutInterpolator()) { scale in

@@ -10,7 +10,7 @@ public extension Array where Element : Equatable {
 }
 
 // Optional Setter
-infix operator ??= { associativity right precedence 90 }
+infix operator ??= : AssignmentPrecedence
 public func ??= <T>(lhs: inout T?,  rhs: @autoclosure () -> T) {
 	lhs = lhs ?? rhs()
 }
