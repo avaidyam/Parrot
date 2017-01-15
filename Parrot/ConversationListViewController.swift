@@ -258,7 +258,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 		}
 	}
     
-    public func windowShouldClose(_ sender: AnyObject) -> Bool {
+    public func windowShouldClose(_ sender: Any) -> Bool {
         guard let w = self.window else { return false }
         
         let scale = Interpolate(from: 1.0, to: 0.25, interpolator: EaseInOutInterpolator()) { scale in
