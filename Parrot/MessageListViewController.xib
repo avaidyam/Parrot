@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11760" systemVersion="16C53a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11760" systemVersion="16D17a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11760"/>
@@ -9,13 +9,12 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MessageListViewController" customModule="Parrot" customModuleProvider="target">
             <connections>
-                <outlet property="drawer" destination="RR8-NV-Gpy" id="kGZ-B7-HUp"/>
                 <outlet property="drawerButton" destination="5ZG-rS-xYQ" id="5CL-aP-pi4"/>
-                <outlet property="drawerView" destination="Pye-gy-Huh" id="jI9-8C-Iqi"/>
                 <outlet property="indicator" destination="c1g-nC-vne" id="EDK-0c-mHz"/>
                 <outlet property="listView" destination="yMT-fg-2gH" id="SXU-Nq-yyB"/>
                 <outlet property="moduleView" destination="eI1-ks-Z3P" id="idG-hc-uzf"/>
                 <outlet property="placeholderView" destination="62j-3o-DEj" id="vvn-O3-hO6"/>
+                <outlet property="settingsPopover" destination="BDE-1t-HSy" id="JBA-mH-l6X"/>
                 <outlet property="statusView" destination="eNL-fW-1Cx" id="gX1-VY-R6C"/>
                 <outlet property="window" destination="rqa-ia-OSc" id="fhe-7e-EqQ"/>
             </connections>
@@ -112,7 +111,7 @@
                     <toolbarItem implicitItemIdentifier="0BA82A9A-B384-4019-91E0-FF901AAB1BE3" label="Title" paletteLabel="Title" visibilityPriority="2" id="GTg-V7-Nyg" userLabel="Title">
                         <nil key="toolTip"/>
                         <size key="minSize" width="1" height="17"/>
-                        <size key="maxSize" width="1000000" height="22"/>
+                        <size key="maxSize" width="10000000" height="22"/>
                         <textField key="view" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="iSW-2i-8yA">
                             <rect key="frame" x="0.0" y="14" width="57" height="17"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
@@ -145,7 +144,7 @@
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="showsBorderOnlyWhileMouseInside" value="NO"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="toggle:" target="RR8-NV-Gpy" id="ldT-Rx-dsb"/>
+                                <action selector="performToggle:" target="BDE-1t-HSy" id="vJT-9Z-0po"/>
                             </connections>
                         </button>
                     </toolbarItem>
@@ -163,24 +162,12 @@
             </connections>
             <point key="canvasLocation" x="26" y="-304"/>
         </window>
-        <customView wantsLayer="YES" id="Pye-gy-Huh" customClass="NSVisualEffectView">
-            <rect key="frame" x="0.0" y="0.0" width="160" height="307"/>
+        <customView wantsLayer="YES" id="Pye-gy-Huh" userLabel="Settings">
+            <rect key="frame" x="0.0" y="0.0" width="154" height="225"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ppq-JF-FK1">
-                    <rect key="frame" x="68" y="17" width="25" height="25"/>
-                    <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Yg3-SG-8RK">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                            <integer key="value" value="1"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EhA-26-aSD">
-                    <rect key="frame" x="32" y="263" width="96" height="25"/>
+                    <rect key="frame" x="29" y="193" width="96" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="96" id="2C0-JW-GFY"/>
                     </constraints>
@@ -198,7 +185,7 @@
                     </connections>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9ft-Rg-mnA">
-                    <rect key="frame" x="32" y="233" width="96" height="25"/>
+                    <rect key="frame" x="29" y="163" width="96" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="96" id="lo7-ic-xQ6"/>
                     </constraints>
@@ -213,7 +200,7 @@
                     </userDefinedRuntimeAttributes>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="unT-iv-6FO">
-                    <rect key="frame" x="32" y="203" width="96" height="25"/>
+                    <rect key="frame" x="29" y="133" width="96" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="96" id="3JD-6L-yKa"/>
                     </constraints>
@@ -228,7 +215,7 @@
                     </userDefinedRuntimeAttributes>
                 </button>
                 <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gtY-6y-nj2">
-                    <rect key="frame" x="32" y="173" width="96" height="25"/>
+                    <rect key="frame" x="29" y="103" width="96" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="96" id="LIb-wb-jb5"/>
                     </constraints>
@@ -243,7 +230,7 @@
                     </userDefinedRuntimeAttributes>
                 </button>
                 <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rMj-gL-aS4">
-                    <rect key="frame" x="12" y="101" width="136" height="58"/>
+                    <rect key="frame" x="9" y="39" width="136" height="58"/>
                     <subviews>
                         <button wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H5U-Fc-eFk">
                             <rect key="frame" x="-2" y="42" width="140" height="18"/>
@@ -298,9 +285,11 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </stackView>
-                <colorWell identifier="MyBubbleColor" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bdo-cG-CSB" customClass="NSPopoverColorWell">
-                    <rect key="frame" x="96" y="57" width="44" height="23"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                <colorWell identifier="MyBubbleColor" translatesAutoresizingMaskIntoConstraints="NO" id="Bdo-cG-CSB" customClass="NSPopoverColorWell">
+                    <rect key="frame" x="102" y="10" width="44" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="44" id="UJq-rx-zG7"/>
+                    </constraints>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="emptyColorEnabled" value="YES"/>
@@ -316,9 +305,11 @@
                         </binding>
                     </connections>
                 </colorWell>
-                <colorWell identifier="TheirBubbleColor" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n2Y-vS-NyF" customClass="NSPopoverColorWell">
-                    <rect key="frame" x="12" y="57" width="44" height="23"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                <colorWell identifier="TheirBubbleColor" translatesAutoresizingMaskIntoConstraints="NO" id="n2Y-vS-NyF" customClass="NSPopoverColorWell">
+                    <rect key="frame" x="8" y="10" width="44" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="YDV-XW-a6i"/>
+                    </constraints>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="emptyColorEnabled" value="YES"/>
@@ -334,9 +325,8 @@
                         </binding>
                     </connections>
                 </colorWell>
-                <imageView identifier="BackgroundImage" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3w6-4X-dSe">
-                    <rect key="frame" x="95" y="7" width="48" height="48"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                <imageView identifier="BackgroundImage" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3w6-4X-dSe">
+                    <rect key="frame" x="53" y="7" width="48" height="27"/>
                     <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="axesIndependently" imageFrameStyle="grayBezel" id="ocm-qR-FJ7"/>
                     <connections>
                         <action selector="colorChanged:" target="-2" id="fEA-4g-OnE"/>
@@ -351,25 +341,28 @@
                 </imageView>
             </subviews>
             <constraints>
-                <constraint firstItem="rMj-gL-aS4" firstAttribute="top" secondItem="gtY-6y-nj2" secondAttribute="bottom" constant="16" id="3Jr-eO-Wqk"/>
+                <constraint firstItem="rMj-gL-aS4" firstAttribute="top" secondItem="gtY-6y-nj2" secondAttribute="bottom" constant="8" id="3Jr-eO-Wqk"/>
                 <constraint firstItem="gtY-6y-nj2" firstAttribute="top" secondItem="unT-iv-6FO" secondAttribute="bottom" constant="8" id="4MZ-Hg-fE5"/>
                 <constraint firstItem="EhA-26-aSD" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="5Sw-jU-h5T"/>
+                <constraint firstItem="3w6-4X-dSe" firstAttribute="centerX" secondItem="rMj-gL-aS4" secondAttribute="centerX" id="6f1-Ol-a2f"/>
                 <constraint firstItem="unT-iv-6FO" firstAttribute="top" secondItem="9ft-Rg-mnA" secondAttribute="bottom" constant="8" id="8cf-iw-Vl3"/>
-                <constraint firstItem="EhA-26-aSD" firstAttribute="top" secondItem="Pye-gy-Huh" secondAttribute="top" constant="20" id="GVH-b2-XJn"/>
-                <constraint firstItem="Ppq-JF-FK1" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="No8-nR-u1S"/>
+                <constraint firstItem="n2Y-vS-NyF" firstAttribute="top" secondItem="rMj-gL-aS4" secondAttribute="bottom" constant="8" id="D4b-x7-5ZC"/>
+                <constraint firstItem="EhA-26-aSD" firstAttribute="top" secondItem="Pye-gy-Huh" secondAttribute="top" constant="8" id="GVH-b2-XJn"/>
+                <constraint firstItem="3w6-4X-dSe" firstAttribute="centerY" secondItem="n2Y-vS-NyF" secondAttribute="centerY" id="JY6-zI-XTN"/>
+                <constraint firstItem="n2Y-vS-NyF" firstAttribute="leading" secondItem="Pye-gy-Huh" secondAttribute="leading" constant="8" id="KBz-EP-NXm"/>
+                <constraint firstItem="3w6-4X-dSe" firstAttribute="leading" secondItem="n2Y-vS-NyF" secondAttribute="trailing" constant="4" id="KnH-go-8Da"/>
+                <constraint firstItem="Bdo-cG-CSB" firstAttribute="leading" secondItem="3w6-4X-dSe" secondAttribute="trailing" constant="4" id="Ltc-ag-zRQ"/>
+                <constraint firstItem="3w6-4X-dSe" firstAttribute="top" secondItem="rMj-gL-aS4" secondAttribute="bottom" constant="8" id="O20-Ub-VLX"/>
                 <constraint firstItem="9ft-Rg-mnA" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="QmE-jS-ytF"/>
                 <constraint firstItem="gtY-6y-nj2" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="ROT-cA-htv"/>
+                <constraint firstAttribute="trailing" secondItem="Bdo-cG-CSB" secondAttribute="trailing" constant="8" id="TBP-Ju-kom"/>
                 <constraint firstItem="rMj-gL-aS4" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="Yib-bL-PwL"/>
+                <constraint firstItem="n2Y-vS-NyF" firstAttribute="centerY" secondItem="Bdo-cG-CSB" secondAttribute="centerY" id="b9S-ok-4mH"/>
                 <constraint firstItem="unT-iv-6FO" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="c3l-Ct-gVb"/>
+                <constraint firstItem="Bdo-cG-CSB" firstAttribute="top" secondItem="rMj-gL-aS4" secondAttribute="bottom" constant="8" id="jTj-CO-Rbd"/>
                 <constraint firstItem="9ft-Rg-mnA" firstAttribute="top" secondItem="EhA-26-aSD" secondAttribute="bottom" constant="8" id="mSI-iF-IQR"/>
-                <constraint firstAttribute="bottom" secondItem="Ppq-JF-FK1" secondAttribute="bottom" constant="20" id="xIA-Zt-TKI"/>
             </constraints>
-            <userDefinedRuntimeAttributes>
-                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                    <integer key="value" value="1"/>
-                </userDefinedRuntimeAttribute>
-            </userDefinedRuntimeAttributes>
-            <point key="canvasLocation" x="406" y="-218.5"/>
+            <point key="canvasLocation" x="400" y="-399"/>
         </customView>
         <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
             <rect key="frame" x="0.0" y="0.0" width="112" height="22"/>
@@ -386,17 +379,23 @@
             </userDefinedRuntimeAttributes>
             <point key="canvasLocation" x="43" y="-17"/>
         </textField>
-        <drawer leadingOffset="40" trailingOffset="12" id="RR8-NV-Gpy">
-            <size key="contentSize" width="160" height="10000"/>
-            <size key="minContentSize" width="160" height="52"/>
-            <size key="maxContentSize" width="240" height="10000"/>
-            <connections>
-                <outlet property="contentView" destination="Pye-gy-Huh" id="zWz-aQ-fc0"/>
-                <outlet property="delegate" destination="-2" id="Y1b-PY-bLJ"/>
-                <outlet property="parentWindow" destination="rqa-ia-OSc" id="492-CG-Jtv"/>
-            </connections>
-        </drawer>
         <userDefaultsController representsSharedInstance="YES" id="DAL-JI-MqR"/>
+        <viewController id="Ous-S2-XVi" userLabel="Popover View Controller">
+            <connections>
+                <outlet property="view" destination="Pye-gy-Huh" id="FTy-Iy-73g"/>
+            </connections>
+        </viewController>
+        <popover behavior="t" id="BDE-1t-HSy">
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="edgeIB">
+                    <integer key="value" value="3"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="contentViewController" destination="Ous-S2-XVi" id="eEz-7H-NpW"/>
+                <outlet property="relativePositioningView" destination="iSW-2i-8yA" id="0Dd-qf-jxc"/>
+            </connections>
+        </popover>
     </objects>
     <resources>
         <image name="NSImageNameVolumeHigh" width="512" height="512"/>

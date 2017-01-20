@@ -41,7 +41,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
         didSet {
             if transient {
                 self.window?.isMovable = false
-                self.drawer.close(nil)
+                self.settingsPopover.close()
                 self.window?.level = Int(CGWindowLevelForKey(.floatingWindow))
                 if let v = self.window?.standardWindowButton(.closeButton)?.superview {
                     v.isHidden = true
@@ -61,9 +61,8 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
 	@IBOutlet var statusView: NSTextField!
     @IBOutlet var moduleView: NSView!
     @IBOutlet var placeholderView: NSView!
-	@IBOutlet var drawer: NSDrawer!
+    @IBOutlet var settingsPopover: NSPopover!
 	@IBOutlet var drawerButton: NSButton!
-    @IBOutlet var drawerView: NSView!
     
     private var typingHelper: TypingHelper? = nil
     lazy var textInputCell: TextInputCell = {
@@ -172,8 +171,8 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
 			vev.state = style.visualEffectState()
-			guard let vev2 = self.drawer.contentView as? NSVisualEffectView else { return }
-			vev2.state = style.visualEffectState()
+			//guard let vev2 = self.drawer.contentView as? NSVisualEffectView else { return }
+			//vev2.state = style.visualEffectState()
 		}
         
         let nib = NSNib(nibNamed: "MessageCell", bundle: nil)!
@@ -231,7 +230,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
 		// Set up dark/light notifications.
 		ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
 			self.window?.appearance = interface.appearance()
-			self.drawer.drawerWindow?.appearance = interface.appearance()
+			self.settingsPopover.appearance = interface.appearance()
 		}
 		
 		/*
@@ -459,6 +458,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
         }
     }
 	
+    /*
 	// Bind the drawer state to the button that toggles it.
 	public func drawerWillOpen(_ notification: Notification) {
 		self.drawerButton.state = NSOnState
@@ -470,6 +470,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
 		self.drawerButton.state = NSOffState
 		self.drawer.drawerWindow?.animator().alphaValue = 0.0
 	}
+    */
     
     public var image: NSImage? {
         if let me = self.conversation?.client.userList.me {
