@@ -38,6 +38,17 @@ public extension NSPopover {
         set { objc_setAssociatedObject(self, &NSPopover_positioningView_key, newValue, .OBJC_ASSOCIATION_ASSIGN) }
     }
     
+    @IBOutlet public var contentView: NSView? {
+        get { return self.contentViewController?.view }
+        set {
+            guard newValue != nil else { return }
+            if self.contentViewController == nil {
+                self.contentViewController = NSViewController()
+            }
+            self.contentViewController?.view = newValue!
+        }
+    }
+    
     @IBAction public func performOpen(_ sender: AnyObject?) {
         guard let posView = self.relativePositioningView else { return }
         self.show(relativeTo: self.positioningRect, of: posView, preferredEdge: self.preferredEdge)

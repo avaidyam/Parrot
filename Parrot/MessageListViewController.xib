@@ -15,7 +15,6 @@
                 <outlet property="moduleView" destination="eI1-ks-Z3P" id="idG-hc-uzf"/>
                 <outlet property="placeholderView" destination="62j-3o-DEj" id="vvn-O3-hO6"/>
                 <outlet property="settingsPopover" destination="BDE-1t-HSy" id="JBA-mH-l6X"/>
-                <outlet property="statusView" destination="eNL-fW-1Cx" id="gX1-VY-R6C"/>
                 <outlet property="window" destination="rqa-ia-OSc" id="fhe-7e-EqQ"/>
             </connections>
         </customObject>
@@ -364,27 +363,7 @@
             </constraints>
             <point key="canvasLocation" x="400" y="-399"/>
         </customView>
-        <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eNL-fW-1Cx">
-            <rect key="frame" x="0.0" y="0.0" width="112" height="22"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" placeholderString="Status" id="0ys-h0-cm2">
-                <font key="font" metaFont="system"/>
-                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-            </textFieldCell>
-            <userDefinedRuntimeAttributes>
-                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                    <integer key="value" value="1"/>
-                </userDefinedRuntimeAttribute>
-            </userDefinedRuntimeAttributes>
-            <point key="canvasLocation" x="43" y="-17"/>
-        </textField>
         <userDefaultsController representsSharedInstance="YES" id="DAL-JI-MqR"/>
-        <viewController id="Ous-S2-XVi" userLabel="Popover View Controller">
-            <connections>
-                <outlet property="view" destination="Pye-gy-Huh" id="FTy-Iy-73g"/>
-            </connections>
-        </viewController>
         <popover behavior="t" id="BDE-1t-HSy">
             <userDefinedRuntimeAttributes>
                 <userDefinedRuntimeAttribute type="number" keyPath="edgeIB">
@@ -392,7 +371,7 @@
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
             <connections>
-                <outlet property="contentViewController" destination="Ous-S2-XVi" id="eEz-7H-NpW"/>
+                <outlet property="contentView" destination="Pye-gy-Huh" id="p4t-00-1d6"/>
                 <outlet property="relativePositioningView" destination="iSW-2i-8yA" id="0Dd-qf-jxc"/>
             </connections>
         </popover>
