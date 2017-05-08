@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Cartography.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>10</integer>
+		</dict>
 		<key>Hangouts.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -103,6 +108,11 @@
 			<true/>
 		</dict>
 		<key>48834E101C1B38B9009BC442</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4894215A1EC0DDD00047FDBB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

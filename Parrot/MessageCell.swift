@@ -139,4 +139,32 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         menu.insertItem(NSMenuItem.separator(), at: 1)
         return menu
     }
+    
+    
+    
+    private static var storage: NSTextStorage = {
+        return NSTextStorage(string: "")
+    }()
+    private static var container: NSTextContainer = {
+        let x = NSTextContainer(containerSize: NSZeroSize)
+        x.lineFragmentPadding = 0.0
+        return x
+    }()
+    private static var manager: NSLayoutManager = {
+        let x = NSLayoutManager()
+        x.addTextContainer(MessageCell.container)
+        MessageCell.storage.addLayoutManager(x)
+        return x
+    }()
+    
+    // Given a string, a font size, and a base width, return the measured height of the cell.
+    public static func measure(_ string: String, _ width: CGFloat, _ font: NSFont = .systemFont(ofSize: 13.0)) -> Double {
+        MessageCell.container.containerSize = NSSize(width: width - 40.0 /* padding + image*/, height: CGFloat.greatestFiniteMagnitude)
+        MessageCell.storage.setAttributedString(NSAttributedString(string: string))
+        MessageCell.storage.font = font
+        
+        _ = MessageCell.manager.glyphRange(for: MessageCell.container)
+        let h = Double(MessageCell.manager.usedRect(for: MessageCell.container).size.height)
+        return (h < 24.0) ? 32.0 : (h + 16.0)
+    }
 }

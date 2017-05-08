@@ -46,7 +46,6 @@
 		48403CA11DF0B9930009897A /* Changeset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48403CA01DF0B9930009897A /* Changeset.swift */; };
 		48403CA31DF0BF6B0009897A /* Interpolate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48403CA21DF0BF6B0009897A /* Interpolate.swift */; };
 		484E8CA01D37FF2500E1D1D5 /* EventStreamItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E8C9F1D37FF2500E1D1D5 /* EventStreamItems.swift */; };
-		4871C50A1E20EE7C00A24A08 /* ContentWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4871C5091E20EE7C00A24A08 /* ContentWindow.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
@@ -68,10 +67,11 @@
 		488492741D0B392A0003D522 /* ConversationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492731D0B392A0003D522 /* ConversationListViewController.xib */; };
 		488492761D0B3A010003D522 /* MessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* MessageListViewController.xib */; };
 		488492771D0B3CA60003D522 /* MessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* MessageListViewController.xib */; };
-		488492791D0B3F370003D522 /* ConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492781D0B3F370003D522 /* ConversationCell.xib */; };
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
 		4884929B1D0B59370003D522 /* MessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4884929A1D0B59370003D522 /* MessageCell.xib */; };
 		489018AC1D3C8FE400CFCA5F /* Person+Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */; };
+		489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */; };
+		4894216A1EC11BCE0047FDBB /* DispatchTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421691EC11BCE0047FDBB /* DispatchTime.swift */; };
 		489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */; };
 		489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */; };
 		489FB0671DF5FBD400AEBD1D /* WatermarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */; };
@@ -333,7 +333,6 @@
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
-		4871C5091E20EE7C00A24A08 /* ContentWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentWindow.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSExtendedTextView.swift; sourceTree = "<group>"; };
 		488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSAntiScrollView.swift; sourceTree = "<group>"; };
@@ -362,10 +361,11 @@
 		48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLiteSerialization.swift; sourceTree = "<group>"; };
 		488492731D0B392A0003D522 /* ConversationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationListViewController.xib; sourceTree = "<group>"; };
 		488492751D0B3A010003D522 /* MessageListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageListViewController.xib; sourceTree = "<group>"; };
-		488492781D0B3F370003D522 /* ConversationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationCell.xib; sourceTree = "<group>"; };
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4884929A1D0B59370003D522 /* MessageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageCell.xib; sourceTree = "<group>"; };
 		489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Person+Directory.swift"; sourceTree = "<group>"; };
+		489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
+		489421691EC11BCE0047FDBB /* DispatchTime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchTime.swift; sourceTree = "<group>"; };
 		489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolators.swift"; sourceTree = "<group>"; };
 		489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolatable.swift"; sourceTree = "<group>"; };
 		489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatermarkCell.swift; sourceTree = "<group>"; };
@@ -580,7 +580,6 @@
 			isa = PBXGroup;
 			children = (
 				4835ECA81C1C620000193EBC /* ConversationCell.swift */,
-				488492781D0B3F370003D522 /* ConversationCell.xib */,
 			);
 			name = Display;
 			sourceTree = "<group>";
@@ -802,6 +801,7 @@
 			isa = PBXGroup;
 			children = (
 				486E7DED1DA8556300C1953B /* Promise.swift */,
+				489421691EC11BCE0047FDBB /* DispatchTime.swift */,
 				48834E391C1B4098009BC442 /* FoundationSupport.swift */,
 				481300341D257FE300768D79 /* Logger.swift */,
 				4835ECB61C1C672900193EBC /* Emoji.swift */,
@@ -833,7 +833,7 @@
 				48403CA21DF0BF6B0009897A /* Interpolate.swift */,
 				489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */,
 				489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */,
-				4871C5091E20EE7C00A24A08 /* ContentWindow.swift */,
+				489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */,
 				48D3CD081DE944C2003D6C02 /* Supporting Files */,
 			);
 			path = MochaUI;
@@ -1332,7 +1332,6 @@
 				4884929B1D0B59370003D522 /* MessageCell.xib in Resources */,
 				488492741D0B392A0003D522 /* ConversationListViewController.xib in Resources */,
 				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
-				488492791D0B3F370003D522 /* ConversationCell.xib in Resources */,
 				488492761D0B3A010003D522 /* MessageListViewController.xib in Resources */,
 				48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */,
 				489FB08B1DF7CC5800AEBD1D /* TextInputCell.xib in Resources */,
@@ -1484,6 +1483,7 @@
 				48D3CD221DE94C9C003D6C02 /* KeyValueStore.swift in Sources */,
 				48D3CD061DE944AA003D6C02 /* Logger.swift in Sources */,
 				48D3CD1C1DE94BBD003D6C02 /* Emoji.swift in Sources */,
+				4894216A1EC11BCE0047FDBB /* DispatchTime.swift in Sources */,
 				48D3CD1F1DE94BEC003D6C02 /* Notification+Extensions.swift in Sources */,
 				481D933E1DF5D7D100EB23A1 /* Wallclock.swift in Sources */,
 				48D3CD041DE944A2003D6C02 /* Promise.swift in Sources */,
@@ -1497,11 +1497,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D3CD171DE945C1003D6C02 /* NSAntiScrollView.swift in Sources */,
-				4871C50A1E20EE7C00A24A08 /* ContentWindow.swift in Sources */,
 				48D3CD211DE94C71003D6C02 /* Mocha+Bridge.swift in Sources */,
 				48D3CD161DE945C1003D6C02 /* NSExtendedTextView.swift in Sources */,
 				48D3CD0D1DE945C1003D6C02 /* AppKit+Extensions.swift in Sources */,
 				489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */,
+				489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */,
 				48D3CD121DE945C1003D6C02 /* ListView.swift in Sources */,
 				48D3CD131DE945C1003D6C02 /* TLTone.swift in Sources */,
 				48403CA31DF0BF6B0009897A /* Interpolate.swift in Sources */,
@@ -1628,6 +1628,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
 					"-lncurses",
@@ -1644,6 +1645,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
 					"-lncurses",
@@ -1754,7 +1756,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -1795,7 +1797,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -1810,6 +1812,7 @@
 				CODE_SIGN_ENTITLEMENTS = Parrot/Parrot.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
@@ -1831,6 +1834,7 @@
 				CODE_SIGN_ENTITLEMENTS = Parrot/Parrot.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
@@ -1931,6 +1935,7 @@
 				CODE_SIGN_ENTITLEMENTS = parrotd/parrotd.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = parrotd/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.parrotd;
@@ -1947,6 +1952,7 @@
 				CODE_SIGN_ENTITLEMENTS = parrotd/parrotd.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = parrotd/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.parrotd;
@@ -2084,6 +2090,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = ParrotShare/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotShare;
@@ -2102,6 +2109,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = ParrotShare/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotShare;
@@ -2121,6 +2129,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = ParrotLink/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotLink;
@@ -2139,6 +2148,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = ParrotLink/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotLink;
@@ -2158,6 +2168,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = ParrotToday/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotToday;
@@ -2176,6 +2187,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = ParrotToday/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotToday;

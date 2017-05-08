@@ -13,12 +13,81 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
     private static var wallclock = Wallclock()
     private var id = UUID() // for wallclock
     
-	@IBOutlet private var photoView: NSImageView?
-	@IBOutlet private var nameLabel: NSTextField?
-	@IBOutlet private var textLabel: NSTextField?
-    @IBOutlet private var timeLabel: NSTextField?
-    @IBOutlet private var effect: NSVisualEffectView?
-	@IBOutlet private var separator: NSView?
+    private lazy var photoView: NSImageView = {
+        return self.prepare(NSImageView(frame: NSZeroRect)) { v in
+            v.allowsCutCopyPaste = false
+            v.isEditable = false
+            v.animates = true
+        }
+    }()
+    
+    private lazy var nameLabel: NSTextField = {
+        return self.prepare(NSTextField(labelWithString: "")) { v in
+            v.textColor = NSColor.labelColor
+            v.font = NSFont.systemFont(ofSize: 13.0)
+        }
+    }()
+    
+    private lazy var textLabel: NSTextField = {
+        return self.prepare(NSTextField(labelWithString: "")) { v in
+            v.textColor = NSColor.secondaryLabelColor
+            v.font = NSFont.systemFont(ofSize: 11.0)
+            v.usesSingleLineMode = false
+            v.lineBreakMode = .byWordWrapping
+        }
+    }()
+    
+    private lazy var timeLabel: NSTextField = {
+        return self.prepare(NSTextField(labelWithString: "")) { v in
+            v.textColor = NSColor.tertiaryLabelColor
+            v.font = NSFont.systemFont(ofSize: 11.0)
+            v.alignment = .right
+        }
+    }()
+    
+    private lazy var separator: NSView = {
+        return self.prepare(NSBox(frame: NSZeroRect)) { v in
+            v.boxType = .separator
+            v.fillColor = NSColor.labelColor
+        }
+    }()
+    
+    // Set up constraints after init.
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.wantsLayer = true
+        prepareLayout()
+    }
+    public override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.wantsLayer = true
+        prepareLayout()
+    }
+    
+    // Constraint setup here.
+    private func prepareLayout() {
+        self.photoView.left === self.left + 8
+        self.photoView.centerY === self.centerY
+        self.photoView.width === 48
+        self.photoView.height === 48
+        self.photoView.right === self.nameLabel.left - 8
+        self.photoView.right === self.textLabel.left - 8
+        self.nameLabel.top === self.top + 8
+        self.nameLabel.right === self.timeLabel.left - 4
+        self.nameLabel.bottom === self.textLabel.top - 4
+        self.nameLabel.centerY === self.timeLabel.centerY
+        self.timeLabel.top === self.top + 8
+        self.timeLabel.right === self.right - 8
+        self.timeLabel.bottom === self.textLabel.top - 4
+        self.textLabel.right === self.right - 8
+        self.textLabel.bottom === self.bottom - 8
+        self.separator.right === self.right
+        self.separator.bottom === self.bottom
+        self.separator.height === 1
+        self.separator.width === self.width - (48 + 8)
+    }
 	
 	// Upon assignment of the represented object, configure the subview contents.
 	public override var objectValue: Any? {
@@ -29,7 +98,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
 			if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
 				let photo = fetchImage(user: firstParticipant, monogram: true)
-				self.photoView?.image = photo
+				self.photoView.image = photo
 			}
 			// FIXME: Group conversation prefixing doesn't work yet.
 			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
@@ -39,17 +108,17 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 			let time = conversation.eventStream.last?.timestamp ?? .origin
 			
 			self.time = time
-			self.nameLabel?.stringValue = conversation.name
-			self.nameLabel?.toolTip = conversation.name
-			self.textLabel?.stringValue = subtitle
-			self.textLabel?.toolTip = subtitle
-			self.timeLabel?.stringValue = self.prefix + time.relativeString()
-			self.timeLabel?.toolTip = "\(time.fullString())"
+			self.nameLabel.stringValue = conversation.name
+			self.nameLabel.toolTip = conversation.name
+			self.textLabel.stringValue = subtitle
+			self.textLabel.toolTip = subtitle
+			self.timeLabel.stringValue = self.prefix + time.relativeString()
+			self.timeLabel.toolTip = "\(time.fullString())"
             
 			if conversation.unreadCount > 0 && (messageSender != selfSender) {
-				self.timeLabel?.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
+				self.timeLabel.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
             } else {
-                self.timeLabel?.textColor = .tertiaryLabelColor
+                self.timeLabel.textColor = .tertiaryLabelColor
             }
 		}
 	}
@@ -58,7 +127,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 	private var time: Date = .origin
 	private var prefix = " "
 	public func updateTimestamp() {
-		self.timeLabel?.stringValue = self.prefix + self.time.relativeString()
+		self.timeLabel.stringValue = self.prefix + self.time.relativeString()
 	}
     
     public var isSelected: Bool = false {
@@ -105,19 +174,19 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 	// Return a complete dragging component for this ConversationView.
 	// Note that we hide the separator and show it again after snapshot.
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
-		self.separator?.isHidden = true
+		self.separator.isHidden = true
 		let ret = [self.draggingComponent("Person")]
-		self.separator?.isHidden = false
+		self.separator.isHidden = false
 		return ret
 	}
 	
 	// Allows the photo view's circle crop to dynamically match size.
 	public override func layout() {
 		super.layout()
-        self.separator?.layer?.backgroundColor = NSColor.labelColor.cgColor
-		if let photo = self.photoView, let layer = photo.layer {
+        self.separator.layer?.backgroundColor = NSColor.labelColor.cgColor
+		if let layer = self.photoView.layer {
 			layer.masksToBounds = true
-			layer.cornerRadius = photo.bounds.width / 2.0
+			layer.cornerRadius = self.photoView.bounds.width / 2.0
 		}
 	}
     

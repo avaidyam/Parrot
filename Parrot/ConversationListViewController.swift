@@ -89,6 +89,10 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         return ConversationCell.self
     }
     
+    public func cellHeight(in view: ListView, at: ListView.Index) -> Double {
+        return 48.0 + 16.0 /* padding */
+    }
+    
     public func proposedSelection(in list: ListView, at: [ListView.Index]) -> [ListView.Index] {
         return list.selection + at
     }
@@ -148,8 +152,8 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 			vev.state = style.visualEffectState()
 		}
 		
-        let nib = NSNib(nibNamed: "ConversationCell", bundle: nil)!
-		self.listView.register(nib: nib, forClass: ConversationCell.self)
+        //let nib = NSNib(nibNamed: "ConversationCell", bundle: nil)!
+		//self.listView.register(nib: nib, forClass: ConversationCell.self)
 		
 		NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService) { note in
             guard let c = note.object as? Service else { return }

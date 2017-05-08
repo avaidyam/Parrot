@@ -17,6 +17,9 @@ public protocol ListViewDataDelegate {
     
     /// Returns the type of NSViewController to use for the list cell.
     func itemClass(in: ListView, at: ListView.Index) -> NSView.Type
+    
+    /// Returns the height of the cell at the given index.
+    func cellHeight(in: ListView, at: ListView.Index) -> Double
 }
 
 public protocol ListViewSelectionDelegate {
@@ -277,23 +280,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	public func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         let index = __fromRow(UInt(row))
         guard let d = self.delegate as? ListViewDataDelegate else { return 0.0 }
-        
-        let cellClass = d.itemClass(in: self, at: index)
-        var proto = self.prototypes["\(cellClass)"]
-        if proto == nil {
-            let stuff = NSNib(nibNamed: "\(cellClass)", bundle: nil)?.instantiate(self).flatMap { $0 as? NSView }
-            proto = stuff?.first//cellClass.init() // FIXME: doesn't work
-            if proto == nil {
-                return -1
-            }
-            proto?.identifier = "\(cellClass)"
-            self.prototypes["\(cellClass)"] = proto!
-        }
-        
-        proto?.frame = NSRect(x: 0, y: 0, width: self.bounds.width, height: 20.0)
-        (proto as? NSTableCellView)?.objectValue = d.object(in: self, at: index)
-        proto?.layoutSubtreeIfNeeded()
-        return proto!.fittingSize.height
+        return CGFloat(d.cellHeight(in: self, at: index))
 	}
 	
     /// Whenever the NSTableColumn resizes, we know the parent view resizes, so automatically 
@@ -347,7 +334,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 		let cellClass = d.itemClass(in: self, at: index)
 		var view = self.tableView.make(withIdentifier: "\(cellClass)", owner: self)
 		if view == nil {
-			log.warning("Cell class \(cellClass) not registered!")
+			//log.warning("Cell class \(cellClass) not registered!")
 			view = cellClass.init(frame: .zero)
 			view!.identifier = cellClass.className()
 		}

@@ -126,6 +126,16 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
         return MessageCell.self
     }
     
+    public func cellHeight(in view: ListView, at: ListView.Index) -> Double {
+        let row = Int(at.item)
+        if let _ = self.dataSource[row] as? Focus {
+            return 24.0
+        } else if let m = self.dataSource[row] as? Message {
+            return MessageCell.measure(m.text, view.frame.width)
+        }
+        return 0.0
+    }
+    
     public func reachedEdge(in: ListView, edge: NSRectEdge) {
         func scrollback() {
             guard self.updateToken == false else { return }

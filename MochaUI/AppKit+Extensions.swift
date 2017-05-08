@@ -25,6 +25,15 @@ public extension NSView {
 		component.frame = self.convert(self.bounds, from: self)
 		return component
 	}
+    
+    // Nifty extension to simplify init-ing views in code.
+    func prepare<T: NSView>(_ v: T, _ handler: (T) -> ()) -> T {
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.wantsLayer = true
+        handler(v)
+        self.addSubview(v)
+        return v
+    }
 }
 
 @objc fileprivate protocol _NSWindowPrivate {
