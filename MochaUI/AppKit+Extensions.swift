@@ -28,6 +28,8 @@ public extension NSView {
     
     // Nifty extension to simplify init-ing views in code.
     func prepare<T: NSView>(_ v: T, _ handler: (T) -> ()) -> T {
+        v.postsFrameChangedNotifications = false
+        v.postsBoundsChangedNotifications = false
         v.translatesAutoresizingMaskIntoConstraints = false
         v.wantsLayer = true
         handler(v)

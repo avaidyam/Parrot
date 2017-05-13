@@ -14,9 +14,22 @@ let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiate
 public class ConversationListViewController: NSWindowController, ConversationListDelegate,
 ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSWindowDelegate {
 	
-	@IBOutlet var listView: ListView!
-	@IBOutlet var indicator: NSProgressIndicator!
-    @IBOutlet var imageView: NSImageView!
+    private lazy var listView: ListView = {
+        self.window?.contentView?.prepare(ListView(frame: NSZeroRect)) { v in
+            v.updateToBottom = false
+            v.multipleSelect = true
+            v.emptySelect = true
+            v.delegate = self
+        }
+    }()!
+    
+    private lazy var indicator: NSProgressIndicator = {
+        self.window?.contentView?.prepare(NSProgressIndicator(frame: NSZeroRect)) { v in
+            v.usesThreadedAnimation = true
+            v.isIndeterminate = true
+            v.style = .spinningStyle
+        }
+    }()!
 	
 	private var updateToken: Bool = false
 	private var userList: Directory?
@@ -70,12 +83,38 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 		}
 	}
 	
-	var sortedConversations: [ParrotServiceExtension.Conversation] {
+    // FIXME: this is recomputed A LOT! bad idea...
+    var sortedConversations: [ParrotServiceExtension.Conversation] {
 		guard self.conversationList != nil else { return [] }
         return self.conversationList!.conversations.values
             .filter { !$0.archived }
             .sorted { $0.timestamp > $1.timestamp }
 	}
+    
+    public init() {
+        let w = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 256, height: 512),
+                         styleMask: [.titled, .unifiedTitleAndToolbar, .resizable, .closable, .miniaturizable, .fullSizeContentView],
+                         backing: .buffered, defer: true)
+        super.init(window: w)
+        
+        // FIXME: needs a delegate :(
+        let t = NSToolbar()
+        t.insertItem(withItemIdentifier: NSToolbarFlexibleSpaceItemIdentifier, at: 0)
+        w.toolbar = t
+        
+        // Center by default, but load a saved frame if available, and set the autosave.
+        w.center()
+        w.setFrameUsingName("Conversations")
+        w.setFrameAutosaveName("Conversations")
+        
+        // Finish up initialization we lost by not using nibs.
+        w.delegate = self
+        self.windowDidLoad()
+    }
+    
+    public required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     public func numberOfItems(in: ListView) -> [UInt] {
         return [UInt(self.sortedConversations.count)]
@@ -134,13 +173,19 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         }
     }
 	
-	public override func loadWindow() {
-		super.loadWindow()
-        
+    public override func windowDidLoad() {
 		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
         self.window?.titleVisibility = .hidden
+        self.window?.titlebarAppearsTransparent = true
         self.window?.contentView?.superview?.wantsLayer = true
+        
+        self.window!.contentView!.centerX == self.indicator.centerX
+        self.window!.contentView!.centerY == self.indicator.centerY
+        self.window!.contentView!.centerX == self.listView.centerX
+        self.window!.contentView!.centerY == self.listView.centerY
+        self.window!.contentView!.width == self.listView.width
+        self.window!.contentView!.height == self.listView.height
         
         let frame = self.listView.layer!.frame
         self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -162,11 +207,11 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 			
             DispatchQueue.main.async {
                 self.window?.title = c.directory.me.fullName
-                self.imageView.layer?.masksToBounds = true
-                self.imageView.layer?.cornerRadius = self.imageView.bounds.width / 2
-                self.imageView.image = fetchImage(user: c.directory.me, monogram: true)
+                //self.imageView.layer?.masksToBounds = true
+                //self.imageView.layer?.cornerRadius = self.imageView.bounds.width / 2
+                //self.imageView.image = fetchImage(user: c.directory.me, monogram: true)
                 
-				self.listView.update()
+                self.listView.update()
                 self.updateSelectionIndexes()
 			}
 		}
@@ -190,7 +235,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 			}
 		}
         
-        self.indicator.usesThreadedAnimation = true
 		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
 		/*self.listView.pasteboardProvider = { row in
 			let pb = NSPasteboardItem()

@@ -64,7 +64,6 @@
 		48834E401C1B4098009BC442 /* ConversationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E381C1B4098009BC442 /* ConversationList.swift */; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
 		48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */; };
-		488492741D0B392A0003D522 /* ConversationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492731D0B392A0003D522 /* ConversationListViewController.xib */; };
 		488492761D0B3A010003D522 /* MessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* MessageListViewController.xib */; };
 		488492771D0B3CA60003D522 /* MessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* MessageListViewController.xib */; };
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
@@ -359,7 +358,6 @@
 		48834E391C1B4098009BC442 /* FoundationSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationSupport.swift; sourceTree = "<group>"; };
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLiteSerialization.swift; sourceTree = "<group>"; };
-		488492731D0B392A0003D522 /* ConversationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationListViewController.xib; sourceTree = "<group>"; };
 		488492751D0B3A010003D522 /* MessageListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageListViewController.xib; sourceTree = "<group>"; };
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4884929A1D0B59370003D522 /* MessageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageCell.xib; sourceTree = "<group>"; };
@@ -576,14 +574,6 @@
 			name = Send;
 			sourceTree = "<group>";
 		};
-		481D932F1DF535B800EB23A1 /* Display */ = {
-			isa = PBXGroup;
-			children = (
-				4835ECA81C1C620000193EBC /* ConversationCell.swift */,
-			);
-			name = Display;
-			sourceTree = "<group>";
-		};
 		482323DE1E1CBC3E00318380 /* Termbox */ = {
 			isa = PBXGroup;
 			children = (
@@ -600,9 +590,8 @@
 		4835ECA51C1C61F300193EBC /* Conversation List */ = {
 			isa = PBXGroup;
 			children = (
-				48D3CD401DEA874F003D6C02 /* Modules */,
+				4835ECA81C1C620000193EBC /* ConversationCell.swift */,
 				4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */,
-				488492731D0B392A0003D522 /* ConversationListViewController.xib */,
 			);
 			name = "Conversation List";
 			sourceTree = "<group>";
@@ -853,14 +842,6 @@
 				48D3CCF81DE9446D003D6C02 /* Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		48D3CD401DEA874F003D6C02 /* Modules */ = {
-			isa = PBXGroup;
-			children = (
-				481D932F1DF535B800EB23A1 /* Display */,
-			);
-			name = Modules;
 			sourceTree = "<group>";
 		};
 		48D3CD411DEA8752003D6C02 /* Receive */ = {
@@ -1330,7 +1311,6 @@
 			files = (
 				489FB0691DF5FBE400AEBD1D /* WatermarkCell.xib in Resources */,
 				4884929B1D0B59370003D522 /* MessageCell.xib in Resources */,
-				488492741D0B392A0003D522 /* ConversationListViewController.xib in Resources */,
 				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
 				488492761D0B3A010003D522 /* MessageListViewController.xib in Resources */,
 				48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */,

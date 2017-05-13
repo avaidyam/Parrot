@@ -66,60 +66,47 @@ public func -<C>(lhs: LayoutItem<C>, rhs: CGFloat) -> LayoutItem<C> {
     return lhs.itemWithConstant(lhs.constant - rhs)
 }
 
+@discardableResult
 public func ==<C>(lhs: LayoutItem<C>, rhs: LayoutItem<C>) -> NSLayoutConstraint {
-    return lhs.constrain(rhs, relation: .equal)
+    let x = lhs.constrain(rhs, relation: .equal)
+    x.isActive = true
+    return x
 }
 
+@discardableResult
 public func ==(lhs: LayoutItem<Dimension>, rhs: CGFloat) -> NSLayoutConstraint {
-    return lhs.constrain(rhs, relation: .equal)
+    let x = lhs.constrain(rhs, relation: .equal)
+    x.isActive = true
+    return x
 }
 
+@discardableResult
 public func >=<C>(lhs: LayoutItem<C>, rhs: LayoutItem<C>) -> NSLayoutConstraint {
-    return lhs.constrain(rhs, relation: .greaterThanOrEqual)
+    let x = lhs.constrain(rhs, relation: .greaterThanOrEqual)
+    x.isActive = true
+    return x
 }
 
+@discardableResult
 public func >=(lhs: LayoutItem<Dimension>, rhs: CGFloat) -> NSLayoutConstraint {
-    return lhs.constrain(rhs, relation: .greaterThanOrEqual)
+    let x = lhs.constrain(rhs, relation: .greaterThanOrEqual)
+    x.isActive = true
+    return x
 }
 
+@discardableResult
 public func <=<C>(lhs: LayoutItem<C>, rhs: LayoutItem<C>) -> NSLayoutConstraint {
-    return lhs.constrain(rhs, relation: .lessThanOrEqual)
+    let x = lhs.constrain(rhs, relation: .lessThanOrEqual)
+    x.isActive = true
+    return x
 }
 
+@discardableResult
 public func <=(lhs: LayoutItem<Dimension>, rhs: CGFloat) -> NSLayoutConstraint {
-    return lhs.constrain(rhs, relation: .lessThanOrEqual)
+    let x = lhs.constrain(rhs, relation: .lessThanOrEqual)
+    x.isActive = true
+    return x
 }
-
-//
-
-infix operator <== : ComparisonPrecedence
-infix operator >==: ComparisonPrecedence
-
-public func ===<C>(lhs: LayoutItem<C>, rhs: LayoutItem<C>) {
-    lhs.constrain(rhs, relation: .equal).isActive = true
-}
-
-public func ===(lhs: LayoutItem<Dimension>, rhs: CGFloat) {
-    lhs.constrain(rhs, relation: .equal).isActive = true
-}
-
-public func >==<C>(lhs: LayoutItem<C>, rhs: LayoutItem<C>) {
-    lhs.constrain(rhs, relation: .greaterThanOrEqual).isActive = true
-}
-
-public func >==(lhs: LayoutItem<Dimension>, rhs: CGFloat) {
-    lhs.constrain(rhs, relation: .greaterThanOrEqual).isActive = true
-}
-
-public func <==<C>(lhs: LayoutItem<C>, rhs: LayoutItem<C>) {
-    lhs.constrain(rhs, relation: .lessThanOrEqual).isActive = true
-}
-
-public func <==(lhs: LayoutItem<Dimension>, rhs: CGFloat) {
-    lhs.constrain(rhs, relation: .lessThanOrEqual).isActive = true
-}
-
-//
 
 private func layoutItem<C>(_ item: AnyObject, _ attribute: NSLayoutAttribute) -> LayoutItem<C> {
     return LayoutItem(item: item, attribute: attribute, multiplier: 1.0, constant: 0.0)

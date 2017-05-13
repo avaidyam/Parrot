@@ -45,13 +45,6 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
         }
     }()
     
-    private lazy var separator: NSView = {
-        return self.prepare(NSBox(frame: NSZeroRect)) { v in
-            v.boxType = .separator
-            v.fillColor = NSColor.labelColor
-        }
-    }()
-    
     // Set up constraints after init.
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -68,25 +61,21 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
     
     // Constraint setup here.
     private func prepareLayout() {
-        self.photoView.left === self.left + 8
-        self.photoView.centerY === self.centerY
-        self.photoView.width === 48
-        self.photoView.height === 48
-        self.photoView.right === self.nameLabel.left - 8
-        self.photoView.right === self.textLabel.left - 8
-        self.nameLabel.top === self.top + 8
-        self.nameLabel.right === self.timeLabel.left - 4
-        self.nameLabel.bottom === self.textLabel.top - 4
-        self.nameLabel.centerY === self.timeLabel.centerY
-        self.timeLabel.top === self.top + 8
-        self.timeLabel.right === self.right - 8
-        self.timeLabel.bottom === self.textLabel.top - 4
-        self.textLabel.right === self.right - 8
-        self.textLabel.bottom === self.bottom - 8
-        self.separator.right === self.right
-        self.separator.bottom === self.bottom
-        self.separator.height === 1
-        self.separator.width === self.width - (48 + 8)
+        self.photoView.left == self.left + 8
+        self.photoView.centerY == self.centerY
+        self.photoView.width == 48
+        self.photoView.height == 48
+        self.photoView.right == self.nameLabel.left - 8
+        self.photoView.right == self.textLabel.left - 8
+        self.nameLabel.top == self.top + 8
+        self.nameLabel.right == self.timeLabel.left - 4
+        self.nameLabel.bottom == self.textLabel.top - 4
+        self.nameLabel.centerY == self.timeLabel.centerY
+        self.timeLabel.top == self.top + 8
+        self.timeLabel.right == self.right - 8
+        self.timeLabel.bottom == self.textLabel.top - 4
+        self.textLabel.right == self.right - 8
+        self.textLabel.bottom == self.bottom - 8
     }
 	
 	// Upon assignment of the represented object, configure the subview contents.
@@ -174,16 +163,12 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 	// Return a complete dragging component for this ConversationView.
 	// Note that we hide the separator and show it again after snapshot.
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
-		self.separator.isHidden = true
-		let ret = [self.draggingComponent("Person")]
-		self.separator.isHidden = false
-		return ret
+		return [self.draggingComponent("Person")]
 	}
 	
 	// Allows the photo view's circle crop to dynamically match size.
 	public override func layout() {
 		super.layout()
-        self.separator.layer?.backgroundColor = NSColor.labelColor.cgColor
 		if let layer = self.photoView.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = self.photoView.bounds.width / 2.0

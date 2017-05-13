@@ -33,7 +33,7 @@ public class ParrotAppController: NSApplicationController {
     
 	/// Lazy-init for the main conversations NSWindowController.
 	private lazy var conversationsController: NSWindowController = {
-		ConversationListViewController(windowNibName: "ConversationListViewController")
+		ConversationListViewController()
 	}()
 	
 	public static override func initialize() {
