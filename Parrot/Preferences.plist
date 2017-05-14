@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Appearance</string>
+		<key>icon</key>
+		<string>icon_name.icns</string>
+		<key>description</key>
+		<string>User Interface settings.</string>
+		<key>children</key>
+		<array>
+			<dict>
+				<key>key</key>
+				<string>interfaceStyle</string>
+				<key>title</key>
+				<string>Interface Style</string>
+				<key>description</key>
+				<string>The day/night interface theme to use.</string>
+				<key>type</key>
+				<string>one</string>
+				<key>values</key>
+				<array>
+					<dict>
+						<key>key</key>
+						<string>light</string>
+						<key>title</key>
+						<string>Light</string>
+						<key>description</key>
+						<string>A Day theme.</string>
+					</dict>
+					<dict>
+						<key>key</key>
+						<string>dark</string>
+						<key>title</key>
+						<string>Dark</string>
+						<key>description</key>
+						<string>A Night theme.</string>
+					</dict>
+					<dict>
+						<key>key</key>
+						<string>auto</string>
+						<key>title</key>
+						<string>Automatic</string>
+						<key>description</key>
+						<string>Follow the system UI theme.</string>
+					</dict>
+				</array>
+				<key>defaults</key>
+				<array>
+					<string>auto</string>
+				</array>
+			</dict>
+			<dict>
+				<key>key</key>
+				<string>vibrancyStyle</string>
+				<key>title</key>
+				<string>Vibrancy Style</string>
+				<key>description</key>
+				<string>The vibrancy style to use.</string>
+				<key>type</key>
+				<string>one</string>
+				<key>values</key>
+				<array>
+					<dict>
+						<key>key</key>
+						<string>never</string>
+						<key>title</key>
+						<string>Never</string>
+						<key>description</key>
+						<string>No translucency will be visible.</string>
+					</dict>
+					<dict>
+						<key>key</key>
+						<string>always</string>
+						<key>title</key>
+						<string>Always</string>
+						<key>description</key>
+						<string>Translucency is always visible.</string>
+					</dict>
+					<dict>
+						<key>key</key>
+						<string>auto</string>
+						<key>title</key>
+						<string>Automatic</string>
+						<key>description</key>
+						<string>The app will be vibrant when frontmost.</string>
+					</dict>
+				</array>
+				<key>defaults</key>
+				<array>
+					<string>auto</string>
+				</array>
+			</dict>
+			<dict>
+				<key>key</key>
+				<string>textSize</string>
+				<key>title</key>
+				<string>Text Size</string>
+				<key>description</key>
+				<string>The size of content text.</string>
+				<key>type</key>
+				<string>one</string>
+				<key>values</key>
+				<array>
+					<dict>
+						<key>key</key>
+						<string>never</string>
+						<key>title</key>
+						<string>Never</string>
+						<key>description</key>
+						<string>No translucency will be visible.</string>
+					</dict>
+					<dict>
+						<key>key</key>
+						<string>always</string>
+						<key>title</key>
+						<string>Always</string>
+						<key>description</key>
+						<string>Translucency is always visible.</string>
+					</dict>
+					<dict>
+						<key>key</key>
+						<string>auto</string>
+						<key>title</key>
+						<string>Automatic</string>
+						<key>description</key>
+						<string>The app will be vibrant when frontmost.</string>
+					</dict>
+				</array>
+				<key>defaults</key>
+				<array>
+					<string></string>
+				</array>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Messages</string>
+		<key>icon</key>
+		<string>icon_name.icns</string>
+		<key>description</key>
+		<string>Message view interface settings.</string>
+		<key>children</key>
+		<array/>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Experimental</string>
+		<key>icon</key>
+		<string>icon_name.icns</string>
+		<key>description</key>
+		<string>Experimental features: caution!</string>
+		<key>children</key>
+		<array/>
+	</dict>
+</array>
+</plist>
