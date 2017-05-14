@@ -16,8 +16,8 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         }
     }()
     
-    private lazy var textLabel: NSTextView = {
-        return self.prepare(NSTextView(frame: NSZeroRect)) { v in
+    private lazy var textLabel: NSExtendedTextView = {
+        return self.prepare(NSExtendedTextView(frame: NSZeroRect)) { v in
             v.isEditable = false
             v.isSelectable = true
             v.drawsBackground = false

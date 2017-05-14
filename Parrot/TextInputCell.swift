@@ -16,21 +16,72 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
     public var host: TextInputHost? = nil
     private var insertToken = false
     
-    @IBOutlet var textView: NSTextView!
-    @IBOutlet var imageView: NSButton!
+    private lazy var photoView: NSImageView = {
+        return self.view.prepare(NSImageView(frame: NSZeroRect)) { v in
+            v.allowsCutCopyPaste = false
+            v.isEditable = false
+            v.animates = true
+        }
+    }()
+    
+    private lazy var textView: NSExtendedTextView = {
+        return self.view.prepare(NSExtendedTextView(frame: NSZeroRect)) { v in
+            v.isEditable = true
+            v.isSelectable = true
+            v.drawsBackground = false
+            v.backgroundColor = NSColor.clear
+            v.textColor = NSColor.labelColor
+            v.delegate = self
+        }
+    }()
+    
+    public init() {
+        super.init(nibName: nil, bundle: nil)!
+        self.view = NSView(frame: NSZeroRect)
+        self.prepareLayout()
+    }
+    public override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        self.view = NSView(frame: NSZeroRect)
+        self.prepareLayout()
+    }
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.view = NSView(frame: NSZeroRect)
+        self.prepareLayout()
+    }
+    
+    // Constraint setup here.
+    private func prepareLayout() {
+        self.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.wantsLayer = true
+        
+        // Install constraints.
+        self.photoView.left == self.view.left + 8.0
+        self.photoView.bottom == self.view.bottom - 8.0
+        self.photoView.height == 24.0
+        self.photoView.width == 24.0
+        self.photoView.bottom == self.textView.bottom
+        
+        self.textView.left == self.photoView.right + 8.0
+        self.textView.bottom == self.view.bottom - 8.0
+        self.textView.right == self.view.right - 8.0
+        self.textView.top == self.view.top + 8.0
+        self.textView.height >= self.photoView.height
+    }
     
     public override func viewWillAppear() {
         super.viewWillAppear()
         
         // Mask the image into a circle and grab it.
-        if let photo = self.imageView, let layer = photo.layer {
+        if let layer = self.photoView.layer {
             layer.masksToBounds = true
-            layer.cornerRadius = photo.bounds.width / 2.0
+            layer.cornerRadius = 24.0 / 2.0 // FIXME: dynamic mask
         }
-        self.imageView.image = self.host?.image
+        self.photoView.image = self.host?.image
         
-        self.textView?.translatesAutoresizingMaskIntoConstraints = false
-        self.textView?.enclosingScrollView?.replaceInSuperview(with: self.textView!)
+        self.textView.translatesAutoresizingMaskIntoConstraints = false
+        self.textView.enclosingScrollView?.replaceInSuperview(with: self.textView)
     }
     
     // Set up dark/light notifications.
@@ -41,7 +92,7 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
             // NSTextView doesn't automatically change its text color when the
             // backing view's appearance changes, so we need to set it each time.
             // In addition, make sure links aren't blue as usual.
-            guard let text = self.textView else { return }
+            let text = self.textView
             text.layer?.masksToBounds = true
             text.layer?.cornerRadius = 10.0
             text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.view.window!.effectiveAppearance).cgColor
@@ -80,9 +131,9 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
     
     private func resizeModule() {
         NSAnimationContext.animate(duration: 0.6) { // TODO: FIX THIS
-            self.textView?.invalidateIntrinsicContentSize()
-            self.textView?.superview?.needsLayout = true
-            self.textView?.superview?.layoutSubtreeIfNeeded()
+            self.textView.invalidateIntrinsicContentSize()
+            self.textView.superview?.needsLayout = true
+            self.textView.superview?.layoutSubtreeIfNeeded()
             self.host?.resized(to: Double(self.view.frame.height))
         }
     }

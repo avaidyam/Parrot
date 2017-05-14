@@ -65,7 +65,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
     
     private var typingHelper: TypingHelper? = nil
     lazy var textInputCell: TextInputCell = {
-        let t = TextInputCell(nibName: "TextInputCell", bundle: Bundle.main)!
+        let t = TextInputCell()
         t.host = self; return t
     }()
     

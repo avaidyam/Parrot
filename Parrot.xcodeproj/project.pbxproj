@@ -75,7 +75,6 @@
 		489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */; };
 		489FB0671DF5FBD400AEBD1D /* WatermarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */; };
 		489FB0891DF7CC4900AEBD1D /* TextInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB0881DF7CC4900AEBD1D /* TextInputCell.swift */; };
-		489FB08B1DF7CC5800AEBD1D /* TextInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 489FB08A1DF7CC5800AEBD1D /* TextInputCell.xib */; };
 		489FB08D1DF7E0CB00AEBD1D /* TypingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */; };
 		48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
 		48BFD0351D13850B00DAE29E /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
@@ -367,7 +366,6 @@
 		489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolatable.swift"; sourceTree = "<group>"; };
 		489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatermarkCell.swift; sourceTree = "<group>"; };
 		489FB0881DF7CC4900AEBD1D /* TextInputCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextInputCell.swift; sourceTree = "<group>"; };
-		489FB08A1DF7CC5800AEBD1D /* TextInputCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextInputCell.xib; sourceTree = "<group>"; };
 		489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypingHelper.swift; sourceTree = "<group>"; };
 		48A452261D19B16500CB588A /* TLTone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLTone.swift; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyValueStore.swift; path = Mocha/KeyValueStore.swift; sourceTree = SOURCE_ROOT; };
@@ -559,7 +557,6 @@
 				4835ECA61C1C620000193EBC /* MessageCell.swift */,
 				489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */,
 				489FB0881DF7CC4900AEBD1D /* TextInputCell.swift */,
-				489FB08A1DF7CC5800AEBD1D /* TextInputCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -1294,7 +1291,6 @@
 				488492761D0B3A010003D522 /* MessageListViewController.xib in Resources */,
 				4871CB8E1EC7DE960020DA83 /* Preferences.plist in Resources */,
 				48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */,
-				489FB08B1DF7CC5800AEBD1D /* TextInputCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
