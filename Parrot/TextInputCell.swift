@@ -33,7 +33,6 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
         self.textView?.enclosingScrollView?.replaceInSuperview(with: self.textView!)
     }
     
-    
     // Set up dark/light notifications.
     public override func viewDidAppear() {
         super.viewDidAppear()

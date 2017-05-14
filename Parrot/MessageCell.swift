@@ -7,20 +7,57 @@ import protocol ParrotServiceExtension.Message
 /* TODO: Use NSPanGestureRecognizer or Force Touch to expand links. */
 
 public class MessageCell: NSTableCellView, NSTextViewDelegate {
-	@IBOutlet var photoView: NSImageView?
-	@IBOutlet var textLabel: NSTextView?
-    private var outline: CAShapeLayer?
+    
+    private lazy var photoView: NSImageView = {
+        return self.prepare(NSImageView(frame: NSZeroRect)) { v in
+            v.allowsCutCopyPaste = false
+            v.isEditable = false
+            v.animates = true
+        }
+    }()
+    
+    private lazy var textLabel: NSTextView = {
+        return self.prepare(NSTextView(frame: NSZeroRect)) { v in
+            v.isEditable = false
+            v.isSelectable = true
+            v.drawsBackground = false
+            v.backgroundColor = NSColor.clear
+            v.textColor = NSColor.labelColor
+            v.delegate = self
+        }
+    }()
+    
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
     
+    // Set up constraints after init.
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        prepareLayout()
+    }
+    public override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        prepareLayout()
+    }
+    
+    // Constraint setup here.
     private var token: Any? = nil
-    public override func awakeFromNib() {
-        super.awakeFromNib()
+    private func prepareLayout() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.wantsLayer = true
         self.token = subscribe(source: nil, Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             self.setColors()
         }
         
-        self.textLabel?.translatesAutoresizingMaskIntoConstraints = false
-        self.textLabel?.enclosingScrollView?.replaceInSuperview(with: self.textLabel!)
+        // Install constraints.
+        self.photoView.left == self.left + 8.0
+        self.photoView.bottom == self.bottom - 4.0
+        self.photoView.height == 24.0
+        self.photoView.width == 24.0
+        self.photoView.bottom == self.textLabel.bottom
+        self.textLabel.left == self.photoView.right + 8.0
+        self.textLabel.bottom == self.bottom - 4.0
+        self.textLabel.right == self.right - 8.0
+        self.textLabel.top == self.top + 8.0
     }
     
     deinit {
@@ -34,26 +71,24 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
             guard let o = b.current as? Message else { return }
 			
 			let user = o.sender
-			let str = NSAttributedString(string: o.text as String)
             self.orientation = o.sender!.me ? .rightToLeft : .leftToRight // FIXME
-			//self.textLabel?.alignment = o.sender!.me ? .right : .left // FIXME
 			//self.color = o.color
-			self.textLabel?.textStorage?.setAttributedString(str)
-			self.textLabel?.toolTip = "\((o.timestamp /*?? .origin*/).fullString())"
+			self.textLabel.string = o.text as String
+			self.textLabel.toolTip = "\((o.timestamp /*?? .origin*/).fullString())"
 			let img: NSImage = fetchImage(user: user!)
-			self.photoView?.image = img
+			self.photoView.image = img
 			//self.photoView?.toolTip = o.caption
             
             // Hide your own icon and hide the icon of a repeating message.
-            self.photoView?.isHidden = /*(o.sender?.me ?? false) || */(b.previous?.sender?.identifier == o.sender?.identifier)
-            self.textLabel?.alignment = (o.sender?.me ?? false) ? .right : .left
+            self.photoView.isHidden = /*(o.sender?.me ?? false) || */(b.previous?.sender?.identifier == o.sender?.identifier)
+            self.textLabel.alignment = (o.sender?.me ?? false) ? .right : .left
             
             // Enable automatic links and data detectors.
-            self.textLabel?.isEditable = true
-            self.textLabel?.checkTextInDocument(nil)
-            self.textLabel?.isEditable = false
+            self.textLabel.isEditable = true
+            self.textLabel.checkTextInDocument(nil)
+            self.textLabel.isEditable = false
             
-            guard let text = self.textLabel else { return }
+            let text = self.textLabel
             let appearance = self.appearance ?? NSAppearance.current()
             text.textColor = NSColor.labelColor
             self.setColors()
@@ -90,7 +125,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     private func setColors() {
         guard let b = self.objectValue as? EventStreamItemBundle else { return }
         guard let o = b.current as? Message else { return }
-        guard let text = self.textLabel else { return }
+        let text = self.textLabel
         
         // Only clip the text if the text isn't purely Emoji.
         if !text.string!.isEmoji {
@@ -115,27 +150,26 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
 	/// Allows the circle crop and masking to dynamically change.
 	public override func layout() {
         super.layout()
-		if let layer = self.photoView?.layer {
+		if let layer = self.photoView.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = layer.bounds.width / 2.0
 		}
-		if let text = self.textLabel {
-            text.layer?.masksToBounds = true
-            text.layer?.cornerRadius = 10.0
-		}
+        
+        self.textLabel.layer?.masksToBounds = true
+        self.textLabel.layer?.cornerRadius = 10.0
 	}
     
     /// If we're right-clicked outside of the text view, just popUp the textView's menu.
     /// Note: make sure we SELECT ALL and then DESELECT ALL after the popUp menu.
     public override func menu(for event: NSEvent) -> NSMenu? {
-        self.textLabel?.selectAll(nil)
-        return self.textLabel?.menu(for: event)
+        self.textLabel.selectAll(nil)
+        return self.textLabel.menu(for: event)
         //self.textLabel?.setSelectedRange(NSRange())
     }
     
     /// Modify the textView menu to display the message's time.
     public func textView(_ view: NSTextView, menu: NSMenu, for event: NSEvent, at charIndex: Int) -> NSMenu? {
-        menu.insertItem(NSMenuItem(title: "Sent at " + (self.textLabel?.toolTip ?? ""), action: nil, keyEquivalent: ""), at: 0)
+        menu.insertItem(NSMenuItem(title: "Sent at " + (self.textLabel.toolTip ?? ""), action: nil, keyEquivalent: ""), at: 0)
         menu.insertItem(NSMenuItem.separator(), at: 1)
         return menu
     }

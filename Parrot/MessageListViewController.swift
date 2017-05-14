@@ -129,7 +129,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
     public func cellHeight(in view: ListView, at: ListView.Index) -> Double {
         let row = Int(at.item)
         if let _ = self.dataSource[row] as? Focus {
-            return 24.0
+            return 32.0
         } else if let m = self.dataSource[row] as? Message {
             return MessageCell.measure(m.text, view.frame.width)
         }
@@ -176,10 +176,10 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
 			//vev2.state = style.visualEffectState()
 		}
         
-        let nib = NSNib(nibNamed: "MessageCell", bundle: nil)!
-        let nib2 = NSNib(nibNamed: "WatermarkCell", bundle: nil)!
-        self.listView.register(nib: nib, forClass: MessageCell.self)
-        self.listView.register(nib: nib2, forClass: WatermarkCell.self)
+        //let nib = NSNib(nibNamed: "MessageCell", bundle: nil)!
+        //let nib2 = NSNib(nibNamed: "WatermarkCell", bundle: nil)!
+        //self.listView.register(nib: nib, forClass: MessageCell.self)
+        //self.listView.register(nib: nib2, forClass: WatermarkCell.self)
 		
         self.token = subscribe(source: nil, Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             self.setBackground()
@@ -364,6 +364,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
 		}
     }
     
+    // FIXME: Watermark!!
     private var lastWatermarkIdx = -1
     public func watermarkEvent(_ focus: Focus) {
         guard let s = focus.sender, !s.me else { return }
