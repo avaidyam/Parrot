@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11760" systemVersion="16D17a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16F71b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11760"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MessageListViewController" customModule="Parrot" customModuleProvider="target">
@@ -14,6 +13,7 @@
                 <outlet property="listView" destination="yMT-fg-2gH" id="SXU-Nq-yyB"/>
                 <outlet property="moduleView" destination="eI1-ks-Z3P" id="idG-hc-uzf"/>
                 <outlet property="placeholderView" destination="62j-3o-DEj" id="vvn-O3-hO6"/>
+                <outlet property="settingsController" destination="khC-sY-cLx" id="Gb4-CD-JAN"/>
                 <outlet property="settingsPopover" destination="BDE-1t-HSy" id="JBA-mH-l6X"/>
                 <outlet property="window" destination="rqa-ia-OSc" id="fhe-7e-EqQ"/>
             </connections>
@@ -111,7 +111,7 @@
                         <nil key="toolTip"/>
                         <size key="minSize" width="1" height="17"/>
                         <size key="maxSize" width="10000000" height="22"/>
-                        <textField key="view" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="iSW-2i-8yA">
+                        <textField key="view" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" id="iSW-2i-8yA">
                             <rect key="frame" x="0.0" y="14" width="57" height="17"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Window" id="C2Y-Ac-6VT">
@@ -161,225 +161,20 @@
             </connections>
             <point key="canvasLocation" x="26" y="-304"/>
         </window>
-        <customView wantsLayer="YES" id="Pye-gy-Huh" userLabel="Settings">
-            <rect key="frame" x="0.0" y="0.0" width="154" height="225"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <subviews>
-                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EhA-26-aSD">
-                    <rect key="frame" x="29" y="193" width="96" height="25"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="96" id="2C0-JW-GFY"/>
-                    </constraints>
-                    <buttonCell key="cell" type="roundTextured" title="Mute" alternateTitle="Unmute" bezelStyle="texturedRounded" image="NSImageNameVolumeHigh" imagePosition="left" alignment="center" alternateImage="NSImageNameVolumeMute" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qsG-dc-gjg">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                            <integer key="value" value="1"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="toggleMute:" target="-2" id="Jmf-Fj-quQ"/>
-                    </connections>
-                </button>
-                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9ft-Rg-mnA">
-                    <rect key="frame" x="29" y="163" width="96" height="25"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="96" id="lo7-ic-xQ6"/>
-                    </constraints>
-                    <buttonCell key="cell" type="roundTextured" title="Block" alternateTitle="Unblock" bezelStyle="texturedRounded" image="NSPathTemplate" imagePosition="left" alignment="center" alternateImage="NSListViewTemplate" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="suU-7R-sti">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                            <integer key="value" value="1"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </button>
-                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="unT-iv-6FO">
-                    <rect key="frame" x="29" y="133" width="96" height="25"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="96" id="3JD-6L-yKa"/>
-                    </constraints>
-                    <buttonCell key="cell" type="roundTextured" title="Archive" alternateTitle="Unarchive" bezelStyle="texturedRounded" image="NSPathTemplate" imagePosition="left" alignment="center" alternateImage="NSListViewTemplate" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QGV-dh-geC">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                            <integer key="value" value="1"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </button>
-                <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gtY-6y-nj2">
-                    <rect key="frame" x="29" y="103" width="96" height="25"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="96" id="LIb-wb-jb5"/>
-                    </constraints>
-                    <buttonCell key="cell" type="roundTextured" title="Delete" alternateTitle="Undelete" bezelStyle="texturedRounded" image="NSPathTemplate" imagePosition="left" alignment="center" alternateImage="NSListViewTemplate" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tQy-vR-9GL">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                            <integer key="value" value="1"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </button>
-                <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rMj-gL-aS4">
-                    <rect key="frame" x="9" y="39" width="136" height="58"/>
-                    <subviews>
-                        <button wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H5U-Fc-eFk">
-                            <rect key="frame" x="-2" y="42" width="140" height="18"/>
-                            <buttonCell key="cell" type="check" title="Display Notification" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="cw2-be-cKZ">
-                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                                    <integer key="value" value="1"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </button>
-                        <button wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X0e-Wa-0GQ">
-                            <rect key="frame" x="-2" y="20" width="90" height="18"/>
-                            <buttonCell key="cell" type="check" title="Play Sound" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FRK-Pk-CVa">
-                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                                    <integer key="value" value="1"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </button>
-                        <button wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Txk-ij-NB3">
-                            <rect key="frame" x="-2" y="-2" width="125" height="18"/>
-                            <buttonCell key="cell" type="check" title="Haptic Feedback" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="w4w-93-2XY">
-                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                                    <integer key="value" value="1"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </button>
-                    </subviews>
-                    <visibilityPriorities>
-                        <integer value="1000"/>
-                        <integer value="1000"/>
-                        <integer value="1000"/>
-                    </visibilityPriorities>
-                    <customSpacing>
-                        <real value="3.4028234663852886e+38"/>
-                        <real value="3.4028234663852886e+38"/>
-                        <real value="3.4028234663852886e+38"/>
-                    </customSpacing>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layerContentsRedrawPolicy">
-                            <integer key="value" value="1"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </stackView>
-                <colorWell identifier="MyBubbleColor" translatesAutoresizingMaskIntoConstraints="NO" id="Bdo-cG-CSB" customClass="NSPopoverColorWell">
-                    <rect key="frame" x="102" y="10" width="44" height="21"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="44" id="UJq-rx-zG7"/>
-                    </constraints>
-                    <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="emptyColorEnabled" value="YES"/>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="colorChanged:" target="-2" id="TYp-fw-idT"/>
-                        <binding destination="DAL-JI-MqR" name="value" keyPath="values.com.avaidyam.Parrot.ConversationIncomingColor" id="2CI-bL-MY7">
-                            <dictionary key="options">
-                                <bool key="NSConditionallySetsEnabled" value="NO"/>
-                                <bool key="NSValidatesImmediately" value="YES"/>
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
-                            </dictionary>
-                        </binding>
-                    </connections>
-                </colorWell>
-                <colorWell identifier="TheirBubbleColor" translatesAutoresizingMaskIntoConstraints="NO" id="n2Y-vS-NyF" customClass="NSPopoverColorWell">
-                    <rect key="frame" x="8" y="10" width="44" height="21"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="21" id="YDV-XW-a6i"/>
-                    </constraints>
-                    <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="emptyColorEnabled" value="YES"/>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="colorChanged:" target="-2" id="hJ3-kh-lOO"/>
-                        <binding destination="DAL-JI-MqR" name="value" keyPath="values.com.avaidyam.Parrot.ConversationOutgoingColor" id="OOt-DK-kJ3">
-                            <dictionary key="options">
-                                <bool key="NSConditionallySetsEnabled" value="NO"/>
-                                <bool key="NSValidatesImmediately" value="YES"/>
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
-                            </dictionary>
-                        </binding>
-                    </connections>
-                </colorWell>
-                <imageView identifier="BackgroundImage" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3w6-4X-dSe">
-                    <rect key="frame" x="53" y="7" width="48" height="27"/>
-                    <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="axesIndependently" imageFrameStyle="grayBezel" id="ocm-qR-FJ7"/>
-                    <connections>
-                        <action selector="colorChanged:" target="-2" id="fEA-4g-OnE"/>
-                        <binding destination="DAL-JI-MqR" name="data" keyPath="values.Parrot.ConversationBackground" id="lvg-Ae-cQk">
-                            <dictionary key="options">
-                                <bool key="NSAlwaysPresentsApplicationModalAlerts" value="YES"/>
-                                <bool key="NSConditionallySetsEnabled" value="NO"/>
-                                <bool key="NSValidatesImmediately" value="YES"/>
-                            </dictionary>
-                        </binding>
-                    </connections>
-                </imageView>
-            </subviews>
-            <constraints>
-                <constraint firstItem="rMj-gL-aS4" firstAttribute="top" secondItem="gtY-6y-nj2" secondAttribute="bottom" constant="8" id="3Jr-eO-Wqk"/>
-                <constraint firstItem="gtY-6y-nj2" firstAttribute="top" secondItem="unT-iv-6FO" secondAttribute="bottom" constant="8" id="4MZ-Hg-fE5"/>
-                <constraint firstItem="EhA-26-aSD" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="5Sw-jU-h5T"/>
-                <constraint firstItem="3w6-4X-dSe" firstAttribute="centerX" secondItem="rMj-gL-aS4" secondAttribute="centerX" id="6f1-Ol-a2f"/>
-                <constraint firstItem="unT-iv-6FO" firstAttribute="top" secondItem="9ft-Rg-mnA" secondAttribute="bottom" constant="8" id="8cf-iw-Vl3"/>
-                <constraint firstItem="n2Y-vS-NyF" firstAttribute="top" secondItem="rMj-gL-aS4" secondAttribute="bottom" constant="8" id="D4b-x7-5ZC"/>
-                <constraint firstItem="EhA-26-aSD" firstAttribute="top" secondItem="Pye-gy-Huh" secondAttribute="top" constant="8" id="GVH-b2-XJn"/>
-                <constraint firstItem="3w6-4X-dSe" firstAttribute="centerY" secondItem="n2Y-vS-NyF" secondAttribute="centerY" id="JY6-zI-XTN"/>
-                <constraint firstItem="n2Y-vS-NyF" firstAttribute="leading" secondItem="Pye-gy-Huh" secondAttribute="leading" constant="8" id="KBz-EP-NXm"/>
-                <constraint firstItem="3w6-4X-dSe" firstAttribute="leading" secondItem="n2Y-vS-NyF" secondAttribute="trailing" constant="4" id="KnH-go-8Da"/>
-                <constraint firstItem="Bdo-cG-CSB" firstAttribute="leading" secondItem="3w6-4X-dSe" secondAttribute="trailing" constant="4" id="Ltc-ag-zRQ"/>
-                <constraint firstItem="3w6-4X-dSe" firstAttribute="top" secondItem="rMj-gL-aS4" secondAttribute="bottom" constant="8" id="O20-Ub-VLX"/>
-                <constraint firstItem="9ft-Rg-mnA" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="QmE-jS-ytF"/>
-                <constraint firstItem="gtY-6y-nj2" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="ROT-cA-htv"/>
-                <constraint firstAttribute="trailing" secondItem="Bdo-cG-CSB" secondAttribute="trailing" constant="8" id="TBP-Ju-kom"/>
-                <constraint firstItem="rMj-gL-aS4" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="Yib-bL-PwL"/>
-                <constraint firstItem="n2Y-vS-NyF" firstAttribute="centerY" secondItem="Bdo-cG-CSB" secondAttribute="centerY" id="b9S-ok-4mH"/>
-                <constraint firstItem="unT-iv-6FO" firstAttribute="centerX" secondItem="Pye-gy-Huh" secondAttribute="centerX" id="c3l-Ct-gVb"/>
-                <constraint firstItem="Bdo-cG-CSB" firstAttribute="top" secondItem="rMj-gL-aS4" secondAttribute="bottom" constant="8" id="jTj-CO-Rbd"/>
-                <constraint firstItem="9ft-Rg-mnA" firstAttribute="top" secondItem="EhA-26-aSD" secondAttribute="bottom" constant="8" id="mSI-iF-IQR"/>
-            </constraints>
-            <point key="canvasLocation" x="400" y="-399"/>
-        </customView>
-        <userDefaultsController representsSharedInstance="YES" id="DAL-JI-MqR"/>
-        <popover behavior="t" id="BDE-1t-HSy">
+        <popover behavior="semitransient" id="BDE-1t-HSy">
             <userDefinedRuntimeAttributes>
                 <userDefinedRuntimeAttribute type="number" keyPath="edgeIB">
                     <integer key="value" value="3"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
             <connections>
-                <outlet property="contentView" destination="Pye-gy-Huh" id="p4t-00-1d6"/>
+                <outlet property="contentViewController" destination="khC-sY-cLx" id="lb7-ng-W0b"/>
                 <outlet property="relativePositioningView" destination="iSW-2i-8yA" id="0Dd-qf-jxc"/>
             </connections>
         </popover>
+        <viewController id="khC-sY-cLx" customClass="ConversationDetailsViewController" customModule="Parrot" customModuleProvider="target"/>
     </objects>
     <resources>
-        <image name="NSImageNameVolumeHigh" width="512" height="512"/>
-        <image name="NSImageNameVolumeMute" width="512" height="512"/>
         <image name="NSListViewTemplate" width="14" height="10"/>
-        <image name="NSPathTemplate" width="16" height="10"/>
     </resources>
 </document>

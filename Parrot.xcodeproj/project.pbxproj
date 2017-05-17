@@ -26,6 +26,7 @@
 		4819BF631D52D78800CF609C /* emoji_equivalences.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 484019201D37D16C001F969E /* emoji_equivalences.plist */; };
 		481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */; };
 		481D933E1DF5D7D100EB23A1 /* Wallclock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933D1DF5D7D100EB23A1 /* Wallclock.swift */; };
+		48212BE91ECCEB7700B7765B /* ConversationSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */; };
 		4822951D1D417B5E00A34B1B /* AddressBookSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */; };
 		482323D71E1776DC00318380 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D61E1776DC00318380 /* Event.swift */; };
 		482323D91E1CBBA100318380 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D81E1CBBA100318380 /* Application.swift */; };
@@ -70,7 +71,7 @@
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
 		489018AC1D3C8FE400CFCA5F /* Person+Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */; };
 		489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */; };
-		4894216A1EC11BCE0047FDBB /* DispatchTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421691EC11BCE0047FDBB /* DispatchTime.swift */; };
+		4894216A1EC11BCE0047FDBB /* DispatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421691EC11BCE0047FDBB /* DispatchSupport.swift */; };
 		489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */; };
 		489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */; };
 		489FB0671DF5FBD400AEBD1D /* WatermarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */; };
@@ -299,6 +300,7 @@
 		48196B9A1D4805D9001D4BAA /* AboutWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutWindowController.swift; sourceTree = "<group>"; };
 		481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayLink.swift; sourceTree = "<group>"; };
 		481D933D1DF5D7D100EB23A1 /* Wallclock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wallclock.swift; sourceTree = "<group>"; };
+		48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationSettingsViewController.swift; sourceTree = "<group>"; };
 		4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookSupport.swift; sourceTree = "<group>"; };
 		482323D61E1776DC00318380 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		482323D81E1CBBA100318380 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
@@ -361,7 +363,7 @@
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Person+Directory.swift"; sourceTree = "<group>"; };
 		489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
-		489421691EC11BCE0047FDBB /* DispatchTime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchTime.swift; sourceTree = "<group>"; };
+		489421691EC11BCE0047FDBB /* DispatchSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchSupport.swift; sourceTree = "<group>"; };
 		489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolators.swift"; sourceTree = "<group>"; };
 		489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolatable.swift"; sourceTree = "<group>"; };
 		489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatermarkCell.swift; sourceTree = "<group>"; };
@@ -547,6 +549,7 @@
 				481D932D1DF5359000EB23A1 /* Cells */,
 				4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */,
 				488492751D0B3A010003D522 /* MessageListViewController.xib */,
+				48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */,
 			);
 			name = "Message List";
 			sourceTree = "<group>";
@@ -777,7 +780,7 @@
 			isa = PBXGroup;
 			children = (
 				486E7DED1DA8556300C1953B /* Promise.swift */,
-				489421691EC11BCE0047FDBB /* DispatchTime.swift */,
+				489421691EC11BCE0047FDBB /* DispatchSupport.swift */,
 				48834E391C1B4098009BC442 /* FoundationSupport.swift */,
 				481300341D257FE300768D79 /* Logger.swift */,
 				4835ECB61C1C672900193EBC /* Emoji.swift */,
@@ -1398,6 +1401,7 @@
 				48196B9B1D4805D9001D4BAA /* AboutWindowController.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
+				48212BE91ECCEB7700B7765B /* ConversationSettingsViewController.swift in Sources */,
 				4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1439,7 +1443,7 @@
 				48D3CD221DE94C9C003D6C02 /* KeyValueStore.swift in Sources */,
 				48D3CD061DE944AA003D6C02 /* Logger.swift in Sources */,
 				48D3CD1C1DE94BBD003D6C02 /* Emoji.swift in Sources */,
-				4894216A1EC11BCE0047FDBB /* DispatchTime.swift in Sources */,
+				4894216A1EC11BCE0047FDBB /* DispatchSupport.swift in Sources */,
 				48D3CD1F1DE94BEC003D6C02 /* Notification+Extensions.swift in Sources */,
 				481D933E1DF5D7D100EB23A1 /* Wallclock.swift in Sources */,
 				48D3CD041DE944A2003D6C02 /* Promise.swift in Sources */,

@@ -25,9 +25,11 @@ public extension NSView {
 		component.frame = self.convert(self.bounds, from: self)
 		return component
 	}
-    
-    // Nifty extension to simplify init-ing views in code.
-    func prepare<T: NSView>(_ v: T, _ handler: (T) -> ()) -> T {
+}
+
+// Nifty extension to simplify init-ing views in code.
+public extension NSView {
+    static func prepare<T: NSView>(_ v: T, _ handler: (T) -> ()) -> T {
         if !(v is NSTextView) { // Required for NSLayoutManager to lay out glyphs.
             v.postsFrameChangedNotifications = false
         }
@@ -35,8 +37,20 @@ public extension NSView {
         v.translatesAutoresizingMaskIntoConstraints = false
         v.wantsLayer = true
         handler(v)
+        return v
+    }
+    
+    static func prepare<T: NSView>(_ v: T) -> T {
+        return NSView.prepare(v) {_ in}
+    }
+    func prepare<T: NSView>(_ v: T, _ handler: (T) -> ()) -> T {
+        let v = NSView.prepare(v, handler)
         self.addSubview(v)
         return v
+    }
+    
+    func prepare<T: NSView>(_ v: T) -> T {
+        return self.prepare(v) {_ in}
     }
 }
 

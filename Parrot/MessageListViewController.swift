@@ -62,6 +62,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
     @IBOutlet var placeholderView: NSView!
     @IBOutlet var settingsPopover: NSPopover!
 	@IBOutlet var drawerButton: NSButton!
+    @IBOutlet var settingsController: ConversationDetailsViewController!
     
     private var typingHelper: TypingHelper? = nil
     lazy var textInputCell: TextInputCell = {
@@ -219,7 +220,11 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
         self.indicator.startAnimation(nil)
         self.listView.alphaValue = 0.0
         //self.animatedUpdate(true)
-		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
+        self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
+        
+        if self.conversation != nil {
+            self.settingsController?.conversation = self.conversation
+        }
 		
 		/*
 		if self.window?.isKeyWindow ?? false {
@@ -341,6 +346,8 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
                     }
                 }
 			}
+            
+            self.settingsController?.conversation = self.conversation
 			
 			/*
 			self.conversation!.messages.map {
