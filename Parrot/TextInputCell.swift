@@ -87,6 +87,7 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
     // Set up dark/light notifications.
     public override func viewDidAppear() {
         super.viewDidAppear()
+        self.resizeModule()
         ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
             
             // NSTextView doesn't automatically change its text color when the
