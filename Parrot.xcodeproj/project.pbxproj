@@ -66,8 +66,6 @@
 		48834E401C1B4098009BC442 /* ConversationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E381C1B4098009BC442 /* ConversationList.swift */; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
 		48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */; };
-		488492761D0B3A010003D522 /* MessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* MessageListViewController.xib */; };
-		488492771D0B3CA60003D522 /* MessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488492751D0B3A010003D522 /* MessageListViewController.xib */; };
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
 		489018AC1D3C8FE400CFCA5F /* Person+Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */; };
 		489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */; };
@@ -359,7 +357,6 @@
 		48834E391C1B4098009BC442 /* FoundationSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationSupport.swift; sourceTree = "<group>"; };
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLiteSerialization.swift; sourceTree = "<group>"; };
-		488492751D0B3A010003D522 /* MessageListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageListViewController.xib; sourceTree = "<group>"; };
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Person+Directory.swift"; sourceTree = "<group>"; };
 		489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
@@ -548,7 +545,6 @@
 			children = (
 				481D932D1DF5359000EB23A1 /* Cells */,
 				4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */,
-				488492751D0B3A010003D522 /* MessageListViewController.xib */,
 				48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */,
 			);
 			name = "Message List";
@@ -1291,7 +1287,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */,
-				488492761D0B3A010003D522 /* MessageListViewController.xib in Resources */,
 				4871CB8E1EC7DE960020DA83 /* Preferences.plist in Resources */,
 				48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */,
 			);
@@ -1346,7 +1341,6 @@
 			files = (
 				48DE52FA1C1CC28000647C63 /* ParrotViewController.xib in Resources */,
 				48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */,
-				488492771D0B3CA60003D522 /* MessageListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

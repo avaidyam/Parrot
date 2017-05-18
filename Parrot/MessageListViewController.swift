@@ -24,7 +24,7 @@ public struct PlaceholderMessage: Message {
     public var failed: Bool = false
 }
 
-public class MessageListViewController: NSWindowController, TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
+public class MessageListViewController: NSWindowController, NSWindowDelegate, TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
     /// Transient mode is to be used when the conversation should be shown modally
     /// for a temporary period of time; any interaction outside of the window should
@@ -55,19 +55,53 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
             }
         }
     }
-	
-	@IBOutlet var listView: ListView!
-	@IBOutlet var indicator: NSProgressIndicator!
-    @IBOutlet var moduleView: NSView!
-    @IBOutlet var placeholderView: NSView!
-    @IBOutlet var settingsPopover: NSPopover!
-	@IBOutlet var drawerButton: NSButton!
-    @IBOutlet var settingsController: ConversationDetailsViewController!
+    
+    private lazy var moduleView: NSVisualEffectView = {
+        self.window?.contentView?.prepare(NSVisualEffectView(frame: NSZeroRect)) { v in
+            v.layerContentsRedrawPolicy = .onSetNeedsDisplay
+            v.state = .active
+            v.blendingMode = .withinWindow
+            v.material = .appearanceBased
+        }
+    }()!
+    
+    //@IBOutlet var drawerButton: NSButton!
+    
+    private lazy var listView: ListView = {
+        self.window?.contentView?.prepare(ListView(frame: NSZeroRect)) { v in
+            v.updateToBottom = false
+            v.multipleSelect = true
+            v.emptySelect = true
+            v.delegate = self
+        }
+    }()!
+    
+    private lazy var indicator: NSProgressIndicator = {
+        self.window?.contentView?.prepare(NSProgressIndicator(frame: NSZeroRect)) { v in
+            v.usesThreadedAnimation = true
+            v.isIndeterminate = true
+            v.style = .spinningStyle
+        }
+    }()!
+    
+    private lazy var settingsPopover: NSPopover = {
+        let popover = NSPopover()
+        popover.contentViewController = self.settingsController
+        popover.preferredEdge = .minY
+        popover.relativePositioningView = self.window!.contentView!
+        return popover
+    }()
+    
+    private lazy var settingsController: ConversationDetailsViewController = {
+        return ConversationDetailsViewController()
+    }()
     
     private var typingHelper: TypingHelper? = nil
-    lazy var textInputCell: TextInputCell = {
+    private lazy var textInputCell: TextInputCell = {
         let t = TextInputCell()
-        t.host = self; return t
+        t.host = self
+        _ = self.window?.contentView?.prepare(t.view) // prepare & attach
+        return t
     }()
     
     private lazy var updateInterpolation: Interpolate = {
@@ -100,6 +134,31 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
 	
 	var _previews = [String: [LinkPreviewType]]()
 	var _note: NSObjectProtocol!
+    
+    public init() {
+        let w = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 256, height: 512),
+                         styleMask: [.titled, .unifiedTitleAndToolbar, .resizable, .closable, .miniaturizable, .fullSizeContentView],
+                         backing: .buffered, defer: true)
+        super.init(window: w)
+        
+        // FIXME: needs a delegate :(
+        let t = NSToolbar()
+        t.insertItem(withItemIdentifier: NSToolbarFlexibleSpaceItemIdentifier, at: 0)
+        w.toolbar = t
+        
+        // Center by default, but load a saved frame if available, and set the autosave.
+        w.center()
+        w.setFrameUsingName("Messages")
+        w.setFrameAutosaveName("Messages")
+        
+        // Finish up initialization we lost by not using nibs.
+        w.delegate = self
+        self.windowDidLoad()
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
 	private var dataSource: [EventStreamItem] = []
     public func numberOfItems(in: ListView) -> [UInt] {
@@ -161,15 +220,27 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
         }
     }
     
-	public override func loadWindow() {
-		super.loadWindow()
-        self.placeholderView.replaceInSuperview(with: self.textInputCell.view)
-        
+    public override func windowDidLoad() {
 		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
 		self.window?.titleVisibility = .hidden
         self.window?.contentView?.superview?.wantsLayer = true
-		
+        
+        self.window!.contentView!.centerX == self.indicator.centerX
+        self.window!.contentView!.centerY == self.indicator.centerY
+        self.window!.contentView!.centerX == self.listView.centerX
+        self.window!.contentView!.centerY == self.listView.centerY
+        self.window!.contentView!.width == self.listView.width
+        self.window!.contentView!.height == self.listView.height
+        self.moduleView.left == self.window!.contentView!.left
+        self.moduleView.right == self.window!.contentView!.right
+        self.moduleView.bottom == self.window!.contentView!.bottom
+        self.moduleView.height <= 250
+        self.textInputCell.view.left == self.moduleView.left
+        self.textInputCell.view.right == self.moduleView.right
+        self.textInputCell.view.top == self.moduleView.top
+        self.textInputCell.view.bottom == self.moduleView.bottom
+        
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
 			vev.state = style.visualEffectState()
@@ -223,7 +294,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
         self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
         
         if self.conversation != nil {
-            self.settingsController?.conversation = self.conversation
+            self.settingsController.conversation = self.conversation
         }
 		
 		/*
@@ -347,7 +418,7 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
                 }
 			}
             
-            self.settingsController?.conversation = self.conversation
+            self.settingsController.conversation = self.conversation
 			
 			/*
 			self.conversation!.messages.map {
@@ -490,8 +561,8 @@ public class MessageListViewController: NSWindowController, TextInputHost, ListV
     
     public func resized(to: Double) {
         self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: CGFloat(to), right: 0)
-        self.moduleView?.needsLayout = true
-        self.moduleView?.layoutSubtreeIfNeeded()
+        self.moduleView.needsLayout = true
+        self.moduleView.layoutSubtreeIfNeeded()
     }
     
     public func typing() {

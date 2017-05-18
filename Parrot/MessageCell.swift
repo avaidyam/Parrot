@@ -57,7 +57,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         self.textLabel.left == self.photoView.right + 8.0
         self.textLabel.bottom == self.bottom - 4.0
         self.textLabel.right == self.right - 8.0
-        self.textLabel.top == self.top + 8.0
+        self.textLabel.top == self.top + 4.0
     }
     
     deinit {
@@ -192,13 +192,13 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     }()
     
     // Given a string, a font size, and a base width, return the measured height of the cell.
-    public static func measure(_ string: String, _ width: CGFloat, _ font: NSFont = .systemFont(ofSize: 13.0)) -> Double {
+    public static func measure(_ string: String, _ width: CGFloat) -> Double {
         MessageCell.container.containerSize = NSSize(width: width - 40.0 /* padding + image*/, height: CGFloat.greatestFiniteMagnitude)
         MessageCell.storage.setAttributedString(NSAttributedString(string: string))
-        MessageCell.storage.font = font
+        MessageCell.storage.font = NSFont.systemFont(ofSize: 12.0 * (string.isEmoji ? 4 : 1))
         
         _ = MessageCell.manager.glyphRange(for: MessageCell.container)
         let h = Double(MessageCell.manager.usedRect(for: MessageCell.container).size.height)
-        return (h < 24.0) ? 32.0 : (h + 16.0)
+        return ((h < 24.0) ? 24.0 : h) + 8.0 /* add padding to max(h, 24) */
     }
 }

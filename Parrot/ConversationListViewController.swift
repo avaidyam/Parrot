@@ -254,7 +254,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 		} else {
             log.debug("Conversation NOT found for id \(conv.identifier)")
             DispatchQueue.main.async {
-                let wc = MessageListViewController(windowNibName: "MessageListViewController")
+                let wc = MessageListViewController()
                 wc.conversation = (conv as! IConversation)
                 wc.sendMessageHandler = { [weak self] message, conv2 in
                     self?.sendMessage(message, conv2)
