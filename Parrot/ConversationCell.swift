@@ -6,9 +6,12 @@ import protocol ParrotServiceExtension.Conversation
 
 /* TODO: Selection: Overlay with NSVisualEffectView per-cell. */
 /* TODO: Alternate mode with Card UI. */
+/* TODO: Make canDrawSubviewsIntoLayer work better. */
 
 // A visual representation of a Conversation in a ListView.
 public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
+    
+    public override var allowsVibrancy: Bool { return true }
     
     private static var wallclock = Wallclock()
     private var id = UUID() // for wallclock
@@ -48,19 +51,19 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
     // Set up constraints after init.
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.wantsLayer = true
         prepareLayout()
     }
     public override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.wantsLayer = true
         prepareLayout()
     }
     
     // Constraint setup here.
     private func prepareLayout() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        //self.canDrawSubviewsIntoLayer = true
+        self.wantsLayer = true
+        
         self.photoView.left == self.left + 8
         self.photoView.centerY == self.centerY
         self.photoView.width == 48

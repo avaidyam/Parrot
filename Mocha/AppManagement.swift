@@ -1,11 +1,11 @@
 import Foundation
 
 /* TODO: Finish Semver comparison and handle app update mechanism. */
-let SEMVER_REGEX = "\\bv?(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?:-[\\da-z\\-]+(?:\\.[\\da-z\\-]+)*)?(?:\\+[\\da-z\\-]+(?:\\.[\\da-z\\-]+)*)?\\b"
+let SEMVER_REGEX = "\\bv?(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:\\.(0|[1-9][0-9]*))?-?([\\da-z\\-.]+(?:\\.[\\da-z\\-]+)*)?\\+?([\\da-z\\-]+(?:\\.[\\da-z\\-]+)*)?\\b"
 
 public struct GithubRelease {
 	public let releaseName: String
-	public let buildTag: String
+	public let buildTag: Semver
 	public let releaseNotes: String
 	public let appUpdateURL: URL
 	public let githubURL: URL
@@ -44,14 +44,14 @@ public struct GithubRelease {
 				let appUpdate = _json["zipball_url"] as? String,
 				let githubURL = _json["html_url"] as? String
 		else { return nil }
-		
-		return GithubRelease(releaseName: releaseName, buildTag: buildTag,
+        
+		return GithubRelease(releaseName: releaseName, buildTag: Semver(buildTag),
 		                     releaseNotes: releaseNotes, appUpdateURL: URL(string: appUpdate)!,
 		                     githubURL: URL(string: githubURL)!)
 	}
 }
 
-public struct Semver {
+public struct Semver: Equatable, Comparable {
 	// X.Y.Z
 	public let x: UInt
 	public let y: UInt
@@ -60,16 +60,43 @@ public struct Semver {
 	public let p: String
 	// X.Y.Z+metadata
 	public let m: String
+    
+    public init(x: UInt = 0, y: UInt = 0, z: UInt = 0, p: String = "", m: String = "") {
+        self.x = x
+        self.y = y
+        self.z = z
+        self.p = p
+        self.m = m
+    }
+    
+    public init(_ string: String) {
+        let g = string.captureGroups(from: SEMVER_REGEX)
+        if g.count <= 0 {
+            self.init(); return
+        }
+        self.init(x: UInt(g[0][1]) ?? 0, y: UInt(g[0][2]) ?? 0, z: UInt(g[0][3]) ?? 0,
+                  p: g[0][4], m: g[0][5])
+    }
 	
-	public static func compare(_ lhs: Semver, _ rhs: Semver) -> ComparisonResult {
-		if lhs.x > rhs.x {
-			return .orderedAscending
-		} else if lhs.y > rhs.y {
-			return .orderedAscending
-		} else if lhs.z > rhs.z {
-			return .orderedAscending
-		}
-		// handle .orderedDescending
-		return .orderedSame
-	}
+    // TODO: this is bad, don't use string funcs
+    private static func num(_ str: String) -> Int {
+        if str == "" { return 10 } /* no str = not pre-release */
+        if str.contains("alpha") { return 1 }
+        if str.contains("beta") { return 2 }
+        if str.contains("rc") { return 3 }
+        return 0
+    }
+    
+    public static func ==(_ lhs: Semver, _ rhs: Semver) -> Bool {
+        let lp = Semver.num(lhs.p), rp = Semver.num(rhs.p)
+        return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lp == rp
+    }
+    
+    public static func <(_ lhs: Semver, _ rhs: Semver) -> Bool {
+        let lp = Semver.num(lhs.p), rp = Semver.num(rhs.p)
+        if lhs.x >= rhs.x && lhs.y >= rhs.y && lhs.z >= rhs.z && lp >= rp {
+            return false
+        }
+        return true
+    }
 }

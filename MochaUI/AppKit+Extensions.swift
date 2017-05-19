@@ -29,28 +29,23 @@ public extension NSView {
 
 // Nifty extension to simplify init-ing views in code.
 public extension NSView {
-    static func prepare<T: NSView>(_ v: T, _ handler: (T) -> ()) -> T {
+    static func prepare<T: NSView>(_ v: T, wantsLayer: Bool = false, _ handler: (T) -> () = {_ in}) -> T {
         if !(v is NSTextView) { // Required for NSLayoutManager to lay out glyphs.
             v.postsFrameChangedNotifications = false
         }
         v.postsBoundsChangedNotifications = false
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.wantsLayer = true
+        if wantsLayer { // Avoid explicit wantsLayer unless desired.
+            v.wantsLayer = true
+        }
         handler(v)
         return v
     }
     
-    static func prepare<T: NSView>(_ v: T) -> T {
-        return NSView.prepare(v) {_ in}
-    }
-    func prepare<T: NSView>(_ v: T, _ handler: (T) -> ()) -> T {
-        let v = NSView.prepare(v, handler)
+    func prepare<T: NSView>(_ v: T, wantsLayer: Bool = false, _ handler: (T) -> () = {_ in}) -> T {
+        let v = NSView.prepare(v, wantsLayer: wantsLayer, handler)
         self.addSubview(v)
         return v
-    }
-    
-    func prepare<T: NSView>(_ v: T) -> T {
-        return self.prepare(v) {_ in}
     }
 }
 
@@ -189,6 +184,27 @@ public extension NSView {
 		}
 		return .visible
 	}
+}
+
+public extension NSAlert {
+    
+    /// Convenience to initialize a canned NSAlert.
+    /// TODO: Add help and info buttons to the button array as attributes.
+    // .style(.informational), .button("hi"), .help, .suppress, etc.
+    public convenience init(style: NSAlertStyle = .warning, message: String = "",
+                            information: String = "", buttons: [String] = [],
+                            showSuppression: Bool = false) {
+        self.init()
+        self.alertStyle = style
+        self.messageText = message
+        self.informativeText = information
+        for b in buttons {
+            self.addButton(withTitle: b)
+        }
+        self.showsSuppressionButton = showSuppression
+        self.layout()
+    }
+    
 }
 
 public extension Date {

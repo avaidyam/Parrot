@@ -8,6 +8,8 @@ import protocol ParrotServiceExtension.Message
 
 public class MessageCell: NSTableCellView, NSTextViewDelegate {
     
+    public override var allowsVibrancy: Bool { return true }
+    
     private lazy var photoView: NSImageView = {
         return self.prepare(NSImageView(frame: NSZeroRect)) { v in
             v.allowsCutCopyPaste = false
@@ -55,9 +57,12 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         self.photoView.width == 24.0
         self.photoView.bottom == self.textLabel.bottom
         self.textLabel.left == self.photoView.right + 8.0
-        self.textLabel.bottom == self.bottom - 4.0
         self.textLabel.right == self.right - 8.0
         self.textLabel.top == self.top + 4.0
+        
+        // So, since the photoView can be hidden (height = 0), we should manually
+        // declare the height minimum constraint here.
+        self.textLabel.height >= 24.0 /* photoView.height */
     }
     
     deinit {
@@ -175,7 +180,6 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     }
     
     
-    
     private static var storage: NSTextStorage = {
         return NSTextStorage(string: "")
     }()
@@ -193,7 +197,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     
     // Given a string, a font size, and a base width, return the measured height of the cell.
     public static func measure(_ string: String, _ width: CGFloat) -> Double {
-        MessageCell.container.containerSize = NSSize(width: width - 40.0 /* padding + image*/, height: CGFloat.greatestFiniteMagnitude)
+        MessageCell.container.containerSize = NSSize(width: width - 48.0 /* padding + image*/, height: CGFloat.greatestFiniteMagnitude)
         MessageCell.storage.setAttributedString(NSAttributedString(string: string))
         MessageCell.storage.font = NSFont.systemFont(ofSize: 12.0 * (string.isEmoji ? 4 : 1))
         

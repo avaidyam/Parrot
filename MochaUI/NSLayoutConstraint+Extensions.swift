@@ -1,6 +1,8 @@
 //  Copyright (c) 2016 Indragie Karunaratne. All rights reserved.
 //  Licensed under the MIT license, see LICENSE file for more info.
 
+/* TODO: Just add as extension of anchors -- no new properties. */
+
 #if os(OSX)
     import AppKit
     public typealias View = NSView
@@ -171,7 +173,7 @@ precedencegroup PriorityPrecedence {
 infix operator ~ : PriorityPrecedence
 
 public func ~(lhs: NSLayoutConstraint, rhs: LayoutPriority) -> NSLayoutConstraint {
-    let newConstraint = NSLayoutConstraint(item: lhs.firstItem, attribute: lhs.firstAttribute, relatedBy: lhs.relation, toItem: lhs.secondItem, attribute: lhs.secondAttribute, multiplier: lhs.multiplier, constant: lhs.constant)
+    let newConstraint = NSLayoutConstraint(item: lhs.firstItem as Any, attribute: lhs.firstAttribute, relatedBy: lhs.relation, toItem: lhs.secondItem, attribute: lhs.secondAttribute, multiplier: lhs.multiplier, constant: lhs.constant)
     newConstraint.priority = rhs
     return newConstraint
 }

@@ -27,7 +27,6 @@
 		481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */; };
 		481D933E1DF5D7D100EB23A1 /* Wallclock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933D1DF5D7D100EB23A1 /* Wallclock.swift */; };
 		48212BE91ECCEB7700B7765B /* ConversationSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */; };
-		4822951D1D417B5E00A34B1B /* AddressBookSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */; };
 		482323D71E1776DC00318380 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D61E1776DC00318380 /* Event.swift */; };
 		482323D91E1CBBA100318380 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D81E1CBBA100318380 /* Application.swift */; };
 		482323DB1E1CBBE000318380 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323DA1E1CBBE000318380 /* Drawing.swift */; };
@@ -35,11 +34,11 @@
 		482323E01E1CBD3A00318380 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323DF1E1CBD3A00318380 /* View.swift */; };
 		482323E11E1CD45D00318380 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		482323E21E1CD46600318380 /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
-		482323E31E1D3B0600318380 /* Mocha+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D3CD201DE94C71003D6C02 /* Mocha+Bridge.swift */; };
 		482323E41E1D3B1100318380 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		482323E51E1D3C0700318380 /* parrot-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4803639A1C1D08490008E9F5 /* parrot-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		482323E71E1D406200318380 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323E61E1D406200318380 /* Auth.swift */; };
 		482323E91E1D61E100318380 /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323E81E1D61E100318380 /* AttributedString.swift */; };
+		4831BC971ECF72C900C30413 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4831BC961ECF72C900C30413 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageCell.swift */; };
 		4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA81C1C620000193EBC /* ConversationCell.swift */; };
 		4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */; };
@@ -102,7 +101,6 @@
 		48D3CD1D1DE94BD0003D6C02 /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
 		48D3CD1E1DE94BD9003D6C02 /* AppActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BFAECF1D1CF19100ADBA3A /* AppActivity.swift */; };
 		48D3CD1F1DE94BEC003D6C02 /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D4C9FD1DBD5F2F001CF7AD /* Notification+Extensions.swift */; };
-		48D3CD211DE94C71003D6C02 /* Mocha+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D3CD201DE94C71003D6C02 /* Mocha+Bridge.swift */; };
 		48D3CD221DE94C9C003D6C02 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */; };
 		48D3CD421DEAF238003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		48D3CD431DEAF23A003D6C02 /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
@@ -299,7 +297,6 @@
 		481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayLink.swift; sourceTree = "<group>"; };
 		481D933D1DF5D7D100EB23A1 /* Wallclock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wallclock.swift; sourceTree = "<group>"; };
 		48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationSettingsViewController.swift; sourceTree = "<group>"; };
-		4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookSupport.swift; sourceTree = "<group>"; };
 		482323D61E1776DC00318380 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		482323D81E1CBBA100318380 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		482323DA1E1CBBE000318380 /* Drawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drawing.swift; sourceTree = "<group>"; };
@@ -308,6 +305,7 @@
 		482323E61E1D406200318380 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		482323E81E1D61E100318380 /* AttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation+List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Conversation+List.swift"; sourceTree = "<group>"; };
+		4831BC961ECF72C900C30413 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4835ECA61C1C620000193EBC /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		4835ECA81C1C620000193EBC /* ConversationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationListViewController.swift; sourceTree = "<group>"; };
@@ -379,7 +377,6 @@
 		48D3CCF51DE9446D003D6C02 /* MochaUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MochaUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48D3CCF81DE9446D003D6C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48D3CD0A1DE9459E003D6C02 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		48D3CD201DE94C71003D6C02 /* Mocha+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Mocha+Bridge.swift"; sourceTree = "<group>"; };
 		48D4C9FD1DBD5F2F001CF7AD /* Notification+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification+Extensions.swift"; sourceTree = "<group>"; };
 		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52CB1C1CC12900647C63 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
@@ -464,6 +461,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4831BC971ECF72C900C30413 /* Security.framework in Frameworks */,
 				48D3CCEF1DE9444F003D6C02 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -573,6 +571,37 @@
 			name = Termbox;
 			sourceTree = "<group>";
 		};
+		4831BC981ECF733100C30413 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */,
+				48403CA21DF0BF6B0009897A /* Interpolate.swift */,
+				489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */,
+				489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */,
+			);
+			name = Animation;
+			sourceTree = "<group>";
+		};
+		4831BC991ECF733900C30413 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */,
+			);
+			name = Layout;
+			sourceTree = "<group>";
+		};
+		4831BC9A1ECF734A00C30413 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				48E0E81F1D584FCC00EE4464 /* NSDrawer+Extensions.swift */,
+				48D3CCDB1DE93248003D6C02 /* NSPopover+Extensions.swift */,
+				4866337D1C5822FA006C094B /* ListView.swift */,
+				488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */,
+				488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		4835ECA51C1C61F300193EBC /* Conversation List */ = {
 			isa = PBXGroup;
 			children = (
@@ -633,7 +662,6 @@
 				488201BB1D4A970400C545F0 /* PersonaImage.swift */,
 				48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */,
 				48EB54F51D209DD100F77C2C /* Cache.swift */,
-				4822951C1D417B5E00A34B1B /* AddressBookSupport.swift */,
 				489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */,
 			);
 			name = Helpers;
@@ -793,22 +821,14 @@
 		48D3CCF61DE9446D003D6C02 /* MochaUI */ = {
 			isa = PBXGroup;
 			children = (
-				48D3CD201DE94C71003D6C02 /* Mocha+Bridge.swift */,
 				488239A21C455CED00C5E8EB /* AppKit+Extensions.swift */,
-				48E0E81F1D584FCC00EE4464 /* NSDrawer+Extensions.swift */,
-				48D3CCDB1DE93248003D6C02 /* NSPopover+Extensions.swift */,
-				4866337D1C5822FA006C094B /* ListView.swift */,
 				48A452261D19B16500CB588A /* TLTone.swift */,
 				4835ECB31C1C672900193EBC /* UserNotification+Extensions.swift */,
-				488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */,
-				488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */,
 				483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */,
 				48403CA01DF0B9930009897A /* Changeset.swift */,
-				481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */,
-				48403CA21DF0BF6B0009897A /* Interpolate.swift */,
-				489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */,
-				489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */,
-				489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */,
+				4831BC9A1ECF734A00C30413 /* Views */,
+				4831BC981ECF733100C30413 /* Animation */,
+				4831BC991ECF733900C30413 /* Layout */,
 				48D3CD081DE944C2003D6C02 /* Supporting Files */,
 			);
 			path = MochaUI;
@@ -852,6 +872,7 @@
 		48DE52DD1C1CC1D300647C63 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4831BC961ECF72C900C30413 /* Security.framework */,
 				48D3CD0A1DE9459E003D6C02 /* AppKit.framework */,
 				48D3CCEE1DE9444F003D6C02 /* Foundation.framework */,
 				48FB44451DBF4FF1004BE55A /* libtermbox.1.0.0.dylib */,
@@ -1356,7 +1377,6 @@
 				482323D91E1CBBA100318380 /* Application.swift in Sources */,
 				482323D71E1776DC00318380 /* Event.swift in Sources */,
 				482323DD1E1CBC1000318380 /* Cell.swift in Sources */,
-				482323E31E1D3B0600318380 /* Mocha+Bridge.swift in Sources */,
 				482323E71E1D406200318380 /* Auth.swift in Sources */,
 				482323DB1E1CBBE000318380 /* Drawing.swift in Sources */,
 				4803639D1C1D08490008E9F5 /* main.swift in Sources */,
@@ -1386,7 +1406,6 @@
 				4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */,
 				489FB0671DF5FBD400AEBD1D /* WatermarkCell.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* MessageListViewController.swift in Sources */,
-				4822951D1D417B5E00A34B1B /* AddressBookSupport.swift in Sources */,
 				48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */,
 				489FB08D1DF7E0CB00AEBD1D /* TypingHelper.swift in Sources */,
 				489FB0891DF7CC4900AEBD1D /* TextInputCell.swift in Sources */,
@@ -1451,7 +1470,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D3CD171DE945C1003D6C02 /* NSAntiScrollView.swift in Sources */,
-				48D3CD211DE94C71003D6C02 /* Mocha+Bridge.swift in Sources */,
 				48D3CD161DE945C1003D6C02 /* NSExtendedTextView.swift in Sources */,
 				48D3CD0D1DE945C1003D6C02 /* AppKit+Extensions.swift in Sources */,
 				489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */,

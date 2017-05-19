@@ -122,6 +122,20 @@ public extension String {
 			}
 		}
 	}
+    
+    public func captureGroups(from regex: String) -> [[String]] {
+        let _s = (self as NSString)
+        let nsregex = try! NSRegularExpression(pattern: regex, options: .caseInsensitive)
+        let results = nsregex.matches(in: self, options:[], range:NSMakeRange(0, _s.length))
+        return results.map {
+            var set = [String]()
+            for i in 0..<$0.numberOfRanges {
+                let r = $0.rangeAt(i)
+                set.append(r.location == NSNotFound ? "" : _s.substring(with: r) as String)
+            }
+            return set
+        }
+    }
 	
 	public func find(matching regex: NSRegularExpression) -> [String] {
 		return regex.matches(in: self, options:[], range:NSMakeRange(0, self.characters.count)).map {

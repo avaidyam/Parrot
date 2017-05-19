@@ -178,7 +178,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 		self.window?.enableRealTitlebarVibrancy(.withinWindow)
         self.window?.titleVisibility = .hidden
         self.window?.titlebarAppearsTransparent = true
-        self.window?.contentView?.superview?.wantsLayer = true
+        self.window?.contentView!.superview?.wantsLayer = true
         
         self.window!.contentView!.centerX == self.indicator.centerX
         self.window!.contentView!.centerY == self.indicator.centerY

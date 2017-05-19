@@ -23,6 +23,7 @@ public class AboutViewController: NSViewController {
 			configureWindow(w)
 			ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { appearance in
 				w.appearance = appearance.appearance()
+                //w.animateAppearance(appearance.appearance())
 			}
 		}
 		

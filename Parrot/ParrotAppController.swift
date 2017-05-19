@@ -28,25 +28,20 @@ public enum Parrot {
 
 @NSApplicationMain
 public class ParrotAppController: NSApplicationController {
-	
-    private var bleh: Any? = nil
     
 	/// Lazy-init for the main conversations NSWindowController.
 	private lazy var conversationsController: NSWindowController = {
 		ConversationListViewController()
 	}()
 	
-	public static override func initialize() {
-		NSDrawer.modernize()
-	}
-	
 	public override init() {
 		super.init()
 		
 		// Check for updates if any are available.
-		checkForUpdates("v0.7-alpha") {
-			NSWorkspace.shared().open($0.githubURL)
-		}
+        // Note: in the future, this will be invoked by the Parrot Daemon periodically
+        // and the UI client will simply display the message; when updating, the
+        // daemon will pre-cache the download and replace the executable.
+		checkForUpdates(prerelease: true)
 		
 		// Register for AppleEvents that follow our URL scheme.
 		NSAppleEventManager.shared().setEventHandler(self,
@@ -55,9 +50,9 @@ public class ParrotAppController: NSApplicationController {
 			andEventID: UInt32(kAEGetURL)
 		)
         
-        self.bleh = subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.giveConversations")) {
+        /*subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.giveConversations")) {
             log.debug("RESULTS: \($0)")
-        }
+        }*/
 		
 		// Register the default completions if none are in the user settings.
 		if let c = Settings[Parrot.Completions] as? NSDictionary , c.count > 0 {} else {
@@ -297,3 +292,18 @@ class ParrotApplication: NSApplication {
     }*/
 }
 
+// For initial release alerts.
+public func checkForUpdates(prerelease: Bool = false) {
+    guard let buildTag = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String else { return }
+    guard let release = GithubRelease.latest(prerelease: prerelease) else { return }
+    guard release.buildTag > Semver(buildTag) else { return }
+    
+    let a = NSAlert(style: .informational, message: "\(release.releaseName) available",
+                    information: release.releaseNotes, buttons: ["Update", "Ignore"],
+                    showSuppression: true) // FIXME suppression
+    a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
+    a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
+    if a.runModal() == 1000 /*NSAlertFirstButtonReturn*/ {
+        NSWorkspace.shared().open(release.githubURL)
+    }
+}

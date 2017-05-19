@@ -82,14 +82,21 @@ public final class SettingsStore: KeyValueStore {
     }
 }
 
+/// A KeyValueStore that encodes its contents in a PropertyList file.
+/// The domain maps to a file URL, and if none is provided, the read-only
+/// Bundle "Info.plist" domain is used (writing to it will cause an assertion).
 public final class FileStore: KeyValueStore {
     private let infoPlist = Bundle.main.bundlePath + "/Contents/Info.plist"
     
+    /// Set or get a file key's value with the default domain (the Info plist).
+    /// Note: this domain cannot be written to.
     public subscript(key: String) -> Any? {
         get { return self[key, domain: infoPlist] }
-        set { self[key, domain: infoPlist] = newValue }
+        set { fatalError("Cannot write to the default FileStore domain.") }
     }
-
+    
+    /// Set or get a file key's value with a custom domain (as a file URL).
+    /// Note: setting a key's value to nil will delete the key from the store.
     public subscript(key: String, domain domain: String) -> Any? {
         get {
             return NSDictionary(contentsOfFile: domain)?[key]
@@ -111,5 +118,74 @@ public final class FileStore: KeyValueStore {
     }
 }
 
+/// A KeyValueStore that securely encodes its contents in the OS keychain.
+@available(macOS 10.2, *)
+public final class SecureSettingsStore: KeyValueStore {
+    fileprivate init() {}
+    private var _defaultDomain = Bundle.main.bundleIdentifier ?? "SecureSettings:ERR"
+    
+    /// Set or get a secure key's value with the default domain (the bundle identifier).
+    /// Note: setting a key's value to nil will delete the key from the store.
+    public subscript(key: String) -> Any? {
+        get {
+            return self[key, domain: _defaultDomain]
+        }
+        set (value) {
+            self[key, domain: _defaultDomain] = value
+        }
+    }
+    
+    /// Set or get a secure key's value with a custom specified domain.
+    /// Note: setting a key's value to nil will delete the key from the store.
+    public subscript(key: String, domain domain: String) -> Any? {
+        get {
+            var passwordLength: UInt32 = 0
+            var passwordPtr: UnsafeMutableRawPointer? = nil
+            let status = SecKeychainFindGenericPassword(nil,
+                                                        UInt32(domain.utf8.count), domain,
+                                                        UInt32(key.utf8.count), key,
+                                                        &passwordLength, &passwordPtr,
+                                                        nil)
+            if status == OSStatus(errSecSuccess) {
+                return NSString(bytes: passwordPtr!,
+                                length: Int(passwordLength),
+                                encoding: String.Encoding.utf8.rawValue)
+            } else { return nil }
+        }
+        set (_value) {
+            if _value == nil {
+                var itemRef: SecKeychainItem? = nil
+                let status = SecKeychainFindGenericPassword(nil,
+                                                            UInt32(domain.utf8.count), domain,
+                                                            UInt32(key.utf8.count), key,
+                                                            nil, nil, &itemRef)
+                if let item = itemRef , status == OSStatus(errSecSuccess) {
+                    SecKeychainItemDelete(item)
+                }
+            } else {
+                guard let value = _value as? String else { return }
+                SecKeychainAddGenericPassword(nil,
+                                              UInt32(domain.utf8.count), domain,
+                                              UInt32(key.utf8.count), key,
+                                              UInt32(value.utf8.count), value,
+                                              nil)
+            }
+        }
+    }
+    
+    public func snapshot() -> [String : Any] {
+        return snapshot(domain: _defaultDomain)
+    }
+    
+    public func snapshot(domain: String) -> [String : Any] {
+        NSLog("SecureSettingsStore: SecKeychain cannot be queried for a snapshot!")
+        return [:]
+    }
+}
+
 /// Aliased singleton for SettingsStore.
 public let Settings = SettingsStore()
+
+/// Aliased singleton for SecureSettingsStore.
+@available(macOS 10.2, *)
+public let SecureSettings = SecureSettingsStore()

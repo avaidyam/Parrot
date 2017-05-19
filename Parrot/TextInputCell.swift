@@ -31,6 +31,8 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
             v.drawsBackground = false
             v.backgroundColor = NSColor.clear
             v.textColor = NSColor.labelColor
+            v.placeholderString = "Send message..."
+            v.shouldAlwaysPasteAsPlainText = true
             v.delegate = self
         }
     }()
@@ -88,6 +90,7 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
     public override func viewDidAppear() {
         super.viewDidAppear()
         self.resizeModule()
+        self.view.window?.makeFirstResponder(self.textView)
         ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
             
             // NSTextView doesn't automatically change its text color when the

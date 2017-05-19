@@ -69,8 +69,8 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
     
     private lazy var listView: ListView = {
         self.window?.contentView?.prepare(ListView(frame: NSZeroRect)) { v in
-            v.updateToBottom = false
-            v.multipleSelect = true
+            v.updateToBottom = true
+            v.multipleSelect = false
             v.emptySelect = true
             v.delegate = self
         }
