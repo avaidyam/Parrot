@@ -19,7 +19,8 @@ public enum Parrot {
 	public static let AutoEmoji = "Parrot.AutoEmoji"
 	public static let MessageTextSize = "Parrot.MessageTextSize"
 	public static let Emoticons = "Parrot.Emoticons"
-	public static let Completions = "Parrot.Completions"
+    public static let Completions = "Parrot.Completions"
+    public static let MenuBarIcon = "Parrot.MenuBarIcon"
 	
 	public static let VibrateForceTouch = "Parrot.VibrateForceTouch"
 	public static let VibrateInterval = "Parrot.VibrateInterval"
@@ -29,10 +30,16 @@ public enum Parrot {
 @NSApplicationMain
 public class ParrotAppController: NSApplicationController {
     
+    let net = NetworkReachabilityManager(host: "google.com")
+    
 	/// Lazy-init for the main conversations NSWindowController.
 	private lazy var conversationsController: NSWindowController = {
 		ConversationListViewController()
 	}()
+    
+    private lazy var statusItem: NSStatusItem = {
+        NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
+    }()
 	
 	public override init() {
 		super.init()
@@ -71,41 +78,28 @@ public class ParrotAppController: NSApplicationController {
             let c = Client(configuration: $0)
 			//AppActivity.end("Authenticate")
 			
-			NotificationCenter.default
-				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
-                    //AppActivity.start("Setup")
-                    if c.conversationList == nil {
-                        c.buildUserConversationList {
-                            // When reconnecting, buildUserConversationList causes Client to then
-                            // re-create the entire userlist + conversationlist and reset it
-                            // but the old ones are still alive, and their delegate is set to the
-                            // conversations window; that means you'll receive double notifications.
-                            
-                            // TODO: FIXME: THIS IS A TERRIBLE DIRTY DISGUSTING HAX, DON'T DO ITS!
-                            NotificationCenter.default.post(name: ServiceRegistry.didAddService, object: c)
-                            //AppActivity.end("Setup")
-                        }
+            _ = subscribe(source: c, Client.didConnectNotification) { _ in
+                UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
+                                 contentImage: NSImage(named: NSImageNameCaution)).post()
+                
+                //AppActivity.start("Setup")
+                if c.conversationList == nil {
+                    c.buildUserConversationList {
+                        // When reconnecting, buildUserConversationList causes Client to then
+                        // re-create the entire userlist + conversationlist and reset it
+                        // but the old ones are still alive, and their delegate is set to the
+                        // conversations window; that means you'll receive double notifications.
+                        
+                        // TODO: FIXME: THIS IS A TERRIBLE DIRTY DISGUSTING HAX, DON'T DO ITS!
+                        NotificationCenter.default.post(name: ServiceRegistry.didAddService, object: c)
+                        //AppActivity.end("Setup")
                     }
-                    
-                    /*DispatchQueue.main.async {
-                        let a = NSAlert()
-                        a.alertStyle = .critical
-                        a.messageText = "Parrot has connected."
-                        a.runModal()
-                    }*/
-                    //UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
-                    //                 contentImage: NSImage(named: NSImageNameCaution)).post()
+                }
+                
 			}
-            NotificationCenter.default
-                .addObserver(forName: Client.didDisconnectNotification, object: c, queue: nil) { _ in
-                    DispatchQueue.main.async {
-                        let a = NSAlert()
-                        a.alertStyle = .critical
-                        a.messageText = "Parrot has disconnected."
-                        a.runModal()
-                    }
-                    //UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has disconnected.",
-                    //                 contentImage: NSImage(named: NSImageNameCaution)).post()
+            _ = subscribe(source: c, Client.didDisconnectNotification) { _ in
+                UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has disconnected.",
+                                 contentImage: NSImage(named: NSImageNameCaution)).post()
             }
             
             ServiceRegistry.add(service: c)
@@ -128,8 +122,31 @@ public class ParrotAppController: NSApplicationController {
                 }
             }
         }
+        
+        /// This setting currently does not exist in the UI. Use `defaults` to set it.
+        /// For a menubar-only experience, set the Info.plist `LSUIElement` to YES.
+        if Settings[Parrot.MenuBarIcon] != nil {
+            let image = NSImage(named: NSImageNameApplicationIcon)
+            image?.size = NSSize(width: 16, height: 16)
+            statusItem.image = image
+            statusItem.button?.target = self
+            statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
+            statusItem.button?.action = #selector(self.showConversationWindow(sender:))
+        }
     }
-    let net = NetworkReachabilityManager(host: "google.com")
+    
+    /// Right clicking the status item causes the app to close; left click causes it to become visible.
+    func showConversationWindow(sender: NSStatusBarButton?) {
+        let event = NSApp.currentEvent!
+        if event.type == NSEventType.rightMouseUp {
+            NSApp.terminate(self)
+        } else {
+            DispatchQueue.main.async {
+                self.conversationsController.showWindow(nil)
+                NSApp.activate(ignoringOtherApps: true)
+            }
+        }
+    }
     
     /// If the Conversations window is closed, tapping the dock icon will reopen it.
     public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -200,7 +217,7 @@ public class ParrotAppController: NSApplicationController {
 			}
 		}
 		WebDelegate.delegate.authenticationTokens = nil
-		NSApplication.shared().terminate(self)
+		NSApp.terminate(self)
 	}
 	
     ///
