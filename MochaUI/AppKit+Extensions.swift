@@ -109,6 +109,63 @@ public extension NSNib {
 	}
 }
 
+public extension NSAppearance {
+    public static let aqua = NSAppearance(named: NSAppearanceNameAqua)!
+    public static let light = NSAppearance(named: NSAppearanceNameVibrantLight)!
+    public static let dark = NSAppearance(named: NSAppearanceNameVibrantDark)!
+}
+
+public extension NSWindow {
+    
+    // Animate the change in appearance.
+    public func animateAppearance(_ appearance: NSAppearance) {
+        guard let view = self.contentView?.superview else {
+            self.appearance = appearance; return
+        }
+        view.superlay { v in
+            self.appearance = appearance
+            v.animator().alphaValue = 0.0
+            v.animator().removeFromSuperview()
+        }
+    }
+}
+
+public extension NSView {
+    
+    //
+    public func animateAppearance(_ appearance: NSAppearance) {
+        self.superlay { v in
+            self.appearance = appearance
+            v.animator().alphaValue = 0.0
+            v.animator().removeFromSuperview()
+        }
+    }
+    
+    // Internal "super-overlay" view used to fade appearance animations.
+    fileprivate func superlay(_ handler: (NSView) -> () = {v in}) {
+        let v = NSDeadView(frame: self.frame)
+        v.wantsLayer = true
+        v.layer?.contents = self.snapshot()
+        
+        if let s = self.superview {
+            s.addSubview(v, positioned: .above, relativeTo: self)
+        } else {
+            self.addSubview(v, positioned: .above, relativeTo: nil)
+        }
+        handler(v)
+    }
+}
+
+// Doesn't respond to any mouse events.
+fileprivate class NSDeadView: NSView {
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+        return false
+    }
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        return nil
+    }
+}
+
 public extension NSWindowOcclusionState {
 	public static let invisible = NSWindowOcclusionState(rawValue: 0)
 }
