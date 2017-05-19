@@ -25,6 +25,11 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
             v.drawsBackground = false
             v.backgroundColor = NSColor.clear
             v.textColor = NSColor.labelColor
+            
+            v.isAutomaticDataDetectionEnabled = true
+            v.isAutomaticLinkDetectionEnabled = true
+            v.isAutomaticTextReplacementEnabled = true
+            
             v.delegate = self
         }
     }()

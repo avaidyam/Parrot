@@ -31,8 +31,14 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
             v.drawsBackground = false
             v.backgroundColor = NSColor.clear
             v.textColor = NSColor.labelColor
+            
             v.placeholderString = "Send message..."
             v.shouldAlwaysPasteAsPlainText = true
+            
+            v.isAutomaticDataDetectionEnabled = true
+            v.isAutomaticLinkDetectionEnabled = true
+            v.isAutomaticTextReplacementEnabled = true
+            
             v.delegate = self
         }
     }()

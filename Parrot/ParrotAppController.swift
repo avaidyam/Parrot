@@ -95,11 +95,17 @@ public class ParrotAppController: NSApplicationController {
                         //AppActivity.end("Setup")
                     }
                 }
-                
 			}
             _ = subscribe(source: c, Client.didDisconnectNotification) { _ in
-                UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has disconnected.",
-                                 contentImage: NSImage(named: NSImageNameCaution)).post()
+                DispatchQueue.main.async { // FIXME why does wrapping it twice work??
+                    NSUserNotification.notifications()
+                        .filter { $0.identifier == "Parrot.ConnectionStatus" }
+                        .forEach { $0.remove() }
+                    let u = UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has disconnected.",
+                                             contentImage: NSImage(named: NSImageNameCaution))
+                    u.set(option: .alwaysShow, value: true)
+                    u.post()
+                }
             }
             
             ServiceRegistry.add(service: c)
