@@ -4,36 +4,36 @@ import MochaUI
 public class WatermarkCell: NSTableCellView {
     
     private lazy var photoView: NSImageView = {
-        return self.prepare(NSImageView(frame: NSZeroRect)) { v in
-            v.allowsCutCopyPaste = false
-            v.isEditable = false
-            v.animates = true
-        }
+        let v = NSImageView().modernize()
+        v.allowsCutCopyPaste = false
+        v.isEditable = false
+        v.animates = true
+        return v
     }()
     
     private lazy var textLabel: NSTextField = {
-        return self.prepare(NSTextField(labelWithString: "")) { v in
-            v.textColor = NSColor.labelColor
-            v.font = NSFont.systemFont(ofSize: 13.0)
-        }
+        let v = NSTextField(labelWithString: "").modernize()
+        v.textColor = NSColor.labelColor
+        v.font = NSFont.systemFont(ofSize: 13.0)
+        return v
     }()
     
     // Set up constraints after init.
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.wantsLayer = true
         prepareLayout()
     }
     public override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.wantsLayer = true
         prepareLayout()
     }
     
     // Constraint setup here.
     private func prepareLayout() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.wantsLayer = true
+        self.add(subviews: [self.photoView, self.textLabel])
+        
         self.height == 32.0
         self.photoView.width == 24.0
         self.photoView.height == 24.0
@@ -46,7 +46,7 @@ public class WatermarkCell: NSTableCellView {
     
     public override var objectValue: Any? {
         didSet {
-            log.debug("got objectValue \(self.objectValue)")
+            log.debug("got objectValue \(String(describing: self.objectValue))")
         }
     }
 }

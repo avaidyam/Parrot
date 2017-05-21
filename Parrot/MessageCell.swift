@@ -11,28 +11,30 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     
     public override var allowsVibrancy: Bool { return true }
     
+    private var token: Subscription? = nil
+    
     private lazy var photoView: NSImageView = {
-        return self.prepare(NSImageView(frame: NSZeroRect)) { v in
-            v.allowsCutCopyPaste = false
-            v.isEditable = false
-            v.animates = true
-        }
+        let v = NSImageView().modernize()
+        v.allowsCutCopyPaste = false
+        v.isEditable = false
+        v.animates = true
+        return v
     }()
     
     private lazy var textLabel: NSExtendedTextView = {
-        return self.prepare(NSExtendedTextView(frame: NSZeroRect)) { v in
-            v.isEditable = false
-            v.isSelectable = true
-            v.drawsBackground = false
-            v.backgroundColor = NSColor.clear
-            v.textColor = NSColor.labelColor
-            
-            v.isAutomaticDataDetectionEnabled = true
-            v.isAutomaticLinkDetectionEnabled = true
-            v.isAutomaticTextReplacementEnabled = true
-            
-            v.delegate = self
-        }
+        let v = NSExtendedTextView().modernize()
+        v.isEditable = false
+        v.isSelectable = true
+        v.drawsBackground = false
+        v.backgroundColor = NSColor.clear
+        v.textColor = NSColor.labelColor
+        
+        v.isAutomaticDataDetectionEnabled = true
+        v.isAutomaticLinkDetectionEnabled = true
+        v.isAutomaticTextReplacementEnabled = true
+        
+        v.delegate = self
+        return v
     }()
     
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
@@ -48,13 +50,14 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     }
     
     // Constraint setup here.
-    private var token: Subscription? = nil
     private func prepareLayout() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.wantsLayer = true
         self.token = AutoSubscription(from: nil, kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             self.setColors()
         }
+        
+        self.add(subviews: [self.photoView, self.textLabel])
         
         // Install constraints.
         self.photoView.left == self.left + 8.0

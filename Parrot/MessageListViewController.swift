@@ -29,53 +29,55 @@ public struct PlaceholderMessage: Message {
 
 public class MessageListViewController: NSViewController, NSWindowDelegate, TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
+    //
+    // MARK: Content Views
+    //
+    
+    /// The backing visual effect view for the text input cell.
     private lazy var moduleView: NSVisualEffectView = {
-        self.view.prepare(NSVisualEffectView(frame: NSZeroRect)) { v in
-            v.layerContentsRedrawPolicy = .onSetNeedsDisplay
-            v.state = .active
-            v.blendingMode = .withinWindow
-            v.material = .appearanceBased
-        }
+        let v = NSVisualEffectView().modernize()
+        v.layerContentsRedrawPolicy = .onSetNeedsDisplay
+        v.state = .active
+        v.blendingMode = .withinWindow
+        v.material = .appearanceBased
+        return v
     }()
     
+    /// The primary messages content ListView.
     private lazy var listView: ListView = {
-        self.view.prepare(ListView(frame: NSZeroRect)) { v in
-            v.updateToBottom = true
-            v.multipleSelect = false
-            v.emptySelect = true
-            v.delegate = self
-            
-            v.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
-        }
+        let v = ListView().modernize()
+        v.flowDirection = .bottom
+        v.selectionType = .none
+        v.delegate = self
+        
+        v.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
+        return v
     }()
     
+    /// The "loading data" indicator.
     private lazy var indicator: NSProgressIndicator = {
-        self.view.prepare(NSProgressIndicator(frame: NSZeroRect)) { v in
-            v.usesThreadedAnimation = true
-            v.isIndeterminate = true
-            v.style = .spinningStyle
-        }
+        let v = NSProgressIndicator().modernize()
+        v.usesThreadedAnimation = true
+        v.isIndeterminate = true
+        v.style = .spinningStyle
+        return v
     }()
     
-    private lazy var settingsPopover: NSPopover = {
-        let popover = NSPopover()
-        popover.contentViewController = self.settingsController
-        popover.preferredEdge = .minY
-        popover.relativePositioningView = self.view
-        return popover
-    }()
-    
+    /// The conversation details/settings controller.
+    /// Note: this should be presented in a popover by this parent view controller.
     private lazy var settingsController: ConversationDetailsViewController = {
         return ConversationDetailsViewController()
     }()
     
+    /// The input cell at the bottom of the view.
     private lazy var textInputCell: TextInputCell = {
         let t = TextInputCell()
         t.host = self
-        _ = self.view.prepare(t.view) // prepare & attach
+        t.view.modernize() // prepare & attach
         return t
     }()
     
+    /// The interpolation animation run when data is loaded.
     private lazy var updateInterpolation: Interpolate = {
         let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
             self?.listView.alphaValue = CGFloat(alpha)
@@ -99,18 +101,31 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
         return group
     }()
     
-    private var typingHelper: TypingHelper? = nil
+    //
+    // MARK: Members
+    //
+    
+    /// A typing helper to debounce typing events and adapt them to Conversation.
+    private lazy var typingHelper: TypingHelper = {
+        TypingHelper {
+            switch $0 {
+            case .started:
+                self.conversation?.setTyping(typing: TypingType.Started)
+            case .paused:
+                self.conversation?.setTyping(typing: TypingType.Paused)
+            case .stopped:
+                self.conversation?.setTyping(typing: TypingType.Stopped)
+            }
+        }
+    }()
 	
-	// TODO: BEGONE!
     public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
     private var updateToken: Bool = false
     private var showingFocus: Bool = false
     private var lastWatermarkIdx = -1
-    private var token: Subscription? = nil
-    private var tokenOcclusion: Subscription? = nil
 	private var _previews = [String: [LinkPreviewType]]()
-    private var _note: NSObjectProtocol!
     
+    /// The currently active user's image or monogram.
     public var image: NSImage? {
         if let me = self.conversation?.client.userList.me {
             return fetchImage(user: me as! User, monogram: true)
@@ -118,17 +133,23 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
         return nil
     }
     
+    /// The primary EventStreamItem dataSource.
 	private var dataSource: [EventStreamItem] = []
     
+    /// The background image and colors update Subscription.
+    private var colorsSub: Subscription? = nil
+    
+    /// The window occlusion/focus update Subscription.
+    private var occlusionSub: Subscription? = nil
+    
     deinit {
-        self.token = nil
-        self.tokenOcclusion = nil
+        self.colorsSub = nil
+        self.occlusionSub = nil
     }
     
-    
-    ///
-    ///
-    ///
+    //
+    // MARK: ListView: DataSource + Delegate
+    //
     
     public func numberOfItems(in: ListView) -> [UInt] {
         return [UInt(self.dataSource.count)]
@@ -188,12 +209,13 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
         }
     }
     
-    ///
-    ///
-    ///
+    //
+    // MARK: ViewController Events
+    //
     
     public override func loadView() {
         self.view = NSView()
+        self.view.add(subviews: [self.moduleView, self.listView, self.indicator, self.textInputCell.view])
         
         self.view.centerX == self.indicator.centerX
         self.view.centerY == self.indicator.centerY
@@ -219,49 +241,34 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
         self.window?.contentView?.superview?.wantsLayer = true
         */
         
-        //
-        self.typingHelper = TypingHelper {
-            switch $0 {
-            case .started:
-                self.conversation?.setTyping(typing: TypingType.Started)
-            case .paused:
-                self.conversation?.setTyping(typing: TypingType.Paused)
-            case .stopped:
-                self.conversation?.setTyping(typing: TypingType.Stopped)
-            }
-        }
+        self.indicator.startAnimation(nil)
+        self.listView.alphaValue = 0.0
     }
     
     public override func viewWillAppear() {
-        
-        // TODO: See if these can go in viewDidLoad() and execute only once.
         syncAutosaveTitle()
-        self.indicator.startAnimation(nil)
-        self.listView.alphaValue = 0.0
         
         // Monitor changes to the view background and colors.
-        self.token = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
+        self.colorsSub = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             if  let dat = Settings["Parrot.ConversationBackground"] as? NSData,
                 let img = NSImage(data: dat as Data) {
-                self.moduleView.superview?.layer?.contents = img
+                self.view.layer?.contents = img
             } else {
-                self.moduleView.superview?.layer?.contents = nil
+                self.view.layer?.contents = nil
             }
         }
-        self.token?.trigger()
+        self.colorsSub?.trigger()
         
         // Monitor changes to the window's occlusion state and map it to conversation focus.
-        self.tokenOcclusion = AutoSubscription(from: self.view.window!, kind: .NSWindowDidChangeOcclusionState) { [weak self] _ in
-            
+        self.occlusionSub = AutoSubscription(from: self.view.window!, kind: .NSWindowDidChangeOcclusionState) { [weak self] _ in
             // NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
             self?.conversation?.setFocus((self?.view.window?.occlusionState.rawValue ?? 0) == 8194)
         }
-        self.tokenOcclusion?.trigger()
+        self.occlusionSub?.trigger()
         
         // Set up dark/light notifications.
         ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
             self.view.window?.appearance = interface.appearance()
-            self.settingsPopover.appearance = interface.appearance()
         }
         
         // Force the window to follow the current ParrotAppearance.
@@ -275,12 +282,16 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
     }
     
     public override func viewWillDisappear() {
-        self.token = nil
-        self.tokenOcclusion = nil
+        self.colorsSub = nil
+        self.occlusionSub = nil
         
         ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
         ParrotAppearance.unregisterVibrancyStyleListener(observer: self)
     }
+    
+    //
+    // MARK: Misc. Methods
+    //
 	
     // TODO: this goes in a new ParrotWindow class or something.
     /*
@@ -479,7 +490,7 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
     }
     
     public func typing() {
-        self.typingHelper?.typing()
+        self.typingHelper.typing()
     }
     
     public func send(message: String) {

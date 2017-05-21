@@ -45,6 +45,36 @@ public protocol ListViewScrollbackDelegate {
 @IBDesignable
 public class ListView: NSView {
     
+    /// The SelectionType describes the manner in which the ListView may be selected by the user.
+    public enum SelectionType {
+        
+        /// No items may be selected.
+        case none
+        
+        /// One item may be selected at a time.
+        case one
+        
+        /// One item must be selected at all times.
+        case exactOne
+        
+        /// At least one item must be selected at all times.
+        case leastOne
+        
+        /// Multiple items may be selected at a time.
+        case any
+    }
+    
+    /// Describes the Direction of content flow in the ListView.
+    /// For example, an update can causes the ListView to scroll to the top or bottom.
+    public enum FlowDirection {
+        
+        /// Content flows to the top (earliest content is at the top).
+        case top
+        
+        /// Content flows to the bottom (earliest content is at the bottom).
+        case bottom
+    }
+    
     /// The ListView is indexed by a combination of section and item, to allow grouping.
     public typealias Index = (section: UInt, item: UInt)
     
@@ -57,19 +87,16 @@ public class ListView: NSView {
     /// Provides the information about each section and items in the sections.
     @IBOutlet public var delegate: AnyObject?
     
-    /// Determines whether an update causes the ListView to scroll to the top or bottom.
-    @IBInspectable public var updateToBottom: Bool = false
+    /// Describes the Direction of content flow in the ListView.
+    public var flowDirection: FlowDirection = .top
     
-    /// Determines whether more than one item may be selected in the ListView.
-    @IBInspectable public var multipleSelect: Bool {
-        get { return self.tableView.allowsMultipleSelection }
-        set { self.tableView.allowsMultipleSelection = newValue }
-    }
-    
-    /// Determines whether no items may be selected in the ListView.
-    @IBInspectable public var emptySelect: Bool {
-        get { return self.tableView.allowsEmptySelection }
-        set { self.tableView.allowsEmptySelection = newValue }
+    /// Determines the selection capabilities of the ListView.
+    public var selectionType: SelectionType = .none {
+        didSet {
+            let s = self.selectionType
+            self.tableView.allowsMultipleSelection = (s == .leastOne || s == .any)
+            self.tableView.allowsEmptySelection = (s == .none || s == .one || s == .any)
+        }
     }
     
     /// Sets the ListView's scrolling insets.
@@ -144,9 +171,9 @@ public class ListView: NSView {
 	public func update(animated: Bool = true, _ handler: @escaping () -> () = {}) {
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            switch !self.updateToBottom {
-            case true: self.scroll(toRow: 0, animated: animated)
-            case false: self.scroll(toRow: self.__rows - 1, animated: animated)
+            switch self.flowDirection {
+            case .top: self.scroll(toRow: 0, animated: animated)
+            case .bottom: self.scroll(toRow: self.__rows - 1, animated: animated)
             }
             handler()
         }
@@ -364,7 +391,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	
 	@objc(selectionShouldChangeInTableView:)
     public func selectionShouldChange(in tableView: NSTableView) -> Bool {
-        guard let _ = self.delegate as? ListViewSelectionDelegate else { return false }
+        guard let _ = self.delegate as? ListViewSelectionDelegate, self.selectionType != .none else { return false }
 		return true
 	}
 	
@@ -376,7 +403,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 	}
 	
     public func tableViewSelectionDidChange(_ notification: Notification) {
-        guard let d = self.delegate as? ListViewSelectionDelegate else { return }
+        guard let d = self.delegate as? ListViewSelectionDelegate, self.selectionType != .none else { return }
         d.selectionChanged(in: self, is: self.selection)
 	}
 }

@@ -18,35 +18,35 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
     private var id = UUID() // for wallclock
     
     private lazy var photoView: NSImageView = {
-        return self.prepare(NSImageView(frame: NSZeroRect)) { v in
-            v.allowsCutCopyPaste = false
-            v.isEditable = false
-            v.animates = true
-        }
+        let v = NSImageView().modernize()
+        v.allowsCutCopyPaste = false
+        v.isEditable = false
+        v.animates = true
+        return v
     }()
     
     private lazy var nameLabel: NSTextField = {
-        return self.prepare(NSTextField(labelWithString: "")) { v in
-            v.textColor = NSColor.labelColor
-            v.font = NSFont.systemFont(ofSize: 13.0)
-        }
+        let v = NSTextField(labelWithString: "").modernize()
+        v.textColor = NSColor.labelColor
+        v.font = NSFont.systemFont(ofSize: 13.0)
+        return v
     }()
     
     private lazy var textLabel: NSTextField = {
-        return self.prepare(NSTextField(labelWithString: "")) { v in
-            v.textColor = NSColor.secondaryLabelColor
-            v.font = NSFont.systemFont(ofSize: 11.0)
-            v.usesSingleLineMode = false
-            v.lineBreakMode = .byWordWrapping
-        }
+        let v = NSTextField(labelWithString: "").modernize()
+        v.textColor = NSColor.secondaryLabelColor
+        v.font = NSFont.systemFont(ofSize: 11.0)
+        v.usesSingleLineMode = false
+        v.lineBreakMode = .byWordWrapping
+        return v
     }()
     
     private lazy var timeLabel: NSTextField = {
-        return self.prepare(NSTextField(labelWithString: "")) { v in
-            v.textColor = NSColor.tertiaryLabelColor
-            v.font = NSFont.systemFont(ofSize: 11.0)
-            v.alignment = .right
-        }
+        let v = NSTextField(labelWithString: "").modernize()
+        v.textColor = NSColor.tertiaryLabelColor
+        v.font = NSFont.systemFont(ofSize: 11.0)
+        v.alignment = .right
+        return v
     }()
     
     // Set up constraints after init.
@@ -64,6 +64,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
         self.translatesAutoresizingMaskIntoConstraints = false
         //self.canDrawSubviewsIntoLayer = true
         self.wantsLayer = true
+        self.add(subviews: [self.photoView, self.nameLabel, self.textLabel, self.timeLabel])
         
         self.photoView.left == self.left + 8
         self.photoView.centerY == self.centerY

@@ -5,8 +5,8 @@ import Mocha
 
 public extension NSView {
 	
-	// Snapshots the view as it exists and return an NSImage of it.
-	func snapshot() -> NSImage {
+	/// Snapshots the view as it exists and return an NSImage of it.
+	public func snapshot() -> NSImage {
 		
 		// First get the bitmap representation of the view.
 		let rep = self.bitmapImageRepForCachingDisplay(in: self.bounds)!
@@ -18,34 +18,94 @@ public extension NSView {
 		return snapshot
 	}
 	
-	// Automatically translate a view into a NSDraggingImageComponent
-	func draggingComponent(_ key: String) -> NSDraggingImageComponent {
+	/// Automatically translate a view into a NSDraggingImageComponent
+	public func draggingComponent(_ key: String) -> NSDraggingImageComponent {
 		let component = NSDraggingImageComponent(key: key)
 		component.contents = self.snapshot()
 		component.frame = self.convert(self.bounds, from: self)
 		return component
 	}
+    
+    /// Add multiple subviews at a time to an NSView.
+    public func add(subviews: [NSView]) {
+        for s in subviews {
+            self.addSubview(s)
+        }
+    }
 }
 
-// Nifty extension to simplify init-ing views in code.
+// from @nilium: https://github.com/nilium/SwiftSchemer/blob/master/SwiftSchemer/NSView%2BReplacement.swift
 public extension NSView {
-    static func prepare<T: NSView>(_ v: T, wantsLayer: Bool = false, _ handler: (T) -> () = {_ in}) -> T {
-        if !(v is NSTextView) { // Required for NSLayoutManager to lay out glyphs.
-            v.postsFrameChangedNotifications = false
+    
+    /// Replaces the receiver with `view` in its superview. If
+    /// `preservingConstraints` is true, any constraints referencing the
+    /// receiver in its superview will be rewritten to reference `view`.
+    public func replaceInSuperview(with view: NSView, preservingConstraints: Bool = true) {
+        assert(superview != nil, "Cannot replace self without a superview!")
+        if preservingConstraints {
+            superview!.replaceSubviewsPreservingConstraints([self: view])
+        } else {
+            superview!.replaceSubview(self, with: view)
         }
-        v.postsBoundsChangedNotifications = false
-        v.translatesAutoresizingMaskIntoConstraints = false
-        if wantsLayer { // Avoid explicit wantsLayer unless desired.
-            v.wantsLayer = true
-        }
-        handler(v)
-        return v
     }
     
-    func prepare<T: NSView>(_ v: T, wantsLayer: Bool = false, _ handler: (T) -> () = {_ in}) -> T {
-        let v = NSView.prepare(v, wantsLayer: wantsLayer, handler)
-        self.addSubview(v)
-        return v
+    /// Replaces subviews in the receiver while preserving their constraints.
+    /// Accepts a dictionary of [NSView: NSView] objects, where the key is the
+    /// view to be replaced and its value the replacement.
+    func replaceSubviewsPreservingConstraints(_ replacements: [NSView: NSView]) {
+        if replacements.isEmpty {
+            return
+        }
+        let currentConstraints = constraints as [NSLayoutConstraint]
+        var removedConstraints = [NSLayoutConstraint]()
+        var newConstraints     = [NSLayoutConstraint]()
+        
+        for current in currentConstraints {
+            var firstItem: AnyObject?  = current.firstItem
+            var secondItem: AnyObject? = current.secondItem
+            
+            if let firstView = firstItem as? NSView {
+                if let replacement = replacements[firstView] {
+                    firstItem = replacement
+                    replacement.frame = firstView.frame
+                }
+            }
+            if let secondView = secondItem as? NSView {
+                if let replacement = replacements[secondView] {
+                    secondItem = replacement
+                    replacement.frame = secondView.frame
+                }
+            }
+            if firstItem === current.firstItem && secondItem === current.secondItem {
+                continue
+            }
+            
+            let updated = NSLayoutConstraint(
+                item: firstItem!,
+                attribute: current.firstAttribute,
+                relatedBy: current.relation,
+                toItem: secondItem!,
+                attribute: current.secondAttribute,
+                multiplier: current.multiplier,
+                constant: current.constant
+            )
+            
+            updated.shouldBeArchived = current.shouldBeArchived
+            updated.identifier = current.identifier
+            updated.priority = current.priority
+            
+            removedConstraints.append(current)
+            newConstraints.append(updated)
+        }
+        if !removedConstraints.isEmpty {
+            removeConstraints(removedConstraints)
+        }
+        for (subview, replacement) in replacements {
+            replaceSubview(subview, with: replacement)
+        }
+        if !newConstraints.isEmpty {
+            addConstraints(newConstraints)
+        }
     }
 }
 
@@ -92,16 +152,6 @@ public extension NSAnimationContext {
     public func onCompletion(_ handler: @escaping () -> ()) {
         self.completionHandler = handler
     }
-}
-
-public extension NSNib {
-	public func instantiate(_ owner: Any?) -> [AnyObject] {
-		var stuff: NSArray = []
-		if self.instantiate(withOwner: nil, topLevelObjects: &stuff) {
-			return stuff as [AnyObject]
-		}
-		return []
-	}
 }
 
 public extension NSAppearance {
@@ -224,14 +274,6 @@ public extension NSFont {
 /// A "typealias" for the traditional NSApplication delegation.
 open class NSApplicationController: NSObject, NSApplicationDelegate {}
 
-/// Can hold any (including non-object) type as an object type.
-public class Wrapper<T> {
-	public let element: T
-	public init(_ value: T) {
-		self.element = value
-	}
-}
-
 public class MenuItem: NSMenuItem {
     private var handler: () -> ()
     
@@ -267,86 +309,6 @@ public extension NSHapticFeedbackManager {
             hp.perform(.generic, performanceTime: .now)
             usleep(UInt32(interval * 1000))
         }
-    }
-}
-
-// from @nilium: https://github.com/nilium/SwiftSchemer/blob/master/SwiftSchemer/NSView%2BReplacement.swift
-public extension NSView {
-    
-    /// Replaces the receiver with `view` in its superview. If
-    /// `preservingConstraints` is true, any constraints referencing the
-    /// receiver in its superview will be rewritten to reference `view`.
-    public func replaceInSuperview(with view: NSView, preservingConstraints: Bool = true) {
-        assert(superview != nil, "Cannot replace self without a superview!")
-        if preservingConstraints {
-            superview!.replaceSubviewsPreservingConstraints([self: view])
-        } else {
-            superview!.replaceSubview(self, with: view)
-        }
-    }
-    
-    /// Replaces subviews in the receiver while preserving their constraints.
-    /// Accepts a dictionary of [NSView: NSView] objects, where the key is the
-    /// view to be replaced and its value the replacement.
-    func replaceSubviewsPreservingConstraints(_ replacements: [NSView: NSView]) {
-        if replacements.isEmpty {
-            return
-        }
-        let currentConstraints = constraints as [NSLayoutConstraint]
-        var removedConstraints = [NSLayoutConstraint]()
-        var newConstraints     = [NSLayoutConstraint]()
-        
-        for current in currentConstraints {
-            var firstItem: AnyObject?  = current.firstItem
-            var secondItem: AnyObject? = current.secondItem
-            
-            if let firstView = firstItem as? NSView {
-                if let replacement = replacements[firstView] {
-                    firstItem = replacement
-                    replacement.frame = firstView.frame
-                }
-            }
-            if let secondView = secondItem as? NSView {
-                if let replacement = replacements[secondView] {
-                    secondItem = replacement
-                    replacement.frame = secondView.frame
-                }
-            }
-            if firstItem === current.firstItem && secondItem === current.secondItem {
-                continue
-            }
-            
-            let updated = NSLayoutConstraint(
-                item: firstItem!,
-                attribute: current.firstAttribute,
-                relatedBy: current.relation,
-                toItem: secondItem!,
-                attribute: current.secondAttribute,
-                multiplier: current.multiplier,
-                constant: current.constant
-            )
-            
-            updated.shouldBeArchived = current.shouldBeArchived
-            updated.identifier = current.identifier
-            updated.priority = current.priority
-            
-            removedConstraints.append(current)
-            newConstraints.append(updated)
-        }
-        if !removedConstraints.isEmpty {
-            removeConstraints(removedConstraints)
-        }
-        for (subview, replacement) in replacements {
-            replaceSubview(subview, with: replacement)
-        }
-        if !newConstraints.isEmpty {
-            addConstraints(newConstraints)
-        }
-    }
-    
-    /// Wrapper for replaceSuviewsPreservingConstraints([subview: replacement])
-    public func replaceSubviewPreservingConstraints(subview: NSView, replacement: NSView) {
-        replaceSubviewsPreservingConstraints([subview: replacement])
     }
 }
 

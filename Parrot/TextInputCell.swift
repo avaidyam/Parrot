@@ -14,55 +14,42 @@ public protocol TextInputHost {
 public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
     
     public var host: TextInputHost? = nil
+    
     private var insertToken = false
     
     private lazy var photoView: NSImageView = {
-        return self.view.prepare(NSImageView(frame: NSZeroRect)) { v in
-            v.allowsCutCopyPaste = false
-            v.isEditable = false
-            v.animates = true
-        }
+        let v = NSImageView().modernize()
+        v.allowsCutCopyPaste = false
+        v.isEditable = false
+        v.animates = true
+        return v
     }()
     
     private lazy var textView: NSExtendedTextView = {
-        return self.view.prepare(NSExtendedTextView(frame: NSZeroRect)) { v in
-            v.isEditable = true
-            v.isSelectable = true
-            v.drawsBackground = false
-            v.backgroundColor = NSColor.clear
-            v.textColor = NSColor.labelColor
-            
-            v.placeholderString = "Send message..."
-            v.shouldAlwaysPasteAsPlainText = true
-            
-            v.isAutomaticDataDetectionEnabled = true
-            v.isAutomaticLinkDetectionEnabled = true
-            v.isAutomaticTextReplacementEnabled = true
-            
-            v.delegate = self
-        }
+        let v = NSExtendedTextView().modernize()
+        v.isEditable = true
+        v.isSelectable = true
+        v.drawsBackground = false
+        v.backgroundColor = NSColor.clear
+        v.textColor = NSColor.labelColor
+        
+        v.placeholderString = "Send message..."
+        v.shouldAlwaysPasteAsPlainText = true
+        
+        v.isAutomaticDataDetectionEnabled = true
+        v.isAutomaticLinkDetectionEnabled = true
+        v.isAutomaticTextReplacementEnabled = true
+        
+        v.delegate = self
+        return v
     }()
     
-    public init() {
-        super.init(nibName: nil, bundle: nil)!
-        self.view = NSView(frame: NSZeroRect)
-        self.prepareLayout()
-    }
-    public override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        self.view = NSView(frame: NSZeroRect)
-        self.prepareLayout()
-    }
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        self.view = NSView(frame: NSZeroRect)
-        self.prepareLayout()
-    }
-    
     // Constraint setup here.
-    private func prepareLayout() {
+    public override func loadView() {
+        self.view = NSView()
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.wantsLayer = true
+        self.view.add(subviews: [self.photoView, self.textView])
         
         // Install constraints.
         self.photoView.left == self.view.left + 8.0

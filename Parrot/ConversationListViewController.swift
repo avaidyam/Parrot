@@ -16,21 +16,20 @@ public class ConversationListViewController: NSWindowController, ConversationLis
 ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSWindowDelegate {
 	
     private lazy var listView: ListView = {
-        self.window?.contentView?.prepare(ListView(frame: NSZeroRect)) { v in
-            v.updateToBottom = false
-            v.multipleSelect = true
-            v.emptySelect = true
-            v.delegate = self
-        }
-    }()!
+        let v = ListView().modernize()
+        v.flowDirection = .top
+        v.selectionType = .any
+        v.delegate = self
+        return v
+    }()
     
     private lazy var indicator: NSProgressIndicator = {
-        self.window?.contentView?.prepare(NSProgressIndicator(frame: NSZeroRect)) { v in
-            v.usesThreadedAnimation = true
-            v.isIndeterminate = true
-            v.style = .spinningStyle
-        }
-    }()!
+        let v = NSProgressIndicator().modernize()
+        v.usesThreadedAnimation = true
+        v.isIndeterminate = true
+        v.style = .spinningStyle
+        return v
+    }()
 	
 	private var updateToken: Bool = false
 	private var userList: Directory?
@@ -180,6 +179,8 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         self.window?.titleVisibility = .hidden
         self.window?.titlebarAppearsTransparent = true
         self.window?.contentView!.superview?.wantsLayer = true
+        
+        self.window?.contentView?.add(subviews: [self.listView, self.indicator])
         
         self.window!.contentView!.centerX == self.indicator.centerX
         self.window!.contentView!.centerY == self.indicator.centerY

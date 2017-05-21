@@ -57,3 +57,17 @@ public struct TypingHelper {
         }
     }
 }
+
+public extension NSObjectProtocol where Self: NSView {
+    public func modernize(wantsLayer: Bool = false) -> Self {
+        if !(self is NSTextView) { // Required for NSLayoutManager to lay out glyphs.
+            self.postsFrameChangedNotifications = false
+        }
+        self.postsBoundsChangedNotifications = false
+        self.translatesAutoresizingMaskIntoConstraints = false
+        if wantsLayer { // Avoid explicit wantsLayer unless desired.
+            self.wantsLayer = true
+        }
+        return self
+    }
+}
