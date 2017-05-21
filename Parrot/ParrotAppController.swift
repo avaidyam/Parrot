@@ -37,7 +37,7 @@ public class ParrotAppController: NSApplicationController {
     private var disconnectSub: Subscription? = nil
     
 	/// Lazy-init for the main conversations NSWindowController.
-	private lazy var conversationsController: NSWindowController = {
+	private lazy var conversationsController: NSViewController = {
 		ConversationListViewController()
 	}()
     
@@ -120,7 +120,7 @@ public class ParrotAppController: NSApplicationController {
             ServiceRegistry.add(service: c)
             self.net?.startListening()
             DispatchQueue.main.async {
-                self.conversationsController.showWindow(nil)
+                self.conversationsController.presentAsWindow()
             }
 		}
         
@@ -157,7 +157,7 @@ public class ParrotAppController: NSApplicationController {
             NSApp.terminate(self)
         } else {
             DispatchQueue.main.async {
-                self.conversationsController.showWindow(nil)
+                self.conversationsController.presentAsWindow()
                 NSApp.activate(ignoringOtherApps: true)
             }
         }
@@ -166,7 +166,7 @@ public class ParrotAppController: NSApplicationController {
     /// If the Conversations window is closed, tapping the dock icon will reopen it.
     public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         DispatchQueue.main.async {
-            self.conversationsController.showWindow(nil)
+            self.conversationsController.presentAsWindow()
         }
 		return true
 	}
@@ -214,7 +214,7 @@ public class ParrotAppController: NSApplicationController {
 		menu.addItem(title: "Open Conversations") {
 			log.info("Open Conversations")
             DispatchQueue.main.async {
-                self.conversationsController.showWindow(nil)
+                self.conversationsController.presentAsWindow()
             }
 		}
 		menu.addItem(withTitle: "Log Out...",

@@ -12,14 +12,15 @@ import protocol ParrotServiceExtension.Conversation
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
-public class ConversationListViewController: NSWindowController, ConversationListDelegate,
-ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSWindowDelegate {
+public class ConversationListViewController: NSViewController, WindowPresentable, NSWindowDelegate,
+ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
     private lazy var listView: ListView = {
         let v = ListView().modernize()
         v.flowDirection = .top
         v.selectionType = .any
         v.delegate = self
+        v.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
         return v
     }()
     
@@ -92,31 +93,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
             .sorted { $0.timestamp > $1.timestamp }
 	}
     
-    public init() {
-        let w = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 256, height: 512),
-                         styleMask: [.titled, .unifiedTitleAndToolbar, .resizable, .closable, .miniaturizable, .fullSizeContentView],
-                         backing: .buffered, defer: true)
-        super.init(window: w)
-        
-        // FIXME: needs a delegate :(
-        let t = NSToolbar()
-        t.insertItem(withItemIdentifier: NSToolbarFlexibleSpaceItemIdentifier, at: 0)
-        w.toolbar = t
-        
-        // Center by default, but load a saved frame if available, and set the autosave.
-        w.center()
-        w.setFrameUsingName("Conversations")
-        w.setFrameAutosaveName("Conversations")
-        
-        // Finish up initialization we lost by not using nibs.
-        w.delegate = self
-        self.windowDidLoad()
-    }
-    
-    public required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     public func numberOfItems(in: ListView) -> [UInt] {
         return [UInt(self.sortedConversations.count)]
     }
@@ -175,21 +151,74 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         }
     }
 	
-    public override func windowDidLoad() {
-		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
-		self.window?.enableRealTitlebarVibrancy(.withinWindow)
-        self.window?.titleVisibility = .hidden
-        self.window?.titlebarAppearsTransparent = true
-        self.window?.contentView!.superview?.wantsLayer = true
+    public override func loadView() {
+        self.view = NSVisualEffectView()
+        self.view.add(subviews: [self.listView, self.indicator])
         
-        self.window?.contentView?.add(subviews: [self.listView, self.indicator])
+        self.view.width >= 128
+        self.view.height >= 128
+        self.view.centerX == self.indicator.centerX
+        self.view.centerY == self.indicator.centerY
+        self.view.centerX == self.listView.centerX
+        self.view.centerY == self.listView.centerY
+        self.view.width == self.listView.width
+        self.view.height == self.listView.height
+    }
+    
+    public func prepare(window: NSWindow) {
+        window.appearance = ParrotAppearance.interfaceStyle().appearance()
+        window.enableRealTitlebarVibrancy(.withinWindow)
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
+    }
+    
+    public override func viewDidLoad() {
+        NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
+            guard let c = note.object as? Service else { return }
+            self.userList = c.directory
+            self.conversationList = c.conversations
+            
+            DispatchQueue.main.async {
+                self.title = c.directory.me.fullName
+                //self.imageView.layer?.masksToBounds = true
+                //self.imageView.layer?.cornerRadius = self.imageView.bounds.width / 2
+                //self.imageView.image = fetchImage(user: c.directory.me, monogram: true)
+                
+                self.listView.update()
+                self.updateSelectionIndexes()
+            }
+            
+            let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
+            NSApp.badgeCount = UInt(unread)
+        }
         
-        self.window!.contentView!.centerX == self.indicator.centerX
-        self.window!.contentView!.centerY == self.indicator.centerY
-        self.window!.contentView!.centerX == self.listView.centerX
-        self.window!.contentView!.centerY == self.listView.centerY
-        self.window!.contentView!.width == self.listView.width
-        self.window!.contentView!.height == self.listView.height
+        NotificationCenter.default.addObserver(forName: NSUserNotification.didActivateNotification, object: nil, queue: nil) {
+            guard	let notification = $0.object as? NSUserNotification,
+                var conv = self.conversationList?.conversations[notification.identifier ?? ""]
+                else { return }
+            
+            switch notification.activationType {
+            case .contentsClicked:
+                self.showConversation(conv as! IConversation)
+            case .actionButtonClicked:
+                conv.muted = true
+            case .replied where notification.response?.string != nil:
+                self.sendMessage(notification.response!.string, conv)
+            default: break
+            }
+        }
+        
+        /*self.listView.pasteboardProvider = { row in
+         let pb = NSPasteboardItem()
+         //NSPasteboardTypeRTF, NSPasteboardTypeString, NSPasteboardTypeTabularText
+         log.info("pb for row \(row)")
+         pb.setString("TEST", forType: "public.utf8-plain-text")
+         return pb
+         }*/
+    }
+    
+    public override func viewWillAppear() {
+        syncAutosaveTitle()
         
         let frame = self.listView.layer!.frame
         self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -197,64 +226,30 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         self.listView.alphaValue = 0.0
         
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
-			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
+			guard let vev = self.view as? NSVisualEffectView else { return }
 			vev.state = style.visualEffectState()
 		}
-		
-        //let nib = NSNib(nibNamed: "ConversationCell", bundle: nil)!
-		//self.listView.register(nib: nib, forClass: ConversationCell.self)
-		
-		NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
-            guard let c = note.object as? Service else { return }
-			self.userList = c.directory
-			self.conversationList = c.conversations
-			
-            DispatchQueue.main.async {
-                self.window?.title = c.directory.me.fullName
-                //self.imageView.layer?.masksToBounds = true
-                //self.imageView.layer?.cornerRadius = self.imageView.bounds.width / 2
-                //self.imageView.image = fetchImage(user: c.directory.me, monogram: true)
-                
-                self.listView.update()
-                self.updateSelectionIndexes()
-			}
-		}
-		
-		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
-		NSApp.badgeCount = UInt(unread)
-		
-		NotificationCenter.default.addObserver(forName: NSUserNotification.didActivateNotification, object: nil, queue: nil) {
-			guard	let notification = $0.object as? NSUserNotification,
-					var conv = self.conversationList?.conversations[notification.identifier ?? ""]
-			else { return }
-			
-			switch notification.activationType {
-			case .contentsClicked:
-				self.showConversation(conv as! IConversation)
-			case .actionButtonClicked:
-				conv.muted = true
-			case .replied where notification.response?.string != nil:
-				self.sendMessage(notification.response!.string, conv)
-			default: break
-			}
-		}
-        
-		self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
-		/*self.listView.pasteboardProvider = { row in
-			let pb = NSPasteboardItem()
-			//NSPasteboardTypeRTF, NSPasteboardTypeString, NSPasteboardTypeTabularText
-			log.info("pb for row \(row)")
-			pb.setString("TEST", forType: "public.utf8-plain-text")
-			return pb
-		}*/
 	}
-	
+    
+    /// If we need to close, make sure we clean up after ourselves, instead of deinit.
+    public override func viewWillDisappear() {
+        ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
+        ParrotAppearance.unregisterVibrancyStyleListener(observer: self)
+    }
+    
+    /// Re-synchronizes the conversation name and identifier with the window.
+    /// Center by default, but load a saved frame if available, and autosave.
+    private func syncAutosaveTitle() {
+        self.view.window?.center()
+        self.view.window?.setFrameUsingName("Conversations")
+        self.view.window?.setFrameAutosaveName("Conversations")
+    }
+    
 	private func showConversation(_ conv: Conversation) {
 		if let wc = self.childConversations[conv.identifier] {
 			log.debug("Conversation found for id \(conv.identifier)")
             DispatchQueue.main.async {
-                wc.presentAsWindow()
-                //wc.showWindow(nil)
+                self.presentViewControllerAsWindow(wc)
             }
 		} else {
             log.debug("Conversation NOT found for id \(conv.identifier)")
@@ -266,7 +261,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
                 }
                 self.childConversations[conv.identifier] = wc
                 let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
-                wc.presentAsWindow()
+                self.presentViewControllerAsWindow(wc)
                 NotificationCenter.default.addObserver(self, selector: sel,
                                                        name: .NSWindowWillClose, object: wc.view.window)
             }
@@ -290,11 +285,12 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
     private func hideConversation(_ conv: Conversation) {
         if let conv2 = self.childConversations[conv.identifier] {
             self.childConversations[conv.identifier] = nil
-            conv2.dismissFromWindow()
+            self.dismissViewController(conv2)
         }
     }
 	
 	/// As we are about to display, configure our UI elements.
+    /*
 	public override func showWindow(_ sender: Any?) {
         let scale = Interpolate(from: 0.25, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] scale in
             self?.window?.scale(to: scale, by: CGPoint(x: 0.5, y: 0.5))
@@ -336,6 +332,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         group.animate(duration: 0.35)
         return false
     }
+    */
 	
 	/// If we're notified that our child window has closed (that is, a conversation),
 	/// clean up by removing it from the `childConversations` dictionary.
@@ -346,11 +343,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         
         self.hideConversation(conv2)
         NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
-	}
-	
-	/// If we need to close, make sure we clean up after ourselves, instead of deinit.
-	public func windowWillClose(_ notification: Notification) {
-		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
 	}
     
     public func windowDidChangeOcclusionState(_ notification: Notification) {

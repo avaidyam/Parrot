@@ -19,7 +19,7 @@ public extension NSViewController {
     
     // For root controllers. The window delegate is set to the VC if it conforms to NSWindowDelegate.
     public func presentAsWindow() {
-        WindowTransitionAnimator().display(viewController: self)
+        (self._rootAnimator ?? WindowTransitionAnimator()).display(viewController: self)
     }
     
     // For root controllers. Use only if presentAsWindow() was used.
@@ -42,6 +42,12 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
     
     // for ROOT NSViewController only
     public func display(viewController: NSViewController) {
+        guard viewController._rootAnimator == nil else {
+            assert(viewController._rootAnimator == self, "the view controller has a different WindowTransitionAnimator already!")
+            self.window?.makeKeyAndOrderFront(nil)
+            return
+        }
+        
         viewController.view.layoutSubtreeIfNeeded()
         let p = viewController.view.fittingSize
         
@@ -75,12 +81,12 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
     }
     
     public func animatePresentation(of viewController: NSViewController, from fromViewController: NSViewController) {
-        assert(self.window != nil, "WindowTransitionAnimator.animatePresentation(...) was invoked already!")
+        assert(self.window == nil, "WindowTransitionAnimator.animatePresentation(...) was invoked already!")
         self.display(viewController: viewController)
     }
     
     public func animateDismissal(of viewController: NSViewController, from fromViewController: NSViewController) {
-        assert(self.window == nil, "WindowTransitionAnimator.animateDismissal(...) invoked before WindowTransitionAnimator.animatePresentation(...)!")
+        assert(self.window != nil, "WindowTransitionAnimator.animateDismissal(...) invoked before WindowTransitionAnimator.animatePresentation(...)!")
         self.undisplay()
     }
     
