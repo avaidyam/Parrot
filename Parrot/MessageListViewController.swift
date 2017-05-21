@@ -24,71 +24,41 @@ public struct PlaceholderMessage: Message {
     public var failed: Bool = false
 }
 
-public class MessageListViewController: NSWindowController, NSWindowDelegate, TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
-    
-    /// Transient mode is to be used when the conversation should be shown modally
-    /// for a temporary period of time; any interaction outside of the window should
-    /// return the window to normal mode, and sending a message should do the same.
-    ///
-    /// This is useful in cases such as implementing a BETTER "Reply" button for
-    /// the macOS notifications; you'd be able to see conversations to some depth and
-    /// compose a rich reply instead of a single text box reply.
-    ///
-    /// If the conversation is already open, it should bounce into its transient mode
-    /// and instead of closing itself, it should bounce back to its old position.
-    /// Also, the frame should be set to a standard size and centered temporarily.
-    public var transient: Bool = false {
-        didSet {
-            if transient {
-                self.window?.isMovable = false
-                self.settingsPopover.close()
-                self.window?.level = Int(CGWindowLevelForKey(.floatingWindow))
-                if let v = self.window?.standardWindowButton(.closeButton)?.superview {
-                    v.isHidden = true
-                }
-            } else {
-                self.window?.isMovable = true
-                self.window?.level = Int(CGWindowLevelForKey(.desktopWindow))
-                if let v = self.window?.standardWindowButton(.closeButton)?.superview {
-                    v.isHidden = false
-                }
-            }
-        }
-    }
+// states: nothing-loaded, loading, error, valid view
+
+public class MessageListViewController: NSViewController, TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
     private lazy var moduleView: NSVisualEffectView = {
-        self.window?.contentView?.prepare(NSVisualEffectView(frame: NSZeroRect)) { v in
+        self.view.prepare(NSVisualEffectView(frame: NSZeroRect)) { v in
             v.layerContentsRedrawPolicy = .onSetNeedsDisplay
             v.state = .active
             v.blendingMode = .withinWindow
             v.material = .appearanceBased
         }
-    }()!
-    
-    //@IBOutlet var drawerButton: NSButton!
+    }()
     
     private lazy var listView: ListView = {
-        self.window?.contentView?.prepare(ListView(frame: NSZeroRect)) { v in
+        self.view.prepare(ListView(frame: NSZeroRect)) { v in
             v.updateToBottom = true
             v.multipleSelect = false
             v.emptySelect = true
             v.delegate = self
         }
-    }()!
+    }()
     
     private lazy var indicator: NSProgressIndicator = {
-        self.window?.contentView?.prepare(NSProgressIndicator(frame: NSZeroRect)) { v in
+        self.view.prepare(NSProgressIndicator(frame: NSZeroRect)) { v in
             v.usesThreadedAnimation = true
             v.isIndeterminate = true
             v.style = .spinningStyle
         }
-    }()!
+    }()
     
     private lazy var settingsPopover: NSPopover = {
         let popover = NSPopover()
         popover.contentViewController = self.settingsController
         popover.preferredEdge = .minY
-        popover.relativePositioningView = self.window!.contentView!
+        popover.relativePositioningView = self.view
         return popover
     }()
     
@@ -100,7 +70,7 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
     private lazy var textInputCell: TextInputCell = {
         let t = TextInputCell()
         t.host = self
-        _ = self.window?.contentView?.prepare(t.view) // prepare & attach
+        _ = self.view.prepare(t.view) // prepare & attach
         return t
     }()
     
@@ -134,31 +104,6 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
 	
 	var _previews = [String: [LinkPreviewType]]()
 	var _note: NSObjectProtocol!
-    
-    public init() {
-        let w = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 256, height: 512),
-                         styleMask: [.titled, .unifiedTitleAndToolbar, .resizable, .closable, .miniaturizable, .fullSizeContentView],
-                         backing: .buffered, defer: true)
-        super.init(window: w)
-        
-        // FIXME: needs a delegate :(
-        let t = NSToolbar()
-        t.insertItem(withItemIdentifier: NSToolbarFlexibleSpaceItemIdentifier, at: 0)
-        w.toolbar = t
-        
-        // Center by default, but load a saved frame if available, and set the autosave.
-        w.center()
-        w.setFrameUsingName("Messages")
-        w.setFrameAutosaveName("Messages")
-        
-        // Finish up initialization we lost by not using nibs.
-        w.delegate = self
-        self.windowDidLoad()
-    }
-    
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
 	private var dataSource: [EventStreamItem] = []
     public func numberOfItems(in: ListView) -> [UInt] {
@@ -220,29 +165,35 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
         }
     }
     
-    public override func windowDidLoad() {
-		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
-		self.window?.enableRealTitlebarVibrancy(.withinWindow)
-		self.window?.titleVisibility = .hidden
-        self.window?.contentView?.superview?.wantsLayer = true
+    public override func loadView() {
+        self.view = NSView()
         
-        self.window!.contentView!.centerX == self.indicator.centerX
-        self.window!.contentView!.centerY == self.indicator.centerY
-        self.window!.contentView!.centerX == self.listView.centerX
-        self.window!.contentView!.centerY == self.listView.centerY
-        self.window!.contentView!.width == self.listView.width
-        self.window!.contentView!.height == self.listView.height
-        self.moduleView.left == self.window!.contentView!.left
-        self.moduleView.right == self.window!.contentView!.right
-        self.moduleView.bottom == self.window!.contentView!.bottom
+        self.view.centerX == self.indicator.centerX
+        self.view.centerY == self.indicator.centerY
+        self.view.centerX == self.listView.centerX
+        self.view.centerY == self.listView.centerY
+        self.view.width == self.listView.width
+        self.view.height == self.listView.height
+        self.moduleView.left == self.view.left
+        self.moduleView.right == self.view.right
+        self.moduleView.bottom == self.view.bottom
         self.moduleView.height <= 250
         self.textInputCell.view.left == self.moduleView.left
         self.textInputCell.view.right == self.moduleView.right
         self.textInputCell.view.top == self.moduleView.top
         self.textInputCell.view.bottom == self.moduleView.bottom
+    }
+    
+    public override func viewDidLoad() {
+        /*
+		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
+		self.window?.enableRealTitlebarVibrancy(.withinWindow)
+		self.window?.titleVisibility = .hidden
+        self.window?.contentView?.superview?.wantsLayer = true
+        */
         
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
-			guard let vev = self.window?.contentView as? NSVisualEffectView else { return }
+			guard let vev = self.view.window?.contentView as? NSVisualEffectView else { return }
 			vev.state = style.visualEffectState()
 			//guard let vev2 = self.drawer.contentView as? NSVisualEffectView else { return }
 			//vev2.state = style.visualEffectState()
@@ -253,11 +204,11 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
         //self.listView.register(nib: nib, forClass: MessageCell.self)
         //self.listView.register(nib: nib2, forClass: WatermarkCell.self)
 		
-        self.token = subscribe(source: nil, Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
+        self.token = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             self.setBackground()
         }
         setBackground()
-        if let s = self.window?.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView {
+        if let s = self.view.window?.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView {
             s.state = .active
         }
         
@@ -273,7 +224,53 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
         }
     }
     
+    public override func viewWillAppear() {
+        
+        // Center by default, but load a saved frame if available, and set the autosave.
+        self.view.window?.center()
+        self.view.window?.setFrameUsingName("Messages")
+        self.view.window?.setFrameAutosaveName("Messages")
+        
+        
+        self.indicator.startAnimation(nil)
+        self.listView.alphaValue = 0.0
+        //self.animatedUpdate(true)
+        self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
+        
+        if self.conversation != nil {
+            self.settingsController.conversation = self.conversation
+        }
+        
+        /*
+         if self.window?.isKeyWindow ?? false {
+         self.windowDidBecomeKey(Notification(name: "" as Notification.Name))
+         }
+         */
+        self.tokenOcclusion = AutoSubscription(from: self.view.window!, kind: .NSWindowDidChangeOcclusionState) { [weak self] _ in
+            
+            // NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
+            self?.conversation?.setFocus((self?.view.window?.occlusionState.rawValue ?? 0) == 8194)
+        }
+        self.conversation?.setFocus((self.view.window?.occlusionState.rawValue ?? 0) == 8194)
+        
+        // Set up dark/light notifications.
+        ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
+            self.view.window?.appearance = interface.appearance()
+            self.settingsPopover.appearance = interface.appearance()
+        }
+        
+        /*
+         runSelectionPanel(for: self.window!, fileTypes: ["mp3", "caf", "aiff", "wav"]) {
+         log.debug("received \($0)")
+         }*/
+    }
+    
+    public override func viewWillDisappear() {
+        self.tokenOcclusion = nil
+    }
+    
     private var token: Any? = nil
+    private var tokenOcclusion: Any? = nil
     public func setBackground() {
         if  let dat = Settings["Parrot.ConversationBackground"] as? NSData,
             let img = NSImage(data: dat as Data) {
@@ -283,37 +280,8 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
         }
     }
     deinit {
-        unsubscribe(self.token)
-    }
-    
-	public override func showWindow(_ sender: Any?) {
-        super.showWindow(nil)
-        self.indicator.startAnimation(nil)
-        self.listView.alphaValue = 0.0
-        //self.animatedUpdate(true)
-        self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
-        
-        if self.conversation != nil {
-            self.settingsController.conversation = self.conversation
-        }
-		
-		/*
-		if self.window?.isKeyWindow ?? false {
-			self.windowDidBecomeKey(Notification(name: "" as Notification.Name))
-		}
-		*/
-		self.windowDidChangeOcclusionState(Notification(name: Notification.Name("")))
-		
-		// Set up dark/light notifications.
-		ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
-			self.window?.appearance = interface.appearance()
-			self.settingsPopover.appearance = interface.appearance()
-		}
-		
-		/*
-		runSelectionPanel(for: self.window!, fileTypes: ["mp3", "caf", "aiff", "wav"]) {
-			log.debug("received \($0)")
-		}*/
+        self.token = nil
+        self.tokenOcclusion = nil
     }
     
     @IBAction func colorChanged(_ sender: AnyObject?) {
@@ -324,7 +292,8 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
         } else if let img = sender as? NSImageView, img.identifier == "BackgroundImage" {
             
         }*/
-        post(name: "com.avaidyam.Parrot.UpdateColors", source: self)
+        
+        Subscription.Event(name: Notification.Name(rawValue: "com.avaidyam.Parrot.UpdateColors"), object: self).post()
     }
     
     /*@IBAction public func colorWellSelected(_ sender: AnyObject?) {
@@ -332,11 +301,8 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
         publish(Notification(name: Notification.Name("_ColorChanged")))
     }*/
 	
-	// NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
-	public func windowDidChangeOcclusionState(_ notification: Notification) {
-		self.conversation?.setFocus(self.window!.occlusionState.rawValue == 8194)
-	}
     
+    /*
     public func windowShouldClose(_ sender: AnyObject) -> Bool {
         guard let w = self.window else { return false }
         
@@ -367,6 +333,7 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
         group.animate(duration: 0.25)
         return false
     }
+    */
     
 	
 	public func windowWillClose(_ notification: Notification) {
@@ -376,8 +343,8 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
 	var conversation: IConversation? {
 		didSet {
 			//DispatchQueue.main.sync {
-				self.window?.title = self.conversation?.name ?? ""
-				self.window?.setFrameAutosaveName("\(self.conversation?.identifier)")
+				self.title = self.conversation?.name ?? ""
+				self.view.window?.setFrameAutosaveName("\(self.conversation?.identifier)")
 			//}
 			
 			/*
@@ -487,12 +454,6 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
             }
         }
     }
-	
-    public override func cancelOperation(_ sender: Any?) {
-        if self.transient {
-            self.window?.performClose(nil)
-        }
-    }
     
 	@IBAction public func toggleMute(_ sender: AnyObject?) {
 		guard let button = sender as? NSButton else { return }
@@ -523,7 +484,7 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
 		
         // Delay here to ensure that small context switches don't send focus messages.
 		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-            if let window = self.window , window.isKeyWindow {
+            if let window = self.view.window, window.isKeyWindow {
 				self.conversation?.setFocus(true) // set it here too just in case.
             }
 			self.conversation?.updateReadTimestamp()
@@ -571,8 +532,5 @@ public class MessageListViewController: NSWindowController, NSWindowDelegate, Te
     
     public func send(message: String) {
         self.sendMessageHandler(message, self.conversation!)
-        if self.transient {
-            self.window?.performClose(nil)
-        }
     }
 }

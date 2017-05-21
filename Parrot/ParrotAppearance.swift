@@ -18,7 +18,7 @@ public struct ParrotAppearance {
 	/// Trampolines the distributed notification sent when the user changes interface styles
 	/// into a locally stored default that can be observed normally.
 	private static let registerDarkModeActiveListener: NSObjectProtocol = {
-		DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("AppleInterfaceThemeChangedNotification")) { n in
+		DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("AppleInterfaceThemeChangedNotification"), object: nil, queue: nil) { n in
 			let style = UserDefaults.standard.persistentDomain(forName: UserDefaults.globalDomain)?["AppleInterfaceStyle"]
 			let dark = (style != nil) && (style as? NSString != nil) && ((style as! NSString).caseInsensitiveCompare("dark") == .orderedSame)
 			Settings[Parrot.SystemInterfaceStyle] = dark
@@ -28,7 +28,7 @@ public struct ParrotAppearance {
 	/// Trampolines the UserDefaults.didChangeNotification notification and triggers any
 	/// registered listeners IFF the appearance has changed. [KVO doesn't work with UserDefaults.]
 	private static let registerNotificationChangeListener: NSObjectProtocol = {
-		NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification) { n in
+		NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { n in
 			
 			// Detect InterfaceStyle changes.
 			let currentInterfaceStyle = ParrotAppearance.interfaceStyle()

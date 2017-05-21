@@ -3,10 +3,6 @@ import Social
 
 public final class ShareViewController: SLComposeServiceViewController {
     private var items = [String: [String]]()
-    private var bleh: Any? = nil
-    deinit {
-        unsubscribe(self.bleh)
-    }
     
     public override func loadView() {
         super.loadView()
@@ -14,12 +10,6 @@ public final class ShareViewController: SLComposeServiceViewController {
         self.setValue(true, forKey: "showsProgressIndicator")
         self.title = NSLocalizedString("ParrotShare", comment: "Title of the Social Service")
         NSLog("Input Items = %@", self.extensionContext!.inputItems)
-        
-        publish(on: .system, Notification(name: Notification.Name("com.avaidyam.Parrot.Service.getConversations")))
-        self.bleh = subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.giveConversations")) {
-            NSLog("got resp \($0)")
-        }
-        
     }
     
     public override func viewDidAppear() {

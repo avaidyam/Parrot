@@ -32,6 +32,9 @@ public class ParrotAppController: NSApplicationController {
     
     let net = NetworkReachabilityManager(host: "google.com")
     
+    private var connectSub: Subscription? = nil
+    private var disconnectSub: Subscription? = nil
+    
 	/// Lazy-init for the main conversations NSWindowController.
 	private lazy var conversationsController: NSWindowController = {
 		ConversationListViewController()
@@ -67,6 +70,11 @@ public class ParrotAppController: NSApplicationController {
 			Settings[Parrot.Completions] = defaultC
 		}
 	}
+    
+    deinit {
+        self.connectSub = nil
+        self.disconnectSub = nil
+    }
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
@@ -78,7 +86,7 @@ public class ParrotAppController: NSApplicationController {
             let c = Client(configuration: $0)
 			//AppActivity.end("Authenticate")
 			
-            _ = subscribe(source: c, Client.didConnectNotification) { _ in
+            self.connectSub = AutoSubscription(from: c, kind: Client.didConnectNotification) { _ in
                 UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
                                  contentImage: NSImage(named: NSImageNameCaution)).post()
                 
@@ -96,7 +104,7 @@ public class ParrotAppController: NSApplicationController {
                     }
                 }
 			}
-            _ = subscribe(source: c, Client.didDisconnectNotification) { _ in
+            self.disconnectSub = AutoSubscription(from: c, kind: Client.didDisconnectNotification) { _ in
                 DispatchQueue.main.async { // FIXME why does wrapping it twice work??
                     NSUserNotification.notifications()
                         .filter { $0.identifier == "Parrot.ConnectionStatus" }

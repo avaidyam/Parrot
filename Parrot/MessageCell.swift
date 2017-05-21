@@ -47,11 +47,11 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     }
     
     // Constraint setup here.
-    private var token: Any? = nil
+    private var token: Subscription? = nil
     private func prepareLayout() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.wantsLayer = true
-        self.token = subscribe(source: nil, Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
+        self.token = AutoSubscription(from: nil, kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             self.setColors()
         }
         
@@ -71,7 +71,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     }
     
     deinit {
-        unsubscribe(self.token)
+        self.token = nil
     }
     
 	/// Upon assignment of the represented object, configure the subview contents.

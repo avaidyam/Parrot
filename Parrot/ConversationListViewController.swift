@@ -150,7 +150,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         // Conversations we have that are not selected. --> REMOVE
         dest.subtracting(convs).forEach { id in
             log.debug("REMOVE: \(id)")
-            self.childConversations[id]?.window?.performClose(nil)
+            self.childConversations[id]?.view.window?.performClose(nil)
         }
     }
     
@@ -200,7 +200,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         //let nib = NSNib(nibNamed: "ConversationCell", bundle: nil)!
 		//self.listView.register(nib: nib, forClass: ConversationCell.self)
 		
-		NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService) { note in
+		NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
             guard let c = note.object as? Service else { return }
 			self.userList = c.directory
 			self.conversationList = c.conversations
@@ -219,7 +219,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 		let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
 		NSApp.badgeCount = UInt(unread)
 		
-		NotificationCenter.default.addObserver(forName: NSUserNotification.didActivateNotification) {
+		NotificationCenter.default.addObserver(forName: NSUserNotification.didActivateNotification, object: nil, queue: nil) {
 			guard	let notification = $0.object as? NSUserNotification,
 					var conv = self.conversationList?.conversations[notification.identifier ?? ""]
 			else { return }
@@ -249,7 +249,8 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 		if let wc = self.childConversations[conv.identifier] {
 			log.debug("Conversation found for id \(conv.identifier)")
             DispatchQueue.main.async {
-                wc.showWindow(nil)
+                wc.presentAsWindow()
+                //wc.showWindow(nil)
             }
 		} else {
             log.debug("Conversation NOT found for id \(conv.identifier)")
@@ -261,9 +262,9 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
                 }
                 self.childConversations[conv.identifier] = wc
                 let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
+                wc.presentAsWindow()
                 NotificationCenter.default.addObserver(self, selector: sel,
-                                                       name: .NSWindowWillClose, object: wc.window)
-                wc.showWindow(nil)
+                                                       name: .NSWindowWillClose, object: wc.view.window)
             }
             
             // TODO: This plus some window snapping and sizing would allow for a UI mode.
@@ -329,9 +330,9 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 	/// clean up by removing it from the `childConversations` dictionary.
 	public func childWindowWillClose(_ notification: Notification) {
 		guard	let win = notification.object as? NSWindow,
-				let ctrl = win.windowController as? MessageListViewController,
+				let ctrl = win.contentViewController as? MessageListViewController,
 				let conv2 = ctrl.conversation else { return }
-		
+        
         self.childConversations[conv2.identifier] = nil
         NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
 	}
@@ -413,7 +414,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 		var showNote = true
 		if let c = self.childConversations[event.conversation_id] {
 			c.conversation(c.conversation!, didReceiveEvent: event)
-			showNote = !(c.window?.isKeyWindow ?? false)
+			showNote = !(c.view.window?.isKeyWindow ?? false)
 		}
 		
 		if let user = (conv as? IConversation)?.user_list[event.userID.gaiaID] , !user.me && showNote {
