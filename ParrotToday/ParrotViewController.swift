@@ -1,4 +1,5 @@
-import Cocoa
+import Foundation
+import AppKit
 import NotificationCenter
 import Hangouts
 import ParrotServiceExtension

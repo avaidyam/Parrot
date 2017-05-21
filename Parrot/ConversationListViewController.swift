@@ -1,4 +1,5 @@
-import Cocoa
+import Foundation
+import AppKit
 import Mocha
 import MochaUI
 import Hangouts
@@ -336,8 +337,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         self.childConversations[conv2.identifier] = nil
         NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
 	}
-    
-    
 	
 	/// If we need to close, make sure we clean up after ourselves, instead of deinit.
 	public func windowWillClose(_ notification: Notification) {

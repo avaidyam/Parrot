@@ -1,4 +1,5 @@
-import Cocoa
+import Foundation
+import AppKit
 import Mocha
 import MochaUI
 import Hangouts
@@ -26,7 +27,7 @@ public struct PlaceholderMessage: Message {
 
 // states: nothing-loaded, loading, error, valid view
 
-public class MessageListViewController: NSViewController, TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
+public class MessageListViewController: NSViewController, NSWindowDelegate, TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
     private lazy var moduleView: NSVisualEffectView = {
         self.view.prepare(NSVisualEffectView(frame: NSZeroRect)) { v in
@@ -43,6 +44,8 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
             v.multipleSelect = false
             v.emptySelect = true
             v.delegate = self
+            
+            v.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
         }
     }()
     
@@ -66,7 +69,6 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
         return ConversationDetailsViewController()
     }()
     
-    private var typingHelper: TypingHelper? = nil
     private lazy var textInputCell: TextInputCell = {
         let t = TextInputCell()
         t.host = self
@@ -96,16 +98,38 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
         let group = Interpolate.group(indicatorAnim, scaleAnim)
         return group
     }()
+    
+    private var typingHelper: TypingHelper? = nil
 	
 	// TODO: BEGONE!
     public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
     private var updateToken: Bool = false
     private var showingFocus: Bool = false
-	
-	var _previews = [String: [LinkPreviewType]]()
-	var _note: NSObjectProtocol!
+    private var lastWatermarkIdx = -1
+    private var token: Subscription? = nil
+    private var tokenOcclusion: Subscription? = nil
+	private var _previews = [String: [LinkPreviewType]]()
+    private var _note: NSObjectProtocol!
+    
+    public var image: NSImage? {
+        if let me = self.conversation?.client.userList.me {
+            return fetchImage(user: me as! User, monogram: true)
+        }
+        return nil
+    }
     
 	private var dataSource: [EventStreamItem] = []
+    
+    deinit {
+        self.token = nil
+        self.tokenOcclusion = nil
+    }
+    
+    
+    ///
+    ///
+    ///
+    
     public func numberOfItems(in: ListView) -> [UInt] {
         return [UInt(self.dataSource.count)]
     }
@@ -145,7 +169,6 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
         func scrollback() {
             guard self.updateToken == false else { return }
             let first = self.dataSource[0] as? IChatMessageEvent
-            log.debug("SCROLLBACK \(first?.event.eventId)")
             self.conversation?.getEvents(event_id: first?.event.eventId, max_events: 50) { events in
                 let count = self.dataSource.count
                 self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent }, at: 0)
@@ -164,6 +187,10 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
         default: break
         }
     }
+    
+    ///
+    ///
+    ///
     
     public override func loadView() {
         self.view = NSView()
@@ -192,26 +219,7 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
         self.window?.contentView?.superview?.wantsLayer = true
         */
         
-		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
-			guard let vev = self.view.window?.contentView as? NSVisualEffectView else { return }
-			vev.state = style.visualEffectState()
-			//guard let vev2 = self.drawer.contentView as? NSVisualEffectView else { return }
-			//vev2.state = style.visualEffectState()
-		}
-        
-        //let nib = NSNib(nibNamed: "MessageCell", bundle: nil)!
-        //let nib2 = NSNib(nibNamed: "WatermarkCell", bundle: nil)!
-        //self.listView.register(nib: nib, forClass: MessageCell.self)
-        //self.listView.register(nib: nib2, forClass: WatermarkCell.self)
-		
-        self.token = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
-            self.setBackground()
-        }
-        setBackground()
-        if let s = self.view.window?.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView {
-            s.state = .active
-        }
-        
+        //
         self.typingHelper = TypingHelper {
             switch $0 {
             case .started:
@@ -226,32 +234,29 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
     
     public override func viewWillAppear() {
         
-        // Center by default, but load a saved frame if available, and set the autosave.
-        self.view.window?.center()
-        self.view.window?.setFrameUsingName("Messages")
-        self.view.window?.setFrameAutosaveName("Messages")
-        
-        
+        // TODO: See if these can go in viewDidLoad() and execute only once.
+        syncAutosaveTitle()
         self.indicator.startAnimation(nil)
         self.listView.alphaValue = 0.0
-        //self.animatedUpdate(true)
-        self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
         
-        if self.conversation != nil {
-            self.settingsController.conversation = self.conversation
+        // Monitor changes to the view background and colors.
+        self.token = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
+            if  let dat = Settings["Parrot.ConversationBackground"] as? NSData,
+                let img = NSImage(data: dat as Data) {
+                self.moduleView.superview?.layer?.contents = img
+            } else {
+                self.moduleView.superview?.layer?.contents = nil
+            }
         }
+        self.token?.trigger()
         
-        /*
-         if self.window?.isKeyWindow ?? false {
-         self.windowDidBecomeKey(Notification(name: "" as Notification.Name))
-         }
-         */
+        // Monitor changes to the window's occlusion state and map it to conversation focus.
         self.tokenOcclusion = AutoSubscription(from: self.view.window!, kind: .NSWindowDidChangeOcclusionState) { [weak self] _ in
             
             // NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
             self?.conversation?.setFocus((self?.view.window?.occlusionState.rawValue ?? 0) == 8194)
         }
-        self.conversation?.setFocus((self.view.window?.occlusionState.rawValue ?? 0) == 8194)
+        self.tokenOcclusion?.trigger()
         
         // Set up dark/light notifications.
         ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
@@ -259,49 +264,25 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
             self.settingsPopover.appearance = interface.appearance()
         }
         
-        /*
-         runSelectionPanel(for: self.window!, fileTypes: ["mp3", "caf", "aiff", "wav"]) {
-         log.debug("received \($0)")
-         }*/
+        // Force the window to follow the current ParrotAppearance.
+        ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
+            guard let vev = self.view.window?.contentView as? NSVisualEffectView else { return }
+            vev.state = style.visualEffectState()
+            if let s = self.view.window?.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView {
+                s.state = style.visualEffectState()
+            }
+        }
     }
     
     public override func viewWillDisappear() {
-        self.tokenOcclusion = nil
-    }
-    
-    private var token: Any? = nil
-    private var tokenOcclusion: Any? = nil
-    public func setBackground() {
-        if  let dat = Settings["Parrot.ConversationBackground"] as? NSData,
-            let img = NSImage(data: dat as Data) {
-            self.moduleView.superview?.layer?.contents = img
-        } else {
-            self.moduleView.superview?.layer?.contents = nil
-        }
-    }
-    deinit {
         self.token = nil
         self.tokenOcclusion = nil
-    }
-    
-    @IBAction func colorChanged(_ sender: AnyObject?) {
-        /*if let well = sender as? NSColorWell, well.identifier == "MyBubbleColor" {
-            
-        } else if let well = sender as? NSColorWell, well.identifier == "TheirBubbleColor" {
-            
-        } else if let img = sender as? NSImageView, img.identifier == "BackgroundImage" {
-            
-        }*/
         
-        Subscription.Event(name: Notification.Name(rawValue: "com.avaidyam.Parrot.UpdateColors"), object: self).post()
+        ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
+        ParrotAppearance.unregisterVibrancyStyleListener(observer: self)
     }
-    
-    /*@IBAction public func colorWellSelected(_ sender: AnyObject?) {
-        guard let sender = sender as? NSColorWell else { return }
-        publish(Notification(name: Notification.Name("_ColorChanged")))
-    }*/
 	
-    
+    // TODO: this goes in a new ParrotWindow class or something.
     /*
     public func windowShouldClose(_ sender: AnyObject) -> Bool {
         guard let w = self.window else { return false }
@@ -334,31 +315,27 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
         return false
     }
     */
+	
+    /// Re-synchronizes the conversation name and identifier with the window.
+    /// Center by default, but load a saved frame if available, and autosave.
+    private func syncAutosaveTitle() {
+        self.title = self.conversation?.name ?? ""
+        let id = self.conversation?.identifier ?? "Messages"
+        self.view.window?.center()
+        self.view.window?.setFrameUsingName(id)
+        self.view.window?.setFrameAutosaveName(id)
+    }
     
-	
-	public func windowWillClose(_ notification: Notification) {
-		ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
-	}
-	
 	var conversation: IConversation? {
-		didSet {
-			//DispatchQueue.main.sync {
-				self.title = self.conversation?.name ?? ""
-				self.view.window?.setFrameAutosaveName("\(self.conversation?.identifier)")
-			//}
-			
-			/*
-			if let oldConversation = oldValue {
-				oldConversation.delegate = nil
-			}
-			self.conversation?.delegate = self
-			*/
+        didSet {
+            self.settingsController.conversation = self.conversation
+            self.syncAutosaveTitle()
 			
 			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
 					self.dataSource.append(chat)
-					//linkQ.async {
-						/*
+					/* // Disabled because it takes a WHILE to run.
+                    linkQ.async {
 						let d = try! NSDataDetector(types: TextCheckingResult.CheckingType.link.rawValue)
 						let t = chat.text
 						d.enumerateMatches(in: t, options: RegularExpression.MatchingOptions(rawValue: UInt(0)),
@@ -372,30 +349,18 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
 								self._previews[chat.id] = [meta]
 							}
 						}
-						*/
-					//}
+					}
+                    */
 				}
                 
-                let group = self.updateInterpolation
+                let group = self.updateInterpolation // lazy
                 DispatchQueue.main.async {
                     self.listView.update(animated: false) {
                         group.animate(duration: 0.5)
-                        //self.window?.makeFirstResponder(self.entryView)
                     }
                 }
 			}
             
-            self.settingsController.conversation = self.conversation
-			
-			/*
-			self.conversation!.messages.map {
-				if let prev = self._previews[($0 as! IChatMessageEvent).id] {
-					let ret = [$0 as Any] + prev.map { $0 as Any }
-					return ret
-				} else { return [$0 as Any] }
-			}.reduce([], combine: +)
-			*/
-			//self.listView?.update()
 		}
 	}
 	
@@ -410,7 +375,6 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
     }
     
     // FIXME: Watermark!!
-    private var lastWatermarkIdx = -1
     public func watermarkEvent(_ focus: Focus) {
         guard let s = focus.sender, !s.me else { return }
         DispatchQueue.main.async {
@@ -469,7 +433,7 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
 		button.title = altT
 		
 		// Mute or unmute the conversation.
-		var cv = self.conversation as! ParrotServiceExtension.Conversation
+		let cv = self.conversation!
 		cv.muted = (button.state == NSOnState ? true : false)
 	}
 	
@@ -477,9 +441,7 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
 	
 	public func windowDidBecomeKey(_ notification: Notification) {
         if let conversation = conversation {
-			NSUserNotification.notifications()
-				.filter { $0.identifier == conversation.id }
-				.forEach { $0.remove() }
+			NSUserNotification.notifications().remove(identifier: conversation.id)
         }
 		
         // Delay here to ensure that small context switches don't send focus messages.
@@ -493,32 +455,22 @@ public class MessageListViewController: NSViewController, TextInputHost, ListVie
 			for state in self.conversation!.readStates {
 				let person = self.conversation!.client.directory.people[state.participantId!.gaiaId!]!
 				let timestamp = Date.from(UTC: Double(state.latestReadTimestamp!))
-				//log.debug("conv => { conv: \(self.conversation!.conversation) }")
 				log.debug("state => { person: \(person.nameComponents), timestamp: \(timestamp) }")
 			}
         }
     }
 	
+    // TODO: Add a toolbar button and do this with that.
     /*
-	// Bind the drawer state to the button that toggles it.
 	public func drawerWillOpen(_ notification: Notification) {
 		self.drawerButton.state = NSOnState
 		self.drawer.drawerWindow?.animator().alphaValue = 1.0
-        
-        publish(on: .system, Notification(name: Notification.Name("com.avaidyam.Parrot.Service.getConversations")))
 	}
 	public func drawerWillClose(_ notification: Notification) {
 		self.drawerButton.state = NSOffState
 		self.drawer.drawerWindow?.animator().alphaValue = 0.0
 	}
     */
-    
-    public var image: NSImage? {
-        if let me = self.conversation?.client.userList.me {
-            return fetchImage(user: me as! User, monogram: true)
-        }
-        return nil
-    }
     
     public func resized(to: Double) {
         self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: CGFloat(to), right: 0)

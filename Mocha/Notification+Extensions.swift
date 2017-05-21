@@ -81,6 +81,13 @@ public class Subscription {
         self.location.underlyingCenter.removeObserver(self)
         self.active = false
     }
+    
+    /// Causes the Subscription's handler to be executed as if an Event had triggered it.
+    /// Note: an optional `userInfo` may be provided, but the kind and source are 
+    /// pre-set from the Subscription's parameters.
+    public func trigger(_ userInfo: [AnyHashable : Any]? = nil) {
+        self._runHandler(Event(name: self.name, object: self.source, userInfo: userInfo))
+    }
 }
 
 /// The AutoSubscription class operates exactly the same as the Subscription class,

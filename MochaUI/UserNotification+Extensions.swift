@@ -141,6 +141,14 @@ public extension NSUserNotification {
 	}
 }
 
+public extension Array where Element == NSUserNotification {
+    
+    /// Convenience for removing any notifications with a matching identifier.
+    public func remove(identifier id: String) {
+        self.filter { $0.identifier == id }.forEach { $0.remove() }
+    }
+}
+
 public extension NSUserNotification {
     
     /// Convenience constructor for a pretty standard notification.

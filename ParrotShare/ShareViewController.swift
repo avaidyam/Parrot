@@ -1,4 +1,5 @@
-import Cocoa
+import Foundation
+import AppKit
 import Social
 
 public final class ShareViewController: SLComposeServiceViewController {

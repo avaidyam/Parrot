@@ -1,4 +1,5 @@
-import Cocoa
+import Foundation
+import AppKit
 import Mocha
 
 /* TODO: Support utility AND modal AND normal windows? */ // NSApp.runModalForWindow(), NSApp.stopModal(), [.utilityWindow]
@@ -16,8 +17,8 @@ public extension NSViewController {
         self.presentViewController(viewController, animator: WindowTransitionAnimator())
     }
     
+    // For root controllers. The window delegate is set to the VC if it conforms to NSWindowDelegate.
     public func presentAsWindow() {
-        DispatchQueue.setupQueues()
         WindowTransitionAnimator().display(viewController: self)
     }
     

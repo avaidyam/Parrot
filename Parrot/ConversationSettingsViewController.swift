@@ -1,4 +1,6 @@
-import Cocoa
+import Foundation
+import AppKit
+import Mocha
 import MochaUI
 import ParrotServiceExtension
 
@@ -109,6 +111,23 @@ public class ConversationDetailsViewController: NSViewController {
             print("DELETE TOGGLE")
         }
     }
+    
+    @IBAction func colorChanged(_ sender: AnyObject?) {
+        /*if let well = sender as? NSColorWell, well.identifier == "MyBubbleColor" {
+         
+         } else if let well = sender as? NSColorWell, well.identifier == "TheirBubbleColor" {
+         
+         } else if let img = sender as? NSImageView, img.identifier == "BackgroundImage" {
+         
+         }*/
+        
+        Subscription.Event(name: Notification.Name(rawValue: "com.avaidyam.Parrot.UpdateColors"), object: self).post()
+    }
+    
+    /*@IBAction public func colorWellSelected(_ sender: AnyObject?) {
+     guard let sender = sender as? NSColorWell else { return }
+     publish(Notification(name: Notification.Name("_ColorChanged")))
+     }*/
     
     // TODO:
     //
