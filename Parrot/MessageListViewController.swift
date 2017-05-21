@@ -215,8 +215,10 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
     
     public override func loadView() {
         self.view = NSView()
-        self.view.add(subviews: [self.moduleView, self.listView, self.indicator, self.textInputCell.view])
+        self.view.add(subviews: [self.listView, self.indicator, self.moduleView, self.textInputCell.view])
         
+        self.view.width >= 96
+        self.view.height >= 128
         self.view.centerX == self.indicator.centerX
         self.view.centerY == self.indicator.centerY
         self.view.centerX == self.listView.centerX

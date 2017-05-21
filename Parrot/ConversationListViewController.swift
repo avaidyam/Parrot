@@ -133,7 +133,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
     }
     
     public func proposedSelection(in list: ListView, at: [ListView.Index]) -> [ListView.Index] {
-        return list.selection + at
+        return list.selection + at // Only additive!
     }
     
     public func selectionChanged(in: ListView, is selection: [ListView.Index]) {
@@ -150,7 +150,8 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
         // Conversations we have that are not selected. --> REMOVE
         dest.subtracting(convs).forEach { id in
             log.debug("REMOVE: \(id)")
-            self.childConversations[id]?.view.window?.performClose(nil)
+            let conv = self.sortedConversations.filter { $0.identifier == id }.first!
+            self.hideConversation(conv)
         }
     }
     
@@ -284,6 +285,13 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
              */
 		}
 	}
+    
+    private func hideConversation(_ conv: Conversation) {
+        if let conv2 = self.childConversations[conv.identifier] {
+            self.childConversations[conv.identifier] = nil
+            conv2.dismissFromWindow()
+        }
+    }
 	
 	/// As we are about to display, configure our UI elements.
 	public override func showWindow(_ sender: Any?) {
@@ -335,7 +343,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
 				let ctrl = win.contentViewController as? MessageListViewController,
 				let conv2 = ctrl.conversation else { return }
         
-        self.childConversations[conv2.identifier] = nil
+        self.hideConversation(conv2)
         NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
 	}
 	

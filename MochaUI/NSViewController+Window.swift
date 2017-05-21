@@ -22,6 +22,11 @@ public extension NSViewController {
         WindowTransitionAnimator().display(viewController: self)
     }
     
+    // For root controllers. Use only if presentAsWindow() was used.
+    public func dismissFromWindow() {
+        self._rootAnimator?.undisplay()
+    }
+    
     // drawer?
     
     // panel?
@@ -38,7 +43,7 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
     // for ROOT NSViewController only
     public func display(viewController: NSViewController) {
         viewController.view.layoutSubtreeIfNeeded()
-        let p = viewController.preferredContentSize
+        let p = viewController.view.fittingSize
         
         self.window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: p.width, height: p.height),
                                styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
