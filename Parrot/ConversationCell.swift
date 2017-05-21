@@ -128,12 +128,12 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
         didSet {
             //let appearance = self.view.appearance ?? NSAppearance.current()
             if self.isSelected {
-                //self.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
+                //self.appearance = .light
                 //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0.1997270976).cgColor
                 //self.effect?.animator().isHidden = false
                 //self.separator?.animator().isHidden = true
             } else {
-                //self.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+                //self.appearance = .dark
                 //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
                 //self.effect?.animator().isHidden = true
                 //self.separator?.animator().isHidden = false

@@ -90,12 +90,12 @@ public struct ParrotAppearance {
 			let style = InterfaceStyle(rawValue: Settings[Parrot.InterfaceStyle] as? Int ?? -1) ?? .Dark
 			
 			switch style {
-			case .Light: return NSAppearance(named: NSAppearanceNameVibrantLight)!
-			case .Dark: return NSAppearance(named: NSAppearanceNameVibrantDark)!
+			case .Light: return .light
+			case .Dark: return .dark
 				
 			case .System: //TODO: "NSAppearanceNameMediumLight"
 				let system = Settings[Parrot.SystemInterfaceStyle] as? Bool ?? false
-				return NSAppearance(named: (system ? NSAppearanceNameVibrantDark : NSAppearanceNameVibrantLight))!
+				return system ? .dark : .light
 			}
 		}
 	}

@@ -28,6 +28,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         v.drawsBackground = false
         v.backgroundColor = NSColor.clear
         v.textColor = NSColor.labelColor
+        v.textContainerInset = NSSize(width: 4, height: 4)
         
         v.isAutomaticDataDetectionEnabled = true
         v.isAutomaticLinkDetectionEnabled = true
@@ -64,10 +65,10 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         self.photoView.bottom == self.bottom - 4.0
         self.photoView.height == 24.0
         self.photoView.width == 24.0
-        self.photoView.bottom == self.textLabel.bottom
         self.textLabel.left == self.photoView.right + 8.0
-        self.textLabel.right == self.right - 8.0
-        self.textLabel.top == self.top + 4.0
+        self.textLabel.right <= self.right - 8.0
+        self.textLabel.top <= self.top + 4.0
+        self.textLabel.bottom == self.bottom - 4.0
         
         // So, since the photoView can be hidden (height = 0), we should manually
         // declare the height minimum constraint here.
@@ -95,7 +96,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
             
             // Hide your own icon and hide the icon of a repeating message.
             self.photoView.isHidden = /*(o.sender?.me ?? false) || */(b.previous?.sender?.identifier == o.sender?.identifier)
-            self.textLabel.alignment = (o.sender?.me ?? false) ? .right : .left
+            //self.textLabel.alignment = (o.sender?.me ?? false) ? .right : .left
             
             // Enable automatic links and data detectors.
             self.textLabel.isEditable = true
@@ -143,7 +144,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         
         // Only clip the text if the text isn't purely Emoji.
         if !text.string!.isEmoji {
-            var color = NSColor.tertiaryLabelColor
+            var color = NSColor.secondaryLabelColor
             let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
             if  let q = Settings[setting] as? Data,
                 let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
@@ -151,9 +152,9 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
                 color = c
                 
                 // This automatically adjusts labelColor to the right XOR mask.
-                text.appearance = NSAppearance(named: color.isLight() ? NSAppearanceNameVibrantLight : NSAppearanceNameVibrantDark)
+                text.appearance = color.isLight() ? .light : .dark
             } else {
-                text.appearance = self.appearance
+                text.appearance = NSAppearance.current() == .dark ? .light : .dark//self.appearance
             }
             text.layer?.backgroundColor = color.cgColor
         } else {
@@ -204,14 +205,34 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         return x
     }()
     
+    private static var _text: NSExtendedTextView = {
+        let v = NSExtendedTextView()
+        v.textContainerInset = NSSize(width: 4, height: 4)
+        return v
+    }()
+    
     // Given a string, a font size, and a base width, return the measured height of the cell.
     public static func measure(_ string: String, _ width: CGFloat) -> Double {
-        MessageCell.container.containerSize = NSSize(width: width - 48.0 /* padding + image*/, height: CGFloat.greatestFiniteMagnitude)
+        /*
+        MessageCell._text.frame = NSRect(x: 0, y: 0, width: width - 48.0 /* padding + image*/, height: CGFloat.greatestFiniteMagnitude)
+        MessageCell._text.string = string
+        MessageCell._text.font = NSFont.systemFont(ofSize: 12.0 * (string.isEmoji ? 4 : 1))
+        MessageCell._text.layoutManager!.ensureLayout(for: MessageCell._text.textContainer!)
+        let baseR = MessageCell._text.layoutManager!.usedRect(for: MessageCell._text.textContainer!)
+        let h = Double(baseR.size.height)
+        */
+        
+        MessageCell.container.containerSize = NSSize(width: width - 40.0 /* padding + image*/, height: CGFloat.greatestFiniteMagnitude)
         MessageCell.storage.setAttributedString(NSAttributedString(string: string))
         MessageCell.storage.font = NSFont.systemFont(ofSize: 12.0 * (string.isEmoji ? 4 : 1))
         
-        _ = MessageCell.manager.glyphRange(for: MessageCell.container)
-        let h = Double(MessageCell.manager.usedRect(for: MessageCell.container).size.height)
+        //_ = MessageCell.manager.glyphRange(for: MessageCell.container)
+        MessageCell.manager.ensureLayout(for: MessageCell.container)
+        let baseR = MessageCell.manager.usedRect(for: MessageCell.container)
+        let insetR = baseR.insetBy(dx: -(4.0), dy: -(4.0))
+        //let offsetR = insetR.offsetBy(dx: (4.0), dy: (4.0))
+        let h = Double(insetR.size.height)
+        
         return ((h < 24.0) ? 24.0 : h) + 8.0 /* add padding to max(h, 24) */
     }
 }

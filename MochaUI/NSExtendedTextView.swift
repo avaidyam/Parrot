@@ -33,10 +33,7 @@ public class NSExtendedTextView: NSTextView {
 	}
 	
 	public override var intrinsicContentSize: NSSize {
-		self.layoutManager?.ensureLayout(for: self.textContainer!)
-		let size = (self.layoutManager?.usedRect(for: self.textContainer!).size)!
-        return NSSize(width: size.width + 2 * self.textContainerInset.width,
-                      height: size.height + 2 * self.textContainerInset.height)
+        return self.layoutRect().size
 	}
 	public override func didChangeText() {
 		super.didChangeText()
@@ -50,15 +47,29 @@ public class NSExtendedTextView: NSTextView {
 		self.needsDisplay = true
 		return super.resignFirstResponder()
 	}
+    
+    /*
+    public override func drawBackground(in rect: NSRect) {
+        NSColor.red.setFill()
+        NSRectFill(self.layoutRect())
+    }*/
 }
 
 public extension NSTextView {
+    public func layoutRect() -> NSRect {
+        self.layoutManager?.ensureLayout(for: self.textContainer!)
+        let baseR = self.layoutManager!.usedRect(for: self.textContainer!)
+        let insetR = baseR.insetBy(dx: -self.textContainerInset.width, dy: -self.textContainerInset.height)
+        let offsetR = insetR.offsetBy(dx: self.textContainerOrigin.x, dy: self.textContainerOrigin.y)
+        return offsetR.insetBy(dx: -4.0, dy: 0.0) // FIXME
+    }
+    
 	public func characterRect() -> NSRect {
 		let glyphRange = NSMakeRange(0, self.layoutManager!.numberOfGlyphs)
 		return self.characterRect(forRange: glyphRange)
 	}
 	public func characterRect(forRange glyphRange: NSRange) -> NSRect {
 		let glyphRect = self.layoutManager!.boundingRect(forGlyphRange: glyphRange, in: self.textContainer!)
-		return NSInsetRect(glyphRect, -self.textContainerInset.width * 2, -self.textContainerInset.height * 2)
+		return NSInsetRect(glyphRect, -self.textContainerInset.width, -self.textContainerInset.height)
 	}
 }

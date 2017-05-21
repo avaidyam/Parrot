@@ -8,6 +8,7 @@ import ParrotServiceExtension
 /* TODO: Re-enable link previews later when they're not terrible... */
 /* TODO: Use the PlaceholderMessage for sending messages. */
 /* TODO: When selecting text and typing a completion character, wrap the text. */
+/* TODO: Remove usage of NSWindowDelegate. */
 
 public struct EventStreamItemBundle {
     public let current: EventStreamItem
@@ -27,7 +28,8 @@ public struct PlaceholderMessage: Message {
 
 // states: nothing-loaded, loading, error, valid view
 
-public class MessageListViewController: NSViewController, NSWindowDelegate, TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
+public class MessageListViewController: NSViewController, WindowPresentable, NSWindowDelegate,
+TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
     //
     // MARK: Content Views
@@ -235,14 +237,14 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
         self.textInputCell.view.bottom == self.moduleView.bottom
     }
     
+    public func prepare(window: NSWindow) {
+        window.appearance = ParrotAppearance.interfaceStyle().appearance()
+        window.enableRealTitlebarVibrancy(.withinWindow)
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
+    }
+    
     public override func viewDidLoad() {
-        /*
-		self.window?.appearance = ParrotAppearance.interfaceStyle().appearance()
-		self.window?.enableRealTitlebarVibrancy(.withinWindow)
-		self.window?.titleVisibility = .hidden
-        self.window?.contentView?.superview?.wantsLayer = true
-        */
-        
         self.indicator.startAnimation(nil)
         self.listView.alphaValue = 0.0
     }
@@ -277,9 +279,9 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
         ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
             guard let vev = self.view.window?.contentView as? NSVisualEffectView else { return }
             vev.state = style.visualEffectState()
-            if let s = self.view.window?.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView {
+            /*if let s = self.view.window?.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView {
                 s.state = style.visualEffectState()
-            }
+            }*/
         }
     }
     
@@ -347,13 +349,15 @@ public class MessageListViewController: NSViewController, NSWindowDelegate, Text
 			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
 					self.dataSource.append(chat)
-					/* // Disabled because it takes a WHILE to run.
+					 // Disabled because it takes a WHILE to run.
+                    /*
                     linkQ.async {
-						let d = try! NSDataDetector(types: TextCheckingResult.CheckingType.link.rawValue)
+                        
+						let d = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
 						let t = chat.text
-						d.enumerateMatches(in: t, options: RegularExpression.MatchingOptions(rawValue: UInt(0)),
+						d.enumerateMatches(in: t, options: NSRegularExpression.MatchingOptions(rawValue: UInt(0)),
 						                   range: NSMakeRange(0, t.unicodeScalars.count)) { (res, flag, stop) in
-							let key = res!.url!.absoluteString!
+							let key = res!.url!.absoluteString
 							guard let meta = try? _getLinkCached(key) else { return }
 							
 							if let arr = self._previews[chat.id] {

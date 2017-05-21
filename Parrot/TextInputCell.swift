@@ -90,9 +90,10 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
             // backing view's appearance changes, so we need to set it each time.
             // In addition, make sure links aren't blue as usual.
             let text = self.textView
+            text.appearance = NSAppearance.current() == .dark ? .light : .dark
             text.layer?.masksToBounds = true
             text.layer?.cornerRadius = 10.0
-            text.layer?.backgroundColor = NSColor.darkOverlay(forAppearance: self.view.window!.effectiveAppearance).cgColor
+            text.layer?.backgroundColor = NSColor.secondaryLabelColor.cgColor//NSColor.darkOverlay(forAppearance: self.view.window!.effectiveAppearance).cgColor
             
             text.textColor = NSColor.labelColor
             text.font = NSFont.systemFont(ofSize: 12.0)

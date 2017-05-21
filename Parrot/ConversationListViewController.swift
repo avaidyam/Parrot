@@ -75,6 +75,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate, NSW
             self.listView.update(animated: false) {
                 self.updateInterpolation.animate(duration: 1.5)
                 self.updateInterpolation.add(at: 1.0) {
+                    // FIXME: If an old opened conversation isn't in the recents, it won't open!
                     (Settings["Parrot.OpenConversations"] as? [String])?
                         .flatMap { self.conversationList?[$0] }
                         .forEach { self.showConversation($0) }
