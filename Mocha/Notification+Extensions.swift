@@ -1,5 +1,15 @@
 import Foundation
 
+/* TODO: Add support for strongly typed event types. */
+/* TODO: Add support for SubscriptionPools/Streams with cool batching/grouping features. */
+
+// kind == TestEvent.Type, userInfo == TestEvent()
+/*
+public struct TestEvent: Subscription.Event {
+    let str: String
+}
+*/
+
 public class Subscription {
     
     /// Describes a trigger Event.
@@ -103,6 +113,17 @@ public class AutoSubscription: Subscription {
         self.deactivate()
     }
 }
+
+/*
+/// A subscription pool can be automatically cleared and stuff.....?
+public typealias SubscriptionPool = [Subscription]
+public extension Array where Element: Subscription {
+    
+    public mutating func <-(_ lhs: Self, _ rhs: Subscription) {
+        lhs.append(rhs)
+    }
+}
+*/
 
 public extension Subscription.Event {
     

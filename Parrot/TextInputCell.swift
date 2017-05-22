@@ -25,8 +25,8 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
         return v
     }()
     
-    private lazy var textView: NSExtendedTextView = {
-        let v = NSExtendedTextView().modernize()
+    private lazy var textView: ExtendedTextView = {
+        let v = ExtendedTextView().modernize()
         v.isEditable = true
         v.isSelectable = true
         v.drawsBackground = false

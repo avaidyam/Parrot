@@ -42,6 +42,8 @@
 		4831BC9C1ECFA1A300C30413 /* NSExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BC9B1ECFA1A300C30413 /* NSExtension.swift */; };
 		4831BCC91ED09C9800C30413 /* GeneralPreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCC81ED09C9800C30413 /* GeneralPreferencesController.swift */; };
 		4831BCCB1ED0C21200C30413 /* NSViewController+Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCCA1ED0C21200C30413 /* NSViewController+Window.swift */; };
+		4831BCCE1ED1FAF000C30413 /* TodayConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCCC1ED1F9F100C30413 /* TodayConversationCell.swift */; };
+		4831BCEF1ED282FA00C30413 /* Switch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCEE1ED282FA00C30413 /* Switch.swift */; };
 		4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA61C1C620000193EBC /* MessageCell.swift */; };
 		4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECA81C1C620000193EBC /* ConversationCell.swift */; };
 		4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */; };
@@ -97,7 +99,6 @@
 		48D3CD131DE945C1003D6C02 /* TLTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A452261D19B16500CB588A /* TLTone.swift */; };
 		48D3CD141DE945C1003D6C02 /* UserNotification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB31C1C672900193EBC /* UserNotification+Extensions.swift */; };
 		48D3CD161DE945C1003D6C02 /* NSExtendedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */; };
-		48D3CD171DE945C1003D6C02 /* NSAntiScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */; };
 		48D3CD191DE945C1003D6C02 /* NetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */; };
 		48D3CD1C1DE94BBD003D6C02 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB61C1C672900193EBC /* Emoji.swift */; };
 		48D3CD1D1DE94BD0003D6C02 /* AppManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48574F121D11F9FC002375E1 /* AppManagement.swift */; };
@@ -115,7 +116,6 @@
 		48DE52E81C1CC1D300647C63 /* ParrotLink.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48DE52F21C1CC28000647C63 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48DE52F11C1CC28000647C63 /* NotificationCenter.framework */; };
 		48DE52F71C1CC28000647C63 /* ParrotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52F61C1CC28000647C63 /* ParrotViewController.swift */; };
-		48DE52FA1C1CC28000647C63 /* ParrotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52F81C1CC28000647C63 /* ParrotViewController.xib */; };
 		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
 		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48DF84981D04E1F800F39444 /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
@@ -311,6 +311,8 @@
 		4831BC9B1ECFA1A300C30413 /* NSExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSExtension.swift; sourceTree = "<group>"; };
 		4831BCC81ED09C9800C30413 /* GeneralPreferencesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPreferencesController.swift; sourceTree = "<group>"; };
 		4831BCCA1ED0C21200C30413 /* NSViewController+Window.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSViewController+Window.swift"; sourceTree = "<group>"; };
+		4831BCCC1ED1F9F100C30413 /* TodayConversationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayConversationCell.swift; sourceTree = "<group>"; };
+		4831BCEE1ED282FA00C30413 /* Switch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
 		4835ECA61C1C620000193EBC /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		4835ECA81C1C620000193EBC /* ConversationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationListViewController.swift; sourceTree = "<group>"; };
@@ -335,7 +337,6 @@
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSExtendedTextView.swift; sourceTree = "<group>"; };
-		488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSAntiScrollView.swift; sourceTree = "<group>"; };
 		488201BB1D4A970400C545F0 /* PersonaImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonaImage.swift; sourceTree = "<group>"; };
 		488239A21C455CED00C5E8EB /* AppKit+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppKit+Extensions.swift"; sourceTree = "<group>"; };
 		48834D921C1B3602009BC442 /* Parrot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parrot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -396,7 +397,6 @@
 		48DE52F11C1CC28000647C63 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		48DE52F51C1CC28000647C63 /* ParrotToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotToday.entitlements; sourceTree = "<group>"; };
 		48DE52F61C1CC28000647C63 /* ParrotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParrotViewController.swift; sourceTree = "<group>"; };
-		48DE52F91C1CC28000647C63 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ParrotViewController.xib; sourceTree = "<group>"; };
 		48DE52FB1C1CC28000647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DE52FD1C1CC28000647C63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		48DF84971D04E1F800F39444 /* Hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hangouts.proto.swift; sourceTree = "<group>"; };
@@ -597,12 +597,9 @@
 		4831BC9A1ECF734A00C30413 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4831BCCA1ED0C21200C30413 /* NSViewController+Window.swift */,
-				48E0E81F1D584FCC00EE4464 /* NSDrawer+Extensions.swift */,
-				48D3CCDB1DE93248003D6C02 /* NSPopover+Extensions.swift */,
+				4831BCEE1ED282FA00C30413 /* Switch.swift */,
 				4866337D1C5822FA006C094B /* ListView.swift */,
 				488201B51D4A962B00C545F0 /* NSExtendedTextView.swift */,
-				488201B71D4A968F00C545F0 /* NSAntiScrollView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -622,6 +619,16 @@
 				48196B9A1D4805D9001D4BAA /* AboutWindowController.swift */,
 			);
 			name = About;
+			sourceTree = "<group>";
+		};
+		4831BCF01ED2830600C30413 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4831BCCA1ED0C21200C30413 /* NSViewController+Window.swift */,
+				48E0E81F1D584FCC00EE4464 /* NSDrawer+Extensions.swift */,
+				48D3CCDB1DE93248003D6C02 /* NSPopover+Extensions.swift */,
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 		4835ECA51C1C61F300193EBC /* Conversation List */ = {
@@ -849,6 +856,7 @@
 				483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */,
 				48403CA01DF0B9930009897A /* Changeset.swift */,
 				4831BC9A1ECF734A00C30413 /* Views */,
+				4831BCF01ED2830600C30413 /* ViewControllers */,
 				4831BC981ECF733100C30413 /* Animation */,
 				4831BC991ECF733900C30413 /* Layout */,
 				48D3CD081DE944C2003D6C02 /* Supporting Files */,
@@ -928,8 +936,8 @@
 		48DE52F31C1CC28000647C63 /* ParrotToday */ = {
 			isa = PBXGroup;
 			children = (
+				4831BCCC1ED1F9F100C30413 /* TodayConversationCell.swift */,
 				48DE52F61C1CC28000647C63 /* ParrotViewController.swift */,
-				48DE52F81C1CC28000647C63 /* ParrotViewController.xib */,
 				48DE52F41C1CC28000647C63 /* Supporting Files */,
 			);
 			path = ParrotToday;
@@ -1381,7 +1389,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48DE52FA1C1CC28000647C63 /* ParrotViewController.xib in Resources */,
 				48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1492,8 +1499,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48D3CD171DE945C1003D6C02 /* NSAntiScrollView.swift in Sources */,
 				48D3CD161DE945C1003D6C02 /* NSExtendedTextView.swift in Sources */,
+				4831BCEF1ED282FA00C30413 /* Switch.swift in Sources */,
 				48D3CD0D1DE945C1003D6C02 /* AppKit+Extensions.swift in Sources */,
 				489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */,
 				489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */,
@@ -1532,6 +1539,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4831BCCE1ED1FAF000C30413 /* TodayConversationCell.swift in Sources */,
 				48DE52F71C1CC28000647C63 /* ParrotViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1598,14 +1606,6 @@
 				4884927D1D0B46BB0003D522 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		48DE52F81C1CC28000647C63 /* ParrotViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				48DE52F91C1CC28000647C63 /* Base */,
-			);
-			name = ParrotViewController.xib;
 			sourceTree = "<group>";
 		};
 		48DE52FC1C1CC28000647C63 /* InfoPlist.strings */ = {

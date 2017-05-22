@@ -21,8 +21,8 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         return v
     }()
     
-    private lazy var textLabel: NSExtendedTextView = {
-        let v = NSExtendedTextView().modernize()
+    private lazy var textLabel: ExtendedTextView = {
+        let v = ExtendedTextView().modernize()
         v.isEditable = false
         v.isSelectable = true
         v.drawsBackground = false
@@ -205,8 +205,8 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         return x
     }()
     
-    private static var _text: NSExtendedTextView = {
-        let v = NSExtendedTextView()
+    private static var _text: ExtendedTextView = {
+        let v = ExtendedTextView()
         v.textContainerInset = NSSize(width: 4, height: 4)
         return v
     }()

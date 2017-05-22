@@ -9,6 +9,7 @@ import protocol ParrotServiceExtension.Conversation
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
 /* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
 
+//private let log = Logger(subsystem: "Parrot.ConversationListViewController")
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 

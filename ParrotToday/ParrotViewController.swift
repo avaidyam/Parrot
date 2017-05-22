@@ -3,179 +3,111 @@ import AppKit
 import NotificationCenter
 import Hangouts
 import ParrotServiceExtension
+import Mocha
+import MochaUI
 
 // Private service points go here:
 private var _hangoutsClient: Client? = nil
 
-class ParrotViewController: NSViewController {//, ConversationListDelegate {
-	
-	/*
-	var personsView: ConversationListView {
-		return self.view as! ConversationListView
-	}
-	var viewingVC: MessageListViewController? = nil
-	*/
-	
-	// Sets up the content size and adds the edit view to the controller.
-	override func loadView() {
-		super.loadView()
-		self.preferredContentSize = CGSize(width: 320, height: 480)
-		//self.setup()
-	}
-	
-	/*// We're jumpstarted into the setup function here.
-	func setup() {
-		AppActivity.start("Authenticate")
-		Authenticator.authenticateClient {
-			let c = Client(configuration: $0)
-			_ = c.connect() {_ in}
-			AppActivity.end("Authenticate")
-			
-			NotificationCenter.default()
-				.addObserver(forName: Client.didConnectNotification, object: c, queue: nil) { _ in
-					AppActivity.start("Setup")
-					c.buildUserConversationList { 
-						AppActivity.end("Setup")
-						ServiceRegistry.add(service: c)
-						
-						self.userList = c.userList
-						self.conversationList = c.conversationList
-						
-						DispatchQueue.main.async {
-							self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-						}
-						
-						ParrotAppearance.registerInterfaceStyleListener(observer: self) { appearance in
-							self.view.window?.appearance = appearance
-						}
-						
-						// Instantiate storyboard and controller and begin the UI from here.
-						DispatchQueue.main.async {
-							self.viewingVC = MessageListViewController(nibName: "MessageListViewController", bundle: nil)
-							self.viewingVC?.preferredContentSize = CGSize(width: 320, height: 480)
-							
-							self.selectionProvider = { row in
-								self.viewingVC?.representedObject = self.conversationList?.conversations[row]
-								self.present(inWidget: self.viewingVC!)
-							}
-						}
-					}
-			}
-			self.personsView.updateScrollsToBottom = false
-		}
-	}
-	
-	var selectionProvider: ((Int) -> Void)? = nil
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		self.personsView.insets = EdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0)
-		self.personsView.selectionProvider = { row in
-			if row >= 0 {
-				self.selectionProvider?(row)
-			}
-		}
-		
-		self.personsView.rowActionProvider = { row, edge in
-			var actions: [NSTableViewRowAction] = []
-			if edge == .leading { // Swipe Right Actions
-				actions = [
-					NSTableViewRowAction(style: .regular, title: "Mute", handler: { action, select in
-						log.info("Mute row:\(select)")
-					}),
-					NSTableViewRowAction(style: .destructive, title: "Block", handler: { action, select in
-						log.info("Block row:\(select)")
-					})
-				]
-				
-				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = #colorLiteral(red: 0.06274510175, green: 0.360784322, blue: 0.7960784435, alpha: 1)
-				actions[1].backgroundColor = #colorLiteral(red: 1, green: 0.5607843399, blue: 0, alpha: 1)
-			} else if edge == .trailing { // Swipe Left Actions
-				actions = [
-					NSTableViewRowAction(style: .destructive, title: "Delete", handler: { action, select in
-						log.info("Delete row:\(select)")
-					}),
-					NSTableViewRowAction(style: .regular, title: "Archive", handler: { action, select in
-						log.info("Archive row:\(select)")
-					})
-				]
-				
-				// Fix the colors set by the given styles.
-				actions[0].backgroundColor = #colorLiteral(red: 1, green: 0.5607843399, blue: 0, alpha: 1)
-				actions[1].backgroundColor = #colorLiteral(red: 0.7882353067, green: 0.09019608051, blue: 0.1215686277, alpha: 1)
-			}
-			return actions
-		}
-	}
-	
-	var userList: UserList? // FIXME
-	var conversationList: Hangouts.ConversationList? {
-		didSet {
-			conversationList?.delegate = self
-			DispatchQueue.main.async {
-				self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-			}
-		}
-	}
-	
-	private func _getPerson(_ conversation: IConversation) -> ConversationView.Info {
-		
-		// Propogate info for data filling
-		let a = conversation.messages.last?.userID
-		let b = conversation.users.filter { $0.isSelf }.first?.id
-		let c = conversation.users.filter { !$0.isSelf }.first
-		let network_ = conversation.conversation.networkType
-		let d = NetworkType(rawValue: network_[0].rawValue) // FIXME weird stuff here
-		
-		// Patch for Google Voice contacts to show their numbers.
-		// FIXME: Sometimes [1] is actually you, fix that.
-		var title = conversation.name
-		if title == "Unknown" {
-			if conversation.conversation.participantData.count > 0 {
-				title = conversation.conversation.participantData[1].fallbackName! as String
-			}
-		}
-		
-		// Load all the field values from the conversation.
-		var img: NSImage = defaultUserImage
-		if let d = fetchData(c?.id.gaiaID, c?.photoURL) {
-			img = NSImage(data: d)!
-		}
-		
-		let ring = d == NetworkType.GoogleVoice ? #colorLiteral(red: 0, green: 0.611764729, blue: 1, alpha: 1) : #colorLiteral(red: 0.03921568766, green: 0.9098039269, blue: 0.3686274588, alpha: 1)
-		let cap = d == NetworkType.GoogleVoice ? "Google Voice" : "Hangouts"
-		let ind = conversation.unread_events.count
-		let name = title
-		let sub = (a != b ? "" : "You: ") + (conversation.messages.last?.text ?? "")
-		let time = conversation.messages.last?.timestamp ?? .origin
-		
-		return ConversationView.Info(photo: img, caption: cap, highlight: ring, indicator: ind, primary: name, secondary: sub, time: time)
-	}
-	
-	private func _getAllPersons() -> [ConversationView.Info]? {
-		return self.conversationList?._conversations.map { _getPerson($0) }
-	}
-	
-	func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {}
-	func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatusTo status: TypingType) {}
-	func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
-	
-	/* TODO: Just updat
-	e the row that is updated. */
-	func conversationList(didUpdate list: Hangouts.ConversationList) {
-		DispatchQueue.main.async {
-			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-		}
-	}
-	
-	/* TODO: Just update the row that is updated. */
-	func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
-		DispatchQueue.main.async {
-			self.personsView.dataSource = self._getAllPersons()!.map { Wrapper.init($0) }
-		}
-	}*/
+private let log = Logger(subsystem: "Parrot.Today.Global")
+
+class ParrotViewController: NSViewController, ConversationListDelegate, ListViewDataDelegate {
+    
+    private lazy var listView: ListView = {
+        let v = ListView()
+        v.flowDirection = .top
+        v.selectionType = .any
+        v.delegate = self
+        v.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
+        return v
+    }()
+    
+    // Dirty auth for Hangouts...
+    private var connectSub: Subscription? = nil
+    
+    private var userList: Directory?
+    var conversationList: ParrotServiceExtension.ConversationList? {
+        didSet {
+            (conversationList as? Hangouts.ConversationList)?.delegate = self // FIXME: FORCE-CAST TO HANGOUTS
+            self.listView.update()
+        }
+    }
+    
+    // FIXME: this is recomputed A LOT! bad idea...
+    var sortedConversations: [ParrotServiceExtension.Conversation] {
+        guard self.conversationList != nil else { return [] }
+        let x = self.conversationList!.conversations.values
+            .filter { !$0.archived }
+            .sorted { $0.timestamp > $1.timestamp }
+        return x
+    }
+    
+    public func numberOfItems(in: ListView) -> [UInt] {
+        log.debug("GETTING COUNT \(self.sortedConversations.count)")
+        return [UInt(self.sortedConversations.count)]
+    }
+    
+    public func object(in: ListView, at: ListView.Index) -> Any? {
+        log.debug("GETTING OBJECT \(at)")
+        return self.sortedConversations[Int(at.item)]
+    }
+    
+    public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
+        log.debug("GETTING CLASS \(at)")
+        return TodayConversationCell.self
+    }
+    
+    public func cellHeight(in view: ListView, at: ListView.Index) -> Double {
+        return 48.0 + 16.0 /* padding */
+    }
+    
+    public override func loadView() {
+        self.view = self.listView
+        self.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
+        self.preferredContentSize = CGSize(width: 320, height: 480)
+    }
+    
+    public override func viewDidLoad() {
+        Authenticator.delegate = AuthDelegate.delegate
+        Authenticator.authenticateClient {
+            let c = Client(configuration: $0)
+            _hangoutsClient = c
+            _ = c.connect() {_ in}
+            self.connectSub = AutoSubscription(from: c, kind: Client.didConnectNotification) { _ in
+                if c.conversationList == nil {
+                    c.buildUserConversationList {
+                        self.userList = c.directory
+                        self.conversationList = c.conversations
+                    }
+                }
+            }
+        }
+    }
+    
+    /* TODO: Just update the row that is updated. */
+    public func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {
+        guard event is IChatMessageEvent else { return }
+        DispatchQueue.main.async {
+            self.listView.update()
+        }
+    }
+    
+    /* TODO: Just update the row that is updated. */
+    public func conversationList(didUpdate list: Hangouts.ConversationList) {
+        DispatchQueue.main.async {
+            self.listView.update()
+        }
+    }
+    
+    /* TODO: Just update the row that is updated. */
+    public func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
+        DispatchQueue.main.async {
+            self.listView.update()
+        }
+    }
+    
+    public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: ITypingStatusMessage, forUser: User) {}
+    public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
 }
 
 // Boilerplate stuff for NCWidgetProviding
@@ -192,4 +124,40 @@ extension ParrotViewController: NCWidgetProviding {
 	var widgetAllowsEditing: Bool {
 		return false
 	}
+}
+
+internal class AuthDelegate: NSObject, AuthenticatorDelegate {
+    
+    private static let GROUP_DOMAIN = "group.com.avaidyam.Parrot"
+    private static let ACCESS_TOKEN = "access_token"
+    private static let REFRESH_TOKEN = "refresh_token"
+    
+    internal static var window: NSWindow? = nil
+    internal static var validURL: URL? = nil
+    internal static var handler: ((_ oauth_code: String) -> Void)? = nil
+    internal static var delegate = AuthDelegate()
+    
+    var authenticationTokens: AuthenticationTokens? {
+        get {
+            let at = SecureSettings[AuthDelegate.ACCESS_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] as? String
+            let rt = SecureSettings[AuthDelegate.REFRESH_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] as? String
+            
+            if let at = at, let rt = rt {
+                return (access_token: at, refresh_token: rt)
+            } else {
+                SecureSettings[AuthDelegate.ACCESS_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] = nil
+                SecureSettings[AuthDelegate.REFRESH_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] = nil
+                return nil
+            }
+        }
+        set {
+            SecureSettings[AuthDelegate.ACCESS_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] = newValue?.access_token ?? nil
+            SecureSettings[AuthDelegate.REFRESH_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] = newValue?.refresh_token ?? nil
+        }
+    }
+    
+    func authenticationMethod(_ oauth_url: URL, _ result: @escaping AuthenticationResult) {
+        log.debug("TEST \(self.authenticationTokens)")
+        result("")
+    }
 }

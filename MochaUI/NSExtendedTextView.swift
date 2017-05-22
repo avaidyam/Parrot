@@ -6,7 +6,7 @@ import AppKit
 }
 
 @IBDesignable
-public class NSExtendedTextView: NSTextView {
+public class ExtendedTextView: NSTextView {
 	
 	@IBInspectable
 	public var shouldAlwaysPasteAsPlainText: Bool = false
