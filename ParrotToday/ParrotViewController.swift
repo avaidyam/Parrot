@@ -26,12 +26,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate, ListView
     private var connectSub: Subscription? = nil
     
     private var userList: Directory?
-    var conversationList: ParrotServiceExtension.ConversationList? {
-        didSet {
-            (conversationList as? Hangouts.ConversationList)?.delegate = self // FIXME: FORCE-CAST TO HANGOUTS
-            self.listView.update()
-        }
-    }
+    var conversationList: ParrotServiceExtension.ConversationList?
     
     // FIXME: this is recomputed A LOT! bad idea...
     var sortedConversations: [ParrotServiceExtension.Conversation] {
@@ -78,6 +73,10 @@ class ParrotViewController: NSViewController, ConversationListDelegate, ListView
                     c.buildUserConversationList {
                         self.userList = c.directory
                         self.conversationList = c.conversations
+                        
+                        // FIXME: FORCE-CAST TO HANGOUTS
+                        (c.conversations as? Hangouts.ConversationList)?.delegate = self
+                        self.listView.update()
                     }
                 }
             }
@@ -113,7 +112,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate, ListView
 // Boilerplate stuff for NCWidgetProviding
 extension ParrotViewController: NCWidgetProviding {
 	override var nibName: String? {
-		return self.className
+		return nil
 	}
 	func widgetMarginInsets(forProposedMarginInsets defaultMarginInset: EdgeInsets) -> EdgeInsets {
 		return NSEdgeInsetsZero
