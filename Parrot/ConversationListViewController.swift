@@ -25,15 +25,13 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
         return v
     }()
     
-    private lazy var indicator: NSProgressIndicator = {
-        let v = NSProgressIndicator().modernize()
-        v.usesThreadedAnimation = true
-        v.isIndeterminate = true
-        v.style = .spinningStyle
+    private lazy var indicator: MessageProgressView = {
+        let v = MessageProgressView().modernize()
         return v
     }()
 	
 	private var updateToken: Bool = false
+    private var childrenSub: Subscription? = nil
 	private var userList: Directory?
     
     private lazy var updateInterpolation: Interpolate = {
@@ -41,14 +39,15 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
             self?.listView.alphaValue = CGFloat(alpha)
             self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
-        indicatorAnim.add(at: 0.0) { [weak self] in
+        /*indicatorAnim.add(at: 0.0) {
             DispatchQueue.main.async {
-                self?.indicator.startAnimation(nil)
+                log.debug("\n\nSTART\n\n")
+                //self.indicator.startAnimation()
             }
-        }
-        indicatorAnim.add(at: 1.0) { [weak self] in
+        }*/
+        indicatorAnim.add(at: 1.0) {
             DispatchQueue.main.async {
-                self?.indicator.stopAnimation(nil)
+                self.indicator.stopAnimation()
             }
         }
         indicatorAnim.handlerRunPolicy = .always
@@ -58,16 +57,6 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
         let group = Interpolate.group(indicatorAnim, scaleAnim)
         return group
     }()
-    
-    /// The childConversations keeps track of all open conversations and when the
-    /// list is updated, it is cached and the list selection is synchronized.
-    private var childConversations = [String: MessageListViewController]() {
-        didSet {
-            log.debug("Updating childConversations... \(Array(self.childConversations.keys))")
-            Settings["Parrot.OpenConversations"] = Array(self.childConversations.keys)
-            self.updateSelectionIndexes()
-        }
-    }
 	
 	var conversationList: ParrotServiceExtension.ConversationList? {
 		didSet {
@@ -77,6 +66,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
             self.listView.update(animated: false) {
                 self.updateInterpolation.animate(duration: 1.5)
                 self.updateInterpolation.add(at: 1.0) {
+                    
                     // FIXME: If an old opened conversation isn't in the recents, it won't open!
                     (Settings["Parrot.OpenConversations"] as? [String])?
                         .flatMap { self.conversationList?[$0] }
@@ -116,7 +106,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
     
     public func selectionChanged(in: ListView, is selection: [ListView.Index]) {
         let src = self.sortedConversations
-        let dest = Set(self.childConversations.keys)
+        let dest = Set(MessageListViewController.openConversations.keys)
         let convs = Set(selection.map { src[Int($0.item)].identifier })
         
         // Conversations selected that we don't already have. --> ADD
@@ -166,6 +156,10 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
         self.view.height == self.listView.height
     }
     
+    deinit {
+        self.childrenSub = nil
+    }
+    
     public func prepare(window: NSWindow) {
         window.appearance = ParrotAppearance.interfaceStyle().appearance()
         window.enableRealTitlebarVibrancy(.withinWindow)
@@ -174,6 +168,11 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
     }
     
     public override func viewDidLoad() {
+        self.childrenSub = AutoSubscription(kind: .OpenConversationsUpdated) { _ in
+            log.debug("Updating childConversations... \(Array(MessageListViewController.openConversations.keys))")
+            self.updateSelectionIndexes()
+        }
+        
         NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
             guard let c = note.object as? Service else { return }
             self.userList = c.directory
@@ -225,6 +224,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
         self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         self.listView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
         self.listView.alphaValue = 0.0
+        self.indicator.startAnimation()
         
 		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
 			guard let vev = self.view as? NSVisualEffectView else { return }
@@ -247,7 +247,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
     }
     
 	private func showConversation(_ conv: Conversation) {
-		if let wc = self.childConversations[conv.identifier] {
+		if let wc = MessageListViewController.openConversations[conv.identifier] {
 			log.debug("Conversation found for id \(conv.identifier)")
             DispatchQueue.main.async {
                 self.presentViewControllerAsWindow(wc)
@@ -260,34 +260,31 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
                 wc.sendMessageHandler = { [weak self] message, conv2 in
                     self?.sendMessage(message, conv2)
                 }
-                self.childConversations[conv.identifier] = wc
+                MessageListViewController.openConversations[conv.identifier] = wc
                 let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
                 self.presentViewControllerAsWindow(wc)
                 NotificationCenter.default.addObserver(self, selector: sel,
                                                        name: .NSWindowWillClose, object: wc.view.window)
             }
-            
-            // TODO: This plus some window snapping and sizing would allow for a UI mode.
-            // Also, remove the drawer and add popover if in single window mode.
-            /*
-             self.window?.addChildWindow(wc.window!, ordered: .above)
-             //wc.window?.isResizable = false
-             wc.window?.standardWindowButton(.closeButton)?.isHidden = true
-             wc.window?.standardWindowButton(.miniaturizeButton)?.isHidden = true
-             wc.window?.standardWindowButton(.zoomButton)?.isHidden = true
-             wc.window?.standardWindowButton(.toolbarButton)?.isHidden = true
-             wc.window?.standardWindowButton(.documentIconButton)?.isHidden = true
-             wc.window?.standardWindowButton(.documentVersionsButton)?.isHidden = true
-             wc.window?.standardWindowButton(.fullScreenButton)?.isHidden = true
-             */
 		}
 	}
     
     private func hideConversation(_ conv: Conversation) {
-        if let conv2 = self.childConversations[conv.identifier] {
-            self.childConversations[conv.identifier] = nil
+        if let conv2 = MessageListViewController.openConversations[conv.identifier] {
+            MessageListViewController.openConversations[conv.identifier] = nil
             self.dismissViewController(conv2)
         }
+    }
+    
+    /// If we're notified that our child window has closed (that is, a conversation),
+    /// clean up by removing it from the `childConversations` dictionary.
+    public func childWindowWillClose(_ notification: Notification) {
+        guard	let win = notification.object as? NSWindow,
+            let ctrl = win.contentViewController as? MessageListViewController,
+            let conv2 = ctrl.conversation else { return }
+        
+        self.hideConversation(conv2)
+        NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
     }
 	
 	/// As we are about to display, configure our UI elements.
@@ -334,17 +331,6 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
         return false
     }
     */
-	
-	/// If we're notified that our child window has closed (that is, a conversation),
-	/// clean up by removing it from the `childConversations` dictionary.
-	public func childWindowWillClose(_ notification: Notification) {
-		guard	let win = notification.object as? NSWindow,
-				let ctrl = win.contentViewController as? MessageListViewController,
-				let conv2 = ctrl.conversation else { return }
-        
-        self.hideConversation(conv2)
-        NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
-	}
     
     public func windowDidChangeOcclusionState(_ notification: Notification) {
         for (_, s) in ServiceRegistry.services {
@@ -414,7 +400,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
 		// Forward the event to the conversation if it's open. Also, if the 
 		// conversation is not open, or if it isn't the main window, show a notification.
 		var showNote = true
-		if let c = self.childConversations[event.conversation_id] {
+		if let c = MessageListViewController.openConversations[event.conversation_id] {
 			c.conversation(c.conversation!, didReceiveEvent: event)
 			showNote = !(c.view.window?.isKeyWindow ?? false)
 		}
@@ -450,7 +436,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
 	}
 	
     public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: ITypingStatusMessage, forUser: User) {
-        if let c = self.childConversations[status.convID] {
+        if let c = MessageListViewController.openConversations[status.convID] {
             var mode = FocusMode.here
             switch status.status {
             case TypingType.Started:
@@ -466,7 +452,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
 	}
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
         log.debug("watermark for \(status.convID) from \(status.userID.gaiaID)")
-        if let c = self.childConversations[status.convID], let person = self.userList?.people[status.userID.gaiaID] {
+        if let c = MessageListViewController.openConversations[status.convID], let person = self.userList?.people[status.userID.gaiaID] {
             log.debug("passthrough")
             c.watermarkEvent(IFocus(sender: person, timestamp: status.readTimestamp, mode: .here))
 		}
@@ -493,7 +479,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
     }
     
     private func updateSelectionIndexes() {
-        let paths = Array(self.childConversations.keys)
+        let paths = Array(MessageListViewController.openConversations.keys)
             .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
             .map { (section: UInt(0), item: UInt($0)) }
         self.listView.selection = paths

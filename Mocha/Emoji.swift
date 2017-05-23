@@ -1,5 +1,7 @@
 import Foundation
 
+/* TODO: Remap to Categories -> Emoji -> [Alternatives, Names, Equivalences, Emoticons]. */
+
 private var emojiDescriptors: [String: String] = {
 	guard let url = Bundle.main.url(forResource: "emoji_descriptors",
 	                                             withExtension: "plist")

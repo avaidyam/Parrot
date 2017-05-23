@@ -206,7 +206,7 @@ open class Interpolate {
     private func _executeHandlers(_ old: Double, _ new: Double) {
         DisplayLink.backgroundQueue.async {
             // This is required because we check `progress > old` and not `>=`...
-            /*if (old == 0.0) { self.handlers[0.0]?.forEach { $0() } }*/
+            if (old == 0.0) { self.handlers[0.0]?.forEach { $0() } }
             Array(self.handlers.keys).lazy.sorted()
                 .filter { (old < $0 && $0 <= new) || (new < $0 && $0 <= old) }
                 .forEach { self.handlers[$0]?.forEach { $0() } }

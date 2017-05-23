@@ -21,6 +21,9 @@ public class Subscription {
         /// The events will be broadcast within the current process boundary.
         case local
         
+        /// The events will be broadcast between apps about their states.
+        ///case workspace
+        
         /// The events will be broadcast to all processes owned by the current user.
         /// Note: the origin `object` parameter of the Event MUST be a string.
         case system

@@ -44,6 +44,10 @@ public class IConversation: ParrotServiceExtension.Conversation {
     public var delegate: ConversationDelegate?
     public var conversationList: ConversationList?
 
+    public required init?(withIdentifier: String, on: Service) {
+        fatalError("oops gotta fix!")
+    }
+    
     public init(client: Client,
         user_list: UserList,
         conversation: Conversation,

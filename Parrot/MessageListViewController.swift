@@ -28,8 +28,22 @@ public struct PlaceholderMessage: Message {
 
 // states: nothing-loaded, loading, error, valid view
 
+// TODO: not here...
+public extension Notification.Name {
+    public static let OpenConversationsUpdated = Notification.Name(rawValue: "Parrot.OpenConversationsUpdated")
+}
+
 public class MessageListViewController: NSViewController, WindowPresentable, NSWindowDelegate,
 TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
+    
+    /// The openConversations keeps track of all open conversations and when the
+    /// list is updated, it is cached and all selections are synchronized.
+    public /*private(set)*/ static var openConversations = [String: MessageListViewController]() {
+        didSet {
+            Settings["Parrot.OpenConversations"] = Array(self.openConversations.keys)
+            Subscription.Event(name: .OpenConversationsUpdated).post()
+        }
+    }
     
     //
     // MARK: Content Views
@@ -62,6 +76,14 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         v.usesThreadedAnimation = true
         v.isIndeterminate = true
         v.style = .spinningStyle
+        return v
+    }()
+    
+    /// The dropping zone.
+    private lazy var dropZone: DroppableView = {
+        let v = DroppableView().modernize()
+        v.extensions = ["swift"]
+        v.defaultOperation = .copy
         return v
     }()
     
@@ -217,7 +239,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
     public override func loadView() {
         self.view = NSView()
-        self.view.add(subviews: [self.listView, self.indicator, self.moduleView, self.textInputCell.view])
+        self.view.add(subviews: [self.listView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone])
         
         self.view.width >= 96
         self.view.height >= 128
@@ -235,6 +257,10 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         self.textInputCell.view.right == self.moduleView.right
         self.textInputCell.view.top == self.moduleView.top
         self.textInputCell.view.bottom == self.moduleView.bottom
+        self.dropZone.left == self.view.left
+        self.dropZone.right == self.view.right
+        self.dropZone.bottom == self.view.bottom
+        self.dropZone.top == self.view.top
     }
     
     public func prepare(window: NSWindow) {
@@ -297,6 +323,8 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     // MARK: Misc. Methods
     //
 	
+    
+    
     // TODO: this goes in a new ParrotWindow class or something.
     /*
     public func windowShouldClose(_ sender: AnyObject) -> Bool {

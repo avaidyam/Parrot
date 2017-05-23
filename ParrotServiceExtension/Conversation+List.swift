@@ -31,7 +31,9 @@ public protocol Conversation /*: Hashable, Equatable*/ {
     
     var timestamp: Date { get }
     
-	
+	/// Create a Conversation from the identifier given on the Service given.
+    init?(withIdentifier: String, on: Service)
+    
 	//var myFocus
 	
 	/// Set the current user's focus for the conversation.
