@@ -121,6 +121,9 @@
 		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
 		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48DF84981D04E1F800F39444 /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
+		48E39C601ED516AC00EF578D /* BezelContentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5D1ED516AC00EF578D /* BezelContentViews.swift */; };
+		48E39C611ED516AC00EF578D /* SystemBezel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5E1ED516AC00EF578D /* SystemBezel.swift */; };
+		48E39C621ED516AC00EF578D /* VolumeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */; };
 		48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3391D04DFF90074984D /* Protobuf.swift */; };
 		48EA55C71D26CAA700C3BC80 /* URLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4816872B1C3A340E0070EEF6 /* URLSession+Delegate.swift */; };
 		48EA55C81D26CAAA00C3BC80 /* URLSession+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */; };
@@ -405,6 +408,9 @@
 		48DE52FD1C1CC28000647C63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		48DF84971D04E1F800F39444 /* Hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hangouts.proto.swift; sourceTree = "<group>"; };
 		48E0E81F1D584FCC00EE4464 /* NSDrawer+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDrawer+Extensions.swift"; sourceTree = "<group>"; };
+		48E39C5D1ED516AC00EF578D /* BezelContentViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BezelContentViews.swift; sourceTree = "<group>"; };
+		48E39C5E1ED516AC00EF578D /* SystemBezel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemBezel.swift; sourceTree = "<group>"; };
+		48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeIndicator.swift; sourceTree = "<group>"; };
 		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
 		48EB54F51D209DD100F77C2C /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Cache.swift; path = Parrot/Cache.swift; sourceTree = SOURCE_ROOT; };
 		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
@@ -861,6 +867,7 @@
 				4835ECB31C1C672900193EBC /* UserNotification+Extensions.swift */,
 				483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */,
 				48403CA01DF0B9930009897A /* Changeset.swift */,
+				48E39C631ED516AF00EF578D /* SystemBezel */,
 				4831BC9A1ECF734A00C30413 /* Views */,
 				4831BCF01ED2830600C30413 /* ViewControllers */,
 				4831BC981ECF733100C30413 /* Animation */,
@@ -967,6 +974,16 @@
 				48DE52F31C1CC28000647C63 /* ParrotToday */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		48E39C631ED516AF00EF578D /* SystemBezel */ = {
+			isa = PBXGroup;
+			children = (
+				48E39C5D1ED516AC00EF578D /* BezelContentViews.swift */,
+				48E39C5E1ED516AC00EF578D /* SystemBezel.swift */,
+				48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */,
+			);
+			name = SystemBezel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1507,9 +1524,12 @@
 			files = (
 				48D3CD161DE945C1003D6C02 /* ExtendedTextView.swift in Sources */,
 				4831BCEF1ED282FA00C30413 /* Switch.swift in Sources */,
+				48E39C601ED516AC00EF578D /* BezelContentViews.swift in Sources */,
+				48E39C611ED516AC00EF578D /* SystemBezel.swift in Sources */,
 				48D3CD0D1DE945C1003D6C02 /* AppKit+Extensions.swift in Sources */,
 				4831BCF41ED356B300C30413 /* DroppableView.swift in Sources */,
 				489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */,
+				48E39C621ED516AC00EF578D /* VolumeIndicator.swift in Sources */,
 				489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */,
 				48D3CD121DE945C1003D6C02 /* ListView.swift in Sources */,
 				48D3CD131DE945C1003D6C02 /* TLTone.swift in Sources */,
