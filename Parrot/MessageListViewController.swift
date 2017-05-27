@@ -264,10 +264,13 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     }
     
     public func prepare(window: NSWindow) {
+        window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
         window.appearance = ParrotAppearance.interfaceStyle().appearance()
         window.enableRealTitlebarVibrancy(.withinWindow)
         window.titleVisibility = .hidden
-        window.titlebarAppearsTransparent = true
+        //window.titlebarAppearsTransparent = true
+        _ = window.installToolbar()
+        window.toolbar?.showsBaselineSeparator = false
     }
     
     public override func viewDidLoad() {
@@ -364,15 +367,28 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     private func syncAutosaveTitle() {
         self.title = self.conversation?.name ?? ""
         let id = self.conversation?.identifier ?? "Messages"
+        self.identifier = id
+        
         self.view.window?.center()
         self.view.window?.setFrameUsingName(id)
         self.view.window?.setFrameAutosaveName(id)
+    }
+    
+    public override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        print("\n\nENCODE \(self.identifier)\n\n")
+    }
+    
+    public override func restoreState(with coder: NSCoder) {
+        print("\n\nRESTORE \(self.identifier)\n\n")
+        super.restoreState(with: coder)
     }
     
 	var conversation: IConversation? {
         didSet {
             self.settingsController.conversation = self.conversation
             self.syncAutosaveTitle()
+            self.invalidateRestorableState()
 			
 			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {

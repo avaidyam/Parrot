@@ -161,10 +161,12 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
     }
     
     public func prepare(window: NSWindow) {
+        window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
         window.appearance = ParrotAppearance.interfaceStyle().appearance()
         window.enableRealTitlebarVibrancy(.withinWindow)
         window.titleVisibility = .hidden
-        window.titlebarAppearsTransparent = true
+        _ = window.installToolbar()
+        window.toolbar?.showsBaselineSeparator = false
     }
     
     public override func viewDidLoad() {

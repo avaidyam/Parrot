@@ -1,11 +1,6 @@
-//
-//  VolumeIndicator.swift
-//  AirVolume
-//
-//  Created by Matt Prowse on 5/08/2014.
-//  Copyright © 2014 Cordless Dog. All rights reserved.
-//
 import Cocoa
+
+/* TODO: Convert to CALayer drawing instead. */
 
 // adapted from @mattprowse: https://github.com/mattprowse/SystemBezelWindowController
 public class VolumeIndicator: NSView {

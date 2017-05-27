@@ -167,6 +167,8 @@ public class ListView: NSView {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+    
+    public override var wantsUpdateLayer: Bool { return true }
 	
 	public func update(animated: Bool = true, _ handler: @escaping () -> () = {}) {
         DispatchQueue.main.async {
@@ -432,6 +434,8 @@ public class NSExtendedTableRowView: NSTableRowView {
 
 /// Support for per-row and multi-select menus.
 public class NSExtendedTableView: NSTableView {
+    public override var wantsUpdateLayer: Bool { return true }
+    
     public var expandSelectionOnMenuClick = false
     public override func menu(for event: NSEvent) -> NSMenu? {
         let row = self.row(at: self.convert(event.locationInWindow, from: nil))
