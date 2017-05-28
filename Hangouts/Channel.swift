@@ -105,6 +105,11 @@ public final class Channel : NSObject {
     private var gSessionIDParam: String? = nil
 	private var retries = Channel.maxRetries
     private var needsSID = true
+    
+    // NOTE: getCookieValue causes a CFNetwork leak repeatedly.
+    private lazy var cachedSAPISID: String = {
+        Channel.getCookieValue(key: "SAPISID")!
+    }()
 	
 	public init(configuration: URLSessionConfiguration) {
 		super.init()
@@ -187,7 +192,7 @@ public final class Channel : NSObject {
 		/* TODO: Clearly, we shouldn't call encodeURL(), but what do we do? */
 		request.httpBody = data_dict.encodeURL().data(using: String.Encoding.utf8,
 			allowLossyConversion: false)!
-		for (k, v) in Channel.getAuthorizationHeaders(Channel.getCookieValue(key: "SAPISID")!) {
+		for (k, v) in Channel.getAuthorizationHeaders(self.cachedSAPISID) {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
@@ -224,7 +229,7 @@ public final class Channel : NSObject {
 		let url = "\(Channel.URLPrefix)/channel/bind?\(params.encodeURL())"
 		var request = URLRequest(url: URL(string: url)!)
 		request.timeoutInterval = Double(Channel.connectTimeout)
-		for (k, v) in Channel.getAuthorizationHeaders(Channel.getCookieValue(key: "SAPISID")!) {
+		for (k, v) in Channel.getAuthorizationHeaders(self.cachedSAPISID) {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		
@@ -336,7 +341,7 @@ public final class Channel : NSObject {
 		request.httpMethod = "POST"
 		request.httpBody = data
 		
-		for (k, v) in Channel.getAuthorizationHeaders(Channel.getCookieValue(key: "SAPISID")!) {
+		for (k, v) in Channel.getAuthorizationHeaders(self.cachedSAPISID) {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
 		request.setValue(content_type, forHTTPHeaderField: "Content-Type")

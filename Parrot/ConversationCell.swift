@@ -17,12 +17,10 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
     private static var wallclock = Wallclock()
     private var id = UUID() // for wallclock
     
-    private lazy var photoView: NSImageView = {
-        let v = NSImageView().modernize()
-        v.allowsCutCopyPaste = false
-        v.isEditable = false
-        v.animates = true
-        return v
+    private lazy var photoLayer: CALayer = {
+        let l = CALayer()
+        l.masksToBounds = true
+        return l
     }()
     
     private lazy var nameLabel: NSTextField = {
@@ -64,14 +62,15 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
         self.translatesAutoresizingMaskIntoConstraints = false
         //self.canDrawSubviewsIntoLayer = true
         self.wantsLayer = true
-        self.add(subviews: [self.photoView, self.nameLabel, self.timeLabel, self.textLabel])
+        self.add(subviews: [self.nameLabel, self.timeLabel, self.textLabel])
+        self.add(sublayer: self.photoLayer)
         
-        self.photoView.left == self.left + 8
-        self.photoView.centerY == self.centerY
-        self.photoView.width == 48
-        self.photoView.height == 48
-        self.photoView.right == self.nameLabel.left - 8
-        self.photoView.right == self.textLabel.left - 8
+        self.photoLayer.layout.left == self.left + 8
+        self.photoLayer.layout.centerY == self.centerY
+        self.photoLayer.layout.width == 48
+        self.photoLayer.layout.height == 48
+        self.photoLayer.layout.right == self.nameLabel.left - 8
+        self.photoLayer.layout.right == self.textLabel.left - 8
         self.nameLabel.top == self.top + 8
         self.nameLabel.right == self.timeLabel.left - 4
         self.nameLabel.bottom == self.textLabel.top - 4
@@ -92,7 +91,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
 			if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
 				let photo = fetchImage(user: firstParticipant, monogram: true)
-				self.photoView.image = photo
+                self.photoLayer.contents = photo
 			}
 			// FIXME: Group conversation prefixing doesn't work yet.
 			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
@@ -174,10 +173,9 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 	// Allows the photo view's circle crop to dynamically match size.
 	public override func layout() {
 		super.layout()
-		if let layer = self.photoView.layer {
-			layer.masksToBounds = true
-			layer.cornerRadius = self.photoView.bounds.width / 2.0
-		}
+        self.photoLayer.syncLayout()
+        
+        self.photoLayer.cornerRadius = self.photoLayer.frame.width / 2.0
 	}
     
     public override func viewDidMoveToSuperview() {

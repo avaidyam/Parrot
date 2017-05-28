@@ -24,7 +24,7 @@ public extension NSColor {
     }
 }
 
-public func imageForString(forString source: String, size: NSSize = NSSize(width: 512.0, height: 512.0), colors: [NSColor] = materialColors) -> NSImage {
+public func imageForString(forString source: String, size: NSSize = NSSize(width: 64, height: 64), colors: [NSColor] = materialColors) -> NSImage {
 	return NSImage(size: size, flipped: false) { rect in
 		colors[abs(source.hashValue) % colors.count].set()
 		NSRectFill(rect)
@@ -46,7 +46,7 @@ public func imageForString(forString source: String, size: NSSize = NSSize(width
 	}
 }
 
-public func defaultImageForString(forString source: String, size: NSSize = NSSize(width: 512.0, height: 512.0), colors: [NSColor] = materialColors) -> NSImage {
+public func defaultImageForString(forString source: String, size: NSSize = NSSize(width: 64, height: 64), colors: [NSColor] = materialColors) -> NSImage {
 	return NSImage(size: size, flipped: false) { rect in
 		colors[abs(source.hashValue) % colors.count].set()
 		NSRectFill(rect)

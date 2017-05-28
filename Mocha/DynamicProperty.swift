@@ -33,8 +33,8 @@ public struct AssociatedProperty<T, U>: DynamicProperty {
         
         fileprivate var _objc: objc_AssociationPolicy {
             switch self {
-            case .strong: return .OBJC_ASSOCIATION_COPY
-            case .weak: return .OBJC_ASSOCIATION_COPY
+            case .strong: return .OBJC_ASSOCIATION_RETAIN
+            case .weak: return .OBJC_ASSOCIATION_ASSIGN
             case .copy: return .OBJC_ASSOCIATION_COPY
             }
         }

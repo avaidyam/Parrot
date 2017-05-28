@@ -3,28 +3,15 @@
 
 /* TODO: Just add as extension of anchors -- no new properties. */
 
-#if os(OSX)
-    import AppKit
-    public typealias View = NSView
-    public typealias LayoutPriority = NSLayoutPriority
-    
-    @available(OSX 10.11, *)
-    public typealias LayoutGuide = NSLayoutGuide
-#elseif os(iOS) || os(tvOS)
-    import UIKit
-    public typealias View = UIView
-    public typealias LayoutPriority = UILayoutPriority
-    
-    @available(iOS 9.0, *)
-    public typealias LayoutGuide = UILayoutGuide
-#endif
+import AppKit
+import Mocha
 
+public typealias View = NSView
+public typealias LayoutPriority = NSLayoutPriority
+public typealias LayoutGuide = NSLayoutGuide
 public protocol LayoutRegion: AnyObject {}
 extension View: LayoutRegion {}
-
-@available(iOS 9.0, OSX 10.11, *)
 extension LayoutGuide: LayoutRegion {}
-
 public struct XAxis {}
 public struct YAxis {}
 public struct Dimension {}
@@ -135,37 +122,6 @@ public extension View {
     public var lastBaseline: LayoutItem<YAxis> { return layoutItem(self, .lastBaseline) }
 }
 
-#if os(iOS) || os(tvOS)
-    public extension UIViewController {
-        public var topLayoutGuideTop: LayoutItem<YAxis> {
-            return layoutItem(topLayoutGuide, .top)
-        }
-        
-        public var topLayoutGuideBottom: LayoutItem<YAxis> {
-            return layoutItem(topLayoutGuide, .bottom)
-        }
-        
-        public var bottomLayoutGuideTop: LayoutItem<YAxis> {
-            return layoutItem(bottomLayoutGuide, .top)
-        }
-        
-        public var bottomLayoutGuideBottom: LayoutItem<YAxis> {
-            return layoutItem(bottomLayoutGuide, .bottom)
-        }
-    }
-    
-    public extension UIView {
-        public var leftMargin: LayoutItem<XAxis> { return layoutItem(self, .leftMargin) }
-        public var rightMargin: LayoutItem<XAxis> { return layoutItem(self, .rightMargin) }
-        public var topMargin: LayoutItem<YAxis> { return layoutItem(self, .topMargin) }
-        public var bottomMargin: LayoutItem<YAxis> { return layoutItem(self, .bottomMargin) }
-        public var leadingMargin: LayoutItem<XAxis> { return layoutItem(self, .leadingMargin) }
-        public var trailingMargin: LayoutItem<XAxis> { return layoutItem(self, .trailingMargin) }
-        public var centerXWithinMargins: LayoutItem<XAxis> { return layoutItem(self, .centerXWithinMargins) }
-        public var centerYWithinMargins: LayoutItem<YAxis> { return layoutItem(self, .centerYWithinMargins) }
-    }
-#endif
-
 precedencegroup PriorityPrecedence {
     lowerThan: ComparisonPrecedence
     higherThan: AssignmentPrecedence
@@ -177,3 +133,56 @@ public func ~(lhs: NSLayoutConstraint, rhs: LayoutPriority) -> NSLayoutConstrain
     newConstraint.priority = rhs
     return newConstraint
 }
+
+public extension CALayer {
+    
+    /// Provides an optional NSLayoutGuide for use in a containing NSView.
+    /// This allows CALayers to be laid out by the NSLayoutConstraint engine.
+    ///
+    /// Note: this does not happen automatically; in your NSView, override
+    /// layout() while invoking super, and call syncLayout() manually.
+    public fileprivate(set) var layout: NSLayoutGuide {
+        get {
+            if let _l = _layoutProp.get(self) {
+                return _l
+            } else {
+                let guide = NSLayoutGuide()
+                _layoutProp.set(self, value: guide)
+                return guide
+            }
+        }
+        set { _layoutProp.set(self, value: newValue) }
+    }
+    
+    /// Allows the CALayer to reconcile the frame calculated by the NSLayoutConstraint
+    /// engine, if applicable; not animatable (yet).
+    public func syncLayout() {
+        guard self.layout.owningView != nil else { return }
+        self.frame = self.layout.frame
+    }
+}
+
+public extension NSView {
+    
+    /// The preferred method of adding a sublayer to a view. Allows the CALayer
+    /// to use an NSLayoutGuide and participate in the NSLayoutConstraint cycle.
+    ///
+    /// Note: does not do anything if the view is not layer-backed.
+    public func add(sublayer layer: CALayer) {
+        layer.removeFromSuperlayer()
+        guard let superlayer = self.layer else { return }
+        superlayer.addSublayer(layer)
+        self.addLayoutGuide(layer.layout)
+    }
+    
+    /// The preferred method of removing a sublayer from a view. Allows the CALayer
+    /// to unregister its NSLayoutGuide from the NSView.
+    public func remove(sublayer layer: CALayer) {
+        guard let superlayer = self.layer, layer.superlayer == superlayer else { return }
+        layer.removeFromSuperlayer()
+        guard layer.layout.owningView == self else { return }
+        self.removeLayoutGuide(layer.layout)
+    }
+}
+
+fileprivate var _layoutProp = AssociatedProperty<CALayer, NSLayoutGuide>(.strong)
