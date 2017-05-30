@@ -23,6 +23,16 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
         return l
     }()
     
+    private lazy var badgeLayer: CALayer = {
+        let l = CATextLayer()
+        l.masksToBounds = true
+        l.backgroundColor = NSColor.selectedMenuItemColor.cgColor
+        l.foregroundColor = NSColor.white.cgColor
+        l.fontSize = 9.0
+        l.string = "1"
+        return l
+    }()
+    
     private lazy var nameLabel: NSTextField = {
         let v = NSTextField(labelWithString: "").modernize()
         v.textColor = NSColor.labelColor
@@ -64,6 +74,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
         self.wantsLayer = true
         self.add(subviews: [self.nameLabel, self.timeLabel, self.textLabel])
         self.add(sublayer: self.photoLayer)
+        //self.add(sublayer: self.badgeLayer) // will not participate in autolayout
         
         self.photoLayer.layout.left == self.left + 8
         self.photoLayer.layout.centerY == self.centerY
@@ -173,9 +184,12 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 	// Allows the photo view's circle crop to dynamically match size.
 	public override func layout() {
 		super.layout()
-        self.photoLayer.syncLayout()
+        let p = self.photoLayer, b = self.badgeLayer
         
-        self.photoLayer.cornerRadius = self.photoLayer.frame.width / 2.0
+        p.syncLayout()
+        b.frame = NSRect(x: p.frame.minX, y: p.frame.midY, width: p.frame.width / 2, height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
+        p.cornerRadius = p.frame.width / 2.0
+        b.cornerRadius = b.frame.width / 2.0
 	}
     
     public override func viewDidMoveToSuperview() {

@@ -5,7 +5,7 @@ import ParrotServiceExtension
 private let log = Logger(subsystem: "Hangouts.Users")
 
 /// A chat user.
-public struct User: Person, Hashable, Equatable {
+public class User: Person, Hashable, Equatable {
     public static let DEFAULT_NAME = "Unknown"
 	
 	/// A chat user identifier.
@@ -52,7 +52,7 @@ public struct User: Person, Hashable, Equatable {
 	
 	// Parse and initialize a User from an Entity.
 	// Note: If selfUser is nil, assume this is the self user.
-    public init(entity: Entity, selfUser: User.ID?) {
+    public convenience init(entity: Entity, selfUser: User.ID?) {
         
 		// Parse User ID and self status.
 		let userID = User.ID(chatID: entity.id!.chatId!,

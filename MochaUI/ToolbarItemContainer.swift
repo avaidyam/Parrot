@@ -1,4 +1,5 @@
 import Cocoa
+import Mocha
 
 /* TODO: Support item types: allowed, required, default, customized(user). */
 /* TODO: Support isVisible (per toolbar, per item), and otherItemsProxy(nesting). */
@@ -11,8 +12,8 @@ public extension NSWindow {
         let t = NSToolbar(identifier: "")
         let h = ToolbarItemContainer()
         h.toolbar = t
-        
         t.delegate = h
+        
         t.displayMode = .iconOnly
         t.sizeMode = .regular
         t.allowsUserCustomization = false
@@ -29,9 +30,18 @@ public extension NSWindow {
 /// Note: some items like flexible space, etc. don't need to be provided.
 public class ToolbarItemContainer: NSObject, NSToolbarDelegate {
     
-    fileprivate weak var toolbar: NSToolbar? = nil
+    /// It's important to have the toolbar retain ownership here.
+    fileprivate weak var toolbar: NSToolbar? = nil {
+        didSet {
+            oldValue?._container = nil
+            self.toolbar?._container = self
+        }
+    }
+    deinit {
+        self.toolbar?._container = nil
+    }
     
-    public var templateItems: [NSToolbarItem] = []
+    public var templateItems = Set<NSToolbarItem>()
     public var itemOrder: [String] = [] {
         willSet {
             guard self.toolbar != nil else { return }
@@ -48,7 +58,8 @@ public class ToolbarItemContainer: NSObject, NSToolbarDelegate {
     }
     
     public func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: String, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-        return self.templateItems.filter { $0.itemIdentifier == itemIdentifier }.first ?? NSToolbarItem(itemIdentifier: "")
+        let t = self.templateItems.filter { $0.itemIdentifier == itemIdentifier }.first ?? NSToolbarItem(itemIdentifier: "")
+        return t
     }
     public func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
         return self.itemOrder
@@ -97,6 +108,14 @@ public extension NSToolbarItem {
     private var _trackedSplitView: NSSplitView? {
         get { return self.value(forKey: "trackedSplitView") as? NSSplitView }
         set { self.setValue(newValue, forKey: "trackedSplitView") }
+    }
+}
+
+private var _containerProp = AssociatedProperty<NSToolbar, ToolbarItemContainer>(.strong)
+fileprivate extension NSToolbar {
+    fileprivate var _container: ToolbarItemContainer? {
+        get { return _containerProp.get(self) }
+        set { _containerProp.set(self, value: newValue) }
     }
 }
 
