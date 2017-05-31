@@ -16,7 +16,7 @@ public enum Reachability {
 	case desktop
 }
 
-public protocol Person /*: Hashable, Equatable*/ {
+public protocol Person: ServiceOriginating /*: Hashable, Equatable*/ {
 	
 	/// The Person's unique identifier (specific to the Service).
 	var identifier: String { get }
@@ -75,7 +75,7 @@ public extension Person {
 	}
 }
 
-public protocol Directory: class /*: Collection*/ {
+public protocol Directory: class, ServiceOriginating /*: Collection*/ {
 	
 	/// Return the user currently logged into the Service.
 	var me: Person { get }

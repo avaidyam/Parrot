@@ -27,6 +27,9 @@ public protocol ConversationListDelegate {
 
 // Wrapper around Client that maintains a list of Conversations
 public class ConversationList: ParrotServiceExtension.ConversationList {
+    public var serviceIdentifier: String {
+        return type(of: self.client).identifier
+    }
 	
     public var delegate: ConversationListDelegate?
     fileprivate let client: Client

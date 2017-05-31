@@ -57,6 +57,7 @@
 		4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9331ED9480C00764594 /* DynamicProperty.swift */; };
 		4869A9381EDB858A00764594 /* DirectoryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9371EDB858A00764594 /* DirectoryListViewController.swift */; };
 		4869A93A1EDB859700764594 /* PersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9391EDB859700764594 /* PersonCell.swift */; };
+		4869A93C1EDD250C00764594 /* ViewAttachmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A93B1EDD250C00764594 /* ViewAttachmentCell.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
@@ -297,7 +298,7 @@
 		4803639A1C1D08490008E9F5 /* parrot-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "parrot-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4803639C1C1D08490008E9F5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		481300341D257FE300768D79 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		481300391D25B54300768D79 /* ServiceRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceRegistry.swift; sourceTree = "<group>"; };
+		481300391D25B54300768D79 /* ServiceRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServiceRegistry.swift; path = ParrotServiceExtension/ServiceRegistry.swift; sourceTree = SOURCE_ROOT; };
 		481300441D26BD4900768D79 /* ParrotServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ParrotServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481300481D26BD4900768D79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4814E3B61D2C973D0079C3DB /* kelvin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = kelvin.py; path = ../../../Desktop/Other/LEDENET/kelvin.py; sourceTree = "<group>"; };
@@ -348,6 +349,7 @@
 		4869A9331ED9480C00764594 /* DynamicProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicProperty.swift; sourceTree = "<group>"; };
 		4869A9371EDB858A00764594 /* DirectoryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryListViewController.swift; sourceTree = "<group>"; };
 		4869A9391EDB859700764594 /* PersonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonCell.swift; sourceTree = "<group>"; };
+		4869A93B1EDD250C00764594 /* ViewAttachmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewAttachmentCell.swift; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
@@ -548,7 +550,6 @@
 				482E21381C23F5F500A4C7B3 /* Conversation+List.swift */,
 				489018AB1D3C8FE400CFCA5F /* Person+Directory.swift */,
 				48158E431D29C28A00ED369C /* Service+Capabilities.swift */,
-				481300391D25B54300768D79 /* ServiceRegistry.swift */,
 				481300501D26BD6700768D79 /* Supporting Files */,
 			);
 			path = ParrotServiceExtension;
@@ -731,6 +732,7 @@
 				48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */,
 				48EB54F51D209DD100F77C2C /* Cache.swift */,
 				489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */,
+				481300391D25B54300768D79 /* ServiceRegistry.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -892,6 +894,7 @@
 			isa = PBXGroup;
 			children = (
 				488239A21C455CED00C5E8EB /* AppKit+Extensions.swift */,
+				4869A93B1EDD250C00764594 /* ViewAttachmentCell.swift */,
 				48A452261D19B16500CB588A /* TLTone.swift */,
 				4835ECB31C1C672900193EBC /* UserNotification+Extensions.swift */,
 				483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */,
@@ -1571,6 +1574,7 @@
 				4831BCFA1ED4151800C30413 /* MessageProgressView.swift in Sources */,
 				48D3CD191DE945C1003D6C02 /* NetworkReachability.swift in Sources */,
 				48403CA11DF0B9930009897A /* Changeset.swift in Sources */,
+				4869A93C1EDD250C00764594 /* ViewAttachmentCell.swift in Sources */,
 				48E39C651ED578AF00EF578D /* KeyboardBrightness.swift in Sources */,
 				481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */,
 				4831BCCB1ED0C21200C30413 /* NSViewController+Window.swift in Sources */,

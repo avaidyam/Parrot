@@ -2,7 +2,7 @@ import Foundation
 
 /// A Conversation is uniquely identified by its ID, and consists of
 /// the current user, along with either one or more persons as well.
-public protocol Conversation /*: Hashable, Equatable*/ {
+public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
 	
 	/// The Conversation's unique identifier (specific to the Service).
 	var identifier: String { get }
@@ -52,7 +52,7 @@ public protocol Conversation /*: Hashable, Equatable*/ {
 	// typing()
 }
 
-public protocol ConversationList: class /*: Collection*/ {
+public protocol ConversationList: class, ServiceOriginating /*: Collection*/ {
 	
 	/// A list of all conversations mapped by their unique ID.
     /// This list will only contain a certain set of conversations,

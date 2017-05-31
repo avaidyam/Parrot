@@ -16,10 +16,12 @@ public protocol ConversationDelegate {
 }
 
 public struct IFocus: Focus {
+    public let serviceIdentifier: String
 	public let sender: Person?
 	public let timestamp: Date
 	public let mode: FocusMode
-    public init(sender: Person?, timestamp: Date, mode: FocusMode) {
+    public init(_ serviceIdentifier: String, sender: Person?, timestamp: Date, mode: FocusMode) {
+        self.serviceIdentifier = serviceIdentifier
         self.sender = sender
         self.timestamp = timestamp
         self.mode = mode
@@ -29,7 +31,11 @@ public struct IFocus: Focus {
 // Wrapper around Client for working with a single chat conversation.
 public class IConversation: ParrotServiceExtension.Conversation {
     public typealias EventID = String
-
+    
+    public var serviceIdentifier: String {
+        return type(of: self.client).identifier
+    }
+    
     public var client: Client
     public var user_list: UserList
     public var conversation: Conversation
@@ -105,15 +111,15 @@ public class IConversation: ParrotServiceExtension.Conversation {
     }
 	
 	// Wrap ClientEvent in Event subclass.
-    private class func wrap_event(event: Event) -> IEvent {
+    private class func wrap_event(_ id: String, event: Event) -> IEvent {
         if event.chatMessage != nil {
-            return IChatMessageEvent(event: event)
+            return IChatMessageEvent(id, event: event)
         } else if event.conversationRename != nil {
-            return IRenameEvent(event: event)
+            return IRenameEvent(id, event: event)
         } else if event.membershipChange != nil {
-            return IMembershipChangeEvent(event: event)
+            return IMembershipChangeEvent(id, event: event)
         } else {
-            return IEvent(event: event)
+            return IEvent(id, event: event)
         }
     }
 
@@ -141,7 +147,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	// Returns an instance of Event or subclass.
 	@discardableResult
     public func add_event(event: Event) -> IEvent {
-        let conv_event = IConversation.wrap_event(event: event)
+        let conv_event = IConversation.wrap_event(self.serviceIdentifier, event: event)
 		conv_event.client = self.client
 		/* TODO: Enable this. */
 		/*if !self.events_dict.contains(conv_event.id) {
@@ -207,7 +213,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			let person = self.client.directory.people[r.participantId!.gaiaId!]
 			let read = Date.from(UTC: Double(r.latestReadTimestamp!))
 			//let t = self.typingStatuses[id]
-			let f = IFocus(sender: person, timestamp: read, mode: .away)
+			let f = IFocus(self.serviceIdentifier, sender: person, timestamp: read, mode: .away)
 			focuses.append(f)
 		}
 		return focuses
@@ -375,7 +381,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 				log.error("Invalid request! \(res!.responseHeader)")
 				return
 			}
-			let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(event: $0) }
+			let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(self.serviceIdentifier, event: $0) }
 			self.readStates = res!.conversationState!.conversation!.readState
 			
 			for conv_event in conv_events {

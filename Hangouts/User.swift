@@ -6,6 +6,8 @@ private let log = Logger(subsystem: "Hangouts.Users")
 
 /// A chat user.
 public class User: Person, Hashable, Equatable {
+    public let serviceIdentifier: String
+
     public static let DEFAULT_NAME = "Unknown"
 	
 	/// A chat user identifier.
@@ -41,8 +43,9 @@ public class User: Person, Hashable, Equatable {
 	// first_name from the full_name, or setting both to DEFAULT_NAME.
 	//
 	// Ignores firstName value.
-    public init(userID: User.ID, fullName: String? = nil, photoURL: String? = nil,
+    public init(_ serviceIdentifier: String, userID: User.ID, fullName: String? = nil, photoURL: String? = nil,
                 locations: [String] = [], isSelf: Bool = false) {
+        self.serviceIdentifier = serviceIdentifier
 		self.id = userID
 		self.nameComponents = (fullName ?? User.DEFAULT_NAME).characters.split{$0 == " "}.map(String.init)
         self.photoURL = photoURL
@@ -52,7 +55,7 @@ public class User: Person, Hashable, Equatable {
 	
 	// Parse and initialize a User from an Entity.
 	// Note: If selfUser is nil, assume this is the self user.
-    public convenience init(entity: Entity, selfUser: User.ID?) {
+    public convenience init(_ serviceIdentifier: String, entity: Entity, selfUser: User.ID?) {
         
 		// Parse User ID and self status.
 		let userID = User.ID(chatID: entity.id!.chatId!,
@@ -61,7 +64,7 @@ public class User: Person, Hashable, Equatable {
 		
 		// If the entity has no provided properties, bail here.
 		guard let props = entity.properties else {
-			self.init(userID: userID, fullName: "", photoURL: "", locations: [], isSelf: isSelf)
+			self.init(serviceIdentifier, userID: userID, fullName: "", photoURL: "", locations: [], isSelf: isSelf)
 			return
 		}
 		
@@ -88,7 +91,7 @@ public class User: Person, Hashable, Equatable {
 		}
 		
 		// Initialize the user.
-        self.init(userID: userID,
+        self.init(serviceIdentifier, userID: userID,
             fullName: phoneI18N ?? props.displayName,
             photoURL: photo, locations: locations, isSelf: isSelf
         )
@@ -101,6 +104,9 @@ public class UserList: Directory, Collection {
 	private var observer: NSObjectProtocol? /*Notification Token*/
 	fileprivate var users: [User.ID: User]
     private let client: Client
+    public var serviceIdentifier: String {
+        return type(of: self.client).identifier
+    }
 	
 	public private(set) var me: Person
 	public var people: [String: Person] {
@@ -128,7 +134,7 @@ public class UserList: Directory, Collection {
 			return user
 		} else {
 			//log.warning("UserList returning unknown User for User.ID \(userID)")
-			return User(userID: userID)
+			return User(self.serviceIdentifier, userID: userID)
 		}
 	}
     
@@ -150,7 +156,7 @@ public class UserList: Directory, Collection {
                 let entities = response?.entityResult.flatMap { $0.entity } ?? []
                 for entity in entities {
                     guard entity.id != nil else { continue } // if no id, we can't use it!
-                    let user = User(entity: entity, selfUser: (self.me as! User).id)
+                    let user = User(self.serviceIdentifier, entity: entity, selfUser: (self.me as! User).id)
                     if self.users[user.id] == nil {
                         self.users[user.id] = user
                     }
@@ -165,7 +171,7 @@ public class UserList: Directory, Collection {
     
     internal func getSelfInfo() {
         self.client.getSelfInfo {
-            let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
+            let selfUser = User(self.serviceIdentifier, entity: $0!.selfEntity!, selfUser: nil)
             self.users[selfUser.id] = selfUser
             self.me = selfUser
         }

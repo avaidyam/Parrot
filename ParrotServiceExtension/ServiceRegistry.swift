@@ -4,7 +4,7 @@ import ParrotServiceExtension
 public enum ServiceRegistry {
 	
 	/// TODO:
-	public struct Account {
+	public struct Account: ServiceOriginating {
 		public let serviceIdentifier: String
 		public let accountName: String
 	}

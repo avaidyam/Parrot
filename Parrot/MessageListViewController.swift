@@ -19,6 +19,8 @@ public struct EventStreamItemBundle {
 /// This is instantly shown to the user when they send a message. It will
 /// be updated automatically when the status of the message is known.
 public struct PlaceholderMessage: Message {
+    public let serviceIdentifier: String = ""
+
     public var contentType: ContentType = .text
     public let sender: Person?
     public let timestamp: Date

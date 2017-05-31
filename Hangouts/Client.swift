@@ -278,7 +278,7 @@ public final class Client: Service {
     
     public func buildUserConversationList(_ completionHandler: @escaping () -> Void = {}) {
         self.getSelfInfo {
-            let selfUser = User(entity: $0!.selfEntity!, selfUser: nil)
+            let selfUser = User(type(of: self).identifier, entity: $0!.selfEntity!, selfUser: nil)
             let userlist = UserList(client: self, me: selfUser)
             let convlist = ConversationList(client: self)
             

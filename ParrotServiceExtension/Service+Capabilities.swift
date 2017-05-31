@@ -1,5 +1,10 @@
 import Foundation
 
+/// Allows ServiceExtension objects to be traced back to a Service by its identifier.
+public protocol ServiceOriginating {
+    var serviceIdentifier: String { get }
+}
+
 /// Defines all possible capabilities that Parrot will understand that can be
 /// vended by a remote messaging Service. Note that at the absolute minimum,
 /// a Service must support [.text] to be compliant.

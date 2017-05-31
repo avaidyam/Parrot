@@ -1,11 +1,5 @@
 import Foundation
 
-// Modularize Conversations + ConversationsView
-// for widget:
-// - main view is conversation view selected
-// - press (i) to show conversations list
-// - select = show a new conversation
-
 public enum ContentType: String {
 	case text = "com.avaidyam.Parrot.MessageType.text"
 	case richText = "com.avaidyam.Parrot.MessageType.richText"
@@ -17,22 +11,22 @@ public enum ContentType: String {
 	case summary = "com.avaidyam.Parrot.MessageType.summary"
 }
 
-public protocol Message: EventStreamItem {
-    var contentType: ContentType { get }
-	var text: String { get }
-}
-
-public protocol EventStreamItem {
+public protocol EventStreamItem: ServiceOriginating {
 	//var identifier: String { get }
 	var sender: Person? { get } // if nil, global event
 	var timestamp: Date { get }
 }
 
+public protocol Message: EventStreamItem {
+    var contentType: ContentType { get }
+    var text: String { get }
+}
+
 public enum FocusMode {
-	case away
-	case here
-	case typing
-	case enteredText
+    case away
+    case here
+    case typing
+    case enteredText
 }
 
 /// A Person's presence in the Service can contain information such as
