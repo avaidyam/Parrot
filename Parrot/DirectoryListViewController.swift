@@ -91,7 +91,6 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, N
         let s = NSSearchField()
         item.view = s
         item.label = "Search"
-        item.maxSize = NSSize(width: window.frame.width, height: item.maxSize.height)
         container.templateItems = [item]
         container.itemOrder = [NSToolbarFlexibleSpaceItemIdentifier, "search", NSToolbarFlexibleSpaceItemIdentifier]
     }

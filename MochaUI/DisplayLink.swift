@@ -1,6 +1,8 @@
 import Dispatch
 import CoreVideo
 
+/* TODO: Use CVDisplayLinkIsRunning() instead of re-initializing the display link each time. */
+
 open class DisplayLink {
     
     public typealias Target = (target: Any, id: UUID, action: (Double) -> ())

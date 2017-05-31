@@ -232,7 +232,10 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
 			guard let vev = self.view as? NSVisualEffectView else { return }
 			vev.state = style.visualEffectState()
 		}
+        
+        d.presentAsWindow()
 	}
+    private let d = DirectoryListViewController()
     
     /// If we need to close, make sure we clean up after ourselves, instead of deinit.
     public override func viewWillDisappear() {
@@ -449,14 +452,14 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
             default: // TypingType.Unknown:
                 mode = .here
             }
-            c.focusModeChanged(IFocus(sender: forUser, timestamp: Date(), mode: mode))
+            c.focusModeChanged(IFocus("", sender: forUser, timestamp: Date(), mode: mode))
 		}
 	}
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
         log.debug("watermark for \(status.convID) from \(status.userID.gaiaID)")
         if let c = MessageListViewController.openConversations[status.convID], let person = self.userList?.people[status.userID.gaiaID] {
             log.debug("passthrough")
-            c.watermarkEvent(IFocus(sender: person, timestamp: status.readTimestamp, mode: .here))
+            c.watermarkEvent(IFocus("", sender: person, timestamp: status.readTimestamp, mode: .here))
 		}
 	}
 	
