@@ -17,9 +17,11 @@ public enum Reachability {
 }
 
 public protocol Person: ServiceOriginating /*: Hashable, Equatable*/ {
+    
+    typealias IdentifierType = String
 	
 	/// The Person's unique identifier (specific to the Service).
-	var identifier: String { get }
+	var identifier: IdentifierType { get }
     
     // a handle...
     //var resource: String { get }
@@ -73,28 +75,4 @@ public extension Person {
 	public var firstName: String {
 		return self.nameComponents.first ?? ""
 	}
-}
-
-public protocol Directory: class, ServiceOriginating /*: Collection*/ {
-	
-	/// Return the user currently logged into the Service.
-	var me: Person { get }
-	
-	/// Return all users the current user can locate mapped by their unique ID.
-	var people: [String: Person] { get }
-	
-	/// Returns all pending invitations requested to the current user.
-	var invitations: [String: Person] { get }
-	
-	/// Returns all the people blocked by the current user.
-	var blocked: [String: Person] { get }
-    
-    /// Return the Person identified the string provided.
-    subscript(_ identifier: String) -> Person { get }
-	
-	/// Search for users given a set of identifiers.
-	/// Identifiers can include anything including name components.
-	/// Returns a set of users that could be possible matches.
-    func lookup(by: [String]) -> [Person]
-    func lookup(by: [String], limit: Int) -> [Person]
 }
