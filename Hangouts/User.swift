@@ -26,10 +26,7 @@ public class User: Person, Hashable, Equatable {
 	public let nameComponents: [String]
     public let photoURL: String?
     public let locations: [String]
-    public let isSelf: Bool
-	public var me: Bool {
-		return self.isSelf
-	}
+	public private(set) var me: Bool
 	
 	public var lastSeen: Date {
 		return Date(timeIntervalSince1970: 0)
@@ -55,13 +52,13 @@ public class User: Person, Hashable, Equatable {
 	//
 	// Ignores firstName value.
     public init(_ client: Client, userID: User.ID, fullName: String? = nil, photoURL: String? = nil,
-                locations: [String] = [], isSelf: Bool = false) {
+                locations: [String] = [], me: Bool = false) {
         self.client = client
 		self.id = userID
 		self.nameComponents = (fullName ?? User.DEFAULT_NAME).characters.split{$0 == " "}.map(String.init)
         self.photoURL = photoURL
         self.locations = locations
-        self.isSelf = isSelf
+        self.me = me
     }
 	
 	// Parse and initialize a User from an Entity.
@@ -75,7 +72,7 @@ public class User: Person, Hashable, Equatable {
 		
 		// If the entity has no provided properties, bail here.
 		guard let props = entity.properties else {
-			self.init(client, userID: userID, fullName: "", photoURL: "", locations: [], isSelf: isSelf)
+			self.init(client, userID: userID, fullName: "", photoURL: "", locations: [], me: isSelf)
 			return
 		}
 		
@@ -104,7 +101,7 @@ public class User: Person, Hashable, Equatable {
 		// Initialize the user.
         self.init(client, userID: userID,
             fullName: phoneI18N ?? props.displayName,
-            photoURL: photo, locations: locations, isSelf: isSelf
+            photoURL: photo, locations: locations, me: isSelf
         )
     }
 }
@@ -112,7 +109,6 @@ public class User: Person, Hashable, Equatable {
 // Collection of User instances.
 public class UserList: Directory, Collection {
 	
-	private var observer: NSObjectProtocol? /*Notification Token*/
 	fileprivate var users: [User.ID: User]
     private unowned let client: Client
     public var serviceIdentifier: String {
@@ -180,12 +176,20 @@ public class UserList: Directory, Collection {
         return ret
     }
     
-    internal func getSelfInfo() {
-        self.client.getSelfInfo {
-            let selfUser = User(self.client, entity: $0!.selfEntity!, selfUser: nil)
-            self.users[selfUser.id] = selfUser
-            self.me = selfUser
+    internal static func getSelfInfo(_ client: Client) -> User {
+        var selfUser: User! = nil
+        let s = DispatchSemaphore(value: 0)
+        
+        print("\n\n", "SELF START", "\n\n")
+        client.opQueue.async {
+            client.getSelfInfo {
+                selfUser = User(client, entity: $0!.selfEntity!, selfUser: nil)
+                print("\n\n", "SELF DONE", "\n\n")
+                s.signal()
+            }
         }
+        s.wait()
+        return selfUser
     }
     
     public func lookup(by: [String]) -> [Person] {
@@ -205,27 +209,45 @@ public class UserList: Directory, Collection {
     }
     
 	// Initialize the list of Users.
-	public init(client: Client, me: User, users: [User] = []) {
-		var usersDict = Dictionary<User.ID, User>()
-		users.forEach { usersDict[$0.id] = $0 }
-        
-		self.users = usersDict
-		self.me = me
+    public init(client: Client, users: [User] = []) {
         self.client = client
         
-		self.observer = NotificationCenter.default
-			.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) {
-				if  let userInfo = $0.userInfo, let state_update = userInfo[Client.didUpdateStateKey],
-                    let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
-					_ = self.addPeople(from: [conversation])
-				}
-		}
+		var usersDict = Dictionary<User.ID, User>()
+		users.forEach { usersDict[$0.id] = $0 }
+		self.users = usersDict
+        
+        let me = UserList.getSelfInfo(self.client)
+        self.users[me.id] = me
+        self.me = me
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(UserList._updatedState(_:)),
+                                               name: Client.didUpdateStateNotification, object: client)
 	}
 	
 	deinit {
-		NotificationCenter.default.removeObserver(self.observer!)
+		NotificationCenter.default.removeObserver(self)
 	}
+    
+    @objc
+    internal func _updatedState(_ notification: Notification) {
+        if  let userInfo = notification.userInfo, let state_update = userInfo[Client.didUpdateStateKey],
+            let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
+            _ = self.addPeople(from: [conversation])
+        }
+    }
 }
+
+// TODO: Make this better...
+/*
+func await(qos: DispatchQoS = .default, flags: DispatchWorkItemFlags = [], _ block: @escaping () -> Void) {
+    let s = DispatchSemaphore(value: 0)
+    let w = DispatchWorkItem(flags: .assignCurrentContext, block: block)
+    w.notify(queue: .main) {
+        s.signal()
+    }
+    s.wait()
+}
+*/
 
 
 // EXTENSIONS:

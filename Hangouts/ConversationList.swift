@@ -38,6 +38,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 
     public init(client: Client) {
         self.client = client
+        self._sync()
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationList.clientDidUpdateState(_:)),
                                                name: Client.didUpdateStateNotification, object: client)
     }
@@ -56,6 +57,16 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     
     public subscript(_ identifier: String) -> ParrotServiceExtension.Conversation? {
         return self.conv_dict[identifier] as? ParrotServiceExtension.Conversation
+    }
+    
+    private func _sync() {
+        let s = DispatchSemaphore(value: 0)
+        print("\n\n", "SYNC START", "\n\n")
+        syncConversations { _ in
+            print("\n\n", "SYNC DONE", "\n\n")
+            s.signal()
+        }
+        s.wait()
     }
     
     /// Retrieve recent conversations so we can preemptively look up their participants.

@@ -34,9 +34,7 @@ public struct Auth: AuthenticatorDelegate {
         Authenticator.delegate = Auth()
         Authenticator.authenticateClient {
             client = Client(configuration: $0)
-            client.buildUserConversationList {
-                sem.signal()
-            }
+            sem.signal()
         }
         _ = sem.wait(timeout: DispatchTime.distantFuture)
         return client

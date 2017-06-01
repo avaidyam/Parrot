@@ -76,7 +76,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	
 	// Update the conversations latest_read_timestamp.
     public func on_watermark_notification(notif: IWatermarkNotification) {
-        if self.get_user(user_id: notif.userID).isSelf {
+        if self.get_user(user_id: notif.userID).me {
 			//FIXME: Oops.
             //self.conversation.selfConversationState.selfReadState.latestReadTimestamp = notif.readTimestamp
         }
@@ -196,7 +196,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
     public var otherUserIsTyping: Bool {
         get {
             return self.typingStatuses.filter {
-                (k, v) in !self.user_list[k].isSelf
+                (k, v) in !self.user_list[k].me
             }.map {
                 (k, v) in v == TypingType.Started
             }.first ?? false
@@ -322,7 +322,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			delegate.conversation(self, didReceiveEvent: event)
         } else {
             let user = user_list[event.userID]
-			if !user.isSelf {
+			if !user.me {
 				//log.info("Notification \(event) from User \(user)!");
             }
         }
@@ -445,7 +445,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			if let name = self.conversation.name {
                 return name
             } else {
-                return users.filter { !$0.isSelf }.map { $0.fullName }.joined(separator: ", ")
+                return users.filter { !$0.me }.map { $0.fullName }.joined(separator: ", ")
             }
 		}
 		set {

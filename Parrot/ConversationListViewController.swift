@@ -381,7 +381,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
 		/*if	let user = (conv as? IConversation)?.user_list[event.userID],
 			let name = self.userList?.me.firstName,
 			let ev = event as? IChatMessageEvent
-			where !user.isSelf && ev.text.contains(name) {
+			where !user.me && ev.text.contains(name) {
 			
 			let notification = NSUserNotification()
 			notification.identifier = "mention"

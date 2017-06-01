@@ -70,14 +70,14 @@ class ParrotViewController: NSViewController, ConversationListDelegate, ListView
             _ = c.connect()
             self.connectSub = AutoSubscription(from: c, kind: Client.didConnectNotification) { _ in
                 if c.conversationList == nil {
-                    c.buildUserConversationList {
+                    //c.buildUserConversationList {
                         self.userList = c.directory
                         self.conversationList = c.conversations
                         
                         // FIXME: FORCE-CAST TO HANGOUTS
                         (c.conversations as? Hangouts.ConversationList)?.delegate = self
                         self.listView.update()
-                    }
+                    //}
                 }
             }
         }

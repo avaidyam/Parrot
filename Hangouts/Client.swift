@@ -39,6 +39,7 @@ public final class Client: Service {
 	public init(configuration: URLSessionConfiguration) {
         self.config = configuration
         self.channel = Channel(configuration: self.config)
+        self.buildUserConversationList()
         
         //
         // A notification-based delegate replacement:
@@ -233,7 +234,7 @@ public final class Client: Service {
 		func addChannelServices() {
 			let inner = ["3": ["1": ["1": "babel"]]]
 			let dat = try! JSONSerialization.data(withJSONObject: inner, options: [])
-			let str = NSString(data: dat, encoding: String.Encoding.utf8.rawValue) as! String
+			let str = NSString(data: dat, encoding: String.Encoding.utf8.rawValue)! as String
 			
 			self.channel?.sendMaps(mapList: [["p": str]])
 		}
@@ -277,17 +278,10 @@ public final class Client: Service {
 	}
     
     public func buildUserConversationList(_ completionHandler: @escaping () -> Void = {}) {
-        self.getSelfInfo {
-            let selfUser = User(self, entity: $0!.selfEntity!, selfUser: nil)
-            let userlist = UserList(client: self, me: selfUser)
-            let convlist = ConversationList(client: self)
-            
-            self.conversationList = convlist
-            self.userList = userlist
-            
-            _ = convlist.syncConversations { _ in
-                completionHandler()
-            }
-        }
+        self.userList = UserList(client: self)
+        self.conversationList = ConversationList(client: self)
+        
+        print("\n\n", "BUILD DONE", "\n\n")
+        completionHandler()
     }
 }
