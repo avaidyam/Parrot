@@ -60,6 +60,7 @@
 		4869A93C1EDD250C00764594 /* ViewAttachmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A93B1EDD250C00764594 /* ViewAttachmentCell.swift */; };
 		4869A93E1EDF2E9E00764594 /* ConversationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A93D1EDF2E9E00764594 /* ConversationList.swift */; };
 		4869A9401EDF2EDC00764594 /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A93F1EDF2EDC00764594 /* Directory.swift */; };
+		4869A9431EDF456C00764594 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9421EDF456C00764594 /* Event.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
@@ -354,6 +355,7 @@
 		4869A93B1EDD250C00764594 /* ViewAttachmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewAttachmentCell.swift; sourceTree = "<group>"; };
 		4869A93D1EDF2E9E00764594 /* ConversationList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationList.swift; sourceTree = "<group>"; };
 		4869A93F1EDF2EDC00764594 /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
+		4869A9421EDF456C00764594 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
@@ -697,6 +699,14 @@
 			name = Cells;
 			sourceTree = "<group>";
 		};
+		4869A9411EDF456000764594 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				4869A9421EDF456C00764594 /* Event.swift */,
+			);
+			name = Events;
+			sourceTree = "<group>";
+		};
 		4871CB8C1EC7DBA70020DA83 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -782,6 +792,7 @@
 		48834D941C1B3602009BC442 /* Parrot */ = {
 			isa = PBXGroup;
 			children = (
+				4869A9411EDF456000764594 /* Events */,
 				4869A9351EDB857200764594 /* Directory List */,
 				4835ECA51C1C61F300193EBC /* Conversation List */,
 				481687231C39D3400070EEF6 /* Message List */,
@@ -1497,6 +1508,7 @@
 				488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */,
 				4869A93A1EDB859700764594 /* PersonCell.swift in Sources */,
 				48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */,
+				4869A9431EDF456C00764594 /* Event.swift in Sources */,
 				4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */,
 				489FB0671DF5FBD400AEBD1D /* WatermarkCell.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* MessageListViewController.swift in Sources */,

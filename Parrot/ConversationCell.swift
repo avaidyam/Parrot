@@ -104,11 +104,8 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 				let photo = fetchImage(user: firstParticipant, monogram: true)
                 self.photoLayer.contents = photo
 			}
-			// FIXME: Group conversation prefixing doesn't work yet.
 			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
-			//let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
-            let _m = conversation.eventStream.last as? Message
-			let subtitle = (_m?.text ?? "")
+			let subtitle = ((conversation.eventStream.last as? Message)?.text ?? "")
 			let time = conversation.eventStream.last?.timestamp ?? .origin
 			
 			self.time = time
@@ -117,7 +114,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 			self.textLabel.stringValue = subtitle
 			self.textLabel.toolTip = subtitle
 			self.timeLabel.stringValue = self.prefix + time.relativeString()
-			self.timeLabel.toolTip = "\(time.fullString())"
+			self.timeLabel.toolTip = time.fullString()
             
 			if conversation.unreadCount > 0 && (messageSender != selfSender) {
 				self.timeLabel.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)

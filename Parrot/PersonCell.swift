@@ -86,35 +86,6 @@ public class PersonCell: NSTableCellView, NSTableViewCellProtocol {
             self.timeLabel.stringValue = person.lastSeen.relativeString()
             self.timeLabel.toolTip = "\(person.lastSeen.fullString())"
             self.photoLayer.contents = fetchImage(user: person, monogram: true)
-
-            /*
-            let messageSender = conversation.eventStream.last?.sender?.identifier ?? ""
-            let selfSender = conversation.participants.filter { $0.me }.first?.identifier
-            if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
-                let photo = fetchImage(user: firstParticipant, monogram: true)
-                self.photoLayer.contents = photo
-            }
-            // FIXME: Group conversation prefixing doesn't work yet.
-            self.prefix = messageSender != selfSender ? "↙ " : "↗ "
-            //let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
-            let _m = conversation.eventStream.last as? Message
-            let subtitle = (_m?.text ?? "")
-            let time = conversation.eventStream.last?.timestamp ?? .origin
-            
-            self.time = time
-            self.nameLabel.stringValue = conversation.name
-            self.nameLabel.toolTip = conversation.name
-            self.textLabel.stringValue = subtitle
-            self.textLabel.toolTip = subtitle
-            self.timeLabel.stringValue = self.prefix + time.relativeString()
-            self.timeLabel.toolTip = "\(time.fullString())"
-            
-            if conversation.unreadCount > 0 && (messageSender != selfSender) {
-                self.timeLabel.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
-            } else {
-                self.timeLabel.textColor = .tertiaryLabelColor
-            }
-            */
         }
     }
     

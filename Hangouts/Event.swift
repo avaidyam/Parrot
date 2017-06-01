@@ -10,12 +10,14 @@ private let log = Logger(subsystem: "Hangouts.Event")
 // An event which becomes part of the permanent record of a conversation.
 // Acts as a base class for the events defined below.
 public class IEvent: ServiceOriginating, Hashable, Equatable {
-    public let serviceIdentifier: String
     public let event: Event
-	internal weak var client: Client? = nil
+	internal unowned let client: Client
+    public var serviceIdentifier: String {
+        return type(of: self.client).identifier
+    }
 	
-    public init(_ serviceIdentifier: String, event: Event) {
-        self.serviceIdentifier = serviceIdentifier
+    public init(_ client: Client, event: Event) {
+        self.client = client
         self.event = event
     }
 	
@@ -113,11 +115,8 @@ public class IChatMessageEvent: IEvent, Message {
     }
 	
 	public var sender: Person? {
-		let orig = User(self.serviceIdentifier, userID: self.userID)
-		if let client = self.client {
-			return client.directory.people[self.userID.gaiaID] ?? orig
-		}
-		return orig
+		let orig = User(self.client, userID: self.userID)
+		return self.client.directory.people[self.userID.gaiaID] ?? orig
 	}
 }
 

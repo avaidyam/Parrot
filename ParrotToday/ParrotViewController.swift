@@ -67,7 +67,7 @@ class ParrotViewController: NSViewController, ConversationListDelegate, ListView
         Authenticator.authenticateClient {
             let c = Client(configuration: $0)
             _hangoutsClient = c
-            _ = c.connect() {_ in}
+            _ = c.connect()
             self.connectSub = AutoSubscription(from: c, kind: Client.didConnectNotification) { _ in
                 if c.conversationList == nil {
                     c.buildUserConversationList {

@@ -111,15 +111,15 @@ public class IConversation: ParrotServiceExtension.Conversation {
     }
 	
 	// Wrap ClientEvent in Event subclass.
-    private class func wrap_event(_ id: String, event: Event) -> IEvent {
+    private class func wrap_event(_ client: Client, event: Event) -> IEvent {
         if event.chatMessage != nil {
-            return IChatMessageEvent(id, event: event)
+            return IChatMessageEvent(client, event: event)
         } else if event.conversationRename != nil {
-            return IRenameEvent(id, event: event)
+            return IRenameEvent(client, event: event)
         } else if event.membershipChange != nil {
-            return IMembershipChangeEvent(id, event: event)
+            return IMembershipChangeEvent(client, event: event)
         } else {
-            return IEvent(id, event: event)
+            return IEvent(client, event: event)
         }
     }
 
@@ -147,8 +147,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	// Returns an instance of Event or subclass.
 	@discardableResult
     public func add_event(event: Event) -> IEvent {
-        let conv_event = IConversation.wrap_event(self.serviceIdentifier, event: event)
-		conv_event.client = self.client
+        let conv_event = IConversation.wrap_event(self.client, event: event)
+		//conv_event.client = self.client
 		/* TODO: Enable this. */
 		/*if !self.events_dict.contains(conv_event.id) {
 			self.events.append(conv_event)
@@ -381,11 +381,11 @@ public class IConversation: ParrotServiceExtension.Conversation {
 				log.error("Invalid request! \(res!.responseHeader)")
 				return
 			}
-			let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(self.serviceIdentifier, event: $0) }
+			let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(self.client, event: $0) }
 			self.readStates = res!.conversationState!.conversation!.readState
 			
 			for conv_event in conv_events {
-				conv_event.client = self.client
+				//conv_event.client = self.client
 				self.events_dict[conv_event.id] = conv_event
 			}
 			cb?(conv_events)

@@ -22,16 +22,16 @@ public protocol Service: class {
 	
 	/// Connects the service to its server/host.
 	/// Returns true if connection succeeded, or false if it failed.
-	func connect(_ onConnect: (Error?) -> ())
+	func connect()
 	
 	/// Disconnects the service from its service/host.
 	/// Returns true if the disconnection succeeded, or false if it failed.
-	func disconnect(_ onDisconnect: (Error?) -> ())
+	func disconnect()
 	
 	/// Synchronizes events and dispatches a didReceiveUpdate event upon completion.
 	/// This is required in case network connection is lost or switched.
 	/// Returns true if synchronization succeeded, or false if it failed.
-	func synchronize(_ onSynchronize: (Error?) -> ())
+	func synchronize()
     
     /// The userInteractionState follows the user's activity in the app and mirrors
     /// it across the entire platform; that is, if the user is currently looking

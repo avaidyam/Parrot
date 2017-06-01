@@ -32,7 +32,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     }
 	
     public var delegate: ConversationListDelegate?
-    fileprivate let client: Client
+    fileprivate unowned let client: Client
     internal var conv_dict = [String : IConversation]() /* TODO: Should be fileprivate! */
     public var syncTimestamp: Date? = nil
 

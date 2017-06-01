@@ -81,7 +81,7 @@ public final class Client: Service {
 	}
 	
 	// Establish a connection to the chat server.
-    public func connect(_ onConnect: (Error?) -> ()) {
+    public func connect() {
         self.channel?.listen()
     }
 	
@@ -97,14 +97,14 @@ public final class Client: Service {
 	
 	/* TODO: Can't disconnect a Channel yet. */
 	// Gracefully disconnect from the server.
-	public func disconnect(_ onDisconnect: (Error?) -> ()) {
+	public func disconnect() {
 		self.channel?.disconnect()
 	}
 	
     public var connected: Bool {
         return self.channel?.isConnected ?? false
     }
-    public func synchronize(_ onSynchronize: (Error?) -> () = {_ in}) {
+    public func synchronize() {
         guard self.lastUpdate > 0 else { return }
         self.syncAllNewEvents(timestamp: Date.from(UTC: Double(self.lastUpdate))) { res in
             for conv_state in res!.conversationState {
@@ -278,7 +278,7 @@ public final class Client: Service {
     
     public func buildUserConversationList(_ completionHandler: @escaping () -> Void = {}) {
         self.getSelfInfo {
-            let selfUser = User(type(of: self).identifier, entity: $0!.selfEntity!, selfUser: nil)
+            let selfUser = User(self, entity: $0!.selfEntity!, selfUser: nil)
             let userlist = UserList(client: self, me: selfUser)
             let convlist = ConversationList(client: self)
             

@@ -129,10 +129,10 @@ public class ParrotAppController: NSApplicationController {
                 switch $0 {
                 case .reachable(_) where !service.connected:
                     log.debug("Connecting service <\(name)>...")
-                    _ = service.connect() {_ in}
+                    _ = service.connect()
                 case .notReachable where service.connected:
                     log.debug("Disconnecting service <\(name)>...")
-                    _ = service.disconnect() {_ in}
+                    _ = service.disconnect()
                 default: continue
                 }
             }
