@@ -35,6 +35,8 @@ public class ParrotAppController: NSApplicationController {
     
     private var connectSub: Subscription? = nil
     private var disconnectSub: Subscription? = nil
+    private var notificationHelper: Subscription? = nil
+    private var notificationReplyHelper: Subscription? = nil
     
 	/// Lazy-init for the main conversations NSWindowController.
 	private lazy var conversationsController: NSViewController = {
@@ -75,6 +77,8 @@ public class ParrotAppController: NSApplicationController {
     deinit {
         self.connectSub = nil
         self.disconnectSub = nil
+        self.notificationHelper = nil
+        self.notificationReplyHelper = nil
     }
 	
 	// First begin authentication and setup for any services.
@@ -97,6 +101,11 @@ public class ParrotAppController: NSApplicationController {
             self.connectSub = AutoSubscription(from: c, kind: Notification.Service.DidConnect) { _ in
                 UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
                                  contentImage: NSImage(named: NSImageNameCaution)).post()
+                
+                // FIXME: If an old opened conversation isn't in the recents, it won't open!
+                (Settings["Parrot.OpenConversations"] as? [String])?
+                    .flatMap { c.conversationList?.conversations[$0] }
+                    .forEach { MessageListViewController.show(conversation: $0 as! IConversation) }
 			}
             self.disconnectSub = AutoSubscription(from: c, kind: Notification.Service.DidDisconnect) { _ in
                 DispatchQueue.main.async { // FIXME why does wrapping it twice work??
@@ -107,6 +116,56 @@ public class ParrotAppController: NSApplicationController {
                                              contentImage: NSImage(named: NSImageNameCaution))
                     u.set(option: .alwaysShow, value: true)
                     u.post()
+                }
+            }
+            self.notificationHelper = AutoSubscription(kind: Notification.Conversation.DidReceiveEvent) {
+                guard let event = $0.userInfo?["event"] as? IChatMessageEvent else { return }
+                
+                var showNote = true
+                if let c = MessageListViewController.openConversations[event.conversation_id] {
+                    showNote = !(c.view.window?.isKeyWindow ?? false)
+                }
+                
+                if let user = (c.conversationList.conversations[event.conversation_id] as? IConversation)?.user_list[event.userID.gaiaID], !user.me && showNote {
+                    log.debug("Sending notification...")
+                    
+                    let notification = NSUserNotification()
+                    notification.identifier = event.conversation_id
+                    notification.title = user.firstName + " (via Hangouts)" /* FIXME */
+                    //notification.subtitle = "via Hangouts"
+                    notification.informativeText = event.text
+                    notification.deliveryDate = Date()
+                    notification.alwaysShowsActions = true
+                    notification.hasReplyButton = true
+                    notification.otherButtonTitle = "Mute"
+                    notification.responsePlaceholder = "Send a message..."
+                    notification.identityImage = fetchImage(user: user, monogram: true)
+                    notification.identityStyle = .circle
+                    //notification.soundName = "texttone:Bamboo" // this works!!
+                    notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
+                    notification.set(option: .vibrateForceTouch, value: true)
+                    notification.set(option: .alwaysShow, value: true)
+                    
+                    // Post the notification "uniquely" -- that is, replace it while it is displayed.
+                    NSUserNotification.notifications()
+                        .filter { $0.identifier == notification.identifier }
+                        .forEach { $0.remove() }
+                    notification.post()
+                }
+            }
+            self.notificationReplyHelper = AutoSubscription(kind: NSUserNotification.didActivateNotification) {
+                guard	let notification = $0.object as? NSUserNotification,
+                    var conv = c.conversationList?.conversations[notification.identifier ?? ""]
+                    else { return }
+                
+                switch notification.activationType {
+                case .contentsClicked:
+                    MessageListViewController.show(conversation: conv as! IConversation)
+                case .actionButtonClicked:
+                    conv.muted = true
+                case .replied where notification.response?.string != nil:
+                    MessageListViewController.sendMessage(notification.response!.string, conv)
+                default: break
                 }
             }
 		}

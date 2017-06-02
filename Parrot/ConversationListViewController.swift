@@ -66,13 +66,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
             // Open conversations that were previously open.
             self.listView.update(animated: false) {
                 self.updateInterpolation.animate(duration: 1.5)
-                self.updateInterpolation.add(at: 1.0) {
-                    
-                    // FIXME: If an old opened conversation isn't in the recents, it won't open!
-                    (Settings["Parrot.OpenConversations"] as? [String])?
-                        .flatMap { self.conversationList?.conversations[$0] }
-                        .forEach { self.showConversation($0) }
-                }
             }
 		}
 	}
@@ -114,13 +107,13 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         convs.subtracting(dest).forEach { id in
             log.debug("ADD: \(id)")
             let conv = self.sortedConversations.filter { $0.identifier == id }.first!
-            self.showConversation(conv)
+            MessageListViewController.show(conversation: conv)
         }
         // Conversations we have that are not selected. --> REMOVE
         dest.subtracting(convs).forEach { id in
             log.debug("REMOVE: \(id)")
             let conv = self.sortedConversations.filter { $0.identifier == id }.first!
-            self.hideConversation(conv)
+            MessageListViewController.hide(conversation: conv as! IConversation)
         }
     }
     
@@ -164,10 +157,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
                       name: Notification.Conversation.DidUpdateList, object: nil)
         c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidReceiveEvent(_:)),
                       name: Notification.Conversation.DidReceiveEvent, object: nil)
-        c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidReceiveWatermark(_:)),
-                      name: Notification.Conversation.DidReceiveWatermark, object: nil)
-        c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidChangeTypingStatus(_:)),
-                      name: Notification.Conversation.DidChangeTypingStatus, object: nil)
     }
     
     deinit {
@@ -207,22 +196,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
             
             let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
             NSApp.badgeCount = UInt(unread)
-        }
-        
-        NotificationCenter.default.addObserver(forName: NSUserNotification.didActivateNotification, object: nil, queue: nil) {
-            guard	let notification = $0.object as? NSUserNotification,
-                var conv = self.conversationList?.conversations[notification.identifier ?? ""]
-                else { return }
-            
-            switch notification.activationType {
-            case .contentsClicked:
-                self.showConversation(conv as! IConversation)
-            case .actionButtonClicked:
-                conv.muted = true
-            case .replied where notification.response?.string != nil:
-                self.sendMessage(notification.response!.string, conv)
-            default: break
-            }
         }
         
         /*self.listView.pasteboardProvider = { row in
@@ -267,47 +240,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         self.view.window?.setFrameAutosaveName("Conversations")
     }
     
-	private func showConversation(_ conv: Conversation) {
-		if let wc = MessageListViewController.openConversations[conv.identifier] {
-			log.debug("Conversation found for id \(conv.identifier)")
-            DispatchQueue.main.async {
-                self.presentViewControllerAsWindow(wc)
-            }
-		} else {
-            log.debug("Conversation NOT found for id \(conv.identifier)")
-            DispatchQueue.main.async {
-                let wc = MessageListViewController()
-                wc.conversation = (conv as! IConversation)
-                wc.sendMessageHandler = { [weak self] message, conv2 in
-                    self?.sendMessage(message, conv2)
-                }
-                MessageListViewController.openConversations[conv.identifier] = wc
-                let sel = #selector(ConversationListViewController.childWindowWillClose(_:))
-                self.presentViewControllerAsWindow(wc)
-                NotificationCenter.default.addObserver(self, selector: sel,
-                                                       name: .NSWindowWillClose, object: wc.view.window)
-            }
-		}
-	}
-    
-    private func hideConversation(_ conv: Conversation) {
-        if let conv2 = MessageListViewController.openConversations[conv.identifier] {
-            MessageListViewController.openConversations[conv.identifier] = nil
-            self.dismissViewController(conv2)
-        }
-    }
-    
-    /// If we're notified that our child window has closed (that is, a conversation),
-    /// clean up by removing it from the `childConversations` dictionary.
-    public func childWindowWillClose(_ notification: Notification) {
-        guard	let win = notification.object as? NSWindow,
-            let ctrl = win.contentViewController as? MessageListViewController,
-            let conv2 = ctrl.conversation else { return }
-        
-        self.hideConversation(conv2)
-        NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
-    }
-    
     public func windowShouldClose(_ sender: Any) -> Bool {
         guard self.view.window != nil else { return true }
         PopWindowAnimator.hide(self.view.window!)
@@ -320,118 +252,17 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         }
     }
 	
-	func sendMessage(_ text: String, _ conversation: Conversation) {
-		func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
-			return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
-		}
-		
-		// Grab a local copy of the text and let the user continue.
-		guard text.characters.count > 0 else { return }
-		
-		var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
-		emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
-		let txt = segmentsForInput(text, emojify: emojify)
-		
-		// Create an operation to process the message and then send it.
-		let operation = DispatchWorkItem(qos: .userInteractive, flags: .enforceQoS) {
-			let s = DispatchSemaphore(value: 0)
-			(conversation as! IConversation).sendMessage(segments: txt) { s.signal() }
-			s.wait()
-		}
-		
-		// Send the operation to the serial send queue, and notify on completion.
-		operation.notify(queue: DispatchQueue.main) {
-			log.debug("message sent")
-		}
-		sendQ.async(execute: operation)
-	}
-	
     //
     //
     //
     
+    /* TODO: Just update the row that is updated. */
     public func conversationDidReceiveEvent(_ notification: Notification) {
-		guard let event = notification.userInfo?["event"] as? IChatMessageEvent else { return }
-		
-		// pls fix :(
 		self.updateList()
-		
-		let conv = self.conversationList?.conversations[event.conversation_id]
-		
-		// Support mentioning a person's name. // TODO, FIXME
-		// Forward the event to the conversation if it's open. Also, if the 
-		// conversation is not open, or if it isn't the main window, show a notification.
-		var showNote = true
-		if let c = MessageListViewController.openConversations[event.conversation_id] {
-			c.conversation(c.conversation!, didReceiveEvent: event)
-			showNote = !(c.view.window?.isKeyWindow ?? false)
-		}
-		
-		if let user = (conv as? IConversation)?.user_list[event.userID.gaiaID] , !user.me && showNote {
-			log.debug("Sending notification...")
-			
-			let text = (event as? IChatMessageEvent)?.text ?? "Event"
-			
-			let notification = NSUserNotification()
-			notification.identifier = event.conversation_id
-			notification.title = user.firstName + " (via Hangouts)" /* FIXME */
-			//notification.subtitle = "via Hangouts"
-			notification.informativeText = text
-			notification.deliveryDate = Date()
-			notification.alwaysShowsActions = true
-			notification.hasReplyButton = true
-			notification.otherButtonTitle = "Mute"
-			notification.responsePlaceholder = "Send a message..."
-			notification.identityImage = fetchImage(user: user, monogram: true)
-			notification.identityStyle = .circle
-			//notification.soundName = "texttone:Bamboo" // this works!!
-			notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
-			notification.set(option: .vibrateForceTouch, value: true)
-			notification.set(option: .alwaysShow, value: true)
-			
-			// Post the notification "uniquely" -- that is, replace it while it is displayed.
-			NSUserNotification.notifications()
-				.filter { $0.identifier == notification.identifier }
-				.forEach { $0.remove() }
-			notification.post()
-		}
 	}
-    
-    public func conversationDidChangeTypingStatus(_ notification: Notification) {
-        guard let status = notification.userInfo?["status"] as? ITypingStatusMessage else { return }
-        guard let forUser = notification.userInfo?["user"] as? User else { return }
-        
-        if let c = MessageListViewController.openConversations[status.convID] {
-            var mode = FocusMode.here
-            switch status.status {
-            case TypingType.Started:
-                mode = .typing
-            case TypingType.Paused:
-                mode = .enteredText
-            case TypingType.Stopped: fallthrough
-            default: // TypingType.Unknown:
-                mode = .here
-            }
-            c.focusModeChanged(IFocus("", sender: forUser, timestamp: Date(), mode: mode))
-		}
-	}
-    
-    public func conversationDidReceiveWatermark(_ notification: Notification) {
-        guard let status = notification.userInfo?["status"] as? IWatermarkNotification else { return }
-        log.debug("watermark for \(status.convID) from \(status.userID.gaiaID)")
-        
-        if let c = MessageListViewController.openConversations[status.convID], let person = self.userList?.people[status.userID.gaiaID] {
-            log.debug("passthrough")
-            c.watermarkEvent(IFocus("", sender: person, timestamp: status.readTimestamp, mode: .here))
-		}
-	}
-    
-	/* TODO: Just update the row that is updated. */
     public func conversationDidUpdate(_ notification: Notification) {
 		self.updateList()
     }
-	
-	/* TODO: Just update the row that is updated. */
     public func conversationDidUpdateList(_ notification: Notification) {
 		self.updateList()
     }

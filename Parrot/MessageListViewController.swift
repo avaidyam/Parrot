@@ -145,7 +145,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         }
     }()
 	
-    public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
+    //public var sendMessageHandler: (String, ParrotServiceExtension.Conversation) -> Void = {_ in}
     private var updateToken: Bool = false
     private var showingFocus: Bool = false
     private var lastWatermarkIdx = -1
@@ -169,6 +169,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     private var occlusionSub: Subscription? = nil
     
     deinit {
+        NotificationCenter.default.removeObserver(self)
         self.colorsSub = nil
         self.occlusionSub = nil
     }
@@ -341,21 +342,22 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         self.view.window?.setFrameAutosaveName(id)
     }
     
-    public override func encodeRestorableState(with coder: NSCoder) {
-        super.encodeRestorableState(with: coder)
-        print("\n\nENCODE \(self.identifier)\n\n")
-    }
-    
-    public override func restoreState(with coder: NSCoder) {
-        print("\n\nRESTORE \(self.identifier)\n\n")
-        super.restoreState(with: coder)
-    }
-    
 	var conversation: IConversation? {
         didSet {
+            NotificationCenter.default.removeObserver(self)
+            
             self.settingsController.conversation = self.conversation
             self.syncAutosaveTitle()
             self.invalidateRestorableState()
+            
+            // Register for Conversation "delegate" changes.
+            let c = NotificationCenter.default
+            c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidReceiveEvent(_:)),
+                          name: Notification.Conversation.DidReceiveEvent, object: self.conversation!)
+            c.addObserver(self, selector: #selector(MessageListViewController.conversationDidReceiveWatermark(_:)),
+                          name: Notification.Conversation.DidReceiveWatermark, object: self.conversation!)
+            c.addObserver(self, selector: #selector(MessageListViewController.conversationDidChangeTypingStatus(_:)),
+                          name: Notification.Conversation.DidChangeTypingStatus, object: self.conversation!)
 			
 			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
@@ -390,16 +392,66 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
 			}
             
 		}
-	}
-	
-	public func conversation(_ conversation: IConversation, didReceiveEvent event: IEvent) {
-		guard let e = event as? IChatMessageEvent else { return }
+    }
+    
+    public static func show(conversation conv: ParrotServiceExtension.Conversation) {
+        if let wc = MessageListViewController.openConversations[conv.identifier] {
+            log.debug("Conversation found for id \(conv.identifier)")
+            DispatchQueue.main.async {
+                wc.presentAsWindow()
+            }
+        } else {
+            log.debug("Conversation NOT found for id \(conv.identifier)")
+            DispatchQueue.main.async {
+                let wc = MessageListViewController()
+                wc.conversation = conv as! IConversation
+                MessageListViewController.openConversations[conv.identifier] = wc
+                wc.presentAsWindow()
+            }
+        }
+    }
+    
+    public static func hide(conversation conv: ParrotServiceExtension.Conversation) {
+        if let conv2 = MessageListViewController.openConversations[conv.identifier] {
+            MessageListViewController.openConversations[conv.identifier] = nil
+            conv2.dismiss(nil)
+        }
+    }
+    
+    public func conversationDidReceiveEvent(_ notification: Notification) {
+        guard let event = notification.userInfo?["event"] as? IChatMessageEvent else { return }
+        
+        // Support mentioning a person's name. // TODO, FIXME
         DispatchQueue.main.async {
-            self.dataSource.append(e)
+            self.dataSource.append(event)
             log.debug("section 0: \(self.dataSource.count)")
             self.listView.insert(at: [(section: 0, item: UInt(self.dataSource.count - 1))])
             //self.listView.scroll(toRow: self.dataSource.count - 1)
-		}
+        }
+    }
+    
+    public func conversationDidChangeTypingStatus(_ notification: Notification) {
+        guard let status = notification.userInfo?["status"] as? ITypingStatusMessage else { return }
+        guard let forUser = notification.userInfo?["user"] as? User else { return }
+        
+        var mode = FocusMode.here
+        switch status.status {
+        case TypingType.Started:
+            mode = .typing
+        case TypingType.Paused:
+            mode = .enteredText
+        case TypingType.Stopped: fallthrough
+        default: // TypingType.Unknown:
+            mode = .here
+        }
+        self.focusModeChanged(IFocus("", sender: forUser, timestamp: Date(), mode: mode))
+    }
+    
+    public func conversationDidReceiveWatermark(_ notification: Notification) {
+        guard let status = notification.userInfo?["status"] as? IWatermarkNotification else { return }
+        if let person = self.conversation?.client.userList?.people[status.userID.gaiaID] {
+            self.watermarkEvent(IFocus("", sender: person, timestamp: status.readTimestamp, mode: .here))
+        }
     }
     
     // FIXME: Watermark!!
@@ -487,6 +539,10 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
 			}
         }
     }
+    
+    public func windowWillClose(_ notification: Notification) {
+        MessageListViewController.openConversations[self.conversation!.identifier] = nil
+    }
 	
     // TODO: Add a toolbar button and do this with that.
     /*
@@ -511,6 +567,35 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     }
     
     public func send(message: String) {
-        self.sendMessageHandler(message, self.conversation!)
+        MessageListViewController.sendMessage(message, self.conversation!)
+        //self.sendMessageHandler(message, self.conversation!)
+    }
+    
+    static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
+        func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
+            return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
+        }
+        
+        // Grab a local copy of the text and let the user continue.
+        guard text.characters.count > 0 else { return }
+        
+        var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
+        emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
+        let txt = segmentsForInput(text, emojify: emojify)
+        
+        // Create an operation to process the message and then send it.
+        let operation = DispatchWorkItem(qos: .userInteractive, flags: .enforceQoS) {
+            let s = DispatchSemaphore(value: 0)
+            (conversation as! IConversation).sendMessage(segments: txt) {
+                s.signal()
+            }
+            s.wait()
+        }
+        
+        // Send the operation to the serial send queue, and notify on completion.
+        operation.notify(queue: DispatchQueue.main) {
+            log.debug("message sent")
+        }
+        sendQ.async(execute: operation)
     }
 }
