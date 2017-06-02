@@ -2,9 +2,7 @@ import Foundation
 import AppKit
 import Mocha
 import MochaUI
-import Hangouts
 import ParrotServiceExtension
-import protocol ParrotServiceExtension.Conversation
 
 public class DirectoryListViewController: NSViewController, WindowPresentable, ListViewDataDelegate {
     

@@ -1,6 +1,5 @@
 import AppKit
 import Mocha
-import Hangouts
 import ParrotServiceExtension
 import MochaUI
 

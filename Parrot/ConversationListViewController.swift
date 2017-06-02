@@ -2,9 +2,7 @@ import Foundation
 import AppKit
 import Mocha
 import MochaUI
-import Hangouts
 import ParrotServiceExtension
-import protocol ParrotServiceExtension.Conversation
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
 
@@ -54,7 +52,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
     //
     //
     
-	var conversationList: ParrotServiceExtension.ConversationList? {
+	var conversationList: ConversationList? {
 		didSet {
             self.listView.update(animated: false) {
                 self.updateInterpolation.animate(duration: 1.5)
@@ -63,7 +61,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	}
 	
     // FIXME: this is recomputed A LOT! bad idea...
-    var sortedConversations: [ParrotServiceExtension.Conversation] {
+    var sortedConversations: [Conversation] {
 		guard self.conversationList != nil else { return [] }
         return self.conversationList!.conversations.values
             .filter { !$0.archived }
@@ -97,15 +95,13 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         
         // Conversations selected that we don't already have. --> ADD
         convs.subtracting(dest).forEach { id in
-            log.debug("ADD: \(id)")
             let conv = self.sortedConversations.filter { $0.identifier == id }.first!
             MessageListViewController.show(conversation: conv)
         }
         // Conversations we have that are not selected. --> REMOVE
         dest.subtracting(convs).forEach { id in
-            log.debug("REMOVE: \(id)")
             let conv = self.sortedConversations.filter { $0.identifier == id }.first!
-            MessageListViewController.hide(conversation: conv as! IConversation)
+            MessageListViewController.hide(conversation: conv)
         }
     }
     

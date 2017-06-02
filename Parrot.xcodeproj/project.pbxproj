@@ -64,6 +64,7 @@
 		4869A9A71EE0FC2C00764594 /* NSAppearance+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9A61EE0FC2C00764594 /* NSAppearance+Extensions.swift */; };
 		4869A9A91EE1058100764594 /* WindowAnimators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9A81EE1058100764594 /* WindowAnimators.swift */; };
 		4869A9AE1EE1528100764594 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9AD1EE1528100764594 /* Notification.swift */; };
+		4869A9B01EE16F5D00764594 /* Auth+WebDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
@@ -361,6 +362,7 @@
 		4869A9A61EE0FC2C00764594 /* NSAppearance+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAppearance+Extensions.swift"; sourceTree = "<group>"; };
 		4869A9A81EE1058100764594 /* WindowAnimators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowAnimators.swift; sourceTree = "<group>"; };
 		4869A9AD1EE1528100764594 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Auth+WebDelegate.swift"; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
@@ -886,6 +888,7 @@
 			children = (
 				4884927C1D0B46BB0003D522 /* Main.storyboard */,
 				48834D951C1B3602009BC442 /* ParrotAppController.swift */,
+				4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */,
 				4831BCC71ED09C7500C30413 /* About */,
 				4831BCC61ED09C6300C30413 /* Preferences */,
 			);
@@ -1512,6 +1515,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
+				4869A9B01EE16F5D00764594 /* Auth+WebDelegate.swift in Sources */,
 				488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */,
 				4869A93A1EDB859700764594 /* PersonCell.swift in Sources */,
 				48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */,

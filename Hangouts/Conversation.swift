@@ -188,9 +188,27 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
 	
-	public func setFocus(_ value: Bool) {
-		self.client.setFocus(conversation_id: id, focused: value)
-	}
+    public var selfFocus: FocusMode {
+        get {
+            return .away
+        }
+        set {
+            switch newValue {
+            case .away:
+                self.client.setFocus(conversation_id: id, focused: false)
+                self.client.setTyping(conversation_id: id, typing: .Stopped)
+            case .here:
+                self.client.setFocus(conversation_id: id, focused: true)
+                self.client.setTyping(conversation_id: id, typing: .Stopped)
+            case .typing:
+                self.client.setFocus(conversation_id: id, focused: true)
+                self.client.setTyping(conversation_id: id, typing: .Started)
+            case .enteredText:
+                self.client.setFocus(conversation_id: id, focused: true)
+                self.client.setTyping(conversation_id: id, typing: .Paused)
+            }
+        }
+    }
 	
 	public var focus: [Focus] {
 		var focuses = [Focus]()
@@ -214,6 +232,17 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			self.setConversationNotificationLevel(level: (newValue ? .Quiet : .Ring), cb: nil)
 		}
 	}
+    
+    public func send(message text: String) {
+        guard text.characters.count > 0 else { return }
+        let s = DispatchSemaphore(value: 0)
+        self.client.opQueue.async {
+            self.sendMessage(segments: [IChatMessageSegment(text: text)]) {
+                s.signal()
+            }
+        }
+        s.wait()
+    }
 	
 	// Send a message to this conversation.
 	// A per-conversation lock is acquired to ensure that messages are sent in

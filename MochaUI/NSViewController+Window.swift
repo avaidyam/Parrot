@@ -22,12 +22,13 @@ public extension NSViewController {
     
     // For root controllers. The window delegate is set to the VC if it conforms to NSWindowDelegate.
     public func presentAsWindow() {
+        print("\n\n\(self._rootAnimator)\n\n")
         (self._rootAnimator ?? WindowTransitionAnimator()).display(viewController: self)
     }
     
     // For root controllers. Use only if presentAsWindow() was used.
     public func dismissFromWindow() {
-        self._rootAnimator?.undisplay()
+        self._rootAnimator?.undisplay(viewController: self)
     }
     
     // drawer?
@@ -75,13 +76,13 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
         self.window?.makeKeyAndOrderFront(nil)
     }
     
-    public func undisplay() {
+    public func undisplay(viewController: NSViewController) {
         NotificationCenter.default.removeObserver(self)
         self.window?.orderOut(nil)
         self.window?.unbind(NSTitleBinding)
         
         self.window = nil
-        self.window?.contentViewController?._rootAnimator = nil
+        viewController._rootAnimator = nil
     }
     
     public func animatePresentation(of viewController: NSViewController, from fromViewController: NSViewController) {
@@ -91,7 +92,7 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
     
     public func animateDismissal(of viewController: NSViewController, from fromViewController: NSViewController) {
         assert(self.window != nil, "WindowTransitionAnimator.animateDismissal(...) invoked before WindowTransitionAnimator.animatePresentation(...)!")
-        self.undisplay()
+        self.undisplay(viewController: viewController)
     }
     
     public func windowWillClose(_ notification: Notification) {
@@ -99,7 +100,7 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
         if let p = c.presenting {
             p.dismiss(c)
         } else {
-            self.undisplay()
+            self.undisplay(viewController: self.window!.contentViewController!)
         }
     }
 }

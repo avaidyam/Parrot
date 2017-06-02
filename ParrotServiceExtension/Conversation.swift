@@ -14,7 +14,10 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
 	var name: String { get set }
 	
 	/// The set of people involved in this Conversation.
-	var participants: [Person] { get }
+    var participants: [Person] { get }
+    
+    /// Set the current user's focus for the conversation.
+    var selfFocus: FocusMode { get set }
 	
 	/// The focus information for each participant in the Conversation.
 	/// There is guaranteed to be one Focus item per participant.
@@ -35,21 +38,16 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
     
 	/// Create a Conversation from the identifier given on the Service given.
     //init?(withIdentifier: String, on: Service)
-    
-	//var myFocus
-	
-	/// Set the current user's focus for the conversation.
-	func setFocus(_: Bool)
-	
-	//var blocked: Bool { get set }
-	
+		
 	// leave()
 	// archive()
 	// delete()
+    
 	// watermark?
-	// focus?
+    
 	// send(String)
 	// send(Image)
 	// send(Sticker)
-	// typing()
+    
+    func send(message: String)
 }

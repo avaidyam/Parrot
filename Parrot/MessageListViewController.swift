@@ -2,7 +2,7 @@ import Foundation
 import AppKit
 import Mocha
 import MochaUI
-import Hangouts
+import Hangouts // FIXME ASAP!!!
 import ParrotServiceExtension
 
 /* TODO: Re-enable link previews later when they're not terrible... */
@@ -152,17 +152,20 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     // MARK: Members
     //
     
+    private var focusComponents: (TypingHelper.State, Bool) = (.stopped, false) {
+        didSet {
+            switch self.focusComponents.0 {
+            case .started: self.conversation?.selfFocus = .typing
+            case .paused: self.conversation?.selfFocus = .enteredText
+            case .stopped: self.conversation?.selfFocus = self.focusComponents.1 ? .here : .away
+            }
+        }
+    }
+    
     /// A typing helper to debounce typing events and adapt them to Conversation.
     private lazy var typingHelper: TypingHelper = {
         TypingHelper {
-            switch $0 {
-            case .started:
-                self.conversation?.setTyping(typing: TypingType.Started)
-            case .paused:
-                self.conversation?.setTyping(typing: TypingType.Paused)
-            case .stopped:
-                self.conversation?.setTyping(typing: TypingType.Stopped)
-            }
+            self.focusComponents.0 = $0
         }
     }()
 	
@@ -317,13 +320,6 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         }
         self.colorsSub?.trigger()
         
-        // Monitor changes to the window's occlusion state and map it to conversation focus.
-        self.occlusionSub = AutoSubscription(from: self.view.window!, kind: .NSWindowDidChangeOcclusionState) { [weak self] _ in
-            // NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
-            self?.conversation?.setFocus((self?.view.window?.occlusionState.rawValue ?? 0) == 8194)
-        }
-        self.occlusionSub?.trigger()
-        
         // Set up dark/light notifications.
         ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
             self.view.window?.appearance = interface.appearance()
@@ -341,7 +337,6 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
     public override func viewWillDisappear() {
         self.colorsSub = nil
-        self.occlusionSub = nil
         
         ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
         ParrotAppearance.unregisterVibrancyStyleListener(observer: self)
@@ -524,7 +519,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         // Delay here to ensure that small context switches don't send focus messages.
 		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
             if let window = self.view.window, window.isKeyWindow {
-				self.conversation?.setFocus(true) // set it here too just in case.
+                self.focusComponents.1 = true // set it here too just in case.
             }
 			self.conversation?.updateReadTimestamp()
 			
@@ -535,6 +530,18 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
 				log.debug("state => { person: \(person.nameComponents), timestamp: \(timestamp) }")
 			}
         }
+    }
+    
+    // Monitor changes to the window's occlusion state and map it to conversation focus.
+    // NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
+    public func windowDidChangeOcclusionState(_ notification: Notification) {
+        self.focusComponents.1 = (self.view.window?.occlusionState.rawValue ?? 0) == 8194
+    }
+    
+    public func windowShouldClose(_ sender: Any) -> Bool {
+        guard self.view.window != nil else { return true }
+        ZoomWindowAnimator.hide(self.view.window!)
+        return false
     }
     
     public func windowWillClose(_ notification: Notification) {
@@ -569,30 +576,8 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     }
     
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
-        func segmentsForInput(_ text: String, emojify: Bool = true) -> [IChatMessageSegment] {
-            return [IChatMessageSegment(text: (emojify ? text.applyGoogleEmoji(): text))]
-        }
-        
-        // Grab a local copy of the text and let the user continue.
-        guard text.characters.count > 0 else { return }
-        
         var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
         emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
-        let txt = segmentsForInput(text, emojify: emojify)
-        
-        // Create an operation to process the message and then send it.
-        let operation = DispatchWorkItem(qos: .userInteractive, flags: .enforceQoS) {
-            let s = DispatchSemaphore(value: 0)
-            (conversation as! IConversation).sendMessage(segments: txt) {
-                s.signal()
-            }
-            s.wait()
-        }
-        
-        // Send the operation to the serial send queue, and notify on completion.
-        operation.notify(queue: DispatchQueue.main) {
-            log.debug("message sent")
-        }
-        sendQ.async(execute: operation)
+        conversation.send(message: emojify ? text.applyGoogleEmoji(): text)
     }
 }
