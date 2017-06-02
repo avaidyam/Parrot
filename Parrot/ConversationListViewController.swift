@@ -14,7 +14,7 @@ let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteract
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
 public class ConversationListViewController: NSViewController, WindowPresentable,
-ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
+ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
     private lazy var listView: ListView = {
         let v = ListView().modernize()
@@ -60,7 +60,8 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
 	
 	var conversationList: ParrotServiceExtension.ConversationList? {
 		didSet {
-            (conversationList as? Hangouts.ConversationList)?.delegate = self // FIXME: FORCE-CAST TO HANGOUTS
+            //(conversationList as? Hangouts.ConversationList)?.delegate = self // FIXME: FORCE-CAST TO HANGOUTS
+            
             
             // Open conversations that were previously open.
             self.listView.update(animated: false) {
@@ -69,7 +70,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
                     
                     // FIXME: If an old opened conversation isn't in the recents, it won't open!
                     (Settings["Parrot.OpenConversations"] as? [String])?
-                        .flatMap { self.conversationList?[$0] }
+                        .flatMap { self.conversationList?.conversations[$0] }
                         .forEach { self.showConversation($0) }
                 }
             }
@@ -154,9 +155,23 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
         self.view.centerY == self.listView.centerY
         self.view.width == self.listView.width
         self.view.height == self.listView.height
+        
+        // Register for Conversation "delegate" changes.
+        let c = NotificationCenter.default
+        c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidUpdate(_:)),
+                      name: Notification.Conversation.DidUpdate, object: nil)
+        c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidUpdateList(_:)),
+                      name: Notification.Conversation.DidUpdateList, object: nil)
+        c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidReceiveEvent(_:)),
+                      name: Notification.Conversation.DidReceiveEvent, object: nil)
+        c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidReceiveWatermark(_:)),
+                      name: Notification.Conversation.DidReceiveWatermark, object: nil)
+        c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidChangeTypingStatus(_:)),
+                      name: Notification.Conversation.DidChangeTypingStatus, object: nil)
     }
     
     deinit {
+        NotificationCenter.default.removeObserver(self)
         self.childrenSub = nil
     }
     
@@ -331,8 +346,12 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
 		sendQ.async(execute: operation)
 	}
 	
-    public func conversationList(_ list: Hangouts.ConversationList, didReceiveEvent event: IEvent) {
-		guard event is IChatMessageEvent else { return }
+    //
+    //
+    //
+    
+    public func conversationDidReceiveEvent(_ notification: Notification) {
+		guard let event = notification.userInfo?["event"] as? IChatMessageEvent else { return }
 		
 		// pls fix :(
 		self.updateList()
@@ -377,8 +396,11 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
 			notification.post()
 		}
 	}
-	
-    public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: ITypingStatusMessage, forUser: User) {
+    
+    public func conversationDidChangeTypingStatus(_ notification: Notification) {
+        guard let status = notification.userInfo?["status"] as? ITypingStatusMessage else { return }
+        guard let forUser = notification.userInfo?["user"] as? User else { return }
+        
         if let c = MessageListViewController.openConversations[status.convID] {
             var mode = FocusMode.here
             switch status.status {
@@ -393,23 +415,30 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
             c.focusModeChanged(IFocus("", sender: forUser, timestamp: Date(), mode: mode))
 		}
 	}
-    public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {
+    
+    public func conversationDidReceiveWatermark(_ notification: Notification) {
+        guard let status = notification.userInfo?["status"] as? IWatermarkNotification else { return }
         log.debug("watermark for \(status.convID) from \(status.userID.gaiaID)")
+        
         if let c = MessageListViewController.openConversations[status.convID], let person = self.userList?.people[status.userID.gaiaID] {
             log.debug("passthrough")
             c.watermarkEvent(IFocus("", sender: person, timestamp: status.readTimestamp, mode: .here))
 		}
 	}
-	
+    
 	/* TODO: Just update the row that is updated. */
-    public func conversationList(didUpdate list: Hangouts.ConversationList) {
+    public func conversationDidUpdate(_ notification: Notification) {
 		self.updateList()
     }
 	
 	/* TODO: Just update the row that is updated. */
-    public func conversationList(_ list: Hangouts.ConversationList, didUpdateConversation conversation: IConversation) {
+    public func conversationDidUpdateList(_ notification: Notification) {
 		self.updateList()
     }
+    
+    //
+    //
+    //
     
     private func updateList() {
         DispatchQueue.main.async {

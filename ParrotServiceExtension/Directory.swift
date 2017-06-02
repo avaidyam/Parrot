@@ -14,9 +14,6 @@ public protocol Directory: class, ServiceOriginating /*: Collection*/ {
     /// Returns all the people blocked by the current user.
     var blocked: [Person.IdentifierType: Person] { get }
     
-    /// Return the Person identified the string provided.
-    subscript(_ identifier: Person.IdentifierType) -> Person { get }
-    
     /// Search for users given a set of identifiers.
     /// Identifiers can include anything including name components.
     /// Returns a set of users that could be possible matches.

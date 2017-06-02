@@ -144,13 +144,10 @@ public extension Client {
 		guard chat_id_list.count > 0 else { cb(nil); return }
 		let data = [
 			self.getRequestHeader(),
-			None,
-			chat_id_list.map { [$0] }
+			None, // ignore lookup_spec for the batch_lookup_spec below
+			chat_id_list.map { [$0] },
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // doesn't work?
 		] as [Any]
-		/*
-		self.request(endpoint: "contacts/getentitybyid", body: data) { r in
-		log.info("\(NSString(data: r.data!, encoding: String.Encoding.utf8.rawValue))")
-		}*/
 		self.channel?.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
 			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
 		}

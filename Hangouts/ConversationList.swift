@@ -4,6 +4,7 @@ import ParrotServiceExtension
 
 fileprivate let log = Logger(subsystem: "Hangouts.ConversationList")
 
+/*
 public protocol ConversationListDelegate {
 	/*
 	conversationNotification(note)
@@ -24,6 +25,7 @@ public protocol ConversationListDelegate {
     func conversationList(didUpdate list: ConversationList)
     func conversationList(_ list: ConversationList, didUpdateConversation conversation: IConversation)
 }
+*/
 
 // Wrapper around Client that maintains a list of Conversations
 public class ConversationList: ParrotServiceExtension.ConversationList {
@@ -31,7 +33,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         return type(of: self.client).identifier
     }
 	
-    public var delegate: ConversationListDelegate?
+    //public var delegate: ConversationListDelegate?
     fileprivate unowned let client: Client
     internal var conv_dict = [String : IConversation]() /* TODO: Should be fileprivate! */
     public var syncTimestamp: Date? = nil
@@ -39,12 +41,12 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     public init(client: Client) {
         self.client = client
         self._sync()
-        NotificationCenter.default.addObserver(self, selector: #selector(ConversationList.clientDidUpdateState(_:)),
+        hangoutsCenter.addObserver(self, selector: #selector(ConversationList.clientDidUpdateState(_:)),
                                                name: Client.didUpdateStateNotification, object: client)
     }
 	
 	deinit {
-		NotificationCenter.default.removeObserver(self)
+		hangoutsCenter.removeObserver(self)
 	}
 	
 	public var conversations: [String: ParrotServiceExtension.Conversation] {
@@ -142,7 +144,8 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     }*/
     
     public func conversationDidUpdate(conversation: IConversation) {
-        delegate?.conversationList(self, didUpdateConversation: conversation)
+        NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: conversation)
+        //delegate?.conversationList(self, didUpdateConversation: conversation)
     }
 }
 
@@ -194,11 +197,12 @@ extension ConversationList {
         let conv_id = client_conversation.conversationId!.id!
         if let conv = conv_dict[conv_id] {
             conv.update_conversation(conversation: client_conversation)
-            delegate?.conversationList(self, didUpdateConversation: conv)
+            //delegate?.conversationList(self, didUpdateConversation: conv)
         } else {
             self.add_conversation(client_conversation: client_conversation)
         }
-        delegate?.conversationList(didUpdate: self)
+        NotificationCenter.default.post(name: Notification.Conversation.DidUpdateList, object: self)
+        //delegate?.conversationList(didUpdate: self)
     }
     
     public func _focusNotification(_ note: SetFocusNotification) {
@@ -214,7 +218,7 @@ extension ConversationList {
         if let conv = conv_dict[event.conversationId!.id!] {
             let conv_event = conv.add_event(event: event)
             
-            delegate?.conversationList(self, didReceiveEvent: conv_event)
+            //delegate?.conversationList(self, didReceiveEvent: conv_event)
             conv.handleEvent(event: conv_event)
         } else {
             log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
@@ -229,7 +233,7 @@ extension ConversationList {
                 chatID: note.senderId!.chatId!,
                 gaiaID: note.senderId!.gaiaId!
             )]
-            delegate?.conversationList(self, didChangeTypingStatus: res, forUser: user)
+            //delegate?.conversationList(self, didChangeTypingStatus: res, forUser: user)
             conv.handleTypingStatus(status: res.status, forUser: user)
         } else {
             log.warning("Received ClientSetTypingNotification for unknown conversation \(conv_id)")
@@ -244,7 +248,7 @@ extension ConversationList {
         let conv_id = note.conversationId!.id!
         if let conv = self.conv_dict[conv_id] {
             let res = parseWatermarkNotification(client_watermark_notification: note)
-            self.delegate?.conversationList(self, didReceiveWatermarkNotification: res)
+            //self.delegate?.conversationList(self, didReceiveWatermarkNotification: res)
             conv.handleWatermarkNotification(status: res)
         } else {
             log.warning("Received WatermarkNotification for unknown conversation \(conv_id)")

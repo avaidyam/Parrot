@@ -84,20 +84,21 @@ public class ParrotAppController: NSApplicationController {
 		//AppActivity.start("Authenticate")
         Authenticator.delegate = WebDelegate.delegate
         Authenticator.authenticateClient {
-            self.net?.startListening()
+            //AppActivity.end("Authenticate")
+            
             DispatchQueue.main.async {
                 self.conversationsController.presentAsWindow()
             }
             
             let c = Client(configuration: $0)
             ServiceRegistry.add(service: c)
-            //AppActivity.end("Authenticate")
+            self.net?.startListening()
             
-            self.connectSub = AutoSubscription(from: c, kind: Client.didConnectNotification) { _ in
+            self.connectSub = AutoSubscription(from: c, kind: Notification.Service.DidConnect) { _ in
                 UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
                                  contentImage: NSImage(named: NSImageNameCaution)).post()
 			}
-            self.disconnectSub = AutoSubscription(from: c, kind: Client.didDisconnectNotification) { _ in
+            self.disconnectSub = AutoSubscription(from: c, kind: Notification.Service.DidDisconnect) { _ in
                 DispatchQueue.main.async { // FIXME why does wrapping it twice work??
                     NSUserNotification.notifications()
                         .filter { $0.identifier == "Parrot.ConnectionStatus" }

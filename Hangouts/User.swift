@@ -4,12 +4,6 @@ import ParrotServiceExtension
 
 private let log = Logger(subsystem: "Hangouts.Users")
 
-public struct IPresence: ParrotServiceExtension.Presence {
-    public let lastSeen: Date
-    public let reachability: Reachability
-    public let mood: String
-}
-
 /// A chat user.
 public class User: Person, Hashable, Equatable {
     private unowned let client: Client
@@ -33,45 +27,10 @@ public class User: Person, Hashable, Equatable {
     public let photoURL: String?
     public let locations: [String]
 	public private(set) var me: Bool
-	
-    public lazy var presence: ParrotServiceExtension.Presence = {
-        let s = DispatchSemaphore(value: 0)
-        var pres: Hangouts.Presence? = nil
-        self.client.queryPresence(chat_ids: [self.identifier]) {
-            pres = $0!.presenceResult.map { $0.presence! }[0]
-            s.signal()
-        }
-        s.wait()
-        
-        let available = pres?.available ?? false
-        let reachable = pres?.reachable ?? false
-        let mobile = pres?.deviceStatus?.mobile ?? false
-        let desktop = pres?.deviceStatus?.desktop ?? false
-        let tablet = pres?.deviceStatus?.tablet ?? false
-        let none = !mobile && !desktop && !tablet
-        let reach = Reachability.unavailable
-        
-        let lastSeenUTC = pres?.lastSeen?.lastSeenTimestampUsec ?? 0
-        let lastSeenDate = Date.from(UTC: Double(lastSeenUTC))
-        
-        var lines = [""]
-        let moodSegments = pres?.moodSetting?.moodMessage?.moodContent?.segment ?? []
-        for segment in moodSegments {
-            if segment.type == nil { continue }
-            switch (segment.type) {
-            case SegmentType.Text, SegmentType.Link:
-                let replacement = lines.last! + segment.text!
-                lines.removeLast()
-                lines.append(replacement)
-            case SegmentType.LineBreak:
-                lines.append("\n")
-            default:
-                log.warning("Ignoring unknown chat message segment type: \(segment.type)")
-            }
-        }
-        let moodText = lines.filter { $0 != "" }.joined(separator: "\n")
-        return IPresence(lastSeen: lastSeenDate, reachability: reach, mood: moodText)
-    }()
+    
+    public internal(set) var lastSeen: Date = Date(timeIntervalSince1970: 0)
+    public internal(set) var reachability: Reachability = .unavailable
+    public internal(set) var mood: String = ""
 	
 	// Initialize a User directly.
 	// Handles full_name or first_name being nil by creating an approximate
@@ -186,6 +145,8 @@ public class UserList: Directory, Collection {
         conversations.forEach { conv in conv.participantData.forEach { required.insert($0) } }
         
         self.client.opQueue.sync {
+            
+            // Required step: get the base User objects prepared.
             self.client.getEntitiesByID(chat_id_list: required.flatMap { $0.id?.chatId }) { response in
                 let entities = response?.entityResult.flatMap { $0.entity } ?? []
                 for entity in entities {
@@ -198,15 +159,54 @@ public class UserList: Directory, Collection {
                 }
                 s.signal()
             }
+            s.wait()
+            
+            // Optional: Once we have all the entities, get their presence data.
+            self.client.queryPresence(chat_ids: required.flatMap { $0.id?.chatId }) {
+                for pres2 in $0!.presenceResult {
+                    let userid = pres2.userId!
+                    let pres = pres2.presence!
+                    
+                    let available = pres.available ?? false
+                    let reachable = pres.reachable ?? false
+                    let mobile = pres.deviceStatus?.mobile ?? false
+                    let desktop = pres.deviceStatus?.desktop ?? false
+                    let tablet = pres.deviceStatus?.tablet ?? false
+                    let none = !mobile && !desktop && !tablet
+                    let reach = Reachability.unavailable
+                    
+                    let lastSeenUTC = pres.lastSeen?.lastSeenTimestampUsec ?? 0
+                    let lastSeenDate = Date.from(UTC: Double(lastSeenUTC))
+                    
+                    var lines = [""]
+                    let moodSegments = pres.moodSetting?.moodMessage?.moodContent?.segment ?? []
+                    for segment in moodSegments {
+                        if segment.type == nil { continue }
+                        switch (segment.type) {
+                        case SegmentType.Text, SegmentType.Link:
+                            let replacement = lines.last! + segment.text!
+                            lines.removeLast()
+                            lines.append(replacement)
+                        case SegmentType.LineBreak:
+                            lines.append("\n")
+                        default:
+                            log.warning("Ignoring unknown chat message segment type: \(segment.type)")
+                        }
+                    }
+                    let moodText = lines.filter { $0 != "" }.joined(separator: "\n")
+                    var user = self.users[User.ID(chatID: userid.chatId!, gaiaID: userid.gaiaId!)]
+                    user?.lastSeen = lastSeenDate
+                    user?.reachability = reach
+                    user?.mood = moodText
+                }
+            }
         }
-        s.wait()
         return ret
     }
     
     internal static func getSelfInfo(_ client: Client) -> User {
         var selfUser: User! = nil
         let s = DispatchSemaphore(value: 0)
-        
         client.opQueue.async {
             client.getSelfInfo {
                 selfUser = User(client, entity: $0!.selfEntity!, selfUser: nil)
@@ -245,12 +245,12 @@ public class UserList: Directory, Collection {
         self.users[me.id] = me
         self.me = me
         
-        NotificationCenter.default.addObserver(self, selector: #selector(UserList._updatedState(_:)),
+        hangoutsCenter.addObserver(self, selector: #selector(UserList._updatedState(_:)),
                                                name: Client.didUpdateStateNotification, object: client)
 	}
 	
 	deinit {
-		NotificationCenter.default.removeObserver(self)
+		hangoutsCenter.removeObserver(self)
 	}
     
     @objc

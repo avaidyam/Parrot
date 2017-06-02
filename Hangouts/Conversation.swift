@@ -4,6 +4,7 @@ import ParrotServiceExtension
 
 private let log = Logger(subsystem: "Hangouts.Conversation")
 
+/*
 public protocol ConversationDelegate {
     func conversation(_ conversation: IConversation, didChangeTypingStatusForUser: User, toStatus: TypingType)
     func conversation(_ conversation: IConversation, didReceiveEvent: IEvent)
@@ -14,6 +15,7 @@ public protocol ConversationDelegate {
     //  the sort timestamp probably changed, at least.
     func conversationDidUpdate(conversation: IConversation)
 }
+*/
 
 public struct IFocus: Focus {
     public let serviceIdentifier: String
@@ -47,12 +49,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	public var readStates: [UserReadState] = []
     public var typingStatuses = Dictionary<User.ID, TypingType>()
 
-    public var delegate: ConversationDelegate?
+    //public var delegate: ConversationDelegate?
     public var conversationList: ConversationList?
-
-    public required init?(withIdentifier: String, on: Service) {
-        fatalError("oops gotta fix!")
-    }
     
     public init(client: Client,
         user_list: UserList,
@@ -107,7 +105,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
             self.conversation.selfConversationState!.selfReadState!.latestReadTimestamp = UInt64(old_timestamp.toUTC())
         }
 
-        delegate?.conversationDidUpdate(conversation: self)
+        NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: self)
+        //delegate?.conversationDidUpdate(conversation: self)
     }
 	
 	// Wrap ClientEvent in Event subclass.
@@ -310,7 +309,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
 
                 // Prevent duplicate requests by updating the conversation now.
                 self.latest_read_timestamp = new_read_timestamp
-                delegate?.conversationDidUpdate(conversation: self)
+                NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: self)
+                //delegate?.conversationDidUpdate(conversation: self)
                 conversationList?.conversationDidUpdate(conversation: self)
                 client.updateWatermark(conv_id: id, read_timestamp: new_read_timestamp) { _ in cb?() }
             }
@@ -318,26 +318,29 @@ public class IConversation: ParrotServiceExtension.Conversation {
     }
 
     public func handleEvent(event: IEvent) {
-        if let delegate = delegate {
+        NotificationCenter.default.post(name: Notification.Conversation.DidReceiveEvent, object: self, userInfo: ["event": event])
+        /*if let delegate = delegate {
 			delegate.conversation(self, didReceiveEvent: event)
         } else {
             let user = user_list[event.userID]
 			if !user.me {
 				//log.info("Notification \(event) from User \(user)!");
             }
-        }
+        }*/
     }
 	
     public func handleTypingStatus(status: TypingType, forUser user: User) {
         let existingTypingStatus = typingStatuses[user.id]
         if existingTypingStatus == nil || existingTypingStatus! != status {
             typingStatuses[user.id] = status
-            delegate?.conversation(self, didChangeTypingStatusForUser: user, toStatus: status)
+            NotificationCenter.default.post(name: Notification.Conversation.DidChangeTypingStatus, object: self, userInfo: ["user": user, "status": status])
+            //delegate?.conversation(self, didChangeTypingStatusForUser: user, toStatus: status)
         }
     }
 
     public func handleWatermarkNotification(status: IWatermarkNotification) {
-		delegate?.conversation(self, didReceiveWatermarkNotification: status)
+        NotificationCenter.default.post(name: Notification.Conversation.DidReceiveWatermark, object: self, userInfo: ["status": status])
+		//delegate?.conversation(self, didReceiveWatermarkNotification: status)
     }
 
     public var _messages: [IChatMessageEvent] {
@@ -389,7 +392,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
 				self.events_dict[conv_event.id] = conv_event
 			}
 			cb?(conv_events)
-			self.delegate?.conversationDidUpdateEvents(self)
+            NotificationCenter.default.post(name: Notification.Conversation.DidUpdateEvents, object: self)
+			//self.delegate?.conversationDidUpdateEvents(self)
 		}
     }
 

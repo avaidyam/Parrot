@@ -18,10 +18,10 @@ public final class Channel : NSObject {
 	private static let maxRetries = 5
 	
 	// NotificationCenter notification and userInfo keys.
-	public static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidConnect")
-	public static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidDisconnect")
-	public static let didReceiveMessageNotification = Notification.Name(rawValue: "Hangouts.Channel.ReceiveMessage")
-	public static let didReceiveMessageKey = "Hangouts.Channel.ReceiveMessage.Key"
+	internal static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidConnect")
+	internal static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Channel.DidDisconnect")
+	internal static let didReceiveMessageNotification = Notification.Name(rawValue: "Hangouts.Channel.ReceiveMessage")
+	internal static let didReceiveMessageKey = "Hangouts.Channel.ReceiveMessage.Key"
 	
 	// Parse data from the backward channel into chunks.
 	// Responses from the backward channel consist of a sequence of chunks which
@@ -270,7 +270,7 @@ public final class Channel : NSObject {
         self.proxy[self.task!] = nil
         if self.isConnected {
             self.isConnected = false
-            NotificationCenter.default.post(name: Channel.didDisconnectNotification, object: self)
+            hangoutsCenter.post(name: Channel.didDisconnectNotification, object: self)
         }
         self.needsSID = true
     }
@@ -285,12 +285,12 @@ public final class Channel : NSObject {
 			if !self.isConnected {
 				if self.onConnectCalled {
 					self.isConnected = true
-					NotificationCenter.default
+					hangoutsCenter
 						.post(name: Channel.didConnectNotification, object: self)
 				} else {
 					self.onConnectCalled = true
 					self.isConnected = true
-					NotificationCenter.default
+					hangoutsCenter
 						.post(name: Channel.didConnectNotification, object: self)
 				}
 			}
@@ -299,7 +299,7 @@ public final class Channel : NSObject {
 				for inner in container {
 					//let array_id = inner[0]
 					if let _inner = inner as? [Any], let array = _inner[1] as? [Any] {
-						NotificationCenter.default
+						hangoutsCenter
 							.post(name: Channel.didReceiveMessageNotification, object: self,
 								userInfo: [Channel.didReceiveMessageKey: array])
 					}

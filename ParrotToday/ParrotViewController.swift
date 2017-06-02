@@ -11,7 +11,7 @@ private var _hangoutsClient: Client? = nil
 
 private let log = Logger(subsystem: "Parrot.Today.Global")
 
-class ParrotViewController: NSViewController, ConversationListDelegate, ListViewDataDelegate {
+class ParrotViewController: NSViewController, ListViewDataDelegate {
     
     private lazy var listView: ListView = {
         let v = ListView()
@@ -68,14 +68,14 @@ class ParrotViewController: NSViewController, ConversationListDelegate, ListView
             let c = Client(configuration: $0)
             _hangoutsClient = c
             _ = c.connect()
-            self.connectSub = AutoSubscription(from: c, kind: Client.didConnectNotification) { _ in
+            self.connectSub = AutoSubscription(from: c, kind: Notification.Service.DidConnect) { _ in
                 if c.conversationList == nil {
                     //c.buildUserConversationList {
                         self.userList = c.directory
                         self.conversationList = c.conversations
                         
                         // FIXME: FORCE-CAST TO HANGOUTS
-                        (c.conversations as? Hangouts.ConversationList)?.delegate = self
+                        //(c.conversations as? Hangouts.ConversationList)?.delegate = self
                         self.listView.update()
                     //}
                 }

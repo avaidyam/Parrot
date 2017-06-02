@@ -26,8 +26,6 @@ public class PersonCell: NSTableCellView, NSTableViewCellProtocol {
         let v = NSTextField(labelWithString: "").modernize()
         v.textColor = NSColor.secondaryLabelColor
         v.font = NSFont.systemFont(ofSize: 11.0)
-        v.usesSingleLineMode = false
-        v.lineBreakMode = .byWordWrapping
         return v
     }()
     
@@ -57,21 +55,21 @@ public class PersonCell: NSTableCellView, NSTableViewCellProtocol {
         self.add(subviews: [self.nameLabel, self.timeLabel, self.textLabel])
         self.add(sublayer: self.photoLayer)
         
-        self.photoLayer.layout.left == self.left + 8
+        self.photoLayer.layout.left == self.left + 4
         self.photoLayer.layout.centerY == self.centerY
-        self.photoLayer.layout.width == 48
-        self.photoLayer.layout.height == 48
-        self.photoLayer.layout.right == self.nameLabel.left - 8
-        self.photoLayer.layout.right == self.textLabel.left - 8
-        self.nameLabel.top == self.top + 8
+        self.photoLayer.layout.width == 40
+        self.photoLayer.layout.height == 40
+        self.photoLayer.layout.right == self.nameLabel.left - 4
+        self.photoLayer.layout.right == self.textLabel.left - 4
+        self.nameLabel.top == self.top + 4
         self.nameLabel.right == self.timeLabel.left - 4
         self.nameLabel.bottom == self.textLabel.top - 4
         self.nameLabel.centerY == self.timeLabel.centerY
-        self.timeLabel.top == self.top + 8
-        self.timeLabel.right == self.right - 8
+        self.timeLabel.top == self.top + 4
+        self.timeLabel.right == self.right - 4
         self.timeLabel.bottom == self.textLabel.top - 4
-        self.textLabel.right == self.right - 8
-        self.textLabel.bottom == self.bottom - 8
+        self.textLabel.right == self.right - 4
+        self.textLabel.bottom == self.bottom - 4
     }
     
     // Upon assignment of the represented object, configure the subview contents.
@@ -81,10 +79,10 @@ public class PersonCell: NSTableCellView, NSTableViewCellProtocol {
             
             self.nameLabel.stringValue = person.fullName
             self.nameLabel.toolTip = person.fullName
-            self.textLabel.stringValue = person.presence.mood
-            self.textLabel.toolTip = person.presence.mood
-            self.timeLabel.stringValue = person.presence.lastSeen.relativeString()
-            self.timeLabel.toolTip = "\(person.presence.lastSeen.fullString())"
+            self.textLabel.stringValue = person.mood
+            self.textLabel.toolTip = person.mood
+            self.timeLabel.stringValue = person.lastSeen.relativeString()
+            self.timeLabel.toolTip = "\(person.lastSeen.fullString())"
             self.photoLayer.contents = fetchImage(user: person, monogram: true)
         }
     }

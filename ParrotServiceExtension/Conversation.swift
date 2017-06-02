@@ -53,11 +53,3 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
 	// send(Sticker)
 	// typing()
 }
-
-public enum ConversationNotification {
-	case create
-	case delete
-	case join
-	case leave
-	case mute
-}

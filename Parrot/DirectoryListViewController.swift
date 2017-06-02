@@ -62,7 +62,7 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     }
     
     public func cellHeight(in view: ListView, at: ListView.Index) -> Double {
-        return 48.0 + 16.0 /* padding */
+        return 32.0 + 16.0 /* padding */
     }
     
     public override func loadView() {

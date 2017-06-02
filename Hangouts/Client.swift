@@ -3,6 +3,7 @@ import Mocha
 import ParrotServiceExtension
 
 private let log = Logger(subsystem: "Hangouts.Client")
+internal let hangoutsCenter = NotificationCenter()
 
 public final class Client: Service {
 	
@@ -10,10 +11,10 @@ public final class Client: Service {
 	public static let IMAGE_UPLOAD_URL = "https://docs.google.com/upload/photos/resumable"
 	
 	// NotificationCenter notification and userInfo keys.
-	public static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidConnect")
-	public static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidDisconnect")
-	public static let didUpdateStateNotification = Notification.Name(rawValue: "Hangouts.Client.UpdateState")
-	public static let didUpdateStateKey = "Hangouts.Client.UpdateState.Key"
+	internal static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidConnect")
+	internal static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidDisconnect")
+	internal static let didUpdateStateNotification = Notification.Name(rawValue: "Hangouts.Client.UpdateState")
+	internal static let didUpdateStateKey = "Hangouts.Client.UpdateState.Key"
 	
 	// Timeout to send for setactiveclient requests:
 	public static let ACTIVE_TIMEOUT_SECS = 120
@@ -44,13 +45,13 @@ public final class Client: Service {
         // A notification-based delegate replacement:
         //
         
-        let _c = NotificationCenter.default
+        let _c = hangoutsCenter
         let a = _c.addObserver(forName: Channel.didConnectNotification, object: self.channel, queue: nil) { _ in
-            NotificationCenter.default.post(name: Client.didConnectNotification, object: self)
+            NotificationCenter.default.post(name: Notification.Service.DidConnect, object: self)
             self.synchronize()
         }
         let b = _c.addObserver(forName: Channel.didDisconnectNotification, object: self.channel, queue: nil) { _ in
-            NotificationCenter.default.post(name: Client.didDisconnectNotification, object: self)
+            NotificationCenter.default.post(name: Notification.Service.DidDisconnect, object: self)
         }
         let c = _c.addObserver(forName: Channel.didReceiveMessageNotification, object: self.channel, queue: nil) { note in
             if let val = (note.userInfo)?[Channel.didReceiveMessageKey] as? [Any] {
@@ -66,7 +67,7 @@ public final class Client: Service {
         
         // Remove all the observers so we aren't receiving calls later on.
         self.tokens.forEach {
-            NotificationCenter.default.removeObserver($0)
+            hangoutsCenter.removeObserver($0)
         }
     }
 	
@@ -116,7 +117,7 @@ public final class Client: Service {
                         if let conv = self.conversationList.conv_dict[event.conversationId!.id!] {
                             let conv_event = conv.add_event(event: event)
                             
-                            self.conversationList.delegate?.conversationList(self.conversationList, didReceiveEvent: conv_event)
+                            //self.conversationList.delegate?.conversationList(self.conversationList, didReceiveEvent: conv_event)
                             conv.handleEvent(event: conv_event)
                         } else {
                             log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
@@ -129,6 +130,7 @@ public final class Client: Service {
             
             // Update the sync timestamp otherwise if we lose connectivity again, we re-sync everything.
             self.lastUpdate = res!.syncTimestamp!
+            NotificationCenter.default.post(name: Notification.Service.DidSynchronize, object: self)
         }
 	}
 	
@@ -231,7 +233,7 @@ public final class Client: Service {
 		// trimmed down to 1 request that includes the bare minimum to make
 		// things work.
 		func addChannelServices() {
-			let inner = ["3": ["1": ["1": "babel"]]]
+			let inner = ["3": ["1": ["1": "babel"]]]//[..., ["3": ["1": ["1": "babel_presence_last_seen"]]]]
 			let dat = try! JSONSerialization.data(withJSONObject: inner, options: [])
 			let str = NSString(data: dat, encoding: String.Encoding.utf8.rawValue)! as String
 			
@@ -266,7 +268,7 @@ public final class Client: Service {
 					self.active_client_state = state_update.stateUpdateHeader!.activeClientState!
                     self.lastUpdate = state_update.stateUpdateHeader!.currentServerTime!
                     
-					NotificationCenter.default.post(
+					hangoutsCenter.post(
 						name: Client.didUpdateStateNotification, object: self,
 						userInfo: [Client.didUpdateStateKey: Wrapper(state_update)])
 				}
