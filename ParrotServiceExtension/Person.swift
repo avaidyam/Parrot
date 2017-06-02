@@ -9,11 +9,23 @@ public enum Reachability {
 	/// The Person is currently available on a mobile device.
 	case mobile
 	
-	/// The Person is currently available on a mobile device.
+	/// The Person is currently available on a tablet device.
 	case tablet
 	
 	/// The Person is currently available on a desktop device.
 	case desktop
+}
+
+public protocol Presence {
+    
+    /// The timestamp the Person was last active on the Service.
+    var lastSeen: Date { get }
+    
+    /// The Person's reachability (device), if they are reachable.
+    var reachability: Reachability { get }
+    
+    /// The Person's mood or status message (a la XMPP or AIM).
+    var mood: String { get }
 }
 
 public protocol Person: ServiceOriginating /*: Hashable, Equatable*/ {
@@ -43,15 +55,9 @@ public protocol Person: ServiceOriginating /*: Hashable, Equatable*/ {
 	
 	/// Is this Person the one logged into the Service?
 	var me: Bool { get }
-	
-	/// The timestamp the Person was last active on the Service.
-	var lastSeen: Date { get }
-	
-	/// The Person's reachability (device), if they are reachable.
-	var reachability: Reachability { get }
-	
-	/// The Person's mood or status message (a la XMPP or AIM).
-	var mood: String { get }
+    
+    /// The Person's presence.
+    var presence: Presence { get }
 	
 	/// Block this person from contacting the logged in user.
 	//func block()

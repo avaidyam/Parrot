@@ -85,7 +85,7 @@ message Presence {
   optional bool reachable = 1;
   optional bool available = 2;
   optional DeviceStatus device_status = 6;
-  optional MoodMessage mood_message = 9;
+  optional MoodSetting mood_setting = 9;
   optional LastSeen last_seen = 10;
 
   // TODO:

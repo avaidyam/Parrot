@@ -192,7 +192,7 @@ public extension Client {
 		
 		let data = [
 			self.getRequestHeader(),
-			[chat_ids],
+			chat_ids.map { [$0] },
 			[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // what are FieldMasks 4, 5, 8, 9?
 		] as [Any]
 		self.channel?.request(endpoint: "presence/querypresence", body: data, use_json: false) { r in
@@ -391,7 +391,7 @@ public extension Client {
 			None,
 			[],
 			false,
-			[],
+			[], // TODO: [[["UgyJ67sRgIpUbr_mp2R4AaABAQ"], 1496247974047340]]
 			1048576 // max_response_size_bytes
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/syncallnewevents", body: data, use_json: false) { r in

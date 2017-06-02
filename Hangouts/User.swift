@@ -4,6 +4,12 @@ import ParrotServiceExtension
 
 private let log = Logger(subsystem: "Hangouts.Users")
 
+public struct IPresence: ParrotServiceExtension.Presence {
+    public let lastSeen: Date
+    public let reachability: Reachability
+    public let mood: String
+}
+
 /// A chat user.
 public class User: Person, Hashable, Equatable {
     private unowned let client: Client
@@ -28,23 +34,44 @@ public class User: Person, Hashable, Equatable {
     public let locations: [String]
 	public private(set) var me: Bool
 	
-	public var lastSeen: Date {
-		return Date(timeIntervalSince1970: 0)
-	}
-	public var reachability: Reachability {
-		return .unavailable
-	}
-	public var mood: String {
-        //sync()
-		return ""
-	}
-    
-    private func sync() {
+    public lazy var presence: ParrotServiceExtension.Presence = {
+        let s = DispatchSemaphore(value: 0)
+        var pres: Hangouts.Presence? = nil
         self.client.queryPresence(chat_ids: [self.identifier]) {
-            let pres = $0!.presenceResult.map { $0.presence! }[0]
-            print("\n\n", pres.available ?? false, pres.reachable ?? false, pres.deviceStatus, pres.lastSeen?.lastSeenTimestampUsec, pres.moodMessage?.moodContent?.segment, "\n\n")
+            pres = $0!.presenceResult.map { $0.presence! }[0]
+            s.signal()
         }
-    }
+        s.wait()
+        
+        let available = pres?.available ?? false
+        let reachable = pres?.reachable ?? false
+        let mobile = pres?.deviceStatus?.mobile ?? false
+        let desktop = pres?.deviceStatus?.desktop ?? false
+        let tablet = pres?.deviceStatus?.tablet ?? false
+        let none = !mobile && !desktop && !tablet
+        let reach = Reachability.unavailable
+        
+        let lastSeenUTC = pres?.lastSeen?.lastSeenTimestampUsec ?? 0
+        let lastSeenDate = Date.from(UTC: Double(lastSeenUTC))
+        
+        var lines = [""]
+        let moodSegments = pres?.moodSetting?.moodMessage?.moodContent?.segment ?? []
+        for segment in moodSegments {
+            if segment.type == nil { continue }
+            switch (segment.type) {
+            case SegmentType.Text, SegmentType.Link:
+                let replacement = lines.last! + segment.text!
+                lines.removeLast()
+                lines.append(replacement)
+            case SegmentType.LineBreak:
+                lines.append("\n")
+            default:
+                log.warning("Ignoring unknown chat message segment type: \(segment.type)")
+            }
+        }
+        let moodText = lines.filter { $0 != "" }.joined(separator: "\n")
+        return IPresence(lastSeen: lastSeenDate, reachability: reach, mood: moodText)
+    }()
 	
 	// Initialize a User directly.
 	// Handles full_name or first_name being nil by creating an approximate

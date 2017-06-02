@@ -81,10 +81,10 @@ public class PersonCell: NSTableCellView, NSTableViewCellProtocol {
             
             self.nameLabel.stringValue = person.fullName
             self.nameLabel.toolTip = person.fullName
-            self.textLabel.stringValue = person.mood
-            self.textLabel.toolTip = person.mood
-            self.timeLabel.stringValue = person.lastSeen.relativeString()
-            self.timeLabel.toolTip = "\(person.lastSeen.fullString())"
+            self.textLabel.stringValue = person.presence.mood
+            self.textLabel.toolTip = person.presence.mood
+            self.timeLabel.stringValue = person.presence.lastSeen.relativeString()
+            self.timeLabel.toolTip = "\(person.presence.lastSeen.fullString())"
             self.photoLayer.contents = fetchImage(user: person, monogram: true)
         }
     }

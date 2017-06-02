@@ -837,7 +837,7 @@ public struct Presence: ProtoMessageExtensor {
 		1: ProtoFieldDescriptor(id: 1, name: "reachable", type: .bool, label: .optional),
 		2: ProtoFieldDescriptor(id: 2, name: "available", type: .bool, label: .optional),
 		6: ProtoFieldDescriptor(id: 6, name: "device_status", type: .prototype("DeviceStatus"), label: .optional),
-		9: ProtoFieldDescriptor(id: 9, name: "mood_message", type: .prototype("MoodMessage"), label: .optional),
+		9: ProtoFieldDescriptor(id: 9, name: "mood_setting", type: .prototype("MoodSetting"), label: .optional),
 		10: ProtoFieldDescriptor(id: 10, name: "last_seen", type: .prototype("LastSeen"), label: .optional),
 	]
 	public var _declaredFields: [Int: ProtoFieldDescriptor] {
@@ -856,8 +856,8 @@ public struct Presence: ProtoMessageExtensor {
 			guard value == nil || value is DeviceStatus? else { throw ProtoError.typeMismatchError }
 			self.deviceStatus = value as! DeviceStatus?
 		case 9:
-			guard value == nil || value is MoodMessage? else { throw ProtoError.typeMismatchError }
-			self.moodMessage = value as! MoodMessage?
+			guard value == nil || value is MoodSetting? else { throw ProtoError.typeMismatchError }
+			self.moodSetting = value as! MoodSetting?
 		case 10:
 			guard value == nil || value is LastSeen? else { throw ProtoError.typeMismatchError }
 			self.lastSeen = value as! LastSeen?
@@ -876,7 +876,7 @@ public struct Presence: ProtoMessageExtensor {
 		case 1: return self.reachable
 		case 2: return self.available
 		case 6: return self.deviceStatus
-		case 9: return self.moodMessage
+		case 9: return self.moodSetting
 		case 10: return self.lastSeen
 		default: throw ProtoError.fieldNameNotFoundError
 		}
@@ -893,7 +893,7 @@ public struct Presence: ProtoMessageExtensor {
 		self.reachable._flatMap { hash = (hash &* 31) &+ $0.hashValue }
 		self.available._flatMap { hash = (hash &* 31) &+ $0.hashValue }
 		self.deviceStatus._flatMap { hash = (hash &* 31) &+ $0.hashValue }
-		self.moodMessage._flatMap { hash = (hash &* 31) &+ $0.hashValue }
+		self.moodSetting._flatMap { hash = (hash &* 31) &+ $0.hashValue }
 		self.lastSeen._flatMap { hash = (hash &* 31) &+ $0.hashValue }
 		return hash
 	}
@@ -901,7 +901,7 @@ public struct Presence: ProtoMessageExtensor {
 	public var reachable: Bool?
 	public var available: Bool?
 	public var deviceStatus: DeviceStatus?
-	public var moodMessage: MoodMessage?
+	public var moodSetting: MoodSetting?
 	public var lastSeen: LastSeen?
 }
 
