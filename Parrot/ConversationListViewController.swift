@@ -7,7 +7,6 @@ import ParrotServiceExtension
 import protocol ParrotServiceExtension.Conversation
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
-/* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
 
 //private let log = Logger(subsystem: "Parrot.ConversationListViewController")
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
@@ -32,22 +31,15 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
 	private var updateToken: Bool = false
     private var childrenSub: Subscription? = nil
-	private var userList: Directory?
     
     private lazy var updateInterpolation: Interpolate = {
         let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
             self?.listView.alphaValue = CGFloat(alpha)
             self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
-        /*indicatorAnim.add(at: 0.0) {
-            DispatchQueue.main.async {
-                log.debug("\n\nSTART\n\n")
-                //self.indicator.startAnimation()
-            }
-        }*/
         indicatorAnim.add(at: 1.0) {
-            DispatchQueue.main.async {
-                self.indicator.stopAnimation()
+            DispatchQueue.main.async { [weak self] in
+                self?.indicator.stopAnimation()
             }
         }
         indicatorAnim.handlerRunPolicy = .always
@@ -58,12 +50,12 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         return group
     }()
 	
+    //
+    //
+    //
+    
 	var conversationList: ParrotServiceExtension.ConversationList? {
 		didSet {
-            //(conversationList as? Hangouts.ConversationList)?.delegate = self // FIXME: FORCE-CAST TO HANGOUTS
-            
-            
-            // Open conversations that were previously open.
             self.listView.update(animated: false) {
                 self.updateInterpolation.animate(duration: 1.5)
             }
@@ -136,6 +128,10 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         }
     }
 	
+    //
+    //
+    //
+    
     public override func loadView() {
         self.view = NSVisualEffectView()
         self.view.add(subviews: [self.listView, self.indicator])
@@ -181,7 +177,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         
         NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
             guard let c = note.object as? Service else { return }
-            self.userList = c.directory
             self.conversationList = c.conversations
             
             DispatchQueue.main.async {
@@ -197,14 +192,6 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
             let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
             NSApp.badgeCount = UInt(unread)
         }
-        
-        /*self.listView.pasteboardProvider = { row in
-         let pb = NSPasteboardItem()
-         //NSPasteboardTypeRTF, NSPasteboardTypeString, NSPasteboardTypeTabularText
-         log.info("pb for row \(row)")
-         pb.setString("TEST", forType: "public.utf8-plain-text")
-         return pb
-         }*/
     }
     
     public override func viewWillAppear() {
@@ -221,10 +208,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 			guard let vev = self.view as? NSVisualEffectView else { return }
 			vev.state = style.visualEffectState()
 		}
-        
-        d.presentAsWindow()
 	}
-    private let d = DirectoryListViewController()
     
     /// If we need to close, make sure we clean up after ourselves, instead of deinit.
     public override func viewWillDisappear() {
@@ -267,13 +251,8 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 		self.updateList()
     }
     
-    //
-    //
-    //
-    
     private func updateList() {
         DispatchQueue.main.async {
-            //self.listView.dataSource = self.sortedConversations.map { Wrapper.init($0) }
             self.listView.update()
             let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
             NSApp.badgeCount = UInt(unread)

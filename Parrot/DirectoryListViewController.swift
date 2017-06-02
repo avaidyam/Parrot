@@ -40,6 +40,10 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
         return group
     }()
     
+    //
+    //
+    //
+    
     var directory: ParrotServiceExtension.Directory? {
         didSet {
             self.listView.update(animated: false) {
@@ -64,6 +68,10 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     public func cellHeight(in view: ListView, at: ListView.Index) -> Double {
         return 32.0 + 16.0 /* padding */
     }
+    
+    //
+    //
+    //
     
     public override func loadView() {
         self.view = NSVisualEffectView()

@@ -27,6 +27,7 @@ public class User: Person, Hashable, Equatable {
     public let photoURL: String?
     public let locations: [String]
 	public private(set) var me: Bool
+    public var blocked: Bool = false
     
     public internal(set) var lastSeen: Date = Date(timeIntervalSince1970: 0)
     public internal(set) var reachability: Reachability = .unavailable
@@ -93,7 +94,7 @@ public class User: Person, Hashable, Equatable {
 }
 
 // Collection of User instances.
-public class UserList: Directory, Collection {
+public class UserList: Directory {
 	
 	fileprivate var users: [User.ID: User]
     private unowned let client: Client
@@ -296,28 +297,4 @@ public extension User {
     public static func ==(lhs: User, rhs: User) -> Bool {
         return lhs.id == rhs.id
     }
-}
-
-/// UserList: Collection
-public extension UserList {
-	public typealias Index = DictionaryIndex<User.ID, User>
-	public typealias SubSequence = Slice<LazyMapCollection<Dictionary<User.ID, User>, User>>
-	public var startIndex : Index {
-		return self.users.values.startIndex
-	}
-	public var endIndex : Index {
-		return self.users.values.endIndex
-	}
-	public func index(after i: Index) -> Index {
-		return self.users.values.index(after: i)
-	}
-	public func formIndex(after i: inout Index) {
-		return self.users.values.formIndex(after: &i)
-	}
-	public subscript(index: Index) -> User {
-		return self.users.values[index]
-	}
-	public subscript(bounds: Range<Index>) -> SubSequence {
-		return self.users.values[bounds]
-	}
 }

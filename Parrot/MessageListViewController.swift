@@ -8,7 +8,6 @@ import ParrotServiceExtension
 /* TODO: Re-enable link previews later when they're not terrible... */
 /* TODO: Use the PlaceholderMessage for sending messages. */
 /* TODO: When selecting text and typing a completion character, wrap the text. */
-/* TODO: Remove usage of NSWindowDelegate. */
 
 public struct EventStreamItemBundle {
     public let current: EventStreamItem
@@ -28,8 +27,6 @@ public struct PlaceholderMessage: Message {
     public var failed: Bool = false
 }
 
-// states: nothing-loaded, loading, error, valid view
-
 // TODO: not here...
 public extension Notification.Name {
     public static let OpenConversationsUpdated = Notification.Name(rawValue: "Parrot.OpenConversationsUpdated")
@@ -44,6 +41,30 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         didSet {
             Settings["Parrot.OpenConversations"] = Array(self.openConversations.keys)
             Subscription.Event(name: .OpenConversationsUpdated).post()
+        }
+    }
+    
+    public static func show(conversation conv: ParrotServiceExtension.Conversation) {
+        if let wc = MessageListViewController.openConversations[conv.identifier] {
+            log.debug("Conversation found for id \(conv.identifier)")
+            DispatchQueue.main.async {
+                wc.presentAsWindow()
+            }
+        } else {
+            log.debug("Conversation NOT found for id \(conv.identifier)")
+            DispatchQueue.main.async {
+                let wc = MessageListViewController()
+                wc.conversation = conv as! IConversation
+                MessageListViewController.openConversations[conv.identifier] = wc
+                wc.presentAsWindow()
+            }
+        }
+    }
+    
+    public static func hide(conversation conv: ParrotServiceExtension.Conversation) {
+        if let conv2 = MessageListViewController.openConversations[conv.identifier] {
+            MessageListViewController.openConversations[conv.identifier] = nil
+            conv2.dismiss(nil)
         }
     }
     
@@ -392,30 +413,6 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
 			}
             
 		}
-    }
-    
-    public static func show(conversation conv: ParrotServiceExtension.Conversation) {
-        if let wc = MessageListViewController.openConversations[conv.identifier] {
-            log.debug("Conversation found for id \(conv.identifier)")
-            DispatchQueue.main.async {
-                wc.presentAsWindow()
-            }
-        } else {
-            log.debug("Conversation NOT found for id \(conv.identifier)")
-            DispatchQueue.main.async {
-                let wc = MessageListViewController()
-                wc.conversation = conv as! IConversation
-                MessageListViewController.openConversations[conv.identifier] = wc
-                wc.presentAsWindow()
-            }
-        }
-    }
-    
-    public static func hide(conversation conv: ParrotServiceExtension.Conversation) {
-        if let conv2 = MessageListViewController.openConversations[conv.identifier] {
-            MessageListViewController.openConversations[conv.identifier] = nil
-            conv2.dismiss(nil)
-        }
     }
     
     public func conversationDidReceiveEvent(_ notification: Notification) {

@@ -1,6 +1,9 @@
 import Cocoa
 import MochaUI
 
+/* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
+// states: nothing-loaded, loading, error, valid view
+
 public protocol WindowAnimator {
     static func show(_ window: NSWindow)
     static func hide(_ window: NSWindow)

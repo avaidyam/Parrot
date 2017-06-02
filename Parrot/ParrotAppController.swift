@@ -43,6 +43,10 @@ public class ParrotAppController: NSApplicationController {
 		ConversationListViewController()
 	}()
     
+    private lazy var directoryController: NSViewController = {
+        DirectoryListViewController()
+    }()
+    
     private lazy var statusItem: NSStatusItem = {
         NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
     }()

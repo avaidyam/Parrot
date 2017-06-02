@@ -23,9 +23,6 @@ public protocol Person: ServiceOriginating /*: Hashable, Equatable*/ {
 	/// The Person's unique identifier (specific to the Service).
 	var identifier: IdentifierType { get }
     
-    // a handle...
-    //var resource: String { get }
-	
 	/// The Person's name as an array of components.
 	/// For example, the first element of the array provides the first name,
 	/// and the last element provides the last name. Concatenation of all the elements
@@ -44,6 +41,9 @@ public protocol Person: ServiceOriginating /*: Hashable, Equatable*/ {
 	/// Is this Person the one logged into the Service?
     var me: Bool { get }
     
+    /// Block or unblock this person from contacting the logged in user.
+    var blocked: Bool { get set }
+    
     /// The timestamp the Person was last active on the Service.
     var lastSeen: Date { get }
     
@@ -52,12 +52,6 @@ public protocol Person: ServiceOriginating /*: Hashable, Equatable*/ {
     
     /// The Person's mood or status message (a la XMPP or AIM).
     var mood: String { get }
-	
-	/// Block this person from contacting the logged in user.
-	//func block()
-	
-	/// Unblock this person from contacting the logged in user.
-	//func unblock()
 }
 
 public extension Person {
