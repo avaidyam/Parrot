@@ -1,59 +1,31 @@
 import Cocoa
 
-// Example:
-/*
-let b = SystemBezel()
-let t = BezelImageIndicatorView()
-
-t.image = NSImage(named: NSImageNameTouchBarMailTemplate)
-//t.text = "Mail Sent!"
-t.level = 8
-
-b.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
-b.contentView = t
-b.show(autohide: .seconds(2))
-*/
-
 // adapted from @mattprowse: https://github.com/mattprowse/SystemBezelWindowController
+
+/* TODO: Add SystemBezel queueing support (like Toast). */
+/* TODO: Add SystemBezel margin/gravity support (like Toast). */
+
+/// A SystemBezel is an on-screen view containing a quick message for the user.
+///
+/// When the view is shown to the user, it appears as a floating window over all 
+/// applications, but will never become key. The user will probably not be interacting
+/// with your app. The idea is to be as unobtrusive as possible, while still 
+/// showing the user the information you want them to see. Two examples are the 
+/// volume control, and a brief message saying that your settings have been saved.
+///
+/// Note: The easiest way to use this class is to call the static `create()` method.
+///
+/// Example: SystemBezel.create(text: "Mail Sent!", image: ImageAssets.mailIcon).show(duration: .seconds(2))
 public class SystemBezel {
-    
-    public enum ColorMode {
-        case light, lightReducedTransparency, lightIncreasedContrast
-        case dark, darkReducedTransparency, darkIncreasedContrast
-    }
-    
-    //
-    //
-    //
     
     // window size = 200x200
     // window padding = 20x20
     // window position = centerx140
     // window corners = 19
-    
-    /*
-    private class var windowFrameRect: NSRect {
-        return NSRect(x: 0, y: 140, width: 200, height: 200)
+    public enum ColorMode {
+        case light, lightReducedTransparency, lightIncreasedContrast
+        case dark, darkReducedTransparency, darkIncreasedContrast
     }
-
-    private class var windowCornerRadius: CGFloat {
-        return 19
-    }
-    */
-    
-    /*
-    private class var imageViewFrameRect: NSRect {
-        return NSRect(x: 20, y: 62, width: 100, height: 100)
-    }
-
-    private class var centredImageViewFrameRect: NSRect {
-        return NSRect(x: 20, y: 20, width: 160, height: 160)
-    }
-
-    private class var levelIndicatorFrameRect: NSRect {
-        return NSRect(x: 20, y: 20, width: 161, height: 8)
-    }
-    */
     
     //
     //
@@ -73,13 +45,13 @@ public class SystemBezel {
     }
     
     private var activeColorMode: ColorMode {
-        if NSAppearance.increaseContrastEnabled {
-            return NSAppearance.darkModeEnabled ? .darkIncreasedContrast : .lightIncreasedContrast
+        if NSAppearance.increaseContrast {
+            return NSAppearance.darkMode ? .darkIncreasedContrast : .lightIncreasedContrast
         }
-        if NSAppearance.reduceTransparencyEnabled {
-            return NSAppearance.darkModeEnabled ? .darkReducedTransparency : .lightReducedTransparency
+        if NSAppearance.reduceTransparency {
+            return NSAppearance.darkMode ? .darkReducedTransparency : .lightReducedTransparency
         }
-        return NSAppearance.darkModeEnabled ? .dark : .light
+        return NSAppearance.darkMode ? .dark : .light
     }
     
     // If nil, follows the system appearance.
@@ -146,6 +118,16 @@ public class SystemBezel {
         }
     }
     
+    public static func create(text: String? = nil, image: NSImage? = nil, appearance: NSAppearance? = nil) -> SystemBezel {
+        let b = SystemBezel()
+        let t = BezelImageTextView()
+        t.image = image
+        t.text = text
+        b.appearance = appearance
+        b.contentView = t
+        return b
+    }
+    
     //
     //
     //
@@ -187,7 +169,7 @@ public class SystemBezel {
         if let a = self.appearance {
             _inner(a.name == NSAppearanceNameVibrantDark)
         } else {
-            _inner(NSAppearance.darkModeEnabled)
+            _inner(NSAppearance.darkMode)
         }
     }
     
@@ -198,41 +180,5 @@ public class SystemBezel {
             newFrame.origin.x = screenHorizontalMidPoint - (window.frame.size.width / 2)
             self.window.setFrame(newFrame, display: true, animate: false)
         }
-    }
-}
-
-// adapted from @mattprowse: https://github.com/mattprowse/SystemBezelWindowController
-extension NSImage {
-    public func tintedImage(_ tintColor: NSColor) -> NSImage {
-        let size = self.size
-        let imageBounds = NSRect(x: 0, y: 0, width: size.width, height: size.height)
-        
-        // Tint the image.
-        let tintedImage = self.copy() as! NSImage
-        tintedImage.lockFocus()
-        tintColor.set()
-        NSRectFillUsingOperation(imageBounds, .sourceAtop)
-        tintedImage.unlockFocus()
-        
-        return tintedImage
-    }
-}
-
-// adapted from @mattprowse: https://github.com/mattprowse/SystemBezelWindowController
-extension NSAppearance {
-    // MARK: - User Interface Preferences
-    public static var darkModeEnabled: Bool {
-        if let darkModeString = CFPreferencesCopyAppValue(("AppleInterfaceStyle" as NSString as CFString), ("NSGlobalDomain" as NSString as CFString)) as? String {
-            return darkModeString == "Dark"
-        }
-        return false
-    }
-    
-    public static var reduceTransparencyEnabled: Bool {
-        return CFPreferencesGetAppBooleanValue(("reduceTransparency" as NSString as CFString), ("com.apple.universalaccess" as NSString as CFString), nil)
-    }
-    
-    public static var increaseContrastEnabled: Bool {
-        return CFPreferencesGetAppBooleanValue(("increaseContrast" as NSString as CFString), ("com.apple.universalaccess" as NSString as CFString), nil)
     }
 }

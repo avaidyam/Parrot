@@ -61,9 +61,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     
     private func _sync() {
         let s = DispatchSemaphore(value: 0)
-        print("\n\n", "SYNC START", "\n\n")
         syncConversations { _ in
-            print("\n\n", "SYNC DONE", "\n\n")
             s.signal()
         }
         s.wait()

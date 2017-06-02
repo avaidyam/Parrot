@@ -21,7 +21,6 @@ public final class Client: Service {
 	// Minimum timeout between subsequent setactiveclient requests:
 	public static let SETACTIVECLIENT_LIMIT_SECS = 60
 	
-	public let config: URLSessionConfiguration
 	public var channel: Channel?
     internal var opQueue = DispatchQueue(label: "Hangouts.Client", qos: .userInitiated, attributes: .concurrent)
 	
@@ -37,9 +36,9 @@ public final class Client: Service {
 	public private(set) var userList: UserList!
 	
 	public init(configuration: URLSessionConfiguration) {
-        self.config = configuration
-        self.channel = Channel(configuration: self.config)
-        self.buildUserConversationList()
+        self.channel = Channel(configuration: configuration)
+        self.userList = UserList(client: self)
+        self.conversationList = ConversationList(client: self)
         
         //
         // A notification-based delegate replacement:
@@ -276,12 +275,4 @@ public final class Client: Service {
 			}
 		}
 	}
-    
-    public func buildUserConversationList(_ completionHandler: @escaping () -> Void = {}) {
-        self.userList = UserList(client: self)
-        self.conversationList = ConversationList(client: self)
-        
-        print("\n\n", "BUILD DONE", "\n\n")
-        completionHandler()
-    }
 }

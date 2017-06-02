@@ -6,7 +6,7 @@ import Hangouts
 import ParrotServiceExtension
 import protocol ParrotServiceExtension.Conversation
 
-public class DirectoryListViewController: NSViewController, WindowPresentable, NSWindowDelegate, ListViewDataDelegate {
+public class DirectoryListViewController: NSViewController, WindowPresentable, ListViewDataDelegate {
     
     private lazy var listView: ListView = {
         let v = ListView().modernize()
@@ -108,6 +108,7 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, N
     
     public override func viewWillAppear() {
         syncAutosaveTitle()
+        PopWindowAnimator.show(self.view.window!)
         
         let frame = self.listView.layer!.frame
         self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)

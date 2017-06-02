@@ -5,8 +5,11 @@ import Mocha
 /* TODO: Support utility AND modal AND normal windows? */ // NSApp.runModalForWindow(), NSApp.stopModal(), [.utilityWindow]
 
 /// Supported objects can allow customization of their behavior within windows using this protocol.
-public protocol WindowPresentable {
-
+@objc public protocol WindowPresentable: NSWindowDelegate {
+    
+    /// Provide a type for the NSWindow to be created.
+    @objc optional func windowClass() -> NSWindow.Type
+    
     /// As the NSWindow is being prepared, a WindowPresentable may customize it as well.
     func prepare(window: NSWindow)
 }
@@ -51,8 +54,9 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
         viewController.view.layoutSubtreeIfNeeded()
         let p = viewController.view.fittingSize
         
-        self.window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: p.width, height: p.height),
-                               styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
+        let clazz = (viewController as? WindowPresentable)?.windowClass?() ?? NSWindow.self
+        self.window = clazz.init(contentRect: NSRect(x: 0, y: 0, width: p.width, height: p.height),
+                                 styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         self.window?.isReleasedWhenClosed = false
         self.window?.contentView?.superview?.wantsLayer = true // always root-layer-backed
         NotificationCenter.default.addObserver(self, selector: #selector(NSWindowDelegate.windowWillClose(_:)),

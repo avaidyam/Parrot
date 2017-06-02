@@ -13,7 +13,7 @@ import protocol ParrotServiceExtension.Conversation
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
-public class ConversationListViewController: NSViewController, WindowPresentable, NSWindowDelegate,
+public class ConversationListViewController: NSViewController, WindowPresentable,
 ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
     private lazy var listView: ListView = {
@@ -221,6 +221,7 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
     
     public override func viewWillAppear() {
         syncAutosaveTitle()
+        PopWindowAnimator.show(self.view.window!)
         
         let frame = self.listView.layer!.frame
         self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -291,51 +292,12 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
         self.hideConversation(conv2)
         NotificationCenter.default.removeObserver(self, name: notification.name, object: win)
     }
-	
-	/// As we are about to display, configure our UI elements.
-    /*
-	public override func showWindow(_ sender: Any?) {
-        let scale = Interpolate(from: 0.25, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] scale in
-            self?.window?.scale(to: scale, by: CGPoint(x: 0.5, y: 0.5))
-        }
-        let alpha = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
-            self?.window?.alphaValue = CGFloat(alpha)
-        }
-        
-        self.window?.scale(to: 0.25, by: CGPoint(x: 0.5, y: 0.5))
-        self.window?.alphaValue = 0.0
-        self.window?.makeKeyAndOrderFront(nil)
-        DispatchQueue.main.async {
-            self.indicator.startAnimation(nil)
-        }
-        
-        let group = Interpolate.group(scale, alpha)
-        group.animate(duration: 0.35)
-        
-		ParrotAppearance.registerInterfaceStyleListener(observer: self) { appearance in
-			self.window?.appearance = appearance.appearance()
-		}
-	}
     
     public func windowShouldClose(_ sender: Any) -> Bool {
-        guard let w = self.window else { return false }
-        
-        let scale = Interpolate(from: 1.0, to: 0.25, interpolator: EaseInOutInterpolator()) { scale in
-            w.scale(to: scale, by: CGPoint(x: 0.5, y: 0.5))
-        }
-        let alpha = Interpolate(from: 1.0, to: 0.0, interpolator: EaseInOutInterpolator()) { alpha in
-            w.alphaValue = CGFloat(alpha)
-        }
-        let group = Interpolate.group(scale, alpha)
-        group.add(at: 1.0) {
-            DispatchQueue.main.async {
-                w.close()
-            }
-        }
-        group.animate(duration: 0.35)
+        guard self.view.window != nil else { return true }
+        PopWindowAnimator.hide(self.view.window!)
         return false
     }
-    */
     
     public func windowDidChangeOcclusionState(_ notification: Notification) {
         for (_, s) in ServiceRegistry.services {
@@ -378,30 +340,6 @@ ConversationListDelegate, ListViewDataDelegate, ListViewSelectionDelegate, ListV
 		let conv = self.conversationList?.conversations[event.conversation_id]
 		
 		// Support mentioning a person's name. // TODO, FIXME
-		/*if	let user = (conv as? IConversation)?.user_list[event.userID],
-			let name = self.userList?.me.firstName,
-			let ev = event as? IChatMessageEvent
-			where !user.me && ev.text.contains(name) {
-			
-			let notification = NSUserNotification()
-			notification.identifier = "mention"
-			notification.title = user.firstName + " (via Hangouts) mentioned you..." /* FIXME */
-			//notification.subtitle = "via Hangouts"
-			notification.deliveryDate = Date()
-			notification.identityImage = fetchImage(user: user, conversation: conv!)
-			notification.identityStyle = .circle
-			//notification.soundName = "texttone:Bamboo" // this works!!
-			notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
-			notification.set(option: .vibrateForceTouch, value: true)
-			notification.set(option: .alwaysShow, value: true)
-			
-			// Post the notification "uniquely" -- that is, replace it while it is displayed.
-			NSUserNotification.notifications()
-				.filter { $0.identifier == notification.identifier }
-				.forEach { $0.remove() }
-			notification.post()
-		}*/
-		
 		// Forward the event to the conversation if it's open. Also, if the 
 		// conversation is not open, or if it isn't the main window, show a notification.
 		var showNote = true

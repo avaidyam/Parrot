@@ -35,7 +35,7 @@ public class User: Person, Hashable, Equatable {
 		return .unavailable
 	}
 	public var mood: String {
-        sync()
+        //sync()
 		return ""
 	}
     
@@ -180,11 +180,9 @@ public class UserList: Directory, Collection {
         var selfUser: User! = nil
         let s = DispatchSemaphore(value: 0)
         
-        print("\n\n", "SELF START", "\n\n")
         client.opQueue.async {
             client.getSelfInfo {
                 selfUser = User(client, entity: $0!.selfEntity!, selfUser: nil)
-                print("\n\n", "SELF DONE", "\n\n")
                 s.signal()
             }
         }

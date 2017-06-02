@@ -154,12 +154,6 @@ public extension NSAnimationContext {
     }
 }
 
-public extension NSAppearance {
-    public static let aqua = NSAppearance(named: NSAppearanceNameAqua)!
-    public static let light = NSAppearance(named: NSAppearanceNameVibrantLight)!
-    public static let dark = NSAppearance(named: NSAppearanceNameVibrantDark)!
-}
-
 public extension NSWindow {
     
     // Animate the change in appearance.
@@ -289,22 +283,6 @@ public class MenuItem: NSMenuItem {
     
     @objc public func action(_ sender: AnyObject?) {
         self.handler()
-    }
-}
-
-/// NSVisualEffectView allows events to bleed through. This blocks that.
-public class NSAntiVisualEffectView: NSVisualEffectView {
-    public override var acceptsTouchEvents: Bool {
-        get { return true }
-        set {}
-    }
-    
-    public override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
-        return true
-    }
-    
-    public override func mouseDown(with event: NSEvent) {
-        //
     }
 }
 

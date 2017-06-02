@@ -35,7 +35,7 @@ public extension Notification.Name {
     public static let OpenConversationsUpdated = Notification.Name(rawValue: "Parrot.OpenConversationsUpdated")
 }
 
-public class MessageListViewController: NSViewController, WindowPresentable, NSWindowDelegate,
+public class MessageListViewController: NSViewController, WindowPresentable,
 TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
     /// The openConversations keeps track of all open conversations and when the
@@ -282,6 +282,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     
     public override func viewWillAppear() {
         syncAutosaveTitle()
+        PopWindowAnimator.show(self.view.window!)
         
         // Monitor changes to the view background and colors.
         self.colorsSub = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
@@ -327,42 +328,6 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     //
     // MARK: Misc. Methods
     //
-	
-    
-    
-    // TODO: this goes in a new ParrotWindow class or something.
-    /*
-    public func windowShouldClose(_ sender: AnyObject) -> Bool {
-        guard let w = self.window else { return false }
-        
-        let old_rect = w.frame
-        var rect = w.frame
-        rect.origin.y = -(rect.height)
-        
-        let scale = Interpolate(from: 1.0, to: 0.5, interpolator: EaseInOutInterpolator()) { scale in
-            w.scale(to: scale, by: CGPoint(x: 0.5, y: 0.5))
-        }
-        let alpha = Interpolate(from: 1.0, to: 0.0, interpolator: EaseInInterpolator()) { alpha in
-            w.alphaValue = alpha
-        }
-        let frame = Interpolate(from: old_rect, to: rect, interpolator: EaseInInterpolator()) { frame in
-            w.setFrame(frame, display: false)
-        }
-        
-        let group = Interpolate.group(scale, alpha, frame)
-        group.add {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
-                w.setFrame(old_rect, display: false)
-                w.alphaValue = 1.0
-                w.scale()
-                w.close()
-            }
-        }
-        
-        group.animate(duration: 0.25)
-        return false
-    }
-    */
 	
     /// Re-synchronizes the conversation name and identifier with the window.
     /// Center by default, but load a saved frame if available, and autosave.

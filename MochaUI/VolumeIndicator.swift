@@ -46,10 +46,10 @@ public class VolumeIndicator: NSView {
     // Note that the color is inverted from the root appearance to stand out.
     private var colorMode: SystemBezel.ColorMode {
         let a = self.appearance?.name ?? NSAppearanceNameVibrantLight
-        if NSAppearance.increaseContrastEnabled {
+        if NSAppearance.increaseContrast {
             return a == NSAppearanceNameVibrantDark ? .lightIncreasedContrast : .darkIncreasedContrast
         }
-        if NSAppearance.reduceTransparencyEnabled {
+        if NSAppearance.reduceTransparency {
             return a == NSAppearanceNameVibrantDark ? .lightReducedTransparency : .darkReducedTransparency
         }
         return a == NSAppearanceNameVibrantDark ? .light : .dark

@@ -96,20 +96,6 @@ public class ParrotAppController: NSApplicationController {
             self.connectSub = AutoSubscription(from: c, kind: Client.didConnectNotification) { _ in
                 UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
                                  contentImage: NSImage(named: NSImageNameCaution)).post()
-                
-                //AppActivity.start("Setup")
-                //if c.conversationList == nil {
-                    //c.buildUserConversationList {
-                        // When reconnecting, buildUserConversationList causes Client to then
-                        // re-create the entire userlist + conversationlist and reset it
-                        // but the old ones are still alive, and their delegate is set to the
-                        // conversations window; that means you'll receive double notifications.
-                        
-                        // TODO: FIXME: THIS IS A TERRIBLE DIRTY DISGUSTING HAX, DON'T DO ITS!
-                        //NotificationCenter.default.post(name: ServiceRegistry.didAddService, object: c)
-                        //AppActivity.end("Setup")
-                    //}
-                //}
 			}
             self.disconnectSub = AutoSubscription(from: c, kind: Client.didDisconnectNotification) { _ in
                 DispatchQueue.main.async { // FIXME why does wrapping it twice work??
