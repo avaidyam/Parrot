@@ -605,6 +605,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
                 let i = NSToolbarItem(itemIdentifier: $0.identifier)
                 i.visibilityPriority = NSToolbarItemVisibilityPriorityHigh
                 i.label = $0.fullName
+                i.toolTip = $0.fullName
                 
                 let b = NSButton(title: "", image: $0.image, target: self, action: #selector(MessageListViewController.pressIcon(_:)))
                 b.wantsLayer = true
@@ -612,6 +613,12 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
                 b.isBordered = false
                 b.frame.size.width = 32
                 b.identifier = $0.identifier
+                
+                
+                let trackingArea = NSTrackingArea(rect: b.frame, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: ["view": b])
+                b.addTrackingArea(trackingArea)
+                NotificationCenter.default.addObserver(self, selector: #selector(MessageListViewController.manageToolbar(_:)),
+                                                       name: .NSViewFrameDidChange, object: b)
                 
                 i.view = b
                 return i
@@ -630,4 +637,50 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         self.presentViewController(self.settingsController, asPopoverRelativeTo: sender.bounds, of: sender, preferredEdge: .maxY, behavior: .transient)
         //print("\n\n", self.conversation?.users.filter { $0.identifier == sender.identifier ?? "" }.first, "\n\n")
     }
+    
+    
+    public func manageToolbar(_ notification: Notification) {
+        guard let b = notification.object as? NSView else { return }
+        b.trackingAreas.forEach { b.removeTrackingArea($0) }
+        let trackingArea = NSTrackingArea(rect: b.frame, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: ["view": b])
+        b.addTrackingArea(trackingArea)
+    }
+    
+    private lazy var vc: NSPopover = {
+        let p = NSPopover()
+        p.behavior = .transient
+        p.contentViewController = ToolTipController()
+        return p
+    }()
+    public override func mouseEntered(with event: NSEvent) {
+        guard let view = event.trackingArea?.userInfo?["view"] as? NSView else { return }
+        guard let vc = self.vc.contentViewController as? ToolTipController else { return }
+        
+        let user = self.conversation?.users.filter { $0.identifier == view.identifier ?? "" }.first.flatMap { $0.fullName }
+        vc.text?.stringValue = user ?? ""
+        self.vc.show(relativeTo: view.bounds, of: view, preferredEdge: .maxY)
+    }
+    
+    public override func mouseExited(with event: NSEvent) {
+        //self.vc.performClose(nil)
+    }
 }
+
+fileprivate class ToolTipController: NSViewController {
+    public var text: NSTextField!
+    
+    override func loadView() {
+        self.view = NSView()
+        self.view.wantsLayer = true
+        self.text = NSTextField(labelWithString: "")
+        self.text.translatesAutoresizingMaskIntoConstraints = false
+        self.text.alignment = .center
+        self.view.addSubview(self.text)
+        
+        text.top == view.top + 4.0
+        text.bottom == view.bottom - 4.0
+        text.left == view.left + 4.0
+        text.right == view.right - 4.0
+    }
+}
+
