@@ -90,8 +90,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
 			//self.color = o.color
 			self.textLabel.string = o.text as String
 			self.textLabel.toolTip = "\((o.timestamp /*?? .origin*/).fullString())"
-			let img: NSImage = fetchImage(user: user!)
-			self.photoView.image = img
+			self.photoView.image = user!.image
 			//self.photoView?.toolTip = o.caption
             
             // Hide your own icon and hide the icon of a repeating message.

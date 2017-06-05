@@ -1,4 +1,5 @@
 import AppKit
+import protocol ParrotServiceExtension.Person
 
 /* FIXME: Turn this into PersonaUI's PRMonogram, essentially. */
 
@@ -55,6 +56,12 @@ public func defaultImageForString(forString source: String, size: NSSize = NSSiz
 		NSImage(named: "NSUserGuest")!.draw(in: r) // composite this somehow.
 		return true
 	}
+}
+
+public extension Person {
+    var image: NSImage {
+        return fetchImage(user: self, monogram: true)
+    }
 }
 
 public extension NSColor {

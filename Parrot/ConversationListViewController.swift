@@ -5,6 +5,8 @@ import MochaUI
 import ParrotServiceExtension
 
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
+/* TODO: Show DND icon in Cell when conversation is muted. */
+/* TODO: Support not sending Read Receipts. */
 
 //private let log = Logger(subsystem: "Parrot.ConversationListViewController")
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
@@ -96,7 +98,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         // Conversations selected that we don't already have. --> ADD
         convs.subtracting(dest).forEach { id in
             let conv = self.sortedConversations.filter { $0.identifier == id }.first!
-            MessageListViewController.show(conversation: conv)
+            MessageListViewController.show(conversation: conv, parent: self.parent)
         }
         // Conversations we have that are not selected. --> REMOVE
         dest.subtracting(convs).forEach { id in
@@ -191,8 +193,10 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
     }
     
     public override func viewWillAppear() {
-        syncAutosaveTitle()
-        PopWindowAnimator.show(self.view.window!)
+        if self.view.window != nil {
+            syncAutosaveTitle()
+            PopWindowAnimator.show(self.view.window!)
+        }
         
         let frame = self.listView.layer!.frame
         self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)

@@ -130,9 +130,19 @@ public class ParrotAppController: NSApplicationController {
                     showNote = !(c.view.window?.isKeyWindow ?? false)
                 }
                 
-                if let user = (c.conversationList.conversations[event.conversation_id] as? IConversation)?.user_list[event.userID.gaiaID], !user.me && showNote {
-                    log.debug("Sending notification...")
+                if let user = (c.conversationList.conversations[event.conversation_id] as? IConversation)?.user_list[event.userID.gaiaID],
+                    !user.me && showNote {
                     
+                    /*
+                    let ev = Event(identifier: event.conversation_id, contents: user.firstName + " (via Hangouts)",
+                                   description: event.text, image: fetchImage(user: user, monogram: true))
+                    let actions: [EventAction.Type] = [BannerAction.self, BezelAction.self, SoundAction.self, VibrateAction.self, BounceDockAction.self, FlashLEDAction.self, SpeakAction.self, ScriptAction.self]
+                    actions.forEach {
+                        $0.perform(with: ev)
+                    }
+                    */
+                    
+                    ///*
                     let notification = NSUserNotification()
                     notification.identifier = event.conversation_id
                     notification.title = user.firstName + " (via Hangouts)" /* FIXME */
@@ -143,7 +153,7 @@ public class ParrotAppController: NSApplicationController {
                     notification.hasReplyButton = true
                     notification.otherButtonTitle = "Mute"
                     notification.responsePlaceholder = "Send a message..."
-                    notification.identityImage = fetchImage(user: user, monogram: true)
+                    notification.identityImage = user.image
                     notification.identityStyle = .circle
                     //notification.soundName = "texttone:Bamboo" // this works!!
                     notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
@@ -155,6 +165,7 @@ public class ParrotAppController: NSApplicationController {
                         .filter { $0.identifier == notification.identifier }
                         .forEach { $0.remove() }
                     notification.post()
+                    //*/
                 }
             }
             self.notificationReplyHelper = AutoSubscription(kind: NSUserNotification.didActivateNotification) {

@@ -254,8 +254,7 @@ public class UserList: Directory {
 		hangoutsCenter.removeObserver(self)
 	}
     
-    @objc
-    internal func _updatedState(_ notification: Notification) {
+    @objc internal func _updatedState(_ notification: Notification) {
         if  let userInfo = notification.userInfo, let state_update = userInfo[Client.didUpdateStateKey],
             let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
             _ = self.addPeople(from: [conversation])

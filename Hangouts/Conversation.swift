@@ -188,6 +188,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
 	
+    /* FIXME: only send if changed!! */
     public var selfFocus: FocusMode {
         get {
             return .away

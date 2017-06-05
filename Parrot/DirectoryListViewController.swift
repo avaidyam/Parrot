@@ -4,6 +4,8 @@ import Mocha
 import MochaUI
 import ParrotServiceExtension
 
+/* TODO: UISearchController for NSViewControllers. */
+
 public class DirectoryListViewController: NSViewController, WindowPresentable, ListViewDataDelegate {
     
     private lazy var listView: ListView = {

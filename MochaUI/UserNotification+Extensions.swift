@@ -49,7 +49,7 @@ public extension NSUserNotification {
 	
 	/// Sets the provided option as explained in `NSUserNotification.Options` directly.
 	public func set(option: Options, value: Any?) {
-		if self.userInfo == nil { self.userInfo = [:] }
+		if self.userInfo == nil { self.userInfo = [String: Any]() }
 		self.userInfo?[option.rawValue] = value
 	}
 	

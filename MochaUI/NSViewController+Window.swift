@@ -2,7 +2,9 @@ import Foundation
 import AppKit
 import Mocha
 
-/* TODO: Support utility AND modal AND normal windows? */ // NSApp.runModalForWindow(), NSApp.stopModal(), [.utilityWindow]
+/* TODO: Support utility, modal, normal windows, AND drawer/panel? */
+// NSApp.runModalForWindow(), NSApp.stopModal(), [.utilityWindow]
+/* TODO: Deprecate the _rootAnimator property and use presentionAnimator. */
 
 /// Supported objects can allow customization of their behavior within windows using this protocol.
 @objc public protocol WindowPresentable: NSWindowDelegate {
@@ -22,7 +24,6 @@ public extension NSViewController {
     
     // For root controllers. The window delegate is set to the VC if it conforms to NSWindowDelegate.
     public func presentAsWindow() {
-        print("\n\n\(self._rootAnimator)\n\n")
         (self._rootAnimator ?? WindowTransitionAnimator()).display(viewController: self)
     }
     
@@ -30,11 +31,50 @@ public extension NSViewController {
     public func dismissFromWindow() {
         self._rootAnimator?.undisplay(viewController: self)
     }
+}
+
+public extension NSViewController {
     
-    // drawer?
+    /// Traverses the ViewController hierarchy and returns the closest ancestor ViewController
+    /// that matches the `type` provided. If `includingSelf`, then the receiver can be returned.
+    public func ancestor<T: NSViewController>(ofType type: T.Type, includingSelf: Bool = true) -> T? {
+        if includingSelf && type(of: self) == type {
+            return self as? T
+        } else if let p = self.parent {
+            return p.ancestor(ofType: type, includingSelf: true)
+        }
+        return nil
+    }
     
-    // panel?
+    public var splitViewController: NSSplitViewController? {
+        return self.ancestor(ofType: NSSplitViewController.self)
+    }
     
+    public var tabViewController: NSTabViewController? {
+        return self.ancestor(ofType: NSTabViewController.self)
+    }
+}
+
+public extension NSViewController {
+    @nonobjc
+    public func beginAppearanceTransition(_ appearing: Bool) {
+        self.perform(Selector(("beginAppearanceTransition:")), with: appearing)
+    }
+    
+    @nonobjc
+    public func endAppearanceTransition() {
+        self.perform(Selector(("endAppearanceTransition")))
+    }
+    
+    @nonobjc
+    public func willMove(toParent parent: NSViewController) {
+        self.perform(Selector(("willMoveToParentViewController:")), with: parent)
+    }
+    
+    @nonobjc
+    public func didMove(toParent parent: NSViewController) {
+        self.perform(Selector(("didMoveToParentViewController:")), with: parent)
+    }
 }
 
 public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAnimator {
@@ -102,6 +142,15 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
         } else {
             self.undisplay(viewController: self.window!.contentViewController!)
         }
+    }
+}
+
+private var __presentationAnimatorProp = KeyValueProperty<NSViewController, NSViewControllerPresentationAnimator>("presentationAnimator")
+public extension NSViewController {
+    @nonobjc
+    public var presentionAnimator: NSViewControllerPresentationAnimator? {
+        get { return __presentationAnimatorProp.get(self) }
+        set { __presentationAnimatorProp.set(self, value: newValue) }
     }
 }
 

@@ -4,6 +4,7 @@ import CoreGraphics
 /* TODO: Multiple animation blocks (after adding generics to Interpolate). */
 /* TODO: Different interpolators between values (a la CAKeyframeAnimation). */
 /* TODO: Use CAAnimation to enable presentation layer (a la UIViewPropertyAnimator). */
+/* TODO: Turn on implicit animation in a CATransaction group. */
 
 public protocol Interpolator {
     func apply(_ progress: CGFloat) -> CGFloat

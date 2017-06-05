@@ -44,7 +44,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         }
     }
     
-    public static func show(conversation conv: ParrotServiceExtension.Conversation) {
+    public static func show(conversation conv: ParrotServiceExtension.Conversation, parent: NSViewController? = nil) {
         if let wc = MessageListViewController.openConversations[conv.identifier] {
             log.debug("Conversation found for id \(conv.identifier)")
             DispatchQueue.main.async {
@@ -56,7 +56,11 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
                 let wc = MessageListViewController()
                 wc.conversation = conv as! IConversation
                 MessageListViewController.openConversations[conv.identifier] = wc
-                wc.presentAsWindow()
+                if let p = parent {
+                    p.addChildViewController(wc)
+                } else {
+                    wc.presentAsWindow()
+                }
             }
         }
     }
@@ -64,7 +68,11 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     public static func hide(conversation conv: ParrotServiceExtension.Conversation) {
         if let conv2 = MessageListViewController.openConversations[conv.identifier] {
             MessageListViewController.openConversations[conv.identifier] = nil
-            conv2.dismiss(nil)
+            if let _ = conv2.parent {
+                conv2.removeFromParentViewController()
+            } else {
+                conv2.dismiss(nil)
+            }
         }
     }
     
@@ -174,11 +182,12 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     private var showingFocus: Bool = false
     private var lastWatermarkIdx = -1
 	private var _previews = [String: [LinkPreviewType]]()
+    private var toolbarContainer = ToolbarItemContainer()
     
     /// The currently active user's image or monogram.
     public var image: NSImage? {
         if let me = self.conversation?.client.userList.me {
-            return fetchImage(user: me as! User, monogram: true)
+            return (me as! User).image
         }
         return nil
     }
@@ -296,8 +305,9 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         window.enableRealTitlebarVibrancy(.withinWindow)
         window.titleVisibility = .hidden
         //window.titlebarAppearsTransparent = true
-        _ = window.installToolbar()
+        self.toolbarContainer = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
+        self._setToolbar()
     }
     
     public override func viewDidLoad() {
@@ -306,8 +316,10 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     }
     
     public override func viewWillAppear() {
-        syncAutosaveTitle()
-        PopWindowAnimator.show(self.view.window!)
+        if let w = self.view.window {
+            syncAutosaveTitle()
+            PopWindowAnimator.show(self.view.window!)
+        }
         
         // Monitor changes to the view background and colors.
         self.colorsSub = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
@@ -365,6 +377,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
             self.settingsController.conversation = self.conversation
             self.syncAutosaveTitle()
             self.invalidateRestorableState()
+            self._setToolbar()
             
             // Register for Conversation "delegate" changes.
             let c = NotificationCenter.default
@@ -440,10 +453,10 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     }
     
     public func conversationDidReceiveWatermark(_ notification: Notification) {
-        guard let status = notification.userInfo?["status"] as? IWatermarkNotification else { return }
+        /*guard let status = notification.userInfo?["status"] as? IWatermarkNotification else { return }
         if let person = self.conversation?.client.userList?.people[status.userID.gaiaID] {
             self.watermarkEvent(IFocus("", sender: person, timestamp: status.readTimestamp, mode: .here))
-        }
+        }*/
     }
     
     // FIXME: Watermark!!
@@ -579,5 +592,42 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
         emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
         conversation.send(message: emojify ? text.applyGoogleEmoji(): text)
+    }
+    
+    //
+    //
+    //
+    
+    private func _usersToItems() -> [NSToolbarItem] {
+        return self.conversation?.users
+            .filter { !$0.me }
+            .map {
+                let i = NSToolbarItem(itemIdentifier: $0.identifier)
+                i.visibilityPriority = NSToolbarItemVisibilityPriorityHigh
+                i.label = $0.fullName
+                
+                let b = NSButton(title: "", image: $0.image, target: self, action: #selector(MessageListViewController.pressIcon(_:)))
+                b.wantsLayer = true
+                b.layer!.cornerRadius = 16
+                b.isBordered = false
+                b.frame.size.width = 32
+                b.identifier = $0.identifier
+                
+                i.view = b
+                return i
+            } ?? []
+    }
+    private func _setToolbar() {
+        let h = self.toolbarContainer
+        h.templateItems = Set(_usersToItems())
+        var order = _usersToItems().map { $0.itemIdentifier }
+        order.insert(NSToolbarFlexibleSpaceItemIdentifier, at: 0)
+        order.append(NSToolbarFlexibleSpaceItemIdentifier)
+        h.itemOrder = order
+    }
+    
+    @objc private func pressIcon(_ sender: NSButton!) {
+        self.presentViewController(self.settingsController, asPopoverRelativeTo: sender.bounds, of: sender, preferredEdge: .maxY, behavior: .transient)
+        //print("\n\n", self.conversation?.users.filter { $0.identifier == sender.identifier ?? "" }.first, "\n\n")
     }
 }

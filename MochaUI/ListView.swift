@@ -5,6 +5,7 @@ private let log = Logger(subsystem: "MochaUI.ListView")
 
 /* TODO: Cell insets (or indents), separator insets/enabled/color/effects. */
 /* TODO: Support type-select. */
+/* TODO: Support NS/Object/Array/Dictionary/Controller with ListView. */
 
 public protocol ListViewDataDelegate {
     

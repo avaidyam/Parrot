@@ -9,7 +9,7 @@ public extension NSWindow {
     /// Simplifies the installation of a "modern" toolbar.
     @discardableResult
     public func installToolbar() -> ToolbarItemContainer {
-        let t = NSToolbar(identifier: "")
+        let t = NSToolbar(identifier: UUID().description)
         let h = ToolbarItemContainer()
         h.toolbar = t
         t.delegate = h

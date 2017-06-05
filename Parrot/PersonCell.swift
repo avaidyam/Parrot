@@ -83,7 +83,7 @@ public class PersonCell: NSTableCellView, NSTableViewCellProtocol {
             self.textLabel.toolTip = person.mood
             self.timeLabel.stringValue = person.lastSeen.relativeString()
             self.timeLabel.toolTip = "\(person.lastSeen.fullString())"
-            self.photoLayer.contents = fetchImage(user: person, monogram: true)
+            self.photoLayer.contents = person.image
         }
     }
     
