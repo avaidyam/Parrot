@@ -11,23 +11,6 @@ import ParrotServiceExtension
 //severity: Logger.Severity(rawValue: Process.arguments["log_level"]) ?? .verbose
 internal let log = Logger(subsystem: "Parrot.Global")
 
-// Existing Parrot Settings keys.
-public enum Parrot {
-	public static let InterfaceStyle = "Parrot.InterfaceStyle"
-	public static let SystemInterfaceStyle = "Parrot.SystemInterfaceStyle"
-	public static let VibrancyStyle = "Parrot.VibrancyStyle"
-	
-	public static let AutoEmoji = "Parrot.AutoEmoji"
-	public static let MessageTextSize = "Parrot.MessageTextSize"
-	public static let Emoticons = "Parrot.Emoticons"
-    public static let Completions = "Parrot.Completions"
-    public static let MenuBarIcon = "Parrot.MenuBarIcon"
-	
-	public static let VibrateForceTouch = "Parrot.VibrateForceTouch"
-	public static let VibrateInterval = "Parrot.VibrateInterval"
-	public static let VibrateLength = "Parrot.VibrateLength"
-}
-
 @NSApplicationMain
 public class ParrotAppController: NSApplicationController {
     
@@ -65,9 +48,9 @@ public class ParrotAppController: NSApplicationController {
         }*/
 		
 		// Register the default completions if none are in the user settings.
-		if let c = Settings[Parrot.Completions] as? NSDictionary , c.count > 0 {} else {
+		if let c = Settings[Preferences.Key.Completions] as? NSDictionary , c.count > 0 {} else {
 			let defaultC = ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]
-			Settings[Parrot.Completions] = defaultC
+			Settings[Preferences.Key.Completions] = defaultC
 		}
 	}
     
@@ -194,7 +177,7 @@ public class ParrotAppController: NSApplicationController {
         
         /// This setting currently does not exist in the UI. Use `defaults` to set it.
         /// For a menubar-only experience, set the Info.plist `LSUIElement` to YES.
-        if Settings[Parrot.MenuBarIcon] != nil {
+        if Settings[Preferences.Key.MenuBarIcon] != nil {
             let image = NSImage(named: NSImageNameApplicationIcon)
             image?.size = NSSize(width: 16, height: 16)
             statusItem.image = image

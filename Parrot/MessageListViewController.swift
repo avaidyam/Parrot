@@ -586,9 +586,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     }
     
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
-        var emojify = Settings[Parrot.AutoEmoji] as? Bool ?? false
-        emojify = NSEvent.modifierFlags().contains(.option) ? false : emojify
-        conversation.send(message: emojify ? text.applyGoogleEmoji(): text)
+        conversation.send(message: text)
     }
     
     //

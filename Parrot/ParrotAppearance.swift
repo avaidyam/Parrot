@@ -19,7 +19,7 @@ public struct ParrotAppearance {
 	/// into a locally stored default that can be observed normally.
 	private static let registerDarkModeActiveListener: NSObjectProtocol = {
 		DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("AppleInterfaceThemeChangedNotification"), object: nil, queue: nil) { _ in
-			Settings[Parrot.SystemInterfaceStyle] = NSAppearance.darkMode
+			Settings[Preferences.Key.SystemInterfaceStyle] = NSAppearance.darkMode
 		}
 	}()
 	
@@ -85,14 +85,14 @@ public struct ParrotAppearance {
 		/// Returns the currently indicated Parrot appearance based on user preference
 		/// and if applicable, the global dark interface style preference (trampolined).
 		public func appearance() -> NSAppearance {
-			let style = InterfaceStyle(rawValue: Settings[Parrot.InterfaceStyle] as? Int ?? -1) ?? .Dark
+			let style = InterfaceStyle(rawValue: Settings[Preferences.Key.InterfaceStyle] as? Int ?? -1) ?? .Dark
 			
 			switch style {
 			case .Light: return .light
 			case .Dark: return .dark
 				
 			case .System: //TODO: "NSAppearanceNameMediumLight"
-				let system = Settings[Parrot.SystemInterfaceStyle] as? Bool ?? false
+				let system = Settings[Preferences.Key.SystemInterfaceStyle] as? Bool ?? false
 				return system ? .dark : .light
 			}
 		}
@@ -137,12 +137,12 @@ public struct ParrotAppearance {
 	
 	/// Returns the current user preferential InterfaceStyle (light, dark, system).
 	public static func interfaceStyle() -> InterfaceStyle {
-		return InterfaceStyle(rawValue: Settings[Parrot.InterfaceStyle] as? Int ?? -1) ?? .System
+		return InterfaceStyle(rawValue: Settings[Preferences.Key.InterfaceStyle] as? Int ?? -1) ?? .System
 	}
 	
 	/// Returns the current user preferential VibrancyStyle (always, never, automatic).
 	public static func vibrancyStyle() -> VibrancyStyle {
-		return VibrancyStyle(rawValue: Settings[Parrot.VibrancyStyle] as? Int ?? -1) ?? .Automatic
+		return VibrancyStyle(rawValue: Settings[Preferences.Key.VibrancyStyle] as? Int ?? -1) ?? .Automatic
 	}
 	
 	/// Register a listener to be invoked when the application appearance changes.

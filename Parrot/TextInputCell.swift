@@ -181,7 +181,7 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
         let userStr = tString.substring(from: _r.location)
         
         NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
-        if let s = Settings[Parrot.Completions] as? [String: Any], let r = s[userStr] as? String {
+        if let s = Settings[Preferences.Key.Completions] as? [String: Any], let r = s[userStr] as? String {
             insertToken = true // prevent re-entrance
             
             // If the entered text was a completion character, place the matching
