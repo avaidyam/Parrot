@@ -16,11 +16,11 @@ public class ConversationListViewController: NSViewController, WindowPresentable
 ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
 	
     private lazy var listView: ListView = {
-        let v = ListView().modernize()
+        let v = ListView().modernize(wantsLayer: true)
         v.flowDirection = .top
         v.selectionType = .any
         v.delegate = self
-        v.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
+        v.insets = EdgeInsets(top: 84.0, left: 0, bottom: 0, right: 0)
         return v
     }()
     
@@ -28,7 +28,21 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         let v = MessageProgressView().modernize()
         return v
     }()
-	
+    
+    private lazy var titleText: NSTextField = {
+        let t = NSTextField(labelWithString: " Conversations").modernize()
+        t.textColor = NSColor.labelColor
+        t.font = NSFont.systemFont(ofSize: 32.0, weight: NSFontWeightHeavy)
+        /*
+        let img = NSImage(named: NSImageNameAddTemplate)!
+        let v = NSButton(title: "", image: img, target: nil, action: nil)
+        t.addSubview(v)
+        t.right == v.right - 8.0
+        t.centerY == v.centerY
+        */
+        return t
+    }()
+    
 	private var updateToken: Bool = false
     private var childrenSub: Subscription? = nil
     
@@ -165,6 +179,12 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         window.titleVisibility = .hidden
         _ = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
+        
+        let t = NSTitlebarAccessoryViewController()
+        t.view = self.titleText
+        t.view.frame.size.height = 48.0
+        t.layoutAttribute = .bottom
+        window.addTitlebarAccessoryViewController(t)
     }
     
     public override func viewDidLoad() {

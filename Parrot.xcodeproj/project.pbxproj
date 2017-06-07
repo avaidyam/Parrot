@@ -66,6 +66,7 @@
 		4869A9AE1EE1528100764594 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9AD1EE1528100764594 /* Notification.swift */; };
 		4869A9B01EE16F5D00764594 /* Auth+WebDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */; };
 		4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9B11EE17A3800764594 /* SplitWindowController.swift */; };
+		4869A9D61EE5C78200764594 /* PersonIndicatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9D51EE5C78200764594 /* PersonIndicatorViewController.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
@@ -89,7 +90,6 @@
 		4894216A1EC11BCE0047FDBB /* DispatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421691EC11BCE0047FDBB /* DispatchSupport.swift */; };
 		489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */; };
 		489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */; };
-		489FB0671DF5FBD400AEBD1D /* WatermarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */; };
 		489FB0891DF7CC4900AEBD1D /* TextInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB0881DF7CC4900AEBD1D /* TextInputCell.swift */; };
 		489FB08D1DF7E0CB00AEBD1D /* TypingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */; };
 		48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
@@ -365,6 +365,7 @@
 		4869A9AD1EE1528100764594 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Auth+WebDelegate.swift"; sourceTree = "<group>"; };
 		4869A9B11EE17A3800764594 /* SplitWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitWindowController.swift; sourceTree = "<group>"; };
+		4869A9D51EE5C78200764594 /* PersonIndicatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonIndicatorViewController.swift; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
@@ -398,7 +399,6 @@
 		489421691EC11BCE0047FDBB /* DispatchSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchSupport.swift; sourceTree = "<group>"; };
 		489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolators.swift"; sourceTree = "<group>"; };
 		489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolatable.swift"; sourceTree = "<group>"; };
-		489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatermarkCell.swift; sourceTree = "<group>"; };
 		489FB0881DF7CC4900AEBD1D /* TextInputCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextInputCell.swift; sourceTree = "<group>"; };
 		489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypingHelper.swift; sourceTree = "<group>"; };
 		48A452261D19B16500CB588A /* TLTone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLTone.swift; sourceTree = "<group>"; };
@@ -583,21 +583,9 @@
 		481687231C39D3400070EEF6 /* Message List */ = {
 			isa = PBXGroup;
 			children = (
-				481D932D1DF5359000EB23A1 /* Cells */,
-				4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */,
-				48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */,
+				4869A9D71EE5D18600764594 /* View */,
 			);
 			name = "Message List";
-			sourceTree = "<group>";
-		};
-		481D932D1DF5359000EB23A1 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				4835ECA61C1C620000193EBC /* MessageCell.swift */,
-				489FB0661DF5FBD400AEBD1D /* WatermarkCell.swift */,
-				489FB0881DF7CC4900AEBD1D /* TextInputCell.swift */,
-			);
-			name = Cells;
 			sourceTree = "<group>";
 		};
 		482323DE1E1CBC3E00318380 /* Termbox */ = {
@@ -674,8 +662,7 @@
 		4835ECA51C1C61F300193EBC /* Conversation List */ = {
 			isa = PBXGroup;
 			children = (
-				4871CB8C1EC7DBA70020DA83 /* Cells */,
-				4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */,
+				4869A9D81EE5D19800764594 /* View */,
 			);
 			name = "Conversation List";
 			sourceTree = "<group>";
@@ -694,18 +681,18 @@
 		4869A9351EDB857200764594 /* Directory List */ = {
 			isa = PBXGroup;
 			children = (
-				4869A9361EDB857D00764594 /* Cells */,
-				4869A9371EDB858A00764594 /* DirectoryListViewController.swift */,
+				4869A9361EDB857D00764594 /* View */,
 			);
 			name = "Directory List";
 			sourceTree = "<group>";
 		};
-		4869A9361EDB857D00764594 /* Cells */ = {
+		4869A9361EDB857D00764594 /* View */ = {
 			isa = PBXGroup;
 			children = (
 				4869A9391EDB859700764594 /* PersonCell.swift */,
+				4869A9371EDB858A00764594 /* DirectoryListViewController.swift */,
 			);
-			name = Cells;
+			name = View;
 			sourceTree = "<group>";
 		};
 		4869A9411EDF456000764594 /* Events */ = {
@@ -716,12 +703,25 @@
 			name = Events;
 			sourceTree = "<group>";
 		};
-		4871CB8C1EC7DBA70020DA83 /* Cells */ = {
+		4869A9D71EE5D18600764594 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4835ECA61C1C620000193EBC /* MessageCell.swift */,
+				489FB0881DF7CC4900AEBD1D /* TextInputCell.swift */,
+				4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */,
+				4869A9D51EE5C78200764594 /* PersonIndicatorViewController.swift */,
+				48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		4869A9D81EE5D19800764594 /* View */ = {
 			isa = PBXGroup;
 			children = (
 				4835ECA81C1C620000193EBC /* ConversationCell.swift */,
+				4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */,
 			);
-			name = Cells;
+			name = View;
 			sourceTree = "<group>";
 		};
 		487A0E101C1E0F6C007A4696 /* PBLite */ = {
@@ -1525,7 +1525,7 @@
 				48808EDD1C6463DD00236E96 /* PreferencesViewController.swift in Sources */,
 				4869A9431EDF456C00764594 /* Event.swift in Sources */,
 				4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */,
-				489FB0671DF5FBD400AEBD1D /* WatermarkCell.swift in Sources */,
+				4869A9D61EE5C78200764594 /* PersonIndicatorViewController.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* MessageListViewController.swift in Sources */,
 				48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */,
 				489FB08D1DF7E0CB00AEBD1D /* TypingHelper.swift in Sources */,
@@ -1901,6 +1901,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};

@@ -59,13 +59,6 @@ public class ParrotAppController: NSApplicationController {
         // and the UI client will simply display the message; when updating, the
         // daemon will pre-cache the download and replace the executable.
 		checkForUpdates(prerelease: true)
-		
-		// Register for AppleEvents that follow our URL scheme.
-		NSAppleEventManager.shared().setEventHandler(self,
-			andSelector: #selector(self.handleURL(event:withReply:)),
-			forEventClass: UInt32(kInternetEventClass),
-			andEventID: UInt32(kAEGetURL)
-		)
         
         /*subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.giveConversations")) {
             log.debug("RESULTS: \($0)")
@@ -231,18 +224,14 @@ public class ParrotAppController: NSApplicationController {
         }
 		return true
 	}
-	
-	/// Handle any URLs that follow the scheme "parrot://" by forwarding them.
-	func handleURL(event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
-		guard	let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
-				let url = URL(string: urlString) else { return }
-		
+    
+    public func application(_ application: NSApplication, open urls: [URL]) {
 		// Create an alert handler to catch any issues with the host or path fragments.
 		let alertHandler = {
 			let a = NSAlert()
 			a.alertStyle = .informational
 			a.messageText = "Parrot couldn't open that location!"
-			a.informativeText = urlString
+			a.informativeText = urls[0].absoluteString
 			a.addButton(withTitle: "OK")
 			
 			a.layout()
@@ -254,8 +243,8 @@ public class ParrotAppController: NSApplicationController {
 		}
 		
 		/// If the URL host is a Service we have registered, comprehend it.
-		if let service = ServiceRegistry.services[(url.host ?? "")] {
-			let name = url.lastPathComponent.removingPercentEncoding ?? ""
+		if let service = ServiceRegistry.services[(urls[0].host ?? "")] {
+			let name = urls[0].lastPathComponent.removingPercentEncoding ?? ""
 			let convs = Array(service.conversations.conversations.values)
 			if let found = (convs.filter { $0.name == name }).first {
 				

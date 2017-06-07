@@ -7,7 +7,6 @@ import protocol ParrotServiceExtension.Conversation
 
 /* TODO: Selection: Overlay with NSVisualEffectView per-cell. */
 /* TODO: Alternate mode with Card UI. */
-/* TODO: Make canDrawSubviewsIntoLayer work better. */
 
 // A visual representation of a Conversation in a ListView.
 public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
@@ -19,7 +18,17 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
     
     private lazy var photoLayer: CALayer = {
         let l = CALayer()
-        l.masksToBounds = true
+        l.shadowRadius = 4
+        l.shadowOpacity = 0.25
+        l.shadowColor = NSColor.black.cgColor
+        l.shadowOffset = CGSize(width: 0, height: 0)
+        
+        let s = CALayer()
+        s.masksToBounds = true
+        s.cornerRadius = 8.0
+        s.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
+        
+        l.addSublayer(s)
         return l
     }()
     
@@ -36,7 +45,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
     private lazy var nameLabel: NSTextField = {
         let v = NSTextField(labelWithString: "").modernize()
         v.textColor = NSColor.labelColor
-        v.font = NSFont.systemFont(ofSize: 13.0)
+        v.font = NSFont.systemFont(ofSize: 13.0, weight: NSFontWeightSemibold)
         return v
     }()
     
@@ -52,7 +61,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
     private lazy var timeLabel: NSTextField = {
         let v = NSTextField(labelWithString: "").modernize()
         v.textColor = NSColor.tertiaryLabelColor
-        v.font = NSFont.systemFont(ofSize: 11.0)
+        v.font = NSFont.systemFont(ofSize: 11.0, weight: NSFontWeightLight)
         v.alignment = .right
         return v
     }()
@@ -101,7 +110,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 			let messageSender = conversation.eventStream.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
 			if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
-                self.photoLayer.contents = firstParticipant.image
+                self.photoLayer.sublayers?[0].contents = firstParticipant.image
 			}
 			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
 			let subtitle = ((conversation.eventStream.last as? Message)?.text ?? "")
@@ -184,7 +193,7 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
         
         p.syncLayout()
         b.frame = NSRect(x: p.frame.minX, y: p.frame.midY, width: p.frame.width / 2, height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
-        p.cornerRadius = p.frame.width / 2.0
+        self.photoLayer.sublayers?[0].cornerRadius = p.frame.width / 2.0
         b.cornerRadius = b.frame.width / 2.0
 	}
     

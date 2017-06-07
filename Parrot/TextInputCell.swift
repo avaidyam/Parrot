@@ -17,7 +17,7 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
     private var insertToken = false
     
     private lazy var photoView: NSImageView = {
-        let v = NSImageView().modernize()
+        let v = NSImageView().modernize(wantsLayer: true)
         v.allowsCutCopyPaste = false
         v.isEditable = false
         v.animates = true
@@ -25,7 +25,7 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
     }()
     
     private lazy var textView: ExtendedTextView = {
-        let v = ExtendedTextView().modernize()
+        let v = ExtendedTextView().modernize(wantsLayer: true)
         v.isEditable = true
         v.isSelectable = true
         v.drawsBackground = false
@@ -45,9 +45,7 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
     
     // Constraint setup here.
     public override func loadView() {
-        self.view = NSView()
-        self.view.translatesAutoresizingMaskIntoConstraints = false
-        self.view.wantsLayer = true
+        self.view = NSView().modernize(wantsLayer: true)
         self.view.add(subviews: [self.photoView, self.textView])
         
         // Install constraints.

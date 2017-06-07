@@ -98,8 +98,10 @@ public class PBLiteSerialization {
 			extra_fields = dict.map { (Int($0.key as! String)!, $0.value) }
 			pblite = Array(pblite.dropLast())
 		}
-		
-		let field_values = ((pblite.enumerated().map { ($0.0 + 1, $0.1) }) + extra_fields)
+        
+        // FIXME: some weirdness here...
+        let f_ = pblite.enumerated().map { ($0.0.advanced(by: 1), Optional($0.1)) }
+		let field_values = (f_ + extra_fields)
 		for (tag, subdata) in field_values {
 			if subdata == nil || subdata is NSNull { continue }
 			if let field = message._declaredFields[tag] {

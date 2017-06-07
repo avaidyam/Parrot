@@ -265,8 +265,34 @@ public extension NSFont {
 	}
 }
 
+/// Register for AppleEvents that follow our URL scheme as a compatibility
+/// layer for macOS 10.13 methods.
+///
+/// Note: this only applies to CFBundleURLTypes, and not CFBundleDocumentTypes
+/// on compatibility platforms. -application:openFiles: and -application:openFile:
+/// will still be invoked for documents.
+///
 /// A "typealias" for the traditional NSApplication delegation.
-open class NSApplicationController: NSObject, NSApplicationDelegate {}
+open class NSApplicationController: NSObject, NSApplicationDelegate {
+    public override init() {
+        super.init()
+        if floor(NSAppKitVersion.current.rawValue) <= NSAppKitVersion.macOS10_12.rawValue {
+            let ae = NSAppleEventManager.shared()
+            ae.setEventHandler(self, andSelector: #selector(self.handleURL(event:withReply:)),
+                               forEventClass: UInt32(kInternetEventClass),
+                               andEventID: UInt32(kAEGetURL)
+            )
+        }
+    }
+    @objc private func handleURL(event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
+        guard   let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
+            let url = URL(string: urlString) else { return }
+        let sel = Selector(("application:" + "openURLs:")) // since DNE on < macOS 13
+        if self.responds(to: sel) {
+            self.perform(sel, with: NSApp, with: [url])
+        }
+    }
+}
 
 public class MenuItem: NSMenuItem {
     private var handler: () -> ()

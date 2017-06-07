@@ -14,7 +14,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     private var token: Subscription? = nil
     
     private lazy var photoView: NSImageView = {
-        let v = NSImageView().modernize()
+        let v = NSImageView().modernize(wantsLayer: true)
         v.allowsCutCopyPaste = false
         v.isEditable = false
         v.animates = true
@@ -22,7 +22,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     }()
     
     private lazy var textLabel: ExtendedTextView = {
-        let v = ExtendedTextView().modernize()
+        let v = ExtendedTextView().modernize(wantsLayer: true)
         v.isEditable = false
         v.isSelectable = true
         v.drawsBackground = false
