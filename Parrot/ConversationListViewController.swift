@@ -20,7 +20,8 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         v.flowDirection = .top
         v.selectionType = .any
         v.delegate = self
-        v.insets = EdgeInsets(top: 84.0, left: 0, bottom: 0, right: 0)
+        v.scrollView.automaticallyAdjustsContentInsets = true
+        //v.insets = EdgeInsets(top: 114.0, left: 0, bottom: 0, right: 0)
         return v
     }()
     
@@ -41,39 +42,45 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
     }()
     
     private lazy var addButton: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImageNameAddTemplate)!,
+        let b = NSButton(title: "", image: NSImage(named: "NSAddBookmarkTemplate")!,
                          target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         return b
     }()
     
+    private lazy var searchToggle: NSButton = {
+        let b = NSButton(title: "", image: NSImage(named: NSImageNameRevealFreestandingTemplate)!,
+                         target: self, action: #selector(self.toggleSearchField(_:))).modernize()
+        b.bezelStyle = .texturedRounded
+        b.imagePosition = .imageOnly
+        b.setButtonType(.onOff)
+        b.state = NSControlStateValueOn
+        return b
+    }()
+    
     private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
         let v = NSView()
-        v.add(subviews: [self.titleText, self.addButton/*, self.searchField*/])
+        v.add(subviews: [self.titleText/*, self.addButton*//*, self.searchField*/])
         v.autoresizingMask = [.viewWidthSizable]
-        v.frame.size.height = 48.0//80.0
-        
+        v.frame.size.height = 44.0//80.0
         self.titleText.left == v.left + 2.0
         self.titleText.top == v.top + 2.0
-        self.titleText.right <= self.addButton.left - 8.0
-        self.addButton.centerY == self.titleText.centerY + 2.0
-        self.addButton.right == v.right - 8.0
-        self.addButton.height == 22.0
-        self.addButton.width == 22.0
-        
-        //self.titleText.bottom == self.searchField.top - 8.0
-        //self.addButton.bottom == self.titleText.bottom
-        
-        /*
-        self.searchField.height == 22.0
-        self.searchField.left == v.left + 8.0
-        self.searchField.right == v.right - 8.0
-        self.searchField.bottom == v.bottom - 8.0
-        */
-        
         let t = NSTitlebarAccessoryViewController()
         t.view = v
+        t.layoutAttribute = .bottom
+        return t
+    }()
+    
+    private lazy var searchAccessory: NSTitlebarAccessoryViewController = {
+        let t = NSTitlebarAccessoryViewController()
+        t.view = NSView()
+        t.view.frame.size.height = 22.0 + 12.0
+        t.view.addSubview(self.searchField)
+        self.searchField.left == t.view.left + 8.0
+        self.searchField.right == t.view.right - 8.0
+        self.searchField.top == t.view.top + 4.0
+        self.searchField.bottom == t.view.bottom - 8.0
         t.layoutAttribute = .bottom
         return t
     }()
@@ -212,9 +219,19 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         window.appearance = ParrotAppearance.interfaceStyle().appearance()
         window.enableRealTitlebarVibrancy(.withinWindow)
         window.titleVisibility = .hidden
-        _ = window.installToolbar()
+        let container = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
         window.addTitlebarAccessoryViewController(self.titleAccessory)
+        window.addTitlebarAccessoryViewController(self.searchAccessory)
+        
+        let item = NSToolbarItem(itemIdentifier: "add")
+        item.view = self.addButton
+        item.label = "Add"
+        let item2 = NSToolbarItem(itemIdentifier: "search")
+        item2.view = self.searchToggle
+        item2.label = "Search"
+        container.templateItems = [item, item2]
+        container.itemOrder = [NSToolbarFlexibleSpaceItemIdentifier, "add", "search"]
     }
     
     public override func viewDidLoad() {
@@ -313,6 +330,10 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
             .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
             .map { (section: UInt(0), item: UInt($0)) }
         self.listView.selection = paths
+    }
+    
+    @objc private func toggleSearchField(_ sender: NSButton!) {
+        self.searchAccessory.animator().isHidden = (sender.state != NSControlStateValueOn)
     }
 }
 
