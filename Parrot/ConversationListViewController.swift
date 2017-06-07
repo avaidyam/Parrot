@@ -14,7 +14,7 @@ let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiate
 
 public class ConversationListViewController: NSViewController, WindowPresentable,
 ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
-	
+    
     private lazy var listView: ListView = {
         let v = ListView().modernize(wantsLayer: true)
         v.flowDirection = .top
@@ -25,25 +25,60 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
     }()
     
     private lazy var indicator: MessageProgressView = {
-        let v = MessageProgressView().modernize()
+        let v = MessageProgressView().modernize(wantsLayer: true)
         return v
     }()
     
     private lazy var titleText: NSTextField = {
-        let t = NSTextField(labelWithString: " Conversations").modernize()
+        let t = NSTextField(labelWithString: " Conversations").modernize(wantsLayer: true)
         t.textColor = NSColor.labelColor
         t.font = NSFont.systemFont(ofSize: 32.0, weight: NSFontWeightHeavy)
-        /*
-        let img = NSImage(named: NSImageNameAddTemplate)!
-        let v = NSButton(title: "", image: img, target: nil, action: nil)
-        t.addSubview(v)
-        t.right == v.right - 8.0
-        t.centerY == v.centerY
-        */
         return t
     }()
     
-	private var updateToken: Bool = false
+    private lazy var searchField: NSSearchField = {
+        return NSSearchField().modernize(wantsLayer: true)
+    }()
+    
+    private lazy var addButton: NSButton = {
+        let b = NSButton(title: "", image: NSImage(named: NSImageNameAddTemplate)!,
+                         target: nil, action: nil).modernize()
+        b.bezelStyle = .texturedRounded
+        b.imagePosition = .imageOnly
+        return b
+    }()
+    
+    private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
+        let v = NSView()
+        v.add(subviews: [self.titleText, self.addButton/*, self.searchField*/])
+        v.autoresizingMask = [.viewWidthSizable]
+        v.frame.size.height = 48.0//80.0
+        
+        self.titleText.left == v.left + 2.0
+        self.titleText.top == v.top + 2.0
+        self.titleText.right <= self.addButton.left - 8.0
+        self.addButton.centerY == self.titleText.centerY + 2.0
+        self.addButton.right == v.right - 8.0
+        self.addButton.height == 22.0
+        self.addButton.width == 22.0
+        
+        //self.titleText.bottom == self.searchField.top - 8.0
+        //self.addButton.bottom == self.titleText.bottom
+        
+        /*
+        self.searchField.height == 22.0
+        self.searchField.left == v.left + 8.0
+        self.searchField.right == v.right - 8.0
+        self.searchField.bottom == v.bottom - 8.0
+        */
+        
+        let t = NSTitlebarAccessoryViewController()
+        t.view = v
+        t.layoutAttribute = .bottom
+        return t
+    }()
+    
+    private var updateToken: Bool = false
     private var childrenSub: Subscription? = nil
     
     private lazy var updateInterpolation: Interpolate = {
@@ -63,26 +98,26 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         let group = Interpolate.group(indicatorAnim, scaleAnim)
         return group
     }()
-	
+    
     //
     //
     //
     
-	var conversationList: ConversationList? {
-		didSet {
+    var conversationList: ConversationList? {
+        didSet {
             self.listView.update(animated: false) {
                 self.updateInterpolation.animate(duration: 1.5)
             }
-		}
-	}
-	
+        }
+    }
+    
     // FIXME: this is recomputed A LOT! bad idea...
     var sortedConversations: [Conversation] {
-		guard self.conversationList != nil else { return [] }
+        guard self.conversationList != nil else { return [] }
         return self.conversationList!.conversations.values
             .filter { !$0.archived }
             .sorted { $0.timestamp > $1.timestamp }
-	}
+    }
     
     public func numberOfItems(in: ListView) -> [UInt] {
         return [UInt(self.sortedConversations.count)]
@@ -139,7 +174,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         default: break
         }
     }
-	
+    
     //
     //
     //
@@ -179,12 +214,7 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         window.titleVisibility = .hidden
         _ = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
-        
-        let t = NSTitlebarAccessoryViewController()
-        t.view = self.titleText
-        t.view.frame.size.height = 48.0
-        t.layoutAttribute = .bottom
-        window.addTitlebarAccessoryViewController(t)
+        window.addTitlebarAccessoryViewController(self.titleAccessory)
     }
     
     public override func viewDidLoad() {
@@ -193,16 +223,14 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
             self.updateSelectionIndexes()
         }
         
+        if let service = ServiceRegistry.services.values.first {
+            self.conversationList = service.conversations
+        }
         NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
             guard let c = note.object as? Service else { return }
             self.conversationList = c.conversations
             
             DispatchQueue.main.async {
-                self.title = c.directory.me.fullName
-                //self.imageView.layer?.masksToBounds = true
-                //self.imageView.layer?.cornerRadius = self.imageView.bounds.width / 2
-                //self.imageView.image = fetchImage(user: c.directory.me, monogram: true)
-                
                 self.listView.update()
                 self.updateSelectionIndexes()
             }
@@ -224,11 +252,11 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         self.listView.alphaValue = 0.0
         self.indicator.startAnimation()
         
-		ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
-			guard let vev = self.view as? NSVisualEffectView else { return }
-			vev.state = style.visualEffectState()
-		}
-	}
+        ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
+            guard let vev = self.view as? NSVisualEffectView else { return }
+            vev.state = style.visualEffectState()
+        }
+    }
     
     /// If we need to close, make sure we clean up after ourselves, instead of deinit.
     public override func viewWillDisappear() {
@@ -255,20 +283,20 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
             s.userInteractionState = true // FIXME
         }
     }
-	
+    
     //
     //
     //
     
     /* TODO: Just update the row that is updated. */
     public func conversationDidReceiveEvent(_ notification: Notification) {
-		self.updateList()
-	}
+        self.updateList()
+    }
     public func conversationDidUpdate(_ notification: Notification) {
-		self.updateList()
+        self.updateList()
     }
     public func conversationDidUpdateList(_ notification: Notification) {
-		self.updateList()
+        self.updateList()
     }
     
     private func updateList() {
@@ -287,3 +315,4 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         self.listView.selection = paths
     }
 }
+

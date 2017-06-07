@@ -9,7 +9,7 @@ import ParrotServiceExtension
 public class DirectoryListViewController: NSViewController, WindowPresentable, ListViewDataDelegate {
     
     private lazy var listView: ListView = {
-        let v = ListView().modernize()
+        let v = ListView().modernize(wantsLayer: true)
         v.flowDirection = .top
         v.selectionType = .any
         v.delegate = self
@@ -18,8 +18,57 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     }()
     
     private lazy var indicator: MessageProgressView = {
-        let v = MessageProgressView().modernize()
+        let v = MessageProgressView().modernize(wantsLayer: true)
         return v
+    }()
+    
+    private lazy var titleText: NSTextField = {
+        let t = NSTextField(labelWithString: " Directory").modernize(wantsLayer: true)
+        t.textColor = NSColor.labelColor
+        t.font = NSFont.systemFont(ofSize: 32.0, weight: NSFontWeightHeavy)
+        return t
+    }()
+    
+    private lazy var searchField: NSSearchField = {
+        return NSSearchField().modernize(wantsLayer: true)
+    }()
+    
+    private lazy var addButton: NSButton = {
+        let b = NSButton(title: "", image: NSImage(named: NSImageNameAddTemplate)!,
+                         target: nil, action: nil).modernize()
+        b.bezelStyle = .texturedRounded
+        b.imagePosition = .imageOnly
+        return b
+    }()
+    
+    private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
+        let v = NSView()
+        v.add(subviews: [self.titleText, self.addButton/*, self.searchField*/])
+        v.autoresizingMask = [.viewWidthSizable]
+        v.frame.size.height = 48.0//80.0
+        
+        self.titleText.left == v.left + 2.0
+        self.titleText.top == v.top + 2.0
+        self.titleText.right <= self.addButton.left - 8.0
+        self.addButton.centerY == self.titleText.centerY + 2.0
+        self.addButton.right == v.right - 8.0
+        self.addButton.height == 22.0
+        self.addButton.width == 22.0
+        
+        //self.titleText.bottom == self.searchField.top - 8.0
+        //self.addButton.bottom == self.titleText.bottom
+        
+        /*
+         self.searchField.height == 22.0
+         self.searchField.left == v.left + 8.0
+         self.searchField.right == v.right - 8.0
+         self.searchField.bottom == v.bottom - 8.0
+         */
+        
+        let t = NSTitlebarAccessoryViewController()
+        t.view = v
+        t.layoutAttribute = .bottom
+        return t
     }()
     
     private lazy var updateInterpolation: Interpolate = {
@@ -94,16 +143,22 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
         window.titleVisibility = .hidden
         let container = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
+        window.addTitlebarAccessoryViewController(self.titleAccessory)
         
+        /*
         let item = NSToolbarItem(itemIdentifier: "search")
         let s = NSSearchField()
         item.view = s
         item.label = "Search"
         container.templateItems = [item]
         container.itemOrder = [NSToolbarFlexibleSpaceItemIdentifier, "search", NSToolbarFlexibleSpaceItemIdentifier]
+        */
     }
     
     public override func viewDidLoad() {
+        if let service = ServiceRegistry.services.values.first {
+            self.directory = service.directory
+        }
         NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
             guard let c = note.object as? Service else { return }
             self.directory = c.directory

@@ -200,12 +200,12 @@ public class ParrotAppController: NSApplicationController {
             statusItem.image = image
             statusItem.button?.target = self
             statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
-            statusItem.button?.action = #selector(self.showConversationWindow(sender:))
+            statusItem.button?.action = #selector(self.showConversationWindow(_:))
         }
     }
     
     /// Right clicking the status item causes the app to close; left click causes it to become visible.
-    func showConversationWindow(sender: NSStatusBarButton?) {
+    func showConversationWindow(_ sender: NSStatusBarButton?) {
         let event = NSApp.currentEvent!
         if event.type == NSEventType.rightMouseUp {
             NSApp.terminate(self)
@@ -272,7 +272,15 @@ public class ParrotAppController: NSApplicationController {
 		             keyEquivalent: "")
 		return menu
 	}
-	
+    
+    @IBAction func showConversations(_ sender: Any?) {
+        self.conversationsController.presentAsWindow()
+    }
+    
+    @IBAction func showDirectory(_ sender: Any?) {
+        self.directoryController.presentAsWindow()
+    }
+    
 	/// If the user requests logging out, clear the authentication tokens.
 	@IBAction func logoutSelected(_ sender: AnyObject) {
 		let cookieStorage = HTTPCookieStorage.shared
