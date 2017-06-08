@@ -9,9 +9,7 @@ import protocol ParrotServiceExtension.Conversation
 /* TODO: Alternate mode with Card UI. */
 
 // A visual representation of a Conversation in a ListView.
-public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
-    
-    public override var allowsVibrancy: Bool { return true }
+public class ConversationCell: NSCollectionViewItem {
     
     private static var wallclock = Wallclock()
     private var id = UUID() // for wallclock
@@ -66,46 +64,35 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
         return v
     }()
     
-    // Set up constraints after init.
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        prepareLayout()
-    }
-    public override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        prepareLayout()
-    }
-    
     // Constraint setup here.
-    private func prepareLayout() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        //self.canDrawSubviewsIntoLayer = true
-        self.wantsLayer = true
-        self.add(subviews: [self.nameLabel, self.timeLabel, self.textLabel])
-        self.add(sublayer: self.photoLayer)
-        //self.add(sublayer: self.badgeLayer) // will not participate in autolayout
+    public override func loadView() {
+        self.view = NSVibrantView()
+        self.view.wantsLayer = true
+        self.view.add(subviews: [self.nameLabel, self.timeLabel, self.textLabel])
+        self.view.add(sublayer: self.photoLayer)
+        //self.view.add(sublayer: self.badgeLayer) // will not participate in autolayout
         
-        self.photoLayer.layout.left == self.left + 8
-        self.photoLayer.layout.centerY == self.centerY
+        self.photoLayer.layout.left == self.view.left + 8
+        self.photoLayer.layout.centerY == self.view.centerY
         self.photoLayer.layout.width == 48
         self.photoLayer.layout.height == 48
         self.photoLayer.layout.right == self.nameLabel.left - 8
         self.photoLayer.layout.right == self.textLabel.left - 8
-        self.nameLabel.top == self.top + 8
+        self.nameLabel.top == self.view.top + 8
         self.nameLabel.right == self.timeLabel.left - 4
         self.nameLabel.bottom == self.textLabel.top - 4
         self.nameLabel.centerY == self.timeLabel.centerY
-        self.timeLabel.top == self.top + 8
-        self.timeLabel.right == self.right - 8
+        self.timeLabel.top == self.view.top + 8
+        self.timeLabel.right == self.view.right - 8
         self.timeLabel.bottom == self.textLabel.top - 4
-        self.textLabel.right == self.right - 8
-        self.textLabel.bottom == self.bottom - 8
+        self.textLabel.right == self.view.right - 8
+        self.textLabel.bottom == self.view.bottom - 8
     }
 	
 	// Upon assignment of the represented object, configure the subview contents.
-	public override var objectValue: Any? {
+	public override var representedObject: Any? {
 		didSet {
-            guard let conversation = self.objectValue as? Conversation else { return }
+            guard let conversation = self.representedObject as? Conversation else { return }
 			
 			let messageSender = conversation.eventStream.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
@@ -139,15 +126,27 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 		self.timeLabel.stringValue = self.prefix + self.time.relativeString()
 	}
     
-    public var isSelected: Bool = false {
+    public override var highlightState: NSCollectionViewItemHighlightState {
+        didSet {
+            if self.highlightState != .none {
+                self.view.layer?.backgroundColor = NSColor.selectedMenuItemColor.cgColor
+            } else {
+                self.view.layer?.backgroundColor = NSColor.clear.cgColor
+            }
+        }
+    }
+    
+    public override var isSelected: Bool {
         didSet {
             //let appearance = self.view.appearance ?? NSAppearance.current()
             if self.isSelected {
+                self.view.layer?.backgroundColor = NSColor.selectedMenuItemColor.cgColor
                 //self.appearance = .light
                 //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0.1997270976).cgColor
                 //self.effect?.animator().isHidden = false
                 //self.separator?.animator().isHidden = true
             } else {
+                self.view.layer?.backgroundColor = NSColor.clear.cgColor
                 //self.appearance = .dark
                 //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
                 //self.effect?.animator().isHidden = true
@@ -156,8 +155,8 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
         }
     }
     
-    public override func menu(for event: NSEvent) -> NSMenu? {
-        guard var conversation = self.objectValue as? Conversation else { return nil }
+    public func menu(for event: NSEvent) -> NSMenu? {
+        guard var conversation = self.representedObject as? Conversation else { return nil }
         let m = NSMenu(title: "Settings")
         m.addItem(title: conversation.muted ? "Unmute" : "Mute") {
             log.info("Mute conv: \(conversation.identifier)")
@@ -183,25 +182,29 @@ public class ConversationCell: NSTableCellView, NSTableViewCellProtocol {
 	// Return a complete dragging component for this ConversationView.
 	// Note that we hide the separator and show it again after snapshot.
 	public override var draggingImageComponents: [NSDraggingImageComponent] {
-		return [self.draggingComponent("Person")]
+		return [self.view.draggingComponent("Person")]
 	}
 	
 	// Allows the photo view's circle crop to dynamically match size.
-	public override func layout() {
-		super.layout()
+	public override func viewDidLayout() {
         let p = self.photoLayer, b = self.badgeLayer
-        
         p.syncLayout()
         b.frame = NSRect(x: p.frame.minX, y: p.frame.midY, width: p.frame.width / 2, height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
         self.photoLayer.sublayers?[0].cornerRadius = p.frame.width / 2.0
         b.cornerRadius = b.frame.width / 2.0
 	}
     
-    public override func viewDidMoveToSuperview() {
-        if let _ = self.superview { // onscreen
-            ConversationCell.wallclock.add(target: (self, self.id, self.updateTimestamp))
-        } else { // offscreen
-            ConversationCell.wallclock.remove(target: (self, self.id, self.updateTimestamp))
-        }
+    public override func viewDidAppear() {
+        ConversationCell.wallclock.add(target: (self, self.id, self.updateTimestamp))
+    }
+    
+    public override func viewDidDisappear() {
+        ConversationCell.wallclock.remove(target: (self, self.id, self.updateTimestamp))
+    }
+}
+
+public class NSVibrantView: NSView {
+    public override var allowsVibrancy: Bool {
+        return true
     }
 }

@@ -34,7 +34,7 @@ public extension Notification.Name {
 }
 
 public class MessageListViewController: NSViewController, WindowPresentable,
-TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
+TextInputHost, ListViewDataDelegate2 {
     
     /// The openConversations keeps track of all open conversations and when the
     /// list is updated, it is cached and all selections are synchronized.
@@ -92,11 +92,12 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     }()
     
     /// The primary messages content ListView.
-    private lazy var listView: ListView = {
-        let v = ListView().modernize(wantsLayer: true)
+    private lazy var listView: ListView2 = {
+        let v = ListView2().modernize(wantsLayer: true)
         v.flowDirection = .bottom
         v.selectionType = .none
         v.delegate = self
+        v.collectionView.register(MessageCell.self, forItemWithIdentifier: "\(MessageCell.self)")
         
         v.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
         return v
@@ -212,11 +213,11 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     // MARK: ListView: DataSource + Delegate
     //
     
-    public func numberOfItems(in: ListView) -> [UInt] {
+    public func numberOfItems(in: ListView2) -> [UInt] {
         return [UInt(self.dataSource.count)]
     }
     
-    public func object(in: ListView, at: ListView.Index) -> Any? {
+    public func object(in: ListView2, at: ListView2.Index) -> Any? {
         let row = Int(at.item)
         if let f = self.dataSource[row] as? Focus {
             return f
@@ -229,12 +230,12 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
                                      next: next ? self.dataSource[row + 1] : nil) as Any
     }
     
-    public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
+    public func itemClass(in: ListView2, at: ListView2.Index) -> NSCollectionViewItem.Type {
         let row = Int(at.item)
         return MessageCell.self
     }
     
-    public func cellHeight(in view: ListView, at: ListView.Index) -> Double {
+    public func cellHeight(in view: ListView2, at: ListView2.Index) -> Double {
         let row = Int(at.item)
         if let _ = self.dataSource[row] as? Focus {
             return 32.0
@@ -244,7 +245,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         return 0.0
     }
     
-    public func reachedEdge(in: ListView, edge: NSRectEdge) {
+    public func reachedEdge(in: ListView2, edge: NSRectEdge) {
         func scrollback() {
             guard self.updateToken == false else { return }
             let first = self.dataSource[0] as? IChatMessageEvent
@@ -252,8 +253,10 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
                 let count = self.dataSource.count
                 self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent }, at: 0)
                 DispatchQueue.main.async {
-                    self.listView.tableView.insertRows(at: IndexSet(integersIn: 0..<(self.dataSource.count - count)),
+                    self.listView.collectionView.insertItems(at: Set((0..<(self.dataSource.count - count)).map { IndexPath(item: $0, section: 0) }))
+                    /*self.listView.tableView.insertRows(at: IndexSet(integersIn: 0..<(self.dataSource.count - count)),
                                                        withAnimation: .slideDown)
+                    */
                     self.updateToken = false
                 }
             }
@@ -428,7 +431,8 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         DispatchQueue.main.async {
             self.dataSource.append(event)
             log.debug("section 0: \(self.dataSource.count)")
-            self.listView.insert(at: [(section: 0, item: UInt(self.dataSource.count - 1))])
+            let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
+            self.listView.collectionView.insertItems(at: [idx])
             //self.listView.scroll(toRow: self.dataSource.count - 1)
         }
     }
@@ -468,6 +472,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
             self.dataSource.append(focus)
             self.lastWatermarkIdx = self.dataSource.count - 1
             
+            /*
             if oldWatermarkIdx > 0 && self.lastWatermarkIdx > 0 {
                 log.debug("MOVE WATERMARK")
                 //self.listView.remove(at: [(section: 0, item: UInt(oldWatermarkIdx))])
@@ -477,7 +482,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
             } else if self.lastWatermarkIdx > 0 {
                 log.debug("ADD WATERMARK")
                 self.listView.insert(at: [(section: 0, item: UInt(self.lastWatermarkIdx))])
-            }
+            }*/
         }
     }
     

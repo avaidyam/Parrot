@@ -6,14 +6,15 @@ import ParrotServiceExtension
 
 /* TODO: UISearchController for NSViewControllers. */
 
-public class DirectoryListViewController: NSViewController, WindowPresentable, ListViewDataDelegate {
+public class DirectoryListViewController: NSViewController, WindowPresentable, ListViewDataDelegate2 {
     
-    private lazy var listView: ListView = {
-        let v = ListView().modernize(wantsLayer: true)
+    private lazy var listView: ListView2 = {
+        let v = ListView2().modernize(wantsLayer: true)
         v.flowDirection = .top
         v.selectionType = .any
         v.delegate = self
         v.scrollView.automaticallyAdjustsContentInsets = true
+        v.collectionView.register(PersonCell.self, forItemWithIdentifier: "\(PersonCell.self)")
         //v.insets = EdgeInsets(top: 114.0, left: 0, bottom: 0, right: 0)
         return v
     }()
@@ -108,20 +109,20 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
         }
     }
     
-    public func numberOfItems(in: ListView) -> [UInt] {
+    public func numberOfItems(in: ListView2) -> [UInt] {
         return [UInt(self.directory?.people.count ?? 0)]
     }
     
-    public func object(in: ListView, at: ListView.Index) -> Any? {
+    public func object(in: ListView2, at: ListView2.Index) -> Any? {
         let t = Array(self.directory!.people.values)[Int(at.item)]
         return t
     }
     
-    public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
+    public func itemClass(in: ListView2, at: ListView2.Index) -> NSCollectionViewItem.Type {
         return PersonCell.self
     }
     
-    public func cellHeight(in view: ListView, at: ListView.Index) -> Double {
+    public func cellHeight(in view: ListView2, at: ListView2.Index) -> Double {
         return 32.0 + 16.0 /* padding */
     }
     

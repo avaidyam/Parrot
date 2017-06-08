@@ -7,9 +7,7 @@ import protocol ParrotServiceExtension.Message
 
 /* TODO: Use NSPanGestureRecognizer or Force Touch to expand links. */
 
-public class MessageCell: NSTableCellView, NSTextViewDelegate {
-    
-    public override var allowsVibrancy: Bool { return true }
+public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
     
     private var token: Subscription? = nil
     
@@ -30,7 +28,8 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         v.textColor = NSColor.labelColor
         v.textContainerInset = NSSize(width: 4, height: 4)
         
-        v.setContentHuggingPriority(1, for: .vertical)
+        //v.setContentCompressionResistancePriority(1000, for: .vertical)
+        //v.setContentHuggingPriority(1, for: .vertical)
         
         v.isAutomaticDataDetectionEnabled = true
         v.isAutomaticLinkDetectionEnabled = true
@@ -42,35 +41,26 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
     
-    // Set up constraints after init.
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        prepareLayout()
-    }
-    public override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        prepareLayout()
-    }
-    
     // Constraint setup here.
-    private func prepareLayout() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.wantsLayer = true
+    public override func loadView() {
+        self.view = NSVibrantView()
+        self.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.wantsLayer = true
         self.token = AutoSubscription(from: nil, kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             self.setColors()
         }
         
-        self.add(subviews: [self.photoView, self.textLabel])
+        self.view.add(subviews: [self.photoView, self.textLabel])
         
         // Install constraints.
-        self.photoView.left == self.left + 8.0
-        self.photoView.bottom == self.bottom - 4.0
+        self.photoView.left == self.view.left + 8.0
+        self.photoView.bottom == self.view.bottom - 4.0
         self.photoView.height == 24.0
         self.photoView.width == 24.0
         self.textLabel.left == self.photoView.right + 8.0
-        self.textLabel.right <= self.right - 8.0
-        self.textLabel.top <= self.top + 4.0
-        self.textLabel.bottom == self.bottom - 4.0
+        self.textLabel.right == self.view.right - 8.0
+        self.textLabel.top == self.view.top + 4.0
+        self.textLabel.bottom == self.view.bottom - 4.0
         
         // So, since the photoView can be hidden (height = 0), we should manually
         // declare the height minimum constraint here.
@@ -82,9 +72,9 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     }
     
 	/// Upon assignment of the represented object, configure the subview contents.
-	public override var objectValue: Any? {
+	public override var representedObject: Any? {
         didSet {
-            guard let b = self.objectValue as? EventStreamItemBundle else { return }
+            guard let b = self.representedObject as? EventStreamItemBundle else { return }
             guard let o = b.current as? Message else { return }
 			
 			let user = o.sender
@@ -105,7 +95,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
             self.textLabel.isEditable = false
             
             let text = self.textLabel
-            let appearance = self.appearance ?? NSAppearance.current()
+            let appearance = self.view.appearance ?? NSAppearance.current()
             text.textColor = NSColor.labelColor
             self.setColors()
             
@@ -139,13 +129,13 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
 	}
     
     private func setColors() {
-        guard let b = self.objectValue as? EventStreamItemBundle else { return }
+        guard let b = self.representedObject as? EventStreamItemBundle else { return }
         guard let o = b.current as? Message else { return }
         let text = self.textLabel
         
         // Only clip the text if the text isn't purely Emoji.
         if !text.string!.isEmoji {
-            var color = NSColor.darkOverlay(forAppearance: NSAppearance.current() == .dark ? .light : .dark)//NSColor.secondaryLabelColor
+            var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance == .dark ? .light : .dark)//NSColor.secondaryLabelColor
             let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
             if  let q = Settings[setting] as? Data,
                 let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
@@ -155,7 +145,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
                 // This automatically adjusts labelColor to the right XOR mask.
                 text.appearance = color.isLight() ? .light : .dark
             } else {
-                text.appearance = NSAppearance.current() == .dark ? .light : .dark//self.appearance
+                text.appearance = self.view.effectiveAppearance == .dark ? .light : .dark//self.appearance
             }
             text.layer?.backgroundColor = color.cgColor
         } else {
@@ -164,8 +154,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     }
     
 	/// Allows the circle crop and masking to dynamically change.
-	public override func layout() {
-        super.layout()
+	public override func viewDidLayout() {
 		if let layer = self.photoView.layer {
 			layer.masksToBounds = true
 			layer.cornerRadius = layer.bounds.width / 2.0
@@ -177,7 +166,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     
     /// If we're right-clicked outside of the text view, just popUp the textView's menu.
     /// Note: make sure we SELECT ALL and then DESELECT ALL after the popUp menu.
-    public override func menu(for event: NSEvent) -> NSMenu? {
+    public func menu(for event: NSEvent) -> NSMenu? {
         self.textLabel.selectAll(nil)
         return self.textLabel.menu(for: event)
         //self.textLabel?.setSelectedRange(NSRange())

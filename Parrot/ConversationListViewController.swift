@@ -13,14 +13,15 @@ let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteract
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
 public class ConversationListViewController: NSViewController, WindowPresentable,
-ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
+ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
     
-    private lazy var listView: ListView = {
-        let v = ListView().modernize(wantsLayer: true)
+    private lazy var listView: ListView2 = {
+        let v = ListView2().modernize(wantsLayer: true)
         v.flowDirection = .top
         v.selectionType = .any
         v.delegate = self
         v.scrollView.automaticallyAdjustsContentInsets = true
+        v.collectionView.register(ConversationCell.self, forItemWithIdentifier: "\(ConversationCell.self)")
         //v.insets = EdgeInsets(top: 114.0, left: 0, bottom: 0, right: 0)
         return v
     }()
@@ -126,30 +127,30 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
             .sorted { $0.timestamp > $1.timestamp }
     }
     
-    public func numberOfItems(in: ListView) -> [UInt] {
+    public func numberOfItems(in: ListView2) -> [UInt] {
         return [UInt(self.sortedConversations.count)]
     }
     
-    public func object(in: ListView, at: ListView.Index) -> Any? {
+    public func object(in: ListView2, at: ListView2.Index) -> Any? {
         return self.sortedConversations[Int(at.item)]
     }
     
-    public func itemClass(in: ListView, at: ListView.Index) -> NSView.Type {
+    public func itemClass(in: ListView2, at: ListView2.Index) -> NSCollectionViewItem.Type {
         return ConversationCell.self
     }
     
-    public func cellHeight(in view: ListView, at: ListView.Index) -> Double {
+    public func cellHeight(in view: ListView2, at: ListView2.Index) -> Double {
         return 48.0 + 16.0 /* padding */
     }
     
-    public func proposedSelection(in list: ListView, at: [ListView.Index]) -> [ListView.Index] {
-        return list.selection + at // Only additive!
+    public func proposedSelection(in list: ListView2, at: [ListView2.Index], selecting: Bool) -> [ListView2.Index] {
+        return at//list.selection + at // Only additive!
     }
     
-    public func selectionChanged(in: ListView, is selection: [ListView.Index]) {
+    public func selectionChanged(in: ListView2, is selection: [ListView2.Index], selecting: Bool) {
         let src = self.sortedConversations
         let dest = Set(MessageListViewController.openConversations.keys)
-        let convs = Set(selection.map { src[Int($0.item)].identifier })
+        let convs = Set(Array(self.listView.collectionView.selectionIndexPaths).map { src[Int($0.item)].identifier })
         
         // Conversations selected that we don't already have. --> ADD
         convs.subtracting(dest).forEach { id in
@@ -163,12 +164,12 @@ ListViewDataDelegate, ListViewSelectionDelegate, ListViewScrollbackDelegate {
         }
     }
     
-    public func reachedEdge(in: ListView, edge: NSRectEdge) {
+    public func reachedEdge(in: ListView2, edge: NSRectEdge) {
         func scrollback() {
             guard self.updateToken == false else { return }
             let _ = self.conversationList?.syncConversations(count: 25, since: self.conversationList!.syncTimestamp) { val in
                 DispatchQueue.main.async {
-                    self.listView.tableView.noteNumberOfRowsChanged()
+                    self.listView.collectionView.reloadData()//.tableView.noteNumberOfRowsChanged()
                     self.updateToken = false
                 }
             }

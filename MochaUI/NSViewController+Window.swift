@@ -68,6 +68,14 @@ public extension NSViewController {
     public var tabViewController: NSTabViewController? {
         return self.ancestor(ofType: NSTabViewController.self)
     }
+    
+    /// Accessor for the CALayer backing the NSView.
+    public var layer: CALayer {
+        if self.view.layer == nil && self.view.wantsLayer == false {
+            self.view.wantsLayer = true
+        }
+        return self.view.layer!
+    }
 }
 
 public extension NSViewController {
