@@ -10,7 +10,7 @@ public protocol TextInputHost {
     func send(message: String)
 }
 
-public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
+public class MessageInputViewController: NSViewController, NSTextViewExtendedDelegate {
     
     public var host: TextInputHost? = nil
     
@@ -31,6 +31,10 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
         v.drawsBackground = false
         v.backgroundColor = NSColor.clear
         v.textColor = NSColor.labelColor
+        v.textContainerInset = NSSize(width: 4, height: 4)
+        
+        v.setContentHuggingPriority(1, for: .vertical)
+        v.setContentCompressionResistancePriority(1, for: .horizontal)
         
         v.placeholderString = "Send message..."
         v.shouldAlwaysPasteAsPlainText = true
@@ -50,15 +54,15 @@ public class TextInputCell: NSViewController, NSTextViewExtendedDelegate {
         
         // Install constraints.
         self.photoView.left == self.view.left + 8.0
-        self.photoView.bottom == self.view.bottom - 8.0
+        self.photoView.bottom == self.view.bottom - 4.0
         self.photoView.height == 24.0
         self.photoView.width == 24.0
         self.photoView.bottom == self.textView.bottom
         
         self.textView.left == self.photoView.right + 8.0
-        self.textView.bottom == self.view.bottom - 8.0
+        self.textView.bottom == self.view.bottom - 4.0
         self.textView.right == self.view.right - 8.0
-        self.textView.top == self.view.top + 8.0
+        self.textView.top == self.view.top + 4.0
         self.textView.height >= self.photoView.height
     }
     

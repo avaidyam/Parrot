@@ -19,6 +19,7 @@ public struct EventStreamItemBundle {
 /// be updated automatically when the status of the message is known.
 public struct PlaceholderMessage: Message {
     public let serviceIdentifier: String = ""
+    public let identifier: String = ""
 
     public var contentType: ContentType = .text
     public let sender: Person?
@@ -125,8 +126,8 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     }()
     
     /// The input cell at the bottom of the view.
-    private lazy var textInputCell: TextInputCell = {
-        let t = TextInputCell()
+    private lazy var textInputCell: MessageInputViewController = {
+        let t = MessageInputViewController()
         t.host = self
         t.view.modernize() // prepare & attach
         return t
@@ -446,7 +447,7 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         default: // TypingType.Unknown:
             mode = .here
         }
-        self.focusModeChanged(IFocus("", sender: forUser, timestamp: Date(), mode: mode))
+        self.focusModeChanged(IFocus("", identifier: "", sender: forUser, timestamp: Date(), mode: mode))
     }
     
     public func conversationDidReceiveWatermark(_ notification: Notification) {
@@ -593,6 +594,26 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
     //
     //
     
+    /*
+    private lazy var addButton: NSButton = {
+        let b = NSButton(title: "", image: NSImage(named: "NSAddBookmarkTemplate")!,
+                         target: nil, action: nil).modernize()
+        b.bezelStyle = .texturedRounded
+        b.imagePosition = .imageOnly
+        return b
+    }()
+    
+    private lazy var searchToggle: NSButton = {
+        let b = NSButton(title: "", image: NSImage(named: NSImageNameRevealFreestandingTemplate)!,
+                         target: self, action: #selector(self.toggleSearchField(_:))).modernize()
+        b.bezelStyle = .texturedRounded
+        b.imagePosition = .imageOnly
+        b.setButtonType(.onOff)
+        b.state = NSControlStateValueOn
+        return b
+    }()
+    */
+    
     private var _usersToIndicators: [Person.IdentifierType: PersonIndicatorViewController] = [:]
     private func _usersToItems() -> [NSToolbarItem] {
         if _usersToIndicators.count == 0 {
@@ -612,5 +633,16 @@ TextInputHost, ListViewDataDelegate, ListViewScrollbackDelegate {
         order.insert(NSToolbarFlexibleSpaceItemIdentifier, at: 0)
         order.append(NSToolbarFlexibleSpaceItemIdentifier)
         h.itemOrder = order
+        
+        /*
+        let item = NSToolbarItem(itemIdentifier: "add")
+        item.view = self.addButton
+        item.label = "Add"
+        let item2 = NSToolbarItem(itemIdentifier: "search")
+        item2.view = self.searchToggle
+        item2.label = "Search"
+        container.templateItems = [item, item2]
+        container.itemOrder = [NSToolbarFlexibleSpaceItemIdentifier, "add", "search"]
+        */
     }
 }

@@ -61,6 +61,10 @@ public class IChatMessageEvent: IEvent, Message {
     public var contentType: ContentType {
         return .text
     }
+    
+    public var identifier: String {
+        return self.event.eventId ?? ""
+    }
 	
 	// A textual representation of the message.
     public lazy var text: String = {

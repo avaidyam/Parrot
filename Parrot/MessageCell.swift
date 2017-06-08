@@ -30,6 +30,8 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         v.textColor = NSColor.labelColor
         v.textContainerInset = NSSize(width: 4, height: 4)
         
+        v.setContentHuggingPriority(1, for: .vertical)
+        
         v.isAutomaticDataDetectionEnabled = true
         v.isAutomaticLinkDetectionEnabled = true
         v.isAutomaticTextReplacementEnabled = true
@@ -143,7 +145,7 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
         
         // Only clip the text if the text isn't purely Emoji.
         if !text.string!.isEmoji {
-            var color = NSColor.secondaryLabelColor
+            var color = NSColor.darkOverlay(forAppearance: NSAppearance.current() == .dark ? .light : .dark)//NSColor.secondaryLabelColor
             let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
             if  let q = Settings[setting] as? Data,
                 let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
@@ -189,49 +191,20 @@ public class MessageCell: NSTableCellView, NSTextViewDelegate {
     }
     
     
-    private static var storage: NSTextStorage = {
-        return NSTextStorage(string: "")
-    }()
-    private static var container: NSTextContainer = {
-        let x = NSTextContainer(containerSize: NSZeroSize)
-        x.lineFragmentPadding = 0.0
-        return x
-    }()
-    private static var manager: NSLayoutManager = {
-        let x = NSLayoutManager()
-        x.addTextContainer(MessageCell.container)
-        MessageCell.storage.addLayoutManager(x)
-        return x
-    }()
-    
     private static var _text: ExtendedTextView = {
         let v = ExtendedTextView()
+        v.isEditable = false
+        v.isSelectable = true
         v.textContainerInset = NSSize(width: 4, height: 4)
         return v
     }()
     
     // Given a string, a font size, and a base width, return the measured height of the cell.
     public static func measure(_ string: String, _ width: CGFloat) -> Double {
-        /*
-        MessageCell._text.frame = NSRect(x: 0, y: 0, width: width - 48.0 /* padding + image*/, height: CGFloat.greatestFiniteMagnitude)
+        MessageCell._text.frame = NSRect(x: 0, y: 0, width: width - 48.0 /* padding + image */, height: CGFloat.greatestFiniteMagnitude)
         MessageCell._text.string = string
         MessageCell._text.font = NSFont.systemFont(ofSize: 12.0 * (string.isEmoji ? 4 : 1))
-        MessageCell._text.layoutManager!.ensureLayout(for: MessageCell._text.textContainer!)
-        let baseR = MessageCell._text.layoutManager!.usedRect(for: MessageCell._text.textContainer!)
-        let h = Double(baseR.size.height)
-        */
-        
-        MessageCell.container.containerSize = NSSize(width: width - 40.0 /* padding + image*/, height: CGFloat.greatestFiniteMagnitude)
-        MessageCell.storage.setAttributedString(NSAttributedString(string: string))
-        MessageCell.storage.font = NSFont.systemFont(ofSize: 12.0 * (string.isEmoji ? 4 : 1))
-        
-        //_ = MessageCell.manager.glyphRange(for: MessageCell.container)
-        MessageCell.manager.ensureLayout(for: MessageCell.container)
-        let baseR = MessageCell.manager.usedRect(for: MessageCell.container)
-        let insetR = baseR.insetBy(dx: -(4.0), dy: -(4.0))
-        //let offsetR = insetR.offsetBy(dx: (4.0), dy: (4.0))
-        let h = Double(insetR.size.height)
-        
+        let h = Double(MessageCell._text.layoutRect().size.height)
         return ((h < 24.0) ? 24.0 : h) + 8.0 /* add padding to max(h, 24) */
     }
 }

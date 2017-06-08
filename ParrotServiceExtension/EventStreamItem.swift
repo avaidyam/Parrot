@@ -12,7 +12,7 @@ public enum ContentType: String {
 }
 
 public protocol EventStreamItem: ServiceOriginating {
-	//var identifier: String { get }
+	var identifier: String { get }
 	var sender: Person? { get } // if nil, global event
 	var timestamp: Date { get }
 }

@@ -6,11 +6,13 @@ private let log = Logger(subsystem: "Hangouts.Conversation")
 
 public struct IFocus: Focus {
     public let serviceIdentifier: String
+    public let identifier: String
 	public let sender: Person?
 	public let timestamp: Date
 	public let mode: FocusMode
-    public init(_ serviceIdentifier: String, sender: Person?, timestamp: Date, mode: FocusMode) {
+    public init(_ serviceIdentifier: String, identifier: String, sender: Person?, timestamp: Date, mode: FocusMode) {
         self.serviceIdentifier = serviceIdentifier
+        self.identifier = identifier
         self.sender = sender
         self.timestamp = timestamp
         self.mode = mode
@@ -217,7 +219,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 			let person = self.client.directory.people[r.participantId!.gaiaId!]
 			let read = Date.from(UTC: Double(r.latestReadTimestamp!))
 			//let t = self.typingStatuses[id]
-			let f = IFocus(self.serviceIdentifier, sender: person, timestamp: read, mode: .away)
+			let f = IFocus(self.serviceIdentifier, identifier: "", sender: person, timestamp: read, mode: .away)
 			focuses.append(f)
 		}
 		return focuses

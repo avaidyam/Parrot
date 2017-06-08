@@ -54,7 +54,7 @@ public class PersonIndicatorViewController: NSViewController {
     }
     
     public override func loadView() {
-        let b = NSButton(title: "", target: self, action: #selector(PersonIndicatorViewController.buttonPressed(_:))).modernize()
+        let b = NSButton(title: "", target: self, action: #selector(PersonIndicatorViewController.buttonPressed(_:)))
         b.isBordered = false
         b.wantsLayer = true
         

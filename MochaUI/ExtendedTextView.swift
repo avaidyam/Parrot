@@ -15,6 +15,24 @@ public class ExtendedTextView: NSTextView {
 	@IBInspectable
 	public var placeholderString: String? = nil
 	public var placeholderAttributedString: NSAttributedString? = nil
+    
+    public var providesContentSize: Bool = true {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
+    
+    public var preferredMaxLayoutWidth: CGFloat = 0.0 {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
+    
+    public var maximumNumberOfLines: Int = 0 {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
 	
 	public override func insertText(_ string: Any, replacementRange: NSRange) {
 		super.insertText(string, replacementRange: replacementRange)
@@ -33,6 +51,9 @@ public class ExtendedTextView: NSTextView {
 	}
 	
 	public override var intrinsicContentSize: NSSize {
+        guard self.providesContentSize else {
+            return super.intrinsicContentSize
+        }
         return self.layoutRect().size
 	}
 	public override func didChangeText() {
