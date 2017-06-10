@@ -133,9 +133,6 @@ public class ListView2: NSView {
         self.collectionView.backgroundColors = [.clear]
         self.selectionType = .none
         let l = NSCollectionViewListLayout()
-        l.heightOfIndexPath = {
-            return self.collectionView(self.collectionView, layout: l, sizeForItemAt: $0).height
-        }
         self.collectionView.collectionViewLayout = l
         self.collectionView.layerContentsRedrawPolicy = .onSetNeedsDisplay
         
