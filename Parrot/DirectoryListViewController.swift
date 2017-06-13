@@ -16,7 +16,7 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
         let l = v.collectionView.collectionViewLayout as! NSCollectionViewListLayout
         l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 64)))
         v.scrollView.automaticallyAdjustsContentInsets = true
-        v.collectionView.register(PersonCell.self, forItemWithIdentifier: "\(PersonCell.self)")
+        v.collectionView.register(PersonCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"))
         //v.insets = EdgeInsets(top: 114.0, left: 0, bottom: 0, right: 0)
         return v
     }()
@@ -29,7 +29,7 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     private lazy var titleText: NSTextField = {
         let t = NSTextField(labelWithString: " Directory").modernize(wantsLayer: true)
         t.textColor = NSColor.labelColor
-        t.font = NSFont.systemFont(ofSize: 32.0, weight: NSFontWeightHeavy)
+        t.font = NSFont.systemFont(ofSize: 32.0, weight: NSFont.Weight.heavy)
         return t
     }()
     
@@ -38,7 +38,7 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     }()
     
     private lazy var addButton: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: "NSAddBookmarkTemplate")!,
+        let b = NSButton(title: "", image: NSImage(named: NSImage.Name(rawValue: "NSAddBookmarkTemplate"))!,
                          target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
@@ -46,19 +46,19 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     }()
     
     private lazy var searchToggle: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImageNameRevealFreestandingTemplate)!,
+        let b = NSButton(title: "", image: NSImage(named: NSImage.Name.revealFreestandingTemplate)!,
                          target: self, action: #selector(self.toggleSearchField(_:))).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         b.setButtonType(.onOff)
-        b.state = NSControlStateValueOn
+        b.state = NSControl.StateValue.on
         return b
     }()
     
     private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
         let v = NSView()
         v.add(subviews: [self.titleText, self.addButton/*, self.searchField*/])
-        v.autoresizingMask = [.viewWidthSizable]
+        v.autoresizingMask = [.width]
         v.frame.size.height = 44.0//80.0
         self.titleText.left == v.left + 2.0
         self.titleText.top == v.top + 2.0
@@ -156,14 +156,14 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
         window.addTitlebarAccessoryViewController(self.titleAccessory)
         window.addTitlebarAccessoryViewController(self.searchAccessory)
         
-        let item = NSToolbarItem(itemIdentifier: "add")
+        let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "add"))
         item.view = self.addButton
         item.label = "Add"
-        let item2 = NSToolbarItem(itemIdentifier: "search")
+        let item2 = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "search"))
         item2.view = self.searchToggle
         item2.label = "Search"
         container.templateItems = [item, item2]
-        container.itemOrder = [NSToolbarFlexibleSpaceItemIdentifier, "add", "search"]
+        container.itemOrder = [.flexibleSpace, NSToolbarItem.Identifier(rawValue: "add"), NSToolbarItem.Identifier(rawValue: "search")]
     }
     
     public override func viewDidLoad() {
@@ -206,11 +206,11 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     /// Center by default, but load a saved frame if available, and autosave.
     private func syncAutosaveTitle() {
         self.view.window?.center()
-        self.view.window?.setFrameUsingName("Directory")
-        self.view.window?.setFrameAutosaveName("Directory")
+        self.view.window?.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
+        self.view.window?.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
     }
     
     @objc private func toggleSearchField(_ sender: NSButton!) {
-        self.searchAccessory.animator().isHidden = (sender.state != NSControlStateValueOn)
+        self.searchAccessory.animator().isHidden = (sender.state != NSControl.StateValue.on)
     }
 }

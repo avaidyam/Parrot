@@ -101,7 +101,7 @@ public class ListView: NSView {
     }
     
     /// Sets the ListView's scrolling insets.
-    @IBInspectable public var insets: EdgeInsets {
+    @IBInspectable public var insets: NSEdgeInsets {
         get { return self.scrollView.contentInsets }
         set { self.scrollView.contentInsets = newValue }
     }
@@ -136,7 +136,7 @@ public class ListView: NSView {
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
-        let col = NSTableColumn(identifier: "")
+        let col = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         col.resizingMask = .autoresizingMask
         col.isEditable = false
         self.tableView.addTableColumn(col)
@@ -155,13 +155,13 @@ public class ListView: NSView {
 		self.scrollView.documentView = self.tableView
 		self.scrollView.hasVerticalScroller = true
 		self.addSubview(self.scrollView)
-		self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
+        self.scrollView.autoresizingMask = [.height, .width]
 		self.scrollView.translatesAutoresizingMaskIntoConstraints = true
         self.scrollView.contentView.postsBoundsChangedNotifications = true
         self.tableView.sizeLastColumnToFit()
         
         NotificationCenter.default.addObserver(self, selector: #selector(ListView.tableViewDidScroll(_:)),
-                                               name: .NSViewBoundsDidChange,
+                                               name: NSView.boundsDidChangeNotification,
                                                object: self.scrollView.contentView)
     }
     
@@ -188,13 +188,13 @@ public class ListView: NSView {
         self.tableView.endUpdates()
     }
     
-    public func insert(at indexes: [ListView.Index], animation: NSTableViewAnimationOptions = [.effectFade, .slideUp]) {
+    public func insert(at indexes: [ListView.Index], animation: NSTableView.AnimationOptions = [.effectFade, .slideUp]) {
         DispatchQueue.main.async {
             self.tableView.insertRows(at: self.__fromRows(indexes), withAnimation: animation)
         }
     }
     
-    public func remove(at indexes: [ListView.Index], animation: NSTableViewAnimationOptions = [.effectFade, .slideDown]) {
+    public func remove(at indexes: [ListView.Index], animation: NSTableView.AnimationOptions = [.effectFade, .slideDown]) {
         DispatchQueue.main.async {
             self.tableView.removeRows(at: self.__fromRows(indexes), withAnimation: animation)
         }
@@ -222,7 +222,7 @@ public class ListView: NSView {
 	}
 	
 	public func register(nib: NSNib, forClass: NSView.Type) {
-        self.tableView.register(nib, forIdentifier: "\(forClass)")
+        self.tableView.register(nib, forIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(forClass)"))
 	}
 	
 	public var visibleIndexes: [ListView.Index] {
@@ -321,7 +321,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         }
 	}
 	
-	public func tableViewDidScroll(_ notification: Notification) {
+    @objc public func tableViewDidScroll(_ notification: Notification) {
         guard let o = notification.object as? NSView , o == self.scrollView.contentView else { return }
         guard let d = self.delegate as? ListViewScrollbackDelegate else { return }
         
@@ -337,8 +337,8 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         }
         */
         
-        let visibleRows = self.tableView.rows(in: self.tableView.visibleRect).toRange()!
-		if visibleRows.contains(0) {
+        let visibleRows = Range(self.tableView.rows(in: self.tableView.visibleRect))!
+        if visibleRows.contains(0) {
             d.reachedEdge(in: self, edge: .maxY)
 		}
         if visibleRows.contains(__rows - 1) {
@@ -352,7 +352,7 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
 		return false
 	}
 	
-	public func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableRowActionEdge) -> [NSTableViewRowAction] {
+    public func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
 		return []//self.rowActionProvider?(row, edge) ?? []
 	}
 	
@@ -362,11 +362,11 @@ extension ListView: NSTableViewDataSource, NSTableViewDelegate {
         guard let d = self.delegate as? ListViewDataDelegate else { return nil }
         
 		let cellClass = d.itemClass(in: self, at: index)
-		var view = self.tableView.make(withIdentifier: "\(cellClass)", owner: self)
+        var view = self.tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(cellClass)"), owner: self)
 		if view == nil {
 			//log.warning("Cell class \(cellClass) not registered!")
 			view = cellClass.init(frame: .zero)
-			view!.identifier = cellClass.className()
+            view!.identifier = NSUserInterfaceItemIdentifier(rawValue: "\(cellClass)")
 		}
 		
 		(view as? NSTableCellView)?.objectValue = d.object(in: self, at: index)

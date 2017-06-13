@@ -80,7 +80,7 @@ public extension String {
 		let options: JSONSerialization.WritingOptions = pretty ? [.prettyPrinted] : []
 		do {
 			let obj = try JSONSerialization.data(withJSONObject: object, options: options)
-			let str = NSString(data: obj, encoding: String.Encoding.utf8.rawValue) as? String
+            let str = NSString(data: obj, encoding: String.Encoding.utf8.rawValue) as String?
 			
 			guard let _ = str else {
 				throw NSError(domain: NSStringEncodingErrorKey, code: Int(String.Encoding.utf8.rawValue), userInfo: nil)
@@ -162,19 +162,6 @@ public extension Dictionary {
 			parts.append(query)
 		}
 		return parts.joined(separator: "&")
-	}
-}
-
-public extension DispatchData {
-	public static func from(data: Data) -> DispatchData {
-		return data.withUnsafeBytes {
-			DispatchData(bytesNoCopy: UnsafeBufferPointer(start: $0, count: data.count))
-		}
-	}
-	public func toData() -> Data {
-		return self.withUnsafeBytes { (a: UnsafePointer<UInt8>) in
-			Data(buffer: UnsafeBufferPointer(start: a, count: self.count))
-		}
 	}
 }
 

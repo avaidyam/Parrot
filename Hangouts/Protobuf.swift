@@ -17,7 +17,7 @@ public protocol ProtoEnum {
 	init(_ rawValue: Int)
 }
 
-public protocol ProtoEnumExtensor: ProtoEnum, ExpressibleByIntegerLiteral, RawRepresentable, Hashable, Equatable {}
+public protocol ProtoEnumExtensor: ProtoEnum, ExpressibleByIntegerLiteral, RawRepresentable, Hashable {}
 public extension ProtoEnumExtensor {
 	public init(integerLiteral value: Int) {
 		self.init(value)
@@ -66,7 +66,7 @@ public extension ProtoMessage {
 }*/
 
 // Message: Hashable & Equatable Support
-public protocol ProtoMessageExtensor: ProtoMessage, Hashable, Equatable {}
+public protocol ProtoMessageExtensor: ProtoMessage, Hashable {}
 public extension ProtoMessageExtensor {
 	public mutating func with(closure: ((inout Self) -> Void)) {
 		closure(&self)
@@ -217,8 +217,9 @@ public struct ProtoEnumDescriptor {
 	
 	public func toString() -> String {
 		var output = "public struct \(self.name): ProtoEnumExtensor {\n"
-		self.values.forEach { k, v in
-			let comps = v.components(separatedBy: "_")
+        self.values.forEach { (arg) in
+            let (k, v) = arg
+            let comps = v.components(separatedBy: "_")
 			let name = comps.dropFirst()
 				.map { $0.capitalized }
 				.reduce(comps.first!.capitalized, +)

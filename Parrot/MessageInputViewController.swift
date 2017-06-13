@@ -33,8 +33,8 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         v.textColor = NSColor.labelColor
         v.textContainerInset = NSSize(width: 4, height: 4)
         
-        v.setContentHuggingPriority(1, for: .vertical)
-        v.setContentCompressionResistancePriority(1, for: .horizontal)
+        v.setContentHuggingPriority(NSLayoutConstraint.Priority(rawValue: 1), for: .vertical)
+        v.setContentCompressionResistancePriority(NSLayoutConstraint.Priority(rawValue: 1), for: .horizontal)
         
         v.placeholderString = "Send message..."
         v.shouldAlwaysPasteAsPlainText = true
@@ -91,7 +91,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             // backing view's appearance changes, so we need to set it each time.
             // In addition, make sure links aren't blue as usual.
             let text = self.textView
-            text.appearance = NSAppearance.current() == .dark ? .light : .dark
+            text.appearance = NSAppearance.current == .dark ? .light : .dark
             text.layer?.masksToBounds = true
             text.layer?.cornerRadius = 10.0
             text.layer?.backgroundColor = NSColor.secondaryLabelColor.cgColor//NSColor.darkOverlay(forAppearance: self.view.window!.effectiveAppearance).cgColor
@@ -99,23 +99,23 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             text.textColor = NSColor.labelColor
             text.font = NSFont.systemFont(ofSize: 12.0)
             text.typingAttributes = [
-                NSForegroundColorAttributeName: text.textColor!,
-                NSFontAttributeName: text.font!
+                NSAttributedStringKey.foregroundColor: text.textColor!,
+                NSAttributedStringKey.font: text.font!
             ]
             text.linkTextAttributes = [
-                NSForegroundColorAttributeName: NSColor.labelColor,
-                NSCursorAttributeName: NSCursor.pointingHand(),
-                NSUnderlineStyleAttributeName: 1,
+                NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+                NSAttributedStringKey.cursor: NSCursor.pointingHand,
+                NSAttributedStringKey.underlineStyle: 1,
             ]
             text.selectedTextAttributes = [
-                NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
-                NSForegroundColorAttributeName: NSColor.labelColor,
-                NSUnderlineStyleAttributeName: 0,
+                NSAttributedStringKey.backgroundColor: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
+                NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+                NSAttributedStringKey.underlineStyle: 0,
             ]
             text.markedTextAttributes = [
-                NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
-                NSForegroundColorAttributeName: NSColor.labelColor,
-                NSUnderlineStyleAttributeName: 0,
+                NSAttributedStringKey.backgroundColor: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
+                NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+                NSAttributedStringKey.underlineStyle: 0,
             ]
             /*text.placeholderTextAttributes = [
              NSForegroundColorAttributeName: NSColor.tertiaryLabelColor(),
@@ -151,9 +151,10 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     public func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
         switch commandSelector {
             
-        case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
-            guard let text = self.textView.string, text.characters.count > 0 else { return true }
-            NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
+        case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags.contains(.shift):
+            let text = self.textView.string
+            guard text.characters.count > 0 else { return true }
+            NSSpellChecker.shared.dismissCorrectionIndicator(for: textView)
             self.textView.string = ""
             self.resizeModule()
             self.host?.send(message: text)
@@ -184,7 +185,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         let userRange = NSMakeRange(_r.location, tString.length - _r.location)
         let userStr = tString.substring(from: _r.location)
         
-        NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
+        NSSpellChecker.shared.dismissCorrectionIndicator(for: textView)
         if let s = Settings[Preferences.Key.Completions] as? [String: Any], let r = s[userStr] as? String {
             insertToken = true // prevent re-entrance
             
@@ -203,7 +204,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             let attr = NSAttributedString(string: found, attributes: textView.typingAttributes)
             textView.insertText(attr, replacementRange: userRange)
             let range = NSMakeRange(_r.location, 1)
-            NSSpellChecker.shared().showCorrectionIndicator(
+            NSSpellChecker.shared.showCorrectionIndicator(
                 of: .reversion,
                 primaryString: userStr,
                 alternativeStrings: [found],

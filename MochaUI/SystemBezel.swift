@@ -61,9 +61,9 @@ public class SystemBezel {
         }
     }
     
-    public var darkMaterial: NSVisualEffectMaterial = .popover
+    public var darkMaterial: NSVisualEffectView.Material = .popover
     
-    public var lightMaterial: NSVisualEffectMaterial = .mediumLight
+    public var lightMaterial: NSVisualEffectView.Material = .mediumLight
     
     //
     //
@@ -81,7 +81,7 @@ public class SystemBezel {
         self.window.ignoresMouseEvents = true
         self.window.backgroundColor = NSColor.clear
         self.window.isOpaque = false
-        self.window.level = Int(CGWindowLevelKey.overlayWindow.rawValue)
+        self.window.level = .screenSaverWindowLevel
         self.window.collectionBehavior = [.canJoinAllSpaces, .ignoresCycle, .stationary,
                                           .fullScreenNone, .fullScreenDisallowsTiling]
         
@@ -135,7 +135,7 @@ public class SystemBezel {
     private func _maskImage(cornerRadius c: CGFloat) -> NSImage {
         let edge = 2.0 * c + 1.0
         let size = NSSize(width: edge, height: edge)
-        let inset = EdgeInsets(top: c, left: c, bottom: c, right: c)
+        let inset = NSEdgeInsets(top: c, left: c, bottom: c, right: c)
         
         let maskImage = NSImage(size: size, flipped: false) {
             let bezierPath = NSBezierPath(roundedRect: $0, xRadius: c, yRadius: c)
@@ -153,12 +153,12 @@ public class SystemBezel {
     private func _updateAppearance() {
         func _inner(_ dark: Bool) {
             if dark {
-                let a = NSAppearance(named: NSAppearanceNameVibrantDark)
+                let a = NSAppearance(named: NSAppearance.Name.vibrantDark)
                 self.window.appearance = a
                 self.contentView?.appearance = a
                 self.effectView.material = self.darkMaterial
             } else {
-                let a = NSAppearance(named: NSAppearanceNameVibrantLight)
+                let a = NSAppearance(named: NSAppearance.Name.vibrantLight)
                 self.window.appearance = a
                 self.contentView?.appearance = a
                 self.effectView.material = self.lightMaterial
@@ -167,14 +167,14 @@ public class SystemBezel {
         
         // trampoline
         if let a = self.appearance {
-            _inner(a.name == NSAppearanceNameVibrantDark)
+            _inner(a.name == NSAppearance.Name.vibrantDark)
         } else {
             _inner(NSAppearance.darkMode)
         }
     }
     
     private func _centerBezel() {
-        if let mainScreen = NSScreen.main() {
+        if let mainScreen = NSScreen.main {
             let screenHorizontalMidPoint = mainScreen.frame.size.width / 2
             var newFrame = self.window.frame
             newFrame.origin.x = screenHorizontalMidPoint - (window.frame.size.width / 2)

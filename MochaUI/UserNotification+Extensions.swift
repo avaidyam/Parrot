@@ -207,7 +207,7 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 			_ = try? NSUserAppleScriptTask(url: url).execute(withAppleEvent: nil, completionHandler: nil)
 		}
 		
-		if let r = notification.get(option: .requestUserAttention) as? NSRequestUserAttentionType {
+        if let r = notification.get(option: .requestUserAttention) as? NSApplication.RequestUserAttentionType {
 			NSApp.requestUserAttention(r)
 		}
 		

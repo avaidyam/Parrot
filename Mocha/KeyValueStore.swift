@@ -48,8 +48,8 @@ public final class SettingsStore: KeyValueStore {
 			if domain == SettingsStore.globalDomain {
 				return UserDefaults.standard.persistentDomain(forName: UserDefaults.globalDomain)?[key]
 			} else if domain == SettingsStore.ubiquitousDomain {
-				NSUbiquitousKeyValueStore.default().synchronize()
-				return NSUbiquitousKeyValueStore.default().object(forKey: key)
+                NSUbiquitousKeyValueStore.default.synchronize()
+				return NSUbiquitousKeyValueStore.default.object(forKey: key)
 			} else {
 				return UserDefaults(suiteName: domain)?.value(forKey: key)
 			}
@@ -58,8 +58,8 @@ public final class SettingsStore: KeyValueStore {
 			if domain == SettingsStore.globalDomain {
 				// FIXME: Unsupported.
 			} else if domain == SettingsStore.ubiquitousDomain {
-				NSUbiquitousKeyValueStore.default().set(value, forKey: key)
-				NSUbiquitousKeyValueStore.default().synchronize()
+				NSUbiquitousKeyValueStore.default.set(value, forKey: key)
+				NSUbiquitousKeyValueStore.default.synchronize()
 			} else {
 				UserDefaults(suiteName: domain)?.setValue(value, forKey: key)
 			}
@@ -74,8 +74,8 @@ public final class SettingsStore: KeyValueStore {
         if domain == SettingsStore.globalDomain {
             return UserDefaults.standard.persistentDomain(forName: UserDefaults.globalDomain) ?? [:]
         } else if domain == SettingsStore.ubiquitousDomain {
-            NSUbiquitousKeyValueStore.default().synchronize()
-            return NSUbiquitousKeyValueStore.default().dictionaryRepresentation
+            NSUbiquitousKeyValueStore.default.synchronize()
+            return NSUbiquitousKeyValueStore.default.dictionaryRepresentation
         } else {
             return UserDefaults(suiteName: domain)?.dictionaryRepresentation() ?? [:]
         }

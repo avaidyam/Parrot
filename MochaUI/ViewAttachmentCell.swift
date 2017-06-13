@@ -12,12 +12,12 @@ public class ViewAttachmentCell : NSTextAttachmentCell {
         didSet {
             let n = NotificationCenter.default
             if oldValue != nil {
-                n.removeObserver(self, name: .NSTextDidChange, object: oldValue!)
+                n.removeObserver(self, name: NSText.didChangeNotification, object: oldValue!)
                 self.view.removeFromSuperview()
             }
             if self.textView != nil {
                 n.addObserver(self, selector: #selector(ViewAttachmentCell.verifyAttached(_:)),
-                              name: .NSTextDidChange, object: self.textView!)
+                              name: NSText.didChangeNotification, object: self.textView!)
                 self.textView!.addSubview(self.view)
             }
         }
@@ -56,8 +56,8 @@ public class ViewAttachmentCell : NSTextAttachmentCell {
         
         // Enumerate all possible attributes to ensure we are attached still.
         str?.enumerateAttributes(in: NSMakeRange(0, str?.length ?? 0), options: []) {
-            if let a = $0.0["NSAttachment"] as? NSTextAttachment, let cell = a.attachmentCell, cell === self {
-                attached = true; $0.2.pointee = true
+            if let a = $0[.attachment] as? NSTextAttachment, let cell = a.attachmentCell, cell === self {
+                attached = true; $2.pointee = true
             }
         }
         

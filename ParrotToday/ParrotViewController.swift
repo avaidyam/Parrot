@@ -18,7 +18,7 @@ class ParrotViewController: NSViewController, ListViewDataDelegate {
         v.flowDirection = .top
         v.selectionType = .any
         v.delegate = self
-        v.insets = EdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
+        v.insets = NSEdgeInsets(top: 36.0, left: 0, bottom: 0, right: 0)
         return v
     }()
     
@@ -58,7 +58,7 @@ class ParrotViewController: NSViewController, ListViewDataDelegate {
     
     public override func loadView() {
         self.view = self.listView
-        self.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
+        self.view.autoresizingMask = [.width, .height]
         self.preferredContentSize = CGSize(width: 320, height: 480)
     }
     
@@ -111,10 +111,10 @@ class ParrotViewController: NSViewController, ListViewDataDelegate {
 
 // Boilerplate stuff for NCWidgetProviding
 extension ParrotViewController: NCWidgetProviding {
-	override var nibName: String? {
+	override var nibName: NSNib.Name? {
 		return nil
 	}
-	func widgetMarginInsets(forProposedMarginInsets defaultMarginInset: EdgeInsets) -> EdgeInsets {
+    func widgetMarginInsets(forProposedMarginInsets defaultMarginInset: NSEdgeInsets) -> NSEdgeInsets {
 		return NSEdgeInsetsZero
 	}
 	func widgetPerformUpdate(completionHandler: @escaping ((NCUpdateResult) -> Void)) {
@@ -156,7 +156,7 @@ internal class AuthDelegate: NSObject, AuthenticatorDelegate {
     }
     
     func authenticationMethod(_ oauth_url: URL, _ result: @escaping AuthenticationResult) {
-        log.debug("TEST \(self.authenticationTokens)")
+        log.debug("TEST \(String(describing: self.authenticationTokens))")
         result("")
     }
 }

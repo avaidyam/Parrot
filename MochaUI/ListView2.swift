@@ -96,7 +96,7 @@ public class ListView2: NSView {
     }
     
     /// Sets the ListView's scrolling insets.
-    @IBInspectable public var insets: EdgeInsets {
+    @IBInspectable public var insets: NSEdgeInsets {
         get { return self.scrollView.contentInsets }
         set { self.scrollView.contentInsets = newValue }
     }
@@ -139,12 +139,12 @@ public class ListView2: NSView {
         self.scrollView.documentView = self.collectionView
         self.scrollView.hasVerticalScroller = true
         self.addSubview(self.scrollView)
-        self.scrollView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
+        self.scrollView.autoresizingMask = [.height, .width]
         self.scrollView.translatesAutoresizingMaskIntoConstraints = true
         self.scrollView.contentView.postsBoundsChangedNotifications = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(ListView.tableViewDidScroll(_:)),
-                                               name: .NSViewBoundsDidChange,
+                                               name: NSView.boundsDidChangeNotification,
                                                object: self.scrollView.contentView)
     }
     
@@ -160,7 +160,7 @@ public class ListView2: NSView {
             DispatchQueue.main.async {
                 switch self.flowDirection {
                 case .top: self.scroll(toRow: 0, animated: animated)
-                case .bottom: self.scroll(toRow: self.__rows - 1, animated: animated)
+                case .bottom: self.scroll(toRow: (Int(self.__rows.unsafeSubtracting(UInt(1)))), animated: animated)
                 }
                 handler()
             }
@@ -210,7 +210,7 @@ extension ListView2: NSCollectionViewDelegate, NSCollectionViewDataSource, NSCol
         let idx = indexPath.toListView()
         
         let clazz = d.itemClass(in: self, at: idx)
-        let item = collectionView.makeItem(withIdentifier: "\(clazz)", for: indexPath)
+        let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(clazz)"), for: indexPath)
         item.representedObject = d.object(in: self, at: idx)
         return item
     }
@@ -239,10 +239,10 @@ extension ListView2: NSCollectionViewDelegate, NSCollectionViewDataSource, NSCol
     
     public func tableViewDidScroll(_ notification: Notification) {
         guard let o = notification.object as? NSView , o == self.scrollView.contentView else { return }
-        guard let d1 = self.delegate as? ListViewDataDelegate2 else { return }
+        guard let _ = self.delegate as? ListViewDataDelegate2 else { return }
         guard let d = self.delegate as? ListViewScrollbackDelegate2 else { return }
         
-        let sections = d1.numberOfItems(in: self)
+        //let sections = d1.numberOfItems(in: self)
         let visibleRows = self.collectionView.indexPathsForVisibleItems()
         if visibleRows.contains(IndexPath(item: 0, section: 0)) {
             d.reachedEdge(in: self, edge: .maxY)

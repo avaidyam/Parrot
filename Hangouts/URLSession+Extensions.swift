@@ -128,7 +128,7 @@ public func query(parameters: [String: Any]) -> String {
 		components += queryComponents(key: key, value)
 	}
 	
-	return (components.map { "\($0)=\($1)" } as [String]).joined(separator: "&")
+	return (components.map { "\($0.0)=\($0.1)" } as [String]).joined(separator: "&")
 }
 
 // default headers straight from Alamofire
@@ -137,8 +137,9 @@ public let _defaultHTTPHeaders: [String: String] = {
 	let acceptEncoding: String = "gzip;q=1.0, compress;q=0.5"
 	
 	// Accept-Language HTTP Header; see https://tools.ietf.org/html/rfc7231#section-5.3.5
-	let acceptLanguage = Locale.preferredLanguages.prefix(6).enumerated().map { index, languageCode in
-		let quality = 1.0 - (Double(index) * 0.1)
+    let acceptLanguage = Locale.preferredLanguages.prefix(6).enumerated().map { (arg) in
+        let (index, languageCode) = arg
+        let quality = 1.0 - (Double(index) * 0.1)
 		return "\(languageCode);q=\(quality)"
 	}.joined(separator: ", ")
 	

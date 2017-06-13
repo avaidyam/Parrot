@@ -52,7 +52,7 @@ public class DroppableView: NSView {
                 types.append("NSTypedFilenamesPboardType:\(ext)")
             }
             // FIXME: Doing nothing with the `types`
-            self.register(forDraggedTypes: [NSFilenamesPboardType])
+            self.registerForDraggedTypes([.filePromise])
         }
     }
     
@@ -164,7 +164,7 @@ public class DroppableView: NSView {
     
     private class func fileUrls(fromInfo info: NSDraggingInfo) -> [NSURL]? {
         let pboard = info.draggingPasteboard()
-        if (pboard.types! as NSArray).contains(NSURLPboardType) {
+        if pboard.types!.contains(.filePromise) {
             let urls = pboard.readObjects(forClasses: [NSURL.self], options: nil) as? [NSURL]
             var realUrls = [NSURL]()
             for url in urls! {

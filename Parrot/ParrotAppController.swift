@@ -31,7 +31,7 @@ public class ParrotAppController: NSApplicationController {
     }()
     
     private lazy var statusItem: NSStatusItem = {
-        NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
+        NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
     }()
 	
 	public override init() {
@@ -80,7 +80,7 @@ public class ParrotAppController: NSApplicationController {
             
             self.connectSub = AutoSubscription(from: c, kind: Notification.Service.DidConnect) { _ in
                 UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
-                                 contentImage: NSImage(named: NSImageNameCaution)).post()
+                                 contentImage: NSImage(named: NSImage.Name.caution)).post()
                 
                 // FIXME: If an old opened conversation isn't in the recents, it won't open!
                 (Settings["Parrot.OpenConversations"] as? [String])?
@@ -93,7 +93,7 @@ public class ParrotAppController: NSApplicationController {
                         .filter { $0.identifier == "Parrot.ConnectionStatus" }
                         .forEach { $0.remove() }
                     let u = UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has disconnected.",
-                                             contentImage: NSImage(named: NSImageNameCaution))
+                                             contentImage: NSImage(named: NSImage.Name.caution))
                     u.set(option: .alwaysShow, value: true)
                     u.post()
                 }
@@ -178,7 +178,7 @@ public class ParrotAppController: NSApplicationController {
         /// This setting currently does not exist in the UI. Use `defaults` to set it.
         /// For a menubar-only experience, set the Info.plist `LSUIElement` to YES.
         if Settings[Preferences.Key.MenuBarIcon] != nil {
-            let image = NSImage(named: NSImageNameApplicationIcon)
+            let image = NSImage(named: NSImage.Name.applicationIcon)
             image?.size = NSSize(width: 16, height: 16)
             statusItem.image = image
             statusItem.button?.target = self
@@ -188,9 +188,9 @@ public class ParrotAppController: NSApplicationController {
     }
     
     /// Right clicking the status item causes the app to close; left click causes it to become visible.
-    func showConversationWindow(_ sender: NSStatusBarButton?) {
+    @objc func showConversationWindow(_ sender: NSStatusBarButton?) {
         let event = NSApp.currentEvent!
-        if event.type == NSEventType.rightMouseUp {
+        if event.type == NSEvent.EventType.rightMouseUp {
             NSApp.terminate(self)
         } else {
             DispatchQueue.main.async {
@@ -220,7 +220,7 @@ public class ParrotAppController: NSApplicationController {
 			a.layout()
 			a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
 			a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
-			if a.runModal() == 1000 /*NSAlertFirstButtonReturn*/ {
+			if a.runModal().rawValue == 1000 /*NSAlertFirstButtonReturn*/ {
 				log.warning("Done with alert.")
 			}
 		}
@@ -278,7 +278,7 @@ public class ParrotAppController: NSApplicationController {
 	
     ///
 	@IBAction func feedback(_ sender: AnyObject?) {
-		NSWorkspace.shared().open(URL(string: "https://gitreports.com/issue/avaidyam/Parrot")!)
+        NSWorkspace.shared.open(URL(string: "https://gitreports.com/issue/avaidyam/Parrot")!)
     }
 }
 
@@ -293,7 +293,7 @@ public func checkForUpdates(prerelease: Bool = false) {
                     showSuppression: true) // FIXME suppression
     a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
     a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
-    if a.runModal() == 1000 /*NSAlertFirstButtonReturn*/ {
-        NSWorkspace.shared().open(release.githubURL)
+    if a.runModal().rawValue == 1000 /*NSAlertFirstButtonReturn*/ {
+        NSWorkspace.shared.open(release.githubURL)
     }
 }

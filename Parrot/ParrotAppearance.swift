@@ -106,7 +106,7 @@ public struct ParrotAppearance {
 		/// Windows will be vibrant when focused.
 		case Automatic
 		
-		public func visualEffectState() -> NSVisualEffectState {
+        public func visualEffectState() -> NSVisualEffectView.State {
 			switch self {
 			case .Always: return .active
 			case .Never: return .inactive
@@ -193,7 +193,7 @@ public struct ParrotAppearance {
 }
 
 public extension NSWindow {
-	public func enableRealTitlebarVibrancy(_ blendingMode: NSVisualEffectBlendingMode = .withinWindow) {
+    public func enableRealTitlebarVibrancy(_ blendingMode: NSVisualEffectView.BlendingMode = .withinWindow) {
 		let t = self.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView
 		t?.material = .appearanceBased
 		t?.blendingMode = blendingMode

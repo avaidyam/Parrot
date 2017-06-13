@@ -291,7 +291,7 @@ int tb_peek_event(struct tb_event *event, int timeout)
 {
     struct timeval tv;
     tv.tv_sec = timeout / 1000;
-    tv.tv_usec = (timeout - (tv.tv_sec * 1000)) * 1000;
+    tv.tv_usec = (int)(timeout - (tv.tv_sec * 1000)) * 1000;
     return wait_fill_event(event, &tv);
 }
 

@@ -23,18 +23,18 @@ public class PreferencesViewController: NSTabViewController {
         }
     }
     
-    public override func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
+    public override func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         let a = super.toolbarAllowedItemIdentifiers(toolbar)
-        return [NSToolbarFlexibleSpaceItemIdentifier] + a + [NSToolbarFlexibleSpaceItemIdentifier]
+        return [.flexibleSpace] + a + [.flexibleSpace]
     }
     
-    public override func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
+    public override func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         let a = super.toolbarDefaultItemIdentifiers(toolbar)
-        return [NSToolbarFlexibleSpaceItemIdentifier] + a + [NSToolbarFlexibleSpaceItemIdentifier]
+        return [.flexibleSpace] + a + [.flexibleSpace]
     }
     
-    public override func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
-        return super.toolbarSelectableItemIdentifiers(toolbar).filter { $0 != NSToolbarFlexibleSpaceItemIdentifier }
+    public override func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return super.toolbarSelectableItemIdentifiers(toolbar).filter { $0 != .flexibleSpace }
     }
     
     private func normalizedFrame(for window: NSWindow, from size: NSSize) -> NSRect {

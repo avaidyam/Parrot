@@ -20,7 +20,7 @@ public extension NSView {
 	
 	/// Automatically translate a view into a NSDraggingImageComponent
 	public func draggingComponent(_ key: String) -> NSDraggingImageComponent {
-		let component = NSDraggingImageComponent(key: key)
+        let component = NSDraggingImageComponent(key: NSDraggingItem.ImageComponentKey(rawValue: key))
 		component.contents = self.snapshot()
 		component.frame = self.convert(self.bounds, from: self)
 		return component
@@ -134,17 +134,17 @@ public extension NSAnimationContext {
     @discardableResult
     public static func animate(duration: TimeInterval = 1.0, timingFunction: CAMediaTimingFunction? = nil, _ animations: () -> ()) -> NSAnimationContext {
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().allowsImplicitAnimation = true
-        NSAnimationContext.current().duration = duration
-        NSAnimationContext.current().timingFunction = timingFunction
+        NSAnimationContext.current.allowsImplicitAnimation = true
+        NSAnimationContext.current.duration = duration
+        NSAnimationContext.current.timingFunction = timingFunction
         animations()
         NSAnimationContext.endGrouping()
-        return NSAnimationContext.current()
+        return NSAnimationContext.current
     }
     
     public static func disableAnimations(_ animations: () -> ()) {
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0
+        NSAnimationContext.current.duration = 0
         animations()
         NSAnimationContext.endGrouping()
     }
@@ -205,14 +205,14 @@ fileprivate class NSDeadView: NSView {
     }
 }
 
-public extension NSWindowOcclusionState {
-	public static let invisible = NSWindowOcclusionState(rawValue: 0)
+public extension NSWindow.OcclusionState {
+    public static let invisible = NSWindow.OcclusionState(rawValue: 0)
 }
 
 public extension NSView {
 	
 	/* TODO: Finish this stuff here. */
-	public var occlusionState: NSWindowOcclusionState {
+    public var occlusionState: NSWindow.OcclusionState {
 		let selfRect = self.window!.frame
 		let windows = CGWindowListCopyWindowInfo(.optionOnScreenAboveWindow, CGWindowID(self.window!.windowNumber))!
 		for dict in (windows as [AnyObject]) {
@@ -235,7 +235,7 @@ public extension NSAlert {
     /// Convenience to initialize a canned NSAlert.
     /// TODO: Add help and info buttons to the button array as attributes.
     // .style(.informational), .button("hi"), .help, .suppress, etc.
-    public convenience init(style: NSAlertStyle = .warning, message: String = "",
+    public convenience init(style: NSAlert.Style = .warning, message: String = "",
                             information: String = "", buttons: [String] = [],
                             showSuppression: Bool = false) {
         self.init()
@@ -259,8 +259,8 @@ public extension NSFont {
 	
 	/// Load an NSFont from a provided URL.
 	public static func from(_ fontURL: URL, size: CGFloat) -> NSFont? {
-		let desc = CTFontManagerCreateFontDescriptorsFromURL(fontURL as CFURL)
-		guard let item = (desc as? NSArray)?[0] else { return nil }
+		let desc = CTFontManagerCreateFontDescriptorsFromURL(fontURL as CFURL) as NSArray?
+        guard let item = desc?[0] else { return nil }
 		return CTFontCreateWithFontDescriptor(item as! CTFontDescriptor, size, nil)
 	}
 }
@@ -324,7 +324,7 @@ public extension NSMenu {
 
 public extension NSHapticFeedbackManager {
     public static func vibrate(length: Int = 1000, interval: Int = 10) {
-        let hp = NSHapticFeedbackManager.defaultPerformer()
+        let hp = NSHapticFeedbackManager.defaultPerformer
         for _ in 1...(length/interval) {
             hp.perform(.generic, performanceTime: .now)
             usleep(UInt32(interval * 1000))
@@ -345,7 +345,7 @@ public func runSelectionPanel(for window: NSWindow, fileTypes: [String],
 	p.allowedFileTypes = fileTypes
 	p.prompt = "Select"
 	p.beginSheetModal(for: window) { r in
-		guard r == NSFileHandlingPanelOKButton else { return }
+		guard r.rawValue == NSFileHandlingPanelOKButton else { return }
 		handler(p.urls)
 	}
 }

@@ -10,9 +10,9 @@ public let materialIndex = [
 public let materialColors = Array(materialIndex.values)
 
 public let materialColorList: NSColorList = {
-    let l = NSColorList(name: "Material Design")
+    let l = NSColorList(name: NSColorList.Name(rawValue: "Material Design"))
     for (i, e) in materialIndex.enumerated() {
-        l.insertColor(e.value, key: e.key, at: i)
+        l.insertColor(e.value, key: NSColor.Name(rawValue: e.key), at: i)
     }
     return l
 }()
@@ -28,15 +28,15 @@ public extension NSColor {
 public func imageForString(forString source: String, size: NSSize = NSSize(width: 64, height: 64), colors: [NSColor] = materialColors) -> NSImage {
 	return NSImage(size: size, flipped: false) { rect in
 		colors[abs(source.hashValue) % colors.count].set()
-		NSRectFill(rect)
+		rect.fill()
 		
-		let textStyle = NSMutableParagraphStyle.default().mutableCopy() as! NSMutableParagraphStyle
+        let textStyle = NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
 		textStyle.alignment = .center
 		let font = NSFont.systemFont(ofSize: rect.size.width * 0.75)
 		let attrs = [
-			NSFontAttributeName: font,
-			NSForegroundColorAttributeName: NSColor.white,
-			NSParagraphStyleAttributeName: textStyle
+            NSAttributedStringKey.font: font,
+            NSAttributedStringKey.foregroundColor: NSColor.white,
+            NSAttributedStringKey.paragraphStyle: textStyle
 		]
 		
 		var rect2 = rect
@@ -50,10 +50,10 @@ public func imageForString(forString source: String, size: NSSize = NSSize(width
 public func defaultImageForString(forString source: String, size: NSSize = NSSize(width: 64, height: 64), colors: [NSColor] = materialColors) -> NSImage {
 	return NSImage(size: size, flipped: false) { rect in
 		colors[abs(source.hashValue) % colors.count].set()
-		NSRectFill(rect)
+		rect.fill()
 		var r = rect.insetBy(dx: -size.width * 0.05, dy: -size.height * 0.05)
 		r.origin.y -= size.height * 0.1
-		NSImage(named: "NSUserGuest")!.draw(in: r) // composite this somehow.
+        NSImage(named: NSImage.Name(rawValue: "NSUserGuest"))!.draw(in: r) // composite this somehow.
 		return true
 	}
 }
@@ -66,7 +66,7 @@ public extension Person {
 
 public extension NSColor {
 	public static func darkOverlay(forAppearance a: NSAppearance) -> NSColor {
-		if a.name == NSAppearanceNameVibrantDark {
+        if a.name == NSAppearance.Name.vibrantDark {
 			return NSColor(calibratedWhite: 1.00, alpha: 0.2)
 		} else {
 			return NSColor(calibratedWhite: 0.00, alpha: 0.1)
@@ -74,7 +74,7 @@ public extension NSColor {
 	}
 	
 	public static func lightOverlay(forAppearance a: NSAppearance) -> NSColor {
-		if a.name == NSAppearanceNameVibrantDark {
+        if a.name == NSAppearance.Name.vibrantDark {
 			return NSColor(calibratedWhite: 1.00, alpha: 0.6)
 		} else {
 			return NSColor(calibratedWhite: 0.00, alpha: 0.3)

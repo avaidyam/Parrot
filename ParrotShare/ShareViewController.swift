@@ -15,7 +15,7 @@ public final class ShareViewController: SLComposeServiceViewController {
     
     public override func viewDidAppear() {
         super.viewDidAppear()
-        self.view.superview?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+        self.view.superview?.appearance = NSAppearance(named: .vibrantDark)
         self.textView.textColor = NSColor.labelColor
         if let img = self.value(forKey: "imageView") as? NSImageView {
             img.imageFrameStyle = .none

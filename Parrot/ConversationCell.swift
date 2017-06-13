@@ -43,7 +43,10 @@ public class ConversationCell: NSCollectionViewItem {
     private lazy var nameLabel: NSTextField = {
         let v = NSTextField(labelWithString: "").modernize()
         v.textColor = NSColor.labelColor
-        v.font = NSFont.systemFont(ofSize: 13.0, weight: NSFontWeightSemibold)
+        v.font = NSFont.systemFont(ofSize: 13.0, weight: NSFont.Weight.semibold)
+        v.lineBreakMode = .byTruncatingTail
+        
+        v.setContentCompressionResistancePriority(NSLayoutConstraint.Priority(rawValue: 1), for: .horizontal)
         return v
     }()
     
@@ -59,8 +62,10 @@ public class ConversationCell: NSCollectionViewItem {
     private lazy var timeLabel: NSTextField = {
         let v = NSTextField(labelWithString: "").modernize()
         v.textColor = NSColor.tertiaryLabelColor
-        v.font = NSFont.systemFont(ofSize: 11.0, weight: NSFontWeightLight)
+        v.font = NSFont.systemFont(ofSize: 11.0, weight: NSFont.Weight.light)
         v.alignment = .right
+        
+        v.setContentCompressionResistancePriority(NSLayoutConstraint.Priority(rawValue: 1000), for: .horizontal)
         return v
     }()
     
@@ -126,7 +131,7 @@ public class ConversationCell: NSCollectionViewItem {
 		self.timeLabel.stringValue = self.prefix + self.time.relativeString()
 	}
     
-    public override var highlightState: NSCollectionViewItemHighlightState {
+    public override var highlightState: NSCollectionViewItem.HighlightState {
         didSet {
             if self.highlightState != .none {
                 self.view.layer?.backgroundColor = NSColor.selectedMenuItemColor.cgColor

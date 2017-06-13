@@ -95,7 +95,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             self.textLabel.isEditable = false
             
             let text = self.textLabel
-            let appearance = self.view.appearance ?? NSAppearance.current()
+            let appearance: NSAppearance = self.view.appearance ?? NSAppearance.current
             text.textColor = NSColor.labelColor
             self.setColors()
             
@@ -103,27 +103,27 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             // backing view's appearance changes, so we need to set it each time.
             // In addition, make sure links aren't blue as usual.
             // Also, expand the text size if it's purely emoji.
-            text.font = NSFont.systemFont(ofSize: 12.0 * (text.string!.isEmoji ? 4 : 1))
+            text.font = NSFont.systemFont(ofSize: 12.0 * (text.string.isEmoji ? 4 : 1))
             text.invalidateIntrinsicContentSize()
             
             text.typingAttributes = [
-                NSForegroundColorAttributeName: text.textColor!,
-                NSFontAttributeName: text.font!
+                NSAttributedStringKey.foregroundColor: text.textColor!,
+                NSAttributedStringKey.font: text.font!
             ]
             text.linkTextAttributes = [
-                NSForegroundColorAttributeName: NSColor.labelColor,
-                NSCursorAttributeName: NSCursor.pointingHand(),
-                NSUnderlineStyleAttributeName: 1,
+                NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+                NSAttributedStringKey.cursor: NSCursor.pointingHand,
+                NSAttributedStringKey.underlineStyle: 1,
             ]
             text.selectedTextAttributes = [
-                NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: appearance),
-                NSForegroundColorAttributeName: NSColor.labelColor,
-                NSUnderlineStyleAttributeName: 0,
+                NSAttributedStringKey.backgroundColor: NSColor.lightOverlay(forAppearance: appearance),
+                NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+                NSAttributedStringKey.underlineStyle: 0,
             ]
             text.markedTextAttributes = [
-                NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: appearance),
-                NSForegroundColorAttributeName: NSColor.labelColor,
-                NSUnderlineStyleAttributeName: 0,
+                NSAttributedStringKey.backgroundColor: NSColor.lightOverlay(forAppearance: appearance),
+                NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+                NSAttributedStringKey.underlineStyle: 0,
             ]
 		}
 	}
@@ -134,7 +134,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         let text = self.textLabel
         
         // Only clip the text if the text isn't purely Emoji.
-        if !text.string!.isEmoji {
+        if !text.string.isEmoji {
             var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance == .dark ? .light : .dark)//NSColor.secondaryLabelColor
             let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
             if  let q = Settings[setting] as? Data,
@@ -202,8 +202,8 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = font.leading
         let attr = NSAttributedString(string: string, attributes: [
-            NSFontAttributeName: font,
-            NSParagraphStyleAttributeName: paragraphStyle
+            NSAttributedStringKey.font: font,
+            NSAttributedStringKey.paragraphStyle: paragraphStyle
         ])
         
         let framesetter = CTFramesetterCreateWithAttributedString(attr)

@@ -9,7 +9,7 @@ public extension NSWindow {
     /// Simplifies the installation of a "modern" toolbar.
     @discardableResult
     public func installToolbar() -> ToolbarItemContainer {
-        let t = NSToolbar(identifier: UUID().description)
+        let t = NSToolbar(identifier: NSToolbar.Identifier(rawValue: UUID().description))
         let h = ToolbarItemContainer()
         h.toolbar = t
         t.delegate = h
@@ -42,7 +42,7 @@ public class ToolbarItemContainer: NSObject, NSToolbarDelegate {
     }
     
     public var templateItems = Set<NSToolbarItem>()
-    public var itemOrder: [String] = [] {
+    public var itemOrder: [NSToolbarItem.Identifier] = [] {
         willSet {
             guard self.toolbar != nil else { return }
             for i in 0..<(self.toolbar?.items.count ?? 0) {
@@ -57,17 +57,17 @@ public class ToolbarItemContainer: NSObject, NSToolbarDelegate {
         }
     }
     
-    public func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: String, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-        let t = self.templateItems.filter { $0.itemIdentifier == itemIdentifier }.first ?? NSToolbarItem(itemIdentifier: "")
+    public func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        let t = self.templateItems.filter { $0.itemIdentifier == itemIdentifier }.first ?? NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: ""))
         return t
     }
-    public func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
+    public func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         return self.itemOrder
     }
-    public func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
+    public func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         return []
     }
-    public func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
+    public func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         return self.itemOrder
     }
 }

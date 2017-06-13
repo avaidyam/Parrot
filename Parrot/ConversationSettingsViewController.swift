@@ -26,7 +26,7 @@ public class ConversationDetailsViewController: NSViewController {
         v.bezelStyle = .texturedRounded
         
         v.setButtonType(.pushOnPushOff)
-        v.state = 0
+        v.state = NSControl.StateValue(rawValue: 0)
         v.tag = Tags.mute.rawValue
         return v
     }()
@@ -39,7 +39,7 @@ public class ConversationDetailsViewController: NSViewController {
         v.bezelStyle = .texturedRounded
         
         v.setButtonType(.pushOnPushOff)
-        v.state = 0
+        v.state = NSControl.StateValue(rawValue: 0)
         v.tag = Tags.block.rawValue
         return v
     }()
@@ -52,7 +52,7 @@ public class ConversationDetailsViewController: NSViewController {
         v.bezelStyle = .texturedRounded
         
         v.setButtonType(.pushOnPushOff)
-        v.state = 0
+        v.state = NSControl.StateValue(rawValue: 0)
         v.tag = Tags.archive.rawValue
         return v
     }()
@@ -65,7 +65,7 @@ public class ConversationDetailsViewController: NSViewController {
         v.bezelStyle = .texturedRounded
         
         v.setButtonType(.pushOnPushOff)
-        v.state = 0
+        v.state = NSControl.StateValue(rawValue: 0)
         v.tag = Tags.delete.rawValue
         return v
     }()
@@ -78,7 +78,7 @@ public class ConversationDetailsViewController: NSViewController {
             self.deleteButton
         ]).modernize()
         
-        stack.edgeInsets = EdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
+        stack.edgeInsets = NSEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
         stack.spacing = 8.0
         stack.orientation = .vertical
         stack.alignment = .centerX

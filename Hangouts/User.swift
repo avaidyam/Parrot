@@ -168,12 +168,12 @@ public class UserList: Directory {
                     let userid = pres2.userId!
                     let pres = pres2.presence!
                     
-                    let available = pres.available ?? false
-                    let reachable = pres.reachable ?? false
-                    let mobile = pres.deviceStatus?.mobile ?? false
-                    let desktop = pres.deviceStatus?.desktop ?? false
-                    let tablet = pres.deviceStatus?.tablet ?? false
-                    let none = !mobile && !desktop && !tablet
+                    //let available = pres.available ?? false
+                    //let reachable = pres.reachable ?? false
+                    //let mobile = pres.deviceStatus?.mobile ?? false
+                    //let desktop = pres.deviceStatus?.desktop ?? false
+                    //let tablet = pres.deviceStatus?.tablet ?? false
+                    //let none = !mobile && !desktop && !tablet
                     let reach = Reachability.unavailable
                     
                     let lastSeenUTC = pres.lastSeen?.lastSeenTimestampUsec ?? 0
@@ -195,7 +195,7 @@ public class UserList: Directory {
                         }
                     }
                     let moodText = lines.filter { $0 != "" }.joined(separator: "\n")
-                    var user = self.users[User.ID(chatID: userid.chatId!, gaiaID: userid.gaiaId!)]
+                    let user = self.users[User.ID(chatID: userid.chatId!, gaiaID: userid.gaiaId!)]
                     user?.lastSeen = lastSeenDate
                     user?.reachability = reach
                     user?.mood = moodText
@@ -222,11 +222,11 @@ public class UserList: Directory {
         return lookup(by: by, limit: 10)
     }
     public func lookup(by: [String], limit: Int) -> [Person] {
-        var ret = [Person]()
+        let ret = [Person]()
         let s = DispatchSemaphore(value: 0)
         self.client.opQueue.sync {
             self.client.getSuggestedEntities(max_count: limit) { r in
-                log.debug("got \(r)")
+                log.debug("got \(String(describing: r))")
                 s.signal()
             }
         }

@@ -39,7 +39,7 @@ Termbox.app(inputMode: [.esc, .mouse]) {
         case let .key(_, value) where value == .ctrlZ:
             Termbox.clear()
             
-        case let .mouse(x, y) where y < Int32(Termbox.size.height - 1):
+        case let .mouse(_, y) where y < Int32(Termbox.size.height - 1):
             continue
         
         case .resize(_, _):

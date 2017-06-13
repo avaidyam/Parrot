@@ -183,9 +183,9 @@ public class IConversation: ParrotServiceExtension.Conversation {
     public var otherUserIsTyping: Bool {
         get {
             return self.typingStatuses.filter {
-                (k, v) in !self.user_list[k].me
+                (arg) -> Bool in let (k, _) = arg; return !self.user_list[k].me
             }.map {
-                (k, v) in v == TypingType.Started
+                (arg) -> Bool in let (_, v) = arg; return v == TypingType.Started
             }.first ?? false
         }
     }
@@ -196,6 +196,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
             return .away
         }
         set {
+            guard newValue != self.selfFocus else { return }
             switch newValue {
             case .away:
                 self.client.setFocus(conversation_id: id, focused: false)
@@ -399,7 +400,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		
 		client.getConversation(conversation_id: id, event_timestamp: ts, max_events: max_events) { res in
 			if res!.responseHeader!.status == ResponseStatus.InvalidRequest {
-				log.error("Invalid request! \(res!.responseHeader)")
+                log.error("Invalid request! \(String(describing: res!.responseHeader))")
 				return
 			}
 			let conv_events = res!.conversationState!.event.map { IConversation.wrap_event(self.client, event: $0) }

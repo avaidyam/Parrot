@@ -61,7 +61,7 @@ public final class Channel : NSObject {
 								break
 							}
 							
-							let subData = bufUTF16.subdata(in: NSMakeRange(length_str.utf16.count * 2, length * 2).toRange()!)
+                            let subData = bufUTF16.subdata(in: Range(NSMakeRange(length_str.utf16.count * 2, length * 2))!)
 							let submission = NSString(data: subData, encoding: String.Encoding.utf16BigEndian.rawValue)! as String
 							submissions.append(submission)
 							
@@ -146,7 +146,7 @@ public final class Channel : NSObject {
     // There's a separate API to get the gsessionid alone that Hangouts for
     // Chrome uses, but if we don't send a gsessionid with this request, it
     // will return a gsessionid as well as the SID.
-    private func fetchChannelSID(cb: ((Void) -> Void)? = nil) {
+    private func fetchChannelSID(cb: (() -> Void)? = nil) {
         self.sidParam = nil
         self.gSessionIDParam = nil
         log.debug("sending maps...")
@@ -249,7 +249,7 @@ public final class Channel : NSObject {
                 return
             }
 			if r.statusCode >= 400 {
-				log.error("Request failed with: \(error)")
+                log.error("Request failed with: \(String(describing: error))")
                 self?.disconnect()
 			} else if r.statusCode == 200 {
                 log.debug("200 OK: restart long-poll")

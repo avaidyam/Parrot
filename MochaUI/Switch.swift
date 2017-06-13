@@ -41,7 +41,7 @@ public class Switch: NSControl {
         layer.cornerRadius = ceil(layer.bounds.height / 2)
         layer.backgroundColor = NSColor.red.cgColor
         layer.shadowColor = NSColor.black.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: -3 * self.scaleFactor)
+        layer.shadowOffset = CGSize(width: 0.0, height: -3 * self.scaleFactor)
         layer.shadowOpacity = 0.12
         layer.shadowRadius = 2.0 * self.scaleFactor
         return layer

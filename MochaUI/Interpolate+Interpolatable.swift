@@ -139,19 +139,19 @@ extension NSColor: Interpolatable {
      */
     public func vectorize() -> IPValue {
         var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
-        if [NSCalibratedRGBColorSpace, NSDeviceRGBColorSpace].contains(colorSpaceName) {
+        if [NSColorSpaceName.calibratedRGB, NSColorSpaceName.deviceRGB].contains(colorSpaceName) {
             getRed(&red, green: &green, blue: &blue, alpha: &alpha)
             return IPValue(type: .colorRGB, vectors: [red, green, blue, alpha])
         }
         
         var white: CGFloat = 0
-        if [NSCalibratedWhiteColorSpace, NSDeviceWhiteColorSpace].contains(colorSpaceName) {
+        if [NSColorSpaceName.calibratedWhite, NSColorSpaceName.deviceWhite].contains(colorSpaceName) {
             getWhite(&white, alpha: &alpha)
             return IPValue(type: .colorMonochrome, vectors: [white, alpha])
         }
         
         var cyan: CGFloat = 0, magenta: CGFloat = 0, yellow: CGFloat = 0, black: CGFloat = 0
-        if [NSDeviceCMYKColorSpace].contains(colorSpaceName) {
+        if [NSColorSpaceName.deviceCMYK].contains(colorSpaceName) {
             getCyan(&cyan, magenta: &magenta, yellow: &yellow, black: &black, alpha: &alpha)
             return IPValue(type: .colorCYMK, vectors: [cyan, magenta, yellow, black, alpha])
         }
@@ -162,7 +162,7 @@ extension NSColor: Interpolatable {
 }
 
 /// UIEdgeInsets Interpolatable extension.
-extension EdgeInsets: Interpolatable {
+extension NSEdgeInsets: Interpolatable {
     /**
      Vectorize UIEdgeInsets.
      
@@ -214,7 +214,7 @@ open class IPValue {
         case .int:
             return Int(vectors[0])
         case .uiEdgeInsets:
-            return NSEdgeInsetsMake(vectors[0], vectors[1], vectors[2], vectors[3]) as EdgeInsets
+            return NSEdgeInsetsMake(vectors[0], vectors[1], vectors[2], vectors[3]) as NSEdgeInsets
         }
     }
     

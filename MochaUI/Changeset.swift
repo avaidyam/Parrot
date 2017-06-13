@@ -154,7 +154,7 @@ public struct Changeset<T: Collection> where T.Iterator.Element: Equatable, T.In
  - parameter edits: An array of `Edit` elements to be reduced.
  - returns: An array of `Edit` elements.
  */
-private func reducedEdits<T: Equatable>(_ edits: [Edit<T>]) -> [Edit<T>] {
+private func reducedEdits<T>(_ edits: [Edit<T>]) -> [Edit<T>] {
     return edits.reduce([Edit<T>]()) { (edits, edit) in
         var reducedEdits = edits
         if let (move, index) = move(from: edit, in: reducedEdits), case .move = move.operation {
@@ -178,7 +178,7 @@ private func reducedEdits<T: Equatable>(_ edits: [Edit<T>]) -> [Edit<T>] {
  
  - returns: An optional tuple consisting of the `.move` `Edit` that corresponds to the given deletion or insertion and an opposite match in `edits`, and the index of the match – if one was found.
  */
-private func move<T: Equatable>(from deletionOrInsertion: Edit<T>, `in` edits: [Edit<T>]) -> (move: Edit<T>, index: Int)? {
+private func move<T>(from deletionOrInsertion: Edit<T>, `in` edits: [Edit<T>]) -> (move: Edit<T>, index: Int)? {
     
     switch deletionOrInsertion.operation {
         
@@ -204,7 +204,7 @@ private func move<T: Equatable>(from deletionOrInsertion: Edit<T>, `in` edits: [
 }
 
 extension Edit: Equatable {}
-public func ==<T: Equatable>(lhs: Edit<T>, rhs: Edit<T>) -> Bool {
+public func ==<T>(lhs: Edit<T>, rhs: Edit<T>) -> Bool {
     guard lhs.destination == rhs.destination && lhs.value == rhs.value else { return false }
     switch (lhs.operation, rhs.operation) {
     case (.insertion, .insertion), (.deletion, .deletion), (.substitution, .substitution):
@@ -219,7 +219,7 @@ public func ==<T: Equatable>(lhs: Edit<T>, rhs: Edit<T>) -> Bool {
 extension NSTableView {
     
     /// Performs batch updates on the table view, given the edits of a Changeset, and animates the transition.
-    open func update<T: Equatable>(with edits: [Edit<T>], in section: Int = 0) {
+    open func update<T>(with edits: [Edit<T>], in section: Int = 0) {
         guard !edits.isEmpty else { return }
         let indexPaths = batchIndexPaths(from: edits)
         
@@ -231,7 +231,7 @@ extension NSTableView {
     }
 }
 
-private func batchIndexPaths<T: Equatable> (from edits: [Edit<T>]) -> (insertions: [Int], deletions: [Int], updates: [Int]) {
+private func batchIndexPaths<T> (from edits: [Edit<T>]) -> (insertions: [Int], deletions: [Int], updates: [Int]) {
     var insertions = [Int](), deletions = [Int](), updates = [Int]()
     for edit in edits {
         switch edit.operation {

@@ -4,9 +4,9 @@ import Cocoa
 /* TODO: Make NSWorkspace.accessibilityDisplayShould* properties available. */
 
 public extension NSAppearance {
-    public static let aqua = NSAppearance(named: NSAppearanceNameAqua)!
-    public static let light = NSAppearance(named: NSAppearanceNameVibrantLight)!
-    public static let dark = NSAppearance(named: NSAppearanceNameVibrantDark)!
+    public static let aqua = NSAppearance(named: NSAppearance.Name.aqua)!
+    public static let light = NSAppearance(named: NSAppearance.Name.vibrantLight)!
+    public static let dark = NSAppearance(named: NSAppearance.Name.vibrantDark)!
 }
 
 // adapted from @mattprowse: https://github.com/mattprowse/SystemBezelWindowController

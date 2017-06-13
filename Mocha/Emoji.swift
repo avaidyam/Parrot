@@ -75,12 +75,12 @@ public extension String {
 	
 	/// Detect whether this String contains UnicodeScalars that are Emoji.
 	public var containsEmoji: Bool {
-		return self.unicodeScalars.lazy.map { $0.isEmoji }.filter { $0 == true }.count > 0
+		return self.unicodeScalars.map { $0.isEmoji }.filter { $0 == true }.count > 0
 	}
 	
 	/// Detect whether this String consists completely of UnicodeScalars that are Emoji.
 	public var isEmoji: Bool {
-		return self.unicodeScalars.lazy.map { $0.isEmoji }.filter { $0 == false }.count == 0
+		return self.unicodeScalars.map { $0.isEmoji }.filter { $0 == false }.count == 0
 	}
 }
 

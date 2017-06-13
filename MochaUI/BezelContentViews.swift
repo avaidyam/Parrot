@@ -48,7 +48,7 @@ public class BezelImageTextView: NSView {
     private lazy var textField: NSTextField = {
         let v = NSTextField()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.font = NSFont.systemFont(ofSize: 16.0, weight: NSFontWeightRegular)
+        v.font = NSFont.systemFont(ofSize: 16.0, weight: .regular)
         v.isSelectable = false
         v.isEnabled = true
         v.isBezeled = false

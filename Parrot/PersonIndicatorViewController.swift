@@ -6,6 +6,8 @@ import ParrotServiceExtension
 //away vs here == alphaValue of toolbar item
 //typing == hidden value of tooltipcontroller messageprogressview
 
+// 2 second timer to autohide unless another hover occurs
+
 fileprivate class PersonIndicatorToolTipController: NSViewController {
     fileprivate static var popover: NSPopover = {
         let p = NSPopover()
@@ -21,6 +23,7 @@ fileprivate class PersonIndicatorToolTipController: NSViewController {
         self.text = NSTextField(labelWithString: "")
         self.text.translatesAutoresizingMaskIntoConstraints = false
         self.text.alignment = .center
+        self.text.font = NSFont.systemFont(ofSize: 11.0, weight: NSFont.Weight.semibold)
         self.view.addSubview(self.text)
         
         self.text.top == self.view.top + 4.0
@@ -33,8 +36,8 @@ fileprivate class PersonIndicatorToolTipController: NSViewController {
 public class PersonIndicatorViewController: NSViewController {
     
     public lazy var toolbarItem: NSToolbarItem = {
-        let i = NSToolbarItem(itemIdentifier: self.identifier ?? "")
-        i.visibilityPriority = NSToolbarItemVisibilityPriorityHigh
+        let i = NSToolbarItem(itemIdentifier: (self.identifier?.rawValue ?? "").map { NSToolbarItem.Identifier(rawValue: $0) }!)
+        i.visibilityPriority = NSToolbarItem.VisibilityPriority.high
         i.view = self.view
         //i.label = $0.fullName
         return i
@@ -47,7 +50,7 @@ public class PersonIndicatorViewController: NSViewController {
     public override var representedObject: Any? {
         didSet {
             guard let person = self.representedObject as? Person else { return }
-            self.identifier = person.identifier
+            self.identifier = NSUserInterfaceItemIdentifier(rawValue: person.identifier)
             //self.toolbarItem.itemIdentifier = person.identifier
             (self.view as? NSButton)?.image = person.image
         }
@@ -74,7 +77,7 @@ public class PersonIndicatorViewController: NSViewController {
         self.view.addTrackingArea(trackingArea)
     }
     
-    public func buttonPressed(_ sender: NSButton!) {
+    @objc public func buttonPressed(_ sender: NSButton!) {
         print("\n\n", "This is the part where I show you a fancy contact card!", "\n\n")
         PersonIndicatorToolTipController.popover.performClose(nil)
     }

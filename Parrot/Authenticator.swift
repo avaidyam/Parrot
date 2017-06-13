@@ -89,8 +89,8 @@ public class Authenticator {
 			
             Authenticator.delegate?.authenticationMethod(URL(string: OAUTH2_LOGIN_URL)!) { oauth_code in
                 //  - first: authenticate(auth_code)
-                authenticate(auth_code: oauth_code) {
-                    saveTokens($0)
+                authenticate(auth_code: oauth_code) { a, b in
+                    saveTokens((a, b))
                     handler(session.configuration)
                 }
             }

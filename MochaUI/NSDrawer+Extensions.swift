@@ -7,7 +7,7 @@ public extension NSDrawer {
 		return self.perform(Selector(("_drawerWindow"))).takeUnretainedValue() as? NSWindow
     }
     
-    public var resizableAxis: NSEventGestureAxis {
+    public var resizableAxis: NSEvent.GestureAxis {
         get {
             guard let w = self.drawerWindow else { return .none }
             let s = w.resizeIncrements
@@ -34,7 +34,7 @@ public extension NSDrawer {
 		
 		// Swizzle out the frameViewClassForStyleMask: to return a normal NSThemeFrame.
 		let frameViewClassForStyleMaskB = imp_implementationWithBlock(unsafeBitCast(frameViewClassForStyleMaskR, to: AnyObject.self))
-		let frameViewClassForStyleMaskM: Method = class_getClassMethod(NSClassFromString("NSDrawerWindow")!, Selector(("frameViewClassForStyleMask:")))
+        let frameViewClassForStyleMaskM: Method = class_getClassMethod(NSClassFromString("NSDrawerWindow")!, Selector(("frameViewClassForStyleMask:")))!
 		method_setImplementation(frameViewClassForStyleMaskM, frameViewClassForStyleMaskB)
         
 		// Unfortunately, special edge considerations don't work on NSThemeFrame.
@@ -42,15 +42,15 @@ public extension NSDrawer {
 		let replaceB = imp_implementationWithBlock(unsafeBitCast(replaceR, to: AnyObject.self))
 		
 		// Swizzle out the setEdge: method.
-		let setEdgeM: Method = class_getInstanceMethod(NSClassFromString("NSDrawerFrame")!, Selector(("setEdge:")))
+        let setEdgeM: Method = class_getInstanceMethod(NSClassFromString("NSDrawerFrame")!, Selector(("setEdge:")))!
 		class_addMethod(NSClassFromString("NSFrameView")!, Selector(("setEdge:")), replaceB, method_getTypeEncoding(setEdgeM))
 		
 		// Swizzle out the registerForEdgeChanges: method.
-		let registerForEdgeChangesM: Method = class_getInstanceMethod(NSClassFromString("NSDrawerFrame")!, Selector(("registerForEdgeChanges:")))
+        let registerForEdgeChangesM: Method = class_getInstanceMethod(NSClassFromString("NSDrawerFrame")!, Selector(("registerForEdgeChanges:")))!
 		class_addMethod(NSClassFromString("NSFrameView")!, Selector(("registerForEdgeChanges:")), replaceB, method_getTypeEncoding(registerForEdgeChangesM))
         
-        let attachM: Method = class_getInstanceMethod(NSClassFromString("NSDrawer")!, Selector(("_doSetParentWindow:")))
-        let attachS: Method = class_getInstanceMethod(NSClassFromString("NSDrawer")!, #selector(NSDrawer.swizzle__doSetParentWindow(_:)))
+        let attachM: Method = class_getInstanceMethod(NSClassFromString("NSDrawer")!, Selector(("_doSetParentWindow:")))!
+        let attachS: Method = class_getInstanceMethod(NSClassFromString("NSDrawer")!, #selector(NSDrawer.swizzle__doSetParentWindow(_:)))!
         method_exchangeImplementations(attachM, attachS)
 	}
 }

@@ -87,9 +87,9 @@ static int parse_mouse_event(struct tb_event *event, const char *buf, int len) {
         if (s1 == -1 || s2 == -1 || s1 == s2)
             return 0;
         
-        n1 = strtoul(&buf[starti], NULL, 10);
-        n2 = strtoul(&buf[s1 + 1], NULL, 10);
-        n3 = strtoul(&buf[s2 + 1], NULL, 10);
+        n1 = (int)strtoul(&buf[starti], NULL, 10);
+        n2 = (int)strtoul(&buf[s1 + 1], NULL, 10);
+        n3 = (int)strtoul(&buf[s2 + 1], NULL, 10);
         
         if (isU)
             n1 -= 32;
@@ -152,7 +152,7 @@ static int parse_escape_seq(struct tb_event *event, const char *buf, int len)
         if (starts_with(buf, len, keys[i])) {
             event->ch = 0;
             event->key = 0xFFFF-i;
-            return strlen(keys[i]);
+            return (int)strlen(keys[i]);
         }
     }
     return 0;

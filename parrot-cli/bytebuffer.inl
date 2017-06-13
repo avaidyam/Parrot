@@ -46,7 +46,7 @@ static void bytebuffer_append(struct bytebuffer *b, const char *data, int len) {
 }
 
 static void bytebuffer_puts(struct bytebuffer *b, const char *str) {
-    bytebuffer_append(b, str, strlen(str));
+    bytebuffer_append(b, str, (int)strlen(str));
 }
 
 static void bytebuffer_resize(struct bytebuffer *b, int len) {

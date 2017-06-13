@@ -55,7 +55,7 @@ TextInputHost, ListViewDataDelegate2 {
             log.debug("Conversation NOT found for id \(conv.identifier)")
             DispatchQueue.main.async {
                 let wc = MessageListViewController()
-                wc.conversation = conv as! IConversation
+                wc.conversation = (conv as! IConversation)
                 MessageListViewController.openConversations[conv.identifier] = wc
                 if let p = parent {
                     p.addChildViewController(wc)
@@ -97,9 +97,9 @@ TextInputHost, ListViewDataDelegate2 {
         v.flowDirection = .bottom
         v.selectionType = .none
         v.delegate = self
-        v.collectionView.register(MessageCell.self, forItemWithIdentifier: "\(MessageCell.self)")
+        v.collectionView.register(MessageCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"))
         
-        v.insets = EdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
+        v.insets = NSEdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
         return v
     }()
     
@@ -108,7 +108,7 @@ TextInputHost, ListViewDataDelegate2 {
         let v = NSProgressIndicator().modernize()
         v.usesThreadedAnimation = true
         v.isIndeterminate = true
-        v.style = .spinningStyle
+        v.style = .spinning
         return v
     }()
     
@@ -231,7 +231,7 @@ TextInputHost, ListViewDataDelegate2 {
     }
     
     public func itemClass(in: ListView2, at: ListView2.Index) -> NSCollectionViewItem.Type {
-        let row = Int(at.item)
+        //let row = Int(at.item)
         return MessageCell.self
     }
     
@@ -317,7 +317,7 @@ TextInputHost, ListViewDataDelegate2 {
     }
     
     public override func viewWillAppear() {
-        if let w = self.view.window {
+        if let _ = self.view.window {
             syncAutosaveTitle()
             PopWindowAnimator.show(self.view.window!)
         }
@@ -364,11 +364,11 @@ TextInputHost, ListViewDataDelegate2 {
     private func syncAutosaveTitle() {
         self.title = self.conversation?.name ?? ""
         let id = self.conversation?.identifier ?? "Messages"
-        self.identifier = id
+        self.identifier = NSUserInterfaceItemIdentifier(rawValue: id)
         
         self.view.window?.center()
-        self.view.window?.setFrameUsingName(id)
-        self.view.window?.setFrameAutosaveName(id)
+        self.view.window?.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: id))
+        self.view.window?.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: id))
     }
     
 	var conversation: IConversation? {
@@ -424,7 +424,7 @@ TextInputHost, ListViewDataDelegate2 {
 		}
     }
     
-    public func conversationDidReceiveEvent(_ notification: Notification) {
+    @objc public func conversationDidReceiveEvent(_ notification: Notification) {
         guard let event = notification.userInfo?["event"] as? IChatMessageEvent else { return }
         
         // Support mentioning a person's name. // TODO, FIXME
@@ -437,7 +437,7 @@ TextInputHost, ListViewDataDelegate2 {
         }
     }
     
-    public func conversationDidChangeTypingStatus(_ notification: Notification) {
+    @objc public func conversationDidChangeTypingStatus(_ notification: Notification) {
         guard let status = notification.userInfo?["status"] as? ITypingStatusMessage else { return }
         guard let forUser = notification.userInfo?["user"] as? User else { return }
         
@@ -454,7 +454,7 @@ TextInputHost, ListViewDataDelegate2 {
         self.focusModeChanged(IFocus("", identifier: "", sender: forUser, timestamp: Date(), mode: mode))
     }
     
-    public func conversationDidReceiveWatermark(_ notification: Notification) {
+    @objc public func conversationDidReceiveWatermark(_ notification: Notification) {
         /*guard let status = notification.userInfo?["status"] as? IWatermarkNotification else { return }
         if let person = self.conversation?.client.userList?.people[status.userID.gaiaID] {
             self.watermarkEvent(IFocus("", sender: person, timestamp: status.readTimestamp, mode: .here))
@@ -522,7 +522,7 @@ TextInputHost, ListViewDataDelegate2 {
 		
 		// Mute or unmute the conversation.
 		let cv = self.conversation!
-		cv.muted = (button.state == NSOnState ? true : false)
+        cv.muted = (button.state == NSControl.StateValue.onState ? true : false)
 	}
 	
     // MARK: Window notifications
@@ -554,7 +554,7 @@ TextInputHost, ListViewDataDelegate2 {
         self.focusComponents.1 = (self.view.window?.occlusionState.rawValue ?? 0) == 8194
     }
     
-    public func windowShouldClose(_ sender: Any) -> Bool {
+    public func windowShouldClose(_ sender: NSWindow) -> Bool {
         guard self.view.window != nil else { return true }
         ZoomWindowAnimator.hide(self.view.window!)
         return false
@@ -577,7 +577,7 @@ TextInputHost, ListViewDataDelegate2 {
     */
     
     public func resized(to: Double) {
-        self.listView.insets = EdgeInsets(top: 36.0, left: 0, bottom: CGFloat(to), right: 0)
+        self.listView.insets = NSEdgeInsets(top: 36.0, left: 0, bottom: CGFloat(to), right: 0)
         self.moduleView.needsLayout = true
         self.moduleView.layoutSubtreeIfNeeded()
     }
@@ -622,7 +622,7 @@ TextInputHost, ListViewDataDelegate2 {
     private var _usersToIndicators: [Person.IdentifierType: PersonIndicatorViewController] = [:]
     private func _usersToItems() -> [NSToolbarItem] {
         if _usersToIndicators.count == 0 {
-            self.conversation?.users.filter { !$0.me }.map {
+            _ = self.conversation?.users.filter { !$0.me }.map {
                 let vc = PersonIndicatorViewController()
                 vc.representedObject = $0
                 _usersToIndicators[$0.identifier] = vc
@@ -635,8 +635,8 @@ TextInputHost, ListViewDataDelegate2 {
         let h = self.toolbarContainer
         h.templateItems = Set(_usersToItems())
         var order = _usersToItems().map { $0.itemIdentifier }
-        order.insert(NSToolbarFlexibleSpaceItemIdentifier, at: 0)
-        order.append(NSToolbarFlexibleSpaceItemIdentifier)
+        order.insert(NSToolbarItem.Identifier.flexibleSpace, at: 0)
+        order.append(NSToolbarItem.Identifier.flexibleSpace)
         h.itemOrder = order
         
         /*

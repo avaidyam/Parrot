@@ -86,7 +86,7 @@ public class TodayConversationCell: NSTableCellView, NSTableViewCellProtocol {
     // Upon assignment of the represented object, configure the subview contents.
     public override var objectValue: Any? {
         didSet {
-            log.debug("OBJECTVALUE \(self.objectValue)")
+            log.debug("OBJECTVALUE \(String(describing: self.objectValue))")
             guard let conversation = self.objectValue as? Conversation else { return }
             
             let messageSender = conversation.eventStream.last?.sender?.identifier ?? ""
@@ -214,10 +214,10 @@ public let materialColors = Array(materialIndex.values)
 public func defaultImageForString(forString source: String, size: NSSize = NSSize(width: 512.0, height: 512.0), colors: [NSColor] = materialColors) -> NSImage {
     return NSImage(size: size, flipped: false) { rect in
         colors[abs(source.hashValue) % colors.count].set()
-        NSRectFill(rect)
+        rect.fill()
         var r = rect.insetBy(dx: -size.width * 0.05, dy: -size.height * 0.05)
         r.origin.y -= size.height * 0.1
-        NSImage(named: "NSUserGuest")!.draw(in: r) // composite this somehow.
+        NSImage(named: NSImage.Name(rawValue: "NSUserGuest"))!.draw(in: r) // composite this somehow.
         return true
     }
 }

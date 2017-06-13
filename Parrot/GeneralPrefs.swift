@@ -32,7 +32,7 @@ public extension Preferences.Controllers {
                 self.textSize, self.interfaceStyle, self.vibrancyStyle
             ]).modernize()
             
-            stack.edgeInsets = EdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
+            stack.edgeInsets = NSEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
             stack.spacing = 8.0
             stack.orientation = .vertical
             stack.alignment = .centerX

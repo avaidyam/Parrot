@@ -7,7 +7,7 @@ import AppKit
 import Mocha
 
 public typealias View = NSView
-public typealias LayoutPriority = NSLayoutPriority
+public typealias LayoutPriority = NSLayoutConstraint.Priority
 public typealias LayoutGuide = NSLayoutGuide
 public protocol LayoutRegion: AnyObject {}
 extension View: LayoutRegion {}
@@ -18,15 +18,15 @@ public struct Dimension {}
 
 public struct LayoutItem<C> {
     public let item: AnyObject
-    public let attribute: NSLayoutAttribute
+    public let attribute: NSLayoutConstraint.Attribute
     public let multiplier: CGFloat
     public let constant: CGFloat
     
-    fileprivate func constrain(_ secondItem: LayoutItem, relation: NSLayoutRelation) -> NSLayoutConstraint {
+    fileprivate func constrain(_ secondItem: LayoutItem, relation: NSLayoutConstraint.Relation) -> NSLayoutConstraint {
         return NSLayoutConstraint(item: item, attribute: attribute, relatedBy: relation, toItem: secondItem.item, attribute: secondItem.attribute, multiplier: secondItem.multiplier, constant: secondItem.constant)
     }
     
-    fileprivate func constrain(_ constant: CGFloat, relation: NSLayoutRelation) -> NSLayoutConstraint {
+    fileprivate func constrain(_ constant: CGFloat, relation: NSLayoutConstraint.Relation) -> NSLayoutConstraint {
         return NSLayoutConstraint(item: item, attribute: attribute, relatedBy: relation, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: constant)
     }
     
@@ -97,7 +97,7 @@ public func <=(lhs: LayoutItem<Dimension>, rhs: CGFloat) -> NSLayoutConstraint {
     return x
 }
 
-private func layoutItem<C>(_ item: AnyObject, _ attribute: NSLayoutAttribute) -> LayoutItem<C> {
+private func layoutItem<C>(_ item: AnyObject, _ attribute: NSLayoutConstraint.Attribute) -> LayoutItem<C> {
     return LayoutItem(item: item, attribute: attribute, multiplier: 1.0, constant: 0.0)
 }
 

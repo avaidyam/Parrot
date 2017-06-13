@@ -230,7 +230,7 @@ static char *load_terminfo(void) {
 static const char *terminfo_copy_string(char *data, int str, int table) {
     const int16_t off = *(int16_t*)(data + str);
     const char *src = data + table + off;
-    int len = strlen(src);
+    int len = (int)strlen(src);
     char *dst = malloc(len+1);
     strcpy(dst, src);
     return dst;

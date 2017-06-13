@@ -59,7 +59,7 @@ public class KeyboardBrightnessAnimation: NSAnimation {
         self.animationBlockingMode = .nonblocking
         self.animationCurve = .linear
     }
-    public override init(duration: TimeInterval, animationCurve: NSAnimationCurve) {
+    public override init(duration: TimeInterval, animationCurve: NSAnimation.Curve) {
         super.init(duration: duration, animationCurve: .linear)
         self.frameRate = 60.0
         self.animationBlockingMode = .nonblocking
@@ -72,7 +72,7 @@ public class KeyboardBrightnessAnimation: NSAnimation {
     public var blinkCount = 3
     private var initialValue: Float = 0
     
-    public override var currentProgress: NSAnimationProgress {
+    public override var currentProgress: NSAnimation.Progress {
         didSet {
             let stage = self.currentProgress * Float(self.blinkCount) * 2
             let progress = stage.truncatingRemainder(dividingBy: 1)

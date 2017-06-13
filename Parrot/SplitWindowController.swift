@@ -38,7 +38,7 @@ public class SplitWindowController: NSSplitViewController, WindowPresentable {
         PopWindowAnimator.show(self.view.window!)
     }
     
-    public func windowShouldClose(_ sender: Any) -> Bool {
+    public func windowShouldClose(_ sender: NSWindow) -> Bool {
         guard self.view.window != nil else { return true }
         ZoomWindowAnimator.hide(self.view.window!)
         return false

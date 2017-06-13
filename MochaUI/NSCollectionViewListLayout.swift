@@ -28,7 +28,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
     /// Describes the animations used by the ListLayout when inserting or removing
     /// elements.
     public struct Animations {
-        public typealias Effect = NSTableViewAnimationOptions
+        public typealias Effect = NSTableView.AnimationOptions
         
         /// The animations to use when an element appears.
         public let appear: Effect = []
@@ -145,7 +145,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         var attributes: NSCollectionViewLayoutAttributes? = nil
         switch i {
         case .header:
-            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: NSCollectionElementKindSectionHeader, with: idx)
+            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: NSCollectionView.SupplementaryElementKind.sectionHeader, with: idx)
             attributes!.frame = self.cache.frame(for: m)
             self.sections[idx.section].header = attributes!
         case .item:
@@ -153,7 +153,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             attributes!.frame = self.cache.frame(for: m)
             self.sections[idx.section].items.insert(attributes!, at: idx.item)
         case .footer:
-            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: NSCollectionElementKindSectionFooter, with: idx)
+            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: NSCollectionView.SupplementaryElementKind.sectionFooter, with: idx)
             attributes!.frame = self.cache.frame(for: m)
             self.sections[idx.section].footer = attributes!
         }
@@ -180,11 +180,11 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         return self.sections[safe: indexPath.section]?.items[safe: indexPath.item]
     }
     
-    public override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+    public override func layoutAttributesForSupplementaryView(ofKind elementKind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
         switch elementKind {
-        case NSCollectionElementKindSectionHeader:
+        case NSCollectionView.SupplementaryElementKind.sectionHeader:
             return self.sections[safe: indexPath.section]?.header
-        case NSCollectionElementKindSectionFooter:
+        case NSCollectionView.SupplementaryElementKind.sectionFooter:
             return self.sections[safe: indexPath.section]?.footer
         default: return nil
         }
@@ -333,7 +333,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             fileprivate var origin: CGFloat = 0
             fileprivate var size: CGFloat = 0
             
-            fileprivate func asRect(onAxis axis: NSLayoutConstraintOrientation,
+            fileprivate func asRect(onAxis axis: NSLayoutConstraint.Orientation,
                                     _ other: MeasuredItem = MeasuredItem(origin: 0, size: 0)) -> NSRect {
                 var rect = NSRect(value: (origin: self.origin, size: self.size), forAxis: axis)
                 rect.origin.setValue(other.origin, forAxis: !axis)
@@ -366,7 +366,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         ///
         
         fileprivate var sections = [MeasuredSection]()
-        fileprivate var axis: NSLayoutConstraintOrientation = .vertical
+        fileprivate var axis: NSLayoutConstraint.Orientation = .vertical
         
         /// Determines axis sizing, layout direction, and whatnot...
         private var axisSize: CGFloat = 0
@@ -503,7 +503,7 @@ extension Collection {
 ///
 
 public protocol AxisSizable {
-    typealias Axis = NSLayoutConstraintOrientation
+    typealias Axis = NSLayoutConstraint.Orientation
     
     associatedtype AxisValue
     func value(forAxis axis: Axis) -> AxisValue
@@ -569,7 +569,7 @@ extension NSRect: AxisSizable {
     }
 }
 
-prefix func !(_ lhs: NSLayoutConstraintOrientation) -> NSLayoutConstraintOrientation {
+prefix func !(_ lhs: NSLayoutConstraint.Orientation) -> NSLayoutConstraint.Orientation {
     switch lhs {
     case .vertical: return .horizontal
     case .horizontal: return .vertical

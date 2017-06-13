@@ -13,7 +13,7 @@ let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteract
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
 public class ConversationListViewController: NSViewController, WindowPresentable,
-ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
+ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, NSSearchFieldDelegate {
     
     private lazy var listView: ListView2 = {
         let v = ListView2().modernize(wantsLayer: true)
@@ -23,7 +23,7 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
         let l = v.collectionView.collectionViewLayout as! NSCollectionViewListLayout
         l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 64)))
         v.scrollView.automaticallyAdjustsContentInsets = true
-        v.collectionView.register(ConversationCell.self, forItemWithIdentifier: "\(ConversationCell.self)")
+        v.collectionView.register(ConversationCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"))
         //v.insets = EdgeInsets(top: 114.0, left: 0, bottom: 0, right: 0)
         return v
     }()
@@ -36,16 +36,21 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
     private lazy var titleText: NSTextField = {
         let t = NSTextField(labelWithString: " Conversations").modernize(wantsLayer: true)
         t.textColor = NSColor.labelColor
-        t.font = NSFont.systemFont(ofSize: 32.0, weight: NSFontWeightHeavy)
+        t.font = NSFont.systemFont(ofSize: 32.0, weight: NSFont.Weight.heavy)
         return t
     }()
     
     private lazy var searchField: NSSearchField = {
-        return NSSearchField().modernize(wantsLayer: true)
+        let s = NSSearchField().modernize(wantsLayer: true)
+        s.sendsWholeSearchString = true
+        s.sendsSearchStringImmediately = true
+        s.target = self
+        s.action = #selector(self.searching(_:))
+        return s
     }()
     
     private lazy var addButton: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: "NSAddBookmarkTemplate")!,
+        let b = NSButton(title: "", image: NSImage(named: NSImage.Name(rawValue: "NSAddBookmarkTemplate"))!,
                          target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
@@ -53,19 +58,19 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
     }()
     
     private lazy var searchToggle: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImageNameRevealFreestandingTemplate)!,
+        let b = NSButton(title: "", image: NSImage(named: NSImage.Name.revealFreestandingTemplate)!,
                          target: self, action: #selector(self.toggleSearchField(_:))).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         b.setButtonType(.onOff)
-        b.state = NSControlStateValueOn
+        b.state = NSControl.StateValue.on
         return b
     }()
     
     private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
         let v = NSView()
         v.add(subviews: [self.titleText/*, self.addButton*//*, self.searchField*/])
-        v.autoresizingMask = [.viewWidthSizable]
+        v.autoresizingMask = [.width]
         v.frame.size.height = 44.0//80.0
         self.titleText.left == v.left + 2.0
         self.titleText.top == v.top + 2.0
@@ -227,14 +232,14 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
         window.addTitlebarAccessoryViewController(self.titleAccessory)
         window.addTitlebarAccessoryViewController(self.searchAccessory)
         
-        let item = NSToolbarItem(itemIdentifier: "add")
+        let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "add"))
         item.view = self.addButton
         item.label = "Add"
-        let item2 = NSToolbarItem(itemIdentifier: "search")
+        let item2 = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "search"))
         item2.view = self.searchToggle
         item2.label = "Search"
         container.templateItems = [item, item2]
-        container.itemOrder = [NSToolbarFlexibleSpaceItemIdentifier, "add", "search"]
+        container.itemOrder = [.flexibleSpace, NSToolbarItem.Identifier(rawValue: "add"), NSToolbarItem.Identifier(rawValue: "search")]
     }
     
     public override func viewDidLoad() {
@@ -288,11 +293,10 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
     /// Center by default, but load a saved frame if available, and autosave.
     private func syncAutosaveTitle() {
         self.view.window?.center()
-        self.view.window?.setFrameUsingName("Conversations")
-        self.view.window?.setFrameAutosaveName("Conversations")
+        self.view.window?.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: "Conversations"))
+        self.view.window?.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: "Conversations"))
     }
-    
-    public func windowShouldClose(_ sender: Any) -> Bool {
+    public func windowShouldClose(_ sender: NSWindow) -> Bool {
         guard self.view.window != nil else { return true }
         PopWindowAnimator.hide(self.view.window!)
         return false
@@ -309,13 +313,13 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
     //
     
     /* TODO: Just update the row that is updated. */
-    public func conversationDidReceiveEvent(_ notification: Notification) {
+    @objc public func conversationDidReceiveEvent(_ notification: Notification) {
         self.updateList()
     }
-    public func conversationDidUpdate(_ notification: Notification) {
+    @objc public func conversationDidUpdate(_ notification: Notification) {
         self.updateList()
     }
-    public func conversationDidUpdateList(_ notification: Notification) {
+    @objc public func conversationDidUpdateList(_ notification: Notification) {
         self.updateList()
     }
     
@@ -336,7 +340,11 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
     }
     
     @objc private func toggleSearchField(_ sender: NSButton!) {
-        self.searchAccessory.animator().isHidden = (sender.state != NSControlStateValueOn)
+        self.searchAccessory.animator().isHidden = (sender.state != NSControl.StateValue.on)
+    }
+    
+    @objc private func searching(_ sender: NSSearchField!) {
+        print("got string \(sender.stringValue)")
     }
 }
 

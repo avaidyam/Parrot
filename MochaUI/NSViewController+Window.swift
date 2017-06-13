@@ -53,7 +53,7 @@ public extension NSViewController {
     /// Traverses the ViewController hierarchy and returns the closest ancestor ViewController
     /// that matches the `type` provided. If `includingSelf`, then the receiver can be returned.
     public func ancestor<T: NSViewController>(ofType type: T.Type, includingSelf: Bool = true) -> T? {
-        if includingSelf && type(of: self) == type {
+        if includingSelf /*&& (self is type)*/ { //fixme
             return self as? T
         } else if let p = self.parent {
             return p.ancestor(ofType: type, includingSelf: true)
@@ -124,10 +124,10 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
         self.window?.isReleasedWhenClosed = false
         self.window?.contentView?.superview?.wantsLayer = true // always root-layer-backed
         NotificationCenter.default.addObserver(self, selector: #selector(NSWindowDelegate.windowWillClose(_:)),
-                                               name: .NSWindowWillClose, object: self.window)
+                                               name: NSWindow.willCloseNotification, object: self.window)
         
         self.window?.contentViewController = viewController
-        self.window?.bind(NSTitleBinding, to: viewController, withKeyPath: "title", options: nil)
+        self.window?.bind(NSBindingName.title, to: viewController, withKeyPath: "title", options: nil)
         self.window?.appearance = viewController.view.window?.appearance
         self.window?.delegate = viewController as? NSWindowDelegate
         self.window?.center()
@@ -142,7 +142,7 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
     public func undisplay(viewController: NSViewController) {
         NotificationCenter.default.removeObserver(self)
         self.window?.orderOut(nil)
-        self.window?.unbind(NSTitleBinding)
+        self.window?.unbind(NSBindingName.title)
         
         self.window = nil
         viewController._rootAnimator = nil

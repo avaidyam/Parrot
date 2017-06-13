@@ -45,14 +45,14 @@ public class VolumeIndicator: NSView {
     
     // Note that the color is inverted from the root appearance to stand out.
     private var colorMode: SystemBezel.ColorMode {
-        let a = self.appearance?.name ?? NSAppearanceNameVibrantLight
+        let a = self.appearance?.name ?? NSAppearance.Name.vibrantLight
         if NSAppearance.increaseContrast {
-            return a == NSAppearanceNameVibrantDark ? .lightIncreasedContrast : .darkIncreasedContrast
+            return a == NSAppearance.Name.vibrantDark ? .lightIncreasedContrast : .darkIncreasedContrast
         }
         if NSAppearance.reduceTransparency {
-            return a == NSAppearanceNameVibrantDark ? .lightReducedTransparency : .darkReducedTransparency
+            return a == NSAppearance.Name.vibrantDark ? .lightReducedTransparency : .darkReducedTransparency
         }
-        return a == NSAppearanceNameVibrantDark ? .light : .dark
+        return a == NSAppearance.Name.vibrantDark ? .light : .dark
     }
     
     //
@@ -63,12 +63,12 @@ public class VolumeIndicator: NSView {
         return false
     }
     public override var intrinsicContentSize: NSSize {
-        return NSSize(width: NSViewNoIntrinsicMetric, height: 8.0)
+        return NSSize(width: NSView.noIntrinsicMetric, height: 8.0)
     }
     public override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
         self.backgroundColor.set()
-        NSRectFill(dirtyRect)
+        dirtyRect.fill()
 
         var segmentIndex = 0
         var segmentXOffset: CGFloat = self.segmentSpacing
@@ -76,7 +76,7 @@ public class VolumeIndicator: NSView {
         self.segmentColor.set()
         while segmentIndex < self.level {
             let segmentRect = NSRect(x: segmentXOffset, y: 1, width: self.segmentSize.width, height: self.segmentSize.height)
-            NSRectFill(segmentRect)
+            segmentRect.fill()
             segmentIndex += 1
             segmentXOffset += self.segmentSize.width + self.segmentSpacing
         }

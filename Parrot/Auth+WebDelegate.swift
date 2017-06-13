@@ -35,7 +35,7 @@ internal class WebDelegate: NSObject, WebPolicyDelegate, WebResourceLoadDelegate
         WebDelegate.handler = cb
         
         let webView = WebView(frame: NSMakeRect(0, 0, 386, 512))
-        webView.autoresizingMask = [.viewHeightSizable, .viewWidthSizable]
+        webView.autoresizingMask = [.height, .width]
         //webView.policyDelegate = WebDelegate.delegate
         webView.resourceLoadDelegate = WebDelegate.delegate
         
