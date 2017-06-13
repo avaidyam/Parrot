@@ -179,7 +179,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         return menu
     }
     
-    
+    /*
     private static var _text: ExtendedTextView = {
         let v = ExtendedTextView()
         v.isEditable = false
@@ -194,6 +194,29 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         MessageCell._text.string = string
         MessageCell._text.font = NSFont.systemFont(ofSize: 12.0 * (string.isEmoji ? 4 : 1))
         let h = Double(MessageCell._text.layoutRect().size.height)
+        return ((h < 24.0) ? 24.0 : h) + 8.0 /* add padding to max(h, 24) */
+    }
+    */
+    
+    static func lineSize(_ string: String, _ font: NSFont, _ width: CGFloat) -> CGFloat {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = font.leading
+        let attr = NSAttributedString(string: string, attributes: [
+            NSFontAttributeName: font,
+            NSParagraphStyleAttributeName: paragraphStyle
+        ])
+        
+        let framesetter = CTFramesetterCreateWithAttributedString(attr)
+        let constraints = NSSize(width: width, height: .greatestFiniteMagnitude)
+        let size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, 0), nil, constraints, nil)
+        return size.height
+    }
+    
+    // Given a string, a font size, and a base width, return the measured height of the cell.
+    public static func measure(_ string: String, _ width: CGFloat) -> CGFloat {
+        let h = lineSize(string,
+                         NSFont.systemFont(ofSize: 12.0 * (string.isEmoji ? 4 : 1)),
+                         width - (24.0 + 24.0 + 16.0)) + 8.0
         return ((h < 24.0) ? 24.0 : h) + 8.0 /* add padding to max(h, 24) */
     }
 }

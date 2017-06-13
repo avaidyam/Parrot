@@ -1,18 +1,52 @@
 import Cocoa
 
-// TODO: static heights instead of delegate calls
-// TODO: section collapse, row hide, sticky headers, swipe actions
+// TODO: sticky headers
+// TODO: section/item collapse
+// TODO: global header/footer
+// TODO: separators
+// TODO: section index
+//
+// TODO: type select
+// TODO: swipe actions
+// TODO: static contents
+// TODO: support autolayout
+// TODO: refresh control/prefetch
+// TODO: editing mode (none, delete, insert)
+// TODO: cell accessory buttons (none, disclosure, checkmark, detail)
+
+/// A layout that organizes items into a vertical or horizontal list arrangement.
+/// In a list layout, the first item is positioned in the top-left corner and
+/// other items are laid out either horizontally or vertically based on the
+/// layout direction, which is configurable.
+///
+/// Items may be the same size or different sizes, and you may use the list layout
+/// object or the collection view’s delegate object to specify the size of items
+/// and the spacing around them. The list layout also lets you specify custom
+/// header and footer views for each section.
 public class NSCollectionViewListLayout: NSCollectionViewLayout {
     
-    public struct AnimationEffect {
-        public let appear: NSTableViewAnimationOptions = []
-        public let disappear: NSTableViewAnimationOptions = []
+    /// Describes the animations used by the ListLayout when inserting or removing
+    /// elements.
+    public struct Animations {
+        public typealias Effect = NSTableViewAnimationOptions
+        
+        /// The animations to use when an element appears.
+        public let appear: Effect = []
+        
+        /// The animations to use when an element disappears.
+        public let disappear: Effect = []
     }
     
-    /// Separator theme definition.
+    /// Describes the look&feel of the separators between elements.
     public struct SeparatorStyle {
+        
+        /// Determines whether the separators are drawn or not.
         public let visible: Bool = false
+        
+        /// Determines the color of the separator.
         public let color: NSColor = NSColor.black
+        
+        /// Determines the inset at which the separator is drawn from the element.
         public let inset: NSEdgeInsets = NSEdgeInsetsZero
         
         /// When set true, the separator appears vibrant when contained within
@@ -25,19 +59,273 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         public let coalesce: Bool = false
     }
     
+    /// Describes the look&feel of the section index that lines the side of
+    /// all the elements, providing a scrubber.
+    /// i.e. Atom or Sublime Text's minimap.
+    public struct SectionIndexStyle {
+        
+        /// Determines the section index is visible or not.
+        public let visible: Bool = false
+        
+        /// Determines the foreground color of the index guide.
+        public let foregroundColor: NSColor = NSColor.black
+        
+        /// Determines the background color of the index guide.
+        public let backgroundColor: NSColor = NSColor.black
+        
+        /// Determines the color of the index track.
+        public let trackingColor: NSColor = NSColor.black
+    }
+    
+    /// Describes the method by which the ListLayout calculates its elements' frames.
+    public enum LayoutDefinition {
+        
+        /// Describes a section's (or the whole list's) static heights.
+        public struct SizeMetrics {
+            public let header: CGSize?
+            public let item: CGSize?
+            public let footer: CGSize?
+            
+            public init(header: CGSize? = nil, item: CGSize? = nil, footer: CGSize? = nil) {
+                self.header = header
+                self.item = item
+                self.footer = footer
+            }
+        }
+        
+        /// `global` implies that all sections follow one set of metrics
+        case global(SizeMetrics)
+        
+        /// `perSection` implies that each section has its own metrics
+        case perSection([SizeMetrics])
+        
+        /// `custom` implies that the delegate will be queried for each element's metrics.
+        case custom
+    }
+    
+    ///
+    ///
+    ///
+    
+    /// The internal cache manages all layout calculations.
+    private var cache = DynamicCache()
+    fileprivate var metricsProvider: MetricsProvider = DelegateMetricsProvider()
+    
+    private var sections = [Section]()
+    private var flattenedSections = [NSCollectionViewLayoutAttributes]()
+    
+    public var animations = Animations()
+    public var separatorStyle = SeparatorStyle()
+    public var layoutDefinition: LayoutDefinition = .custom {
+        didSet {
+            //guard oldValue != self.layoutDefinition else { return }
+            switch self.layoutDefinition {
+            case .global(_): self.metricsProvider = GlobalMetricsProvider()
+            case .perSection(_): self.metricsProvider = PerSectionMetricsProvider()
+            case .custom: self.metricsProvider = DelegateMetricsProvider()
+            }
+            self.invalidateLayout()
+        }
+    }
+    
+    ///
+    ///
+    ///
+    
+    private func willCompute(_ s: [Int]) {
+        self.flattenedSections = []
+        self.sections = s.map {
+            var s = Section()
+            s.index = $0
+            return s
+        }
+    }
+    
+    private func didCompute(_ i: DynamicCache.ItemType, _ idx: IndexPath, _ m: DynamicCache.MeasuredItem) {
+        var attributes: NSCollectionViewLayoutAttributes? = nil
+        switch i {
+        case .header:
+            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: NSCollectionElementKindSectionHeader, with: idx)
+            attributes!.frame = self.cache.frame(for: m)
+            self.sections[idx.section].header = attributes!
+        case .item:
+            attributes = NSCollectionViewLayoutAttributes(forItemWith: idx)
+            attributes!.frame = self.cache.frame(for: m)
+            self.sections[idx.section].items.insert(attributes!, at: idx.item)
+        case .footer:
+            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: NSCollectionElementKindSectionFooter, with: idx)
+            attributes!.frame = self.cache.frame(for: m)
+            self.sections[idx.section].footer = attributes!
+        }
+        self.flattenedSections.append(attributes!)
+    }
+    
+    //
+    // MARK: CollectionView Vendor
+    //
+    
+    public override func shouldInvalidateLayout(forBoundsChange newBounds: NSRect) -> Bool {
+        return self.cache.update(from: newBounds.size)
+    }
+    
+    public override func prepare() {
+        self.cache.recomputeCache(from: self.collectionView!)
+    }
+    
+    public override var collectionViewContentSize: NSSize {
+        return self.cache.size()
+    }
+    
+    public override func layoutAttributesForItem(at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+        return self.sections[safe: indexPath.section]?.items[safe: indexPath.item]
+    }
+    
+    public override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+        switch elementKind {
+        case NSCollectionElementKindSectionHeader:
+            return self.sections[safe: indexPath.section]?.header
+        case NSCollectionElementKindSectionFooter:
+            return self.sections[safe: indexPath.section]?.footer
+        default: return nil
+        }
+    }
+    
+    public override func layoutAttributesForElements(in rect: NSRect) -> [NSCollectionViewLayoutAttributes] {
+        return self.flattenedSections
+    }
+    
+    //
+    // MARK: Animations
+    //
+    
+    public override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+        let x = self.layoutAttributesForItem(at: itemIndexPath)
+        if self.animations.appear.contains(.effectFade) {
+            x?.alpha = 0.0
+        }
+        if self.animations.appear.contains(.slideUp) {
+            x?.frame.origin.y -= x!.frame.height
+        } else if self.animations.appear.contains(.slideDown) {
+            x?.frame.origin.y += x!.frame.height
+        } else if self.animations.appear.contains(.slideLeft) {
+            x?.frame.origin.x += x!.frame.width
+        } else if self.animations.appear.contains(.slideRight) {
+            x?.frame.origin.x -= x!.frame.width
+        }
+        return x
+    }
+    
+    public override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+        let x = self.layoutAttributesForItem(at: itemIndexPath)
+        if self.animations.disappear.contains(.effectFade) {
+            x?.alpha = 0.0
+        }
+        if self.animations.disappear.contains(.slideUp) {
+            x?.frame.origin.y -= x!.frame.height
+        } else if self.animations.disappear.contains(.slideDown) {
+            x?.frame.origin.y += x!.frame.height
+        } else if self.animations.disappear.contains(.slideLeft) {
+            x?.frame.origin.x += x!.frame.width
+        } else if self.animations.disappear.contains(.slideRight) {
+            x?.frame.origin.x -= x!.frame.width
+        }
+        return x
+    }
+    
+    //
+    //
+    //
+    
+    /// Describes layout of an individual section.
+    fileprivate struct Section {
+        fileprivate var index: Int = 0
+        
+        fileprivate var header: NSCollectionViewLayoutAttributes? = nil
+        fileprivate var footer: NSCollectionViewLayoutAttributes? = nil
+        fileprivate var items = [NSCollectionViewLayoutAttributes]()
+        /*
+         subscript(_ lhs: Index, _ rhs: NSCollectionViewLayoutAttributes) {
+         return indices.contains(index) ? self[index] : nil
+         }*/
+    }
+    
+    ///
+    ///
+    ///
+    
+    ///
+    private struct GlobalMetricsProvider: MetricsProvider {
+        func size(for itemType: DynamicCache.ItemType, at idx: IndexPath, in collectionView: NSCollectionView) -> CGSize {
+            guard let layout = collectionView.collectionViewLayout as? NSCollectionViewListLayout
+                else { return .zero }
+            switch layout.layoutDefinition {
+            case .global(let def):
+                switch itemType {
+                case .header:
+                    return def.header ?? .zero
+                case .item:
+                    return def.item ?? .zero
+                case .footer:
+                    return def.footer ?? .zero
+                }
+            default: return .zero
+            }
+        }
+    }
+    
+    ///
+    private struct PerSectionMetricsProvider: MetricsProvider {
+        func size(for itemType: DynamicCache.ItemType, at idx: IndexPath, in collectionView: NSCollectionView) -> CGSize {
+            guard let layout = collectionView.collectionViewLayout as? NSCollectionViewListLayout
+                else { return .zero }
+            switch layout.layoutDefinition {
+            case .perSection(let sections):
+                switch itemType {
+                case .header:
+                    return sections[idx.section].header ?? .zero
+                case .item:
+                    return sections[idx.section].item ?? .zero
+                case .footer:
+                    return sections[idx.section].footer ?? .zero
+                }
+            default: return .zero
+            }
+        }
+    }
+    
+    ///
+    private struct DelegateMetricsProvider: MetricsProvider {
+        func size(for itemType: DynamicCache.ItemType, at idx: IndexPath, in collectionView: NSCollectionView) -> CGSize {
+            guard let layout = collectionView.collectionViewLayout as? NSCollectionViewListLayout
+                else { return .zero }
+            guard let delegate = collectionView.delegate as? NSCollectionViewDelegateFlowLayout
+                else { return .zero }
+            
+            switch itemType {
+            case .header:
+                let header = delegate.collectionView(_:layout:referenceSizeForHeaderInSection:)
+                return header?(collectionView, layout, idx.section) ?? .zero
+            case .item:
+                let item = delegate.collectionView(_:layout:sizeForItemAt:)
+                return item?(collectionView, layout, idx) ?? .zero
+            case .footer:
+                let footer = delegate.collectionView(_:layout:referenceSizeForFooterInSection:)
+                return footer?(collectionView, layout, idx.section) ?? .zero
+            }
+        }
+    }
+    
+    ///
+    ///
+    ///
+    
     /// The cache is encapsulated in its own structure to avoid mixing things up.
     /// It maps all the heights and y-locations of each cell, and maintains
     /// the expected overall height of the layout, recomputing at will.
-    ///
-    /// Note: takes ~0.00115ms per indexPath.
-    /// - 100x200 = ~23.0ms
-    /// - 10x200 = ~2.4ms
-    /// - 1x200 = ~0.26ms
-    /// - 1x20 = ~0.06ms
-    private struct CacheData {
+    fileprivate struct DynamicCache {
         
         fileprivate enum ItemType {
-            case header(IndexPath), footer(IndexPath), item(IndexPath)
+            case header, footer, item
         }
         
         /// Describes layout for an item on a single axis.
@@ -55,7 +343,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         }
         
         /// Describes layout of an individual section.
-        fileprivate struct Section {
+        fileprivate struct MeasuredSection {
             fileprivate var index: Int
             fileprivate var count: Int
             
@@ -77,9 +365,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         ///
         ///
         
-        fileprivate var sections = [Section]()
-        fileprivate var computationPreparer: (([Int]) -> ())? = nil
-        fileprivate var computationHandler: ((ItemType, MeasuredItem) -> ())? = nil
+        fileprivate var sections = [MeasuredSection]()
         fileprivate var axis: NSLayoutConstraintOrientation = .vertical
         
         /// Determines axis sizing, layout direction, and whatnot...
@@ -103,16 +389,11 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             var currentOrigin: CGFloat = 0
             self.otherAxisSize = collectionView.bounds.size.value(forAxis: !self.axis)
             let layout = collectionView.collectionViewLayout as! NSCollectionViewListLayout
+            let metricsProvider = layout.metricsProvider
             let counts = (0..<collectionView.numberOfSections).map {
                 collectionView.numberOfItems(inSection: $0)
             }
-            self.computationPreparer?(counts)
-            
-            // Prepare supported delegate calls.
-            guard let d = collectionView.delegate as? NSCollectionViewDelegateFlowLayout else { return }
-            guard let cell = d.collectionView(_:layout:sizeForItemAt:) else { return }
-            let header = d.collectionView(_:layout:referenceSizeForHeaderInSection:)
-            let footer = d.collectionView(_:layout:referenceSizeForFooterInSection:)
+            layout.willCompute(counts)
             
             // List Header
             //let globalHeaderSize = header?(collectionView, layout, -1).value(forAxis: self.axis) ?? 0
@@ -121,39 +402,39 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             
             // List Contents
             for i in 0..<counts.count {
-                var currentSection = Section(index: i)
+                var currentSection = MeasuredSection(index: i)
                 
                 // Section Header
-                let headerSize = header?(collectionView, layout, i).value(forAxis: self.axis) ?? 0
+                let headerSize = metricsProvider.size(for: .header, at: IndexPath(item: 0, section: i), in: collectionView).value(forAxis: self.axis)
                 currentSection.header = MeasuredItem(origin: currentOrigin, size: headerSize)
                 currentOrigin += headerSize
                 
                 // Ping Handler
-                self.computationHandler?(.header(IndexPath(item: 0, section: i)), currentSection.header)
+                layout.didCompute(.header, IndexPath(item: 0, section: i), currentSection.header)
                 
                 // Section Contents
                 var sectionItems = [MeasuredItem]()
                 for j in 0..<counts[i] {
                     
                     // Cell
-                    let itemSize = cell(collectionView, layout, IndexPath(item: j, section: i)).value(forAxis: self.axis)
+                    let itemSize = metricsProvider.size(for: .item, at: IndexPath(item: j, section: i), in: collectionView).value(forAxis: self.axis)
                     let itemMeasure = MeasuredItem(origin: currentOrigin, size: itemSize)
                     sectionItems.insert(itemMeasure, at: j)
                     currentOrigin += itemSize
                     
                     // Ping Handler
-                    self.computationHandler?(.item(IndexPath(item: j, section: i)), itemMeasure)
+                    layout.didCompute(.item, IndexPath(item: j, section: i), itemMeasure)
                 }
                 currentSection.items = sectionItems
                 currentSection.count = counts[i]
                 
                 // Section Footer
-                let footerSize = footer?(collectionView, layout, i).value(forAxis: self.axis) ?? 0
+                let footerSize = metricsProvider.size(for: .footer, at: IndexPath(item: 0, section: i), in: collectionView).value(forAxis: self.axis)
                 currentSection.footer = MeasuredItem(origin: currentOrigin, size: footerSize)
                 currentOrigin += footerSize
                 
                 // Ping Handler
-                self.computationHandler?(.footer(IndexPath(item: 0, section: i)), currentSection.footer)
+                layout.didCompute(.footer, IndexPath(item: 0, section: i), currentSection.footer)
                 
                 self.sections.insert(currentSection, at: i)
             }
@@ -171,28 +452,6 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         ///
         ///
         
-        fileprivate func headerFrame(from section: Int) -> NSRect {
-            guard let measure = self.sections[safe: section]?.header
-                else { return .zero }
-            return measure.asRect(onAxis: self.axis, MeasuredItem(origin: 0, size: self.otherAxisSize))
-        }
-        
-        fileprivate func itemFrame(from indexPath: IndexPath) -> NSRect {
-            guard let measure = self.sections[safe: indexPath.section]?.items[safe: indexPath.item]
-                else { return .zero }
-            return measure.asRect(onAxis: self.axis, MeasuredItem(origin: 0, size: self.otherAxisSize))
-        }
-        
-        fileprivate func footerFrame(from section: Int) -> NSRect {
-            guard let measure = self.sections[safe: section]?.footer
-                else { return .zero }
-            return measure.asRect(onAxis: self.axis, MeasuredItem(origin: 0, size: self.otherAxisSize))
-        }
-        
-        ///
-        ///
-        ///
-        
         fileprivate func size() -> NSSize {
             var size = NSSize(value: self.axisSize, forAxis: self.axis)
             size.setValue(self.otherAxisSize, forAxis: !self.axis)
@@ -204,148 +463,33 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         }
         
         fileprivate mutating func update(from: NSSize) -> Bool {
-            switch self.axis {
-            case .vertical:
+            if self.axis == .vertical {
                 guard self.otherAxisSize != from.width else { return false }
                 self.otherAxisSize = from.width
-            case .horizontal:
+            } else if self.axis == .horizontal {
                 guard self.otherAxisSize != from.height else { return false }
                 self.otherAxisSize = from.height
             }
             return true
         }
     }
+}
+
+public typealias SizeMetrics = NSCollectionViewListLayout.LayoutDefinition.SizeMetrics
+fileprivate protocol MetricsProvider {
+    func size(for: NSCollectionViewListLayout.DynamicCache.ItemType, at: IndexPath, in: NSCollectionView) -> CGSize
+}
+
+@discardableResult
+func benchmark<T>(_ only60FPS: Bool = true, _ title: String = #function, _ handler: () -> (T)) -> T {
+    let t = CACurrentMediaTime()
+    let x = handler()
     
-    /// Describes layout of an individual section.
-    fileprivate struct Section {
-        fileprivate var index: Int = 0
-        
-        fileprivate var header: NSCollectionViewLayoutAttributes? = nil
-        fileprivate var footer: NSCollectionViewLayoutAttributes? = nil
-        fileprivate var items = [NSCollectionViewLayoutAttributes]()
-        /*
-         subscript(_ lhs: Index, _ rhs: NSCollectionViewLayoutAttributes) {
-         return indices.contains(index) ? self[index] : nil
-         }*/
+    let ms = (CACurrentMediaTime() - t)
+    if (!only60FPS) || (only60FPS && ms > (1/60)) {
+        print("Operation \(title) took \(ms * 1000)ms!")
     }
-    
-    ///
-    ///
-    ///
-    
-    /// The internal cache manages all layout calculations.
-    private var cache = CacheData()
-    private var sections = [Section]()
-    private var flattenedSections = [NSCollectionViewLayoutAttributes]()
-    
-    public var animationEffect = AnimationEffect()
-    public var separatorStyle = SeparatorStyle()
-    
-    public override init() {
-        super.init()
-        self.setup()
-    }
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setup()
-    }
-    private func setup() {
-        self.cache.computationPreparer = {
-            self.sections = $0.map {
-                var s = Section()
-                s.index = $0
-                return s
-            }
-            self.flattenedSections = []
-        }
-        
-        self.cache.computationHandler = { i, m in
-            var attributes: NSCollectionViewLayoutAttributes? = nil
-            let frame = self.cache.frame(for: m)
-            
-            switch i {
-            case .header(let idx):
-                attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: "header", with: idx)
-                attributes!.frame = frame
-                self.sections[idx.section].header = attributes!
-            case .item(let idx):
-                attributes = NSCollectionViewLayoutAttributes(forItemWith: idx)
-                attributes!.frame = frame
-                self.sections[idx.section].items.insert(attributes!, at: idx.item)
-            case .footer(let idx):
-                attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: "footer", with: idx)
-                attributes!.frame = frame
-                self.sections[idx.section].header = attributes!
-            }
-            self.flattenedSections.append(attributes!)
-        }
-    }
-    
-    public override func shouldInvalidateLayout(forBoundsChange newBounds: NSRect) -> Bool {
-        return self.cache.update(from: newBounds.size)
-    }
-    
-    public override func prepare() {
-        //let t = CACurrentMediaTime()
-        self.cache.recomputeCache(from: self.collectionView!)
-        //print("layout pass: ", (CACurrentMediaTime() - t) * 1000, "ms")
-    }
-    
-    public override var collectionViewContentSize: NSSize {
-        return self.cache.size()
-    }
-    
-    public override func layoutAttributesForItem(at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
-        return self.sections[safe: indexPath.section]?.items[safe: indexPath.item]
-    }
-    
-    public override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
-        switch elementKind {
-        case "header":
-            return self.sections[safe: indexPath.section]?.header
-        case "footer":
-            return self.sections[safe: indexPath.section]?.footer
-        default: return nil
-        }
-    }
-    
-    public override func layoutAttributesForElements(in rect: NSRect) -> [NSCollectionViewLayoutAttributes] {
-        return self.flattenedSections
-    }
-    
-    public override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
-        let x = self.layoutAttributesForItem(at: itemIndexPath)
-        if self.animationEffect.appear.contains(.effectFade) {
-            x?.alpha = 0.0
-        }
-        if self.animationEffect.appear.contains(.slideUp) {
-            x?.frame.origin.y -= x!.frame.height
-        } else if self.animationEffect.appear.contains(.slideDown) {
-            x?.frame.origin.y += x!.frame.height
-        } else if self.animationEffect.appear.contains(.slideLeft) {
-            x?.frame.origin.x += x!.frame.width
-        } else if self.animationEffect.appear.contains(.slideRight) {
-            x?.frame.origin.x -= x!.frame.width
-        }
-        return x
-    }
-    
-    public override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
-        let x = self.layoutAttributesForItem(at: itemIndexPath)
-        if self.animationEffect.disappear.contains(.effectFade) {
-            x?.alpha = 0.0
-        }
-        if self.animationEffect.disappear.contains(.slideUp) {
-            x?.frame.origin.y -= x!.frame.height
-        } else if self.animationEffect.disappear.contains(.slideDown) {
-            x?.frame.origin.y += x!.frame.height
-        } else if self.animationEffect.disappear.contains(.slideLeft) {
-            x?.frame.origin.x += x!.frame.width
-        } else if self.animationEffect.disappear.contains(.slideRight) {
-            x?.frame.origin.x -= x!.frame.width
-        }
-        return x
-    }
+    return x
 }
 
 extension Collection {
@@ -431,3 +575,4 @@ prefix func !(_ lhs: NSLayoutConstraintOrientation) -> NSLayoutConstraintOrienta
     case .horizontal: return .vertical
     }
 }
+

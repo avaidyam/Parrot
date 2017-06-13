@@ -240,7 +240,7 @@ TextInputHost, ListViewDataDelegate2 {
         if let _ = self.dataSource[row] as? Focus {
             return 32.0
         } else if let m = self.dataSource[row] as? Message {
-            return MessageCell.measure(m.text, view.frame.width)
+            return Double(MessageCell.measure(m.text, view.frame.width))
         }
         return 0.0
     }

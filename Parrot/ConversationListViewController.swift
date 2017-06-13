@@ -20,6 +20,8 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2 {
         v.flowDirection = .top
         v.selectionType = .any
         v.delegate = self
+        let l = v.collectionView.collectionViewLayout as! NSCollectionViewListLayout
+        l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 64)))
         v.scrollView.automaticallyAdjustsContentInsets = true
         v.collectionView.register(ConversationCell.self, forItemWithIdentifier: "\(ConversationCell.self)")
         //v.insets = EdgeInsets(top: 114.0, left: 0, bottom: 0, right: 0)
