@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4803639D1C1D08490008E9F5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4803639C1C1D08490008E9F5 /* main.swift */; };
+		4807F4F01EF0A36100C32132 /* DirectoryActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4EF1EF0A36100C32132 /* DirectoryActions.swift */; };
+		4807F4F31EF0A40B00C32132 /* ConversationListActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4F21EF0A40B00C32132 /* ConversationListActions.swift */; };
+		4807F4F61EF0A42C00C32132 /* MessageListActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4F51EF0A42C00C32132 /* MessageListActions.swift */; };
 		4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300391D25B54300768D79 /* ServiceRegistry.swift */; };
 		4813004B1D26BD4900768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		4813004C1D26BD4900768D79 /* ParrotServiceExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -308,6 +311,9 @@
 /* Begin PBXFileReference section */
 		4803639A1C1D08490008E9F5 /* parrot-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "parrot-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4803639C1C1D08490008E9F5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		4807F4EF1EF0A36100C32132 /* DirectoryActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryActions.swift; sourceTree = "<group>"; };
+		4807F4F21EF0A40B00C32132 /* ConversationListActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListActions.swift; sourceTree = "<group>"; };
+		4807F4F51EF0A42C00C32132 /* MessageListActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListActions.swift; sourceTree = "<group>"; };
 		481300341D257FE300768D79 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		481300391D25B54300768D79 /* ServiceRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServiceRegistry.swift; path = ParrotServiceExtension/ServiceRegistry.swift; sourceTree = SOURCE_ROOT; };
 		481300441D26BD4900768D79 /* ParrotServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ParrotServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -565,6 +571,30 @@
 			path = "parrot-cli";
 			sourceTree = "<group>";
 		};
+		4807F4EE1EF0A34F00C32132 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4807F4EF1EF0A36100C32132 /* DirectoryActions.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		4807F4F11EF0A3FD00C32132 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4807F4F21EF0A40B00C32132 /* ConversationListActions.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		4807F4F41EF0A41C00C32132 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4807F4F51EF0A42C00C32132 /* MessageListActions.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		481300451D26BD4900768D79 /* ParrotServiceExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -591,6 +621,7 @@
 		481687231C39D3400070EEF6 /* Message List */ = {
 			isa = PBXGroup;
 			children = (
+				4807F4F41EF0A41C00C32132 /* Model */,
 				4869A9D71EE5D18600764594 /* View */,
 			);
 			name = "Message List";
@@ -667,6 +698,7 @@
 		4835ECA51C1C61F300193EBC /* Conversation List */ = {
 			isa = PBXGroup;
 			children = (
+				4807F4F11EF0A3FD00C32132 /* Model */,
 				4869A9D81EE5D19800764594 /* View */,
 			);
 			name = "Conversation List";
@@ -686,6 +718,7 @@
 		4869A9351EDB857200764594 /* Directory List */ = {
 			isa = PBXGroup;
 			children = (
+				4807F4EE1EF0A34F00C32132 /* Model */,
 				4869A9361EDB857D00764594 /* View */,
 			);
 			name = "Directory List";
@@ -1527,6 +1560,7 @@
 				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
 				4869A9B01EE16F5D00764594 /* Auth+WebDelegate.swift in Sources */,
 				488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */,
+				4807F4F31EF0A40B00C32132 /* ConversationListActions.swift in Sources */,
 				4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */,
 				4869A93A1EDB859700764594 /* PersonCell.swift in Sources */,
 				4869A9431EDF456C00764594 /* Event.swift in Sources */,
@@ -1545,6 +1579,8 @@
 				4869A9A91EE1058100764594 /* WindowAnimators.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
+				4807F4F61EF0A42C00C32132 /* MessageListActions.swift in Sources */,
+				4807F4F01EF0A36100C32132 /* DirectoryActions.swift in Sources */,
 				48212BE91ECCEB7700B7765B /* ConversationSettingsViewController.swift in Sources */,
 				4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */,
 			);
