@@ -729,6 +729,7 @@
 			children = (
 				4869A9391EDB859700764594 /* PersonCell.swift */,
 				4869A9371EDB858A00764594 /* DirectoryListViewController.swift */,
+				4869A9D51EE5C78200764594 /* PersonIndicatorViewController.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -747,7 +748,6 @@
 				4835ECA61C1C620000193EBC /* MessageCell.swift */,
 				4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */,
 				489FB0881DF7CC4900AEBD1D /* MessageInputViewController.swift */,
-				4869A9D51EE5C78200764594 /* PersonIndicatorViewController.swift */,
 				48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */,
 			);
 			name = View;

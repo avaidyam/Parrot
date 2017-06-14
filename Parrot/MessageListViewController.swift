@@ -622,9 +622,9 @@ TextInputHost, ListViewDataDelegate2 {
     private var _usersToIndicators: [Person.IdentifierType: PersonIndicatorViewController] = [:]
     private func _usersToItems() -> [NSToolbarItem] {
         if _usersToIndicators.count == 0 {
-            _ = self.conversation?.users.filter { !$0.me }.map {
+            self.conversation?.users.filter { !$0.me }.forEach {
                 let vc = PersonIndicatorViewController()
-                vc.representedObject = $0
+                vc.person = $0
                 _usersToIndicators[$0.identifier] = vc
             }
         }
@@ -635,8 +635,8 @@ TextInputHost, ListViewDataDelegate2 {
         let h = self.toolbarContainer
         h.templateItems = Set(_usersToItems())
         var order = _usersToItems().map { $0.itemIdentifier }
-        order.insert(NSToolbarItem.Identifier.flexibleSpace, at: 0)
-        order.append(NSToolbarItem.Identifier.flexibleSpace)
+        order.insert(.flexibleSpace, at: 0)
+        order.append(.flexibleSpace)
         h.itemOrder = order
         
         /*
