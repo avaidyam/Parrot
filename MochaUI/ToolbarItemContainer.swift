@@ -119,6 +119,10 @@ fileprivate extension NSToolbar {
     }
 }
 
+public extension NSToolbarItem.Identifier {
+    public static let none = NSToolbarItem.Identifier(rawValue: "")
+}
+
 //
 //
 //

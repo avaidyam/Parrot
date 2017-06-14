@@ -6,19 +6,27 @@ import ParrotServiceExtension
 
 /* TODO: UISearchController for NSViewControllers. */
 
-public class DirectoryListViewController: NSViewController, WindowPresentable, ListViewDataDelegate2 {
+public class DirectoryListViewController: NSViewController, WindowPresentable,
+NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
     
-    private lazy var listView: ListView2 = {
-        let v = ListView2().modernize(wantsLayer: true)
-        v.flowDirection = .top
-        v.selectionType = .any
-        v.delegate = self
-        let l = v.collectionView.collectionViewLayout as! NSCollectionViewListLayout
-        l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 64)))
-        v.scrollView.automaticallyAdjustsContentInsets = true
-        v.collectionView.register(PersonCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"))
-        //v.insets = EdgeInsets(top: 114.0, left: 0, bottom: 0, right: 0)
-        return v
+    private lazy var collectionView: NSCollectionView = {
+        let c = NSCollectionView(frame: .zero)//.modernize(wantsLayer: true)
+        //c.layerContentsRedrawPolicy = .onSetNeedsDisplay // FIXME: causes a random white background
+        c.dataSource = self
+        c.delegate = self
+        c.backgroundColors = [.clear]
+        c.selectionType = .any
+        
+        let l = NSCollectionViewListLayout()
+        l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 48)))
+        c.collectionViewLayout = l
+        c.register(PersonCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"))
+        return c
+    }()
+    
+    private lazy var scrollView: NSScrollView = {
+        let s = NSScrollView(for: self.collectionView).modernize()
+        return s
     }()
     
     private lazy var indicator: MessageProgressView = {
@@ -83,7 +91,7 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     
     private lazy var updateInterpolation: Interpolate = {
         let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
-            self?.listView.alphaValue = CGFloat(alpha)
+            self?.scrollView.alphaValue = CGFloat(alpha)
             self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
         indicatorAnim.add(at: 1.0) {
@@ -93,7 +101,7 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
         }
         indicatorAnim.handlerRunPolicy = .always
         let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { [weak self] scale in
-            self?.listView.layer!.setAffineTransform(scale)
+            self?.scrollView.layer!.setAffineTransform(scale)
         }
         let group = Interpolate.group(indicatorAnim, scaleAnim)
         return group
@@ -105,27 +113,13 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     
     var directory: ParrotServiceExtension.Directory? {
         didSet {
-            self.listView.update(animated: false) {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+                self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
+                                                             scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
                 self.updateInterpolation.animate(duration: 1.5)
             }
         }
-    }
-    
-    public func numberOfItems(in: ListView2) -> [UInt] {
-        return [UInt(self.directory?.people.count ?? 0)]
-    }
-    
-    public func object(in: ListView2, at: ListView2.Index) -> Any? {
-        let t = Array(self.directory!.people.values)[Int(at.item)]
-        return t
-    }
-    
-    public func itemClass(in: ListView2, at: ListView2.Index) -> NSCollectionViewItem.Type {
-        return PersonCell.self
-    }
-    
-    public func cellHeight(in view: ListView2, at: ListView2.Index) -> Double {
-        return 32.0 + 16.0 /* padding */
     }
     
     //
@@ -134,16 +128,16 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
     
     public override func loadView() {
         self.view = NSVisualEffectView()
-        self.view.add(subviews: [self.listView, self.indicator])
+        self.view.add(subviews: [self.scrollView, self.indicator])
         
         self.view.width >= 128
         self.view.height >= 128
         self.view.centerX == self.indicator.centerX
         self.view.centerY == self.indicator.centerY
-        self.view.centerX == self.listView.centerX
-        self.view.centerY == self.listView.centerY
-        self.view.width == self.listView.width
-        self.view.height == self.listView.height
+        self.view.centerX == self.scrollView.centerX
+        self.view.centerY == self.scrollView.centerY
+        self.view.width == self.scrollView.width
+        self.view.height == self.scrollView.height
     }
     
     public func prepare(window: NSWindow) {
@@ -175,7 +169,7 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
             self.directory = c.directory
             DispatchQueue.main.async {
                 self.title = c.directory.me.fullName
-                self.listView.update()
+                self.collectionView.reloadData()
             }
         }
     }
@@ -184,10 +178,10 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
         syncAutosaveTitle()
         PopWindowAnimator.show(self.view.window!)
         
-        let frame = self.listView.layer!.frame
-        self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        self.listView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
-        self.listView.alphaValue = 0.0
+        let frame = self.scrollView.layer!.frame
+        self.scrollView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        self.scrollView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
+        self.scrollView.alphaValue = 0.0
         self.indicator.startAnimation()
         
         ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
@@ -209,6 +203,24 @@ public class DirectoryListViewController: NSViewController, WindowPresentable, L
         self.view.window?.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
         self.view.window?.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
     }
+    
+    ///
+    ///
+    ///
+    
+    public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.directory!.people.count
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"), for: indexPath)
+        item.representedObject = Array(self.directory!.people.values)[indexPath.item]
+        return item
+    }
+    
+    ///
+    ///
+    ///
     
     @objc private func toggleSearchField(_ sender: NSButton!) {
         self.searchAccessory.animator().isHidden = (sender.state != NSControl.StateValue.on)

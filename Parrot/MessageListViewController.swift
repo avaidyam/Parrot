@@ -33,8 +33,8 @@ public extension Notification.Name {
     public static let OpenConversationsUpdated = Notification.Name(rawValue: "Parrot.OpenConversationsUpdated")
 }
 
-public class MessageListViewController: NSViewController, WindowPresentable,
-TextInputHost, ListViewDataDelegate2 {
+public class MessageListViewController: NSViewController, WindowPresentable, TextInputHost,
+NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
     
     /// The openConversations keeps track of all open conversations and when the
     /// list is updated, it is cached and all selections are synchronized.
@@ -91,16 +91,25 @@ TextInputHost, ListViewDataDelegate2 {
         return v
     }()
     
-    /// The primary messages content ListView.
-    private lazy var listView: ListView2 = {
-        let v = ListView2().modernize(wantsLayer: true)
-        v.flowDirection = .bottom
-        v.selectionType = .none
-        v.delegate = self
-        v.collectionView.register(MessageCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"))
+    private lazy var collectionView: NSCollectionView = {
+        let c = NSCollectionView(frame: .zero)//.modernize(wantsLayer: true)
+        //c.layerContentsRedrawPolicy = .onSetNeedsDisplay // FIXME: causes a random white background
+        c.dataSource = self
+        c.delegate = self
+        c.backgroundColors = [.clear]
+        c.selectionType = .none
         
-        v.insets = NSEdgeInsets(top: 36.0, left: 0, bottom: 40.0, right: 0)
-        return v
+        let l = NSCollectionViewListLayout()
+        l.layoutDefinition = .custom
+        c.collectionViewLayout = l
+        c.register(MessageCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"))
+        return c
+    }()
+    
+    private lazy var scrollView: NSScrollView = {
+        let s = NSScrollView(for: self.collectionView).modernize()
+        s.contentInsets = NSEdgeInsets(top: 36.0, left: 0, bottom: 32.0, right: 0)
+        return s
     }()
     
     /// The "loading data" indicator.
@@ -137,7 +146,7 @@ TextInputHost, ListViewDataDelegate2 {
     /// The interpolation animation run when data is loaded.
     private lazy var updateInterpolation: Interpolate = {
         let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
-            self?.listView.alphaValue = CGFloat(alpha)
+            self?.scrollView.alphaValue = CGFloat(alpha)
             self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
         indicatorAnim.add(at: 0.0) { [weak self] in
@@ -152,7 +161,7 @@ TextInputHost, ListViewDataDelegate2 {
         }
         indicatorAnim.handlerRunPolicy = .always
         let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { [weak self] scale in
-            self?.listView.layer!.setAffineTransform(scale)
+            self?.scrollView.layer!.setAffineTransform(scale)
         }
         let group = Interpolate.group(indicatorAnim, scaleAnim)
         return group
@@ -213,39 +222,7 @@ TextInputHost, ListViewDataDelegate2 {
     // MARK: ListView: DataSource + Delegate
     //
     
-    public func numberOfItems(in: ListView2) -> [UInt] {
-        return [UInt(self.dataSource.count)]
-    }
-    
-    public func object(in: ListView2, at: ListView2.Index) -> Any? {
-        let row = Int(at.item)
-        if let f = self.dataSource[row] as? Focus {
-            return f
-        }
-        
-        let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
-        let next = (row + 1) < self.dataSource.count && (row + 1) < 0
-        return EventStreamItemBundle(current: self.dataSource[row],
-                                     previous: prev ? self.dataSource[row - 1] : nil,
-                                     next: next ? self.dataSource[row + 1] : nil) as Any
-    }
-    
-    public func itemClass(in: ListView2, at: ListView2.Index) -> NSCollectionViewItem.Type {
-        //let row = Int(at.item)
-        return MessageCell.self
-    }
-    
-    public func cellHeight(in view: ListView2, at: ListView2.Index) -> Double {
-        let row = Int(at.item)
-        if let _ = self.dataSource[row] as? Focus {
-            return 32.0
-        } else if let m = self.dataSource[row] as? Message {
-            return Double(MessageCell.measure(m.text, view.frame.width))
-        }
-        return 0.0
-    }
-    
-    public func reachedEdge(in: ListView2, edge: NSRectEdge) {
+    public func reachedEdge(in: NSView, edge: NSRectEdge) {
         func scrollback() {
             guard self.updateToken == false else { return }
             let first = self.dataSource[0] as? IChatMessageEvent
@@ -253,7 +230,7 @@ TextInputHost, ListViewDataDelegate2 {
                 let count = self.dataSource.count
                 self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent }, at: 0)
                 DispatchQueue.main.async {
-                    self.listView.collectionView.insertItems(at: Set((0..<(self.dataSource.count - count)).map { IndexPath(item: $0, section: 0) }))
+                    self.collectionView.insertItems(at: Set((0..<(self.dataSource.count - count)).map { IndexPath(item: $0, section: 0) }))
                     /*self.listView.tableView.insertRows(at: IndexSet(integersIn: 0..<(self.dataSource.count - count)),
                                                        withAnimation: .slideDown)
                     */
@@ -276,16 +253,16 @@ TextInputHost, ListViewDataDelegate2 {
     
     public override func loadView() {
         self.view = NSView()
-        self.view.add(subviews: [self.listView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone])
+        self.view.add(subviews: [self.scrollView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone])
         
         self.view.width >= 96
         self.view.height >= 128
         self.view.centerX == self.indicator.centerX
         self.view.centerY == self.indicator.centerY
-        self.view.centerX == self.listView.centerX
-        self.view.centerY == self.listView.centerY
-        self.view.width == self.listView.width
-        self.view.height == self.listView.height
+        self.view.centerX == self.scrollView.centerX
+        self.view.centerY == self.scrollView.centerY
+        self.view.width == self.scrollView.width
+        self.view.height == self.scrollView.height
         self.moduleView.left == self.view.left
         self.moduleView.right == self.view.right
         self.moduleView.bottom == self.view.bottom
@@ -313,7 +290,7 @@ TextInputHost, ListViewDataDelegate2 {
     
     public override func viewDidLoad() {
         self.indicator.startAnimation(nil)
-        self.listView.alphaValue = 0.0
+        self.scrollView.alphaValue = 0.0
     }
     
     public override func viewWillAppear() {
@@ -353,6 +330,32 @@ TextInputHost, ListViewDataDelegate2 {
         
         ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
         ParrotAppearance.unregisterVibrancyStyleListener(observer: self)
+    }
+    
+    ///
+    ///
+    ///
+    
+    public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.dataSource.count
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
+        let msg = self.dataSource[indexPath.item] as? Message
+        return NSSize(width: collectionView.bounds.width,
+                      height: MessageCell.measure(msg?.text ?? "", collectionView.bounds.width))
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"), for: indexPath)
+        
+        let row = indexPath.item
+        let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
+        let next = (row + 1) < self.dataSource.count && (row + 1) < 0
+        item.representedObject = EventStreamItemBundle(current: self.dataSource[row],
+                                                       previous: prev ? self.dataSource[row - 1] : nil,
+                                                       next: next ? self.dataSource[row + 1] : nil) as Any
+        return item
     }
     
     //
@@ -415,9 +418,8 @@ TextInputHost, ListViewDataDelegate2 {
                 
                 let group = self.updateInterpolation // lazy
                 DispatchQueue.main.async {
-                    self.listView.update(animated: false) {
-                        group.animate(duration: 0.5)
-                    }
+                    self.collectionView.reloadData()
+                    group.animate(duration: 0.5)
                 }
 			}
             
@@ -432,7 +434,7 @@ TextInputHost, ListViewDataDelegate2 {
             self.dataSource.append(event)
             log.debug("section 0: \(self.dataSource.count)")
             let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
-            self.listView.collectionView.insertItems(at: [idx])
+            self.collectionView.insertItems(at: [idx])
             //self.listView.scroll(toRow: self.dataSource.count - 1)
         }
     }
@@ -577,7 +579,7 @@ TextInputHost, ListViewDataDelegate2 {
     */
     
     public func resized(to: Double) {
-        self.listView.insets = NSEdgeInsets(top: 36.0, left: 0, bottom: CGFloat(to), right: 0)
+        self.scrollView.contentInsets = NSEdgeInsets(top: 36.0, left: 0, bottom: CGFloat(to), right: 0)
         self.moduleView.needsLayout = true
         self.moduleView.layoutSubtreeIfNeeded()
     }

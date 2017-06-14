@@ -11,8 +11,9 @@ private var _hangoutsClient: Client? = nil
 
 private let log = Logger(subsystem: "Parrot.Today.Global")
 
-class ParrotViewController: NSViewController, ListViewDataDelegate {
+class ParrotViewController: NSViewController {
     
+    /*
     private lazy var listView: ListView = {
         let v = ListView()
         v.flowDirection = .top
@@ -107,6 +108,7 @@ class ParrotViewController: NSViewController, ListViewDataDelegate {
     
     public func conversationList(_ list: Hangouts.ConversationList, didChangeTypingStatus status: ITypingStatusMessage, forUser: User) {}
     public func conversationList(_ list: Hangouts.ConversationList, didReceiveWatermarkNotification status: IWatermarkNotification) {}
+ */
 }
 
 // Boilerplate stuff for NCWidgetProviding

@@ -1,4 +1,5 @@
 import Cocoa
+import Mocha
 
 // TODO: sticky headers
 // TODO: section/item collapse
@@ -576,3 +577,51 @@ prefix func !(_ lhs: NSLayoutConstraint.Orientation) -> NSLayoutConstraint.Orien
     }
 }
 
+public extension NSCollectionView {
+    
+    /// The SelectionType describes the manner in which the ListView may be selected by the user.
+    public enum SelectionType {
+        
+        /// No items may be selected.
+        case none
+        
+        /// One item may be selected at a time.
+        case one
+        
+        /// One item must be selected at all times.
+        case exactOne
+        
+        /// At least one item must be selected at all times.
+        case leastOne
+        
+        /// Multiple items may be selected at a time.
+        case any
+    }
+    
+    /// Determines the selection capabilities of the ListView.
+    public var selectionType: SelectionType {
+        get { return _selectionTypeProp.get(self) ?? .none }
+        set(s) { _selectionTypeProp.set(self, value: s)
+            
+            self.allowsMultipleSelection = (s == .leastOne || s == .any)
+            self.allowsEmptySelection = (s == .none || s == .one || s == .any)
+            self.isSelectable = (s != .none)
+        }
+    }
+}
+private var _selectionTypeProp = AssociatedProperty<NSCollectionView, NSCollectionView.SelectionType>(.strong)
+
+public extension NSScrollView {
+    
+    @nonobjc
+    public convenience init(for contentView: NSView? = nil) {
+        self.init(frame: .zero)
+        self.wantsLayer = true
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.drawsBackground = false
+        self.backgroundColor = .clear
+        self.borderType = .noBorder
+        self.documentView = contentView
+        self.hasVerticalScroller = true
+    }
+}

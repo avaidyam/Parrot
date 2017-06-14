@@ -39,8 +39,9 @@ public class PersonIndicatorViewController: NSViewController {
     public static let contactStore = CNContactStore()
     
     public lazy var toolbarItem: NSToolbarItem = {
-        let i = NSToolbarItem(itemIdentifier: (self.identifier?.rawValue ?? "").map { NSToolbarItem.Identifier(rawValue: $0) }!)
-        i.visibilityPriority = NSToolbarItem.VisibilityPriority.high
+        let identifier = self.identifier != nil ? NSToolbarItem.Identifier(rawValue: self.identifier!.rawValue) : .none
+        let i = NSToolbarItem(itemIdentifier: identifier)
+        i.visibilityPriority = .high
         i.view = self.view
         //i.label = $0.fullName
         return i
@@ -60,7 +61,7 @@ public class PersonIndicatorViewController: NSViewController {
     
     public var isDimmed: Bool = false {
         didSet {
-            self.view.alphaValue = isDimmed ? 0.6 : 1.0
+            self.view.alphaValue = self.isDimmed ? 0.6 : 1.0
         }
     }
     
@@ -129,3 +130,4 @@ public class PersonIndicatorViewController: NSViewController {
         PersonIndicatorToolTipController.popover.performClose(nil)
     }
 }
+

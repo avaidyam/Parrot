@@ -9,7 +9,7 @@ import protocol ParrotServiceExtension.Conversation
 private let log = Logger(subsystem: "Parrot.Today.Cell")
 
 // A visual representation of a Conversation in a ListView.
-public class TodayConversationCell: NSTableCellView, NSTableViewCellProtocol {
+public class TodayConversationCell: NSTableCellView {
     
     public override var allowsVibrancy: Bool { return true }
     

@@ -13,19 +13,26 @@ let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteract
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
 public class ConversationListViewController: NSViewController, WindowPresentable,
-ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, NSSearchFieldDelegate {
+NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
     
-    private lazy var listView: ListView2 = {
-        let v = ListView2().modernize(wantsLayer: true)
-        v.flowDirection = .top
-        v.selectionType = .any
-        v.delegate = self
-        let l = v.collectionView.collectionViewLayout as! NSCollectionViewListLayout
+    private lazy var collectionView: NSCollectionView = {
+        let c = NSCollectionView(frame: .zero)//.modernize(wantsLayer: true)
+        //c.layerContentsRedrawPolicy = .onSetNeedsDisplay // FIXME: causes a random white background
+        c.dataSource = self
+        c.delegate = self
+        c.backgroundColors = [.clear]
+        c.selectionType = .any
+        
+        let l = NSCollectionViewListLayout()
         l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 64)))
-        v.scrollView.automaticallyAdjustsContentInsets = true
-        v.collectionView.register(ConversationCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"))
-        //v.insets = EdgeInsets(top: 114.0, left: 0, bottom: 0, right: 0)
-        return v
+        c.collectionViewLayout = l
+        c.register(ConversationCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"))
+        return c
+    }()
+    
+    private lazy var scrollView: NSScrollView = {
+        let s = NSScrollView(for: self.collectionView).modernize()
+        return s
     }()
     
     private lazy var indicator: MessageProgressView = {
@@ -36,7 +43,7 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
     private lazy var titleText: NSTextField = {
         let t = NSTextField(labelWithString: " Conversations").modernize(wantsLayer: true)
         t.textColor = NSColor.labelColor
-        t.font = NSFont.systemFont(ofSize: 32.0, weight: NSFont.Weight.heavy)
+        t.font = NSFont.systemFont(ofSize: 32.0, weight: .heavy)
         return t
     }()
     
@@ -98,7 +105,7 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
     
     private lazy var updateInterpolation: Interpolate = {
         let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
-            self?.listView.alphaValue = CGFloat(alpha)
+            self?.scrollView.alphaValue = CGFloat(alpha)
             self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
         indicatorAnim.add(at: 1.0) {
@@ -108,7 +115,7 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
         }
         indicatorAnim.handlerRunPolicy = .always
         let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { [weak self] scale in
-            self?.listView.layer!.setAffineTransform(scale)
+            self?.scrollView.layer!.setAffineTransform(scale)
         }
         let group = Interpolate.group(indicatorAnim, scaleAnim)
         return group
@@ -120,74 +127,25 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
     
     var conversationList: ConversationList? {
         didSet {
-            self.listView.update(animated: false) {
+            DispatchQueue.main.async {
+                self.recacheConversations()
+                self.collectionView.reloadData()
+                self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
+                                                             scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
                 self.updateInterpolation.animate(duration: 1.5)
             }
         }
     }
     
-    // FIXME: this is recomputed A LOT! bad idea...
-    var sortedConversations: [Conversation] {
-        guard self.conversationList != nil else { return [] }
-        return self.conversationList!.conversations.values
+    private var sortedConversations = [Conversation]()
+    
+    private func recacheConversations() {
+        guard self.conversationList != nil else {
+            self.sortedConversations = []; return
+        }
+        self.sortedConversations = self.conversationList!.conversations.values
             .filter { !$0.archived }
             .sorted { $0.timestamp > $1.timestamp }
-    }
-    
-    public func numberOfItems(in: ListView2) -> [UInt] {
-        return [UInt(self.sortedConversations.count)]
-    }
-    
-    public func object(in: ListView2, at: ListView2.Index) -> Any? {
-        return self.sortedConversations[Int(at.item)]
-    }
-    
-    public func itemClass(in: ListView2, at: ListView2.Index) -> NSCollectionViewItem.Type {
-        return ConversationCell.self
-    }
-    
-    public func cellHeight(in view: ListView2, at: ListView2.Index) -> Double {
-        return 48.0 + 16.0 /* padding */
-    }
-    
-    public func proposedSelection(in list: ListView2, at: [ListView2.Index], selecting: Bool) -> [ListView2.Index] {
-        return at//list.selection + at // Only additive!
-    }
-    
-    public func selectionChanged(in: ListView2, is selection: [ListView2.Index], selecting: Bool) {
-        let src = self.sortedConversations
-        let dest = Set(MessageListViewController.openConversations.keys)
-        let convs = Set(Array(self.listView.collectionView.selectionIndexPaths).map { src[Int($0.item)].identifier })
-        
-        // Conversations selected that we don't already have. --> ADD
-        convs.subtracting(dest).forEach { id in
-            let conv = self.sortedConversations.filter { $0.identifier == id }.first!
-            MessageListViewController.show(conversation: conv, parent: self.parent)
-        }
-        // Conversations we have that are not selected. --> REMOVE
-        dest.subtracting(convs).forEach { id in
-            let conv = self.sortedConversations.filter { $0.identifier == id }.first!
-            MessageListViewController.hide(conversation: conv)
-        }
-    }
-    
-    public func reachedEdge(in: ListView2, edge: NSRectEdge) {
-        func scrollback() {
-            guard self.updateToken == false else { return }
-            let _ = self.conversationList?.syncConversations(count: 25, since: self.conversationList!.syncTimestamp) { val in
-                DispatchQueue.main.async {
-                    self.listView.collectionView.reloadData()//.tableView.noteNumberOfRowsChanged()
-                    self.updateToken = false
-                }
-            }
-            self.updateToken = true
-        }
-        
-        // Driver/filter here:
-        switch edge {
-        case .minY: scrollback()
-        default: break
-        }
     }
     
     //
@@ -196,16 +154,16 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
     
     public override func loadView() {
         self.view = NSVisualEffectView()
-        self.view.add(subviews: [self.listView, self.indicator])
+        self.view.add(subviews: [self.scrollView, self.indicator])
         
         self.view.width >= 128
         self.view.height >= 128
         self.view.centerX == self.indicator.centerX
         self.view.centerY == self.indicator.centerY
-        self.view.centerX == self.listView.centerX
-        self.view.centerY == self.listView.centerY
-        self.view.width == self.listView.width
-        self.view.height == self.listView.height
+        self.view.centerX == self.scrollView.centerX
+        self.view.centerY == self.scrollView.centerY
+        self.view.width == self.scrollView.width
+        self.view.height == self.scrollView.height
         
         // Register for Conversation "delegate" changes.
         let c = NotificationCenter.default
@@ -256,7 +214,9 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
             self.conversationList = c.conversations
             
             DispatchQueue.main.async {
-                self.listView.update()
+                self.collectionView.reloadData()
+                self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
+                                                             scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
                 self.updateSelectionIndexes()
             }
             
@@ -271,10 +231,10 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
             PopWindowAnimator.show(self.view.window!)
         }
         
-        let frame = self.listView.layer!.frame
-        self.listView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        self.listView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
-        self.listView.alphaValue = 0.0
+        let frame = self.scrollView.layer!.frame
+        self.scrollView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        self.scrollView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
+        self.scrollView.alphaValue = 0.0
         self.indicator.startAnimation()
         
         ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
@@ -308,6 +268,54 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
         }
     }
     
+    ///
+    ///
+    ///
+    
+    public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.sortedConversations.count
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"), for: indexPath)
+        item.representedObject = self.sortedConversations[indexPath.item]
+        return item
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
+        indexPaths.map { self.sortedConversations[$0.item] }.forEach {
+            MessageListViewController.show(conversation: $0, parent: self.parent)
+        }
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
+        indexPaths.map { self.sortedConversations[$0.item] }.forEach {
+            MessageListViewController.hide(conversation: $0)
+        }
+    }
+    
+    
+    
+    public func reachedEdge(in: NSView, edge: NSRectEdge) {
+        func scrollback() {
+            guard self.updateToken == false else { return }
+            let _ = self.conversationList?.syncConversations(count: 25, since: self.conversationList!.syncTimestamp) { val in
+                self.recacheConversations()
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()//.tableView.noteNumberOfRowsChanged()
+                    self.updateToken = false
+                }
+            }
+            self.updateToken = true
+        }
+        
+        // Driver/filter here:
+        switch edge {
+        case .minY: scrollback()
+        default: break
+        }
+    }
+    
     //
     //
     //
@@ -325,7 +333,9 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
     
     private func updateList() {
         DispatchQueue.main.async {
-            self.listView.update()
+            self.collectionView.reloadData()
+            self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
+                                                         scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
             let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
             NSApp.badgeCount = UInt(unread)
             self.updateSelectionIndexes()
@@ -335,8 +345,8 @@ ListViewDataDelegate2, ListViewSelectionDelegate2, ListViewScrollbackDelegate2, 
     private func updateSelectionIndexes() {
         let paths = Array(MessageListViewController.openConversations.keys)
             .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
-            .map { (section: UInt(0), item: UInt($0)) }
-        self.listView.selection = paths
+            .map { IndexPath(item: $0, section: 0) }
+        self.collectionView.selectionIndexPaths = Set(paths)
     }
     
     @objc private func toggleSearchField(_ sender: NSButton!) {
