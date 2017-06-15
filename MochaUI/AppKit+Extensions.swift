@@ -371,6 +371,12 @@ public extension NSCollectionView {
         case any
     }
     
+    public func indexPathForLastItem() -> IndexPath {
+        let sec = self.numberOfSections - 1
+        let it = self.numberOfItems(inSection: sec) - 1
+        return IndexPath(item: it, section: sec)
+    }
+    
     /// Determines the selection capabilities of the ListView.
     public var selectionType: SelectionType {
         get { return _selectionTypeProp.get(self) ?? .none }

@@ -97,7 +97,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             let text = self.textLabel
             let appearance: NSAppearance = self.view.appearance ?? NSAppearance.current
             text.textColor = NSColor.labelColor
-            self.setColors()
+            //self.setColors()
             
             // NSTextView doesn't automatically change its text color when the
             // backing view's appearance changes, so we need to set it each time.
@@ -135,7 +135,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         
         // Only clip the text if the text isn't purely Emoji.
         if !text.string.isEmoji {
-            var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance == .dark ? .light : .dark)//NSColor.secondaryLabelColor
+            var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
             let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
             if  let q = Settings[setting] as? Data,
                 let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
@@ -145,12 +145,16 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
                 // This automatically adjusts labelColor to the right XOR mask.
                 text.appearance = color.isLight() ? .light : .dark
             } else {
-                text.appearance = self.view.effectiveAppearance == .dark ? .light : .dark//self.appearance
+                text.appearance = self.view.effectiveAppearance//self.appearance
             }
             text.layer?.backgroundColor = color.cgColor
         } else {
             text.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
         }
+    }
+    
+    public override func viewWillAppear() {
+        self.setColors()
     }
     
 	/// Allows the circle crop and masking to dynamically change.

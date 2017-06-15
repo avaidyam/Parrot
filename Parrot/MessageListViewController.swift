@@ -398,6 +398,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 let group = self.updateInterpolation // lazy
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
+                    DispatchQueue.main.async { // after layout pass
+                        self.collectionView.animator().scrollToItems(at: [self.collectionView.indexPathForLastItem()],
+                                                                     scrollPosition: [.nearestVerticalEdge, .nearestHorizontalEdge])
+                    }
                     group.animate(duration: 0.5)
                 }
 			}

@@ -5,6 +5,7 @@ import Mocha
 // TODO: section/item collapse
 // TODO: separators
 // TODO: section index
+// TODO: inverted layout
 //
 // TODO: type select
 // TODO: swipe actions

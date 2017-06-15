@@ -133,7 +133,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 self.recacheConversations()
                 self.collectionView.reloadData()
                 self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
-                                                             scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
+                                                             scrollPosition: [.centeredHorizontally, .nearestHorizontalEdge])
                 self.updateInterpolation.animate(duration: 1.5)
             }
         }
