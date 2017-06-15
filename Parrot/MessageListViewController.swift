@@ -100,9 +100,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         c.selectionType = .none
         
         let l = NSCollectionViewListLayout()
+        l.globalSections = (32, 0)
         l.layoutDefinition = .custom
         c.collectionViewLayout = l
         c.register(MessageCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"))
+        c.register(ReloadCell.self, forSupplementaryViewOfKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"))
         return c
     }()
     
@@ -219,35 +221,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     //
-    // MARK: ListView: DataSource + Delegate
-    //
-    
-    public func reachedEdge(in: NSView, edge: NSRectEdge) {
-        func scrollback() {
-            guard self.updateToken == false else { return }
-            let first = self.dataSource[0] as? IChatMessageEvent
-            self.conversation?.getEvents(event_id: first?.event.eventId, max_events: 50) { events in
-                let count = self.dataSource.count
-                self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent }, at: 0)
-                DispatchQueue.main.async {
-                    self.collectionView.insertItems(at: Set((0..<(self.dataSource.count - count)).map { IndexPath(item: $0, section: 0) }))
-                    /*self.listView.tableView.insertRows(at: IndexSet(integersIn: 0..<(self.dataSource.count - count)),
-                                                       withAnimation: .slideDown)
-                    */
-                    self.updateToken = false
-                }
-            }
-            self.updateToken = true
-        }
-        
-        // Driver/filter here:
-        switch edge {
-        case .maxY: scrollback()
-        default: break
-        }
-    }
-    
-    //
     // MARK: ViewController Events
     //
     
@@ -356,6 +329,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                                                        previous: prev ? self.dataSource[row - 1] : nil,
                                                        next: next ? self.dataSource[row + 1] : nil) as Any
         return item
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
+        let footer = collectionView.makeSupplementaryView(ofKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"), for: indexPath) as! ReloadCell
+        footer.handler = self.scrollback
+        return footer
     }
     
     //
@@ -577,6 +556,23 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 		self.drawer.drawerWindow?.animator().alphaValue = 0.0
 	}
     */
+    
+    private func scrollback() {
+        guard self.updateToken == false else { return }
+        let first = self.dataSource[0] as? IChatMessageEvent
+        self.conversation?.getEvents(event_id: first?.event.eventId, max_events: 50) { events in
+            let count = self.dataSource.count
+            self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent }, at: 0)
+            DispatchQueue.main.async {
+                self.collectionView.insertItems(at: Set((0..<(self.dataSource.count - count)).map { IndexPath(item: $0, section: 0) }))
+                /*self.listView.tableView.insertRows(at: IndexSet(integersIn: 0..<(self.dataSource.count - count)),
+                 withAnimation: .slideDown)
+                 */
+                self.updateToken = false
+            }
+        }
+        self.updateToken = true
+    }
     
     public func resized(to: Double) {
         self.scrollView.contentInsets = NSEdgeInsets(top: 36.0, left: 0, bottom: CGFloat(to), right: 0)

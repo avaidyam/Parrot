@@ -24,9 +24,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         c.selectionType = .any
         
         let l = NSCollectionViewListLayout()
+        l.globalSections = (0, 32)
         l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 64)))
         c.collectionViewLayout = l
         c.register(ConversationCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"))
+        c.register(ReloadCell.self, forSupplementaryViewOfKind: .globalFooter, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"))
         return c
     }()
     
@@ -282,6 +284,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return item
     }
     
+    public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
+        let footer = collectionView.makeSupplementaryView(ofKind: .globalFooter, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"), for: indexPath) as! ReloadCell
+        footer.handler = self.scrollback
+        return footer
+    }
+    
     public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
         indexPaths.map { self.sortedConversations[$0.item] }.forEach {
             MessageListViewController.show(conversation: $0, parent: self.parent)
@@ -291,28 +299,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
         indexPaths.map { self.sortedConversations[$0.item] }.forEach {
             MessageListViewController.hide(conversation: $0)
-        }
-    }
-    
-    
-    
-    public func reachedEdge(in: NSView, edge: NSRectEdge) {
-        func scrollback() {
-            guard self.updateToken == false else { return }
-            let _ = self.conversationList?.syncConversations(count: 25, since: self.conversationList!.syncTimestamp) { val in
-                self.recacheConversations()
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()//.tableView.noteNumberOfRowsChanged()
-                    self.updateToken = false
-                }
-            }
-            self.updateToken = true
-        }
-        
-        // Driver/filter here:
-        switch edge {
-        case .minY: scrollback()
-        default: break
         }
     }
     
@@ -329,6 +315,18 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     @objc public func conversationDidUpdateList(_ notification: Notification) {
         self.updateList()
+    }
+    
+    private func scrollback() {
+        guard self.updateToken == false else { return }
+        let _ = self.conversationList?.syncConversations(count: 25, since: self.conversationList!.syncTimestamp) { val in
+            self.recacheConversations()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()//.tableView.noteNumberOfRowsChanged()
+                self.updateToken = false
+            }
+        }
+        self.updateToken = true
     }
     
     private func updateList() {

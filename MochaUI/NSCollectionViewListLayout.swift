@@ -3,7 +3,6 @@ import Mocha
 
 // TODO: sticky headers
 // TODO: section/item collapse
-// TODO: global header/footer
 // TODO: separators
 // TODO: section index
 //
@@ -113,10 +112,17 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
     fileprivate var metricsProvider: MetricsProvider = DelegateMetricsProvider()
     
     private var sections = [Section]()
+    private var globalSection: (NSCollectionViewLayoutAttributes?, NSCollectionViewLayoutAttributes?) = (nil, nil)
     private var flattenedSections = [NSCollectionViewLayoutAttributes]()
     
     public var animations = Animations()
     public var separatorStyle = SeparatorStyle()
+    
+    /// Provides the `(header, footer)` for the whole list, regardless of the
+    /// number of sections, or any headers or footers in those sections.
+    /// Note: the corresponding IndexPath is (0, 0) and meaningless.
+    public var globalSections: (CGFloat?, CGFloat?) = (nil, nil)
+    
     public var layoutDefinition: LayoutDefinition = .custom {
         didSet {
             //guard oldValue != self.layoutDefinition else { return }
@@ -146,7 +152,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         var attributes: NSCollectionViewLayoutAttributes? = nil
         switch i {
         case .header:
-            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: NSCollectionView.SupplementaryElementKind.sectionHeader, with: idx)
+            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: .sectionHeader, with: idx)
             attributes!.frame = self.cache.frame(for: m)
             self.sections[idx.section].header = attributes!
         case .item:
@@ -154,11 +160,25 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             attributes!.frame = self.cache.frame(for: m)
             self.sections[idx.section].items.insert(attributes!, at: idx.item)
         case .footer:
-            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: NSCollectionView.SupplementaryElementKind.sectionFooter, with: idx)
+            attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: .sectionFooter, with: idx)
             attributes!.frame = self.cache.frame(for: m)
             self.sections[idx.section].footer = attributes!
         }
         self.flattenedSections.append(attributes!)
+    }
+    
+    private func didGlobalCompute(_ footer: Bool, _ m: DynamicCache.MeasuredItem) {
+        if !footer {
+            let attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: .globalHeader, with: .zero)
+            attributes.frame = self.cache.frame(for: m)
+            self.globalSection.0 = attributes
+            self.flattenedSections.append(attributes)
+        } else {
+            let attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: .globalFooter, with: .zero)
+            attributes.frame = self.cache.frame(for: m)
+            self.globalSection.1 = attributes
+            self.flattenedSections.append(attributes)
+        }
     }
     
     //
@@ -256,18 +276,18 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
     
     ///
     private struct GlobalMetricsProvider: MetricsProvider {
-        func size(for itemType: DynamicCache.ItemType, at idx: IndexPath, in collectionView: NSCollectionView) -> CGSize {
+        func size(for itemType: DynamicCache.ItemType, at idx: IndexPath, in collectionView: NSCollectionView) -> CGSize? {
             guard let layout = collectionView.collectionViewLayout as? NSCollectionViewListLayout
                 else { return .zero }
             switch layout.layoutDefinition {
             case .global(let def):
                 switch itemType {
                 case .header:
-                    return def.header ?? .zero
+                    return def.header
                 case .item:
-                    return def.item ?? .zero
+                    return def.item
                 case .footer:
-                    return def.footer ?? .zero
+                    return def.footer
                 }
             default: return .zero
             }
@@ -276,18 +296,18 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
     
     ///
     private struct PerSectionMetricsProvider: MetricsProvider {
-        func size(for itemType: DynamicCache.ItemType, at idx: IndexPath, in collectionView: NSCollectionView) -> CGSize {
+        func size(for itemType: DynamicCache.ItemType, at idx: IndexPath, in collectionView: NSCollectionView) -> CGSize? {
             guard let layout = collectionView.collectionViewLayout as? NSCollectionViewListLayout
                 else { return .zero }
             switch layout.layoutDefinition {
             case .perSection(let sections):
                 switch itemType {
                 case .header:
-                    return sections[idx.section].header ?? .zero
+                    return sections[idx.section].header
                 case .item:
-                    return sections[idx.section].item ?? .zero
+                    return sections[idx.section].item
                 case .footer:
-                    return sections[idx.section].footer ?? .zero
+                    return sections[idx.section].footer
                 }
             default: return .zero
             }
@@ -296,7 +316,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
     
     ///
     private struct DelegateMetricsProvider: MetricsProvider {
-        func size(for itemType: DynamicCache.ItemType, at idx: IndexPath, in collectionView: NSCollectionView) -> CGSize {
+        func size(for itemType: DynamicCache.ItemType, at idx: IndexPath, in collectionView: NSCollectionView) -> CGSize? {
             guard let layout = collectionView.collectionViewLayout as? NSCollectionViewListLayout
                 else { return .zero }
             guard let delegate = collectionView.delegate as? NSCollectionViewDelegateFlowLayout
@@ -305,13 +325,13 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             switch itemType {
             case .header:
                 let header = delegate.collectionView(_:layout:referenceSizeForHeaderInSection:)
-                return header?(collectionView, layout, idx.section) ?? .zero
+                return header?(collectionView, layout, idx.section)
             case .item:
                 let item = delegate.collectionView(_:layout:sizeForItemAt:)
-                return item?(collectionView, layout, idx) ?? .zero
+                return item?(collectionView, layout, idx)
             case .footer:
                 let footer = delegate.collectionView(_:layout:referenceSizeForFooterInSection:)
-                return footer?(collectionView, layout, idx.section) ?? .zero
+                return footer?(collectionView, layout, idx.section)
             }
         }
     }
@@ -348,12 +368,12 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             fileprivate var index: Int
             fileprivate var count: Int
             
-            fileprivate var header: MeasuredItem
-            fileprivate var footer: MeasuredItem
+            fileprivate var header: MeasuredItem?
+            fileprivate var footer: MeasuredItem?
             fileprivate var items: [MeasuredItem]
             
-            fileprivate init(index: Int = 0, header: MeasuredItem = MeasuredItem(),
-                             footer: MeasuredItem = MeasuredItem(), items: [MeasuredItem] = []) {
+            fileprivate init(index: Int = 0, header: MeasuredItem? = nil,
+                             footer: MeasuredItem? = nil, items: [MeasuredItem] = []) {
                 self.index = index
                 self.header = header
                 self.footer = footer
@@ -397,53 +417,55 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             layout.willCompute(counts)
             
             // List Header
-            //let globalHeaderSize = header?(collectionView, layout, -1).value(forAxis: self.axis) ?? 0
-            //self.headers.insert(MeasuredItem(origin: currentY, size: globalHeaderSize), at: -1)
-            //currentOrigin += globalHeaderSize
+            if let listHeaderMetric = layout.globalSections.0 {
+                let m = MeasuredItem(origin: currentOrigin, size: listHeaderMetric)
+                currentOrigin += listHeaderMetric
+                layout.didGlobalCompute(false, m)
+            }
             
             // List Contents
             for i in 0..<counts.count {
                 var currentSection = MeasuredSection(index: i)
                 
                 // Section Header
-                let headerSize = metricsProvider.size(for: .header, at: IndexPath(item: 0, section: i), in: collectionView).value(forAxis: self.axis)
-                currentSection.header = MeasuredItem(origin: currentOrigin, size: headerSize)
-                currentOrigin += headerSize
-                
-                // Ping Handler
-                layout.didCompute(.header, IndexPath(item: 0, section: i), currentSection.header)
+                if let headerMetric = metricsProvider.size(for: .header, at: IndexPath(item: 0, section: i), in: collectionView) {
+                    let headerSize = headerMetric.value(forAxis: self.axis)
+                    currentSection.header = MeasuredItem(origin: currentOrigin, size: headerSize)
+                    currentOrigin += headerSize
+                    layout.didCompute(.header, IndexPath(item: 0, section: i), currentSection.header!)
+                }
                 
                 // Section Contents
                 var sectionItems = [MeasuredItem]()
                 for j in 0..<counts[i] {
                     
                     // Cell
-                    let itemSize = metricsProvider.size(for: .item, at: IndexPath(item: j, section: i), in: collectionView).value(forAxis: self.axis)
+                    let itemSize = metricsProvider.size(for: .item, at: IndexPath(item: j, section: i), in: collectionView)!.value(forAxis: self.axis)
                     let itemMeasure = MeasuredItem(origin: currentOrigin, size: itemSize)
                     sectionItems.insert(itemMeasure, at: j)
                     currentOrigin += itemSize
-                    
-                    // Ping Handler
                     layout.didCompute(.item, IndexPath(item: j, section: i), itemMeasure)
                 }
                 currentSection.items = sectionItems
                 currentSection.count = counts[i]
                 
                 // Section Footer
-                let footerSize = metricsProvider.size(for: .footer, at: IndexPath(item: 0, section: i), in: collectionView).value(forAxis: self.axis)
-                currentSection.footer = MeasuredItem(origin: currentOrigin, size: footerSize)
-                currentOrigin += footerSize
-                
-                // Ping Handler
-                layout.didCompute(.footer, IndexPath(item: 0, section: i), currentSection.footer)
+                if let footerMetric = metricsProvider.size(for: .footer, at: IndexPath(item: 0, section: i), in: collectionView) {
+                    let footerSize = footerMetric.value(forAxis: self.axis)
+                    currentSection.footer = MeasuredItem(origin: currentOrigin, size: footerSize)
+                    currentOrigin += footerSize
+                    layout.didCompute(.footer, IndexPath(item: 0, section: i), currentSection.footer!)
+                }
                 
                 self.sections.insert(currentSection, at: i)
             }
             
             // List Footer
-            //let globalFooterSize = footer?(collectionView, layout, -1).value(forAxis: self.axis) ?? 0
-            //self.footers.insert(MeasuredItem(origin: currentY, size: globalFooterSize), at: -1)
-            //currentOrigin += globalFooterSize
+            if let listFooterMetric = layout.globalSections.1 {
+                let m = MeasuredItem(origin: currentOrigin, size: listFooterMetric)
+                currentOrigin += listFooterMetric
+                layout.didGlobalCompute(true, m)
+            }
             
             // Aggregate
             self.axisSize = currentOrigin
@@ -478,7 +500,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
 
 public typealias SizeMetrics = NSCollectionViewListLayout.LayoutDefinition.SizeMetrics
 fileprivate protocol MetricsProvider {
-    func size(for: NSCollectionViewListLayout.DynamicCache.ItemType, at: IndexPath, in: NSCollectionView) -> CGSize
+    func size(for: NSCollectionViewListLayout.DynamicCache.ItemType, at: IndexPath, in: NSCollectionView) -> CGSize?
 }
 
 @discardableResult
@@ -577,51 +599,11 @@ prefix func !(_ lhs: NSLayoutConstraint.Orientation) -> NSLayoutConstraint.Orien
     }
 }
 
-public extension NSCollectionView {
-    
-    /// The SelectionType describes the manner in which the ListView may be selected by the user.
-    public enum SelectionType {
-        
-        /// No items may be selected.
-        case none
-        
-        /// One item may be selected at a time.
-        case one
-        
-        /// One item must be selected at all times.
-        case exactOne
-        
-        /// At least one item must be selected at all times.
-        case leastOne
-        
-        /// Multiple items may be selected at a time.
-        case any
-    }
-    
-    /// Determines the selection capabilities of the ListView.
-    public var selectionType: SelectionType {
-        get { return _selectionTypeProp.get(self) ?? .none }
-        set(s) { _selectionTypeProp.set(self, value: s)
-            
-            self.allowsMultipleSelection = (s == .leastOne || s == .any)
-            self.allowsEmptySelection = (s == .none || s == .one || s == .any)
-            self.isSelectable = (s != .none)
-        }
-    }
+public extension IndexPath {
+    public static let zero = IndexPath(item: 0, section: 0)
 }
-private var _selectionTypeProp = AssociatedProperty<NSCollectionView, NSCollectionView.SelectionType>(.strong)
 
-public extension NSScrollView {
-    
-    @nonobjc
-    public convenience init(for contentView: NSView? = nil) {
-        self.init(frame: .zero)
-        self.wantsLayer = true
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.drawsBackground = false
-        self.backgroundColor = .clear
-        self.borderType = .noBorder
-        self.documentView = contentView
-        self.hasVerticalScroller = true
-    }
+public extension NSCollectionView.SupplementaryElementKind {
+    public static let globalHeader = NSCollectionView.SupplementaryElementKind(rawValue: "NSCollectionView.SupplementaryElementKind.GlobalHeader")
+    public static let globalFooter = NSCollectionView.SupplementaryElementKind(rawValue: "NSCollectionView.SupplementaryElementKind.GlobalFooter")
 }

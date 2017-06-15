@@ -10,6 +10,7 @@ public extension Notification {
     public struct Conversation { private init() {}
         public static let DidCreate = NSNotification.Name(rawValue: "Parrot.Conversation.DidCreate")
         public static let DidDelete = NSNotification.Name(rawValue: "Parrot.Conversation.DidDelete")
+        public static let DidChangeArchive = NSNotification.Name(rawValue: "Parrot.Conversation.DidChangeArchive")
         
         public static let DidJoin = NSNotification.Name(rawValue: "Parrot.Conversation.DidJoin")
         public static let DidLeave = NSNotification.Name(rawValue: "Parrot.Conversation.DidLeave")
@@ -17,6 +18,7 @@ public extension Notification {
         public static let DidUpdate = NSNotification.Name(rawValue: "Parrot.Conversation.DidUpdate")
         public static let DidChangeMute = NSNotification.Name(rawValue: "Parrot.Conversation.DidChangeMute")
         
+        public static let DidChangeFocus = NSNotification.Name(rawValue: "Parrot.Conversation.DidChangeFocus")
         public static let DidChangeTypingStatus = NSNotification.Name(rawValue: "Parrot.Conversation.DidChangeTypingStatus")
         public static let DidReceiveWatermark = NSNotification.Name(rawValue: "Parrot.Conversation.DidReceiveWatermark")
         
@@ -31,16 +33,3 @@ public extension Notification {
         public static let DidChangePresence = NSNotification.Name(rawValue: "Parrot.Person.DidChangePresence")
     }
 }
-
-/*
-	conversationNotification(note)
-	eventNotification(note)
-	focusNotification(note)
-	typingNotification(note)
-	notificationLevelNotification(note)
-	watermarkNotification(note)
-	viewModification(note)
-	selfPresenceNotification(note)
-	deleteNotification(note)
-	presenceNotification(note)
-*/
