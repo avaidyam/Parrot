@@ -2,15 +2,17 @@ import Foundation
 import AppKit
 import Mocha
 import MochaUI
+import Contacts
+import ContactsUI
 import protocol ParrotServiceExtension.Person
 
 // A visual representation of a Conversation in a ListView.
 public class PersonCell: NSCollectionViewItem {
     
-    private lazy var photoLayer: CALayer = {
-        let l = CALayer()
-        l.masksToBounds = true
-        return l
+    private lazy var photoButton: NSButton = {
+        let b = NSButton(title: "", target: self, action: #selector(self.showContactCard(_:))).modernize(wantsLayer: true)
+        b.isBordered = false
+        return b
     }()
     
     private lazy var nameLabel: NSTextField = {
@@ -35,6 +37,7 @@ public class PersonCell: NSCollectionViewItem {
         return v
     }()
     
+    private var presenceSubscription: Subscription? = nil
     
     // Constraint setup here.
     public override func loadView() {
@@ -42,15 +45,14 @@ public class PersonCell: NSCollectionViewItem {
         self.view.translatesAutoresizingMaskIntoConstraints = false
         //self.canDrawSubviewsIntoLayer = true
         self.view.wantsLayer = true
-        self.view.add(subviews: [self.nameLabel, self.timeLabel, self.textLabel])
-        self.view.add(sublayer: self.photoLayer)
+        self.view.add(subviews: [self.photoButton, self.nameLabel, self.timeLabel, self.textLabel])
         
-        self.photoLayer.layout.left == self.view.left + 4
-        self.photoLayer.layout.centerY == self.view.centerY
-        self.photoLayer.layout.width == 40
-        self.photoLayer.layout.height == 40
-        self.photoLayer.layout.right == self.nameLabel.left - 4
-        self.photoLayer.layout.right == self.textLabel.left - 4
+        self.photoButton.left == self.view.left + 4
+        self.photoButton.centerY == self.view.centerY
+        self.photoButton.width == 40
+        self.photoButton.height == 40
+        self.photoButton.right == self.nameLabel.left - 4
+        self.photoButton.right == self.textLabel.left - 4
         self.nameLabel.top == self.view.top + 4
         self.nameLabel.right == self.timeLabel.left - 4
         self.nameLabel.bottom == self.textLabel.top - 4
@@ -60,11 +62,14 @@ public class PersonCell: NSCollectionViewItem {
         self.timeLabel.bottom == self.textLabel.top - 4
         self.textLabel.right == self.view.right - 4
         self.textLabel.bottom == self.view.bottom - 4
+        
+        self.presenceSubscription = AutoSubscription(kind: Notification.Person.DidChangePresence, self.updateStatusText)
     }
     
     // Upon assignment of the represented object, configure the subview contents.
     public override var representedObject: Any? {
         didSet {
+            //self.presenceSubscription?.deactivate()
             guard let person = self.representedObject as? Person else { return }
             
             self.nameLabel.stringValue = person.fullName
@@ -72,8 +77,8 @@ public class PersonCell: NSCollectionViewItem {
             self.textLabel.stringValue = person.mood
             self.textLabel.toolTip = person.mood
             self.timeLabel.stringValue = person.lastSeen.relativeString()
-            self.timeLabel.toolTip = "\(person.lastSeen.fullString())"
-            self.photoLayer.contents = person.image
+            self.timeLabel.toolTip = person.lastSeen.fullString()
+            self.photoButton.image = person.image
         }
     }
     
@@ -91,7 +96,44 @@ public class PersonCell: NSCollectionViewItem {
     
     // Allows the photo view's circle crop to dynamically match size.
     public override func viewDidLayout() {
-        self.photoLayer.syncLayout()
-        self.photoLayer.cornerRadius = self.photoLayer.frame.width / 2.0
+        self.photoButton.layer!.cornerRadius = self.photoButton.frame.width / 2.0
+    }
+    
+    private func updateStatusText(_ event: Subscription.Event) {
+        guard let person = self.representedObject as? Person else { return }
+        self.textLabel.stringValue = person.mood
+        self.textLabel.toolTip = person.mood
+    }
+    
+    @objc private func showContactCard(_ sender: Any? = nil) {
+        func show(_ c: CNContact) {
+            let cv = CNContactViewController()
+            cv.contact = c
+            cv.preferredContentSize = CGSize(width: 300, height: 400)
+            //guard let cell = self else { return }
+            
+            self.presentViewController(cv, asPopoverRelativeTo: self.photoButton.bounds,
+                                       of: self.photoButton, preferredEdge: .minX,
+                                       behavior: .transient)
+            
+            // The VC shows up offset so it's important to adjust it.
+            cv.view.frame.origin.x -= 40.0
+            cv.view.frame.size.width += 52.0
+        }
+        
+        // contact fetching first, then showing up there ^
+        guard let person = self.representedObject as? Person else { return }
+        let request = CNContactFetchRequest(keysToFetch: [CNContactViewController.descriptorForRequiredKeys()])
+        request.predicate = CNContact.predicateForContacts(matchingName: person.fullName)
+        DispatchQueue.global(qos: .background).async {
+            do {
+                try PersonIndicatorViewController.contactStore.enumerateContacts(with: request) { c, stop in
+                    stop.pointee = true
+                    DispatchQueue.main.async {
+                        show(c)
+                    }
+                }
+            } catch { }
+        }
     }
 }
