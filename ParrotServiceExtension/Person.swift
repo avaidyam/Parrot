@@ -6,13 +6,15 @@ public enum Reachability {
 	/// The Person is currently unavailable.
 	case unavailable
 	
-	/// The Person is currently available on a mobile device.
-	case mobile
+	/// The Person is currently available on a phone device.
+	case phone
 	
 	/// The Person is currently available on a tablet device.
 	case tablet
 	
 	/// The Person is currently available on a desktop device.
+    /// If the person is available but no device information is provided,
+    /// this is the default available state.
 	case desktop
 }
 

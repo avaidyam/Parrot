@@ -247,7 +247,7 @@ public class UserList: Directory {
                     user.lastSeen = Date.from(UTC: Double(usec))
                 }
                 //if ??? {
-                user.reachability = pres.toReachability()
+                    user.reachability = pres.toReachability()
                 //}
                 if let mood = pres.moodSetting?.moodMessage?.moodContent {
                     user.mood = mood.toText()
@@ -275,7 +275,7 @@ public class UserList: Directory {
                             user.lastSeen = Date.from(UTC: Double(usec))
                         }
                         //if ??? {
-                        user.reachability = pres.toReachability()
+                            user.reachability = pres.toReachability()
                         //}
                         if let mood = pres.moodSetting?.moodMessage?.moodContent {
                             user.mood = mood.toText()
@@ -332,16 +332,26 @@ fileprivate extension MoodContent {
     }
 }
 
+// TODO: doesn't account for available vs reachable
+// Note: available=true shows a green dot, reachable=true does not...?
 fileprivate extension Presence {
     func toReachability() -> Reachability {
-        //let available = self.available ?? false
-        //let reachable = self.reachable ?? false
-        //let mobile = self.deviceStatus?.mobile ?? false
-        //let desktop = self.deviceStatus?.desktop ?? false
-        //let tablet = self.deviceStatus?.tablet ?? false
-        //let none = !mobile && !desktop && !tablet
-        let reach = Reachability.unavailable
-        return reach
+        let available = self.available ?? false
+        let reachable = self.reachable ?? false
+        let mobile = self.deviceStatus?.mobile ?? false
+        let desktop = self.deviceStatus?.desktop ?? false
+        let tablet = self.deviceStatus?.tablet ?? false
+        
+        if mobile {
+            return .phone
+        } else if tablet {
+            return .tablet
+        } else if desktop {
+            return .desktop
+        } else if available || reachable {
+            return .desktop
+        }
+        return .unavailable
     }
 }
 

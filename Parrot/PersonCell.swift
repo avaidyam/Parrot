@@ -72,11 +72,19 @@ public class PersonCell: NSCollectionViewItem {
             //self.presenceSubscription?.deactivate()
             guard let person = self.representedObject as? Person else { return }
             
+            var prefix = " "
+            switch person.reachability {
+            case .unavailable: break
+            case .phone: prefix = "📱 "
+            case .tablet: prefix = "📱 " //💻
+            case .desktop: prefix = "🖥 "
+            }
+            
             self.nameLabel.stringValue = person.fullName
             self.nameLabel.toolTip = person.fullName
             self.textLabel.stringValue = person.mood
             self.textLabel.toolTip = person.mood
-            self.timeLabel.stringValue = person.lastSeen.relativeString()
+            self.timeLabel.stringValue = prefix + person.lastSeen.relativeString()
             self.timeLabel.toolTip = person.lastSeen.fullString()
             self.photoButton.image = person.image
         }
@@ -103,6 +111,17 @@ public class PersonCell: NSCollectionViewItem {
         guard let person = self.representedObject as? Person else { return }
         self.textLabel.stringValue = person.mood
         self.textLabel.toolTip = person.mood
+        
+        var prefix = " "
+        switch person.reachability {
+        case .unavailable: break
+        case .phone: prefix = "📱 "
+        case .tablet: prefix = "📱 " //💻
+        case .desktop: prefix = "🖥 "
+        }
+        
+        self.timeLabel.stringValue = prefix + person.lastSeen.relativeString()
+        self.timeLabel.toolTip = person.lastSeen.fullString()
     }
     
     @objc private func showContactCard(_ sender: Any? = nil) {
