@@ -233,8 +233,11 @@ public final class Client: Service {
 		// trimmed down to 1 request that includes the bare minimum to make
 		// things work.
 		func addChannelServices() {
-			let inner = ["3": ["1": ["1": "babel"]]]//[..., ["3": ["1": ["1": "babel_presence_last_seen"]]]]
-			let dat = try! JSONSerialization.data(withJSONObject: inner, options: [])
+            let services = ["babel", "babel_presence_last_seen"]
+            let mapped = services.map { ["3": ["1": ["1": $0]]] }
+            
+			//let inner = ["3": ["1": ["1": "babel"]]]//[..., ["3": ["1": ["1": "babel_presence_last_seen"]]]]
+			let dat = try! JSONSerialization.data(withJSONObject: mapped, options: [])
 			let str = NSString(data: dat, encoding: String.Encoding.utf8.rawValue)! as String
 			
 			self.channel?.sendMaps(mapList: [["p": str]])

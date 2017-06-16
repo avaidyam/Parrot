@@ -113,7 +113,7 @@ public class PersonCell: NSCollectionViewItem {
             //guard let cell = self else { return }
             
             self.presentViewController(cv, asPopoverRelativeTo: self.photoButton.bounds,
-                                       of: self.photoButton, preferredEdge: .minX,
+                                       of: self.photoButton, preferredEdge: .maxX,
                                        behavior: .transient)
             
             // The VC shows up offset so it's important to adjust it.

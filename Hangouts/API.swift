@@ -190,7 +190,7 @@ public extension Client {
 		let data = [
 			self.getRequestHeader(),
 			chat_ids.map { [$0] },
-			[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // what are FieldMasks 4, 5, 8, 9?
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // what are FieldMasks 4, 5, 8, 9?
 		] as [Any]
 		self.channel?.request(endpoint: "presence/querypresence", body: data, use_json: false) { r in
 			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
