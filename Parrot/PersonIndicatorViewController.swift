@@ -39,11 +39,11 @@ public class PersonIndicatorViewController: NSViewController {
     public static let contactStore = CNContactStore()
     
     public lazy var toolbarItem: NSToolbarItem = {
-        let identifier = self.identifier != nil ? NSToolbarItem.Identifier(rawValue: self.identifier!.rawValue) : .none
-        let i = NSToolbarItem(itemIdentifier: identifier)
+        assert(self.person != nil, "Cannot create a toolbar item without an assigned person!")
+        let i = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: self.person!.identifier))
         i.visibilityPriority = .high
         i.view = self.view
-        //i.label = $0.fullName
+        i.label = self.person?.fullName ?? ""
         return i
     }()
     
@@ -51,7 +51,6 @@ public class PersonIndicatorViewController: NSViewController {
         didSet {
             guard self.person != nil else { return }
             self.identifier = NSUserInterfaceItemIdentifier(rawValue: self.person!.identifier)
-            //self.toolbarItem.itemIdentifier = person.identifier
             (self.view as? NSButton)?.image = self.person!.image
             self.cacheContact()
         }

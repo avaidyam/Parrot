@@ -42,7 +42,7 @@ public class ReloadCell: NSView {
     public override var allowsVibrancy: Bool { return true }
     public override var wantsUpdateLayer: Bool { return true }
     public override func updateLayer() {
-        self.layer!.backgroundColor = NSColor.white.withAlphaComponent(0.2).cgColor
+        //self.layer!.backgroundColor = NSColor.white.withAlphaComponent(0.2).cgColor
     }
     
     public override func prepareForReuse() {

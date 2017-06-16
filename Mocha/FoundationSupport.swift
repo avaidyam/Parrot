@@ -258,10 +258,8 @@ public extension Date {
 	}
 }
 
-/// Can hold any (including non-object) type as an object type.
-public class Wrapper<T> {
-	public let element: T
-	public init(_ value: T) {
-		self.element = value
-	}
+public extension Collection {
+    public subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
 }

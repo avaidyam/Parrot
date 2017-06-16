@@ -399,6 +399,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
                     DispatchQueue.main.async { // after layout pass
+                        guard self.dataSource.count > 0 else { return }
                         self.collectionView.animator().scrollToItems(at: [self.collectionView.indexPathForLastItem()],
                                                                      scrollPosition: [.nearestVerticalEdge, .nearestHorizontalEdge])
                     }
@@ -563,7 +564,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     private func scrollback() {
         guard self.updateToken == false else { return }
-        let first = self.dataSource[0] as? IChatMessageEvent
+        let first = self.dataSource[safe: 0] as? IChatMessageEvent
         self.conversation?.getEvents(event_id: first?.event.eventId, max_events: 50) { events in
             let count = self.dataSource.count
             self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent }, at: 0)

@@ -374,7 +374,7 @@ public extension NSCollectionView {
     public func indexPathForLastItem() -> IndexPath {
         let sec = self.numberOfSections - 1
         let it = self.numberOfItems(inSection: sec) - 1
-        return IndexPath(item: it, section: sec)
+        return IndexPath(item: max(0, it), section: max(0, sec))
     }
     
     /// Determines the selection capabilities of the ListView.
@@ -403,4 +403,16 @@ public extension NSScrollView {
         self.documentView = contentView
         self.hasVerticalScroller = true
     }
+}
+
+@discardableResult
+func benchmark<T>(_ only60FPS: Bool = true, _ title: String = #function, _ handler: () -> (T)) -> T {
+    let t = CACurrentMediaTime()
+    let x = handler()
+    
+    let ms = (CACurrentMediaTime() - t)
+    if (!only60FPS) || (only60FPS && ms > (1/60)) {
+        print("Operation \(title) took \(ms * 1000)ms!")
+    }
+    return x
 }

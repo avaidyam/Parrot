@@ -167,34 +167,11 @@ public class UserList: Directory {
                 for pres2 in $0!.presenceResult {
                     let userid = pres2.userId!
                     let pres = pres2.presence!
-                    
-                    //let available = pres.available ?? false
-                    //let reachable = pres.reachable ?? false
-                    //let mobile = pres.deviceStatus?.mobile ?? false
-                    //let desktop = pres.deviceStatus?.desktop ?? false
-                    //let tablet = pres.deviceStatus?.tablet ?? false
-                    //let none = !mobile && !desktop && !tablet
-                    let reach = Reachability.unavailable
-                    
+                    let reach = pres.toReachability()
                     let lastSeenUTC = pres.lastSeen?.lastSeenTimestampUsec ?? 0
                     let lastSeenDate = Date.from(UTC: Double(lastSeenUTC))
-                    
-                    var lines = [""]
-                    let moodSegments = pres.moodSetting?.moodMessage?.moodContent?.segment ?? []
-                    for segment in moodSegments {
-                        if segment.type == nil { continue }
-                        switch (segment.type) {
-                        case SegmentType.Text, SegmentType.Link:
-                            let replacement = lines.last! + segment.text!
-                            lines.removeLast()
-                            lines.append(replacement)
-                        case SegmentType.LineBreak:
-                            lines.append("\n")
-                        default:
-                            log.warning("Ignoring unknown chat message segment type: \(segment.type)")
-                        }
-                    }
-                    let moodText = lines.filter { $0 != "" }.joined(separator: "\n")
+                    let mood = pres.moodSetting?.moodMessage?.moodContent
+                    let moodText = mood?.toText() ?? ""
                     let user = self.users[User.ID(chatID: userid.chatId!, gaiaID: userid.gaiaId!)]
                     user?.lastSeen = lastSeenDate
                     user?.reachability = reach
@@ -254,25 +231,50 @@ public class UserList: Directory {
 		hangoutsCenter.removeObserver(self)
 	}
     
+    /// Note: all notification objects are expected to be deltas.
     @objc internal func _updatedState(_ notification: Notification) {
-        if  let userInfo = notification.userInfo, let state_update = userInfo[Client.didUpdateStateKey],
-            let conversation = ((state_update as! Wrapper<StateUpdate>).element).conversation {
+        guard   let userInfo = notification.userInfo,
+                let update = userInfo[Client.didUpdateStateKey] as? StateUpdate
+        else { return }
+        
+        // Cache all un-cached people from conversation deltas.
+        if  let conversation = update.conversation {
             _ = self.addPeople(from: [conversation])
+        }
+        
+        if let note = update.selfPresenceNotification {
+            let user = (self.me as! User)
+            if let state = note.clientPresenceState?.state {
+                user.lastSeen = state == .DesktopActive ? Date() : Date(timeIntervalSince1970: 0)
+            }
+            if let mood = note.moodState?.moodSetting?.moodMessage?.moodContent {
+                user.mood = mood.toText()
+            }
+            user.reachability = .desktop
+            
+            NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
+        } else if let note = update.presenceNotification {
+            for presence in note.presence {
+                guard   let id1 = presence.userId?.chatId, let id2 = presence.userId?.gaiaId,
+                        let user = self.users[User.ID(chatID: id1, gaiaID: id2)],
+                        let pres = presence.presence
+                else { continue }
+                
+                if let usec = pres.lastSeen?.lastSeenTimestampUsec {
+                    user.lastSeen = Date.from(UTC: Double(usec))
+                }
+                //if ??? {
+                    user.reachability = pres.toReachability()
+                //}
+                if let mood = pres.moodSetting?.moodMessage?.moodContent {
+                    user.mood = mood.toText()
+                }
+                
+                NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
+            }
         }
     }
 }
-
-// TODO: Make this better...
-/*
-func await(qos: DispatchQoS = .default, flags: DispatchWorkItemFlags = [], _ block: @escaping () -> Void) {
-    let s = DispatchSemaphore(value: 0)
-    let w = DispatchWorkItem(flags: .assignCurrentContext, block: block)
-    w.notify(queue: .main) {
-        s.signal()
-    }
-    s.wait()
-}
-*/
 
 
 // EXTENSIONS:
@@ -295,5 +297,36 @@ public extension User {
 	}
     public static func ==(lhs: User, rhs: User) -> Bool {
         return lhs.id == rhs.id
+    }
+}
+
+fileprivate extension MoodContent {
+    func toText() -> String {
+        var lines = ""
+        for segment in self.segment {
+            if segment.type == nil { continue }
+            switch (segment.type) {
+            case SegmentType.Text, SegmentType.Link:
+                lines += segment.text!
+            case SegmentType.LineBreak:
+                lines += "\n"
+            default:
+                log.warning("Ignoring unknown chat message segment type: \(segment.type)")
+            }
+        }
+        return lines
+    }
+}
+
+fileprivate extension Presence {
+    func toReachability() -> Reachability {
+        //let available = self.available ?? false
+        //let reachable = self.reachable ?? false
+        //let mobile = self.deviceStatus?.mobile ?? false
+        //let desktop = self.deviceStatus?.desktop ?? false
+        //let tablet = self.deviceStatus?.tablet ?? false
+        //let none = !mobile && !desktop && !tablet
+        let reach = Reachability.unavailable
+        return reach
     }
 }

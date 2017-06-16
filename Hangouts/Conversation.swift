@@ -647,10 +647,9 @@ extension ConversationList {
     
     // Receive a ClientStateUpdate and fan out to Conversations
     @objc public func clientDidUpdateState(_ note: Notification) {
-        guard let val = (note.userInfo)?[Client.didUpdateStateKey] as? Wrapper<StateUpdate> else {
+        guard let update = (note.userInfo)?[Client.didUpdateStateKey] as? StateUpdate else {
             log.error("Encountered an error! \(note)"); return
         }
-        let update = val.element
         
         if let note = update.conversationNotification {
             log.debug("clientDidUpdateState: conversationNotification")
@@ -673,15 +672,9 @@ extension ConversationList {
         } else if let note = update.viewModification {
             log.debug("clientDidUpdateState: viewModification")
             _viewModification(note)
-        } else if let note = update.selfPresenceNotification {
-            log.debug("clientDidUpdateState: selfPresenceNotification")
-            _selfPresenceNotification(note)
         } else if let note = update.deleteNotification {
             log.debug("clientDidUpdateState: deleteNotification")
             _deleteNotification(note)
-        } else if let note = update.presenceNotification {
-            log.debug("clientDidUpdateState: presenceNotification")
-            _presenceNotification(note)
         }
     }
     
@@ -752,15 +745,7 @@ extension ConversationList {
         log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
     }
     
-    public func _selfPresenceNotification(_ note: SelfPresenceNotification) {
-        log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
-    }
-    
     public func _deleteNotification(_ note: DeleteActionNotification) {
-        log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
-    }
-    
-    public func _presenceNotification(_ note: PresenceNotification) {
         log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
     }
 }

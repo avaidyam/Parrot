@@ -504,24 +504,6 @@ fileprivate protocol MetricsProvider {
     func size(for: NSCollectionViewListLayout.DynamicCache.ItemType, at: IndexPath, in: NSCollectionView) -> CGSize?
 }
 
-@discardableResult
-func benchmark<T>(_ only60FPS: Bool = true, _ title: String = #function, _ handler: () -> (T)) -> T {
-    let t = CACurrentMediaTime()
-    let x = handler()
-    
-    let ms = (CACurrentMediaTime() - t)
-    if (!only60FPS) || (only60FPS && ms > (1/60)) {
-        print("Operation \(title) took \(ms * 1000)ms!")
-    }
-    return x
-}
-
-extension Collection {
-    subscript (safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
-    }
-}
-
 ///
 /// AxisSizable
 ///

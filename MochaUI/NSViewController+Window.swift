@@ -158,7 +158,7 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
         self.undisplay(viewController: viewController)
     }
     
-    public func windowWillClose(_ notification: Notification) {
+    @objc public func windowWillClose(_ notification: Notification) {
         guard let c = self.window?.contentViewController else { return }
         if let p = c.presenting {
             p.dismiss(c)

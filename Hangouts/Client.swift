@@ -270,7 +270,7 @@ public final class Client: Service {
                     
 					hangoutsCenter.post(
 						name: Client.didUpdateStateNotification, object: self,
-						userInfo: [Client.didUpdateStateKey: Wrapper(state_update)])
+						userInfo: [Client.didUpdateStateKey: state_update])
 				}
 			} else {
 				log.warning("Ignoring message: \(payload[0])")
