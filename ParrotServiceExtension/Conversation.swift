@@ -16,12 +16,9 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
 	/// The set of people involved in this Conversation.
     var participants: [Person] { get }
     
-    /// Set the current user's focus for the conversation.
-    var selfFocus: FocusMode { get set }
-	
 	/// The focus information for each participant in the Conversation.
 	/// There is guaranteed to be one Focus item per participant.
-	var focus: [Focus] { get }
+	var focus: [Person.IdentifierType: FocusMode] { get }
 	
 	/// The set of all events in this Conversation.
 	var eventStream: [EventStreamItem] { get }
@@ -48,6 +45,8 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
 	// send(String)
 	// send(Image)
 	// send(Sticker)
+    
+    func focus(mode: FocusMode)
     
     func send(message: String)
 }

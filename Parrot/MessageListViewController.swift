@@ -176,9 +176,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private var focusComponents: (TypingHelper.State, Bool) = (.stopped, false) {
         didSet {
             switch self.focusComponents.0 {
-            case .started: self.conversation?.selfFocus = .typing
-            case .paused: self.conversation?.selfFocus = .enteredText
-            case .stopped: self.conversation?.selfFocus = self.focusComponents.1 ? .here : .away
+            case .started: self.conversation?.focus(mode: .typing)
+            case .paused: self.conversation?.focus(mode: .enteredText)
+            case .stopped: self.conversation?.focus(mode: self.focusComponents.1 ? .here : .away)
             }
         }
     }
@@ -364,12 +364,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             
             // Register for Conversation "delegate" changes.
             let c = NotificationCenter.default
-            c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidReceiveEvent(_:)),
+            c.addObserver(self, selector: #selector(self.conversationDidReceiveEvent(_:)),
                           name: Notification.Conversation.DidReceiveEvent, object: self.conversation!)
-            c.addObserver(self, selector: #selector(MessageListViewController.conversationDidReceiveWatermark(_:)),
+            c.addObserver(self, selector: #selector(self.conversationDidReceiveWatermark(_:)),
                           name: Notification.Conversation.DidReceiveWatermark, object: self.conversation!)
-            c.addObserver(self, selector: #selector(MessageListViewController.conversationDidChangeTypingStatus(_:)),
+            c.addObserver(self, selector: #selector(self.conversationDidChangeTypingStatus(_:)),
                           name: Notification.Conversation.DidChangeTypingStatus, object: self.conversation!)
+            c.addObserver(self, selector: #selector(self.conversationDidChangeFocus(_:)),
+                          name: Notification.Conversation.DidChangeFocus, object: self.conversation!)
 			
 			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
@@ -438,6 +440,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             mode = .here
         }
         self.focusModeChanged(IFocus("", identifier: "", sender: forUser, timestamp: Date(), mode: mode))
+    }
+    
+    @objc public func conversationDidChangeFocus(_ notification: Notification) {
+        for (u, f) in self.conversation!.focus {
+            self._usersToIndicators[u]?.isDimmed = f == .away
+        }
     }
     
     @objc public func conversationDidReceiveWatermark(_ notification: Notification) {
@@ -526,11 +534,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 			self.conversation?.updateReadTimestamp()
 			
 			// Get current states
-			for state in self.conversation!.readStates {
+			/*for state in self.conversation!.readStates {
 				let person = self.conversation!.client.directory.people[state.participantId!.gaiaId!]!
 				let timestamp = Date.from(UTC: Double(state.latestReadTimestamp!))
 				log.debug("state => { person: \(person.nameComponents), timestamp: \(timestamp) }")
-			}
+			}*/
         }
     }
     
@@ -628,6 +636,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             self.conversation?.users.filter { !$0.me }.forEach {
                 let vc = PersonIndicatorViewController()
                 vc.person = $0
+                vc.isDimmed = self.conversation!.focus[$0.identifier] == .away
                 _usersToIndicators[$0.identifier] = vc
             }
         }

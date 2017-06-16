@@ -34,8 +34,10 @@ public class IConversation: ParrotServiceExtension.Conversation {
             self._cachedEvents = nil
         }
     }
-	public var readStates: [UserReadState] = []
-    public var typingStatuses = Dictionary<User.ID, TypingType>()
+    
+	fileprivate var readStates: [UserReadState] = []
+    fileprivate var typingStatuses = Dictionary<User.ID, TypingType>()
+    fileprivate var focuses = Dictionary<User.ID, Bool>()
 
     //public var delegate: ConversationDelegate?
     public var user_list: UserList {
@@ -179,58 +181,46 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		e.deliveryMedium = getDefaultDeliveryMedium()
 		return e
 	}
-
-    public var otherUserIsTyping: Bool {
-        get {
-            return self.typingStatuses.filter {
-                (arg) -> Bool in let (k, _) = arg; return !self.user_list[k].me
-            }.map {
-                (arg) -> Bool in let (_, v) = arg; return v == TypingType.Started
-            }.first ?? false
-        }
-    }
-	
-    /* FIXME: only send if changed!! */
-    public var selfFocus: FocusMode {
-        get {
-            return .away
-        }
-        set {
-            guard newValue != self.selfFocus else { return }
-            switch newValue {
-            case .away:
-                self.client.setFocus(conversation_id: id, focused: false)
-                self.client.setTyping(conversation_id: id, typing: .Stopped)
-            case .here:
-                self.client.setFocus(conversation_id: id, focused: true)
-                self.client.setTyping(conversation_id: id, typing: .Stopped)
-            case .typing:
-                self.client.setFocus(conversation_id: id, focused: true)
-                self.client.setTyping(conversation_id: id, typing: .Started)
-            case .enteredText:
-                self.client.setFocus(conversation_id: id, focused: true)
-                self.client.setTyping(conversation_id: id, typing: .Paused)
+    
+    public var focus: [Person.IdentifierType: FocusMode] {
+        var dict = [String: FocusMode]()
+        for u in self.users {
+            if let type = self.typingStatuses[u.id], type == .Started {
+                dict[u.identifier] = .typing
+            } else if let type = self.typingStatuses[u.id], type == .Paused {
+                dict[u.identifier] = .enteredText
+            } else if let fcs = self.focuses[u.id] {
+                dict[u.identifier] = fcs ? .here : .away
+            } else {
+                let gv = self.conversation.networkType.contains(.GoogleVoice)
+                dict[u.identifier] = gv ? .here : .away // DNE case
             }
         }
+        return dict
     }
-	
-	public var focus: [Focus] {
-		var focuses = [Focus]()
-		for r in self.conversation.readState {
-			let person = self.client.directory.people[r.participantId!.gaiaId!]
-			let read = Date.from(UTC: Double(r.latestReadTimestamp!))
-			//let t = self.typingStatuses[id]
-			let f = IFocus(self.serviceIdentifier, identifier: "", sender: person, timestamp: read, mode: .away)
-			focuses.append(f)
-		}
-		return focuses
-	}
+    
+    public func focus(mode: FocusMode) {
+        switch mode {
+        case .away:
+            self.client.setFocus(conversation_id: id, focused: false)
+            self.client.setTyping(conversation_id: id, typing: .Stopped)
+        case .here:
+            self.client.setFocus(conversation_id: id, focused: true)
+            self.client.setTyping(conversation_id: id, typing: .Stopped)
+        case .typing:
+            self.client.setFocus(conversation_id: id, focused: true)
+            self.client.setTyping(conversation_id: id, typing: .Started)
+        case .enteredText:
+            self.client.setFocus(conversation_id: id, focused: true)
+            self.client.setTyping(conversation_id: id, typing: .Paused)
+        }
+    }
 	
 	public var muted: Bool {
 		get {
             log.debug("NOT IMPLEMENTED: Conversation.muted.get!")
 			return false
-			//return self.setConversationNotificationLevel(level: <#T##NotificationLevel#>, cb: nil)
+			//return self.setConversationNotificationLevel(level: , cb: nil)
 		}
 		set {
 			self.setConversationNotificationLevel(level: (newValue ? .Quiet : .Ring), cb: nil)
@@ -352,14 +342,9 @@ public class IConversation: ParrotServiceExtension.Conversation {
         let existingTypingStatus = typingStatuses[user.id]
         if existingTypingStatus == nil || existingTypingStatus! != status {
             typingStatuses[user.id] = status
-            NotificationCenter.default.post(name: Notification.Conversation.DidChangeTypingStatus, object: self, userInfo: ["user": user, "status": status])
-            //delegate?.conversation(self, didChangeTypingStatusForUser: user, toStatus: status)
+            NotificationCenter.default.post(name: Notification.Conversation.DidChangeTypingStatus,
+                                            object: self, userInfo: ["user": user, "status": status])
         }
-    }
-
-    public func handleWatermarkNotification(status: IWatermarkNotification) {
-        NotificationCenter.default.post(name: Notification.Conversation.DidReceiveWatermark, object: self, userInfo: ["status": status])
-		//delegate?.conversation(self, didReceiveWatermarkNotification: status)
     }
 
     public var _messages: [IChatMessageEvent] {
@@ -472,7 +457,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
 		}
 		set {
-			log.info("can't set name yet!")
+            self.client.renameConversation(conversation_id: self.id, name: newValue)
 		}
     }
 
@@ -652,84 +637,61 @@ extension ConversationList {
         }
         
         if let note = update.conversationNotification {
-            log.debug("clientDidUpdateState: conversationNotification")
-            _conversationNotification(note)
-        } else if let note = update.eventNotification {
-            log.debug("clientDidUpdateState: eventNotification")
-            _eventNotification(note)
-        } else if let note = update.focusNotification {
-            log.debug("clientDidUpdateState: focusNotification => \(note)")
+            let client_conversation = note.conversation!
+            if let conv = conv_dict[client_conversation.conversationId!.id!] {
+                conv.update_conversation(conversation: client_conversation)
+            } else {
+                self.add_conversation(client_conversation: client_conversation)
+            }
+            NotificationCenter.default.post(name: Notification.Conversation.DidUpdateList, object: self)
             
-            let conv = self.conv_dict[note.conversationId!.id!]
-            var focus = conv?.focus.filter { $0.sender?.identifier == note.senderId!.gaiaId! }.first
-            //focus?.mode = note.type! == FocusType.Focused ? FocusMode.here : .away
+        } else if let note = update.eventNotification {
+            let event = note.event!
+            // Be sure to maintain the event sync_timestamp for sync'ing.
+            //sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
+            if let conv = conv_dict[event.conversationId!.id!] {
+                let conv_event = conv.add_event(event: note.event!)
+                conv.handleEvent(event: conv_event)
+            } else {
+                log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
+            }
+            
+        } else if let note = update.focusNotification {
+            if let conv = self.conv_dict[note.conversationId!.id!] {
+                let userid = User.ID(chatID: note.senderId!.chatId!, gaiaID: note.senderId!.gaiaId!)
+                conv.focuses[userid] = note.type! == .Focused
+                NotificationCenter.default.post(name: Notification.Conversation.DidChangeFocus, object: conv)
+            } else {
+                log.warning("Received SetFocusNotification for unknown conversation \(note.conversationId!.id!)")
+            }
             
         } else if let note = update.typingNotification {
-            log.debug("clientDidUpdateState: typingNotification")
-            _typingNotification(note)
+            if let conv = conv_dict[note.conversationId!.id!] {
+                let res = parseTypingStatusMessage(p: note)
+                let user = self.client.userList[User.ID(
+                    chatID: note.senderId!.chatId!,
+                    gaiaID: note.senderId!.gaiaId!
+                )]
+                conv.handleTypingStatus(status: res.status, forUser: user)
+            } else {
+                log.warning("Received ClientSetTypingNotification for unknown conversation \(note.conversationId!.id!)")
+            }
+            
         } else if let note = update.notificationLevelNotification {
             log.debug("clientDidUpdateState: notificationLevelNotification => \(note)")
         } else if let note = update.watermarkNotification {
-            log.debug("clientDidUpdateState: watermarkNotification")
-            _watermarkNotification(note)
+            if let conv = self.conv_dict[note.conversationId!.id!] {
+                let res = parseWatermarkNotification(client_watermark_notification: note)
+                NotificationCenter.default.post(name: Notification.Conversation.DidReceiveWatermark,
+                                                object: conv, userInfo: ["status": res])
+            } else {
+                log.warning("Received WatermarkNotification for unknown conversation \(note.conversationId!.id!)")
+            }
+            
         } else if let note = update.viewModification {
             log.debug("clientDidUpdateState: viewModification => \(note)")
         } else if let note = update.deleteNotification {
             log.debug("clientDidUpdateState: deleteNotification => \(note)")
-        }
-    }
-    
-    public func _conversationNotification(_ note: ConversationNotification) {
-        let client_conversation = note.conversation!
-        let conv_id = client_conversation.conversationId!.id!
-        if let conv = conv_dict[conv_id] {
-            conv.update_conversation(conversation: client_conversation)
-        } else {
-            self.add_conversation(client_conversation: client_conversation)
-        }
-        NotificationCenter.default.post(name: Notification.Conversation.DidUpdateList, object: self)
-        //delegate?.conversationList(didUpdate: self)
-    }
-    
-    public func _eventNotification(_ note: EventNotification) {
-        let event = note.event!
-        
-        // Be sure to maintain the event sync_timestamp for sync'ing.
-        //sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
-        
-        if let conv = conv_dict[event.conversationId!.id!] {
-            let conv_event = conv.add_event(event: event)
-            
-            //delegate?.conversationList(self, didReceiveEvent: conv_event)
-            conv.handleEvent(event: conv_event)
-        } else {
-            log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
-        }
-    }
-    
-    public func _typingNotification(_ note: SetTypingNotification) {
-        let conv_id = note.conversationId!.id!
-        if let conv = conv_dict[conv_id] {
-            let res = parseTypingStatusMessage(p: note)
-            let user = self.client.userList[User.ID(
-                chatID: note.senderId!.chatId!,
-                gaiaID: note.senderId!.gaiaId!
-            )]
-            //delegate?.conversationList(self, didChangeTypingStatus: res, forUser: user)
-            conv.handleTypingStatus(status: res.status, forUser: user)
-        } else {
-            log.warning("Received ClientSetTypingNotification for unknown conversation \(conv_id)")
-        }
-    }
-    
-    public func _watermarkNotification(_ note: WatermarkNotification) {
-        let conv_id = note.conversationId!.id!
-        if let conv = self.conv_dict[conv_id] {
-            let res = parseWatermarkNotification(client_watermark_notification: note)
-            //self.delegate?.conversationList(self, didReceiveWatermarkNotification: res)
-            conv.handleWatermarkNotification(status: res)
-        } else {
-            log.warning("Received WatermarkNotification for unknown conversation \(conv_id)")
         }
     }
 }
