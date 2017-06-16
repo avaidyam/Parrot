@@ -199,20 +199,33 @@ public class IConversation: ParrotServiceExtension.Conversation {
         return dict
     }
     
+    // FIXME: ugh... 
     public func focus(mode: FocusMode) {
-        switch mode {
-        case .away:
-            self.client.setFocus(conversation_id: id, focused: false)
-            self.client.setTyping(conversation_id: id, typing: .Stopped)
-        case .here:
-            self.client.setFocus(conversation_id: id, focused: true)
-            self.client.setTyping(conversation_id: id, typing: .Stopped)
-        case .typing:
-            self.client.setFocus(conversation_id: id, focused: true)
-            self.client.setTyping(conversation_id: id, typing: .Started)
-        case .enteredText:
-            self.client.setFocus(conversation_id: id, focused: true)
-            self.client.setTyping(conversation_id: id, typing: .Paused)
+        let id = (self.user_list.me as! User).id
+        
+        if mode == .typing && self.typingStatuses[id] != .Started {
+            self.client.setFocus(conversation_id: self.id, focused: true)
+            self.client.setTyping(conversation_id: self.id, typing: .Started)
+            self.typingStatuses[id] = .Started
+            self.focuses[id] = true
+            
+        } else if mode == .enteredText && self.typingStatuses[id] != .Paused {
+            self.client.setFocus(conversation_id: self.id, focused: true)
+            self.client.setTyping(conversation_id: self.id, typing: .Paused)
+            self.typingStatuses[id] = .Paused
+            self.focuses[id] = true
+            
+        } else if mode == .here && self.focuses[id] != true {
+            self.client.setFocus(conversation_id: self.id, focused: true)
+            self.client.setTyping(conversation_id: self.id, typing: .Stopped)
+            self.typingStatuses[id] = .Stopped
+            self.focuses[id] = true
+            
+        } else if mode == .away && self.focuses[id] == true {
+            self.client.setFocus(conversation_id: self.id, focused: false)
+            self.client.setTyping(conversation_id: self.id, typing: .Stopped)
+            self.typingStatuses[id] = .Stopped
+            self.focuses[id] = false
         }
     }
 	
