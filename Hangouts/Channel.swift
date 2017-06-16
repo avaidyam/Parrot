@@ -160,7 +160,7 @@ public final class Channel : NSObject {
     }
 	
 	// Sends a request to the server containing maps (dicts).
-	public func sendMaps(mapList: [[String: Any]]? = nil, cb: ((Data) -> Void)? = nil) {
+	public func sendMaps(_ mapList: [[String: Any]]? = nil, cb: ((Data) -> Void)? = nil) {
 		var params = [
 			"VER":		8,			// channel protocol version
 			"RID":		81188,		// request identifier

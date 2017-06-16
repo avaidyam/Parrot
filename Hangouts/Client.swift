@@ -232,15 +232,12 @@ public final class Client: Service {
 		// Based on what Hangouts for Chrome does over 2 requests, this is
 		// trimmed down to 1 request that includes the bare minimum to make
 		// things work.
-		func addChannelServices() {
-            let services = ["babel", "babel_presence_last_seen"]
-            let mapped = services.map { ["3": ["1": ["1": $0]]] }
-            
-			//let inner = ["3": ["1": ["1": "babel"]]]//[..., ["3": ["1": ["1": "babel_presence_last_seen"]]]]
-			let dat = try! JSONSerialization.data(withJSONObject: mapped, options: [])
-			let str = NSString(data: dat, encoding: String.Encoding.utf8.rawValue)! as String
-			
-			self.channel?.sendMaps(mapList: [["p": str]])
+		func addChannelServices(services: [String] = ["babel", "babel_presence_last_seen"]) {
+            let mapped = services.map { ["3": ["1": ["1": $0]]] }.map {
+                let dat = try! JSONSerialization.data(withJSONObject: $0, options: [])
+                return NSString(data: dat, encoding: String.Encoding.utf8.rawValue)! as String
+            }.map { ["p": $0] }
+            self.channel?.sendMaps(mapped)
 		}
 		
 		guard message[0] as? String != "noop" else {

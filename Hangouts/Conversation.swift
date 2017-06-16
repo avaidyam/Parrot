@@ -658,23 +658,24 @@ extension ConversationList {
             log.debug("clientDidUpdateState: eventNotification")
             _eventNotification(note)
         } else if let note = update.focusNotification {
-            log.debug("clientDidUpdateState: focusNotification")
-            _focusNotification(note)
+            log.debug("clientDidUpdateState: focusNotification => \(note)")
+            
+            let conv = self.conv_dict[note.conversationId!.id!]
+            var focus = conv?.focus.filter { $0.sender?.identifier == note.senderId!.gaiaId! }.first
+            //focus?.mode = note.type! == FocusType.Focused ? FocusMode.here : .away
+            
         } else if let note = update.typingNotification {
             log.debug("clientDidUpdateState: typingNotification")
             _typingNotification(note)
         } else if let note = update.notificationLevelNotification {
-            log.debug("clientDidUpdateState: notificationLevelNotification")
-            _notificationLevelNotification(note)
+            log.debug("clientDidUpdateState: notificationLevelNotification => \(note)")
         } else if let note = update.watermarkNotification {
             log.debug("clientDidUpdateState: watermarkNotification")
             _watermarkNotification(note)
         } else if let note = update.viewModification {
-            log.debug("clientDidUpdateState: viewModification")
-            _viewModification(note)
+            log.debug("clientDidUpdateState: viewModification => \(note)")
         } else if let note = update.deleteNotification {
-            log.debug("clientDidUpdateState: deleteNotification")
-            _deleteNotification(note)
+            log.debug("clientDidUpdateState: deleteNotification => \(note)")
         }
     }
     
@@ -683,16 +684,11 @@ extension ConversationList {
         let conv_id = client_conversation.conversationId!.id!
         if let conv = conv_dict[conv_id] {
             conv.update_conversation(conversation: client_conversation)
-            //delegate?.conversationList(self, didUpdateConversation: conv)
         } else {
             self.add_conversation(client_conversation: client_conversation)
         }
         NotificationCenter.default.post(name: Notification.Conversation.DidUpdateList, object: self)
         //delegate?.conversationList(didUpdate: self)
-    }
-    
-    public func _focusNotification(_ note: SetFocusNotification) {
-        log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
     }
     
     public func _eventNotification(_ note: EventNotification) {
@@ -726,10 +722,6 @@ extension ConversationList {
         }
     }
     
-    public func _notificationLevelNotification(_ note: SetConversationNotificationLevelNotification) {
-        log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
-    }
-    
     public func _watermarkNotification(_ note: WatermarkNotification) {
         let conv_id = note.conversationId!.id!
         if let conv = self.conv_dict[conv_id] {
@@ -739,13 +731,5 @@ extension ConversationList {
         } else {
             log.warning("Received WatermarkNotification for unknown conversation \(conv_id)")
         }
-    }
-    
-    public func _viewModification(_ note: ConversationViewModification) {
-        log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
-    }
-    
-    public func _deleteNotification(_ note: DeleteActionNotification) {
-        log.verbose("UNIMPLEMENTED: \(#function) => \(note)")
     }
 }

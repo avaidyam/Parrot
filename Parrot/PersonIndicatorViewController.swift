@@ -21,7 +21,7 @@ fileprivate class PersonIndicatorToolTipController: NSViewController {
     public override func loadView() {
         self.view = NSView()
         self.view.wantsLayer = true
-        self.text = NSTextField(labelWithString: "")
+        self.text = NSTextField(labelWithString: "").modernize()
         self.text.translatesAutoresizingMaskIntoConstraints = false
         self.text.alignment = .center
         self.text.font = NSFont.systemFont(ofSize: 11.0, weight: NSFont.Weight.semibold)
@@ -120,8 +120,16 @@ public class PersonIndicatorViewController: NSViewController {
         guard let vc = PersonIndicatorToolTipController.popover.contentViewController
             as? PersonIndicatorToolTipController else { return }
         
+        var prefix = ""
+        switch self.person?.reachability ?? .unavailable {
+        case .unavailable: break
+        case .phone: prefix = "📱  "
+        case .tablet: prefix = "📱  " //💻
+        case .desktop: prefix = "🖥  "
+        }
+        
         _ = vc.view // loadView()
-        vc.text?.stringValue = self.person?.fullName ?? ""
+        vc.text?.stringValue = prefix + (self.person?.fullName ?? "")
         PersonIndicatorToolTipController.popover.show(relativeTo: view.bounds, of: view, preferredEdge: .maxY)
     }
     
@@ -129,4 +137,3 @@ public class PersonIndicatorViewController: NSViewController {
         PersonIndicatorToolTipController.popover.performClose(nil)
     }
 }
-
