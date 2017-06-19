@@ -226,15 +226,22 @@ public extension Date {
         }
     }
     
-    private static var formatter: DateFormatter = {
+    private static var fullFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .full
         formatter.timeStyle = .long
         return formatter
     }()
     
-    public func fullString() -> String {
-        return Date.formatter.string(from: self)
+    private static var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
+    
+    public func fullString(_ includeTime: Bool = true) -> String {
+        return (includeTime ? Date.fullFormatter : Date.dateFormatter).string(from: self)
     }
     
     public func nearestMinute() -> Date {

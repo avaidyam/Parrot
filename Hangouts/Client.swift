@@ -157,8 +157,7 @@ public final class Client: Service {
 			// before the API request finishes, we don't start extra requests.
 			active_client_state = ActiveClientState.IsActive
 			last_active_secs = Date().timeIntervalSince1970 as NSNumber?
-			
-			
+            
 			// The first time this is called, we need to retrieve the user's email address.
 			if self.email == nil {
 				self.getSelfInfo {
@@ -182,99 +181,64 @@ public final class Client: Service {
             }
         }
     }
-	
-	// Upload an image that can be later attached to a chat message.
-	// The name of the uploaded file may be changed by specifying the filename argument.
-	public func uploadImage(data: Data, filename: String, cb: ((String) -> Void)? = nil) {
-		let json = "{\"protocolVersion\":\"0.8\",\"createSessionRequest\":{\"fields\":[{\"external\":{\"name\":\"file\",\"filename\":\"\(filename)\",\"put\":{},\"size\":\(data.count)}}]}}"
-		
-		self.channel?.base_request(path: Client.IMAGE_UPLOAD_URL,
-			content_type: "application/x-www-form-urlencoded;charset=UTF-8",
-			data: json.data(using: String.Encoding.utf8)!) { response in
-			
-			// Sift through JSON for a response with the upload URL.
-				let _data: NSDictionary = try! JSONSerialization.jsonObject(with: response.data!,
-				options: .allowFragments) as! NSDictionary
-			let _a = _data["sessionStatus"] as! NSDictionary
-			let _b = _a["externalFieldTransfers"] as! NSArray
-			let _c = _b[0] as! NSDictionary
-			let _d = _c["putInfo"] as! NSDictionary
-			let upload = (_d["url"] as! NSString) as String
-			
-			self.channel?.base_request(path: upload, content_type: "application/octet-stream", data: data) { resp in
-				
-				// Sift through JSON for a response with the photo ID.
-				let _data2: NSDictionary = try! JSONSerialization.jsonObject(with: resp.data!,
-					options: .allowFragments) as! NSDictionary
-				let _a2 = _data2["sessionStatus"] as! NSDictionary
-				let _b2 = _a2["additionalInfo"] as! NSDictionary
-				let _c2 = _b2["uploader_service.GoogleRupioAdditionalInfo"] as! NSDictionary
-				let _d2 = _c2["completionInfo"] as! NSDictionary
-				let _e2 = _d2["customerSpecificInfo"] as! NSDictionary
-				let photoid = (_e2["photoid"] as! NSString) as String
-				
-				cb?(photoid)
-			}
-		}
-	}
-	
-	// Parse channel array and call the appropriate events.
-	public func channel(channel: Channel, didReceiveMessage message: [Any]) {
-		
-		// Add services to the channel.
-		//
-		// The services we add to the channel determine what kind of data we will
-		// receive on it. The "babel" service includes what we need for Hangouts.
-		// If this fails for some reason, hangups will never receive any events.
-		// This needs to be re-called whenever we open a new channel (when there's
-		// a new SID and client_id.
-		//
-		// Based on what Hangouts for Chrome does over 2 requests, this is
-		// trimmed down to 1 request that includes the bare minimum to make
-		// things work.
-		func addChannelServices(services: [String] = ["babel", "babel_presence_last_seen"]) {
+    
+    // Parse channel array and call the appropriate events.
+    public func channel(channel: Channel, didReceiveMessage message: [Any]) {
+        
+        // Add services to the channel.
+        //
+        // The services we add to the channel determine what kind of data we will
+        // receive on it. The "babel" service includes what we need for Hangouts.
+        // If this fails for some reason, hangups will never receive any events.
+        // This needs to be re-called whenever we open a new channel (when there's
+        // a new SID and client_id.
+        //
+        // Based on what Hangouts for Chrome does over 2 requests, this is
+        // trimmed down to 1 request that includes the bare minimum to make
+        // things work.
+        func addChannelServices(services: [String] = ["babel", "babel_presence_last_seen"]) {
             let mapped = services.map { ["3": ["1": ["1": $0]]] }.map {
                 let dat = try! JSONSerialization.data(withJSONObject: $0, options: [])
                 return NSString(data: dat, encoding: String.Encoding.utf8.rawValue)! as String
-            }.map { ["p": $0] }
+                }.map { ["p": $0] }
             self.channel?.sendMaps(mapped)
-		}
-		
-		guard message[0] as? String != "noop" else {
-			return
-		}
-		
-		// Wrapper appears to be a Protocol Buffer message, but encoded via
-		// field numbers as dictionary keys. Since we don't have a parser
-		// for that, parse it ad-hoc here.
-		let thr = (message[0] as! [String: String])["p"]!
-		let wrapper = try! thr.decodeJSON()
-		
-		// Once client_id is received, the channel is ready to have services added.
-		if let id = wrapper["3"] as? [String: Any] {
-			self.client_id = (id["2"] as! String)
-			addChannelServices()
-		}
-		if let cbu = wrapper["2"] as? [String: Any] {
-			let val2 = (cbu["2"]! as! String).data(using: String.Encoding.utf8)
-			let payload = try! JSONSerialization.jsonObject(with: val2!, options: .allowFragments) as! [AnyObject]
-			
-			// This is a (Client)BatchUpdate containing StateUpdate messages.
-			// payload[1] is a list of state updates.
-			if payload[0] as? String == "cbu" {
-				var b = BatchUpdate() as ProtoMessage
-				PBLiteSerialization.decode(message: &b, pblite: payload, ignoreFirstItem: true)
-				for state_update in (b as! BatchUpdate).stateUpdate {
-					self.active_client_state = state_update.stateUpdateHeader!.activeClientState!
+        }
+        
+        guard message[0] as? String != "noop" else {
+            return
+        }
+        
+        // Wrapper appears to be a Protocol Buffer message, but encoded via
+        // field numbers as dictionary keys. Since we don't have a parser
+        // for that, parse it ad-hoc here.
+        let thr = (message[0] as! [String: String])["p"]!
+        let wrapper = try! thr.decodeJSON()
+        
+        // Once client_id is received, the channel is ready to have services added.
+        if let id = wrapper["3"] as? [String: Any] {
+            self.client_id = (id["2"] as! String)
+            addChannelServices()
+        }
+        if let cbu = wrapper["2"] as? [String: Any] {
+            let val2 = (cbu["2"]! as! String).data(using: String.Encoding.utf8)
+            let payload = try! JSONSerialization.jsonObject(with: val2!, options: .allowFragments) as! [AnyObject]
+            
+            // This is a (Client)BatchUpdate containing StateUpdate messages.
+            // payload[1] is a list of state updates.
+            if payload[0] as? String == "cbu" {
+                var b = BatchUpdate() as ProtoMessage
+                PBLiteSerialization.decode(message: &b, pblite: payload, ignoreFirstItem: true)
+                for state_update in (b as! BatchUpdate).stateUpdate {
+                    self.active_client_state = state_update.stateUpdateHeader!.activeClientState!
                     self.lastUpdate = state_update.stateUpdateHeader!.currentServerTime!
                     
-					hangoutsCenter.post(
-						name: Client.didUpdateStateNotification, object: self,
-						userInfo: [Client.didUpdateStateKey: state_update])
-				}
-			} else {
-				log.warning("Ignoring message: \(payload[0])")
-			}
-		}
-	}
+                    hangoutsCenter.post(
+                        name: Client.didUpdateStateNotification, object: self,
+                        userInfo: [Client.didUpdateStateKey: state_update])
+                }
+            } else {
+                log.warning("Ignoring message: \(payload[0])")
+            }
+        }
+    }
 }
