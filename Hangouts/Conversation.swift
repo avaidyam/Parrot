@@ -199,7 +199,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         return dict
     }
     
-    // FIXME: ugh... 
+    // FIXME: ugh...
     public func focus(mode: FocusMode) {
         let id = (self.user_list.me as! User).id
         
@@ -262,6 +262,11 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	// (if you specify both image_file and image_id together, image_file
 	// takes precedence and supplied image_id will be ignored)
 	// Send messages with OTR status matching the conversation's status.
+    //
+    // Note: tl;dr if uploading an image, use image_data and image_name...
+    // Otherwise, if using an existing image, use image_id only.
+    // If using another person's public image, use image_id and image_user_id.
+    //
     public func sendMessage(segments: [IChatMessageSegment],
 		image_data: Data? = nil,
 		image_name: String? = nil,
@@ -269,21 +274,22 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		image_user_id: String? = nil,
         cb: (() -> Void)? = nil
     ) {
-        let otr_status = (is_off_the_record ? OffTheRecordStatus.OffTheRecord : OffTheRecordStatus.OnTheRecord)
+        let otr_status = (self.is_off_the_record ? OffTheRecordStatus.OffTheRecord : OffTheRecordStatus.OnTheRecord)
         if let image_data = image_data, let image_name = image_name {
-			client.uploadImage(data: image_data, filename: image_name) { photoID in
+			self.client.uploadImage(data: image_data, filename: image_name) { photoID in
 				self.client.sendChatMessage(conversation_id: self.id,
 					segments: segments.map { $0.serialize() },
-					image_id: image_id,
+					image_id: photoID,
 					image_user_id: nil,
-					otr_status: otr_status) { _ in cb?() }
+					otr_status: otr_status,
+                    delivery_medium: self.getDefaultDeliveryMedium().mediumType!) { _ in cb?() }
 			}
 		} else {
-			client.sendChatMessage(conversation_id: id,
+			self.client.sendChatMessage(conversation_id: id,
 				segments: segments.map { $0.serialize() },
 				image_id: nil,
 				otr_status: otr_status,
-				delivery_medium: getDefaultDeliveryMedium().mediumType!) { _ in cb?() }
+				delivery_medium: self.getDefaultDeliveryMedium().mediumType!) { _ in cb?() }
 		}
     }
 

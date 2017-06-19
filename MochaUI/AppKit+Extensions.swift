@@ -341,7 +341,7 @@ public func runSelectionPanel(for window: NSWindow, fileTypes: [String],
 	p.canCreateDirectories = false
 	p.canDownloadUbiquitousContents = true
 	p.canResolveUbiquitousConflicts = false
-	p.resolvesAliases = false
+	p.resolvesAliases = true
 	p.allowedFileTypes = fileTypes
 	p.prompt = "Select"
 	p.beginSheetModal(for: window) { r in

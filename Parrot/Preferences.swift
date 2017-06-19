@@ -6,7 +6,9 @@ public struct Preferences {
         private init() {}
     }
     
-    public enum Key {
+    public struct Key {
+        private init() {}
+        
         public static let InterfaceStyle = "Parrot.InterfaceStyle"
         public static let SystemInterfaceStyle = "Parrot.SystemInterfaceStyle"
         public static let VibrancyStyle = "Parrot.VibrancyStyle"

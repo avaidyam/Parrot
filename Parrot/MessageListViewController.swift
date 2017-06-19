@@ -602,6 +602,16 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         //self.sendMessageHandler(message, self.conversation!)
     }
     
+    public func send(images: [URL]) {
+        for url in images {
+            let img = try? Data(contentsOf: url)
+            let fname = url.lastPathComponent
+            self.conversation?.sendMessage(segments: [], image_data: img, image_name: fname, image_id: nil, image_user_id: nil) {
+                print("sent img1")
+            }
+        }
+    }
+    
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
         conversation.send(message: text)
     }
@@ -610,9 +620,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     //
     
-    /*
     private lazy var addButton: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: "NSAddBookmarkTemplate")!,
+        let b = NSButton(title: "", image: NSImage(named: NSImage.Name(rawValue: "NSAddBookmarkTemplate"))!,
                          target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
@@ -620,15 +629,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }()
     
     private lazy var searchToggle: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImageNameRevealFreestandingTemplate)!,
-                         target: self, action: #selector(self.toggleSearchField(_:))).modernize()
+        let b = NSButton(title: "", image: NSImage(named: NSImage.Name.revealFreestandingTemplate)!,
+                         target: nil, action: nil)
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         b.setButtonType(.onOff)
-        b.state = NSControlStateValueOn
+        b.state = NSControl.StateValue.on
         return b
     }()
-    */
     
     private var _usersToIndicators: [Person.IdentifierType: PersonIndicatorViewController] = [:]
     private func _usersToItems() -> [NSToolbarItem] {
@@ -640,15 +648,22 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 _usersToIndicators[$0.identifier] = vc
             }
         }
-        
         return self._usersToIndicators.values.map { $0.toolbarItem }
     }
     private func _setToolbar() {
+        /*
+        let i = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "search"))
+        i.view = self.searchToggle
+        i.label = "Search"
+        */
+        
         let h = self.toolbarContainer
         h.templateItems = Set(_usersToItems())
+        //h.templateItems.insert(i)
         var order = _usersToItems().map { $0.itemIdentifier }
         order.insert(.flexibleSpace, at: 0)
         order.append(.flexibleSpace)
+        //order.append(NSToolbarItem.Identifier(rawValue: "search"))
         h.itemOrder = order
         
         /*

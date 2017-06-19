@@ -8,6 +8,7 @@ public protocol TextInputHost {
     func resized(to: Double)
     func typing()
     func send(message: String)
+    func send(images: [URL])
 }
 
 public class MessageInputViewController: NSViewController, NSTextViewExtendedDelegate {
@@ -16,12 +17,14 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     
     private var insertToken = false
     
-    private lazy var photoView: NSImageView = {
-        let v = NSImageView().modernize(wantsLayer: true)
-        v.allowsCutCopyPaste = false
-        v.isEditable = false
-        v.animates = true
-        return v
+    private lazy var photoView: NSButton = {
+        let img = NSImage(named: NSImage.Name(rawValue: "NSMediaBrowserMediaTypePhotosTemplate32"))!
+        let b = NSButton(title: "", image: img, target: self,
+                         action: #selector(self.loadImage(_:)))
+            .modernize(wantsLayer: true)
+        b.isBordered = false
+        b.wantsLayer = true
+        return b
     }()
     
     private lazy var textView: ExtendedTextView = {
@@ -70,14 +73,15 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         super.viewWillAppear()
         
         // Mask the image into a circle and grab it.
-        if let layer = self.photoView.layer {
+        /*if let layer = self.photoView.layer {
             layer.masksToBounds = true
             layer.cornerRadius = 24.0 / 2.0 // FIXME: dynamic mask
         }
-        self.photoView.image = self.host?.image
+        */
+        //self.photoView.image = self.host?.image
         
-        self.textView.translatesAutoresizingMaskIntoConstraints = false
-        self.textView.enclosingScrollView?.replaceInSuperview(with: self.textView)
+        //self.textView.translatesAutoresizingMaskIntoConstraints = false
+        //self.textView.enclosingScrollView?.replaceInSuperview(with: self.textView)
     }
     
     // Set up dark/light notifications.
@@ -121,12 +125,46 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
              NSForegroundColorAttributeName: NSColor.tertiaryLabelColor(),
              NSFontAttributeName: text.font!
             ]*/
+            
+            self.setColors()
         }
+    }
+    
+    private func setColors() {
+        let text = self.textView
+        
+        var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
+        let setting = "com.avaidyam.Parrot.ConversationOutgoingColor"
+        if  let q = Settings[setting] as? Data,
+            let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
+            c.alphaComponent > 0.0 {
+            color = c
+            
+            // This automatically adjusts labelColor to the right XOR mask.
+            text.appearance = color.isLight() ? .light : .dark
+        } else {
+            text.appearance = self.view.effectiveAppearance//self.appearance
+        }
+        text.layer?.backgroundColor = color.cgColor
     }
     
     public override func viewWillDisappear() {
         ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
     }
+    
+    //
+    //
+    //
+    
+    @objc private func loadImage(_ sender: NSButton!) {
+        runSelectionPanel(for: self.view.window!, fileTypes: [kUTTypeImage as String], multiple: true) { urls in
+            self.host?.send(images: urls)
+        }
+    }
+    
+    //
+    //
+    //
     
     private func resizeModule() {
         NSAnimationContext.animate(duration: 0.6) { // TODO: FIX THIS
