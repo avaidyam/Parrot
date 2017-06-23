@@ -54,8 +54,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         s.sendsWholeSearchString = true
         s.sendsSearchStringImmediately = true
         s.disableToolbarLook()
-        s.target = self
-        s.action = #selector(self.searching(_:))
+        s.handler = { [weak s] in
+            print("got string \(String(describing: s?.stringValue))")
+        }
         return s
     }()
     
@@ -68,12 +69,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }()
     
     private lazy var searchToggle: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImage.Name.revealFreestandingTemplate)!,
-                         target: self, action: #selector(self.toggleSearchField(_:))).modernize()
+        let b = NSButton(title: "", image: NSImage(named: .revealFreestandingTemplate)!,
+                         target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         b.setButtonType(.onOff)
         b.state = NSControl.StateValue.on
+        b.handler = { [weak b] in
+            self.searchAccessory.animator().isHidden = ((b?.state ?? .off) != .on)
+        }
         return b
     }()
     
@@ -346,14 +350,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
             .map { IndexPath(item: $0, section: 0) }
         self.collectionView.selectionIndexPaths = Set(paths)
-    }
-    
-    @objc private func toggleSearchField(_ sender: NSButton!) {
-        self.searchAccessory.animator().isHidden = (sender.state != NSControl.StateValue.on)
-    }
-    
-    @objc private func searching(_ sender: NSSearchField!) {
-        print("got string \(sender.stringValue)")
     }
 }
 

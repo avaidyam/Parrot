@@ -92,6 +92,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }()
     
     private lazy var collectionView: NSCollectionView = {
+        // NOTE: Do not reference `scrollView` because lazy init cycles!
         let c = NSCollectionView(frame: .zero)//.modernize(wantsLayer: true)
         //c.layerContentsRedrawPolicy = .onSetNeedsDisplay // FIXME: causes a random white background
         c.dataSource = self
@@ -553,9 +554,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     // Monitor changes to the window's occlusion state and map it to conversation focus.
-    // NSWindowOcclusionState: 8194 is Visible, 8192 is Occluded
     public func windowDidChangeOcclusionState(_ notification: Notification) {
-        self.focusComponents.1 = (self.view.window?.occlusionState.rawValue ?? 0) == 8194
+        self.focusComponents.1 = self.view.window?.occlusionState.contains(.visible) ?? false
     }
     
     public func windowShouldClose(_ sender: NSWindow) -> Bool {

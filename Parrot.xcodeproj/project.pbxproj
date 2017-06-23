@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		4803639D1C1D08490008E9F5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4803639C1C1D08490008E9F5 /* main.swift */; };
 		4807F4F01EF0A36100C32132 /* DirectoryActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4EF1EF0A36100C32132 /* DirectoryActions.swift */; };
-		4807F4F31EF0A40B00C32132 /* ConversationListActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4F21EF0A40B00C32132 /* ConversationListActions.swift */; };
+		4807F4F31EF0A40B00C32132 /* ConversationListModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4F21EF0A40B00C32132 /* ConversationListModelController.swift */; };
 		4807F4F61EF0A42C00C32132 /* MessageListActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4F51EF0A42C00C32132 /* MessageListActions.swift */; };
 		4807F4FB1EF1E58F00C32132 /* ReloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4FA1EF1E58F00C32132 /* ReloadCell.swift */; };
 		4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300391D25B54300768D79 /* ServiceRegistry.swift */; };
@@ -56,6 +56,7 @@
 		483ED2B41EE9E80200D2BDCF /* NSCollectionViewListLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483ED2B31EE9E80200D2BDCF /* NSCollectionViewListLayout.swift */; };
 		48403CA11DF0B9930009897A /* Changeset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48403CA01DF0B9930009897A /* Changeset.swift */; };
 		48403CA31DF0BF6B0009897A /* Interpolate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48403CA21DF0BF6B0009897A /* Interpolate.swift */; };
+		4848A5831EFD1A0D008B2DE2 /* BlockTrampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4848A5821EFD1A0D008B2DE2 /* BlockTrampoline.swift */; };
 		484E8CA01D37FF2500E1D1D5 /* EventStreamItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E8C9F1D37FF2500E1D1D5 /* EventStreamItem.swift */; };
 		4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */; };
 		4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9331ED9480C00764594 /* DynamicProperty.swift */; };
@@ -312,7 +313,7 @@
 		4803639A1C1D08490008E9F5 /* parrot-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "parrot-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4803639C1C1D08490008E9F5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4807F4EF1EF0A36100C32132 /* DirectoryActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryActions.swift; sourceTree = "<group>"; };
-		4807F4F21EF0A40B00C32132 /* ConversationListActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListActions.swift; sourceTree = "<group>"; };
+		4807F4F21EF0A40B00C32132 /* ConversationListModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListModelController.swift; sourceTree = "<group>"; };
 		4807F4F51EF0A42C00C32132 /* MessageListActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListActions.swift; sourceTree = "<group>"; };
 		4807F4FA1EF1E58F00C32132 /* ReloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadCell.swift; sourceTree = "<group>"; };
 		481300341D257FE300768D79 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -359,6 +360,7 @@
 		48403CA01DF0B9930009897A /* Changeset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Changeset.swift; sourceTree = "<group>"; };
 		48403CA21DF0BF6B0009897A /* Interpolate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interpolate.swift; sourceTree = "<group>"; };
 		48467B131D54407800DAB836 /* ToneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ToneKit.framework; path = ../../../../../System/Library/PrivateFrameworks/ToneKit.framework; sourceTree = "<group>"; };
+		4848A5821EFD1A0D008B2DE2 /* BlockTrampoline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockTrampoline.swift; sourceTree = "<group>"; };
 		484E8C9F1D37FF2500E1D1D5 /* EventStreamItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventStreamItem.swift; sourceTree = "<group>"; };
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		48574F121D11F9FC002375E1 /* AppManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppManagement.swift; sourceTree = "<group>"; };
@@ -582,7 +584,7 @@
 		4807F4F11EF0A3FD00C32132 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4807F4F21EF0A40B00C32132 /* ConversationListActions.swift */,
+				4807F4F21EF0A40B00C32132 /* ConversationListModelController.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -959,6 +961,7 @@
 			isa = PBXGroup;
 			children = (
 				488239A21C455CED00C5E8EB /* AppKit+Extensions.swift */,
+				4848A5821EFD1A0D008B2DE2 /* BlockTrampoline.swift */,
 				4869A9A61EE0FC2C00764594 /* NSAppearance+Extensions.swift */,
 				4869A93B1EDD250C00764594 /* ViewAttachmentCell.swift */,
 				48A452261D19B16500CB588A /* TLTone.swift */,
@@ -1560,7 +1563,7 @@
 				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
 				4869A9B01EE16F5D00764594 /* Auth+WebDelegate.swift in Sources */,
 				488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */,
-				4807F4F31EF0A40B00C32132 /* ConversationListActions.swift in Sources */,
+				4807F4F31EF0A40B00C32132 /* ConversationListModelController.swift in Sources */,
 				4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */,
 				4869A93A1EDB859700764594 /* PersonCell.swift in Sources */,
 				4869A9431EDF456C00764594 /* Event.swift in Sources */,
@@ -1659,6 +1662,7 @@
 				483ED2B41EE9E80200D2BDCF /* NSCollectionViewListLayout.swift in Sources */,
 				4831BCCB1ED0C21200C30413 /* NSViewController+Window.swift in Sources */,
 				48D3CD0F1DE945C1003D6C02 /* NSPopover+Extensions.swift in Sources */,
+				4848A5831EFD1A0D008B2DE2 /* BlockTrampoline.swift in Sources */,
 				4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */,
 				48AD39F61EE7FDF000C33E40 /* PreferencesViewController.swift in Sources */,
 				489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */,

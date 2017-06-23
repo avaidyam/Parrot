@@ -34,81 +34,6 @@ public extension NSView {
     }
 }
 
-// from @nilium: https://github.com/nilium/SwiftSchemer/blob/master/SwiftSchemer/NSView%2BReplacement.swift
-public extension NSView {
-    
-    /// Replaces the receiver with `view` in its superview. If
-    /// `preservingConstraints` is true, any constraints referencing the
-    /// receiver in its superview will be rewritten to reference `view`.
-    public func replaceInSuperview(with view: NSView, preservingConstraints: Bool = true) {
-        assert(superview != nil, "Cannot replace self without a superview!")
-        if preservingConstraints {
-            superview!.replaceSubviewsPreservingConstraints([self: view])
-        } else {
-            superview!.replaceSubview(self, with: view)
-        }
-    }
-    
-    /// Replaces subviews in the receiver while preserving their constraints.
-    /// Accepts a dictionary of [NSView: NSView] objects, where the key is the
-    /// view to be replaced and its value the replacement.
-    func replaceSubviewsPreservingConstraints(_ replacements: [NSView: NSView]) {
-        if replacements.isEmpty {
-            return
-        }
-        let currentConstraints = constraints as [NSLayoutConstraint]
-        var removedConstraints = [NSLayoutConstraint]()
-        var newConstraints     = [NSLayoutConstraint]()
-        
-        for current in currentConstraints {
-            var firstItem: AnyObject?  = current.firstItem
-            var secondItem: AnyObject? = current.secondItem
-            
-            if let firstView = firstItem as? NSView {
-                if let replacement = replacements[firstView] {
-                    firstItem = replacement
-                    replacement.frame = firstView.frame
-                }
-            }
-            if let secondView = secondItem as? NSView {
-                if let replacement = replacements[secondView] {
-                    secondItem = replacement
-                    replacement.frame = secondView.frame
-                }
-            }
-            if firstItem === current.firstItem && secondItem === current.secondItem {
-                continue
-            }
-            
-            let updated = NSLayoutConstraint(
-                item: firstItem!,
-                attribute: current.firstAttribute,
-                relatedBy: current.relation,
-                toItem: secondItem!,
-                attribute: current.secondAttribute,
-                multiplier: current.multiplier,
-                constant: current.constant
-            )
-            
-            updated.shouldBeArchived = current.shouldBeArchived
-            updated.identifier = current.identifier
-            updated.priority = current.priority
-            
-            removedConstraints.append(current)
-            newConstraints.append(updated)
-        }
-        if !removedConstraints.isEmpty {
-            removeConstraints(removedConstraints)
-        }
-        for (subview, replacement) in replacements {
-            replaceSubview(subview, with: replacement)
-        }
-        if !newConstraints.isEmpty {
-            addConstraints(newConstraints)
-        }
-    }
-}
-
 @objc fileprivate protocol _NSWindowPrivate {
     func _setTransformForAnimation(_: CGAffineTransform, anchorPoint: CGPoint)
 }
@@ -205,10 +130,6 @@ fileprivate class NSDeadView: NSView {
     }
 }
 
-public extension NSWindow.OcclusionState {
-    public static let invisible = NSWindow.OcclusionState(rawValue: 0)
-}
-
 public extension NSView {
 	
 	/* TODO: Finish this stuff here. */
@@ -291,34 +212,6 @@ open class NSApplicationController: NSObject, NSApplicationDelegate {
         if self.responds(to: sel) {
             self.perform(sel, with: NSApp, with: [url])
         }
-    }
-}
-
-public class MenuItem: NSMenuItem {
-    private var handler: () -> ()
-    
-    public init(title: String, keyEquivalent: String = "", handler: @escaping () -> ()) {
-        self.handler = handler
-        super.init(title: title, action: #selector(action(_:)), keyEquivalent: keyEquivalent)
-        self.target = self
-    }
-    
-    public required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc public func action(_ sender: AnyObject?) {
-        self.handler()
-    }
-}
-
-public extension NSMenu {
-    
-    @discardableResult
-    public func addItem(title: String, keyEquivalent: String = "", handler: @escaping () -> ()) -> NSMenuItem {
-        let item = MenuItem(title: title, keyEquivalent: keyEquivalent, handler: handler)
-        self.addItem(item)
-        return item
     }
 }
 

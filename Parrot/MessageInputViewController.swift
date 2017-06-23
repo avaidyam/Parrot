@@ -69,21 +69,6 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         self.textView.height >= self.photoView.height
     }
     
-    public override func viewWillAppear() {
-        super.viewWillAppear()
-        
-        // Mask the image into a circle and grab it.
-        /*if let layer = self.photoView.layer {
-            layer.masksToBounds = true
-            layer.cornerRadius = 24.0 / 2.0 // FIXME: dynamic mask
-        }
-        */
-        //self.photoView.image = self.host?.image
-        
-        //self.textView.translatesAutoresizingMaskIntoConstraints = false
-        //self.textView.enclosingScrollView?.replaceInSuperview(with: self.textView)
-    }
-    
     // Set up dark/light notifications.
     public override func viewDidAppear() {
         super.viewDidAppear()
