@@ -53,6 +53,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let s = NSSearchField().modernize(wantsLayer: true)
         s.sendsWholeSearchString = true
         s.sendsSearchStringImmediately = true
+        s.disableToolbarLook()
         s.target = self
         s.action = #selector(self.searching(_:))
         return s

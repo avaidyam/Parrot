@@ -7,6 +7,7 @@ public class ReloadCell: NSView {
         let b = NSButton(title: "Load More", image: NSImage(named: .refreshTemplate)!,
                          target: self, action: #selector(self.reloadPressed(_:)))
             .modernize()
+        b.bezelStyle = .texturedRounded
         return b
     }()
     

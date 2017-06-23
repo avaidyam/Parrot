@@ -110,6 +110,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     private lazy var scrollView: NSScrollView = {
         let s = NSScrollView(for: self.collectionView).modernize()
+        s.automaticallyAdjustsContentInsets = false
         s.contentInsets = NSEdgeInsets(top: 36.0, left: 0, bottom: 32.0, right: 0)
         return s
     }()

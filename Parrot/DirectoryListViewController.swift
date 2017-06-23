@@ -42,7 +42,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }()
     
     private lazy var searchField: NSSearchField = {
-        return NSSearchField().modernize(wantsLayer: true)
+        let s = NSSearchField().modernize(wantsLayer: true)
+        s.disableToolbarLook()
+        return s
     }()
     
     private lazy var addButton: NSButton = {

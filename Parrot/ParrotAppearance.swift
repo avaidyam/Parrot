@@ -199,3 +199,13 @@ public extension NSWindow {
 		t?.blendingMode = blendingMode
 	}
 }
+
+public extension NSControl {
+    
+    /// Sigh. More AppKit "magic" to defeat. When placed in the titlebarview of a window,
+    /// views are given a semanticContext of 0x5 and marked explicit. Setting an explicit
+    /// value of 0x0 disables that. Not sure what the thing is used for...
+    public func disableToolbarLook() {
+        self.perform(Selector(("_setSemanticContext:")), with: 0)
+    }
+}
