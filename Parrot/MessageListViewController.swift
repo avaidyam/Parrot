@@ -604,11 +604,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func send(images: [URL]) {
         for url in images {
-            let img = try? Data(contentsOf: url)
+            let img = try! Data(contentsOf: url)
             let fname = url.lastPathComponent
-            self.conversation?.sendMessage(segments: [], image_data: img, image_name: fname, image_id: nil, image_user_id: nil) {
-                print("sent img1")
-            }
+            self.conversation?.send(photo: img, name: fname)
+            
         }
     }
     

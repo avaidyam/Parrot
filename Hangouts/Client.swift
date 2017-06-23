@@ -7,9 +7,6 @@ internal let hangoutsCenter = NotificationCenter()
 
 public final class Client: Service {
 	
-	// URL for uploading any URL to Photos
-	public static let IMAGE_UPLOAD_URL = "https://docs.google.com/upload/photos/resumable"
-	
 	// NotificationCenter notification and userInfo keys.
 	internal static let didConnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidConnect")
 	internal static let didDisconnectNotification = Notification.Name(rawValue: "Hangouts.Client.DidDisconnect")

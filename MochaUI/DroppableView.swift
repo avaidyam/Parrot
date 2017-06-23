@@ -162,6 +162,7 @@ public class DroppableView: NSView {
     //
     //
     
+    // TODO: if dragging an image that isn't on-disk, this crashes.
     private class func fileUrls(fromInfo info: NSDraggingInfo) -> [NSURL]? {
         let pboard = info.draggingPasteboard()
         if pboard.types!.contains(.filePromise) {

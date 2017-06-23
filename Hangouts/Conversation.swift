@@ -240,59 +240,62 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		}
 	}
     
+    // TODO: opQueue should be serial!
     public func send(message text: String) {
         guard text.characters.count > 0 else { return }
+        let otr: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
+        let medium = self.getDefaultDeliveryMedium().mediumType!
+        
         let s = DispatchSemaphore(value: 0)
         self.client.opQueue.async {
-            self.sendMessage(segments: [IChatMessageSegment(text: text)]) {
-                s.signal()
+            self.client.sendChatMessage(conversation_id: self.id,
+                                        segments: [IChatMessageSegment(text: text)].map { $0.serialize() },
+                                        image_id: nil,
+                                        otr_status: otr,
+                                        delivery_medium: medium) { _ in s.signal() }
+        }
+        s.wait()
+    }
+    
+    // TODO: opQueue should be serial!
+    public func send(photo: Data, name: String) {
+        let otr: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
+        let medium = self.getDefaultDeliveryMedium().mediumType!
+        
+        let s = DispatchSemaphore(value: 0)
+        self.client.opQueue.async {
+            self.client.uploadIfNeeded(photo: .new(data: photo, name: name)) { photoID, userID in
+                self.client.sendChatMessage(conversation_id: self.id,
+                                            segments: [],
+                                            image_id: photoID,
+                                            image_user_id: userID,
+                                            otr_status: otr,
+                                            delivery_medium: medium) { _ in s.signal() }
             }
         }
         s.wait()
     }
-	
-	// Send a message to this conversation.
-	// A per-conversation lock is acquired to ensure that messages are sent in
-	// the correct order when this method is called multiple times
-	// asynchronously.
-	// segments is a list of ChatMessageSegments to include in the message.
-	// image_file is an optional file-like object containing an image to be
-	// attached to the message.
-	// image_id is an optional ID of an image to be attached to the message
-	// (if you specify both image_file and image_id together, image_file
-	// takes precedence and supplied image_id will be ignored)
-	// Send messages with OTR status matching the conversation's status.
-    //
-    // Note: tl;dr if uploading an image, use image_data and image_name...
-    // Otherwise, if using an existing image, use image_id only.
-    // If using another person's public image, use image_id and image_user_id.
-    //
-    public func sendMessage(segments: [IChatMessageSegment],
-		image_data: Data? = nil,
-		image_name: String? = nil,
-		image_id: String? = nil,
-		image_user_id: String? = nil,
-        cb: (() -> Void)? = nil
-    ) {
-        let otr_status = (self.is_off_the_record ? OffTheRecordStatus.OffTheRecord : OffTheRecordStatus.OnTheRecord)
-        if let image_data = image_data, let image_name = image_name {
-			self.client.uploadImage(data: image_data, filename: image_name) { photoID in
-				self.client.sendChatMessage(conversation_id: self.id,
-					segments: segments.map { $0.serialize() },
-					image_id: photoID,
-					image_user_id: nil,
-					otr_status: otr_status,
-                    delivery_medium: self.getDefaultDeliveryMedium().mediumType!) { _ in cb?() }
-			}
-		} else {
-			self.client.sendChatMessage(conversation_id: id,
-				segments: segments.map { $0.serialize() },
-				image_id: nil,
-				otr_status: otr_status,
-				delivery_medium: self.getDefaultDeliveryMedium().mediumType!) { _ in cb?() }
-		}
+    
+    // TODO: opQueue should be serial!
+    // TODO: Clean this up a little bit.
+    public func send(photoID: String, userID: String) {
+        let otr: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
+        let medium = self.getDefaultDeliveryMedium().mediumType!
+        
+        let s = DispatchSemaphore(value: 0)
+        self.client.opQueue.async {
+            self.client.uploadIfNeeded(photo: .existing(id: photoID, user: userID)) { photoID, userID in
+                self.client.sendChatMessage(conversation_id: self.id,
+                                            segments: [],
+                                            image_id: photoID,
+                                            image_user_id: userID,
+                                            otr_status: otr,
+                                            delivery_medium: medium) { _ in s.signal() }
+            }
+        }
+        s.wait()
     }
-
+    
     public func leave(cb: (() -> Void)? = nil) {
         switch (self.conversation.type!) {
         case ConversationType.Group:

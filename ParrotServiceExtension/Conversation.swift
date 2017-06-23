@@ -49,4 +49,6 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
     func focus(mode: FocusMode)
     
     func send(message: String)
+    func send(photo: Data, name: String)
+    //func send(media: Data, name: String, kind: [.photo, .audio, .video, ...])
 }
