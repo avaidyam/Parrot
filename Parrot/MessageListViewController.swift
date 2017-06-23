@@ -377,6 +377,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
 					self.dataSource.append(chat)
+                    
 					 // Disabled because it takes a WHILE to run.
                     /*
                     linkQ.async {
@@ -400,13 +401,17 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 
                 let group = self.updateInterpolation // lazy
                 DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                    DispatchQueue.main.async { // after layout pass
-                        guard self.dataSource.count > 0 else { return }
+                    self.collectionView.performBatchUpdates({
+                        let t = (0..<self.dataSource.count).map {
+                            IndexPath(item: $0, section: 0)
+                        }
+                        self.collectionView.insertItems(at: Set(t))
+                        //self.collectionView.reloadData()
+                    }, completionHandler: { b in
+                        group.animate(duration: 0.5)
                         self.collectionView.animator().scrollToItems(at: [self.collectionView.indexPathForLastItem()],
-                                                                     scrollPosition: [.nearestVerticalEdge, .nearestHorizontalEdge])
-                    }
-                    group.animate(duration: 0.5)
+                                                                     scrollPosition: [.bottom])
+                    })
                 }
 			}
             
@@ -418,11 +423,16 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         
         // Support mentioning a person's name. // TODO, FIXME
         DispatchQueue.main.async {
+            let shouldScroll = self.collectionView.indexPathsForVisibleItems().contains(IndexPath(item: self.dataSource.count - 1, section: 0))
+            
             self.dataSource.append(event)
-            log.debug("section 0: \(self.dataSource.count)")
-            let idx = IndexPath(item: self.dataSource.count - 1, section: 0)
-            self.collectionView.insertItems(at: [idx])
-            //self.listView.scroll(toRow: self.dataSource.count - 1)
+            self.collectionView.performBatchUpdates({
+                self.collectionView.insertItems(at: [IndexPath(item: self.dataSource.count - 1, section: 0)])
+            }, completionHandler: { b in
+                guard shouldScroll else { return }
+                self.collectionView.animator().scrollToItems(at: [self.collectionView.indexPathForLastItem()],
+                                                             scrollPosition: [.bottom])
+            })
         }
     }
     

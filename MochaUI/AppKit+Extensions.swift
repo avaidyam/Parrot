@@ -372,9 +372,9 @@ public extension NSCollectionView {
     }
     
     public func indexPathForLastItem() -> IndexPath {
-        let sec = self.numberOfSections - 1
-        let it = self.numberOfItems(inSection: sec) - 1
-        return IndexPath(item: max(0, it), section: max(0, sec))
+        let sec = max(0, self.numberOfSections - 1)
+        let it = max(0, self.numberOfItems(inSection: sec) - 1)
+        return IndexPath(item: it, section: sec)
     }
     
     /// Determines the selection capabilities of the ListView.
