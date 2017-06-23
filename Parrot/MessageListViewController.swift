@@ -406,7 +406,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                             IndexPath(item: $0, section: 0)
                         }
                         self.collectionView.insertItems(at: Set(t))
-                        //self.collectionView.reloadData()
                     }, completionHandler: { b in
                         group.animate(duration: 0.5)
                         self.collectionView.animator().scrollToItems(at: [self.collectionView.indexPathForLastItem()],
@@ -568,30 +567,18 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public func windowWillClose(_ notification: Notification) {
         MessageListViewController.openConversations[self.conversation!.identifier] = nil
     }
-	
-    // TODO: Add a toolbar button and do this with that.
-    /*
-	public func drawerWillOpen(_ notification: Notification) {
-		self.drawerButton.state = NSOnState
-		self.drawer.drawerWindow?.animator().alphaValue = 1.0
-	}
-	public func drawerWillClose(_ notification: Notification) {
-		self.drawerButton.state = NSOffState
-		self.drawer.drawerWindow?.animator().alphaValue = 0.0
-	}
-    */
     
     private func scrollback() {
         guard self.updateToken == false else { return }
-        let first = self.dataSource[safe: 0] as? IChatMessageEvent
-        self.conversation?.getEvents(event_id: first?.event.eventId, max_events: 50) { events in
+        let first = self.dataSource[0] as! IChatMessageEvent
+        self.conversation?.getEvents(event_id: first.event.eventId, max_events: 50) { events in
             let count = self.dataSource.count
             self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent }, at: 0)
             DispatchQueue.main.async {
-                self.collectionView.insertItems(at: Set((0..<(self.dataSource.count - count)).map { IndexPath(item: $0, section: 0) }))
-                /*self.listView.tableView.insertRows(at: IndexSet(integersIn: 0..<(self.dataSource.count - count)),
-                 withAnimation: .slideDown)
-                 */
+                let idxs = (0..<(self.dataSource.count - count)).map {
+                    IndexPath(item: $0, section: 0)
+                }
+                self.collectionView.insertItems(at: Set(idxs))
                 self.updateToken = false
             }
         }
