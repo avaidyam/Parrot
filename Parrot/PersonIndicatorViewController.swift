@@ -60,7 +60,7 @@ public class PersonIndicatorViewController: NSViewController {
     
     public var isDimmed: Bool = false {
         didSet {
-            DispatchQueue.main.async {
+            UI {
                 self.view.animator().alphaValue = self.isDimmed ? 0.6 : 1.0
             }
         }

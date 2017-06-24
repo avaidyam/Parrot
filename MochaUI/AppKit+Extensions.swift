@@ -298,14 +298,27 @@ public extension NSScrollView {
     }
 }
 
+//
+//
+//
+
 @discardableResult
-func benchmark<T>(_ only60FPS: Bool = true, _ title: String = #function, _ handler: () -> (T)) -> T {
+public func benchmark<T>(_ only60FPS: Bool = true, _ title: String = #function, _ handler: () throws -> (T)) rethrows -> T {
     let t = CACurrentMediaTime()
-    let x = handler()
+    let x = try handler()
     
     let ms = (CACurrentMediaTime() - t)
     if (!only60FPS) || (only60FPS && ms > (1/60)) {
         print("Operation \(title) took \(ms * 1000)ms!")
     }
     return x
+}
+
+@discardableResult
+public func UI<T>(_ handler: @escaping () throws -> (T)) rethrows -> T {
+    if DispatchQueue.current == .main {
+        return try handler()
+    } else {
+        return try DispatchQueue.main.sync(execute: handler)
+    }
 }

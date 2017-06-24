@@ -48,12 +48,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public static func show(conversation conv: ParrotServiceExtension.Conversation, parent: NSViewController? = nil) {
         if let wc = MessageListViewController.openConversations[conv.identifier] {
             log.debug("Conversation found for id \(conv.identifier)")
-            DispatchQueue.main.async {
+            UI {
                 wc.presentAsWindow()
             }
         } else {
             log.debug("Conversation NOT found for id \(conv.identifier)")
-            DispatchQueue.main.async {
+            UI {
                 let wc = MessageListViewController()
                 wc.conversation = (conv as! IConversation)
                 MessageListViewController.openConversations[conv.identifier] = wc
@@ -154,12 +154,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
         indicatorAnim.add(at: 0.0) { [weak self] in
-            DispatchQueue.main.async {
+            UI {
                 self?.indicator.startAnimation(nil)
             }
         }
         indicatorAnim.add(at: 1.0) { [weak self] in
-            DispatchQueue.main.async {
+            UI {
                 self?.indicator.stopAnimation(nil)
             }
         }
@@ -403,7 +403,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 				}
                 
                 let group = self.updateInterpolation // lazy
-                DispatchQueue.main.async {
+                UI {
                     self.collectionView.performBatchUpdates({
                         let t = (0..<self.dataSource.count).map {
                             IndexPath(item: $0, section: 0)
@@ -424,7 +424,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         guard let event = notification.userInfo?["event"] as? IChatMessageEvent else { return }
         
         // Support mentioning a person's name. // TODO, FIXME
-        DispatchQueue.main.async {
+        UI {
             let shouldScroll = self.collectionView.indexPathsForVisibleItems().contains(IndexPath(item: self.dataSource.count - 1, section: 0))
             
             self.dataSource.insert(event)
@@ -471,7 +471,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     // FIXME: Watermark!!
     public func watermarkEvent(_ focus: Focus) {
         guard let s = focus.sender, !s.me else { return }
-        DispatchQueue.main.async {
+        UI {
             let oldWatermarkIdx = self.lastWatermarkIdx
             if oldWatermarkIdx > 0 {
                 self.dataSource.remove(at: oldWatermarkIdx)
@@ -495,7 +495,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func focusModeChanged(_ focus: Focus) {
         guard let s = focus.sender, !s.me else { return }
-        DispatchQueue.main.async {
+        UI {
             switch focus.mode {
             case .typing: fallthrough
             case .enteredText:
@@ -540,7 +540,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
 		
         // Delay here to ensure that small context switches don't send focus messages.
-		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+		DispatchQueue.main.asyncAfter(deadline: 1.seconds.later) {
             if let window = self.view.window, window.isKeyWindow {
                 self.focusComponents.1 = true // set it here too just in case.
             }
@@ -576,7 +576,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.conversation?.getEvents(event_id: first.event.eventId, max_events: 50) { events in
             let count = self.dataSource.count
             self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent })
-            DispatchQueue.main.async {
+            UI {
                 let idxs = (0..<(self.dataSource.count - count)).map {
                     IndexPath(item: $0, section: 0)
                 }

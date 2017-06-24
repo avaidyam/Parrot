@@ -148,9 +148,7 @@ public class PersonCell: NSCollectionViewItem {
             do {
                 try PersonIndicatorViewController.contactStore.enumerateContacts(with: request) { c, stop in
                     stop.pointee = true
-                    DispatchQueue.main.async {
-                        show(c)
-                    }
+                    UI { show(c) }
                 }
             } catch { }
         }

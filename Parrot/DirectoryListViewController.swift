@@ -97,9 +97,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
         indicatorAnim.add(at: 1.0) {
-            DispatchQueue.main.async {
-                self.indicator.stopAnimation()
-            }
+            UI { self.indicator.stopAnimation() }
         }
         indicatorAnim.handlerRunPolicy = .always
         let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { [weak self] scale in
@@ -115,7 +113,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     var directory: ParrotServiceExtension.Directory? {
         didSet {
-            DispatchQueue.main.async {
+            UI {
                 self.collectionView.reloadData()
                 self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
                                                              scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
@@ -169,7 +167,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
             guard let c = note.object as? Service else { return }
             self.directory = c.directory
-            DispatchQueue.main.async {
+            UI {
                 self.title = c.directory.me.fullName
                 self.collectionView.reloadData()
             }

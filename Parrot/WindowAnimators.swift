@@ -89,7 +89,7 @@ public struct ZoomWindowAnimator: WindowAnimator {
         
         let group = Interpolate.group(scale, alpha, frame)
         group.add {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak window] in
+            DispatchQueue.main.asyncAfter(deadline: 200.milliseconds.later) { [weak window] in
                 window?.setFrame(old_rect, display: false)
                 window?.alphaValue = 1.0
                 window?.scale()

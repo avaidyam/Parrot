@@ -39,7 +39,7 @@ public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> V
 	
 	// Onlt wait on the semaphore if we don't have a handler.
 	if handler == nil {
-		_ = semaphore.wait(timeout: .now() + .seconds(3))
+		_ = semaphore.wait(timeout: 3.seconds.later)
 		return _cache[id]
 	} else {
 		return nil

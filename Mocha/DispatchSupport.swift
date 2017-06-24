@@ -39,13 +39,13 @@ public extension DispatchTimeInterval {
 // app init, and then current will work.
 public extension DispatchQueue {
     
-    public enum AuxType: Equatable {
+    public enum QueueType: Equatable {
         case main
         case global(DispatchQoS.QoSClass)
         case other(String)
         case unknown
         
-        public static func ==(lhs: AuxType, rhs: AuxType) -> Bool {
+        public static func ==(lhs: QueueType, rhs: QueueType) -> Bool {
             switch (lhs, rhs) {
             case (let .global(qos1), let .global(qos2)):
                 return qos1 == qos2
@@ -61,27 +61,35 @@ public extension DispatchQueue {
         }
     }
     
-    private static let _key = DispatchSpecificKey<DispatchQueue.AuxType>()
-    public static func setupQueues() {
-        DispatchQueue.main.async {
-            DispatchQueue.main.setSpecific(key: _key, value: .main)
-            DispatchQueue.global(qos: .background).setSpecific(key: _key, value: .global(.background))
-            DispatchQueue.global(qos: .default).setSpecific(key: _key, value: .global(.default))
-            DispatchQueue.global(qos: .userInitiated).setSpecific(key: _key, value: .global(.userInitiated))
-            DispatchQueue.global(qos: .userInteractive).setSpecific(key: _key, value: .global(.userInteractive))
-            DispatchQueue.global(qos: .utility).setSpecific(key: _key, value: .global(.utility))
-        }
-    }
-    
-    public static var current: AuxType {
+    /// Retrieve the current queue AuxType, and bootstrap the system if needed.
+    /// Note: bootstrapping occurs on the invoking queue.
+    public static var current: QueueType {
+        _ = DispatchQueue.setupQueueToken
         return DispatchQueue.getSpecific(key: DispatchQueue._key) ?? .unknown
     }
     
-    public var auxType: AuxType {
-        get { return self.getSpecific(key: DispatchQueue._key) ?? .unknown }
+    public var queueType: QueueType {
+        get {
+            _ = DispatchQueue.setupQueueToken
+            return self.getSpecific(key: DispatchQueue._key) ?? .unknown
+        }
         set {
-            if case .global(_) = self.auxType, case .main = self.auxType { return }
+            _ = DispatchQueue.setupQueueToken
+            if case .global(_) = self.queueType, case .main = self.queueType { return }
+            guard case .other(_) = newValue, case .unknown = newValue else { return }
+            
             self.setSpecific(key: DispatchQueue._key, value: newValue)
         }
     }
+    
+    private static let _key = DispatchSpecificKey<DispatchQueue.QueueType>()
+    private static var setupQueueToken: Void = {
+        DispatchQueue.main.setSpecific(key: _key, value: .main)
+        DispatchQueue.global(qos: .background).setSpecific(key: _key, value: .global(.background))
+        DispatchQueue.global(qos: .default).setSpecific(key: _key, value: .global(.default))
+        DispatchQueue.global(qos: .userInitiated).setSpecific(key: _key, value: .global(.userInitiated))
+        DispatchQueue.global(qos: .userInteractive).setSpecific(key: _key, value: .global(.userInteractive))
+        DispatchQueue.global(qos: .utility).setSpecific(key: _key, value: .global(.utility))
+        return ()
+    }()
 }

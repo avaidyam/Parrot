@@ -116,7 +116,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             self?.indicator.alphaValue = CGFloat(1.0 - alpha)
         }
         indicatorAnim.add(at: 1.0) {
-            DispatchQueue.main.async { [weak self] in
+            UI { [weak self] in
                 self?.indicator.stopAnimation()
             }
         }
@@ -135,7 +135,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     var conversationList: ConversationList? {
         didSet {
             self.dataSource.insert(contentsOf: self.conversationList!.conversations.values.filter { !$0.archived })
-            DispatchQueue.main.async {
+            UI {
                 self.collectionView.reloadData()
                 self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
                                                              scrollPosition: [.centeredHorizontally, .nearestHorizontalEdge])
@@ -213,7 +213,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             guard let c = note.object as? Service else { return }
             self.conversationList = c.conversations
             
-            DispatchQueue.main.async {
+            UI {
                 self.collectionView.reloadData()
                 self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
                                                              scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
@@ -320,7 +320,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let _ = self.conversationList?.syncConversations(count: 25, since: self.conversationList!.syncTimestamp) { val in
             guard let val = val else { return }
             self.dataSource.insert(contentsOf: val.values.filter { !$0.archived })
-            DispatchQueue.main.async {
+            UI {
                 self.collectionView.reloadData()
                 self.updateToken = false
             }
@@ -329,7 +329,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     private func updateList() {
-        DispatchQueue.main.async {
+        UI {
             self.collectionView.reloadData()
             self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
                                                          scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])

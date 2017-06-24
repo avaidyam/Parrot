@@ -45,8 +45,7 @@ public struct TypingHelper {
         }
         
         self.lastTypingTimestamp = now
-        let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.asyncAfter(deadline: dt, execute: self.callback)
+        DispatchQueue.main.asyncAfter(deadline: 1.seconds.later, execute: self.callback)
     }
     
     private func callback() {
