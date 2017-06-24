@@ -208,7 +208,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     /// The primary EventStreamItem dataSource.
-	private var dataSource: [EventStreamItem] = []
+    private var dataSource = SortedArray<EventStreamItem>() { a, b in
+        return a.timestamp < b.timestamp
+    }
     
     /// The background image and colors update Subscription.
     private var colorsSub: Subscription? = nil
@@ -377,7 +379,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 			
 			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
-					self.dataSource.append(chat)
+					self.dataSource.insert(chat)
                     
 					 // Disabled because it takes a WHILE to run.
                     /*
@@ -425,7 +427,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         DispatchQueue.main.async {
             let shouldScroll = self.collectionView.indexPathsForVisibleItems().contains(IndexPath(item: self.dataSource.count - 1, section: 0))
             
-            self.dataSource.append(event)
+            self.dataSource.insert(event)
             self.collectionView.performBatchUpdates({
                 self.collectionView.insertItems(at: [IndexPath(item: self.dataSource.count - 1, section: 0)])
             }, completionHandler: { b in
@@ -474,7 +476,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             if oldWatermarkIdx > 0 {
                 self.dataSource.remove(at: oldWatermarkIdx)
             }
-            self.dataSource.append(focus)
+            self.dataSource.insert(focus)
             self.lastWatermarkIdx = self.dataSource.count - 1
             
             /*
@@ -573,7 +575,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let first = self.dataSource[0] as! IChatMessageEvent
         self.conversation?.getEvents(event_id: first.event.eventId, max_events: 50) { events in
             let count = self.dataSource.count
-            self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent }, at: 0)
+            self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent })
             DispatchQueue.main.async {
                 let idxs = (0..<(self.dataSource.count - count)).map {
                     IndexPath(item: $0, section: 0)

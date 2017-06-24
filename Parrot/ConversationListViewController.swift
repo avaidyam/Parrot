@@ -134,8 +134,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     var conversationList: ConversationList? {
         didSet {
+            self.dataSource.insert(contentsOf: self.conversationList!.conversations.values.filter { !$0.archived })
             DispatchQueue.main.async {
-                self.recacheConversations()
                 self.collectionView.reloadData()
                 self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
                                                              scrollPosition: [.centeredHorizontally, .nearestHorizontalEdge])
@@ -144,15 +144,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }
     
-    private var sortedConversations = [Conversation]()
-    
-    private func recacheConversations() {
-        guard self.conversationList != nil else {
-            self.sortedConversations = []; return
-        }
-        self.sortedConversations = self.conversationList!.conversations.values
-            .filter { !$0.archived }
-            .sorted { $0.timestamp > $1.timestamp }
+    private var dataSource = SortedArray<Conversation>() { a, b in
+        return a.timestamp > b.timestamp
     }
     
     //
@@ -227,7 +220,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 self.updateSelectionIndexes()
             }
             
-            let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
+            let unread = self.dataSource.map { $0.unreadCount }.reduce(0, +)
             NSApp.badgeCount = UInt(unread)
         }
     }
@@ -280,12 +273,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     ///
     
     public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.sortedConversations.count
+        return self.dataSource.count
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"), for: indexPath)
-        item.representedObject = self.sortedConversations[indexPath.item]
+        item.representedObject = self.dataSource[indexPath.item]
         return item
     }
     
@@ -296,13 +289,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-        indexPaths.map { self.sortedConversations[$0.item] }.forEach {
+        indexPaths.map { self.dataSource[$0.item] }.forEach {
             MessageListViewController.show(conversation: $0, parent: self.parent)
         }
     }
     
     public func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
-        indexPaths.map { self.sortedConversations[$0.item] }.forEach {
+        indexPaths.map { self.dataSource[$0.item] }.forEach {
             MessageListViewController.hide(conversation: $0)
         }
     }
@@ -325,9 +318,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private func scrollback() {
         guard self.updateToken == false else { return }
         let _ = self.conversationList?.syncConversations(count: 25, since: self.conversationList!.syncTimestamp) { val in
-            self.recacheConversations()
+            guard let val = val else { return }
+            self.dataSource.insert(contentsOf: val.values.filter { !$0.archived })
             DispatchQueue.main.async {
-                self.collectionView.reloadData()//.tableView.noteNumberOfRowsChanged()
+                self.collectionView.reloadData()
                 self.updateToken = false
             }
         }
@@ -339,7 +333,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             self.collectionView.reloadData()
             self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
                                                          scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
-            let unread = self.sortedConversations.map { $0.unreadCount }.reduce(0, +)
+            let unread = self.dataSource.map { $0.unreadCount }.reduce(0, +)
             NSApp.badgeCount = UInt(unread)
             self.updateSelectionIndexes()
         }
@@ -347,7 +341,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     private func updateSelectionIndexes() {
         let paths = Array(MessageListViewController.openConversations.keys)
-            .flatMap { id in self.sortedConversations.index { $0.identifier == id } }
+            .flatMap { id in self.dataSource.index { $0.identifier == id } }
             .map { IndexPath(item: $0, section: 0) }
         self.collectionView.selectionIndexPaths = Set(paths)
     }
