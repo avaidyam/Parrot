@@ -12,7 +12,7 @@ import protocol ParrotServiceExtension.Conversation
 public class ConversationCell: NSCollectionViewItem {
     
     private static var wallclock = Wallclock()
-    private var id = UUID() // for wallclock
+    private var id = UUID() // for Wallclock
     
     private lazy var photoLayer: CALayer = {
         let l = CALayer()
