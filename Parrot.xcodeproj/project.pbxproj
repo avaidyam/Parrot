@@ -41,6 +41,7 @@
 		482323E51E1D3C0700318380 /* parrot-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4803639A1C1D08490008E9F5 /* parrot-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		482323E71E1D406200318380 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323E61E1D406200318380 /* Auth.swift */; };
 		482323E91E1D61E100318380 /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323E81E1D61E100318380 /* AttributedString.swift */; };
+		4826D3881F03B853000FE44F /* Transformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4826D3871F03B853000FE44F /* Transformer.swift */; };
 		4831BC971ECF72C900C30413 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4831BC961ECF72C900C30413 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		4831BC9C1ECFA1A300C30413 /* NSExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BC9B1ECFA1A300C30413 /* NSExtension.swift */; };
 		4831BCC91ED09C9800C30413 /* GeneralPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCC81ED09C9800C30413 /* GeneralPrefs.swift */; };
@@ -337,6 +338,7 @@
 		482323DF1E1CBD3A00318380 /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		482323E61E1D406200318380 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		482323E81E1D61E100318380 /* AttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
+		4826D3871F03B853000FE44F /* Transformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformer.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		4831BC961ECF72C900C30413 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4831BC9B1ECFA1A300C30413 /* NSExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSExtension.swift; sourceTree = "<group>"; };
@@ -956,6 +958,7 @@
 				48BFAECF1D1CF19100ADBA3A /* AppActivity.swift */,
 				48D4C9FD1DBD5F2F001CF7AD /* Subscription.swift */,
 				4848A5BE1EFF1BED008B2DE2 /* Binding.swift */,
+				4826D3871F03B853000FE44F /* Transformer.swift */,
 				48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */,
 				481D933D1DF5D7D100EB23A1 /* Wallclock.swift */,
 				48D3CD071DE944B7003D6C02 /* Supporting Files */,
@@ -1633,6 +1636,7 @@
 				48D3CD051DE944A6003D6C02 /* FoundationSupport.swift in Sources */,
 				4831BC9C1ECFA1A300C30413 /* NSExtension.swift in Sources */,
 				4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */,
+				4826D3881F03B853000FE44F /* Transformer.swift in Sources */,
 				48D3CD221DE94C9C003D6C02 /* KeyValueStore.swift in Sources */,
 				48D3CD061DE944AA003D6C02 /* Logger.swift in Sources */,
 				48D3CD1C1DE94BBD003D6C02 /* Emoji.swift in Sources */,
