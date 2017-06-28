@@ -40,7 +40,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     /// list is updated, it is cached and all selections are synchronized.
     public /*private(set)*/ static var openConversations = [String: MessageListViewController]() {
         didSet {
-            Settings["Parrot.OpenConversations"] = Array(self.openConversations.keys)
+            Settings.openConversations = Array(self.openConversations.keys)
             Subscription.Event(name: .OpenConversationsUpdated).post()
         }
     }
@@ -278,7 +278,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         
         // Monitor changes to the view background and colors.
         self.colorsSub = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
-            if  let dat = Settings["Parrot.ConversationBackground"] as? NSData,
+            if  let dat = Settings.conversationBackground,
                 let img = NSImage(data: dat as Data) {
                 self.view.layer?.contents = img
             } else {

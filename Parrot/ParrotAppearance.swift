@@ -18,8 +18,8 @@ public struct ParrotAppearance {
 	/// Trampolines the distributed notification sent when the user changes interface styles
 	/// into a locally stored default that can be observed normally.
 	private static let registerDarkModeActiveListener: NSObjectProtocol = {
-		DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("AppleInterfaceThemeChangedNotification"), object: nil, queue: nil) { _ in
-			Settings[Preferences.Key.SystemInterfaceStyle] = NSAppearance.darkMode
+		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.menuBarAppearanceDidChangeNotification, object: nil, queue: nil) { _ in
+			Settings.systemInterfaceStyle = NSAppearance.darkInterfaceTheme
 		}
 	}()
 	
@@ -74,75 +74,15 @@ public struct ParrotAppearance {
 	/// PUBLIC:
 	///
 	
-	public enum InterfaceStyle: Int {
-		/// Vibrant Light theme.
-		case Light
-		/// Vibrant Dark theme.
-		case Dark
-		/// System-defined vibrant theme.
-		case System
-		
-		/// Returns the currently indicated Parrot appearance based on user preference
-		/// and if applicable, the global dark interface style preference (trampolined).
-		public func appearance() -> NSAppearance {
-			let style = InterfaceStyle(rawValue: Settings[Preferences.Key.InterfaceStyle] as? Int ?? -1) ?? .Dark
-			
-			switch style {
-			case .Light: return .light
-			case .Dark: return .dark
-				
-			case .System: //TODO: "NSAppearanceNameMediumLight"
-				let system = Settings[Preferences.Key.SystemInterfaceStyle] as? Bool ?? false
-				return system ? .dark : .light
-			}
-		}
-	}
-	
-	public enum VibrancyStyle: Int {
-		/// Windows will always be vibrant.
-		case Always
-		/// Windows will never be vibrant (opaque).
-		case Never
-		/// Windows will be vibrant when focused.
-		case Automatic
-		
-        public func visualEffectState() -> NSVisualEffectView.State {
-			switch self {
-			case .Always: return .active
-			case .Never: return .inactive
-			case .Automatic: return .followsWindowActiveState
-			}
-		}
-	}
-	
-	public enum WindowInteraction: Int {
-		/// App windows can be tabbed.
-		case Tabbed
-		/// App windows can be docked.
-		case Docking
-	}
-	
-	public enum InterfaceMode: Int {
-		///
-		case MasterDetail
-		///
-		case InlineExpansion
-		/// Sidebar for all conversations, content has a single conversation.
-		case SplitView
-		///
-		case PopoverDetail
-		///
-		case OverlayBubble
-	}//document, utility, shoebox
 	
 	/// Returns the current user preferential InterfaceStyle (light, dark, system).
 	public static func interfaceStyle() -> InterfaceStyle {
-		return InterfaceStyle(rawValue: Settings[Preferences.Key.InterfaceStyle] as? Int ?? -1) ?? .System
+		return InterfaceStyle(rawValue: Settings.interfaceStyle) ?? .System
 	}
 	
 	/// Returns the current user preferential VibrancyStyle (always, never, automatic).
 	public static func vibrancyStyle() -> VibrancyStyle {
-		return VibrancyStyle(rawValue: Settings[Preferences.Key.VibrancyStyle] as? Int ?? -1) ?? .Automatic
+		return VibrancyStyle(rawValue: Settings.vibrancyStyle) ?? .Automatic
 	}
 	
 	/// Register a listener to be invoked when the application appearance changes.

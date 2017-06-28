@@ -184,7 +184,7 @@ public final class SecureSettingsStore: KeyValueStore {
 }
 
 /// Aliased singleton for SettingsStore.
-public let Settings = SettingsStore()
+//public let Settings = SettingsStore()
 
 /// Aliased singleton for SecureSettingsStore.
 @available(macOS 10.2, *)

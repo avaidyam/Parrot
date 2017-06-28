@@ -1,5 +1,6 @@
 import Foundation
 import AppKit
+import Mocha
 import MochaUI
 
 public extension Preferences.Controllers {
@@ -27,6 +28,8 @@ public extension Preferences.Controllers {
             return v
         }()
         
+        private var bindings = [AnyBinding]()
+        
         public override func loadView() {
             let stack: NSStackView = NSStackView(views: [
                 self.textSize, self.interfaceStyle, self.vibrancyStyle
@@ -40,6 +43,11 @@ public extension Preferences.Controllers {
             stack.width == 512.0
             stack.height == 512.0
             self.view = stack
+            
+            self.bindings.append(Binding(between: (self.interfaceStyle.cell! as! NSSegmentedCell, \.selectedSegment),
+                                         and: (Settings, \.interfaceStyle), with: .right))
+            self.bindings.append(Binding(between: (self.vibrancyStyle.cell! as! NSSegmentedCell, \.selectedSegment),
+                                         and: (Settings, \.vibrancyStyle), with: .right))
         }
     }
 }

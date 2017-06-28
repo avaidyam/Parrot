@@ -48,9 +48,9 @@ public class ParrotAppController: NSApplicationController {
         }*/
 		
 		// Register the default completions if none are in the user settings.
-		if let c = Settings[Preferences.Key.Completions] as? NSDictionary , c.count > 0 {} else {
+		if Settings.completions.count == 0 {
 			let defaultC = ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]
-			Settings[Preferences.Key.Completions] = defaultC
+			Settings.completions = defaultC
 		}
 	}
     
@@ -83,7 +83,7 @@ public class ParrotAppController: NSApplicationController {
                                  contentImage: NSImage(named: NSImage.Name.caution)).post()
                 
                 // FIXME: If an old opened conversation isn't in the recents, it won't open!
-                (Settings["Parrot.OpenConversations"] as? [String])?
+                Settings.openConversations
                     .flatMap { c.conversationList?.conversations[$0] }
                     .forEach { MessageListViewController.show(conversation: $0 as! IConversation) }
 			}
@@ -177,13 +177,14 @@ public class ParrotAppController: NSApplicationController {
         
         /// This setting currently does not exist in the UI. Use `defaults` to set it.
         /// For a menubar-only experience, set the Info.plist `LSUIElement` to YES.
-        if Settings[Preferences.Key.MenuBarIcon] != nil {
+        if Settings.menubarIcon {
             let image = NSImage(named: NSImage.Name.applicationIcon)
             image?.size = NSSize(width: 16, height: 16)
             statusItem.image = image
             statusItem.button?.target = self
             statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
             statusItem.button?.action = #selector(self.showConversationWindow(_:))
+            NSApp.setActivationPolicy(.accessory)
         }
     }
     

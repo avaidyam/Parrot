@@ -1,8 +1,5 @@
 import Cocoa
 
-/* TODO: Make NSWorkspaceAccessibilityDisplayOptionsDidChangeNotification available. */
-/* TODO: Make NSWorkspace.accessibilityDisplayShould* properties available. */
-
 public extension NSAppearance {
     public static let aqua = NSAppearance(named: NSAppearance.Name.aqua)!
     public static let light = NSAppearance(named: NSAppearance.Name.vibrantLight)!
@@ -11,16 +8,21 @@ public extension NSAppearance {
 
 // adapted from @mattprowse: https://github.com/mattprowse/SystemBezelWindowController
 extension NSAppearance {
-    public static var darkMode: Bool {
+    public static var darkInterfaceTheme: Bool {
         return CFPreferencesCopyAppValue("AppleInterfaceStyle" as CFString, "NSGlobalDomain" as CFString) as? String == "Dark"
     }
-    public static var reduceTransparency: Bool {
-        return CFPreferencesGetAppBooleanValue("reduceTransparency" as CFString, "com.apple.universalaccess" as CFString, nil)
-    }
-    public static var increaseContrast: Bool {
-        return CFPreferencesGetAppBooleanValue("increaseContrast" as CFString, "com.apple.universalaccess" as CFString, nil)
-    }
+    
 }
+
+public extension NSWorkspace {
+    
+    public static var darkInterfaceTheme: Bool {
+        return CFPreferencesCopyAppValue("AppleInterfaceStyle" as CFString, "NSGlobalDomain" as CFString) as? String == "Dark"
+    }
+    
+    public static let menuBarAppearanceDidChangeNotification = NSNotification.Name(rawValue: "NSWorkspaceMenuBarAppearanceDidChangeNotification")
+}
+
 
 /// NSVisualEffectView allows events to bleed through. This blocks that.
 public class NSAntiVisualEffectView: NSVisualEffectView {

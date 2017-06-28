@@ -68,16 +68,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return b
     }()
     
+    private var searchBinding: AnyBinding? = nil
+    
     private lazy var searchToggle: NSButton = {
         let b = NSButton(title: "", image: NSImage(named: .revealFreestandingTemplate)!,
                          target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         b.setButtonType(.onOff)
-        b.state = NSControl.StateValue.on
-        b.handler = { [weak b] in
-            self.searchAccessory.animator().isHidden = ((b?.state ?? .off) != .on)
-        }
         return b
     }()
     
@@ -173,6 +171,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                       name: Notification.Conversation.DidUpdateList, object: nil)
         c.addObserver(self, selector: #selector(ConversationListViewController.conversationDidReceiveEvent(_:)),
                       name: Notification.Conversation.DidReceiveEvent, object: nil)
+        
+        // Setup bindings between things.
+        let t = CustomTransformer(forward: { $0 != NSControl.StateValue.on }, backward: { $0 ? .off : .on })
+        self.searchBinding = Binding(between: (self.searchToggle.cell!, \.state),
+                                     and: (self.searchAccessory, \.isHidden),
+                                     transformer: t, with: .left)
     }
     
     deinit {

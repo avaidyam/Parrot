@@ -119,8 +119,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         let text = self.textView
         
         var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
-        let setting = "com.avaidyam.Parrot.ConversationOutgoingColor"
-        if  let q = Settings[setting] as? Data,
+        if  let q = Settings.conversationOutgoingColor,
             let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
             c.alphaComponent > 0.0 {
             color = c
@@ -209,7 +208,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         let userStr = tString.substring(from: _r.location)
         
         NSSpellChecker.shared.dismissCorrectionIndicator(for: textView)
-        if let s = Settings[Preferences.Key.Completions] as? [String: Any], let r = s[userStr] as? String {
+        if let r = Settings.emoticons[userStr] {
             insertToken = true // prevent re-entrance
             
             // If the entered text was a completion character, place the matching

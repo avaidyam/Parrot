@@ -136,8 +136,8 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         // Only clip the text if the text isn't purely Emoji.
         if !text.string.isEmoji {
             var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
-            let setting = "com.avaidyam.Parrot.Conversation" + ((o.sender?.me ?? false) ? "OutgoingColor" : "IncomingColor")
-            if  let q = Settings[setting] as? Data,
+            let setting = (o.sender?.me ?? false) ? Settings.conversationOutgoingColor : Settings.conversationIncomingColor
+            if  let q = setting,
                 let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
                 c.alphaComponent > 0.0 {
                 color = c
