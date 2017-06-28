@@ -242,6 +242,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.indicator.startAnimation()
         
         ParrotAppearance.registerListener(observer: self, invokeImmediately: true) { interface, style in
+            self.view.window?.appearance = interface.appearance()
+            
             guard let vev = self.view as? NSVisualEffectView else { return }
             vev.state = style.visualEffectState()
         }
