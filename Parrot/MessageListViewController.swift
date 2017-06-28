@@ -288,25 +288,18 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.colorsSub?.trigger()
         
         // Set up dark/light notifications.
-        ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
+        ParrotAppearance.registerListener(observer: self, invokeImmediately: true) { interface, style in
             self.view.window?.appearance = interface.appearance()
-        }
-        
-        // Force the window to follow the current ParrotAppearance.
-        ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
+            
             guard let vev = self.view.window?.contentView as? NSVisualEffectView else { return }
             vev.state = style.visualEffectState()
-            /*if let s = self.view.window?.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView {
-                s.state = style.visualEffectState()
-            }*/
         }
     }
     
     public override func viewWillDisappear() {
         self.colorsSub = nil
         
-        ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
-        ParrotAppearance.unregisterVibrancyStyleListener(observer: self)
+        ParrotAppearance.unregisterListener(observer: self)
     }
     
     ///

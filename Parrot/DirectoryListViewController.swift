@@ -184,7 +184,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.scrollView.alphaValue = 0.0
         self.indicator.startAnimation()
         
-        ParrotAppearance.registerVibrancyStyleListener(observer: self, invokeImmediately: true) { style in
+        ParrotAppearance.registerListener(observer: self, invokeImmediately: true) { interface, style in
             guard let vev = self.view as? NSVisualEffectView else { return }
             vev.state = style.visualEffectState()
         }
@@ -192,8 +192,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     /// If we need to close, make sure we clean up after ourselves, instead of deinit.
     public override func viewWillDisappear() {
-        ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
-        ParrotAppearance.unregisterVibrancyStyleListener(observer: self)
+        ParrotAppearance.unregisterListener(observer: self)
     }
     
     /// Re-synchronizes the conversation name and identifier with the window.

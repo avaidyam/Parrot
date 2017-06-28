@@ -46,12 +46,12 @@ public class SystemBezel {
     
     private var activeColorMode: ColorMode {
         if NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast {
-            return NSAppearance.darkInterfaceTheme ? .darkIncreasedContrast : .lightIncreasedContrast
+            return NSWorkspace.shared.darkInterfaceTheme ? .darkIncreasedContrast : .lightIncreasedContrast
         }
         if NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency {
-            return NSAppearance.darkInterfaceTheme ? .darkReducedTransparency : .lightReducedTransparency
+            return NSWorkspace.shared.darkInterfaceTheme ? .darkReducedTransparency : .lightReducedTransparency
         }
-        return NSAppearance.darkInterfaceTheme ? .dark : .light
+        return NSWorkspace.shared.darkInterfaceTheme ? .dark : .light
     }
     
     // If nil, follows the system appearance.
@@ -169,7 +169,7 @@ public class SystemBezel {
         if let a = self.appearance {
             _inner(a.name == NSAppearance.Name.vibrantDark)
         } else {
-            _inner(NSAppearance.darkInterfaceTheme)
+            _inner(NSWorkspace.shared.darkInterfaceTheme)
         }
     }
     

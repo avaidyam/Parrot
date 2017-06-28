@@ -13,7 +13,7 @@ public enum InterfaceStyle: Int {
     /// and if applicable, the global dark interface style preference (trampolined).
     public func appearance() -> NSAppearance {
         let style = InterfaceStyle(rawValue: Settings.interfaceStyle) ?? .Dark
-        NSWorkspace.accessibilityDisplayOptionsDidChangeNotification
+        
         switch style {
         case .Light: return .light
         case .Dark: return .dark

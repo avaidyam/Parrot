@@ -74,7 +74,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         super.viewDidAppear()
         self.resizeModule()
         self.view.window?.makeFirstResponder(self.textView)
-        ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
+        ParrotAppearance.registerListener(observer: self, invokeImmediately: true) { interface, style in
             
             // NSTextView doesn't automatically change its text color when the
             // backing view's appearance changes, so we need to set it each time.
@@ -133,7 +133,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     }
     
     public override func viewWillDisappear() {
-        ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
+        ParrotAppearance.unregisterListener(observer: self)
     }
     
     //

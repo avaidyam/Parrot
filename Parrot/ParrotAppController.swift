@@ -176,7 +176,6 @@ public class ParrotAppController: NSApplicationController {
         }
         
         /// This setting currently does not exist in the UI. Use `defaults` to set it.
-        /// For a menubar-only experience, set the Info.plist `LSUIElement` to YES.
         if Settings.menubarIcon {
             let image = NSImage(named: NSImage.Name.applicationIcon)
             image?.size = NSSize(width: 16, height: 16)
