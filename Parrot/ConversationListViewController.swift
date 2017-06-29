@@ -54,7 +54,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         s.sendsWholeSearchString = true
         s.sendsSearchStringImmediately = true
         s.disableToolbarLook()
-        s.handler = { [weak s] in
+        s.performedAction = { [weak s] in
             print("got string \(String(describing: s?.stringValue))")
         }
         return s

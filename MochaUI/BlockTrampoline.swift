@@ -9,7 +9,7 @@ extension NSControl: BlockTrampolineSupporting {}
 extension NSMenuItem: BlockTrampolineSupporting {}
 
 public extension BlockTrampolineSupporting {
-    var handler: (() -> ())? {
+    var performedAction: (() -> ())? {
         get {
             guard let trampoline = BlockTrampolineSupporting_handlerProp.get(self) else { return nil }
             return trampoline.action
@@ -42,7 +42,7 @@ public extension NSMenu {
     @discardableResult
     public func addItem(title: String, keyEquivalent: String = "", handler: @escaping () -> ()) -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: keyEquivalent)
-        item.handler = handler
+        item.performedAction = handler
         self.addItem(item)
         return item
     }

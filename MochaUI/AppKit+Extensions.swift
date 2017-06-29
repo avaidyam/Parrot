@@ -307,6 +307,33 @@ public extension NSWindow {
     }
 }
 
+public extension NSControl {
+    
+    /// Mutually exclusive with target/action/handlers.
+    public func setupForBindings() {
+        self.target = self
+        self.action = #selector(self.bindingTrampoline(_:))
+    }
+    
+    /// Allows triggering of all KVO bindings.
+    public func triggerBindings() {
+        self.bindingTrampoline(self)
+    }
+    
+    @objc private func bindingTrampoline(_ sender: NSControl!) {
+        let keys = ["objectValue", "attributedStringValue", "stringValue",
+                    "doubleValue", "floatValue", "integerValue", "intValue"]
+        for key in keys {
+            sender.willChangeValue(forKey: key)
+            sender.cell?.willChangeValue(forKey: key)
+        }
+        for key in keys {
+            sender.cell?.didChangeValue(forKey: key)
+            sender.didChangeValue(forKey: key)
+        }
+    }
+}
+
 //
 //
 //

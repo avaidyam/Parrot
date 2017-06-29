@@ -34,7 +34,7 @@ public class PreferencesViewController: NSTabViewController {
     }
     
     public override func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return super.toolbarSelectableItemIdentifiers(toolbar).filter { $0 != .flexibleSpace }
+        return super.toolbarSelectableItemIdentifiers(toolbar)
     }
     
     private func normalizedFrame(for window: NSWindow, from size: NSSize) -> NSRect {

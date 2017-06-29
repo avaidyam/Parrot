@@ -78,10 +78,12 @@ public class Binding<T: NSObject, U: NSObject, X, Y>: AnyBinding {
         }
         
         // Establish initial state.
-        switch initialState {
-        case .none: break
-        case .left: right.0[keyPath: right.1] = self.transformer.transform(x: left.0[keyPath: left.1])
-        case .right: left.0[keyPath: left.1] = self.transformer.transform(y: right.0[keyPath: right.1])
+        self.perform { l, r in
+            switch initialState {
+            case .none: break
+            case .left: r[keyPath: self.right.keyPath] = self.transformer.transform(x: l[keyPath: self.left.keyPath])
+            case .right: l[keyPath: self.left.keyPath] = self.transformer.transform(y: r[keyPath: self.right.keyPath])
+            }
         }
     }
     
