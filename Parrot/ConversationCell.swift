@@ -134,9 +134,9 @@ public class ConversationCell: NSCollectionViewItem {
     public override var highlightState: NSCollectionViewItem.HighlightState {
         didSet {
             if self.highlightState != .none {
-                self.view.layer?.backgroundColor = NSColor.selectedMenuItemColor.cgColor
+                self.layer.backgroundColor = NSColor.selectedMenuItemColor.cgColor
             } else {
-                self.view.layer?.backgroundColor = NSColor.clear.cgColor
+                self.layer.backgroundColor = NSColor.clear.cgColor
             }
         }
     }
@@ -145,15 +145,15 @@ public class ConversationCell: NSCollectionViewItem {
         didSet {
             //let appearance = self.view.appearance ?? NSAppearance.current()
             if self.isSelected {
-                self.view.layer?.backgroundColor = NSColor.selectedMenuItemColor.cgColor
+                self.layer.backgroundColor = NSColor.selectedMenuItemColor.cgColor
                 //self.appearance = .light
-                //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0.1997270976).cgColor
+                //self.layer.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0.1997270976).cgColor
                 //self.effect?.animator().isHidden = false
                 //self.separator?.animator().isHidden = true
             } else {
-                self.view.layer?.backgroundColor = NSColor.clear.cgColor
+                self.layer.backgroundColor = NSColor.clear.cgColor
                 //self.appearance = .dark
-                //self.view.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
+                //self.layer.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
                 //self.effect?.animator().isHidden = true
                 //self.separator?.animator().isHidden = false
             }

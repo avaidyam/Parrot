@@ -284,9 +284,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.colorsSub = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             if  let dat = Settings.conversationBackground,
                 let img = NSImage(data: dat as Data) {
-                self.view.layer?.contents = img
+                self.layer.contents = img
             } else {
-                self.view.layer?.contents = nil
+                self.layer.contents = nil
             }
         }
         self.colorsSub?.trigger()

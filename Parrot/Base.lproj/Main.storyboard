@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13122.17" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13122.17" systemVersion="17A291j" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13122.17"/>
@@ -33,7 +33,7 @@
                                         <menuItem isSeparatorItem="YES" id="K7u-i2-yQe"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
                                             <connections>
-                                                <segue destination="gJR-Sw-Gfg" kind="show" id="BCY-9r-7u0"/>
+                                                <action selector="showPreferences:" target="Voe-Tx-rLC" id="4Th-zK-rA6"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Accounts..." enabled="NO" id="jtZ-oz-XZD">
@@ -677,44 +677,6 @@
             </objects>
             <point key="canvasLocation" x="1513" y="-416"/>
         </scene>
-        <!--Preferences-->
-        <scene sceneID="V8I-ad-rAx">
-            <objects>
-                <tabViewController title="Preferences" selectedTabViewItemIndex="0" tabStyle="toolbar" id="gJR-Sw-Gfg" customClass="PreferencesViewController" customModule="MochaUI" sceneMemberID="viewController">
-                    <tabViewItems>
-                        <tabViewItem label="General" identifier="Parrot.General" image="NSColorPanel" id="gBw-aq-f1Z"/>
-                        <tabViewItem label="Messages" identifier="Parrot.Messages" image="NSAdvanced" id="5Dn-GQ-Rnb"/>
-                        <tabViewItem label="Accounts" identifier="Parrot.Accounts" image="NSUser" id="W03-co-0ZW"/>
-                    </tabViewItems>
-                    <viewControllerTransitionOptions key="transitionOptions" allowUserInteraction="YES"/>
-                    <tabView key="tabView" type="noTabsNoBorder" id="PnR-Xd-GfW">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <font key="font" metaFont="message"/>
-                        <tabViewItems/>
-                        <connections>
-                            <outlet property="delegate" destination="gJR-Sw-Gfg" id="U0M-cs-w2C"/>
-                        </connections>
-                    </tabView>
-                    <connections>
-                        <segue destination="pKj-Ns-rph" kind="relationship" relationship="tabItems" id="8ce-3E-Pfg"/>
-                        <segue destination="nBO-60-3Hu" kind="relationship" relationship="tabItems" id="bag-EB-Gq7"/>
-                        <segue destination="MRF-LU-YO2" kind="relationship" relationship="tabItems" id="UL1-hw-8qj"/>
-                    </connections>
-                </tabViewController>
-                <customObject id="gVI-or-jUe" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1513" y="-63"/>
-        </scene>
-        <!--General-->
-        <scene sceneID="E9z-Ze-Wgi">
-            <objects>
-                <viewController title="General" id="pKj-Ns-rph" customClass="GeneralPreferencesController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController"/>
-                <customObject id="rtd-0l-cK2" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <userDefaultsController representsSharedInstance="YES" id="cbh-fj-EIe"/>
-            </objects>
-            <point key="canvasLocation" x="1232" y="800"/>
-        </scene>
         <!--Messages-->
         <scene sceneID="u1m-pE-gEh">
             <objects>
@@ -937,14 +899,6 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.AutoEmoji" id="GKG-3z-aIe">
-                                        <dictionary key="options">
-                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                            <bool key="NSValidatesImmediately" value="YES"/>
-                                        </dictionary>
-                                    </binding>
-                                </connections>
                             </button>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O24-W5-gFo">
                                 <rect key="frame" x="276" y="114" width="141" height="124"/>
@@ -956,14 +910,6 @@
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateForceTouch" id="X7a-cm-vl2">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
                                     </button>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zp5-e2-c95">
                                         <rect key="frame" x="-2" y="85" width="107" height="17"/>
@@ -976,14 +922,6 @@
                                     <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UYI-YW-zB9">
                                         <rect key="frame" x="-2" y="53" width="145" height="24"/>
                                         <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="100" doubleValue="10" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="DVE-Me-5wo"/>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateInterval" id="XF0-3P-RAo">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
                                     </slider>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="z2h-vf-jek">
                                         <rect key="frame" x="-2" y="30" width="105" height="17"/>
@@ -996,14 +934,6 @@
                                     <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GEk-0h-Kxe">
                                         <rect key="frame" x="-2" y="-2" width="145" height="24"/>
                                         <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="2000" doubleValue="1000" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="Lws-XA-MYK"/>
-                                        <connections>
-                                            <binding destination="cbh-fj-EIe" name="value" keyPath="values.Parrot.VibrateLength" id="hgJ-e3-xxi">
-                                                <dictionary key="options">
-                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                    <bool key="NSValidatesImmediately" value="YES"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
                                     </slider>
                                 </subviews>
                                 <visibilityPriorities>
@@ -1065,22 +995,11 @@
                 </dictionaryController>
                 <userDefaultsController id="13l-3V-Sox"/>
             </objects>
-            <point key="canvasLocation" x="1757" y="800"/>
-        </scene>
-        <!--Accounts-->
-        <scene sceneID="267-EA-phL">
-            <objects>
-                <viewController title="Accounts" id="nBO-60-3Hu" customClass="AccountsPreferencesController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController"/>
-                <customObject id="BhR-WV-Gpi" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2241" y="800"/>
+            <point key="canvasLocation" x="1513" y="-167"/>
         </scene>
     </scenes>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
-        <image name="NSAdvanced" width="32" height="32"/>
-        <image name="NSColorPanel" width="32" height="32"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>

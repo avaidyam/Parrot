@@ -5,6 +5,10 @@ import MochaUI
 
 public extension Preferences.Controllers {
     public class General: NSViewController {
+        public var image: NSImage? = NSImage(named: .advanced)
+        public override var title: String? {
+            set{} get { return "General" }
+        }
         
         private lazy var textSize: NSSlider = {
             let v = NSSlider(value: 12, minValue: 9, maxValue: 16,
@@ -63,6 +67,3 @@ public extension Preferences.Controllers {
         }
     }
 }
-
-// FIXME: COMPAT
-public class GeneralPreferencesController: Preferences.Controllers.General {}

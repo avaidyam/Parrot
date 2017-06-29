@@ -100,6 +100,21 @@ public extension NSViewController {
     }
 }
 
+public extension NSViewController {
+    private static var presentationAnimatorProp = KeyValueProperty<NSViewController, NSViewControllerPresentationAnimator>("presentationAnimator")
+    private static var rootAnimatorProp = AssociatedProperty<NSViewController, WindowTransitionAnimator>(.strong)
+    
+    @nonobjc public fileprivate(set) var presentationAnimator: NSViewControllerPresentationAnimator? {
+        get { return NSViewController.presentationAnimatorProp[self] }
+        set { NSViewController.presentationAnimatorProp[self] = newValue }
+    }
+    
+    @nonobjc fileprivate var _rootAnimator: WindowTransitionAnimator? {
+        get { return NSViewController.rootAnimatorProp[self] }
+        set { NSViewController.rootAnimatorProp[self] = newValue }
+    }
+}
+
 public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAnimator {
     
     private var window: NSWindow?
@@ -127,7 +142,7 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
                                                name: NSWindow.willCloseNotification, object: self.window)
         
         self.window?.contentViewController = viewController
-        self.window?.bind(NSBindingName.title, to: viewController, withKeyPath: "title", options: nil)
+        self.window?.bind(.title, to: viewController, withKeyPath: "title", options: nil)
         self.window?.appearance = viewController.view.window?.appearance
         self.window?.delegate = viewController as? NSWindowDelegate
         self.window?.center()
@@ -142,7 +157,7 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
     public func undisplay(viewController: NSViewController) {
         NotificationCenter.default.removeObserver(self)
         self.window?.orderOut(nil)
-        self.window?.unbind(NSBindingName.title)
+        self.window?.unbind(.title)
         
         self.window = nil
         viewController._rootAnimator = nil
@@ -167,20 +182,3 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
         }
     }
 }
-
-public extension NSViewController {
-    private static var presentationAnimatorProp = KeyValueProperty<NSViewController, NSViewControllerPresentationAnimator>("presentationAnimator")
-    
-    @nonobjc public var presentionAnimator: NSViewControllerPresentationAnimator? {
-        get { return NSViewController.presentationAnimatorProp[self] }
-        set { NSViewController.presentationAnimatorProp[self] = newValue }
-    }
-}
-
-fileprivate extension NSViewController {
-    fileprivate var _rootAnimator: WindowTransitionAnimator? {
-        get { return objc_getAssociatedObject(self, &NSViewController_anim_key) as? WindowTransitionAnimator }
-        set { objc_setAssociatedObject(self, &NSViewController_anim_key, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
-    }
-}
-private var NSViewController_anim_key: UnsafeRawPointer? = nil

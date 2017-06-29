@@ -21,6 +21,30 @@ public class ParrotAppController: NSApplicationController {
     private var notificationHelper: Subscription? = nil
     private var notificationReplyHelper: Subscription? = nil
     
+    /// Lazy-init for Preferences.
+    public lazy var preferencesController: PreferencesViewController = {
+        let p = PreferencesViewController()
+        p.tabStyle = .toolbar
+        p.transitionOptions = [.allowUserInteraction, .crossfade, .slideDown]
+        
+        let general = Preferences.Controllers.General()
+        let generalTab = NSTabViewItem(viewController: general)
+        generalTab.image = general.image
+        
+        let text = Preferences.Controllers.Text()
+        let textTab = NSTabViewItem(viewController: text)
+        textTab.image = text.image
+        
+        let accounts = Preferences.Controllers.Accounts()
+        let accountsTab = NSTabViewItem(viewController: accounts)
+        accountsTab.image = accounts.image
+        
+        p.addTabViewItem(generalTab)
+        p.addTabViewItem(textTab)
+        p.addTabViewItem(accountsTab)
+        return p
+    }()
+    
 	/// Lazy-init for the main conversations NSWindowController.
 	private lazy var conversationsController: NSViewController = {
 		ConversationListViewController()
@@ -259,6 +283,10 @@ public class ParrotAppController: NSApplicationController {
 		             keyEquivalent: "")
 		return menu
 	}
+    
+    @IBAction func showPreferences(_ sender: Any?) {
+        self.preferencesController.presentAsWindow()
+    }
     
     @IBAction func showConversations(_ sender: Any?) {
         self.conversationsController.presentAsWindow()
