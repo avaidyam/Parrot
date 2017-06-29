@@ -126,7 +126,7 @@ fileprivate class NSDeadView: NSView {
         return false
     }
     override func hitTest(_ point: NSPoint) -> NSView? {
-        return nil
+        return nil //ignoresHitTest property
     }
 }
 
@@ -295,6 +295,15 @@ public extension NSScrollView {
         self.borderType = .noBorder
         self.documentView = contentView
         self.hasVerticalScroller = true
+    }
+}
+
+public extension NSWindow {
+    public var frameView: NSView {
+        return self.value(forKey: "_borderView") as! NSView
+    }
+    public var titlebar: NSViewController {
+        return self.value(forKey: "titlebarViewController") as! NSViewController
     }
 }
 

@@ -3,6 +3,7 @@ import Mocha
 import MochaUI
 
 /* TODO: Remove NSAppearance from ParrotAppearance and add an extension for it. */
+/* TODO: System InterfaceStyle requires a restart, because interfaceStyle() doesn't account for it. */
 
 /// ParrotAppearance controls all user interface constructs (style, theme,
 /// mode, etc.) at runtime. It cannot be instantiated.
@@ -16,8 +17,8 @@ public struct ParrotAppearance {
 	/// Trampolines the distributed notification sent when the user changes interface styles
 	/// into a locally stored default that can be observed normally.
 	private static let registerDarkModeActiveListener: NSObjectProtocol = {
-		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.menuBarAppearanceDidChangeNotification, object: nil, queue: nil) { _ in
-			Settings.systemInterfaceStyle = NSWorkspace.shared.darkInterfaceTheme
+		DistributedNotificationCenter.default().addObserver(forName: NSAppearance.systemAppearanceDidChangeNotification, object: nil, queue: nil) { _ in
+			Settings.systemInterfaceStyle = NSAppearance.systemAppearanceIsDark
 		}
 	}()
 	
@@ -33,7 +34,7 @@ public struct ParrotAppearance {
                 _cachedVibrancyStyle = currentVibrancyStyle
 				
 				_interfaceStyleListeners.filter { $0.object != nil }.forEach {
-					$0.handler(currentInterfaceStyle, currentVibrancyStyle)
+					$0.handler(currentInterfaceStyle.appearance(), currentVibrancyStyle.visualEffectState())
 				}
 			}
 		}
@@ -42,8 +43,8 @@ public struct ParrotAppearance {
 	/// Wraps the object and handler into a single container.
 	private class InterfaceStyleListener {
 		weak var object: AnyObject?
-		let handler: (InterfaceStyle, VibrancyStyle) -> Void
-		fileprivate required init(object: AnyObject, handler: @escaping (InterfaceStyle, VibrancyStyle) -> Void) {
+		let handler: (NSAppearance, NSVisualEffectView.State) -> Void
+		fileprivate required init(object: AnyObject, handler: @escaping (NSAppearance, NSVisualEffectView.State) -> Void) {
 			self.object = object
 			self.handler = handler
 		}
@@ -68,11 +69,11 @@ public struct ParrotAppearance {
 	/// If invokeImmediately is true, the handler will be invoked immediately.
 	/// This is useful in case appearance update logic is unified and can be streamlined.
 	/// Note: this should be done when a view appears on-screen.
-	public static func registerListener(observer: AnyObject, invokeImmediately: Bool = false, handler: @escaping (InterfaceStyle, VibrancyStyle) -> Void) {
+	public static func registerListener(observer: AnyObject, invokeImmediately: Bool = false, handler: @escaping (NSAppearance, NSVisualEffectView.State) -> Void) {
 		_ = registerDarkModeActiveListener; _ = registerNotificationChangeListener // SETUP
 		_interfaceStyleListeners.append(InterfaceStyleListener(object: observer, handler: handler))
 		if invokeImmediately {
-			handler(ParrotAppearance.interfaceStyle(), ParrotAppearance.vibrancyStyle())
+			handler(ParrotAppearance.interfaceStyle().appearance(), ParrotAppearance.vibrancyStyle().visualEffectState())
 		}
 	}
 	

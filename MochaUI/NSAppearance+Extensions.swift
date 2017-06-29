@@ -6,20 +6,11 @@ public extension NSAppearance {
     public static let dark = NSAppearance(named: .vibrantDark)!
 }
 
-public extension NSWorkspace {
-    public var darkInterfaceTheme: Bool {
+public extension NSAppearance {
+    public static var systemAppearanceIsDark: Bool {
         return CFPreferencesCopyAppValue("AppleInterfaceStyle" as CFString, "NSGlobalDomain" as CFString) as? String == "Dark"
     }
-    
-    public static let menuBarAppearanceDidChangeNotification = NSNotification.Name(rawValue: "NSWorkspaceMenuBarAppearanceDidChangeNotification")
-}
-
-public extension NSWindow {
-    public func enableRealTitlebarVibrancy(_ blendingMode: NSVisualEffectView.BlendingMode = .withinWindow) {
-        let t = self.standardWindowButton(.closeButton)?.superview as? NSVisualEffectView
-        t?.material = .appearanceBased
-        t?.blendingMode = blendingMode
-    }
+    public static let systemAppearanceDidChangeNotification = NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification")
 }
 
 public extension NSControl {

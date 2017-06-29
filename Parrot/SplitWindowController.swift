@@ -27,7 +27,11 @@ public class SplitWindowController: NSSplitViewController, WindowPresentable {
     public func prepare(window: NSWindow) {
         window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
         window.appearance = ParrotAppearance.interfaceStyle().appearance()
-        window.enableRealTitlebarVibrancy(.withinWindow)
+        if let vev = window.titlebar.view as? NSVisualEffectView {
+            vev.material = .appearanceBased
+            vev.state = .active
+            vev.blendingMode = .withinWindow
+        }
         window.titleVisibility = .hidden
         _ = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false

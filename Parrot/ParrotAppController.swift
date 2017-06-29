@@ -219,7 +219,11 @@ public class ParrotAppController: NSApplicationController {
 			
 			a.layout()
 			a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
-			a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
+            if let vev = a.window.titlebar.view as? NSVisualEffectView {
+                vev.material = .appearanceBased
+                vev.state = .active
+                vev.blendingMode = .withinWindow
+            }
 			if a.runModal().rawValue == 1000 /*NSAlertFirstButtonReturn*/ {
 				log.warning("Done with alert.")
 			}
@@ -292,7 +296,11 @@ public func checkForUpdates(prerelease: Bool = false) {
                     information: release.releaseNotes, buttons: ["Update", "Ignore"],
                     showSuppression: true) // FIXME suppression
     a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
-    a.window.enableRealTitlebarVibrancy(.behindWindow) // FIXME
+    if let vev = a.window.titlebar.view as? NSVisualEffectView {
+        vev.material = .appearanceBased
+        vev.state = .active
+        vev.blendingMode = .withinWindow
+    }
     if a.runModal().rawValue == 1000 /*NSAlertFirstButtonReturn*/ {
         NSWorkspace.shared.open(release.githubURL)
     }

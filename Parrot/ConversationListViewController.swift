@@ -187,7 +187,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public func prepare(window: NSWindow) {
         window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
         window.appearance = ParrotAppearance.interfaceStyle().appearance()
-        window.enableRealTitlebarVibrancy(.withinWindow)
+        if let vev = window.titlebar.view as? NSVisualEffectView {
+            vev.material = .appearanceBased
+            vev.state = .active
+            vev.blendingMode = .withinWindow
+        }
         window.titleVisibility = .hidden
         let container = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
@@ -242,10 +246,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.indicator.startAnimation()
         
         ParrotAppearance.registerListener(observer: self, invokeImmediately: true) { interface, style in
-            self.view.window?.appearance = interface.appearance()
-            
-            guard let vev = self.view as? NSVisualEffectView else { return }
-            vev.state = style.visualEffectState()
+            self.view.window?.appearance = interface
+            (self.view as? NSVisualEffectView)?.state = style
         }
     }
     

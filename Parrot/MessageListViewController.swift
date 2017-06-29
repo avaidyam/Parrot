@@ -83,7 +83,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     /// The backing visual effect view for the text input cell.
     private lazy var moduleView: NSVisualEffectView = {
-        let v = NSVisualEffectView().modernize()
+        let v = NSVisualEffectView().modernize(wantsLayer: true)
         v.layerContentsRedrawPolicy = .onSetNeedsDisplay
         v.state = .active
         v.blendingMode = .withinWindow
@@ -229,7 +229,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     
     public override func loadView() {
-        self.view = NSView()
+        self.view = NSVisualEffectView()
         self.view.add(subviews: [self.scrollView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone])
         
         self.view.width >= 96
@@ -257,7 +257,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public func prepare(window: NSWindow) {
         window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
         window.appearance = ParrotAppearance.interfaceStyle().appearance()
-        window.enableRealTitlebarVibrancy(.withinWindow)
+        if let vev = window.titlebar.view as? NSVisualEffectView {
+            vev.material = .appearanceBased
+            vev.state = .active
+            vev.blendingMode = .withinWindow
+        }
         window.titleVisibility = .hidden
         //window.titlebarAppearsTransparent = true
         self.toolbarContainer = window.installToolbar()
@@ -289,10 +293,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         
         // Set up dark/light notifications.
         ParrotAppearance.registerListener(observer: self, invokeImmediately: true) { interface, style in
-            self.view.window?.appearance = interface.appearance()
-            
-            guard let vev = self.view.window?.contentView as? NSVisualEffectView else { return }
-            vev.state = style.visualEffectState()
+            self.view.window?.appearance = interface
+            (self.view as? NSVisualEffectView)?.state = style
         }
     }
     
