@@ -168,12 +168,12 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
     }
 }
 
-private var __presentationAnimatorProp = KeyValueProperty<NSViewController, NSViewControllerPresentationAnimator>("presentationAnimator")
 public extension NSViewController {
-    @nonobjc
-    public var presentionAnimator: NSViewControllerPresentationAnimator? {
-        get { return __presentationAnimatorProp.get(self) }
-        set { __presentationAnimatorProp.set(self, value: newValue) }
+    private static var presentationAnimatorProp = KeyValueProperty<NSViewController, NSViewControllerPresentationAnimator>("presentationAnimator")
+    
+    @nonobjc public var presentionAnimator: NSViewControllerPresentationAnimator? {
+        get { return NSViewController.presentationAnimatorProp[self] }
+        set { NSViewController.presentationAnimatorProp[self] = newValue }
     }
 }
 

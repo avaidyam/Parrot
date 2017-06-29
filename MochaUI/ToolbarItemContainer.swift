@@ -111,11 +111,11 @@ public extension NSToolbarItem {
     }
 }
 
-private var _containerProp = AssociatedProperty<NSToolbar, ToolbarItemContainer>(.strong)
 fileprivate extension NSToolbar {
+    private static var containerProp = AssociatedProperty<NSToolbar, ToolbarItemContainer>(.strong)
     fileprivate var _container: ToolbarItemContainer? {
-        get { return _containerProp.get(self) }
-        set { _containerProp.set(self, value: newValue) }
+        get { return NSToolbar.containerProp[self] }
+        set { NSToolbar.containerProp[self] = newValue }
     }
 }
 

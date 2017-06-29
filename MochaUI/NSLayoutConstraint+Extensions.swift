@@ -135,6 +135,7 @@ public func ~(lhs: NSLayoutConstraint, rhs: LayoutPriority) -> NSLayoutConstrain
 }
 
 public extension CALayer {
+    fileprivate static var layoutProp = AssociatedProperty<CALayer, NSLayoutGuide>(.strong)
     
     /// Provides an optional NSLayoutGuide for use in a containing NSView.
     /// This allows CALayers to be laid out by the NSLayoutConstraint engine.
@@ -143,15 +144,15 @@ public extension CALayer {
     /// layout() while invoking super, and call syncLayout() manually.
     public fileprivate(set) var layout: NSLayoutGuide {
         get {
-            if let _l = _layoutProp.get(self) {
+            if let _l = CALayer.layoutProp[self] {
                 return _l
             } else {
                 let guide = NSLayoutGuide()
-                _layoutProp.set(self, value: guide)
+                CALayer.layoutProp[self] = guide
                 return guide
             }
         }
-        set { _layoutProp.set(self, value: newValue) }
+        set { CALayer.layoutProp[self] = newValue }
     }
     
     /// Allows the CALayer to reconcile the frame calculated by the NSLayoutConstraint
@@ -184,5 +185,3 @@ public extension NSView {
         self.removeLayoutGuide(layer.layout)
     }
 }
-
-fileprivate var _layoutProp = AssociatedProperty<CALayer, NSLayoutGuide>(.strong)

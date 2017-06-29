@@ -272,16 +272,17 @@ public extension NSCollectionView {
     
     /// Determines the selection capabilities of the ListView.
     public var selectionType: SelectionType {
-        get { return _selectionTypeProp.get(self) ?? .none }
-        set(s) { _selectionTypeProp.set(self, value: s)
+        get { return NSCollectionView.selectionTypeProp[self] ?? .none }
+        set(s) { NSCollectionView.selectionTypeProp[self] = s
             
             self.allowsMultipleSelection = (s == .leastOne || s == .any)
             self.allowsEmptySelection = (s == .none || s == .one || s == .any)
             self.isSelectable = (s != .none)
         }
     }
+    
+    private static var selectionTypeProp = AssociatedProperty<NSCollectionView, NSCollectionView.SelectionType>(.strong)
 }
-private var _selectionTypeProp = AssociatedProperty<NSCollectionView, NSCollectionView.SelectionType>(.strong)
 
 public extension NSScrollView {
     

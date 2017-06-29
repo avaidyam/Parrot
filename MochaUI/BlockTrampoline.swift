@@ -11,20 +11,20 @@ extension NSMenuItem: BlockTrampolineSupporting {}
 public extension BlockTrampolineSupporting {
     var performedAction: (() -> ())? {
         get {
-            guard let trampoline = BlockTrampolineSupporting_handlerProp.get(self) else { return nil }
+            guard let trampoline = BlockTrampoline.handlerProp[self] else { return nil }
             return trampoline.action
         }
         set {
-            if let trampoline = BlockTrampolineSupporting_handlerProp.get(self), let update = newValue {
+            if let trampoline = BlockTrampoline.handlerProp[self], let update = newValue {
                 trampoline.action = update
             } else if let update = newValue {
                 let trampoline = BlockTrampoline(action: update)
-                BlockTrampolineSupporting_handlerProp.set(self, value: trampoline)
+                BlockTrampoline.handlerProp[self] = trampoline
                 
                 self.target = trampoline
                 self.action = #selector(BlockTrampoline.performAction(_:))
             } else {
-                BlockTrampolineSupporting_handlerProp.set(self, value: nil)
+                BlockTrampoline.handlerProp[self] = nil
                 
                 self.target = nil
                 self.action = nil
@@ -64,5 +64,6 @@ public extension NSMenu {
     @objc fileprivate func performAction(_ sender: Any!) {
         self.action()
     }
+    
+    fileprivate static var handlerProp = AssociatedProperty<BlockTrampolineSupporting, BlockTrampoline>(.strong)
 }
-fileprivate var BlockTrampolineSupporting_handlerProp = AssociatedProperty<BlockTrampolineSupporting, BlockTrampoline>(.strong)
