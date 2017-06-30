@@ -73,6 +73,11 @@ public class Binding<T: NSObject, U: NSObject, X, Y>: AnyBinding {
         // Set up the "between" observations.
         self.left.observation = left.0.observe(left.1, options: (initialState == .left ? [.new, .initial] : [.new])) { _, _ in
             self.perform { l, r in
+                /*
+                var value = self.transformer.transform(x: l[keyPath: self.left.keyPath])
+                try r.validateValue(&value, forKeyPath: self.right.keyPath._kvcKeyPathString!)
+                r[keyPath: self.right.keyPath] = value
+                */
                 r[keyPath: self.right.keyPath] = self.transformer.transform(x: l[keyPath: self.left.keyPath])
             }
         }
@@ -98,26 +103,6 @@ public class Binding<T: NSObject, U: NSObject, X, Y>: AnyBinding {
         self.propogating = false
         self.performAction?()
     }
-    
-    /*
-    /// Assign left <--> right value based on their keypaths after validating them.
-    private func assign(_ direction: InitialState) {
-        guard let l = self.left.object, let r = self.right.object else { return }
-        do {
-            switch direction {
-            case .left:
-                var value = self.transformer.transform(x: l[keyPath: self.left.keyPath])
-                try r.validateValue(&value, forKeyPath: self.right.keyPath._kvcKeyPathString!)
-                r[keyPath: self.right.keyPath] = value
-            case .right:
-                var value = self.transformer.transform(y: r[keyPath: self.right.keyPath])
-                try l.validateValue(&value, forKeyPath: self.left.keyPath._kvcKeyPathString!)
-                l[keyPath: self.left.keyPath] = value
-            case .none: return
-            }
-        }
-    }
-    */
 }
 
 /// A type-erased parent for `Binding<A, B, X, Y>`. See docs there.

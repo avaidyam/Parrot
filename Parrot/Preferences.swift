@@ -153,20 +153,23 @@ public extension UserDefaults { // number, array, dictionary, data, url
         self.set(value, forKey: key)
     }
     
-    func archivedGet<T>(forKey key: String = #function, default: @autoclosure () -> (T)) -> T {
+    func archivedGet<T: Decodable>(forKey key: String = #function, default: @autoclosure () -> (T)) -> T {
         if let data = self.object(forKey: key) as? Data {
-            return NSUnarchiver.unarchiveObject(with: data) as? T ?? `default`()
+            let value = try? PropertyListDecoder().decode(T.self, from: data)
+            return value ?? `default`()
         }
         return `default`()
     }
     
-    func archivedSet<T>(forKey key: String = #function, value: T) {
-        self.set(NSArchiver.archivedData(withRootObject: value), forKey: key)
+    func archivedSet<T: Encodable>(forKey key: String = #function, value: T) {
+        if let v = try? PropertyListEncoder().encode(value) {
+            self.set(v, forKey: key)
+        }
     }
     
-    func archivedSet<T>(forKey key: String = #function, value: T?) {
-        if let v = value {
-            self.archivedSet(value: v)
+    func archivedSet<T: Encodable>(forKey key: String = #function, value: T?) {
+        if let o = value, let v = try? PropertyListEncoder().encode(o) {
+            self.set(v, forKey: key)
         }
     }
 }
