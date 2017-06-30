@@ -132,9 +132,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     var conversationList: ConversationList? {
         didSet {
-            self.dataSource.insert(contentsOf: self.conversationList!.conversations.values.filter { !$0.archived })
-            UI {
-                self.collectionView.reloadData()
+            self.updateDataSource(Array(self.conversationList!.conversations.values)) {
                 self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
                                                              scrollPosition: [.centeredHorizontally, .nearestHorizontalEdge])
                 self.updateInterpolation.animate(duration: 1.5)
@@ -222,7 +220,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             self.conversationList = c.conversations
             
             UI {
-                self.collectionView.reloadData()
+                //self.collectionView.reloadData()
                 self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
                                                              scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
                 self.updateSelectionIndexes()
@@ -326,9 +324,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         guard self.updateToken == false else { return }
         let _ = self.conversationList?.syncConversations(count: 25, since: self.conversationList!.syncTimestamp) { val in
             guard let val = val else { return }
-            self.dataSource.insert(contentsOf: val.values.filter { !$0.archived })
-            UI {
-                self.collectionView.reloadData()
+            self.updateDataSource(Array(val.values)) {
                 self.updateToken = false
             }
         }
@@ -344,6 +340,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             NSApp.badgeCount = UInt(unread)
             self.updateSelectionIndexes()
         }
+    }
+    
+    private func updateDataSource(_ newContent: [Conversation], _ handler: @escaping () -> () = {}) {
+        let oldVal = self.dataSource.map { $0.identifier }
+        self.dataSource.insert(contentsOf: newContent.filter { !$0.archived })
+        let updates = Changeset.edits(from: oldVal, to: self.dataSource.map { $0.identifier })
+        UI { self.collectionView.update(with: updates, in: 0) { _ in handler() } }
     }
     
     private func updateSelectionIndexes() {

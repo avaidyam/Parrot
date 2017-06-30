@@ -41,11 +41,23 @@ public extension Preferences.Controllers {
             return v
         }()
         
+        private lazy var autoEmoji: NSButton = {
+            let v = NSButton(checkboxWithTitle: "Automatically convert emoji", target: nil, action: nil)
+            v.setupForBindings()
+            return v
+        }()
+        
+        private lazy var menubarIcon: NSButton = {
+            let v = NSButton(checkboxWithTitle: "Display in menu bar only", target: nil, action: nil)
+            v.setupForBindings()
+            return v
+        }()
+        
         private var bindings: [AnyBinding] = []
         
         public override func loadView() {
             let stack: NSStackView = NSStackView(views: [
-                self.textSize, self.interfaceStyle, self.vibrancyStyle
+                self.textSize, self.interfaceStyle, self.vibrancyStyle, self.autoEmoji, self.menubarIcon
             ]).modernize()
             
             stack.edgeInsets = NSEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
@@ -62,7 +74,11 @@ public extension Preferences.Controllers {
                 Binding(between: (self.interfaceStyle, \.integerValue),
                         and: (Settings, \.interfaceStyle), with: .right),
                 Binding(between: (self.vibrancyStyle, \.integerValue),
-                        and: (Settings, \.vibrancyStyle), with: .right)
+                        and: (Settings, \.vibrancyStyle), with: .right),
+                Binding(between: (self.autoEmoji, \.boolValue),
+                        and: (Settings, \.autoEmoji), with: .right),
+                Binding(between: (self.menubarIcon, \.boolValue),
+                        and: (Settings, \.menubarIcon), with: .right)
             ]
         }
     }

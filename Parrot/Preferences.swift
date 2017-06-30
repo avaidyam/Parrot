@@ -164,12 +164,19 @@ public extension UserDefaults { // number, array, dictionary, data, url
     func archivedSet<T: Encodable>(forKey key: String = #function, value: T) {
         if let v = try? PropertyListEncoder().encode(value) {
             self.set(v, forKey: key)
+        } else {
+            self.set(nil, forKey: key)
         }
+    }
+}
+
+// why is this here again?
+public extension NSObject {
+    
+    public static func exchange<A: NSObject, B: NSObject>(from: (A.Type, Selector), to: (B.Type, Selector), _ classMethod: Bool = false) {
+        let old = classMethod ? class_getClassMethod(from.0, from.1) : class_getInstanceMethod(from.0, from.1)
+        let new = classMethod ? class_getClassMethod(to.0, to.1)     : class_getInstanceMethod(to.0, to.1)
+        method_exchangeImplementations(old, new)
     }
     
-    func archivedSet<T: Encodable>(forKey key: String = #function, value: T?) {
-        if let o = value, let v = try? PropertyListEncoder().encode(o) {
-            self.set(v, forKey: key)
-        }
-    }
 }

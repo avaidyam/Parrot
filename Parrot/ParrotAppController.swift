@@ -199,17 +199,23 @@ public class ParrotAppController: NSApplicationController {
             }
         }
         
-        /// This setting currently does not exist in the UI. Use `defaults` to set it.
-        if Settings.menubarIcon {
-            let image = NSImage(named: NSImage.Name.applicationIcon)
-            image?.size = NSSize(width: 16, height: 16)
-            statusItem.image = image
-            statusItem.button?.target = self
-            statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
-            statusItem.button?.action = #selector(self.showConversationWindow(_:))
-            NSApp.setActivationPolicy(.accessory)
+        self.menubarSub = Settings.observe(\.menubarIcon, options: [.new, .initial]) { _, _ in
+            if Settings.menubarIcon {
+                let image = NSImage(named: NSImage.Name.applicationIcon)
+                image?.size = NSSize(width: 16, height: 16)
+                self.statusItem.image = image
+                self.statusItem.button?.target = self
+                self.statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
+                self.statusItem.button?.action = #selector(self.showConversationWindow(_:))
+                
+                NSApp.setActivationPolicy(.accessory)
+            } else {
+                NSStatusBar.system.removeStatusItem(self.statusItem)
+                NSApp.setActivationPolicy(.regular)
+            }
         }
     }
+    private var menubarSub: NSKeyValueObservation? = nil
     
     /// Right clicking the status item causes the app to close; left click causes it to become visible.
     @objc func showConversationWindow(_ sender: NSStatusBarButton?) {

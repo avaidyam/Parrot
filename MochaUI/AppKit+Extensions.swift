@@ -322,8 +322,8 @@ public extension NSControl {
     }
     
     @objc private func bindingTrampoline(_ sender: NSControl!) {
-        let keys = ["objectValue", "attributedStringValue", "stringValue",
-                    "doubleValue", "floatValue", "integerValue", "intValue"]
+        let keys = ["objectValue", "attributedStringValue", "stringValue", "doubleValue",
+                    "floatValue", "integerValue", "intValue", "boolValue"]
         for key in keys {
             sender.willChangeValue(forKey: key)
             sender.cell?.willChangeValue(forKey: key)
@@ -332,6 +332,16 @@ public extension NSControl {
             sender.cell?.didChangeValue(forKey: key)
             sender.didChangeValue(forKey: key)
         }
+    }
+    
+    @objc public dynamic var boolValue: Bool {
+        get { return self.integerValue != 0 }
+        set { self.integerValue = newValue ? 1 : 0 }
+    }
+    
+    @IBAction public func takeBoolValueFrom(_ sender: Any?) {
+        guard let sender = sender as? NSControl else { return }
+        self.boolValue = sender.boolValue
     }
 }
 

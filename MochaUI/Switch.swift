@@ -51,22 +51,22 @@ public class Switch: NSControl {
         return ceil(self.frame.size.height / 62) // Hardcoded base height
     }
     
-    @IBInspectable
-    public var tintColor: NSColor = NSColor(deviceRed: 76/255, green: 217/255, blue: 100/255, alpha: 1.0) {
+    @IBInspectable @objc
+    public dynamic var tintColor: NSColor = NSColor.selectedMenuItemColor {
+        didSet { //NSColor(deviceRed: 76/255, green: 217/255, blue: 100/255, alpha: 1.0)
+            self.needsDisplay = true
+        }
+    }
+    
+    @IBInspectable @objc
+    public dynamic var rimColor: NSColor = NSColor.black.withAlphaComponent(0.09) {
         didSet {
             self.needsDisplay = true
         }
     }
     
-    @IBInspectable
-    public var rimColor: NSColor = NSColor.black.withAlphaComponent(0.09) {
-        didSet {
-            self.needsDisplay = true
-        }
-    }
-    
-    @IBInspectable
-    public var on: Bool = false {
+    @IBInspectable @objc
+    public dynamic var on: Bool = false {
         didSet {
             self.needsDisplay = true
         }
