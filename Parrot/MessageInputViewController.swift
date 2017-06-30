@@ -119,9 +119,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         let text = self.textView
         
         var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
-        if  let q = Settings.conversationOutgoingColor,
-            let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
-            c.alphaComponent > 0.0 {
+        if let c = Settings.conversationOutgoingColor, c.alphaComponent > 0.0 {
             color = c
             
             // This automatically adjusts labelColor to the right XOR mask.

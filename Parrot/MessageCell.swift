@@ -137,9 +137,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         if !text.string.isEmoji {
             var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
             let setting = (o.sender?.me ?? false) ? Settings.conversationOutgoingColor : Settings.conversationIncomingColor
-            if  let q = setting,
-                let c = NSUnarchiver.unarchiveObject(with: q) as? NSColor,
-                c.alphaComponent > 0.0 {
+            if  let c = setting, c.alphaComponent > 0.0 {
                 color = c
                 
                 // This automatically adjusts labelColor to the right XOR mask.

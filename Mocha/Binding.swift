@@ -1,12 +1,17 @@
 import Foundation
 
-/* TODO: Support NSEditor/Registration, NSValidation*. */
-/* TODO: Support NSMenu (ContentPlacementTag), ArrayController. */
+/* TODO: Fix validation: -validateValue:forKeyPath: doesn't work because AnyObject. */
+/* TODO: Support NSMenu (ContentPlacementTag). */
+/* TODO: Add ArrayController support. */
 
 /// A `Binding` connects two objects' properties such that if one object's property
 /// value were to ever update, the other object's property value would do so as well.
 /// Thus, both objects' properties are kept in sync. The objects and their properties
 /// need not be the same, however, their individual properties' types must be the same.
+///
+/// Note: unlike Cocoa Bindings, this is a bare implementation that does not support
+/// NSEditor and NSEditorRegistration. In addition, it does not function like Cocoa
+/// Bindings! When working with NSControl, manually invoke will/did/ChangeValueForKey.
 public class Binding<T: NSObject, U: NSObject, X, Y>: AnyBinding {
     
     /// Describes the initial state the `Binding` should follow. That is, upon creation
@@ -51,7 +56,7 @@ public class Binding<T: NSObject, U: NSObject, X, Y>: AnyBinding {
     
     /// Executes if present when propogation has completed between the two ends
     /// of this `Binding`.
-    public var propogationHandler: (() -> ())? = nil
+    public var performAction: (() -> ())? = nil
     
     /// Creates a new `Binding<...>` between two objects on independent `KeyPath`s
     /// whose types are identical. The `Binding` will be unbound automatically
@@ -66,29 +71,20 @@ public class Binding<T: NSObject, U: NSObject, X, Y>: AnyBinding {
         super.init()
         
         // Set up the "between" observations.
-        self.left.observation = left.0.observe(left.1) { _, _ in
+        self.left.observation = left.0.observe(left.1, options: (initialState == .left ? [.new, .initial] : [.new])) { _, _ in
             self.perform { l, r in
                 r[keyPath: self.right.keyPath] = self.transformer.transform(x: l[keyPath: self.left.keyPath])
             }
         }
-        self.right.observation = right.0.observe(right.1) { _, _ in
+        self.right.observation = right.0.observe(right.1, options: (initialState == .right ? [.new, .initial] : [.new])) { _, _ in
             self.perform { l, r in
                 l[keyPath: self.left.keyPath] = self.transformer.transform(y: r[keyPath: self.right.keyPath])
-            }
-        }
-        
-        // Establish initial state.
-        self.perform { l, r in
-            switch initialState {
-            case .none: break
-            case .left: r[keyPath: self.right.keyPath] = self.transformer.transform(x: l[keyPath: self.left.keyPath])
-            case .right: l[keyPath: self.left.keyPath] = self.transformer.transform(y: r[keyPath: self.right.keyPath])
             }
         }
     }
     
     /// Manually invalidate the "left-hand-side" and "right-hand-side" observations on deallocation.
-    deinit {
+    public override func invalidate() {
         self.left.observation?.invalidate()
         self.right.observation?.invalidate()
     }
@@ -100,9 +96,36 @@ public class Binding<T: NSObject, U: NSObject, X, Y>: AnyBinding {
         self.propogating = true
         propogation(l, r)
         self.propogating = false
-        self.propogationHandler?()
+        self.performAction?()
     }
+    
+    /*
+    /// Assign left <--> right value based on their keypaths after validating them.
+    private func assign(_ direction: InitialState) {
+        guard let l = self.left.object, let r = self.right.object else { return }
+        do {
+            switch direction {
+            case .left:
+                var value = self.transformer.transform(x: l[keyPath: self.left.keyPath])
+                try r.validateValue(&value, forKeyPath: self.right.keyPath._kvcKeyPathString!)
+                r[keyPath: self.right.keyPath] = value
+            case .right:
+                var value = self.transformer.transform(y: r[keyPath: self.right.keyPath])
+                try l.validateValue(&value, forKeyPath: self.left.keyPath._kvcKeyPathString!)
+                l[keyPath: self.left.keyPath] = value
+            case .none: return
+            }
+        }
+    }
+    */
 }
 
 /// A type-erased parent for `Binding<A, B, X, Y>`. See docs there.
-public class AnyBinding {}
+public class AnyBinding {
+    
+    /// Disable the Binding. Automatically when a Binding is deinited.
+    public func invalidate() {}
+    deinit {
+        self.invalidate()
+    }
+}

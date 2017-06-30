@@ -282,12 +282,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         
         // Monitor changes to the view background and colors.
         self.colorsSub = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
-            if  let dat = Settings.conversationBackground,
-                let img = NSImage(data: dat as Data) {
-                self.layer.contents = img
-            } else {
-                self.layer.contents = nil
-            }
+            self.layer.contents = Settings.conversationBackground
         }
         self.colorsSub?.trigger()
         

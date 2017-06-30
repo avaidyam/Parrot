@@ -126,24 +126,24 @@ public extension UserDefaults {
         set { self.set(value: newValue) }
     }
     
-    public var conversationOutgoingColor: Data? {
-        get { return self.get(default: nil) }
-        set { self.set(value: newValue) }
+    public var conversationOutgoingColor: NSColor? {
+        get { return self.archivedGet(default: nil) }
+        set { self.archivedSet(value: newValue) }
     }
     
-    public var conversationIncomingColor: Data? {
-        get { return self.get(default: nil) }
-        set { self.set(value: newValue) }
+    public var conversationIncomingColor: NSColor? {
+        get { return self.archivedGet(default: nil) }
+        set { self.archivedSet(value: newValue) }
     }
     
-    public var conversationBackground: Data? {
-        get { return self.get(default: nil) }
-        set { self.set(value: newValue) }
+    public var conversationBackground: NSImage? {
+        get { return self.archivedGet(default: nil) }
+        set { self.archivedSet(value: newValue) }
     }
 }
 
 public let Settings = UserDefaults.standard
-public extension UserDefaults {
+public extension UserDefaults { // number, array, dictionary, data, url
     
     func get<T>(forKey key: String = #function, default: @autoclosure () -> (T)) -> T {
         return self.object(forKey: key) as? T ?? `default`()
@@ -151,5 +151,22 @@ public extension UserDefaults {
     
     func set<T>(forKey key: String = #function, value: T) {
         self.set(value, forKey: key)
+    }
+    
+    func archivedGet<T>(forKey key: String = #function, default: @autoclosure () -> (T)) -> T {
+        if let data = self.object(forKey: key) as? Data {
+            return NSUnarchiver.unarchiveObject(with: data) as? T ?? `default`()
+        }
+        return `default`()
+    }
+    
+    func archivedSet<T>(forKey key: String = #function, value: T) {
+        self.set(NSArchiver.archivedData(withRootObject: value), forKey: key)
+    }
+    
+    func archivedSet<T>(forKey key: String = #function, value: T?) {
+        if let v = value {
+            self.archivedSet(value: v)
+        }
     }
 }
