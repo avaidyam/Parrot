@@ -28,15 +28,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
     
     /// Describes the animations used by the ListLayout when inserting or removing
     /// elements.
-    public struct Animations {
-        public typealias Effect = NSTableView.AnimationOptions
-        
-        /// The animations to use when an element appears.
-        public let appear: Effect = []
-        
-        /// The animations to use when an element disappears.
-        public let disappear: Effect = []
-    }
+    public typealias AnimationEffect = NSTableView.AnimationOptions
     
     /// Describes the look&feel of the separators between elements.
     public struct SeparatorStyle {
@@ -116,7 +108,8 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
     private var globalSection: (NSCollectionViewLayoutAttributes?, NSCollectionViewLayoutAttributes?) = (nil, nil)
     private var flattenedSections = [NSCollectionViewLayoutAttributes]()
     
-    public var animations = Animations()
+    public var appearEffect: AnimationEffect = []
+    public var disappearEffect: AnimationEffect = []
     public var separatorStyle = SeparatorStyle()
     
     /// Provides the `(header, footer)` for the whole list, regardless of the
@@ -221,34 +214,36 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
     //
     
     public override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+        guard !self.appearEffect.isEmpty else { return nil }
         let x = self.layoutAttributesForItem(at: itemIndexPath)
-        if self.animations.appear.contains(.effectFade) {
+        if self.appearEffect.contains(.effectFade) {
             x?.alpha = 0.0
         }
-        if self.animations.appear.contains(.slideUp) {
+        if self.appearEffect.contains(.slideUp) {
             x?.frame.origin.y -= x!.frame.height
-        } else if self.animations.appear.contains(.slideDown) {
+        } else if self.appearEffect.contains(.slideDown) {
             x?.frame.origin.y += x!.frame.height
-        } else if self.animations.appear.contains(.slideLeft) {
+        } else if self.appearEffect.contains(.slideLeft) {
             x?.frame.origin.x += x!.frame.width
-        } else if self.animations.appear.contains(.slideRight) {
+        } else if self.appearEffect.contains(.slideRight) {
             x?.frame.origin.x -= x!.frame.width
         }
         return x
     }
     
     public override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> NSCollectionViewLayoutAttributes? {
+        guard !self.disappearEffect.isEmpty else { return nil }
         let x = self.layoutAttributesForItem(at: itemIndexPath)
-        if self.animations.disappear.contains(.effectFade) {
+        if self.disappearEffect.contains(.effectFade) {
             x?.alpha = 0.0
         }
-        if self.animations.disappear.contains(.slideUp) {
+        if self.disappearEffect.contains(.slideUp) {
             x?.frame.origin.y -= x!.frame.height
-        } else if self.animations.disappear.contains(.slideDown) {
+        } else if self.disappearEffect.contains(.slideDown) {
             x?.frame.origin.y += x!.frame.height
-        } else if self.animations.disappear.contains(.slideLeft) {
+        } else if self.disappearEffect.contains(.slideLeft) {
             x?.frame.origin.x += x!.frame.width
-        } else if self.animations.disappear.contains(.slideRight) {
+        } else if self.disappearEffect.contains(.slideRight) {
             x?.frame.origin.x -= x!.frame.width
         }
         return x

@@ -26,6 +26,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let l = NSCollectionViewListLayout()
         l.globalSections = (0, 32)
         l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 64)))
+        //l.appearEffect = [.effectFade, .slideUp]
+        //l.disappearEffect = [.effectFade, .slideDown]
         c.collectionViewLayout = l
         c.register(ConversationCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"))
         c.register(ReloadCell.self, forSupplementaryViewOfKind: .globalFooter, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"))

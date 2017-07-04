@@ -82,19 +82,3 @@ public class VolumeIndicator: NSView {
         }
     }
 }
-
-/// from @full-descent: https://stackoverflow.com/questions/31943797/extending-generic-integer-types-in-swift/43769799#43769799
-public extension Comparable {
-    public func clamped(from lowerBound: Self, to upperBound: Self) -> Self {
-        return min(max(self, lowerBound), upperBound)
-    }
-    public func clamped(to range: ClosedRange<Self>) -> Self {
-        return min(max(self, range.lowerBound), range.upperBound)
-    }
-}
-public extension Strideable where Self.Stride: SignedInteger {
-    public func clamped(to range: CountableClosedRange<Self>) -> Self {
-        return min(max(self, range.lowerBound), range.upperBound)
-    }
-}
-

@@ -152,6 +152,7 @@
 		48EA55C71D26CAA700C3BC80 /* URLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4816872B1C3A340E0070EEF6 /* URLSession+Delegate.swift */; };
 		48EA55C81D26CAAA00C3BC80 /* URLSession+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */; };
 		48EA55CA1D26CDD000C3BC80 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EB54F51D209DD100F77C2C /* Cache.swift */; };
+		48ED2BE01F0BD4B9001A547F /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */; };
 		48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
 		48FB444D1DBF5288004BE55A /* termbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FB444B1DBF5288004BE55A /* termbox.c */; };
 		48FB444E1DBF5288004BE55A /* utf8.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FB444C1DBF5288004BE55A /* utf8.c */; };
@@ -461,6 +462,7 @@
 		48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardBrightness.swift; sourceTree = "<group>"; };
 		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
 		48EB54F51D209DD100F77C2C /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Cache.swift; path = Parrot/Cache.swift; sourceTree = SOURCE_ROOT; };
+		48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftSupport.swift; sourceTree = "<group>"; };
 		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
 		48FB44451DBF4FF1004BE55A /* libtermbox.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtermbox.1.0.0.dylib; path = "../../../Desktop/termbox-master/usr/local/lib/libtermbox.1.0.0.dylib"; sourceTree = "<group>"; };
 		48FB44471DBF5018004BE55A /* termbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = termbox.h; sourceTree = "<group>"; };
@@ -952,6 +954,7 @@
 				4831BC9B1ECFA1A300C30413 /* NSExtension.swift */,
 				489421691EC11BCE0047FDBB /* DispatchSupport.swift */,
 				48834E391C1B4098009BC442 /* FoundationSupport.swift */,
+				48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */,
 				481300341D257FE300768D79 /* Logger.swift */,
 				4835ECB61C1C672900193EBC /* Emoji.swift */,
 				48574F121D11F9FC002375E1 /* AppManagement.swift */,
@@ -1639,6 +1642,7 @@
 				4826D3881F03B853000FE44F /* Transformer.swift in Sources */,
 				48D3CD221DE94C9C003D6C02 /* KeyValueStore.swift in Sources */,
 				48D3CD061DE944AA003D6C02 /* Logger.swift in Sources */,
+				48ED2BE01F0BD4B9001A547F /* SwiftSupport.swift in Sources */,
 				48D3CD1C1DE94BBD003D6C02 /* Emoji.swift in Sources */,
 				4894216A1EC11BCE0047FDBB /* DispatchSupport.swift in Sources */,
 				4848A5BF1EFF1BED008B2DE2 /* Binding.swift in Sources */,

@@ -3,6 +3,8 @@ import AppKit
 import Mocha
 import MochaUI
 
+/* TODO: Use UserDefaults.register(...) and force keys to be optional. */
+
 public enum InterfaceStyle: Int {
     /// Vibrant Light theme.
     case Light
