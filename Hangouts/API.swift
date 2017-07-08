@@ -54,7 +54,7 @@ public extension Client {
 			]
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/adduser", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -71,7 +71,7 @@ public extension Client {
 			each
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/createconversation", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+            cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -89,7 +89,7 @@ public extension Client {
 			[]
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/deleteconversation", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -101,7 +101,7 @@ public extension Client {
 			[easteregg, None, 1],
         ] as [Any]
 		self.channel?.request(endpoint: "conversations/easteregg", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -128,14 +128,14 @@ public extension Client {
 			None,  // ???
 			max_events,  // maxEventsPerConversation
 			[
-				None,  // eventId
+				None,  // event_id
 				None,  // storageContinuationToken
 				NSNumber(value: UInt64(event_timestamp.toUTC()))//to_timestamp(date: event_timestamp),  // eventTimestamp
 			] // eventContinuationToken (specifying timestamp is sufficient)
 		] as [Any]
 		
 		self.channel?.request(endpoint: "conversations/getconversation", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -149,7 +149,7 @@ public extension Client {
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // doesn't work?
 		] as [Any]
 		self.channel?.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -158,7 +158,7 @@ public extension Client {
 			self.getRequestHeader()
 		] as [Any]
 		self.channel?.request(endpoint: "contacts/getselfinfo", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -170,7 +170,7 @@ public extension Client {
 			max_count
 		] as [Any]
 		self.channel?.request(endpoint: "contacts/getsuggestedentities", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -193,7 +193,7 @@ public extension Client {
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // what are FieldMasks 4, 5, 8, 9?
 		] as [Any]
 		self.channel?.request(endpoint: "presence/querypresence", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -212,7 +212,7 @@ public extension Client {
 			],
         ] as [Any]
 		self.channel?.request(endpoint: "conversations/removeuser", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -230,7 +230,7 @@ public extension Client {
 			]
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/renameconversation", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -243,7 +243,7 @@ public extension Client {
 			max_results,
         ] as [Any]
 		self.channel?.request(endpoint: "conversations/searchentities", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -298,7 +298,7 @@ public extension Client {
 		] as [Any]
 		
 		self.channel?.request(endpoint: "conversations/sendchatmessage", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -313,7 +313,7 @@ public extension Client {
 		
 		// Set the active client.
 		self.channel?.request(endpoint: "clients/setactiveclient", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -325,7 +325,7 @@ public extension Client {
 			level.rawValue
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/setconversationnotificationlevel", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -339,7 +339,7 @@ public extension Client {
 			20
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/setfocus", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -362,7 +362,7 @@ public extension Client {
 			[(mood ?? None) as Any] // UTF-8 smiley like 0x1f603
 		] as [Any]
 		self.channel?.request(endpoint: "presence/setpresence", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -375,7 +375,7 @@ public extension Client {
 			NSNumber(value: typing.rawValue)
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/settyping", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -392,7 +392,7 @@ public extension Client {
 			1048576 // max_response_size_bytes
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/syncallnewevents", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 		
 		// This method requests protojson rather than json so we have one chat
@@ -418,7 +418,7 @@ public extension Client {
 			[] // ??
 		] as [Any]
         self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
-            cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+            cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 	
@@ -430,7 +430,7 @@ public extension Client {
 			NSNumber(value: UInt64(read_timestamp.toUTC()))//to_timestamp(date: ), // latest_read_timestamp
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/updatewatermark", body: data, use_json: false) { r in
-			cb(PBLiteSerialization.parseProtoJSON(input: r.data!))
+			cb(try! PBLiteDecoder().decode(r.data!))
 		}
 	}
 }

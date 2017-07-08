@@ -29,19 +29,19 @@ public class IEvent: ServiceOriginating, Hashable, Equatable {
 	// A User.ID indicating who created the event.
     public lazy var userID: User.ID = {
         return User.ID(
-            chatID: self.event.senderId!.chatId!,
-            gaiaID: self.event.senderId!.gaiaId!
+            chatID: self.event.sender_id!.chat_id!,
+            gaiaID: self.event.sender_id!.gaia_id!
         )
     }()
 	
 	// The ID of the conversation the event belongs to.
     public lazy var conversation_id: String = {
-        return (self.event.conversationId!.id! as String)
+        return (self.event.conversation_id!.id! as String)
     }()
 	
 	// The ID of the Event.
     public lazy var id: IConversation.EventID = {
-        return self.event.eventId! as IConversation.EventID
+        return self.event.event_id! as IConversation.EventID
     }()
 	
 	// Event: Hashable
@@ -63,7 +63,7 @@ public class IChatMessageEvent: IEvent, Message {
     }
     
     public var identifier: String {
-        return self.event.eventId ?? ""
+        return self.event.event_id ?? ""
     }
 	
 	// A textual representation of the message.
@@ -88,7 +88,7 @@ public class IChatMessageEvent: IEvent, Message {
 	
 	// List of ChatMessageSegments in the message.
     public lazy var segments: [IChatMessageSegment] = {
-        if let list = self.event.chatMessage!.messageContent?.segment {
+        if let list = self.event.chat_message!.message_content?.segment {
             return list.map { IChatMessageSegment(segment: $0) }
         }
 		return []
@@ -96,20 +96,19 @@ public class IChatMessageEvent: IEvent, Message {
 	
 	// Attachments in the message.
     public var attachments: [String] {
-		let raws = self.event.chatMessage?.messageContent?.attachment ?? [Attachment]()
+		let raws = self.event.chat_message?.message_content?.attachment ?? [Attachment]()
 		var attachments = [String]()
 		
 		for attachment in raws {
-			if attachment.embedItem!.type.contains(.PlusPhoto) { // PLUS_PHOTO
-				if let data = attachment.embedItem?.plusPhoto?.url {
-						attachments.append(data)
+			if attachment.embed_item!.type.contains(.PlusPhoto) { // PLUS_PHOTO
+				if let data = attachment.embed_item?.plus_photo?.url {
+                    attachments.append(data)
 				}
-			} else if attachment.embedItem!.type.contains(438) { // VOICE_PHOTO
-				if let data = attachment.embedItem!._unknownFields[62101782] as? [Any],
-					let zeroth = data[0] as? [Any], let url = zeroth[0] as? String {
-					attachments.append(url)
-				}
-			} else if attachment.embedItem!.type == [.Place, .PlaceV2, .Thing] { // FIXME this is bad swift
+			} else if attachment.embed_item!.type.contains(.VoicePhoto) { // VOICE_PHOTO
+                if let data = attachment.embed_item?.voice_photo?.url {
+                    attachments.append(data)
+                }
+			} else if attachment.embed_item!.type == [.Place, .PlaceV2, .Thing] { // FIXME this is bad swift
 				// Google Maps URL that's already in the text.
 			} else {
 				//log.info("Ignoring unknown chat message attachment: \(attachment)")
@@ -129,12 +128,12 @@ public class IRenameEvent : IEvent {
 	
 	// The conversation's new name, or "" if the name was cleared.
     public var newName: String {
-        return self.event.conversationRename!.newName!
+        return self.event.conversation_rename!.new_name!
     }
 	
 	// The conversation's old name, or "" if no previous name.
     public var oldName: String {
-        return self.event.conversationRename!.oldName!
+        return self.event.conversation_rename!.old_name!
     }
 }
 
@@ -143,14 +142,14 @@ public class IMembershipChangeEvent : IEvent {
 	
 	// The membership change type (join, leave).
     public var type: MembershipChangeType {
-        return self.event.membershipChange!.type!
+        return self.event.membership_change!.type!
     }
 	
 	// Return the User.IDs involved in the membership change.
 	// Multiple users may be added to a conversation at the same time.
     public var participantIDs: [User.ID] {
-		return self.event.membershipChange!.participantIds.map {
-			User.ID(chatID: $0.chatId! , gaiaID: $0.gaiaId!)
+		return self.event.membership_change!.participant_ids.map {
+			User.ID(chatID: $0.chat_id! , gaiaID: $0.gaia_id!)
 		}
     }
 }
@@ -160,7 +159,7 @@ public class IHangoutEvent : IEvent {
 	
 	// The Hangouts event (start, end, join, leave, etc).
 	public var type: HangoutEventType {
-		return self.event.hangoutEvent!.eventType!
+		return self.event.hangout_event!.event_type!
 	}
 }
 
@@ -212,7 +211,7 @@ public class IChatMessageSegment {
 		self.italic = segment.formatting?.italic ?? false
 		self.strikethrough = segment.formatting?.strikethrough ?? false
 		self.underline = segment.formatting?.underline ?? false
-		self.linkTarget = segment.linkData?.linkTarget ?? nil
+		self.linkTarget = segment.link_data?.link_target ?? nil
 	}
 	
 	// Serialize the segment to pblite.
@@ -246,8 +245,8 @@ public typealias IWatermarkNotification = (convID: String, userID: User.ID, read
 // message is sent the typing status will not change to stopped.
 internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatusMessage {
 	return ITypingStatusMessage(
-		convID: p.conversationId!.id! ,
-		userID: User.ID(chatID: p.senderId!.chatId!, gaiaID: p.senderId!.gaiaId!),
+		convID: p.conversation_id!.id! ,
+		userID: User.ID(chatID: p.sender_id!.chat_id!, gaiaID: p.sender_id!.gaia_id!),
 		timestamp: Date.from(UTC: Double(p.timestamp ?? 0)),
 		status: p.type!
 	)
@@ -256,11 +255,11 @@ internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatu
 // Return WatermarkNotification from ClientWatermarkNotification.
 internal func parseWatermarkNotification(client_watermark_notification: WatermarkNotification) -> IWatermarkNotification {
 	return IWatermarkNotification(
-		convID: client_watermark_notification.conversationId!.id!,
+		convID: client_watermark_notification.conversation_id!.id!,
 		userID: User.ID(
-			chatID: client_watermark_notification.senderId!.chatId!,
-			gaiaID: client_watermark_notification.senderId!.gaiaId!
+			chatID: client_watermark_notification.sender_id!.chat_id!,
+			gaiaID: client_watermark_notification.sender_id!.gaia_id!
 		),
-		readTimestamp: Date.from(UTC: Double(client_watermark_notification.latestReadTimestamp ?? 0))
+		readTimestamp: Date.from(UTC: Double(client_watermark_notification.latest_read_timestamp ?? 0))
 	)
 }

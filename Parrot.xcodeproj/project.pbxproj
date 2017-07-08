@@ -75,6 +75,7 @@
 		4869A9B01EE16F5D00764594 /* Auth+WebDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */; };
 		4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9B11EE17A3800764594 /* SplitWindowController.swift */; };
 		4869A9D61EE5C78200764594 /* PersonIndicatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9D51EE5C78200764594 /* PersonIndicatorViewController.swift */; };
+		486C99FD1F103A36007D7BAA /* PBLiteDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486C99FC1F103A36007D7BAA /* PBLiteDecoder.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
 		48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ParrotAppController.swift */; };
@@ -90,7 +91,6 @@
 		48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E361C1B4098009BC442 /* Conversation.swift */; };
 		48834E3F1C1B4098009BC442 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E371C1B4098009BC442 /* Event.swift */; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
-		48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */; };
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
 		488F652A1EF97CD50085325F /* GooglePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F65291EF97CD50085325F /* GooglePhoto.swift */; };
 		489018AC1D3C8FE400CFCA5F /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person.swift */; };
@@ -387,6 +387,7 @@
 		4869A9D51EE5C78200764594 /* PersonIndicatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonIndicatorViewController.swift; sourceTree = "<group>"; };
 		486A2B791C1F421500569457 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486A2B7A1C1F422100569457 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		486C99FC1F103A36007D7BAA /* PBLiteDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBLiteDecoder.swift; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = ../Parrot/PreferencesViewController.swift; sourceTree = "<group>"; };
 		488201B51D4A962B00C545F0 /* ExtendedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedTextView.swift; sourceTree = "<group>"; };
@@ -411,7 +412,6 @@
 		48834E371C1B4098009BC442 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		48834E391C1B4098009BC442 /* FoundationSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationSupport.swift; sourceTree = "<group>"; };
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBLiteSerialization.swift; sourceTree = "<group>"; };
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		488F65291EF97CD50085325F /* GooglePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePhoto.swift; sourceTree = "<group>"; };
 		489018AB1D3C8FE400CFCA5F /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
@@ -776,7 +776,7 @@
 			children = (
 				48DF84971D04E1F800F39444 /* Hangouts.proto.swift */,
 				48E9C3391D04DFF90074984D /* Protobuf.swift */,
-				48834E431C1B40A4009BC442 /* PBLiteSerialization.swift */,
+				486C99FC1F103A36007D7BAA /* PBLiteDecoder.swift */,
 			);
 			name = PBLite;
 			sourceTree = "<group>";
@@ -1607,13 +1607,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				486C99FD1F103A36007D7BAA /* PBLiteDecoder.swift in Sources */,
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
 				48DF84981D04E1F800F39444 /* Hangouts.proto.swift in Sources */,
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				488F652A1EF97CD50085325F /* GooglePhoto.swift in Sources */,
 				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
-				48834E451C1B40A4009BC442 /* PBLiteSerialization.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
 				48158E1F1D28690C00ED369C /* API.swift in Sources */,
 				48EA55C81D26CAAA00C3BC80 /* URLSession+Extensions.swift in Sources */,

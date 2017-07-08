@@ -53,8 +53,8 @@ public class User: Person, Hashable, Equatable {
     public convenience init(_ client: Client, entity: Entity, selfUser: User.ID?) {
         
         // Parse User ID and self status.
-        let userID = User.ID(chatID: entity.id!.chatId!,
-                             gaiaID: entity.id!.gaiaId!)
+        let userID = User.ID(chatID: entity.id!.chat_id!,
+                             gaiaID: entity.id!.gaia_id!)
         let isSelf = (selfUser != nil ? (selfUser == userID) : true)
         
         // If the entity has no provided properties, bail here.
@@ -63,22 +63,17 @@ public class User: Person, Hashable, Equatable {
             return
         }
         
-        // Parse possible phone numbers.
-        var phoneI18N: String? = nil // just use I18N and reformat it if needed.
-        if    let r = props._unknownFields[14] as? [Any], r.count > 0 {
-            if let a = r[0] as? [Any], let b = a[0] as? [Any], let d = b[1] as? [Any] { // retrieve the I18nData
-                phoneI18N = d[1] as? String
-            }
-        }
+        // Parse possible phone numbers. Just use I18N and reformat it if needed.
+        let phoneI18N: String? = props.phones.first?.phone_number?.i18n_data?.international_number
         
         // Parse the user photo.
-        let photo: String? = props.photoUrl != nil ? "https:" + props.photoUrl! : nil
+        let photo: String? = props.photo_url != nil ? "https:" + props.photo_url! : nil
         
         // Parse possible locations.
         var locations: [String] = []
         locations += props.email
         locations += props.phone
-        if let c = props.canonicalEmail {
+        if let c = props.canonical_email {
             locations.append(c)
         }
         if let p = phoneI18N {
@@ -87,7 +82,7 @@ public class User: Person, Hashable, Equatable {
         
         // Initialize the user.
         self.init(client, userID: userID,
-                  fullName: phoneI18N ?? props.displayName,
+                  fullName: phoneI18N ?? props.display_name,
                   photoURL: photo, locations: locations, me: isSelf
         )
     }
@@ -143,12 +138,12 @@ public class UserList: Directory {
         
         // Prepare a set of all conversation participant data first to batch the query.
         var required = Set<ConversationParticipantData>()
-        conversations.forEach { conv in conv.participantData.forEach { required.insert($0) } }
+        conversations.forEach { conv in conv.participant_data.forEach { required.insert($0) } }
         
         // Required step: get the base User objects prepared.
         self.client.opQueue.sync {
-            self.client.getEntitiesByID(chat_id_list: required.flatMap { $0.id?.chatId }) { response in
-                let entities = response?.entityResult.flatMap { $0.entity } ?? []
+            self.client.getEntitiesByID(chat_id_list: required.flatMap { $0.id?.chat_id }) { response in
+                let entities = response?.entity_result.flatMap { $0.entity } ?? []
                 for entity in entities {
                     guard entity.id != nil else { continue } // if no id, we can't use it!
                     let user = User(self.client, entity: entity, selfUser: (self.me as! User).id)
@@ -157,7 +152,7 @@ public class UserList: Directory {
                     }
                     ret.append(user as Person)
                 }
-                self.cache(presencesFor: entities.map { $0.id!.gaiaId! })
+                self.cache(presencesFor: entities.map { $0.id!.gaia_id! })
                 s.signal()
             }
             s.wait()
@@ -170,7 +165,7 @@ public class UserList: Directory {
         let s = DispatchSemaphore(value: 0)
         client.opQueue.async {
             client.getSelfInfo {
-                selfUser = User(client, entity: $0!.selfEntity!, selfUser: nil)
+                selfUser = User(client, entity: $0!.self_entity!, selfUser: nil)
                 s.signal()
             }
         }
@@ -225,31 +220,31 @@ public class UserList: Directory {
             _ = self.addPeople(from: [conversation])
         }
         
-        if let note = update.selfPresenceNotification {
+        if let note = update.self_presence_notification {
             let user = (self.me as! User)
-            if let state = note.clientPresenceState?.state {
+            if let state = note.client_presence_state?.state {
                 user.lastSeen = state == .DesktopActive ? Date() : Date(timeIntervalSince1970: 0)
             }
-            if let mood = note.moodState?.moodSetting?.moodMessage?.moodContent {
+            if let mood = note.mood_state?.mood_setting?.mood_message?.mood_content {
                 user.mood = mood.toText()
             }
             user.reachability = .desktop
             
             NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
-        } else if let note = update.presenceNotification {
+        } else if let note = update.presence_notification {
             for presence in note.presence {
-                guard   let id1 = presence.userId?.chatId, let id2 = presence.userId?.gaiaId,
+                guard   let id1 = presence.user_id?.chat_id, let id2 = presence.user_id?.gaia_id,
                     let user = self.users[User.ID(chatID: id1, gaiaID: id2)],
                     let pres = presence.presence
                     else { continue }
                 
-                if let usec = pres.lastSeen?.lastSeenTimestampUsec {
+                if let usec = pres.last_seen?.last_seen_timestamp_usec {
                     user.lastSeen = Date.from(UTC: Double(usec))
                 }
                 //if ??? {
                     user.reachability = pres.toReachability()
                 //}
-                if let mood = pres.moodSetting?.moodMessage?.moodContent {
+                if let mood = pres.mood_setting?.mood_message?.mood_content {
                     user.mood = mood.toText()
                 }
                 
@@ -265,19 +260,19 @@ public class UserList: Directory {
             let s = DispatchSemaphore(value: queries.count)
             for q in queries {
                 self.client.queryPresence(chat_ids: [q]) {
-                    for pres2 in $0!.presenceResult {
-                        guard   let id1 = pres2.userId?.chatId, let id2 = pres2.userId?.gaiaId,
+                    for pres2 in $0!.presence_result {
+                        guard   let id1 = pres2.user_id?.chat_id, let id2 = pres2.user_id?.gaia_id,
                                 let user = self.users[User.ID(chatID: id1, gaiaID: id2)],
                                 let pres = pres2.presence
                         else { continue }
                         
-                        if let usec = pres.lastSeen?.lastSeenTimestampUsec {
+                        if let usec = pres.last_seen?.last_seen_timestamp_usec {
                             user.lastSeen = Date.from(UTC: Double(usec))
                         }
                         //if ??? {
                             user.reachability = pres.toReachability()
                         //}
-                        if let mood = pres.moodSetting?.moodMessage?.moodContent {
+                        if let mood = pres.mood_setting?.mood_message?.mood_content {
                             user.mood = mood.toText()
                         }
                     }
@@ -338,9 +333,9 @@ fileprivate extension Presence {
     func toReachability() -> Reachability {
         let available = self.available ?? false
         let reachable = self.reachable ?? false
-        let mobile = self.deviceStatus?.mobile ?? false
-        let desktop = self.deviceStatus?.desktop ?? false
-        let tablet = self.deviceStatus?.tablet ?? false
+        let mobile = self.device_status?.mobile ?? false
+        let desktop = self.device_status?.desktop ?? false
+        let tablet = self.device_status?.tablet ?? false
         
         if mobile {
             return .phone

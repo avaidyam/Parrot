@@ -563,7 +563,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private func scrollback() {
         guard self.updateToken == false else { return }
         let first = self.dataSource[0] as! IChatMessageEvent
-        self.conversation?.getEvents(event_id: first.event.eventId, max_events: 50) { events in
+        self.conversation?.getEvents(event_id: first.event.event_id, max_events: 50) { events in
             let count = self.dataSource.count
             self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent })
             UI {

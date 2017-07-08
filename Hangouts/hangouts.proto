@@ -185,6 +185,7 @@ enum ItemType {
   ITEM_TYPE_PLACE = 335;
   // Google Map place.
   ITEM_TYPE_PLACE_V2 = 340;
+  ITEM_TYPE_VOICE_PHOTO = 438;
 }
 
 // Metadata for displaying an image thumbnail.
@@ -257,6 +258,8 @@ message EmbedItem {
   optional PlusPhoto plus_photo = 27639957;
   // Embedded Google Map of a place.
   optional Place place = 35825640;
+  // Embedded Google Voice photo.
+  optional VoicePhoto voice_photo = 62101782;
 }
 
 // An attachment for a chat message.
@@ -677,6 +680,7 @@ message EntityProperties {
   optional bool in_users_domain = 10;
   optional Gender gender = 11;
   optional PhotoUrlStatus photo_url_status = 12;
+  repeated Phone phones = 14;
   optional string canonical_email = 15;
 }
 
@@ -1513,6 +1517,7 @@ message SyncRecentConversationsResponse {
   optional ResponseHeader response_header = 1;
   optional uint64 sync_timestamp = 2;
   repeated ConversationState conversation_state = 3;
+  optional uint64 continuation_end_timestamp = 4;
 }
 
 message UpdateWatermarkRequest {

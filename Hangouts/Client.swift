@@ -105,19 +105,19 @@ public final class Client: Service {
     public func synchronize() {
         guard self.lastUpdate > 0 else { return }
         self.syncAllNewEvents(timestamp: Date.from(UTC: Double(self.lastUpdate))) { res in
-            for conv_state in res!.conversationState {
-                if let conv = self.conversationList.conv_dict[conv_state.conversationId!.id!] {
+            for conv_state in res!.conversation_state {
+                if let conv = self.conversationList.conv_dict[conv_state.conversation_id!.id!] {
                     conv.update_conversation(conversation: conv_state.conversation!)
                     for event in conv_state.event {
                         guard event.timestamp! > self.lastUpdate else { continue }
                         
-                        if let conv = self.conversationList.conv_dict[event.conversationId!.id!] {
+                        if let conv = self.conversationList.conv_dict[event.conversation_id!.id!] {
                             let conv_event = conv.add_event(event: event)
                             
                             //self.conversationList.delegate?.conversationList(self.conversationList, didReceiveEvent: conv_event)
                             conv.handleEvent(event: conv_event)
                         } else {
-                            log.warning("Received ClientEvent for unknown conversation \(event.conversationId!.id!)")
+                            log.warning("Received ClientEvent for unknown conversation \(event.conversation_id!.id!)")
                         }
                     }
                 } else {
@@ -126,7 +126,7 @@ public final class Client: Service {
             }
             
             // Update the sync timestamp otherwise if we lose connectivity again, we re-sync everything.
-            self.lastUpdate = res!.syncTimestamp!
+            self.lastUpdate = res!.sync_timestamp!
             NotificationCenter.default.post(name: Notification.Service.DidSynchronize, object: self)
         }
 	}
@@ -158,7 +158,7 @@ public final class Client: Service {
 			// The first time this is called, we need to retrieve the user's email address.
 			if self.email == nil {
 				self.getSelfInfo {
-					self.email = $0!.selfEntity!.properties!.email[0] as String
+					self.email = $0!.self_entity!.properties!.email[0] as String
 				}
 			}
 			
@@ -218,16 +218,16 @@ public final class Client: Service {
         }
         if let cbu = wrapper["2"] as? [String: Any] {
             let val2 = (cbu["2"]! as! String).data(using: String.Encoding.utf8)
-            let payload = try! JSONSerialization.jsonObject(with: val2!, options: .allowFragments) as! [AnyObject]
+            var payload = try! JSONSerialization.jsonObject(with: val2!, options: .allowFragments) as! [AnyObject]
             
             // This is a (Client)BatchUpdate containing StateUpdate messages.
             // payload[1] is a list of state updates.
             if payload[0] as? String == "cbu" {
-                var b = BatchUpdate() as ProtoMessage
-                PBLiteSerialization.decode(message: &b, pblite: payload, ignoreFirstItem: true)
-                for state_update in (b as! BatchUpdate).stateUpdate {
-                    self.active_client_state = state_update.stateUpdateHeader!.activeClientState!
-                    self.lastUpdate = state_update.stateUpdateHeader!.currentServerTime!
+                payload.remove(at: 0) // since we're using a decode(...) variant
+                let b: BatchUpdate = try! PBLiteDecoder().decode(payload)
+                for state_update in b.state_update {
+                    self.active_client_state = state_update.state_update_header!.active_client_state!
+                    self.lastUpdate = state_update.state_update_header!.current_server_time!
                     
                     hangoutsCenter.post(
                         name: Client.didUpdateStateNotification, object: self,
