@@ -83,7 +83,6 @@ public class PBLiteDecoder {
             }
             guard let value = outerValue as? T else {
                 let desc = "Expected type \(T.self) but container stored value \(outerValue)."
-                print("\n\n", #line, #function, self.content, "\n\n")
                 throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             return value
@@ -135,7 +134,7 @@ public class PBLiteDecoder {
         }
         
         func superDecoder() throws -> Decoder {
-            let key = Key(stringValue: "super")! // or Key(intValue: 0)
+            let key = Key(intValue: 0)! // TODO: will this even work?
             return try self.superDecoder(forKey: key)
         }
         
@@ -377,7 +376,6 @@ public class PBLiteDecoder {
         public func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> {
             try! throwIfExists()
             guard let inside = self.content as? [Any] else {
-                print("\n\n", "content", self.content, type, "\n\n")
                 let desc = "This decoder's content could not support a keyed container."
                 throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }

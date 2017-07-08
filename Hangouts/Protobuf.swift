@@ -69,12 +69,12 @@ extension Dictionary where Value: Hashable {
 //
 //
 
-public protocol _ProtoEnum {
+public protocol _ProtoEnum: Codable {
     var rawValue: Int { get }
     init(_ rawValue: Int)
 }
 
-public protocol ProtoEnum: _ProtoEnum, ExpressibleByIntegerLiteral, RawRepresentable, Codable, Hashable {}
+public protocol ProtoEnum: _ProtoEnum, ExpressibleByIntegerLiteral, RawRepresentable, Hashable {}
 public extension ProtoEnum {
     public init(integerLiteral value: Int) {
         self.init(value)
@@ -91,7 +91,7 @@ public extension ProtoEnum {
 //
 //
 
-public protocol _ProtoMessage {
+public protocol _ProtoMessage: Codable {
     init()
 }
 extension _ProtoMessage where Self: Hashable {
@@ -99,7 +99,7 @@ extension _ProtoMessage where Self: Hashable {
         return lhs.hashValue == rhs.hashValue
     }
 }
-public typealias ProtoMessage = _ProtoMessage & Codable & Hashable
+public typealias ProtoMessage = _ProtoMessage & Hashable
 
 //
 //
