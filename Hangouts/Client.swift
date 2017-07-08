@@ -157,9 +157,9 @@ public final class Client: Service {
             
 			// The first time this is called, we need to retrieve the user's email address.
 			if self.email == nil {
-				self.getSelfInfo {
-					self.email = $0!.self_entity!.properties!.email[0] as String
-				}
+                self.execute(GetSelfInfo.self, with: GetSelfInfoRequest()) { res, _ in
+                    self.email = res!.self_entity!.properties!.email[0] as String
+                }
 			}
 			
 			setActiveClient(is_active: true, timeout_secs: Client.ACTIVE_TIMEOUT_SECS)

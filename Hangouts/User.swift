@@ -161,15 +161,8 @@ public class UserList: Directory {
     }
     
     internal static func getSelfInfo(_ client: Client) -> User {
-        var selfUser: User! = nil
-        let s = DispatchSemaphore(value: 0)
-        client.opQueue.async {
-            client.getSelfInfo {
-                selfUser = User(client, entity: $0!.self_entity!, selfUser: nil)
-                s.signal()
-            }
-        }
-        s.wait()
+        let res = try! client.execute(GetSelfInfo.self, with: GetSelfInfoRequest())
+        let selfUser = User(client, entity: res.self_entity!, selfUser: nil)
         return selfUser
     }
     

@@ -41,8 +41,8 @@ public class PBLiteEncoder {
         return self.root!.values()
     }
     
-    public func encode<T: Encodable>(_ value: T) throws -> Data {
-        let inner = try self.encode(value)
+    public func encode<T: Encodable>(value: T) throws -> Data {
+        let inner: Any = try self.encode(value)
         return try JSONSerialization.data(withJSONObject: inner, options: [])
     }
     

@@ -38,8 +38,8 @@ public class PBLiteDecoder {
     }
     
     // Data-based wrapper...
-    public func decode<T: Decodable>(_ value: Data) throws -> T? {
-        if  let script = String(data: value, encoding: .utf8),
+    public func decode<T: Decodable>(data: Data) throws -> T? {
+        if  let script = String(data: data, encoding: .utf8),
             var parsed = PBLiteDecoder.sanitize(script) {
             parsed.remove(at: 0) // FIXME: for the header thing?
             return try self.decode(parsed) as T

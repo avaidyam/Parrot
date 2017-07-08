@@ -12,6 +12,20 @@ private func random64(_ upper_bound: UInt64) -> UInt64 {
 	return rnd % upper_bound
 }
 
+public extension RequestHeader {
+    public static func header(for clientID: String? = "") -> RequestHeader {
+        var header = RequestHeader()
+        var vers = ClientVersion()
+        vers.major_version = "parrot"
+        var ident = ClientIdentifier()
+        ident.resource = clientID
+        header.client_version = vers
+        header.client_identifier = ident
+        header.language_code = "en"
+        return header
+    }
+}
+
 // Since we can't use nil in JSON arrays due to the parser.
 internal let None = NSNull()
 
@@ -54,7 +68,7 @@ public extension Client {
 			]
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/adduser", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -71,7 +85,7 @@ public extension Client {
 			each
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/createconversation", body: data, use_json: false) { r in
-            cb(try! PBLiteDecoder().decode(r.data!))
+            cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -89,7 +103,7 @@ public extension Client {
 			[]
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/deleteconversation", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -101,7 +115,7 @@ public extension Client {
 			[easteregg, None, 1],
         ] as [Any]
 		self.channel?.request(endpoint: "conversations/easteregg", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -135,7 +149,7 @@ public extension Client {
 		] as [Any]
 		
 		self.channel?.request(endpoint: "conversations/getconversation", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -149,16 +163,7 @@ public extension Client {
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // doesn't work?
 		] as [Any]
 		self.channel?.request(endpoint: "contacts/getentitybyid", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
-		}
-	}
-	
-	public func getSelfInfo(cb: @escaping ((GetSelfInfoResponse?) -> Void)) {
-		let data = [
-			self.getRequestHeader()
-		] as [Any]
-		self.channel?.request(endpoint: "contacts/getselfinfo", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -170,7 +175,7 @@ public extension Client {
 			max_count
 		] as [Any]
 		self.channel?.request(endpoint: "contacts/getsuggestedentities", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -193,7 +198,7 @@ public extension Client {
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // what are FieldMasks 4, 5, 8, 9?
 		] as [Any]
 		self.channel?.request(endpoint: "presence/querypresence", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -212,7 +217,7 @@ public extension Client {
 			],
         ] as [Any]
 		self.channel?.request(endpoint: "conversations/removeuser", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -230,7 +235,7 @@ public extension Client {
 			]
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/renameconversation", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -243,7 +248,7 @@ public extension Client {
 			max_results,
         ] as [Any]
 		self.channel?.request(endpoint: "conversations/searchentities", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -298,7 +303,7 @@ public extension Client {
 		] as [Any]
 		
 		self.channel?.request(endpoint: "conversations/sendchatmessage", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -313,7 +318,7 @@ public extension Client {
 		
 		// Set the active client.
 		self.channel?.request(endpoint: "clients/setactiveclient", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -325,7 +330,7 @@ public extension Client {
 			level.rawValue
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/setconversationnotificationlevel", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -339,7 +344,7 @@ public extension Client {
 			20
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/setfocus", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -362,7 +367,7 @@ public extension Client {
 			[(mood ?? None) as Any] // UTF-8 smiley like 0x1f603
 		] as [Any]
 		self.channel?.request(endpoint: "presence/setpresence", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -375,7 +380,7 @@ public extension Client {
 			NSNumber(value: typing.rawValue)
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/settyping", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
 	
@@ -392,7 +397,7 @@ public extension Client {
 			1048576 // max_response_size_bytes
 		] as [Any]
 		self.channel?.request(endpoint: "conversations/syncallnewevents", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
+			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 		
 		// This method requests protojson rather than json so we have one chat
@@ -418,19 +423,29 @@ public extension Client {
 			[] // ??
 		] as [Any]
         self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
-            cb(try! PBLiteDecoder().decode(r.data!))
+            cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
-	
-	// Update the watermark (read timestamp) for a conversation.
-	public func updateWatermark(conv_id: String, read_timestamp: Date, cb: @escaping (UpdateWatermarkResponse?) -> Void = {_ in}) {
-		let data = [
-			self.getRequestHeader(),
-			[conv_id], // conversation_id
-			NSNumber(value: UInt64(read_timestamp.toUTC()))//to_timestamp(date: ), // latest_read_timestamp
-		] as [Any]
-		self.channel?.request(endpoint: "conversations/updatewatermark", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(r.data!))
-		}
-	}
+}
+
+//
+//
+//
+
+extension GetSelfInfoRequest: ServiceRequest {}
+extension GetSelfInfoResponse: ServiceResponse {}
+public struct GetSelfInfo: ServiceEndpoint {
+    typealias Request = GetSelfInfoRequest
+    typealias Response = GetSelfInfoResponse
+    static let location: String = "contacts/getselfinfo"
+    private init() {}
+}
+
+extension UpdateWatermarkRequest: ServiceRequest {}
+extension UpdateWatermarkResponse: ServiceResponse {}
+public struct UpdateWatermark: ServiceEndpoint {
+    typealias Request = UpdateWatermarkRequest
+    typealias Response = UpdateWatermarkResponse
+    static let location: String = "conversations/updatewatermark"
+    private init() {}
 }

@@ -343,7 +343,13 @@ public class IConversation: ParrotServiceExtension.Conversation {
                 NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: self)
                 //delegate?.conversationDidUpdate(conversation: self)
                 //conversationList.conversationDidUpdate(conversation: self)
-                client.updateWatermark(conv_id: id, read_timestamp: new_read_timestamp) { _ in cb?() }
+                
+                var req = UpdateWatermarkRequest()
+                var _id = ConversationId()
+                _id.id = id
+                req.conversation_id = _id
+                req.last_read_timestamp = UInt64(new_read_timestamp.toUTC())
+                client.execute(UpdateWatermark.self, with: req) {_,_ in cb?()}
             }
         }
     }
