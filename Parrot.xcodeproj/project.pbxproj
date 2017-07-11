@@ -133,6 +133,7 @@
 		48D3CD421DEAF238003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		48D3CD431DEAF23A003D6C02 /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
 		48D4CA011DBE657D001CF7AD /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D4C9FD1DBD5F2F001CF7AD /* Subscription.swift */; };
+		48D7EE181F14587C005C7E16 /* ProtobufRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */; };
 		48DE52CC1C1CC12900647C63 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52CB1C1CC12900647C63 /* icon.icns */; };
 		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
 		48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -440,6 +441,7 @@
 		48D3CCF81DE9446D003D6C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48D3CD0A1DE9459E003D6C02 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		48D4C9FD1DBD5F2F001CF7AD /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
+		48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtobufRuntime.swift; sourceTree = "<group>"; };
 		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52CB1C1CC12900647C63 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		48DE52CD1C1CC12900647C63 /* ParrotShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotShare.entitlements; sourceTree = "<group>"; };
@@ -780,6 +782,7 @@
 			children = (
 				48DF84971D04E1F800F39444 /* Hangouts.proto.swift */,
 				48E9C3391D04DFF90074984D /* Protobuf.swift */,
+				48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */,
 				48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */,
 				48F7E8071F108FE20059E5CD /* PBLiteEncoder.swift */,
 				486C99FC1F103A36007D7BAA /* PBLiteDecoder.swift */,
@@ -1626,6 +1629,7 @@
 				48EA55C81D26CAAA00C3BC80 /* URLSession+Extensions.swift in Sources */,
 				48F7E8081F108FE20059E5CD /* PBLiteEncoder.swift in Sources */,
 				4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */,
+				48D7EE181F14587C005C7E16 /* ProtobufRuntime.swift in Sources */,
 				48834E3D1C1B4098009BC442 /* Client.swift in Sources */,
 				48EA55C71D26CAA700C3BC80 /* URLSession+Delegate.swift in Sources */,
 			);

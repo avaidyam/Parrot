@@ -231,7 +231,7 @@ public class UserList: Directory {
                     let pres = presence.presence
                     else { continue }
                 
-                if let usec = pres.last_seen?.last_seen_timestamp_usec {
+                if let usec = pres.last_seen?.usec_since_last_seen {
                     user.lastSeen = Date.from(UTC: Double(usec))
                 }
                 //if ??? {
@@ -259,7 +259,7 @@ public class UserList: Directory {
                                 let pres = pres2.presence
                         else { continue }
                         
-                        if let usec = pres.last_seen?.last_seen_timestamp_usec {
+                        if let usec = pres.last_seen?.usec_since_last_seen {
                             user.lastSeen = Date.from(UTC: Double(usec))
                         }
                         //if ??? {

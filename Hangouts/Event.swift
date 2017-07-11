@@ -208,7 +208,7 @@ public class IChatMessageSegment {
 		self.text = segment.text ?? ""
 		self.type = segment.type
 		self.bold = segment.formatting?.bold ?? false
-		self.italic = segment.formatting?.italic ?? false
+		self.italic = segment.formatting?.italics ?? false
 		self.strikethrough = segment.formatting?.strikethrough ?? false
 		self.underline = segment.formatting?.underline ?? false
 		self.linkTarget = segment.link_data?.link_target ?? nil

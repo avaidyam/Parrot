@@ -192,7 +192,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
             } else if let fcs = self.focuses[u.id] {
                 dict[u.identifier] = fcs ? .here : .away
             } else {
-                let gv = self.conversation.network_type.contains(.GoogleVoice)
+                let gv = self.conversation.network_type.contains(.Phone)
                 dict[u.identifier] = gv ? .here : .away // DNE case
             }
         }
