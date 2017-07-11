@@ -31,7 +31,7 @@ internal extension Client {
                     }
                     
                     do {
-                        let output: T.Response = try PBLiteDecoder().decode(response)
+                        let output: T.Response = try PBLiteDecoder().decode(data: response)!
                         handler(output, nil)
                     } catch(let error) {
                         handler(nil, error)

@@ -599,7 +599,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
                                                  max_conversations: UInt64(count),
                                                  max_events_per_conversation: UInt64(1),
                                                  sync_filter: [.Inbox, .Active, .Invited])
-        self.client.execute(SyncRecentConversations.self, with: req) { response, _ in
+        self.client.execute(SyncRecentConversations.self, with: req) { response, err in
             let conv_states = response!.conversation_state
             if let ts = response?.continuation_end_timestamp {
                 //let sync_timestamp = response!.syncTimestamp// use current_server_time?
@@ -620,20 +620,18 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         }
     }
     
-    public func begin(with: [Person]) -> ParrotServiceExtension.Conversation? {
-        let s = DispatchSemaphore(value: 0)
-        var conv: IConversation? = nil
-        self.client.createConversation(chat_id_list: with.map { $0.identifier }) {
-            guard let c = $0?.conversation else { s.signal(); return }
-            if ($0?.new_conversation_created ?? false) {
-                conv = self.add_conversation(client_conversation: c)
-            } else {
-                conv = self.conv_dict[c.conversation_id!.id!]
-            }
-            s.signal()
+    public func begin(with: Person...) -> ParrotServiceExtension.Conversation? {
+        let req = CreateConversationRequest(type: with.count > 1 ? .Group : .OneToOne,
+                                            client_generated_id: RequestHeader.uniqueID(),
+                                            invitee_id: with.map { InviteeID(gaia_id: $0.identifier) })
+        let resp = try? self.client.execute(CreateConversation.self, with: req)
+        
+        guard let c = resp?.conversation else { return nil }
+        if (resp?.new_conversation_created ?? false) {
+            return self.add_conversation(client_conversation: c)
+        } else {
+            return self.conv_dict[c.conversation_id!.id!]
         }
-        s.wait()
-        return conv
     }
     
     public var unreadCount: Int {

@@ -152,7 +152,7 @@ public class UserList: Directory {
                     }
                     ret.append(user as Person)
                 }
-                self.cache(presencesFor: entities.map { $0.id!.gaia_id! })
+                self.cache(presencesFor: entities.map { $0.id! })
                 s.signal()
             }
             s.wait()
@@ -247,33 +247,31 @@ public class UserList: Directory {
     }
     
     // Optional: Once we have all the entities, get their presence data.
-    private func cache(presencesFor queries: [String]) {
+    private func cache(presencesFor queries: [ParticipantId]) {
         log.debug("Note: batch queryPresence does not work yet!")
-        self.client.opQueue.async {
-            let s = DispatchSemaphore(value: queries.count)
-            for q in queries {
-                self.client.queryPresence(chat_ids: [q]) {
-                    for pres2 in $0!.presence_result {
-                        guard   let id1 = pres2.user_id?.chat_id, let id2 = pres2.user_id?.gaia_id,
-                                let user = self.users[User.ID(chatID: id1, gaiaID: id2)],
-                                let pres = pres2.presence
+        for q in queries {
+            let req = QueryPresenceRequest(participant_id: [q],
+                                           field_mask: [.Reachable, .Available, .Mood, .Location, .InCall, .Device, .LastSeen])
+            self.client.execute(QueryPresence.self, with: req) { req, _ in
+                for pres2 in req!.presence_result {
+                    guard   let id1 = pres2.user_id?.chat_id, let id2 = pres2.user_id?.gaia_id,
+                        let user = self.users[User.ID(chatID: id1, gaiaID: id2)],
+                        let pres = pres2.presence
                         else { continue }
-                        
-                        if let usec = pres.last_seen?.usec_since_last_seen {
-                            user.lastSeen = Date.from(UTC: Double(usec))
-                        }
-                        //if ??? {
-                            user.reachability = pres.toReachability()
-                        //}
-                        if let mood = pres.mood_setting?.mood_message?.mood_content {
-                            user.mood = mood.toText()
-                        }
+                    
+                    if let usec = pres.last_seen?.usec_since_last_seen {
+                        user.lastSeen = Date.from(UTC: Double(usec))
                     }
-                    s.signal()
+                    //if ??? {
+                        user.reachability = pres.toReachability()
+                    //}
+                    if let mood = pres.mood_setting?.mood_message?.mood_content {
+                        user.mood = mood.toText()
+                    }
                 }
+                
+                NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: nil, userInfo: nil)
             }
-            s.wait()
-            NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: nil, userInfo: nil)
         }
     }
 }

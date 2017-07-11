@@ -18,12 +18,8 @@ public extension RequestHeader {
                              client_identifier: ClientIdentifier(resource: clientID),
                              language_code: "en")
     }
-}
-
-public extension EventRequestHeader {
-    public mutating func withID() -> EventRequestHeader {
-        self.client_generated_id = random64(UInt64(pow(2.0, 32.0)))
-        return self
+    public static func uniqueID() -> UInt64 {
+        return random64(UInt64(pow(2.0, 32.0)))
     }
 }
 
@@ -196,6 +192,14 @@ public enum UpdateWatermark: ServiceEndpoint {
 }
 
 
+// TODO:
+//GetGroupConversationUrlRequest
+//ModifyConversationViewRequest
+//OpenGroupConversationFromUrlRequest
+//SendOffnetworkInvitationRequest
+//ModifyOTRStatusRequest
+//SetConversationLevelRequest
+//SetGroupLinkSharingEnabledRequest
 
 
 
@@ -239,24 +243,6 @@ fileprivate extension Client {
 
 /// Client API Operations
 public extension Client {
-	
-	// Create new conversation.
-	// chat_id_list is list of users which should be invited to conversation (except from yourself).
-    @available(*, deprecated)
-	public func createConversation(chat_id_list: [String], force_group: Bool = false,
-	                               cb: @escaping (CreateConversationResponse?) -> Void = {_ in}) {
-		let each = chat_id_list.map { [$0, None, None, "unknown", None, []] }
-		let data = [
-			self.getRequestHeader(),
-			(chat_id_list.count == 1 && !force_group) ? 1 : 2,
-			NSNumber(value: self.generateClientID()),
-			None,
-			each
-		] as [Any]
-		self.channel?.request(endpoint: "conversations/createconversation", body: data, use_json: false) { r in
-            cb(try! PBLiteDecoder().decode(data: r.data!))
-		}
-	}
 	
 	// Delete one-to-one conversation.
 	// conversation_id must be a valid conversation ID.
