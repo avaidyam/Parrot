@@ -324,7 +324,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	// Set typing status.
 	// TODO: Add rate-limiting to avoid unnecessary requests.
     public func setTyping(typing: TypingType = TypingType.Started, cb: (() -> Void)? = nil) {
-        client.setTyping(conversation_id: id, typing: typing) { _ in cb?() }
+        let req = SetTypingRequest(conversation_id: ConversationId(id: id), type: typing)
+        self.client.execute(SetTyping.self, with: req) { _, _ in cb?() }
     }
 	
 	// Update the timestamp of the latest event which has been read.
@@ -594,26 +595,28 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     
     /// Retrieve recent conversations so we can preemptively look up their participants.
     public func syncConversations(count: Int = 25, since: Date? = nil, handler: @escaping ([String: ParrotServiceExtension.Conversation]?) -> ()) {
-        self.client.opQueue.async {
-            self.client.syncRecentConversations(maxConversations: count, since: since) { response in
-                let conv_states = response!.conversation_state
-                if let ts = response?.continuation_end_timestamp {
-                    //let sync_timestamp = response!.syncTimestamp// use current_server_time?
-                    self.syncTimestamp = Date.from(UTC: Double(ts))//.origin
-                }
-                
-                // Initialize the list of conversations from Client's list of ClientConversationStates.
-                var ret = [IConversation]()
-                for conv_state in conv_states {
-                    ret.append(self.add_conversation(client_conversation: conv_state.conversation!, client_events: conv_state.event))
-                }
-                _ = self.client.userList.addPeople(from: ret)
-                
-                let r: [String: ParrotServiceExtension.Conversation]? = ret.count > 0
-                    ? ret.dictionaryMap { return [$0.id: $0 as ParrotServiceExtension.Conversation] }
-                    : nil
-                handler(r)
+        let req = SyncRecentConversationsRequest(end_timestamp: (since != nil ? UInt64(since!.toUTC()) : nil),
+                                                 max_conversations: UInt64(count),
+                                                 max_events_per_conversation: UInt64(1),
+                                                 sync_filter: [.Inbox, .Active, .Invited])
+        self.client.execute(SyncRecentConversations.self, with: req) { response, _ in
+            let conv_states = response!.conversation_state
+            if let ts = response?.continuation_end_timestamp {
+                //let sync_timestamp = response!.syncTimestamp// use current_server_time?
+                self.syncTimestamp = Date.from(UTC: Double(ts))//.origin
             }
+            
+            // Initialize the list of conversations from Client's list of ClientConversationStates.
+            var ret = [IConversation]()
+            for conv_state in conv_states {
+                ret.append(self.add_conversation(client_conversation: conv_state.conversation!, client_events: conv_state.event))
+            }
+            _ = self.client.userList.addPeople(from: ret)
+            
+            let r: [String: ParrotServiceExtension.Conversation]? = ret.count > 0
+                ? ret.dictionaryMap { return [$0.id: $0 as ParrotServiceExtension.Conversation] }
+                : nil
+            handler(r)
         }
     }
     

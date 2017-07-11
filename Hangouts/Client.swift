@@ -20,6 +20,8 @@ public final class Client: Service {
 	public static let SETACTIVECLIENT_LIMIT_SECS = 60
 	
 	public var channel: Channel?
+    
+    /// The internal operation queue to use.
     internal var opQueue = DispatchQueue(label: "Hangouts.Client", qos: .userInitiated, attributes: .concurrent)
 	
 	public var email: String?
@@ -104,7 +106,9 @@ public final class Client: Service {
     }
     public func synchronize() {
         guard self.lastUpdate > 0 else { return }
-        self.syncAllNewEvents(timestamp: Date.from(UTC: Double(self.lastUpdate))) { res in
+        let req = SyncAllNewEventsRequest(last_sync_timestamp: self.lastUpdate,
+                                          max_response_size_bytes: 1048576)
+        self.execute(SyncAllNewEvents.self, with: req) { res, _ in
             for conv_state in res!.conversation_state {
                 if let conv = self.conversationList.conv_dict[conv_state.conversation_id!.id!] {
                     conv.update_conversation(conversation: conv_state.conversation!)

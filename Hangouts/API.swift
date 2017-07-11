@@ -14,66 +14,235 @@ private func random64(_ upper_bound: UInt64) -> UInt64 {
 
 public extension RequestHeader {
     public static func header(for clientID: String? = "") -> RequestHeader {
-        var header = RequestHeader()
-        var vers = ClientVersion()
-        vers.major_version = "parrot"
-        var ident = ClientIdentifier()
-        ident.resource = clientID
-        header.client_version = vers
-        header.client_identifier = ident
-        header.language_code = "en"
-        return header
+        return RequestHeader(client_version: ClientVersion(major_version: "parrot"),
+                             client_identifier: ClientIdentifier(resource: clientID),
+                             language_code: "en")
     }
 }
+
+public extension EventRequestHeader {
+    public mutating func withID() -> EventRequestHeader {
+        self.client_generated_id = random64(UInt64(pow(2.0, 32.0)))
+        return self
+    }
+}
+
+extension AddUserRequest: ServiceRequest {}
+extension AddUserResponse: ServiceResponse {}
+public enum AddUser: ServiceEndpoint {
+    typealias Request = AddUserRequest
+    typealias Response = AddUserResponse
+    static let location: String = "conversations/adduser"
+}
+
+extension CreateConversationRequest: ServiceRequest {}
+extension CreateConversationResponse: ServiceResponse {}
+public enum CreateConversation: ServiceEndpoint {
+    typealias Request = CreateConversationRequest
+    typealias Response = CreateConversationResponse
+    static let location: String = "conversations/createconversation"
+}
+
+extension DeleteConversationRequest: ServiceRequest {}
+extension DeleteConversationResponse: ServiceResponse {}
+public enum DeleteConversation: ServiceEndpoint {
+    typealias Request = DeleteConversationRequest
+    typealias Response = DeleteConversationResponse
+    static let location: String = "conversations/deleteconversation"
+}
+
+extension EasterEggRequest: ServiceRequest {}
+extension EasterEggResponse: ServiceResponse {}
+public enum SendEasterEgg: ServiceEndpoint {
+    typealias Request = EasterEggRequest
+    typealias Response = EasterEggResponse
+    static let location: String = "conversations/easteregg"
+}
+
+extension GetConversationRequest: ServiceRequest {}
+extension GetConversationResponse: ServiceResponse {}
+public enum GetConversation: ServiceEndpoint {
+    typealias Request = GetConversationRequest
+    typealias Response = GetConversationResponse
+    static let location: String = "conversations/getconversation"
+}
+
+extension GetEntityByIdRequest: ServiceRequest {}
+extension GetEntityByIdResponse: ServiceResponse {}
+public enum GetEntityById: ServiceEndpoint {
+    typealias Request = GetEntityByIdRequest
+    typealias Response = GetEntityByIdResponse
+    static let location: String = "contacts/getentitybyid"
+}
+
+extension GetSuggestedEntitiesRequest: ServiceRequest {}
+extension GetSuggestedEntitiesResponse: ServiceResponse {}
+public enum GetSuggestedEntities: ServiceEndpoint {
+    typealias Request = GetSuggestedEntitiesRequest
+    typealias Response = GetSuggestedEntitiesResponse
+    static let location: String = "contacts/getsuggestedentities"
+}
+
+extension QueryPresenceRequest: ServiceRequest {}
+extension QueryPresenceResponse: ServiceResponse {}
+public enum QueryPresence: ServiceEndpoint {
+    typealias Request = QueryPresenceRequest
+    typealias Response = QueryPresenceResponse
+    static let location: String = "presence/querypresence"
+}
+
+extension RemoveUserRequest: ServiceRequest {}
+extension RemoveUserResponse: ServiceResponse {}
+public enum RemoveUser: ServiceEndpoint {
+    typealias Request = RemoveUserRequest
+    typealias Response = RemoveUserResponse
+    static let location: String = "conversations/removeuser"
+}
+
+extension RenameConversationRequest: ServiceRequest {}
+extension RenameConversationResponse: ServiceResponse {}
+public enum RenameConversation: ServiceEndpoint {
+    typealias Request = RenameConversationRequest
+    typealias Response = RenameConversationResponse
+    static let location: String = "conversations/renameconversation"
+}
+
+extension SearchEntitiesRequest: ServiceRequest {}
+extension SearchEntitiesResponse: ServiceResponse {}
+public enum SearchEntities: ServiceEndpoint {
+    typealias Request = SearchEntitiesRequest
+    typealias Response = SearchEntitiesResponse
+    static let location: String = "conversations/searchentities"
+}
+
+extension SendChatMessageRequest: ServiceRequest {}
+extension SendChatMessageResponse: ServiceResponse {}
+public enum SendChatMessage: ServiceEndpoint {
+    typealias Request = SendChatMessageRequest
+    typealias Response = SendChatMessageResponse
+    static let location: String = "conversations/sendchatmessage"
+}
+
+extension SetActiveClientRequest: ServiceRequest {}
+extension SetActiveClientResponse: ServiceResponse {}
+public enum SetActiveClient: ServiceEndpoint {
+    typealias Request = SetActiveClientRequest
+    typealias Response = SetActiveClientResponse
+    static let location: String = "clients/setactiveclient"
+}
+
+extension SetConversationNotificationLevelRequest: ServiceRequest {}
+extension SetConversationNotificationLevelResponse: ServiceResponse {}
+public enum SetConversationNotificationLevel: ServiceEndpoint {
+    typealias Request = SetConversationNotificationLevelRequest
+    typealias Response = SetConversationNotificationLevelResponse
+    static let location: String = "conversations/setconversationnotificationlevel"
+}
+
+extension SetFocusRequest: ServiceRequest {}
+extension SetFocusResponse: ServiceResponse {}
+public enum SetFocus: ServiceEndpoint {
+    typealias Request = SetFocusRequest
+    typealias Response = SetFocusResponse
+    static let location: String = "conversations/setfocus"
+}
+
+extension GetSelfInfoRequest: ServiceRequest {}
+extension GetSelfInfoResponse: ServiceResponse {}
+public enum GetSelfInfo: ServiceEndpoint {
+    typealias Request = GetSelfInfoRequest
+    typealias Response = GetSelfInfoResponse
+    static let location: String = "contacts/getselfinfo"
+}
+
+extension SetPresenceRequest: ServiceRequest {}
+extension SetPresenceResponse: ServiceResponse {}
+public enum SetPresence: ServiceEndpoint {
+    typealias Request = SetPresenceRequest
+    typealias Response = SetPresenceResponse
+    static let location: String = "presence/setpresence"
+}
+
+extension SetTypingRequest: ServiceRequest {}
+extension SetTypingResponse: ServiceResponse {}
+public enum SetTyping: ServiceEndpoint {
+    typealias Request = SetTypingRequest
+    typealias Response = SetTypingResponse
+    static let location: String = "conversations/settyping"
+}
+
+extension SyncAllNewEventsRequest: ServiceRequest {}
+extension SyncAllNewEventsResponse: ServiceResponse {}
+public enum SyncAllNewEvents: ServiceEndpoint {
+    typealias Request = SyncAllNewEventsRequest
+    typealias Response = SyncAllNewEventsResponse
+    static let location: String = "conversations/syncallnewevents"
+}
+
+extension SyncRecentConversationsRequest: ServiceRequest {}
+extension SyncRecentConversationsResponse: ServiceResponse {}
+public enum SyncRecentConversations: ServiceEndpoint {
+    typealias Request = SyncRecentConversationsRequest
+    typealias Response = SyncRecentConversationsResponse
+    static let location: String = "conversations/syncrecentconversations"
+}
+
+extension UpdateWatermarkRequest: ServiceRequest {}
+extension UpdateWatermarkResponse: ServiceResponse {}
+public enum UpdateWatermark: ServiceEndpoint {
+    typealias Request = UpdateWatermarkRequest
+    typealias Response = UpdateWatermarkResponse
+    static let location: String = "conversations/updatewatermark"
+}
+
+
+
+
+
+
+
+
+
+//
+// LEGACY
+//
+
+
+
+
+
+
+
+
 
 // Since we can't use nil in JSON arrays due to the parser.
 internal let None = NSNull()
 
 /// Client API Operation Support
 fileprivate extension Client {
-	
-	// Use this method for constructing request messages when calling Hangouts APIs.
-	fileprivate func getRequestHeader() -> [Any] {
-		return [
-			[None /* 6 */, None /* 3 */, "parrot", None, None, None],
-			[(self.client_id ?? None) as Any, None],
-			None,
-			"en"
-		]
-	}
-	
-	// Use this method for constructing request messages when calling Hangouts APIs.
-	fileprivate func generateClientID() -> UInt64 {
-		return random64(UInt64(pow(2.0, 32.0)))
-	}
+    
+    // Use this method for constructing request messages when calling Hangouts APIs.
+    fileprivate func getRequestHeader() -> [Any] {
+        return [
+            [None /* 6 */, None /* 3 */, "parrot", None, None, None],
+            [(self.client_id ?? None) as Any, None],
+            None,
+            "en"
+        ]
+    }
+    
+    // Use this method for constructing request messages when calling Hangouts APIs.
+    fileprivate func generateClientID() -> UInt64 {
+        return random64(UInt64(pow(2.0, 32.0)))
+    }
 }
 
 /// Client API Operations
 public extension Client {
 	
-	// Add user to existing conversation.
-	// conversation_id must be a valid conversation ID.
-	// chat_id_list is list of users which should be invited to conversation.
-    public func addUser(conversation_id: String, chat_id_list: [String], cb: @escaping (AddUserResponse?) -> Void = {_ in}) {
-		let each = chat_id_list.map { [$0, None, None, "unknown", None, []] }
-		let data = [
-			self.getRequestHeader(),
-			None,
-			each,
-			None,
-			[
-				[conversation_id],
-				NSNumber(value: self.generateClientID()),
-				2, None, 4
-			]
-		] as [Any]
-		self.channel?.request(endpoint: "conversations/adduser", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(data: r.data!))
-		}
-	}
-	
 	// Create new conversation.
 	// chat_id_list is list of users which should be invited to conversation (except from yourself).
+    @available(*, deprecated)
 	public func createConversation(chat_id_list: [String], force_group: Bool = false,
 	                               cb: @escaping (CreateConversationResponse?) -> Void = {_ in}) {
 		let each = chat_id_list.map { [$0, None, None, "unknown", None, []] }
@@ -91,6 +260,7 @@ public extension Client {
 	
 	// Delete one-to-one conversation.
 	// conversation_id must be a valid conversation ID.
+    @available(*, deprecated)
 	public func deleteConversation(conversation_id: String, cb: @escaping (DeleteConversationResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
@@ -107,22 +277,11 @@ public extension Client {
 		}
 	}
 	
-	// Send a easteregg to a conversation.
-	public func sendEasterEgg(conversation_id: String, easteregg: String, cb: @escaping (EasterEggResponse?) -> Void = {_ in}) {
-		let data = [
-			self.getRequestHeader(),
-			[conversation_id],
-			[easteregg, None, 1],
-        ] as [Any]
-		self.channel?.request(endpoint: "conversations/easteregg", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(data: r.data!))
-		}
-	}
-	
 	// Return conversation events.
 	// This is mainly used for retrieving conversation scrollback. Events
 	// occurring before event_timestamp are returned, in order from oldest to
 	// newest.
+    @available(*, deprecated)
 	public func getConversation(
 		conversation_id: String,
 		event_timestamp: Date,
@@ -154,6 +313,7 @@ public extension Client {
 	}
 	
 	// Return information about a list of contacts.
+    @available(*, deprecated)
 	public func getEntitiesByID(chat_id_list: [String], cb: @escaping (GetEntityByIdResponse?) -> Void) {
 		guard chat_id_list.count > 0 else { cb(nil); return }
 		let data = [
@@ -166,7 +326,8 @@ public extension Client {
 			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
-	
+    
+    @available(*, deprecated)
 	public func getSuggestedEntities(max_count: Int, cb: @escaping ((GetSuggestedEntitiesResponse?) -> Void)) {
 		let data = [
 			self.getRequestHeader(),
@@ -178,7 +339,8 @@ public extension Client {
 			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
-	
+    
+    @available(*, deprecated)
 	public func queryPresence(chat_ids: [String] = [],
 	                          reachable: Bool = true,
 	                          available: Bool = true,
@@ -204,6 +366,7 @@ public extension Client {
 	
 	// Leave group conversation.
 	// conversation_id must be a valid conversation ID.
+    @available(*, deprecated)
     public func removeUser(conversation_id: String, cb: @escaping (RemoveUserResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
@@ -222,6 +385,7 @@ public extension Client {
 	}
 	
 	// Set the name of a conversation.
+    @available(*, deprecated)
 	public func renameConversation(conversation_id: String, name: String, cb: @escaping (RenameConversationResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
@@ -240,6 +404,7 @@ public extension Client {
 	}
 	
 	// Search for people.
+    @available(*, deprecated)
 	public func searchEntities(search_string: String, max_results: Int, cb: @escaping (SearchEntitiesResponse?) -> Void = {_ in}) {
 		let data = [
 			self.getRequestHeader(),
@@ -262,6 +427,7 @@ public extension Client {
 	// image_id is an option ID of an image retrieved from
 	// Client.upload_image. If provided, the image will be attached to the
 	// message.
+    @available(*, deprecated)
 	public func sendChatMessage(conversation_id: String,
 	                            segments: [[Any]],
 	                            image_id: String? = nil,
@@ -306,7 +472,8 @@ public extension Client {
 			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
-	
+    
+    @available(*, deprecated)
 	public func setActiveClient(is_active: Bool, timeout_secs: Int,
 	                            cb: @escaping (SetActiveClientResponse?) -> Void = {_ in}) {
 		let data = [
@@ -321,7 +488,8 @@ public extension Client {
 			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
-	
+    
+    @available(*, deprecated)
 	public func setConversationNotificationLevel(conversation_id: String, level: NotificationLevel = .Ring,
 	                                             cb: @escaping (SetConversationNotificationLevelResponse?) -> Void = {_ in}) {
 		let data = [
@@ -335,6 +503,7 @@ public extension Client {
 	}
 	
 	// Set focus (occurs whenever you give focus to a client).
+    @available(*, deprecated)
 	public func setFocus(conversation_id: String, focused: Bool = true,
 	                     cb: @escaping (SetFocusResponse?) -> Void = {_ in}) {
 		let data = [
@@ -347,7 +516,8 @@ public extension Client {
 			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
-	
+    
+    @available(*, deprecated)
 	public func setPresence(online: Bool, mood: String?,
 	                        cb: @escaping (SetPresenceResponse?) -> Void = {_ in}) {
 		let data = [
@@ -372,6 +542,7 @@ public extension Client {
 	}
 	
 	// Send typing notification.
+    @available(*, deprecated)
 	public func setTyping(conversation_id: String, typing: TypingType = TypingType.Started,
 	                      cb: @escaping (SetTypingResponse?) -> Void = {_ in}) {
 		let data = [
@@ -383,69 +554,4 @@ public extension Client {
 			cb(try! PBLiteDecoder().decode(data: r.data!))
 		}
 	}
-	
-	// List all events occurring at or after a timestamp.
-	public func syncAllNewEvents(timestamp: Date, cb: @escaping (SyncAllNewEventsResponse?) -> Void) {
-		let data = [
-			self.getRequestHeader(),
-			NSNumber(value: UInt64(timestamp.toUTC())),//to_timestamp(date: timestamp),
-			[],
-			None,
-			[],
-			false,
-			[], // TODO: [[["UgyJ67sRgIpUbr_mp2R4AaABAQ"], 1496247974047340]]
-			1048576 // max_response_size_bytes
-		] as [Any]
-		self.channel?.request(endpoint: "conversations/syncallnewevents", body: data, use_json: false) { r in
-			cb(try! PBLiteDecoder().decode(data: r.data!))
-		}
-		
-		// This method requests protojson rather than json so we have one chat
-		// message parser rather than two.
-		// timestamp: datetime.datetime instance specifying the time after
-		// which to return all events occurring in.
-	}
-	
-	// Return info on recent conversations and their events.
-	// If since is nil, get latest.
-	public func syncRecentConversations(maxConversations: Int = 25,
-	                                    maxEventsPer: Int = 1,
-	                                    since: Date? = nil,
-	                                    cb: @escaping ((SyncRecentConversationsResponse?) -> Void)) {
-		let data = [
-			self.getRequestHeader(),
-			(since?.toUTC() ?? None) as Any, // if refreshing, provide timestamp?
-			maxConversations,
-			maxEventsPer,
-			[SyncFilter.Inbox.rawValue, 3, 4], // [3, 4] = ??
-			None, // ??
-			true, // ??
-			[] // ??
-		] as [Any]
-        self.channel?.request(endpoint: "conversations/syncrecentconversations", body: data, use_json: false) { r in
-            cb(try! PBLiteDecoder().decode(data: r.data!))
-		}
-	}
-}
-
-//
-//
-//
-
-extension GetSelfInfoRequest: ServiceRequest {}
-extension GetSelfInfoResponse: ServiceResponse {}
-public struct GetSelfInfo: ServiceEndpoint {
-    typealias Request = GetSelfInfoRequest
-    typealias Response = GetSelfInfoResponse
-    static let location: String = "contacts/getselfinfo"
-    private init() {}
-}
-
-extension UpdateWatermarkRequest: ServiceRequest {}
-extension UpdateWatermarkResponse: ServiceResponse {}
-public struct UpdateWatermark: ServiceEndpoint {
-    typealias Request = UpdateWatermarkRequest
-    typealias Response = UpdateWatermarkResponse
-    static let location: String = "conversations/updatewatermark"
-    private init() {}
 }
