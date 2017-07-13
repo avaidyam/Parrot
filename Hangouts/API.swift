@@ -108,7 +108,7 @@ extension SearchEntitiesResponse: ServiceResponse {}
 public enum SearchEntities: ServiceEndpoint {
     typealias Request = SearchEntitiesRequest
     typealias Response = SearchEntitiesResponse
-    static let location: String = "conversations/searchentities"
+    static let location: String = "contacts/searchentities"
 }
 
 extension SendChatMessageRequest: ServiceRequest {}
@@ -191,15 +191,65 @@ public enum UpdateWatermark: ServiceEndpoint {
     static let location: String = "conversations/updatewatermark"
 }
 
+extension GetGroupConversationUrlRequest: ServiceRequest {}
+extension GetGroupConversationUrlResponse: ServiceResponse {}
+public enum GetGroupConversationUrl: ServiceEndpoint {
+    typealias Request = GetGroupConversationUrlRequest
+    typealias Response = GetGroupConversationUrlResponse
+    static let location: String = "conversations/getgroupconversationurl"
+}
 
-// TODO:
-//GetGroupConversationUrlRequest
-//ModifyConversationViewRequest
-//OpenGroupConversationFromUrlRequest
-//SendOffnetworkInvitationRequest
-//ModifyOTRStatusRequest
-//SetConversationLevelRequest
-//SetGroupLinkSharingEnabledRequest
+extension ModifyConversationViewRequest: ServiceRequest {}
+extension ModifyConversationViewResponse: ServiceResponse {}
+public enum ModifyConversationView: ServiceEndpoint {
+    typealias Request = ModifyConversationViewRequest
+    typealias Response = ModifyConversationViewResponse
+    static let location: String = "conversations/modifyconversationview"
+}
+
+extension OpenGroupConversationFromUrlRequest: ServiceRequest {}
+extension OpenGroupConversationFromUrlResponse: ServiceResponse {}
+public enum OpenGroupConversationFromUrl: ServiceEndpoint {
+    typealias Request = OpenGroupConversationFromUrlRequest
+    typealias Response = OpenGroupConversationFromUrlResponse
+    static let location: String = "conversations/opengroupconversationfromurl"
+}
+
+extension SendOffnetworkInvitationRequest: ServiceRequest {}
+extension SendOffnetworkInvitationResponse: ServiceResponse {}
+public enum SendOffnetworkInvitation: ServiceEndpoint {
+    typealias Request = SendOffnetworkInvitationRequest
+    typealias Response = SendOffnetworkInvitationResponse
+    static let location: String = "devices/sendoffnetworkinvitation"
+}
+
+extension ModifyOTRStatusRequest: ServiceRequest {}
+extension ModifyOTRStatusResponse: ServiceResponse {}
+public enum ModifyOTRStatus: ServiceEndpoint {
+    typealias Request = ModifyOTRStatusRequest
+    typealias Response = ModifyOTRStatusResponse
+    static let location: String = "conversations/modifyotrstatus"
+}
+
+extension SetConversationLevelRequest: ServiceRequest {}
+extension SetConversationLevelResponse: ServiceResponse {}
+public enum SetConversationLevel: ServiceEndpoint {
+    typealias Request = SetConversationLevelRequest
+    typealias Response = SetConversationLevelResponse
+    static let location: String = "conversations/setconversationlevel"
+}
+
+extension SetGroupLinkSharingEnabledRequest: ServiceRequest {}
+extension SetGroupLinkSharingEnabledResponse: ServiceResponse {}
+public enum SetGroupLinkSharingEnabled: ServiceEndpoint {
+    typealias Request = SetGroupLinkSharingEnabledRequest
+    typealias Response = SetGroupLinkSharingEnabledResponse
+    static let location: String = "conversations/setgrouplinksharingenabled"
+}
+
+//
+
+
 
 
 

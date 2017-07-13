@@ -111,14 +111,16 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     //
     
+    private var cachedFavorites: [Person] = []
     var directory: ParrotServiceExtension.Directory? {
         didSet {
             UI {
                 self.collectionView.reloadData()
-                self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
-                                                             scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
+                //self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
+                //                                             scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
                 self.updateInterpolation.animate(duration: 1.5)
             }
+            self.cachedFavorites = self.directory?.list(200) ?? []//.search(by: "Test", limit: 200) ?? []
         }
     }
     
@@ -212,12 +214,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     ///
     
     public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.directory!.people.count
+        return self.cachedFavorites.count
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"), for: indexPath)
-        item.representedObject = Array(self.directory!.people.values)[indexPath.item]
+        item.representedObject = self.cachedFavorites[indexPath.item]
         return item
     }
     

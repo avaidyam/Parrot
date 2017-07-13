@@ -112,6 +112,26 @@ public class UserList: Directory {
         return [:]
     }
     
+    // Initialize the list of Users.
+    public init(client: Client, users: [User] = []) {
+        self.client = client
+        
+        var usersDict = Dictionary<User.ID, User>()
+        users.forEach { usersDict[$0.id] = $0 }
+        self.users = usersDict
+        
+        let me = UserList.getSelfInfo(self.client)
+        self.users[me.id] = me
+        self.me = me
+        
+        hangoutsCenter.addObserver(self, selector: #selector(UserList._updatedState(_:)),
+                                   name: Client.didUpdateStateNotification, object: client)
+    }
+    
+    deinit {
+        hangoutsCenter.removeObserver(self)
+    }
+    
     public subscript(_ identifier: String) -> Person {
         return self[User.ID(chatID: identifier, gaiaID: identifier)]
     }
@@ -166,40 +186,29 @@ public class UserList: Directory {
         return selfUser
     }
     
-    public func lookup(by: [String]) -> [Person] {
-        return lookup(by: by, limit: 10)
+    ///
+    public func search(by: String, limit: Int) -> [Person] {
+        let req = SearchEntitiesRequest(query: by, max_count: UInt64(limit))
+        let vals = try? self.client.execute(SearchEntities.self, with: req)
+        return vals?.entity.map { User(self.client, entity: $0, selfUser: (self.me as! User).id) } ?? []
     }
-    public func lookup(by: [String], limit: Int) -> [Person] {
-        let ret = [Person]()
-        let s = DispatchSemaphore(value: 0)
-        self.client.opQueue.sync {
-            self.client.getSuggestedEntities(max_count: limit) { r in
-                log.debug("got \(String(describing: r))")
-                s.signal()
-            }
+    
+    ///
+    public func list(_ limit: Int) -> [Person] {
+        /*
+         favorites:    favorites + pinned_favorites
+         frequents:    contacts_you_hangout_with
+         others:       other_contacts + other_contacts_on_hangouts
+         --:           dismissed_contacts
+        */
+        let req = GetSuggestedEntitiesRequest(max_count: UInt64(limit))
+        var vals: GetSuggestedEntitiesResponse? = nil
+        do {
+            vals = try self.client.execute(GetSuggestedEntities.self, with: req)
+        } catch(let error) {
+            print("\n\n", error, "\n\n")
         }
-        s.wait()
-        return ret
-    }
-    
-    // Initialize the list of Users.
-    public init(client: Client, users: [User] = []) {
-        self.client = client
-        
-        var usersDict = Dictionary<User.ID, User>()
-        users.forEach { usersDict[$0.id] = $0 }
-        self.users = usersDict
-        
-        let me = UserList.getSelfInfo(self.client)
-        self.users[me.id] = me
-        self.me = me
-        
-        hangoutsCenter.addObserver(self, selector: #selector(UserList._updatedState(_:)),
-                                   name: Client.didUpdateStateNotification, object: client)
-    }
-    
-    deinit {
-        hangoutsCenter.removeObserver(self)
+        return vals?.entity.map { User(self.client, entity: $0, selfUser: (self.me as! User).id) } ?? []
     }
     
     /// Note: all notification objects are expected to be deltas.
@@ -231,7 +240,7 @@ public class UserList: Directory {
                     let pres = presence.presence
                     else { continue }
                 
-                if let usec = pres.last_seen?.usec_since_last_seen {
+                if let usec = pres.last_seen?.last_seen_timestamp {
                     user.lastSeen = Date.from(UTC: Double(usec))
                 }
                 //if ??? {
@@ -259,7 +268,7 @@ public class UserList: Directory {
                         let pres = pres2.presence
                         else { continue }
                     
-                    if let usec = pres.last_seen?.usec_since_last_seen {
+                    if let usec = pres.last_seen?.last_seen_timestamp {
                         user.lastSeen = Date.from(UTC: Double(usec))
                     }
                     //if ??? {
@@ -268,9 +277,9 @@ public class UserList: Directory {
                     if let mood = pres.mood_setting?.mood_message?.mood_content {
                         user.mood = mood.toText()
                     }
+                    
+                    NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
                 }
-                
-                NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: nil, userInfo: nil)
             }
         }
     }

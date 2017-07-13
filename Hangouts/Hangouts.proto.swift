@@ -1927,10 +1927,10 @@ public struct EntityProperties: ProtoMessage {
     public var in_users_domain: Bool? = nil
     public var gender: Gender? = nil
     public var photo_url_status: PhotoUrlStatus? = nil
-    public var phones: [Phone] = []
+    public var phones: [PhoneDescription] = []
     public var canonical_email: String? = nil
     
-    public init(type: ProfileType? = nil, display_name: String? = nil, first_name: String? = nil, photo_url: String? = nil, email: [String] = [], phone: [String] = [], location: String? = nil, organization: String? = nil, role: String? = nil, in_users_domain: Bool? = nil, gender: Gender? = nil, photo_url_status: PhotoUrlStatus? = nil, phones: [Phone] = [], canonical_email: String? = nil) {
+    public init(type: ProfileType? = nil, display_name: String? = nil, first_name: String? = nil, photo_url: String? = nil, email: [String] = [], phone: [String] = [], location: String? = nil, organization: String? = nil, role: String? = nil, in_users_domain: Bool? = nil, gender: Gender? = nil, photo_url_status: PhotoUrlStatus? = nil, phones: [PhoneDescription] = [], canonical_email: String? = nil) {
         self.type = type
         self.display_name = display_name
         self.first_name = first_name
@@ -2322,6 +2322,25 @@ public struct PhoneData: ProtoMessage {
     
     public var hashValue: Int {
         return combine(hashes: [self.phone.hash(), self.caller_id_settings_mask.hash()])
+    }
+}
+
+public struct PhoneDescription: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case phone_number = 1
+        case label = 3
+    }
+    
+    public var phone_number: PhoneNumber? = nil
+    public var label: String? = nil
+    
+    public init(phone_number: PhoneNumber? = nil, label: String? = nil) {
+        self.phone_number = phone_number
+        self.label = label
+    }
+    
+    public var hashValue: Int {
+        return combine(hashes: [self.phone_number.hash(), self.label.hash()])
     }
 }
 
@@ -4446,6 +4465,7 @@ let _protoMessages: [String: _ProtoMessage.Type] = [
     "Country": Country.self,
     "DesktopSoundSetting": DesktopSoundSetting.self,
     "PhoneData": PhoneData.self,
+    "PhoneDescription": PhoneDescription.self,
     "Phone": Phone.self,
     "I18nData": I18nData.self,
     "PhoneNumber": PhoneNumber.self,

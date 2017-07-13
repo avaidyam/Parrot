@@ -804,7 +804,7 @@ message EntityProperties {
   optional bool in_users_domain = 10;
   optional Gender gender = 11;
   optional PhotoUrlStatus photo_url_status = 12;
-  repeated Phone phones = 14;
+  repeated PhoneDescription phones = 14;
   optional string canonical_email = 15;
 }
 
@@ -1040,6 +1040,12 @@ enum CallerIdSettingsMask {
 message PhoneData {
   repeated Phone phone = 1;
   optional CallerIdSettingsMask caller_id_settings_mask = 3;
+}
+
+// FIXME
+message PhoneDescription {
+  optional PhoneNumber phone_number = 1;
+  optional string label = 3;
 }
 
 enum PhoneVerificationStatus {
