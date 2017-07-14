@@ -9,10 +9,10 @@ import ParrotServiceExtension
 /* TODO: Use the PlaceholderMessage for sending messages. */
 /* TODO: When selecting text and typing a completion character, wrap the text. */
 
-public struct EventStreamItemBundle {
-    public let current: EventStreamItem
-    public let previous: EventStreamItem?
-    public let next: EventStreamItem?
+public struct MessageBundle {
+    public let current: Message
+    public let previous: Message?
+    public let next: Message?
 }
 
 /// This is instantly shown to the user when they send a message. It will
@@ -21,11 +21,11 @@ public struct PlaceholderMessage: Message {
     public let serviceIdentifier: String = ""
     public let identifier: String = ""
 
-    public var contentType: ContentType = .text
-    public let sender: Person?
-    public let timestamp: Date
-    public let text: String
-    public var failed: Bool = false
+    public var content: Content
+    public let sender: Person? = nil
+    public let timestamp: Date = Date()
+    
+    //public var failed: Bool = false
 }
 
 // TODO: not here...
@@ -208,7 +208,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     /// The primary EventStreamItem dataSource.
-    private var dataSource = SortedArray<EventStreamItem>() { a, b in
+    private var dataSource = SortedArray<Message>() { a, b in
         return a.timestamp < b.timestamp
     }
     
@@ -308,9 +308,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
-        let msg = self.dataSource[indexPath.item] as? Message
+        let msg = self.dataSource[indexPath.item]
         return NSSize(width: collectionView.bounds.width,
-                      height: MessageCell.measure(msg?.text ?? "", collectionView.bounds.width))
+                      height: MessageCell.measure(msg.text, collectionView.bounds.width))
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
@@ -319,9 +319,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let row = indexPath.item
         let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
         let next = (row + 1) < self.dataSource.count && (row + 1) < 0
-        item.representedObject = EventStreamItemBundle(current: self.dataSource[row],
-                                                       previous: prev ? self.dataSource[row - 1] : nil,
-                                                       next: next ? self.dataSource[row + 1] : nil) as Any
+        item.representedObject = MessageBundle(current: self.dataSource[row],
+                                               previous: prev ? self.dataSource[row - 1] : nil,
+                                               next: next ? self.dataSource[row + 1] : nil) as Any
         return item
     }
     
@@ -442,7 +442,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         default: // TypingType.Unknown:
             mode = .here
         }
-        self.focusModeChanged(IFocus("", identifier: "", sender: forUser, timestamp: Date(), mode: mode))
+        self.focusModeChanged(mode, forUser)
     }
     
     @objc public func conversationDidChangeFocus(_ notification: Notification) {
@@ -459,14 +459,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     // FIXME: Watermark!!
-    public func watermarkEvent(_ focus: Focus) {
+    /*public func watermarkEvent(_ focus: FocusMode) {
         guard let s = focus.sender, !s.me else { return }
         UI {
             let oldWatermarkIdx = self.lastWatermarkIdx
             if oldWatermarkIdx > 0 {
                 self.dataSource.remove(at: oldWatermarkIdx)
             }
-            self.dataSource.insert(focus)
+            //self.dataSource.insert(focus)
             self.lastWatermarkIdx = self.dataSource.count - 1
             
             /*
@@ -481,12 +481,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 self.listView.insert(at: [(section: 0, item: UInt(self.lastWatermarkIdx))])
             }*/
         }
-    }
+    }*/
     
-    public func focusModeChanged(_ focus: Focus) {
-        guard let s = focus.sender, !s.me else { return }
+    public func focusModeChanged(_ focus: FocusMode, _ user: User) {
+        guard !user.me else { return }
         UI {
-            switch focus.mode {
+            switch focus {
             case .typing: fallthrough
             case .enteredText:
                 log.debug("typing start")
@@ -596,13 +596,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         for url in images {
             let img = try! Data(contentsOf: url)
             let fname = url.lastPathComponent
-            self.conversation?.send(photo: img, name: fname)
+            self.conversation?.send(message: PlaceholderMessage(content: .image(img, fname)))
             
         }
     }
     
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
-        conversation.send(message: text)
+        conversation.send(message: PlaceholderMessage(content: .text(text)))
     }
     
     //

@@ -4,21 +4,6 @@ import ParrotServiceExtension
 
 private let log = Logger(subsystem: "Hangouts.Conversation")
 
-public struct IFocus: Focus {
-    public let serviceIdentifier: String
-    public let identifier: String
-	public let sender: Person?
-	public let timestamp: Date
-	public let mode: FocusMode
-    public init(_ serviceIdentifier: String, identifier: String, sender: Person?, timestamp: Date, mode: FocusMode) {
-        self.serviceIdentifier = serviceIdentifier
-        self.identifier = identifier
-        self.sender = sender
-        self.timestamp = timestamp
-        self.mode = mode
-    }
-}
-
 // Wrapper around Client for working with a single chat conversation.
 public class IConversation: ParrotServiceExtension.Conversation {
     public typealias EventID = String
@@ -241,104 +226,96 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	}
     
     // TODO: opQueue should be serial!
-    public func send(message text: String) {
-        guard text.characters.count > 0 else { return }
+    public func send(message: Message) {
         let otr: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
         let medium = self.getDefaultDeliveryMedium().medium_type!
         
-        let s = DispatchSemaphore(value: 0)
-        self.client.opQueue.async {
-            self.client.sendChatMessage(conversation_id: self.id,
-                                        segments: [IChatMessageSegment(text: text)].map { $0.serialize() },
-                                        image_id: nil,
-                                        otr_status: otr,
-                                        delivery_medium: medium) { _ in s.signal() }
-        }
-        s.wait()
-    }
-    
-    // TODO: opQueue should be serial!
-    public func send(photo: Data, name: String) {
-        let otr: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
-        let medium = self.getDefaultDeliveryMedium().medium_type!
-        
-        let s = DispatchSemaphore(value: 0)
-        self.client.opQueue.async {
-            self.client.uploadIfNeeded(photo: .new(data: photo, name: name)) { photoID, userID in
+        switch message.content {
+        case .text(let text) where text.characters.count > 0:
+            let s = DispatchSemaphore(value: 0)
+            self.client.opQueue.async {
                 self.client.sendChatMessage(conversation_id: self.id,
-                                            segments: [],
-                                            image_id: photoID,
-                                            image_user_id: userID,
+                                            segments: [IChatMessageSegment(text: text)].map { $0.serialize() },
+                                            image_id: nil,
                                             otr_status: otr,
                                             delivery_medium: medium) { _ in s.signal() }
             }
-        }
-        s.wait()
-    }
-    
-    // TODO: opQueue should be serial!
-    // TODO: Clean this up a little bit.
-    public func send(photoID: String, userID: String) {
-        let otr: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
-        let medium = self.getDefaultDeliveryMedium().medium_type!
-        
-        let s = DispatchSemaphore(value: 0)
-        self.client.opQueue.async {
-            self.client.uploadIfNeeded(photo: .existing(id: photoID, user: userID)) { photoID, userID in
-                self.client.sendChatMessage(conversation_id: self.id,
-                                            segments: [],
-                                            image_id: photoID,
-                                            image_user_id: userID,
-                                            otr_status: otr,
-                                            delivery_medium: medium) { _ in s.signal() }
+            s.wait()
+        case .image(let photo, let name):
+            let s = DispatchSemaphore(value: 0)
+            self.client.opQueue.async {
+                self.client.uploadIfNeeded(photo: .new(data: photo, name: name)) { photoID, userID in
+                    self.client.sendChatMessage(conversation_id: self.id,
+                                                segments: [],
+                                                image_id: photoID,
+                                                image_user_id: userID,
+                                                otr_status: otr,
+                                                delivery_medium: medium) { _ in s.signal() }
+                }
             }
+            s.wait()
+        /*
+        case .image(let photoID, let name):
+            let s = DispatchSemaphore(value: 0)
+            self.client.opQueue.async {
+                self.client.uploadIfNeeded(photo: .existing(id: photoID, name: name)) { photoID, userID in
+                    self.client.sendChatMessage(conversation_id: self.id,
+                                                segments: [],
+                                                image_id: photoID,
+                                                image_user_id: userID,
+                                                otr_status: otr,
+                                                delivery_medium: medium) { _ in s.signal() }
+                }
+            }
+            s.wait()
+        */
+        default: log.debug("\(message) not supported!")
         }
-        s.wait()
     }
     
     public func leave(cb: (() -> Void)? = nil) {
         switch (self.conversation.type!) {
         case ConversationType.Group:
-			client.removeUser(conversation_id: id) { _ in cb?() }
+            client.removeUser(conversation_id: id) { _ in cb?() }
         case ConversationType.OneToOne:
             client.deleteConversation(conversation_id: id) { _ in cb?() }
         default:
             break
         }
     }
-	
-	// Rename the conversation.
-	// Hangouts only officially supports renaming group conversations, so
-	// custom names for one-to-one conversations may or may not appear in all
-	// first party clients.
+    
+    // Rename the conversation.
+    // Hangouts only officially supports renaming group conversations, so
+    // custom names for one-to-one conversations may or may not appear in all
+    // first party clients.
     public func rename(name: String, cb: (() -> Void)?) {
         self.client.renameConversation(conversation_id: self.id, name: name) { _ in cb?() }
     }
-	
-	// Set the notification level of the conversation.
-	// Pass .QUIET to disable notifications or .RING to enable them.
-	public func setConversationNotificationLevel(level: NotificationLevel, cb: (() -> Void)?) {
-		self.client.setConversationNotificationLevel(conversation_id: self.id, level: level) { _ in cb?() }
+    
+    // Set the notification level of the conversation.
+    // Pass .QUIET to disable notifications or .RING to enable them.
+    public func setConversationNotificationLevel(level: NotificationLevel, cb: (() -> Void)?) {
+        self.client.setConversationNotificationLevel(conversation_id: self.id, level: level) { _ in cb?() }
     }
-	
-	// Set typing status.
-	// TODO: Add rate-limiting to avoid unnecessary requests.
+    
+    // Set typing status.
+    // TODO: Add rate-limiting to avoid unnecessary requests.
     public func setTyping(typing: TypingType = TypingType.Started, cb: (() -> Void)? = nil) {
         let req = SetTypingRequest(conversation_id: ConversationId(id: id), type: typing)
         self.client.execute(SetTyping.self, with: req) { _, _ in cb?() }
     }
-	
-	// Update the timestamp of the latest event which has been read.
-	// By default, the timestamp of the newest event is used.
-	// This method will avoid making an API request if it will have no effect.
+    
+    // Update the timestamp of the latest event which has been read.
+    // By default, the timestamp of the newest event is used.
+    // This method will avoid making an API request if it will have no effect.
     public func updateReadTimestamp(read_timestamp: Date? = nil, cb: (() -> Void)? = nil) {
-		var read_timestamp = read_timestamp
+        var read_timestamp = read_timestamp
         if read_timestamp == nil {
             read_timestamp = self.events.last!.timestamp
         }
         if let new_read_timestamp = read_timestamp {
             if new_read_timestamp > self.latest_read_timestamp {
-
+                
                 // Prevent duplicate requests by updating the conversation now.
                 self.latest_read_timestamp = new_read_timestamp
                 NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: self)
@@ -354,19 +331,19 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
         }
     }
-
+    
     public func handleEvent(event: IEvent) {
         NotificationCenter.default.post(name: Notification.Conversation.DidReceiveEvent, object: self, userInfo: ["event": event])
         /*if let delegate = delegate {
-			delegate.conversation(self, didReceiveEvent: event)
-        } else {
-            let user = user_list[event.userID]
-			if !user.me {
-				//log.info("Notification \(event) from User \(user)!");
-            }
-        }*/
+         delegate.conversation(self, didReceiveEvent: event)
+         } else {
+         let user = user_list[event.userID]
+         if !user.me {
+         //log.info("Notification \(event) from User \(user)!");
+         }
+         }*/
     }
-	
+    
     public func handleTypingStatus(status: TypingType, forUser user: User) {
         let existingTypingStatus = typingStatuses[user.id]
         if existingTypingStatus == nil || existingTypingStatus! != status {
@@ -375,97 +352,97 @@ public class IConversation: ParrotServiceExtension.Conversation {
                                             object: self, userInfo: ["user": user, "status": status])
         }
     }
-
+    
     public var _messages: [IChatMessageEvent] {
-		get {
-			return events.flatMap { $0 as? IChatMessageEvent }
+        get {
+            return events.flatMap { $0 as? IChatMessageEvent }
         }
     }
-	
-	// Return list of Events ordered newest-first.
-	// If event_id is specified, return events preceding this event.
-	// This method will make an API request to load historical events if
-	// necessary. If the beginning of the conversation is reached, an empty
-	// list will be returned.
+    
+    // Return list of Events ordered newest-first.
+    // If event_id is specified, return events preceding this event.
+    // This method will make an API request to load historical events if
+    // necessary. If the beginning of the conversation is reached, an empty
+    // list will be returned.
     public func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([IEvent]) -> Void)? = nil) {
         /*guard let event_id = event_id else {
-            cb?(events)
-            return
-		}*/
-
+         cb?(events)
+         return
+         }*/
+        
         // If event_id is provided, return the events we have that are
         // older, or request older events if event_id corresponds to the
         // oldest event we have.
-		var ts = Date()
-        if	let event_id = event_id,
-			let conv_event = self.get_event(event_id: event_id) {
-			
+        var ts = Date()
+        if    let event_id = event_id,
+            let conv_event = self.get_event(event_id: event_id) {
+            
             if events.first!.id != event_id {
                 if let indexOfEvent = self.events.index(where: { $0 == conv_event }) {
                     cb?(Array(self.events[indexOfEvent..<self.events.endIndex]))
                     return
                 }
             }
-			ts = conv_event.timestamp
+            ts = conv_event.timestamp
         }/* else {
-            log.error("Event not found.")
-			return
-		}*/
-		
-		client.getConversation(conversation_id: id, event_timestamp: ts, max_events: max_events) { res in
-			if res!.response_header!.status == ResponseStatus.InvalidRequest {
+         log.error("Event not found.")
+         return
+         }*/
+        
+        client.getConversation(conversation_id: id, event_timestamp: ts, max_events: max_events) { res in
+            if res!.response_header!.status == ResponseStatus.InvalidRequest {
                 log.error("Invalid request! \(String(describing: res!.response_header))")
-				return
-			}
-			let conv_events = res!.conversation_state!.event.map { IConversation.wrap_event(self.client, event: $0) }
-			self.readStates = res!.conversation_state!.conversation!.read_state
-			
-			for conv_event in conv_events {
-				//conv_event.client = self.client
-				self.events_dict[conv_event.id] = conv_event
-			}
-			cb?(conv_events)
+                return
+            }
+            let conv_events = res!.conversation_state!.event.map { IConversation.wrap_event(self.client, event: $0) }
+            self.readStates = res!.conversation_state!.conversation!.read_state
+            
+            for conv_event in conv_events {
+                //conv_event.client = self.client
+                self.events_dict[conv_event.id] = conv_event
+            }
+            cb?(conv_events)
             NotificationCenter.default.post(name: Notification.Conversation.DidUpdateEvents, object: self)
-			//self.delegate?.conversationDidUpdateEvents(self)
-		}
+            //self.delegate?.conversationDidUpdateEvents(self)
+        }
     }
-
-//    func next_event(event_id, prev=False) {
-//        // Return Event following the event with given event_id.
-//        // If prev is True, return the previous event rather than the following
-//        // one.
-//        // Raises KeyError if no such Event is known.
-//        // Return nil if there is no following event.
-//
-//        i = self.events.index(self._events_dict[event_id])
-//        if prev and i > 0:
-//        return self.events[i - 1]
-//        elif not prev and i + 1 < len(self.events) {
-//            return self.events[i + 1]
-//            else:
-//            return nil
-//        }
-//    }
-
+    
+    //    func next_event(event_id, prev=False) {
+    //        // Return Event following the event with given event_id.
+    //        // If prev is True, return the previous event rather than the following
+    //        // one.
+    //        // Raises KeyError if no such Event is known.
+    //        // Return nil if there is no following event.
+    //
+    //        i = self.events.index(self._events_dict[event_id])
+    //        if prev and i > 0:
+    //        return self.events[i - 1]
+    //        elif not prev and i + 1 < len(self.events) {
+    //            return self.events[i + 1]
+    //            else:
+    //            return nil
+    //        }
+    //    }
+    
     public func get_event(event_id: EventID) -> IEvent? {
         return events_dict[event_id]
     }
-	
-	// The conversation's ID.
+    
+    // The conversation's ID.
     public var id: String {
         get {
             return self.conversation.conversation_id!.id!
         }
     }
-	
-	public var identifier: String {
-		return self.id
-	}
-	
-	public var eventStream: [EventStreamItem] {
-		return self._messages.map { $0 as Message }
-	}
-
+    
+    public var identifier: String {
+        return self.id
+    }
+    
+    public var messages: [Message] {
+        return self._messages.map { $0 as Message }
+    }
+    
     public var users: [User] {
         get {
             return conversation.participant_data.map {
@@ -476,55 +453,55 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
         }
     }
-
+    
     public var name: String {
         get {
-			if let name = self.conversation.name {
+            if let name = self.conversation.name {
                 return name
             } else {
                 return users.filter { !$0.me }.map { $0.fullName }.joined(separator: ", ")
             }
-		}
-		set {
+        }
+        set {
             self.client.renameConversation(conversation_id: self.id, name: newValue)
-		}
+        }
     }
-
+    
     public var timestamp: Date {
         get {
-			return Date.from(UTC: Double(conversation.self_conversation_state?.sort_timestamp ?? 0))
-			//.origin
+            return Date.from(UTC: Double(conversation.self_conversation_state?.sort_timestamp ?? 0))
+            //.origin
         }
     }
-	
-	// datetime timestamp of the last read Event.
+    
+    // datetime timestamp of the last read Event.
     public var latest_read_timestamp: Date {
         get {
-			return Date.from(UTC: Double(conversation.self_conversation_state?.self_read_state?.latest_read_timestamp ?? 0))
+            return Date.from(UTC: Double(conversation.self_conversation_state?.self_read_state?.latest_read_timestamp ?? 0))
         }
         set(newLatestReadTimestamp) {
-			// FIXME: Oops.
+            // FIXME: Oops.
             //conversation.self_conversation_state.selfReadState.latestReadTimestamp = newLatestReadTimestamp
         }
     }
-	
-	// List of Events that are unread.
-	// Events are sorted oldest to newest.
-	// Note that some Hangouts clients don't update the read timestamp for
-	// certain event types, such as membership changes, so this method may
-	// return more unread events than these clients will show. There's also a
-	// delay between sending a message and the user's own message being
-	// considered read.
+    
+    // List of Events that are unread.
+    // Events are sorted oldest to newest.
+    // Note that some Hangouts clients don't update the read timestamp for
+    // certain event types, such as membership changes, so this method may
+    // return more unread events than these clients will show. There's also a
+    // delay between sending a message and the user's own message being
+    // considered read.
     public var unread_events: [IEvent] {
         get {
             return events.filter { $0.timestamp > self.latest_read_timestamp }
         }
     }
-	
-	public var unreadCount: Int {
-		return self.unread_events.count
-	}
-
+    
+    public var unreadCount: Int {
+        return self.unread_events.count
+    }
+    
     public var hasUnreadEvents: Bool {
         get {
             if unread_events.first != nil {
@@ -533,22 +510,22 @@ public class IConversation: ParrotServiceExtension.Conversation {
             return unread_events.first != nil
         }
     }
-	
-	// True if this conversation has been archived.
+    
+    // True if this conversation has been archived.
     public var is_archived: Bool {
         get {
             return self.conversation.self_conversation_state!.view.contains(ConversationView.Archived)
         }
     }
-	
-	// True if notification level for this conversation is quiet.
-	public var is_quiet: Bool {
-		get {
-			return self.conversation.self_conversation_state!.notification_level == NotificationLevel.Quiet
-		}
-	}
-	
-	// True if conversation is off the record (history is disabled).
+    
+    // True if notification level for this conversation is quiet.
+    public var is_quiet: Bool {
+        get {
+            return self.conversation.self_conversation_state!.notification_level == NotificationLevel.Quiet
+        }
+    }
+    
+    // True if conversation is off the record (history is disabled).
     public var is_off_the_record: Bool {
         get {
             return self.conversation.otr_status == OffTheRecordStatus.OffTheRecord
@@ -724,3 +701,4 @@ extension ConversationList {
         }
     }
 }
+

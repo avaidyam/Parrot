@@ -99,14 +99,14 @@ public class ConversationCell: NSCollectionViewItem {
 		didSet {
             guard let conversation = self.representedObject as? Conversation else { return }
 			
-			let messageSender = conversation.eventStream.last?.sender?.identifier ?? ""
+			let messageSender = conversation.messages.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
 			if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
                 self.photoLayer.sublayers?[0].contents = firstParticipant.image
 			}
 			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
-			let subtitle = ((conversation.eventStream.last as? Message)?.text ?? "")
-			let time = conversation.eventStream.last?.timestamp ?? .origin
+			let subtitle = (conversation.messages.last?.text ?? "")
+			let time = conversation.messages.last?.timestamp ?? .origin
 			
 			self.time = time
 			self.nameLabel.stringValue = conversation.name

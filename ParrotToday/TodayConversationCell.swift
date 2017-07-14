@@ -89,7 +89,7 @@ public class TodayConversationCell: NSTableCellView {
             log.debug("OBJECTVALUE \(String(describing: self.objectValue))")
             guard let conversation = self.objectValue as? Conversation else { return }
             
-            let messageSender = conversation.eventStream.last?.sender?.identifier ?? ""
+            let messageSender = conversation.messages.last?.sender?.identifier ?? ""
             let selfSender = conversation.participants.filter { $0.me }.first?.identifier
             if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
                 let photo = fetchImage(user: firstParticipant, monogram: true)
@@ -98,9 +98,9 @@ public class TodayConversationCell: NSTableCellView {
             // FIXME: Group conversation prefixing doesn't work yet.
             self.prefix = messageSender != selfSender ? "↙ " : "↗ "
             //let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
-            let _m = conversation.eventStream.last as? Message
+            let _m = conversation.messages.last
             let subtitle = (_m?.text ?? "")
-            let time = conversation.eventStream.last?.timestamp ?? .origin
+            let time = conversation.messages.last?.timestamp ?? .origin
             
             self.time = time
             self.nameLabel.stringValue = conversation.name

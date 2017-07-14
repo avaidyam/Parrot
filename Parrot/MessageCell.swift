@@ -74,8 +74,8 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
 	/// Upon assignment of the represented object, configure the subview contents.
 	public override var representedObject: Any? {
         didSet {
-            guard let b = self.representedObject as? EventStreamItemBundle else { return }
-            guard let o = b.current as? Message else { return }
+            guard let b = self.representedObject as? MessageBundle else { return }
+            let o = b.current
 			
 			let user = o.sender
             self.orientation = o.sender!.me ? .rightToLeft : .leftToRight // FIXME
@@ -129,8 +129,8 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
 	}
     
     private func setColors() {
-        guard let b = self.representedObject as? EventStreamItemBundle else { return }
-        guard let o = b.current as? Message else { return }
+        guard let b = self.representedObject as? MessageBundle else { return }
+        let o = b.current
         let text = self.textLabel
         
         // Only clip the text if the text isn't purely Emoji.

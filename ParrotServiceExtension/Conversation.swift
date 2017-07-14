@@ -21,7 +21,7 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
 	var focus: [Person.IdentifierType: FocusMode] { get }
 	
 	/// The set of all events in this Conversation.
-	var eventStream: [EventStreamItem] { get }
+	var messages: [Message] { get }
 	
 	/// The number of messages that are unread for this Conversation.
 	var unreadCount: Int { get }
@@ -48,7 +48,16 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
     
     func focus(mode: FocusMode)
     
-    func send(message: String)
-    func send(photo: Data, name: String)
+    func send(message: Message)
+    
+    //func send(message: String)
+    //func send(photo: Data, name: String)
     //func send(media: Data, name: String, kind: [.photo, .audio, .video, ...])
+}
+
+public enum FocusMode {
+    case away
+    case here
+    case typing
+    case enteredText
 }

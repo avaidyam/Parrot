@@ -125,11 +125,17 @@ public class PBLiteEncoder {
         /// Convert between an Int-keyed Dictionary and Array.
         /// k-1 because protobuf message indexes start at 1.
         private static func transform(_ content: [Int: Any]) -> [Any] {
-            if let max = content.keys.max() {
+            let normal = content.filter { $0.key <= Int(Int8.max) }
+            let extended = content.filter { $0.key > Int(Int8.max) }
+            
+            if let max = normal.keys.max() {
                 var arrayed: [Any] = Array<Any>(repeating: Optional<Any>.none as Any, count: max)
                 for (k, v) in content {
                     arrayed[k - 1] = v
                 }
+                
+                // Add the extended stuff to the end of the protobuf.
+                arrayed.append(extended)
                 return arrayed
             }
             return []
