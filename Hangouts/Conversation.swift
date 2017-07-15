@@ -6,7 +6,6 @@ private let log = Logger(subsystem: "Hangouts.Conversation")
 
 // Wrapper around Client for working with a single chat conversation.
 public class IConversation: ParrotServiceExtension.Conversation {
-    public typealias EventID = String
     
     public var serviceIdentifier: String {
         return type(of: self.client).identifier
@@ -14,7 +13,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
     
     public var client: Client
     public var conversation: Conversation
-    public var events_dict: Dictionary<EventID, IEvent> = Dictionary<EventID, IEvent>() {
+    public var events_dict: Dictionary<IEvent.ID, IEvent> = Dictionary<IEvent.ID, IEvent>() {
         didSet {
             self._cachedEvents = nil
         }
@@ -25,9 +24,6 @@ public class IConversation: ParrotServiceExtension.Conversation {
     fileprivate var focuses = Dictionary<User.ID, Bool>()
 
     //public var delegate: ConversationDelegate?
-    public var user_list: UserList {
-        return self.client.userList
-    }
     public var conversationList: ConversationList {
         return self.client.conversationList
     }
@@ -43,13 +39,9 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
 	
-	public var participants: [Person] {
-		return self.users.map { $0 as Person }
-	}
-	
 	// Update the conversations latest_read_timestamp.
     public func on_watermark_notification(notif: IWatermarkNotification) {
-        if self.get_user(user_id: notif.userID).me {
+        if self.client.userList[notif.userID].me {
 			//FIXME: Oops.
             //self.conversation.self_conversation_state.selfReadState.latestReadTimestamp = notif.readTimestamp
         }
@@ -72,12 +64,12 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		}
 		*/
 		
-        let old_timestamp = self.latest_read_timestamp
+        let old_timestamp = self.timestamp
         self.conversation = conversation
         
-		if self.latest_read_timestamp.toUTC() == 0 {//to_timestamp(date: ) == 0 {
+		if self.timestamp.toUTC() == 0 {//to_timestamp(date: ) == 0 {
 			// FIXME: I think this is supposed to repair the read timestamp...
-            self.conversation.self_conversation_state!.self_read_state!.latest_read_timestamp = UInt64(old_timestamp.toUTC())
+            self.conversation.self_conversation_state!.self_read_state!.latest_read_timestamp = old_timestamp.toUTC()
         }
 
         NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: self)
@@ -107,16 +99,6 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
     
-    public var archived: Bool {
-        get {
-            return self.is_archived
-        }
-        set {
-            // FIXME:
-            //self.client.setView(self.conversation, archived)
-        }
-    }
-    
 	// Add a ClientEvent to the Conversation.
 	// Returns an instance of Event or subclass.
 	@discardableResult
@@ -133,39 +115,6 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		self.events_dict[conv_event.id] = conv_event
         return conv_event
     }
-	
-	// Return the User instance with the given User.ID.
-    public func get_user(user_id: User.ID) -> User {
-        return self.user_list[user_id]
-    }
-	
-	// Return default DeliveryMedium to use for sending messages.
-	// Use the first option, or an option that's marked as the current default.
-	public func getDefaultDeliveryMedium() -> DeliveryMedium {
-		let medium_options = self.conversation.self_conversation_state?.delivery_medium_option
-		
-		var default_medium: DeliveryMedium = DeliveryMedium()
-		default_medium.medium_type = .Babel
-		if let r = medium_options?[0].delivery_medium {
-			default_medium = r
-		}
-		for medium_option in medium_options! {
-			if let m = medium_option.current_default, m {
-				default_medium = medium_option.delivery_medium!; break
-			}
-		}
-		return default_medium
-	}
-	
-	public func getEventRequestHeader() -> EventRequestHeader {
-		let otr_status: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
-		var e = EventRequestHeader()
-		e.conversation_id = self.conversation.conversation_id
-		//e.clientGeneratedId = UInt64(self.client.generateClientID())
-		e.expected_otr = otr_status
-		e.delivery_medium = getDefaultDeliveryMedium()
-		return e
-	}
     
     public var focus: [Person.IdentifierType: FocusMode] {
         var dict = [String: FocusMode]()
@@ -186,55 +135,50 @@ public class IConversation: ParrotServiceExtension.Conversation {
     
     // FIXME: ugh...
     public func focus(mode: FocusMode) {
-        let id = (self.user_list.me as! User).id
+        let id = (self.client.userList.me as! User).id
         
         if mode == .typing && self.typingStatuses[id] != .Started {
-            self.client.setFocus(conversation_id: self.id, focused: true)
-            self.client.setTyping(conversation_id: self.id, typing: .Started)
             self.typingStatuses[id] = .Started
             self.focuses[id] = true
-            
         } else if mode == .enteredText && self.typingStatuses[id] != .Paused {
-            self.client.setFocus(conversation_id: self.id, focused: true)
-            self.client.setTyping(conversation_id: self.id, typing: .Paused)
             self.typingStatuses[id] = .Paused
             self.focuses[id] = true
-            
         } else if mode == .here && self.focuses[id] != true {
-            self.client.setFocus(conversation_id: self.id, focused: true)
-            self.client.setTyping(conversation_id: self.id, typing: .Stopped)
             self.typingStatuses[id] = .Stopped
             self.focuses[id] = true
-            
         } else if mode == .away && self.focuses[id] == true {
-            self.client.setFocus(conversation_id: self.id, focused: false)
-            self.client.setTyping(conversation_id: self.id, typing: .Stopped)
             self.typingStatuses[id] = .Stopped
             self.focuses[id] = false
         }
+        
+        let req1 = SetTypingRequest(conversation_id: self.id, type: self.typingStatuses[id]!)
+        self.client.execute(SetTyping.self, with: req1) {_,_ in}
+        //timeout_secs: <#T##UInt32?#>?
+        let req2 = SetFocusRequest(conversation_id: self.id, type: (self.focuses[id]! ? .Focused : .Unfocused))
+        self.client.execute(SetFocus.self, with: req2) {_,_ in}
     }
 	
 	public var muted: Bool {
 		get {
-            log.debug("NOT IMPLEMENTED: Conversation.muted.get!")
-			return false
-			//return self.setConversationNotificationLevel(level: , cb: nil)
+            return self.conversation.self_conversation_state?.notification_level ?? .Ring == .Quiet
 		}
 		set {
-			self.setConversationNotificationLevel(level: (newValue ? .Quiet : .Ring), cb: nil)
+            //revert_timeout_secs: 0
+            let req = SetConversationLevelRequest(conversation_id: self.id, level: (newValue ? .Quiet : .Ring))
+            self.client.execute(SetConversationLevel.self, with: req) {_, _ in}
 		}
 	}
     
     // TODO: opQueue should be serial!
     public func send(message: Message) throws {
-        let otr: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
+        let otr = self.conversation.otr_status ?? .OnTheRecord
         let medium = self.getDefaultDeliveryMedium().medium_type!
         
         switch message.content {
         case .text(let text) where text.characters.count > 0:
             let s = DispatchSemaphore(value: 0)
             self.client.opQueue.async {
-                self.client.sendChatMessage(conversation_id: self.id,
+                self.client.sendChatMessage(conversation_id: self.identifier,
                                             segments: [IChatMessageSegment(text: text)].map { $0.serialize() },
                                             image_id: nil,
                                             otr_status: otr,
@@ -245,7 +189,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
             let s = DispatchSemaphore(value: 0)
             self.client.opQueue.async {
                 self.client.uploadIfNeeded(photo: .new(data: photo, name: name)) { photoID, userID in
-                    self.client.sendChatMessage(conversation_id: self.id,
+                    self.client.sendChatMessage(conversation_id: self.identifier,
                                                 segments: [],
                                                 image_id: photoID,
                                                 image_user_id: userID,
@@ -277,61 +221,29 @@ public class IConversation: ParrotServiceExtension.Conversation {
     
     public func leave(cb: (() -> Void)? = nil) {
         switch (self.conversation.type!) {
-        case ConversationType.Group:
-            client.removeUser(conversation_id: id) { _ in cb?() }
-        case ConversationType.OneToOne:
-            client.deleteConversation(conversation_id: id) { _ in cb?() }
-        default:
-            break
+        case .Group:
+            //participant_id: self?
+            let req = RemoveUserRequest(conversation_id: self.id, event_request_header: self.eventHeader(.RemoveUser))
+            self.client.execute(RemoveUser.self, with: req) {_,_ in}
+        case .OneToOne:
+            //delete_upper_bound_timestamp: <#T##UInt64?#>?
+            let req = DeleteConversationRequest(conversation_id: self.id)
+            self.client.execute(DeleteConversation.self, with: req) {_,_ in}
+        default: break
         }
-    }
-    
-    // Rename the conversation.
-    // Hangouts only officially supports renaming group conversations, so
-    // custom names for one-to-one conversations may or may not appear in all
-    // first party clients.
-    public func rename(name: String, cb: (() -> Void)?) {
-        self.client.renameConversation(conversation_id: self.id, name: name) { _ in cb?() }
-    }
-    
-    // Set the notification level of the conversation.
-    // Pass .QUIET to disable notifications or .RING to enable them.
-    public func setConversationNotificationLevel(level: NotificationLevel, cb: (() -> Void)?) {
-        self.client.setConversationNotificationLevel(conversation_id: self.id, level: level) { _ in cb?() }
-    }
-    
-    // Set typing status.
-    // TODO: Add rate-limiting to avoid unnecessary requests.
-    public func setTyping(typing: TypingType = TypingType.Started, cb: (() -> Void)? = nil) {
-        let req = SetTypingRequest(conversation_id: ConversationId(id: id), type: typing)
-        self.client.execute(SetTyping.self, with: req) { _, _ in cb?() }
     }
     
     // Update the timestamp of the latest event which has been read.
     // By default, the timestamp of the newest event is used.
     // This method will avoid making an API request if it will have no effect.
-    public func updateReadTimestamp(read_timestamp: Date? = nil, cb: (() -> Void)? = nil) {
-        var read_timestamp = read_timestamp
-        if read_timestamp == nil {
-            read_timestamp = self.events.last!.timestamp
-        }
-        if let new_read_timestamp = read_timestamp {
-            if new_read_timestamp > self.latest_read_timestamp {
-                
-                // Prevent duplicate requests by updating the conversation now.
-                self.latest_read_timestamp = new_read_timestamp
-                NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: self)
-                //delegate?.conversationDidUpdate(conversation: self)
-                //conversationList.conversationDidUpdate(conversation: self)
-                
-                var req = UpdateWatermarkRequest()
-                var _id = ConversationId()
-                _id.id = id
-                req.conversation_id = _id
-                req.last_read_timestamp = UInt64(new_read_timestamp.toUTC())
-                client.execute(UpdateWatermark.self, with: req) {_,_ in cb?()}
-            }
-        }
+    // nil = latest event's timestamp
+    public func update(readTimestamp: Date?, cb: (() -> Void)? = nil) {
+        let ts = readTimestamp ?? self.events.last!.timestamp
+        guard ts > self.timestamp else { return }
+            
+        // Prevent duplicate requests by updating the conversation now.
+        self.timestamp = ts
+        NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: self)
     }
     
     public func handleEvent(event: IEvent) {
@@ -339,7 +251,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         /*if let delegate = delegate {
          delegate.conversation(self, didReceiveEvent: event)
          } else {
-         let user = user_list[event.userID]
+         let user = self.client.userList[event.userID]
          if !user.me {
          //log.info("Notification \(event) from User \(user)!");
          }
@@ -352,12 +264,6 @@ public class IConversation: ParrotServiceExtension.Conversation {
             typingStatuses[user.id] = status
             NotificationCenter.default.post(name: Notification.Conversation.DidChangeTypingStatus,
                                             object: self, userInfo: ["user": user, "status": status])
-        }
-    }
-    
-    public var _messages: [IChatMessageEvent] {
-        get {
-            return events.flatMap { $0 as? IChatMessageEvent }
         }
     }
     
@@ -376,8 +282,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
         // older, or request older events if event_id corresponds to the
         // oldest event we have.
         var ts = Date()
-        if    let event_id = event_id,
-            let conv_event = self.get_event(event_id: event_id) {
+        if  let event_id = event_id,
+            let conv_event = self.events_dict[event_id] {
             
             if events.first!.id != event_id {
                 if let indexOfEvent = self.events.index(where: { $0 == conv_event }) {
@@ -391,7 +297,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
          return
          }*/
         
-        client.getConversation(conversation_id: id, event_timestamp: ts, max_events: max_events) { res in
+        self.client.getConversation(conversation_id: self.identifier, event_timestamp: ts, max_events: max_events) { res in
             if res!.response_header!.status == ResponseStatus.InvalidRequest {
                 log.error("Invalid request! \(String(describing: res!.response_header))")
                 return
@@ -409,51 +315,55 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
     
-    //    func next_event(event_id, prev=False) {
-    //        // Return Event following the event with given event_id.
-    //        // If prev is True, return the previous event rather than the following
-    //        // one.
-    //        // Raises KeyError if no such Event is known.
-    //        // Return nil if there is no following event.
-    //
-    //        i = self.events.index(self._events_dict[event_id])
-    //        if prev and i > 0:
-    //        return self.events[i - 1]
-    //        elif not prev and i + 1 < len(self.events) {
-    //            return self.events[i + 1]
-    //            else:
-    //            return nil
-    //        }
-    //    }
-    
-    public func get_event(event_id: EventID) -> IEvent? {
-        return events_dict[event_id]
+    // The conversation's internal ID.
+    public var id: ConversationId {
+        return self.conversation.conversation_id!
     }
     
-    // The conversation's ID.
-    public var id: String {
-        get {
-            return self.conversation.conversation_id!.id!
+    // Return default DeliveryMedium to use for sending messages.
+    // Use the first option, or an option that's marked as the current default.
+    private func getDefaultDeliveryMedium() -> DeliveryMedium {
+        let medium_options = self.conversation.self_conversation_state?.delivery_medium_option
+        
+        var default_medium: DeliveryMedium = DeliveryMedium()
+        default_medium.medium_type = .Babel
+        if let r = medium_options?[0].delivery_medium {
+            default_medium = r
         }
+        for medium_option in medium_options! {
+            if let m = medium_option.current_default, m {
+                default_medium = medium_option.delivery_medium!; break
+            }
+        }
+        return default_medium
     }
-    
-    public var identifier: String {
-        return self.id
-    }
-    
-    public var messages: [Message] {
-        return self._messages.map { $0 as Message }
+    private func eventHeader(_ type: EventType) -> EventRequestHeader {
+        return EventRequestHeader(conversation_id: self.id,
+                                  client_generated_id: RequestHeader.uniqueID(),
+                                  expected_otr: self.conversation.otr_status,
+                                  delivery_medium: self.getDefaultDeliveryMedium(),
+                                  event_type: .ConversationRename)
     }
     
     public var users: [User] {
-        get {
-            return conversation.participant_data.map {
-                self.user_list[User.ID(
-                    chatID: $0.id!.chat_id!,
-                    gaiaID: $0.id!.gaia_id!
-                )]
-            }
+        return self.conversation.participant_data.map {
+            self.client.userList[User.ID(
+                chatID: $0.id!.chat_id!,
+                gaiaID: $0.id!.gaia_id!
+            )]
         }
+    }
+    
+    public var participants: [Person] {
+        return self.users.map { $0 as Person }
+    }
+    
+    public var identifier: String {
+        return self.conversation.conversation_id!.id!
+    }
+    
+    public var messages: [Message] {
+        return self.events.flatMap { $0 as? IChatMessageEvent }.map { $0 as Message }
     }
     
     public var name: String {
@@ -465,25 +375,31 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
         }
         set {
-            self.client.renameConversation(conversation_id: self.id, name: newValue)
+            let req = RenameConversationRequest(conversation_id: self.id, new_name: newValue,
+                                                event_request_header: self.eventHeader(.ConversationRename))
+            self.client.execute(RenameConversation.self, with: req) {_,_ in}
+        }
+    }
+    
+    public var archived: Bool {
+        get {
+            return self.conversation.self_conversation_state!.view.contains(.Archived)
+        }
+        set {
+            //last_event_timestamp: <#T##UInt64?#>?
+            let req = ModifyConversationViewRequest(conversation_id: self.id, new_view: (newValue ? .Archived : .Inbox))
+            self.client.execute(ModifyConversationView.self, with: req) {_,_ in}
         }
     }
     
     public var timestamp: Date {
         get {
-            return Date.from(UTC: Double(conversation.self_conversation_state?.sort_timestamp ?? 0))
-            //.origin
+            //self_read_state!.latest_read_timestamp?
+            return Date(UTC: self.conversation.self_conversation_state?.sort_timestamp ?? 0)
         }
-    }
-    
-    // datetime timestamp of the last read Event.
-    public var latest_read_timestamp: Date {
-        get {
-            return Date.from(UTC: Double(conversation.self_conversation_state?.self_read_state?.latest_read_timestamp ?? 0))
-        }
-        set(newLatestReadTimestamp) {
-            // FIXME: Oops.
-            //conversation.self_conversation_state.selfReadState.latestReadTimestamp = newLatestReadTimestamp
+        set {
+            let req = UpdateWatermarkRequest(conversation_id: self.id, last_read_timestamp: newValue.toUTC())
+            self.client.execute(UpdateWatermark.self, with: req) {_,_ in}
         }
     }
     
@@ -494,44 +410,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
     // return more unread events than these clients will show. There's also a
     // delay between sending a message and the user's own message being
     // considered read.
-    public var unread_events: [IEvent] {
-        get {
-            return events.filter { $0.timestamp > self.latest_read_timestamp }
-        }
-    }
-    
     public var unreadCount: Int {
-        return self.unread_events.count
-    }
-    
-    public var hasUnreadEvents: Bool {
-        get {
-            if unread_events.first != nil {
-                //log.info("Conversation \(name) has unread events, latest read timestamp is \(self.latest_read_timestamp)")
-            }
-            return unread_events.first != nil
-        }
-    }
-    
-    // True if this conversation has been archived.
-    public var is_archived: Bool {
-        get {
-            return self.conversation.self_conversation_state!.view.contains(ConversationView.Archived)
-        }
-    }
-    
-    // True if notification level for this conversation is quiet.
-    public var is_quiet: Bool {
-        get {
-            return self.conversation.self_conversation_state!.notification_level == NotificationLevel.Quiet
-        }
-    }
-    
-    // True if conversation is off the record (history is disabled).
-    public var is_off_the_record: Bool {
-        get {
-            return self.conversation.otr_status == OffTheRecordStatus.OffTheRecord
-        }
+        return events.filter { $0.timestamp > self.timestamp }.count
     }
 }
 
@@ -574,7 +454,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     
     /// Retrieve recent conversations so we can preemptively look up their participants.
     public func syncConversations(count: Int = 25, since: Date? = nil, handler: @escaping ([String: ParrotServiceExtension.Conversation]?) -> ()) {
-        let req = SyncRecentConversationsRequest(end_timestamp: (since != nil ? UInt64(since!.toUTC()) : nil),
+        let req = SyncRecentConversationsRequest(end_timestamp: since?.toUTC(),
                                                  max_conversations: UInt64(count),
                                                  max_events_per_conversation: UInt64(1),
                                                  sync_filter: [.Inbox, .Active, .Invited])
@@ -582,7 +462,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
             let conv_states = response!.conversation_state
             if let ts = response?.continuation_end_timestamp {
                 //let sync_timestamp = response!.syncTimestamp// use current_server_time?
-                self.syncTimestamp = Date.from(UTC: Double(ts))//.origin
+                self.syncTimestamp = Date(UTC: ts)//.origin
             }
             
             // Initialize the list of conversations from Client's list of ClientConversationStates.
@@ -593,7 +473,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
             _ = self.client.userList.addPeople(from: ret)
             
             let r: [String: ParrotServiceExtension.Conversation]? = ret.count > 0
-                ? ret.dictionaryMap { return [$0.id: $0 as ParrotServiceExtension.Conversation] }
+                ? ret.dictionaryMap { return [$0.identifier: $0 as ParrotServiceExtension.Conversation] }
                 : nil
             handler(r)
         }
@@ -614,8 +494,8 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     }
     
     public var unreadCount: Int {
-        return Array(self.conv_dict.values)
-            .filter { !$0.is_archived && $0.unread_events.count > 0 }
+        return self.conv_dict
+            .filter { !$0.value.archived && $0.value.unreadCount > 0 }
             .count
     }
     
@@ -656,7 +536,7 @@ extension ConversationList {
         } else if let note = update.event_notification {
             let event = note.event!
             // Be sure to maintain the event sync_timestamp for sync'ing.
-            //sync_timestamp = Date.from(UTC: Double(event.timestamp ?? 0))
+            //sync_timestamp = Date(UTC: event.timestamp)
             if let conv = conv_dict[event.conversation_id!.id!] {
                 let conv_event = conv.add_event(event: note.event!)
                 conv.handleEvent(event: conv_event)

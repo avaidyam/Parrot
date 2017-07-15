@@ -304,7 +304,7 @@ public extension Client {
 			
 			// Not sure what timestamp should be there, last time I have tried
 			// it Hangouts client in GMail sent something like now() - 5 hours
-			NSNumber(value: UInt64(Date().toUTC())),
+			NSNumber(value: Date().toUTC()),
 			None,
 			[]
 		] as [Any]
@@ -463,6 +463,13 @@ public extension Client {
 	// image_id is an option ID of an image retrieved from
 	// Client.upload_image. If provided, the image will be attached to the
 	// message.
+    /*
+    self.client.sendChatMessage(conversation_id: self.identifier,
+    segments: [IChatMessageSegment(text: text)].map { $0.serialize() },
+    image_id: nil,
+    otr_status: otr,
+    delivery_medium: medium) { _ in s.signal() }
+    */
     @available(*, deprecated)
 	public func sendChatMessage(conversation_id: String,
 	                            segments: [[Any]],

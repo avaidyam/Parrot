@@ -20,13 +20,50 @@ public struct MessageBundle {
 public struct PlaceholderMessage: Message {
     public let serviceIdentifier: String = ""
     public let identifier: String = ""
-
-    public var content: Content
     public let sender: Person? = nil
     public let timestamp: Date = Date()
     
+    public var content: Content
     //public var failed: Bool = false
 }
+
+// Use this in the future:
+/*
+public enum MessagePromise: Message {
+    case pending(Content)
+    case sent(Message)
+    case failed(Error)
+    
+    public var serviceIdentifier: String {
+        guard case .sent(let msg) = self else { return "" }
+        return msg.serviceIdentifier
+    }
+    
+    public var identifier: String {
+        guard case .sent(let msg) = self else { return "" }
+        return msg.identifier
+    }
+    
+    public var sender: Person? {
+        guard case .sent(let msg) = self else { return nil }
+        return msg.sender
+    }
+    
+    public var timestamp: Date {
+        guard case .sent(let msg) = self else { return Date() }
+        return msg.timestamp
+    }
+    
+    public var content: Content {
+        if case .pending(let content) = self {
+            return content
+        } else if case .sent(let msg) = self {
+            return msg.content
+        }
+        return .text("")
+    }
+}
+*/
 
 // TODO: not here...
 public extension Notification.Name {
@@ -526,7 +563,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 	
 	public func windowDidBecomeKey(_ notification: Notification) {
         if let conversation = conversation {
-			NSUserNotification.notifications().remove(identifier: conversation.id)
+			NSUserNotification.notifications().remove(identifier: conversation.identifier)
         }
 		
         // Delay here to ensure that small context switches don't send focus messages.
@@ -534,14 +571,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             if let window = self.view.window, window.isKeyWindow {
                 self.focusComponents.1 = true // set it here too just in case.
             }
-			self.conversation?.updateReadTimestamp()
-			
-			// Get current states
-			/*for state in self.conversation!.readStates {
-				let person = self.conversation!.client.directory.people[state.participantId!.gaiaId!]!
-				let timestamp = Date.from(UTC: Double(state.latestReadTimestamp!))
-				log.debug("state => { person: \(person.nameComponents), timestamp: \(timestamp) }")
-			}*/
+			self.conversation?.update(readTimestamp: nil)
         }
     }
     

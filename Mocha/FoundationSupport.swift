@@ -252,19 +252,6 @@ public extension Date {
     }
 }
 
-// Microseconds
-// Convert a microsecond timestamp to an Date instance.
-// Convert UTC datetime to microsecond timestamp used by Hangouts.
-private let MicrosecondsPerSecond: Double = 1000000.0
-public extension Date {
-	public static func from(UTC: Double) -> Date {
-		return Date(timeIntervalSince1970: (UTC / MicrosecondsPerSecond))
-	}
-	public func toUTC() -> Double {
-		return self.timeIntervalSince1970 * MicrosecondsPerSecond
-	}
-}
-
 public extension Collection {
     public subscript (safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil

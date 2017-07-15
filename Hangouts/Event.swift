@@ -10,6 +10,8 @@ private let log = Logger(subsystem: "Hangouts.Event")
 // An event which becomes part of the permanent record of a conversation.
 // Acts as a base class for the events defined below.
 public class IEvent: ServiceOriginating, Hashable, Equatable {
+    public typealias ID = String
+    
     public let event: Event
 	internal unowned let client: Client
     public var serviceIdentifier: String {
@@ -23,7 +25,7 @@ public class IEvent: ServiceOriginating, Hashable, Equatable {
 	
 	// A timestamp of when the event occurred.
     public lazy var timestamp: Date = {
-		return Date.from(UTC: Double(self.event.timestamp ?? 0))
+		return Date(UTC: self.event.timestamp ?? 0)
     }()
 	
 	// A User.ID indicating who created the event.
@@ -40,8 +42,8 @@ public class IEvent: ServiceOriginating, Hashable, Equatable {
     }()
 	
 	// The ID of the Event.
-    public lazy var id: IConversation.EventID = {
-        return self.event.event_id! as IConversation.EventID
+    public lazy var id: IEvent.ID = {
+        return self.event.event_id! as IEvent.ID
     }()
 	
 	// Event: Hashable
@@ -231,6 +233,31 @@ public class IChatMessageSegment {
 }
 
 //
+// UTC Microseconds
+//
+
+
+// Convert a microsecond timestamp to an Date instance.
+// Convert UTC datetime to microsecond timestamp used by Hangouts.
+private let MicrosecondsPerSecond: Double = 1000000.0
+extension Date {
+    init(UTC: UInt64?) {
+        self = Date(timeIntervalSince1970: (Double(UTC ?? 0) / MicrosecondsPerSecond))
+    }
+    func toUTC() -> UInt64 {
+        return UInt64(self.timeIntervalSince1970 * MicrosecondsPerSecond)
+    }
+}
+/*
+// nil Date = 0 UTC microseconds
+public extension Optional where Wrapped == Date {
+    public func toUTC() -> UInt64 {
+        return self?.toUTC() ?? 0
+    }
+}
+*/
+
+//
 // TypingStatusMessage & WatermarkNotification
 //
 
@@ -247,7 +274,7 @@ internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatu
 	return ITypingStatusMessage(
 		convID: p.conversation_id!.id! ,
 		userID: User.ID(chatID: p.sender_id!.chat_id!, gaiaID: p.sender_id!.gaia_id!),
-		timestamp: Date.from(UTC: Double(p.timestamp ?? 0)),
+		timestamp: Date(UTC: p.timestamp ?? 0),
 		status: p.type!
 	)
 }
@@ -260,6 +287,6 @@ internal func parseWatermarkNotification(client_watermark_notification: Watermar
 			chatID: client_watermark_notification.sender_id!.chat_id!,
 			gaiaID: client_watermark_notification.sender_id!.gaia_id!
 		),
-		readTimestamp: Date.from(UTC: Double(client_watermark_notification.latest_read_timestamp ?? 0))
+		readTimestamp: Date(UTC: client_watermark_notification.latest_read_timestamp ?? 0)
 	)
 }

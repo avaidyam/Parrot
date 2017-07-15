@@ -241,7 +241,7 @@ public class UserList: Directory {
                     else { continue }
                 
                 if let usec = pres.last_seen?.last_seen_timestamp {
-                    user.lastSeen = Date.from(UTC: Double(usec))
+                    user.lastSeen = Date(UTC: usec)
                 }
                 //if ??? {
                     user.reachability = pres.toReachability()
@@ -269,7 +269,7 @@ public class UserList: Directory {
                         else { continue }
                     
                     if let usec = pres.last_seen?.last_seen_timestamp {
-                        user.lastSeen = Date.from(UTC: Double(usec))
+                        user.lastSeen = Date(UTC: usec)
                     }
                     //if ??? {
                         user.reachability = pres.toReachability()

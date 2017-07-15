@@ -130,9 +130,11 @@ public class ParrotAppController: NSApplicationController {
                     showNote = !(c.view.window?.isKeyWindow ?? false)
                 }
                 
-                if let user = (c.conversationList.conversations[event.conversation_id] as? IConversation)?.user_list[event.userID.gaiaID],
-                    !user.me && showNote {
+                if let user = c.userList.people[event.userID.gaiaID], !user.me && showNote {
                     
+                    // add "action" property -- if the event is "acted on", the handler is invoked
+                    // i.e. notification button
+                    // i.e. dock bounce --> NSAppDelegate checks if bounce, then calls handler (otherwise bail)
                     /*
                     let ev = Event(identifier: event.conversation_id, contents: user.firstName + " (via Hangouts)",
                                    description: event.text, image: fetchImage(user: user, monogram: true))
