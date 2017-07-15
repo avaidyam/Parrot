@@ -42,6 +42,9 @@ public enum Content {
     
     /// Service supports sending reactions to messages.
 	case reaction(Character, String) //= "com.avaidyam.Parrot.MessageType.reaction"
+    
+    /// Service supports sending locations by lat-long coordinates.
+    case location(Double, Double) //= "com.avaidyam.Parrot.MessageType.location"
 }
 
 // TODO: generify to Event, with EventType -- part of eventStream.

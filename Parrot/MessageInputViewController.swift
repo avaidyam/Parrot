@@ -9,6 +9,7 @@ public protocol TextInputHost {
     func typing()
     func send(message: String)
     func send(images: [URL])
+    func sendLocation()
 }
 
 public class MessageInputViewController: NSViewController, NSTextViewExtendedDelegate {
@@ -17,13 +18,29 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     
     private var insertToken = false
     
+    private lazy var photoMenu: NSMenu = {
+        let menu = NSMenu()
+        menu.addItem(title: "Send Photo") {
+            runSelectionPanel(for: self.view.window!, fileTypes: [kUTTypeImage as String], multiple: true) { urls in
+                self.host?.send(images: urls)
+            }
+        }
+        menu.addItem(title: "Send Location") {
+            self.host?.sendLocation()
+        }
+        return menu
+    }()
+    
     private lazy var photoView: NSButton = {
-        let img = NSImage(named: NSImage.Name(rawValue: "NSMediaBrowserMediaTypePhotosTemplate32"))!
-        let b = NSButton(title: "", image: img, target: self,
-                         action: #selector(self.loadImage(_:)))
-            .modernize(wantsLayer: true)
+        let b = NSButton(title: "", image: NSImage(named: .addTemplate)!,
+                         target: nil, action: nil).modernize(wantsLayer: true)
         b.isBordered = false
         b.wantsLayer = true
+        b.performedAction = {
+            self.photoMenu.popUp(positioning: self.photoMenu.item(at: 0),
+                                 at: self.photoView.bounds.origin,
+                                 in: self.photoView)
+        }
         return b
     }()
     
@@ -132,16 +149,6 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     
     public override func viewWillDisappear() {
         ParrotAppearance.unregisterListener(observer: self)
-    }
-    
-    //
-    //
-    //
-    
-    @objc private func loadImage(_ sender: NSButton!) {
-        runSelectionPanel(for: self.view.window!, fileTypes: [kUTTypeImage as String], multiple: true) { urls in
-            self.host?.send(images: urls)
-        }
     }
     
     //

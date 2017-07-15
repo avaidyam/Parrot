@@ -587,9 +587,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.typingHelper.typing()
     }
     
-    public func send(message: String) {
-        MessageListViewController.sendMessage(message, self.conversation!)
-        //self.sendMessageHandler(message, self.conversation!)
+    public func send(message text: String) {
+        try! self.conversation!.send(message: PlaceholderMessage(content: .text(text)))
     }
     
     public func send(images: [URL]) {
@@ -603,10 +602,24 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 // upload the image on a different provider
                 // send a link to it here
             }
-            
         }
     }
     
+    public func sendLocation() {
+        locate(reason: "Send location.") { loc, _ in
+            guard let coord = loc?.coordinate else { return true }
+            do {
+                try self.conversation?.send(message: PlaceholderMessage(content: .location(coord.latitude, coord.longitude)))
+            } catch {
+                log.debug("sending a location was not supported; sending maps link instead")
+                let text = "https://maps.google.com/maps?q=\(coord.latitude),\(coord.longitude)"
+                try! self.conversation?.send(message: PlaceholderMessage(content: .text(text)))
+            }
+            return true
+        }
+    }
+    
+    // LEGACY
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
         try! conversation.send(message: PlaceholderMessage(content: .text(text)))
     }

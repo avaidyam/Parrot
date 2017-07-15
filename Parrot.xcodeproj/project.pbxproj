@@ -61,6 +61,7 @@
 		4848A5851EFEBE35008B2DE2 /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4848A5841EFEBE35008B2DE2 /* SortedArray.swift */; };
 		4848A5BF1EFF1BED008B2DE2 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4848A5BE1EFF1BED008B2DE2 /* Binding.swift */; };
 		484E8CA01D37FF2500E1D1D5 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E8C9F1D37FF2500E1D1D5 /* Message.swift */; };
+		485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485B12EC1F1A904400432A36 /* LocationHelper.swift */; };
 		4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */; };
 		4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9331ED9480C00764594 /* DynamicProperty.swift */; };
 		4869A9381EDB858A00764594 /* DirectoryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9371EDB858A00764594 /* DirectoryListViewController.swift */; };
@@ -374,6 +375,7 @@
 		484E8C9F1D37FF2500E1D1D5 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		48574F121D11F9FC002375E1 /* AppManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppManagement.swift; sourceTree = "<group>"; };
+		485B12EC1F1A904400432A36 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
 		4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarItemContainer.swift; sourceTree = "<group>"; };
 		4869A9331ED9480C00764594 /* DynamicProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicProperty.swift; sourceTree = "<group>"; };
 		4869A9371EDB858A00764594 /* DirectoryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryListViewController.swift; sourceTree = "<group>"; };
@@ -817,6 +819,7 @@
 				489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */,
 				481300391D25B54300768D79 /* ServiceRegistry.swift */,
 				4869A9B11EE17A3800764594 /* SplitWindowController.swift */,
+				485B12EC1F1A904400432A36 /* LocationHelper.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -1604,6 +1607,7 @@
 				4869A9381EDB858A00764594 /* DirectoryListViewController.swift in Sources */,
 				4869A9A91EE1058100764594 /* WindowAnimators.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */,
+				485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
 				4807F4F61EF0A42C00C32132 /* MessageListActions.swift in Sources */,
 				4807F4F01EF0A36100C32132 /* DirectoryActions.swift in Sources */,

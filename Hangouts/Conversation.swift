@@ -269,6 +269,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
             s.wait()
         */
+        //case .location(lat, long):
+            //TODO
         default: throw MessageError.unsupported
         }
     }
