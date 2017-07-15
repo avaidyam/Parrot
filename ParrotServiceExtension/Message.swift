@@ -3,34 +3,45 @@ import Foundation
 // Convenience...
 public typealias AttributedString = NSAttributedString
 
-public struct Media: Codable, Hashable, Equatable {
-    public let data: Data
-    public let filename: String
+///
+public enum MessageError: Error {
     
-    public init(data: Data, filename: String) {
-        self.data = data
-        self.filename = filename
-    }
+    /// The message's content type is unsupported by the Service.
+    case unsupported
 }
 
-public extension Media {
-    public var hashValue: Int {
-        return self.data.hashValue
-    }
-    public static func ==(_ lhs: Media, _ rhs: Media) -> Bool {
-        return lhs.data == rhs.data
-    }
-}
-
+// TODO: Add a Service-level query for Content support that can be cached.
 public enum Content {
-	case text(String) //= "com.avaidyam.Parrot.MessageType.text" // String
-    case richText(AttributedString) //= "com.avaidyam.Parrot.MessageType.richText" // AttributedString
-	case image(Data, String) //= "com.avaidyam.Parrot.MessageType.image" // Media
-	case audio(Data, String) //= "com.avaidyam.Parrot.MessageType.audio" // Media
-	case video(Data, String) //= "com.avaidyam.Parrot.MessageType.video" // Media
-	case link(String) //= "com.avaidyam.Parrot.MessageType.link" // String
-	case snippet(String) //= "com.avaidyam.Parrot.MessageType.snippet" // String
-	case summary(String) //= "com.avaidyam.Parrot.MessageType.summary" // ???
+    
+    /// Service supports plain text in conversations.
+	case text(String) //= "com.avaidyam.Parrot.MessageType.text"
+    
+    /// Service supports rich text in conversations.
+    case richText(AttributedString) //= "com.avaidyam.Parrot.MessageType.richText"
+    
+    /// Service supports sending photos in conversations.
+	case image(Data, String) //= "com.avaidyam.Parrot.MessageType.image"
+    
+    /// Service supports sending audio in conversations.
+    case audio(Data, String) //= "com.avaidyam.Parrot.MessageType.audio"
+    
+    /// Service supports sending videos in conversations.
+    case video(Data, String) //= "com.avaidyam.Parrot.MessageType.video"
+    
+    /// Service supports uploading files to conversations.
+    case file(Data, String) //= "com.avaidyam.Parrot.MessageType.file"
+    
+    /// Service supports sending rich links.
+	case link(String) //= "com.avaidyam.Parrot.MessageType.link"
+    
+    /// Service supports posting text messages above a character limit.
+	case snippet(String) //= "com.avaidyam.Parrot.MessageType.snippet"
+    
+    /// Service supports sending stickers in conversations. (Just use Image for now)
+    //case sticker(String) //= "com.avaidyam.Parrot.MessageType.sticker"
+    
+    /// Service supports sending reactions to messages.
+	case reaction(Character, String) //= "com.avaidyam.Parrot.MessageType.reaction"
 }
 
 // TODO: generify to Event, with EventType -- part of eventStream.

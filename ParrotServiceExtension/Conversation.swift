@@ -42,17 +42,9 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
     
 	// watermark?
     
-	// send(String)
-	// send(Image)
-	// send(Sticker)
-    
     func focus(mode: FocusMode)
     
-    func send(message: Message)
-    
-    //func send(message: String)
-    //func send(photo: Data, name: String)
-    //func send(media: Data, name: String, kind: [.photo, .audio, .video, ...])
+    func send(message: Message) throws // MessageError
 }
 
 public enum FocusMode {

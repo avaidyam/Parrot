@@ -596,13 +596,19 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         for url in images {
             let img = try! Data(contentsOf: url)
             let fname = url.lastPathComponent
-            self.conversation?.send(message: PlaceholderMessage(content: .image(img, fname)))
+            do {
+                try self.conversation?.send(message: PlaceholderMessage(content: .image(img, fname)))
+            } catch {
+                log.debug("sending an image was not supported; sending text after provider upload instead")
+                // upload the image on a different provider
+                // send a link to it here
+            }
             
         }
     }
     
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
-        conversation.send(message: PlaceholderMessage(content: .text(text)))
+        try! conversation.send(message: PlaceholderMessage(content: .text(text)))
     }
     
     //

@@ -51,43 +51,6 @@ public protocol Service: class {
 	var conversations: ConversationList { get }
 }
 
-/// Service supports plain text in conversations.
-/// Note: this should definitely be supported by all services.
-public protocol SendTextSupport {}
-
-/// Service supports rich text in conversations.
-/// If not supported, artificial tags (i.e. markdown syntax) can be used.
-public protocol SendRichTextSupport {}
-
-/// Service supports sending photos in conversations.
-/// If not supported, a plain-text link to a CDN-hosted image can be used.
-public protocol SendPhotoSupport {}
-
-/// Service supports sending audio in conversations.
-/// If not supported, a plain-text link to a CDN-hosted clip can be used.
-public protocol SendAudioSupport {}
-
-/// Service supports sending videos in conversations.
-/// If not supported, a plain-text link to a CDN-hosted video can be used.
-public protocol SendVideoSupport {}
-
-/// Service supports uploading files to conversations.
-/// If not supported, a plain-text link to a CDN-hosted file can be used.
-public protocol SendFileSupport {}
-
-/// Service supports posting text messages above a character limit.
-/// If not supported, chunk message and send individually.
-public protocol SendTextPostSupport {}
-
-/// Service supports sending stickers in conversations.
-/// If not supported, a plain-text link to a CDN-hosted image can be used.
-/// Alternatively, a set of emoji can be supplied and elarged for effect.
-public protocol SendStickerSupport {}
-
-/// Service supports reaction emoji per-message.
-/// There is no alternative if not supported.
-public protocol SendReactionSupport {}
-
 /// Service supports multi-user (group) conversations.
 /// There is no alternative if not supported.
 public protocol GroupMessageSupport {}

@@ -226,7 +226,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	}
     
     // TODO: opQueue should be serial!
-    public func send(message: Message) {
+    public func send(message: Message) throws {
         let otr: OffTheRecordStatus = (self.is_off_the_record ? .OffTheRecord : .OnTheRecord)
         let medium = self.getDefaultDeliveryMedium().medium_type!
         
@@ -269,7 +269,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
             s.wait()
         */
-        default: log.debug("\(message) not supported!")
+        default: throw MessageError.unsupported
         }
     }
     
