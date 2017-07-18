@@ -783,6 +783,22 @@ public struct Location: ProtoMessage {
     }
 }
 
+public struct LocationSpec: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case place = 1
+    }
+    
+    public var place: Place? = nil
+    
+    public init(place: Place? = nil) {
+        self.place = place
+    }
+    
+    public var hashValue: Int {
+        return combine(hashes: [self.place.hash()])
+    }
+}
+
 public struct InCall: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case call_type = 1
@@ -1051,17 +1067,90 @@ public struct PlusPhoto: ProtoMessage {
 
 public struct RepresentativeImage: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
+        case type = 1
         case url = 2
+        case image = 40265033
     }
     
+    public var type: [ItemType] = []
     public var url: String? = nil
+    public var image: VoicePhoto? = nil
     
-    public init(url: String? = nil) {
+    public init(type: [ItemType] = [], url: String? = nil, image: VoicePhoto? = nil) {
+        self.type = type
         self.url = url
+        self.image = image
     }
     
     public var hashValue: Int {
-        return combine(hashes: [self.url.hash()])
+        return combine(hashes: [self.type.hash(), self.url.hash(), self.image.hash()])
+    }
+}
+
+public struct PlaceDescription: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case text = 35
+    }
+    
+    public var text: String? = nil
+    
+    public init(text: String? = nil) {
+        self.text = text
+    }
+    
+    public var hashValue: Int {
+        return combine(hashes: [self.text.hash()])
+    }
+}
+
+public struct Coordinates: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case lat = 36
+        case lng = 37
+    }
+    
+    public var lat: Double? = nil
+    public var lng: Double? = nil
+    
+    public init(lat: Double? = nil, lng: Double? = nil) {
+        self.lat = lat
+        self.lng = lng
+    }
+    
+    public var hashValue: Int {
+        return combine(hashes: [self.lat.hash(), self.lng.hash()])
+    }
+}
+
+public struct PlaceDisplayInfo: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case description = 36003298
+    }
+    
+    public var description: PlaceDescription? = nil
+    
+    public init(description: PlaceDescription? = nil) {
+        self.description = description
+    }
+    
+    public var hashValue: Int {
+        return combine(hashes: [self.description.hash()])
+    }
+}
+
+public struct PlaceLocationInfo: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case latlng = 36736749
+    }
+    
+    public var latlng: Coordinates? = nil
+    
+    public init(latlng: Coordinates? = nil) {
+        self.latlng = latlng
+    }
+    
+    public var hashValue: Int {
+        return combine(hashes: [self.latlng.hash()])
     }
 }
 
@@ -1069,21 +1158,27 @@ public struct Place: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case url = 1
         case name = 3
+        case display_info = 24
+        case location_info = 25
         case representative_image = 185
     }
     
     public var url: String? = nil
     public var name: String? = nil
+    public var display_info: PlaceDisplayInfo? = nil
+    public var location_info: PlaceLocationInfo? = nil
     public var representative_image: RepresentativeImage? = nil
     
-    public init(url: String? = nil, name: String? = nil, representative_image: RepresentativeImage? = nil) {
+    public init(url: String? = nil, name: String? = nil, display_info: PlaceDisplayInfo? = nil, location_info: PlaceLocationInfo? = nil, representative_image: RepresentativeImage? = nil) {
         self.url = url
         self.name = name
+        self.display_info = display_info
+        self.location_info = location_info
         self.representative_image = representative_image
     }
     
     public var hashValue: Int {
-        return combine(hashes: [self.url.hash(), self.name.hash(), self.representative_image.hash()])
+        return combine(hashes: [self.url.hash(), self.name.hash(), self.display_info.hash(), self.location_info.hash(), self.representative_image.hash()])
     }
 }
 
@@ -1109,6 +1204,7 @@ public struct EmbedItem: ProtoMessage {
         case id = 2
         case plus_photo = 27639957
         case place = 35825640
+        case place_v2 = 39748951
         case voice_photo = 62101782
     }
     
@@ -1116,34 +1212,39 @@ public struct EmbedItem: ProtoMessage {
     public var id: String? = nil
     public var plus_photo: PlusPhoto? = nil
     public var place: Place? = nil
+    public var place_v2: Place? = nil
     public var voice_photo: VoicePhoto? = nil
     
-    public init(type: [ItemType] = [], id: String? = nil, plus_photo: PlusPhoto? = nil, place: Place? = nil, voice_photo: VoicePhoto? = nil) {
+    public init(type: [ItemType] = [], id: String? = nil, plus_photo: PlusPhoto? = nil, place: Place? = nil, place_v2: Place? = nil, voice_photo: VoicePhoto? = nil) {
         self.type = type
         self.id = id
         self.plus_photo = plus_photo
         self.place = place
+        self.place_v2 = place_v2
         self.voice_photo = voice_photo
     }
     
     public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.id.hash(), self.plus_photo.hash(), self.place.hash(), self.voice_photo.hash()])
+        return combine(hashes: [self.type.hash(), self.id.hash(), self.plus_photo.hash(), self.place.hash(), self.place_v2.hash(), self.voice_photo.hash()])
     }
 }
 
 public struct Attachment: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case embed_item = 1
+        case id = 3
     }
     
     public var embed_item: EmbedItem? = nil
+    public var id: String? = nil
     
-    public init(embed_item: EmbedItem? = nil) {
+    public init(embed_item: EmbedItem? = nil, id: String? = nil) {
         self.embed_item = embed_item
+        self.id = id
     }
     
     public var hashValue: Int {
-        return combine(hashes: [self.embed_item.hash()])
+        return combine(hashes: [self.embed_item.hash(), self.id.hash()])
     }
 }
 
@@ -3720,37 +3821,37 @@ public struct SearchEntitiesResponse: ProtoMessage {
 public struct SendChatMessageRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case request_header = 1
-        case conversation_id = 2
         case client_generated_id = 3
         case annotation = 5
         case message_content = 6
         case existing_media = 7
         case event_request_header = 8
         case other_invitee_id = 9
+        case attach_location = 10
     }
     
     public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
     public var client_generated_id: UInt64? = nil
     public var annotation: [EventAnnotation] = []
     public var message_content: MessageContent? = nil
     public var existing_media: ExistingMedia? = nil
     public var event_request_header: EventRequestHeader? = nil
     public var other_invitee_id: InviteeID? = nil
+    public var attach_location: LocationSpec? = nil
     
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, client_generated_id: UInt64? = nil, annotation: [EventAnnotation] = [], message_content: MessageContent? = nil, existing_media: ExistingMedia? = nil, event_request_header: EventRequestHeader? = nil, other_invitee_id: InviteeID? = nil) {
+    public init(request_header: RequestHeader? = nil, client_generated_id: UInt64? = nil, annotation: [EventAnnotation] = [], message_content: MessageContent? = nil, existing_media: ExistingMedia? = nil, event_request_header: EventRequestHeader? = nil, other_invitee_id: InviteeID? = nil, attach_location: LocationSpec? = nil) {
         self.request_header = request_header
-        self.conversation_id = conversation_id
         self.client_generated_id = client_generated_id
         self.annotation = annotation
         self.message_content = message_content
         self.existing_media = existing_media
         self.event_request_header = event_request_header
         self.other_invitee_id = other_invitee_id
+        self.attach_location = attach_location
     }
     
     public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.client_generated_id.hash(), self.annotation.hash(), self.message_content.hash(), self.existing_media.hash(), self.event_request_header.hash(), self.other_invitee_id.hash()])
+        return combine(hashes: [self.request_header.hash(), self.client_generated_id.hash(), self.annotation.hash(), self.message_content.hash(), self.existing_media.hash(), self.event_request_header.hash(), self.other_invitee_id.hash(), self.attach_location.hash()])
     }
 }
 
@@ -4402,6 +4503,7 @@ let _protoMessages: [String: _ProtoMessage.Type] = [
     "DeviceStatus": DeviceStatus.self,
     "LastSeen": LastSeen.self,
     "Location": Location.self,
+    "LocationSpec": LocationSpec.self,
     "InCall": InCall.self,
     "Presence": Presence.self,
     "PresenceResult": PresenceResult.self,
@@ -4414,6 +4516,10 @@ let _protoMessages: [String: _ProtoMessage.Type] = [
     "Thumbnail": Thumbnail.self,
     "PlusPhoto": PlusPhoto.self,
     "RepresentativeImage": RepresentativeImage.self,
+    "PlaceDescription": PlaceDescription.self,
+    "Coordinates": Coordinates.self,
+    "PlaceDisplayInfo": PlaceDisplayInfo.self,
+    "PlaceLocationInfo": PlaceLocationInfo.self,
     "Place": Place.self,
     "VoicePhoto": VoicePhoto.self,
     "EmbedItem": EmbedItem.self,
@@ -4553,3 +4659,4 @@ let _protoMessages: [String: _ProtoMessage.Type] = [
     "UpdateWatermarkRequest": UpdateWatermarkRequest.self,
     "UpdateWatermarkResponse": UpdateWatermarkResponse.self,
 ]
+

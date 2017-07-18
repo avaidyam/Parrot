@@ -213,8 +213,20 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
             s.wait()
         */
-        //case .location(lat, long):
-            //TODO
+        case .location(let lat, let long):
+            let loc = "https://maps.google.com/maps?q=\(lat),\(long)"
+            let img = "https://maps.googleapis.com/maps/api/staticmap?center=\(lat),\(long)&markers=color:red%7C\(lat),\(long)&size=400x400"
+            //let seg = Segment(type: .Link, text: loc, link_data: LinkData(link_target: loc))
+            
+            let rep = RepresentativeImage(type: [.Thing, .Place, .init(336), .init(338), .init(339)], url: img, image: VoicePhoto(url: img))
+            let place = Place(url: loc, name: "Current Location", display_info: PlaceDisplayInfo(description: PlaceDescription(text: "Current Location")), location_info: PlaceLocationInfo(latlng: Coordinates(lat: lat, lng: long)), representative_image: rep)
+            
+            //let place_v2 = Place(url: loc, name: "Current Location", representative_image: rep)
+            //let attach = Attachment(embed_item: EmbedItem(type: [.Thing, .Place, .PlaceV2], id: "and0", place: place, place_v2: place_v2), id: "and0")
+            //message_content: MessageContent(segment: [seg], attachment: [attach])
+            
+            let req = SendChatMessageRequest(event_request_header: self.eventHeader(.RegularChatMessage), attach_location: LocationSpec(place: place))
+            self.client.execute(SendChatMessage.self, with: req) {_,_ in}
         default: throw MessageError.unsupported
         }
     }
@@ -342,7 +354,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
                                   client_generated_id: RequestHeader.uniqueID(),
                                   expected_otr: self.conversation.otr_status,
                                   delivery_medium: self.getDefaultDeliveryMedium(),
-                                  event_type: .ConversationRename)
+                                  event_type: type)
     }
     
     public var users: [User] {

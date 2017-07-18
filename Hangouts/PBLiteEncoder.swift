@@ -125,20 +125,23 @@ public class PBLiteEncoder {
         /// Convert between an Int-keyed Dictionary and Array.
         /// k-1 because protobuf message indexes start at 1.
         private static func transform(_ content: [Int: Any]) -> [Any] {
-            let normal = content.filter { $0.key <= Int(Int8.max) }
-            let extended = content.filter { $0.key > Int(Int8.max) }
+            let normal = content.filter { $0.key <= Int(Int16.max) }
+            let extended = content.filter { $0.key > Int(Int16.max) }
             
-            if let max = normal.keys.max() {
-                var arrayed: [Any] = Array<Any>(repeating: Optional<Any>.none as Any, count: max)
-                for (k, v) in content {
-                    arrayed[k - 1] = v
-                }
-                
-                // Add the extended stuff to the end of the protobuf.
-                arrayed.append(extended)
-                return arrayed
+            var arrayed: [Any] = Array<Any>(repeating: Optional<Any>.none as Any,
+                                            count: normal.keys.max() ?? 0)
+            for (k, v) in normal {
+                arrayed[k - 1] = v
             }
-            return []
+            
+            // Add the extended stuff to the end of the protobuf.
+            if extended.count > 0 {
+                if arrayed.count == 0 {
+                    arrayed.append([]) // padding?
+                }
+                arrayed.append(extended.mapKeyValues { ("\($0)", $1) })
+            }
+            return arrayed
         }
     }
     
@@ -549,3 +552,19 @@ fileprivate extension SingleValueEncodingChildContainer {
     }
 }
 
+//
+//
+//
+
+fileprivate extension Dictionary {
+    func mapKeyValues<K, V> (transform: (Key, Value) -> (K, V)) -> Dictionary<K, V> {
+        var results: Dictionary<K, V> = [:]
+        for k in self.keys {
+            if let value = self[k] {
+                let (u, w) = transform(k, value)
+                results.updateValue(w, forKey: u)
+            }
+        }
+        return results
+    }
+}

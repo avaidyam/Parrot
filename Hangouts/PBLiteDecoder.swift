@@ -39,12 +39,14 @@ public class PBLiteDecoder {
     
     // Data-based wrapper...
     public func decode<T: Decodable>(data: Data) throws -> T? {
-        if  let script = String(data: data, encoding: .utf8),
-            var parsed = PBLiteDecoder.sanitize(script) {
-            parsed.remove(at: 0) // FIXME: for the header thing?
-            return try self.decode(parsed) as T
+        guard let script = String(data: data, encoding: .utf8) else {
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "Data corrupted."))
         }
-        throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "Data corrupted."))
+        guard var parsed = PBLiteDecoder.sanitize(script) else {
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "Data corrupted: \(script)"))
+        }
+        parsed.remove(at: 0) // FIXME: for the header thing?
+        return try self.decode(parsed) as T
     }
     
     /// Sanitize and decode JSON from a server PBLite response.

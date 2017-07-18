@@ -91,6 +91,10 @@ message Location {
   optional string display_name = 6;
 }
 
+message LocationSpec {
+  optional Place place = 1;
+}
+
 enum CallType {
   CALL_TYPE_NONE = 0;
   CALL_TYPE_PSTN = 1;
@@ -263,6 +267,26 @@ message PlusPhoto {
 message RepresentativeImage {
   // URL of image.
   optional string url = 2;
+  // Image -> optional string url = 1;
+  //optional Image image = 40265033;
+  optional VoicePhoto image = 40265033;
+}
+
+message PlaceDescription {
+  optional string text = 35;
+}
+
+message Coordinates {
+  optional double lat = 36;
+  optional double lng = 37;
+}
+
+message PlaceDisplayInfo {
+  optional PlaceDescription description = 36003298;
+}
+
+message PlaceLocationInfo {
+  optional Coordinates latlng = 36736749;
 }
 
 // Place that can be embedded in a chat message via Google Maps.
@@ -272,6 +296,8 @@ message Place {
   optional string url = 1;
   // Name of map location.
   optional string name = 3;
+  optional PlaceDisplayInfo display_info = 24;
+  optional PlaceLocationInfo location_info = 25;
   // Representative image of the place (map with pin).
   optional RepresentativeImage representative_image = 185;
 }
@@ -292,6 +318,7 @@ message EmbedItem {
   optional PlusPhoto plus_photo = 27639957;
   // Embedded Google Map of a place.
   optional Place place = 35825640;
+  optional Place place_v2 = 39748951;
   // Embedded Google Voice photo.
   optional VoicePhoto voice_photo = 62101782;
 }
@@ -299,6 +326,7 @@ message EmbedItem {
 // An attachment for a chat message.
 message Attachment {
   optional EmbedItem embed_item = 1;
+  optional string id = 3;
 }
 
 // Chat message content.
@@ -1561,14 +1589,13 @@ message SearchEntitiesResponse {
 
 message SendChatMessageRequest {
   optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
   optional uint64 client_generated_id = 3;
   repeated EventAnnotation annotation = 5;
   optional MessageContent message_content = 6;
   optional ExistingMedia existing_media = 7;
   optional EventRequestHeader event_request_header = 8;
   optional InviteeID other_invitee_id = 9;
-  //optional LocationSpec attach_location = 10;
+  optional LocationSpec attach_location = 10;
 }
 
 message SendChatMessageResponse {
@@ -1725,6 +1752,7 @@ message SyncAllNewEventsResponse {
 
 message SyncRecentConversationsRequest {
   optional RequestHeader request_header = 1;
+  //last_event_timestamp = 2?
   optional uint64 end_timestamp = 2;
   optional uint64 max_conversations = 3;
   optional uint64 max_events_per_conversation = 4;
