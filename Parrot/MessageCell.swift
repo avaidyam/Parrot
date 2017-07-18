@@ -125,6 +125,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
                 NSAttributedStringKey.foregroundColor: NSColor.labelColor,
                 NSAttributedStringKey.underlineStyle: 0,
             ]
+            self.updateTextStyles()
 		}
 	}
     
@@ -148,6 +149,31 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             text.layer?.backgroundColor = color.cgColor
         } else {
             text.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
+        }
+    }
+    
+    // Clear any text styles and re-compute them.
+    private func updateTextStyles() {
+        guard let storage = self.textLabel.textStorage else { return }
+        
+        let base = NSRange(location: 0, length: storage.length)
+        let matches = MessageInputViewController.regex.matches(in: storage.string, options: [], range: base)
+        storage.setAttributes(self.textLabel.typingAttributes, range: base)
+        storage.applyFontTraits([.unboldFontMask, .unitalicFontMask], range: base)
+        
+        for res in matches {
+            let range = res.rangeAt(2)
+            switch storage.attributedSubstring(from: res.rangeAt(1)).string {
+            case "*": // bold
+                storage.applyFontTraits(.boldFontMask, range: range)
+            case "_": // italics
+                storage.applyFontTraits(.italicFontMask, range: range)
+            case "~": // strikethrough
+                storage.addAttribute(.strikethroughStyle, value: NSUnderlineStyle.styleSingle.rawValue, range: range)
+            case "`": // underline
+                storage.addAttribute(.underlineStyle, value: NSUnderlineStyle.styleSingle.rawValue, range: range)
+            default: break
+            }
         }
     }
     

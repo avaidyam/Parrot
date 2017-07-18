@@ -176,15 +176,10 @@ public class IConversation: ParrotServiceExtension.Conversation {
         
         switch message.content {
         case .text(let text) where text.characters.count > 0:
-            let s = DispatchSemaphore(value: 0)
-            self.client.opQueue.async {
-                self.client.sendChatMessage(conversation_id: self.identifier,
-                                            segments: [IChatMessageSegment(text: text)].map { $0.serialize() },
-                                            image_id: nil,
-                                            otr_status: otr,
-                                            delivery_medium: medium) { _ in s.signal() }
-            }
-            s.wait()
+            let seg = Segment(type: .Text, text: text)
+            let req = SendChatMessageRequest(message_content: MessageContent(segment: [seg]),
+                                             event_request_header: self.eventHeader(.RegularChatMessage))
+            self.client.execute(SendChatMessage.self, with: req) {_,_ in}
         case .image(let photo, let name):
             let s = DispatchSemaphore(value: 0)
             self.client.opQueue.async {

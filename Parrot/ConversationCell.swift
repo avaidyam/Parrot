@@ -5,9 +5,6 @@ import MochaUI
 import protocol ParrotServiceExtension.Message
 import protocol ParrotServiceExtension.Conversation
 
-/* TODO: Selection: Overlay with NSVisualEffectView per-cell. */
-/* TODO: Alternate mode with Card UI. */
-
 // A visual representation of a Conversation in a ListView.
 public class ConversationCell: NSCollectionViewItem {
     

@@ -31,9 +31,6 @@ public enum Content {
     /// Service supports uploading files to conversations.
     case file(Data, String) //= "com.avaidyam.Parrot.MessageType.file"
     
-    /// Service supports sending rich links.
-	case link(String) //= "com.avaidyam.Parrot.MessageType.link"
-    
     /// Service supports posting text messages above a character limit.
 	case snippet(String) //= "com.avaidyam.Parrot.MessageType.snippet"
     

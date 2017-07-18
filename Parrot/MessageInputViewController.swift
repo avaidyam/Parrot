@@ -14,6 +14,9 @@ public protocol TextInputHost {
 
 public class MessageInputViewController: NSViewController, NSTextViewExtendedDelegate {
     
+    internal static let regex = try! NSRegularExpression(pattern: "(\\*|\\_|\\~|\\`)(.+?)\\1",
+                                                         options: [.caseInsensitive])
+    
     public var host: TextInputHost? = nil
     
     private var insertToken = false
@@ -24,6 +27,15 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             runSelectionPanel(for: self.view.window!, fileTypes: [kUTTypeImage as String], multiple: true) { urls in
                 self.host?.send(images: urls)
             }
+        }
+        menu.addItem(title: "Send Audio") {
+            log.debug("Cannot send audio yet.")
+        }
+        menu.addItem(title: "Send Video") {
+            log.debug("Cannot send video yet.")
+        }
+        menu.addItem(title: "Send Document") {
+            log.debug("Cannot send documents yet.")
         }
         menu.addItem(title: "Send Location") {
             self.host?.sendLocation()
@@ -164,6 +176,31 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         }
     }
     
+    // Clear any text styles and re-compute them.
+    private func updateTextStyles() {
+        guard let storage = self.textView.textStorage else { return }
+        
+        let base = NSRange(location: 0, length: storage.length)
+        let matches = MessageInputViewController.regex.matches(in: storage.string, options: [], range: base)
+        storage.setAttributes(self.textView.typingAttributes, range: base)
+        storage.applyFontTraits([.unboldFontMask, .unitalicFontMask], range: base)
+        
+        for res in matches {
+            let range = res.rangeAt(2)
+            switch storage.attributedSubstring(from: res.rangeAt(1)).string {
+            case "*": // bold
+                storage.applyFontTraits(.boldFontMask, range: range)
+            case "_": // italics
+                storage.applyFontTraits(.italicFontMask, range: range)
+            case "~": // strikethrough
+                storage.addAttribute(.strikethroughStyle, value: NSUnderlineStyle.styleSingle.rawValue, range: range)
+            case "`": // underline
+                storage.addAttribute(.underlineStyle, value: NSUnderlineStyle.styleSingle.rawValue, range: range)
+            default: break
+            }
+        }
+    }
+    
     public func textDidChange(_ obj: Notification) {
         self.resizeModule()
         if self.textView.string == "" {
@@ -171,6 +208,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             return
         }
         self.host?.typing()
+        self.updateTextStyles()
     }
     
     // If the user presses ENTER and doesn't hold SHIFT, send the message.
