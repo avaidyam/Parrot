@@ -50,27 +50,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return s
     }()
     
-    private lazy var addButton: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImage.Name(rawValue: "NSAddBookmarkTemplate"))!,
-                         target: nil, action: nil).modernize()
-        b.bezelStyle = .texturedRounded
-        b.imagePosition = .imageOnly
-        return b
-    }()
-    
-    private lazy var searchToggle: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImage.Name.revealFreestandingTemplate)!,
-                         target: self, action: #selector(self.toggleSearchField(_:))).modernize()
-        b.bezelStyle = .texturedRounded
-        b.imagePosition = .imageOnly
-        b.setButtonType(.onOff)
-        b.state = NSControl.StateValue.on
-        return b
-    }()
-    
     private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
         let v = NSView()
-        v.add(subviews: [self.titleText, self.addButton/*, self.searchField*/])
+        v.add(subviews: [self.titleText])
         v.autoresizingMask = [.width]
         v.frame.size.height = 44.0//80.0
         self.titleText.left == v.left + 2.0
@@ -135,6 +117,16 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }
     
+    // We should be able to now edit things.
+    public var selectable = false {
+        didSet {
+            self.collectionView.isSelectable = self.selectable
+            self.collectionView.allowsMultipleSelection = self.selectable
+        }
+    }
+    
+    public private(set) var selection: [Person] = []
+    
     //
     //
     //
@@ -162,19 +154,16 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             vev.blendingMode = .withinWindow
         }
         window.titleVisibility = .hidden
-        let container = window.installToolbar()
+        _ = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
         window.addTitlebarAccessoryViewController(self.titleAccessory)
         window.addTitlebarAccessoryViewController(self.searchAccessory)
         
-        let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "add"))
-        item.view = self.addButton
-        item.label = "Add"
-        let item2 = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "search"))
-        item2.view = self.searchToggle
-        item2.label = "Search"
-        container.templateItems = [item, item2]
-        container.itemOrder = [.flexibleSpace, NSToolbarItem.Identifier(rawValue: "add"), NSToolbarItem.Identifier(rawValue: "search")]
+        /// Re-synchronizes the conversation name and identifier with the window.
+        /// Center by default, but load a saved frame if available, and autosave.
+        window.center()
+        window.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
+        window.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
     }
     
     public override func viewDidLoad() {
@@ -192,7 +181,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public override func viewWillAppear() {
-        syncAutosaveTitle()
         PopWindowAnimator.show(self.view.window!)
         
         let frame = self.scrollView.layer!.frame
@@ -212,18 +200,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         ParrotAppearance.unregisterListener(observer: self)
     }
     
-    /// Re-synchronizes the conversation name and identifier with the window.
-    /// Center by default, but load a saved frame if available, and autosave.
-    private func syncAutosaveTitle() {
-        self.view.window?.center()
-        self.view.window?.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
-        self.view.window?.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
-    }
-    
     ///
     ///
     ///
     
+    // account for [selection] too
     private func currentSource() -> [Person] {
         return self.currentSearch != nil ? self.currentSearch! : self.cachedFavorites
     }
@@ -238,11 +219,16 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return item
     }
     
-    ///
-    ///
-    ///
+    public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
+        self.selection.append(contentsOf: indexPaths.map { self.currentSource()[$0.item] })
+        print(self.selection, self.collectionView.selectionIndexPaths)
+    }
     
-    @objc private func toggleSearchField(_ sender: NSButton!) {
-        self.searchAccessory.animator().isHidden = (sender.state != NSControl.StateValue.on)
+    public func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
+        for a in (indexPaths.map { self.currentSource()[$0.item] }) {
+            let idx = self.selection.index { $0.identifier == a.identifier }
+            self.selection.remove(at: idx!)
+        }
+        print(self.selection, self.collectionView.selectionIndexPaths)
     }
 }

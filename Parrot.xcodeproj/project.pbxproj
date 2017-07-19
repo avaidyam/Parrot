@@ -154,6 +154,7 @@
 		48EA55C71D26CAA700C3BC80 /* URLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4816872B1C3A340E0070EEF6 /* URLSession+Delegate.swift */; };
 		48EA55C81D26CAAA00C3BC80 /* URLSession+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */; };
 		48EA55CA1D26CDD000C3BC80 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EB54F51D209DD100F77C2C /* Cache.swift */; };
+		48EC1BEC1F1FBC0B000C40C1 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EC1BEB1F1FBC0B000C40C1 /* SearchCell.swift */; };
 		48ED2BE01F0BD4B9001A547F /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */; };
 		48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
 		48F7E8081F108FE20059E5CD /* PBLiteEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7E8071F108FE20059E5CD /* PBLiteEncoder.swift */; };
@@ -468,6 +469,7 @@
 		48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardBrightness.swift; sourceTree = "<group>"; };
 		48E9C3391D04DFF90074984D /* Protobuf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protobuf.swift; sourceTree = "<group>"; };
 		48EB54F51D209DD100F77C2C /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Cache.swift; path = Parrot/Cache.swift; sourceTree = SOURCE_ROOT; };
+		48EC1BEB1F1FBC0B000C40C1 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftSupport.swift; sourceTree = "<group>"; };
 		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
 		48F7E8071F108FE20059E5CD /* PBLiteEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBLiteEncoder.swift; sourceTree = "<group>"; };
@@ -774,6 +776,7 @@
 			children = (
 				4835ECA81C1C620000193EBC /* ConversationCell.swift */,
 				4807F4FA1EF1E58F00C32132 /* ReloadCell.swift */,
+				48EC1BEB1F1FBC0B000C40C1 /* SearchCell.swift */,
 				4835ECAC1C1C620E00193EBC /* ConversationListViewController.swift */,
 			);
 			name = View;
@@ -1591,6 +1594,7 @@
 				4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */,
 				4869A93A1EDB859700764594 /* PersonCell.swift in Sources */,
 				4869A9431EDF456C00764594 /* Event.swift in Sources */,
+				48EC1BEC1F1FBC0B000C40C1 /* SearchCell.swift in Sources */,
 				4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */,
 				4869A9D61EE5C78200764594 /* PersonIndicatorViewController.swift in Sources */,
 				4807F4FB1EF1E58F00C32132 /* ReloadCell.swift in Sources */,

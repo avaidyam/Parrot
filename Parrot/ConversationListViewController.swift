@@ -67,6 +67,18 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                          target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
+        b.performedAction = {
+            let d = DirectoryListViewController()
+            d.view.frame.size.width = self.view.frame.width
+            d.view.frame.size.height = (self.view.frame.height / 3).clamped(to: 128.0...4000.0)
+            d.selectable = true
+            self.presentViewControllerAsSheet(d)
+            self.titleText.stringValue = " Create"
+            DispatchQueue.main.asyncAfter(deadline: 3.seconds.later) {
+                self.dismissViewController(d)
+                self.titleText.stringValue = " Conversations"
+            }
+        }
         return b
     }()
     

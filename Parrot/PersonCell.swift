@@ -90,9 +90,12 @@ public class PersonCell: NSCollectionViewItem {
         }
     }
     
+    // When selected, ensure a selection background color.
     public override var isSelected: Bool {
         didSet {
-            
+            self.view.layer?.backgroundColor = isSelected
+                ? NSColor.selectedMenuItemColor.cgColor
+                : NSColor.clear.cgColor
         }
     }
     
