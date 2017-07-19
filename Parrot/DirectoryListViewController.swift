@@ -37,13 +37,16 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private lazy var titleText: NSTextField = {
         let t = NSTextField(labelWithString: " Directory").modernize(wantsLayer: true)
         t.textColor = NSColor.labelColor
-        t.font = NSFont.systemFont(ofSize: 32.0, weight: NSFont.Weight.heavy)
+        t.font = NSFont.systemFont(ofSize: 32.0, weight: .heavy)
         return t
     }()
     
     private lazy var searchField: NSSearchField = {
         let s = NSSearchField().modernize(wantsLayer: true)
         s.disableToolbarLook()
+        s.performedAction = {
+            self.searchQuery = s.stringValue
+        }
         return s
     }()
     
@@ -112,6 +115,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     
     private var cachedFavorites: [Person] = []
+    private var currentSearch: [Person]? = nil
+    private var searchQuery: String = "" { // TODO: BINDING HERE
+        didSet {
+            self.currentSearch = self.searchQuery == "" ? nil :
+                self.directory?.search(by: self.searchQuery, limit: 25)
+            self.collectionView.reloadData()
+        }
+    }
     var directory: ParrotServiceExtension.Directory? {
         didSet {
             UI {
@@ -213,13 +224,17 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     ///
     ///
     
+    private func currentSource() -> [Person] {
+        return self.currentSearch != nil ? self.currentSearch! : self.cachedFavorites
+    }
+    
     public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.cachedFavorites.count
+        return self.currentSource().count
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"), for: indexPath)
-        item.representedObject = self.cachedFavorites[indexPath.item]
+        item.representedObject = self.currentSource()[indexPath.item]
         return item
     }
     
