@@ -72,7 +72,7 @@ public final class Logger {
 	
 	/// Post a message to the Logger with a given severity. This message will 
 	/// flow through the Logger's Channel if the Severity allows it.
-	public func trace(severity: Severity, message: @autoclosure() -> Message) {
+	public func trace(severity: Severity, message: @autoclosure () -> Message) {
 		guard self.severity >= severity else { return }
 		self.channels.forEach { $0.operation(message(), severity, self.subsystem) }
 	}
@@ -116,31 +116,31 @@ public func <(lhs: Logger.Severity, rhs: Logger.Severity) -> Bool {
 
 /// Shortcuts for Logger.post(...)
 public extension Logger {
-	public func fatal(_ message: @autoclosure() -> Message) {
+	public func fatal(_ message: @autoclosure () -> Message) {
 		self.trace(severity: .fatal, message: message)
 	}
 	
-	public func critical(_ message: @autoclosure() -> Message) {
+	public func critical(_ message: @autoclosure () -> Message) {
 		self.trace(severity: .critical, message: message)
 	}
 	
-	public func error(_ message: @autoclosure() -> Message) {
+	public func error(_ message: @autoclosure () -> Message) {
 		self.trace(severity: .error, message: message)
 	}
 	
-	public func warning(_ message: @autoclosure() -> Message) {
+	public func warning(_ message: @autoclosure () -> Message) {
 		self.trace(severity: .warning, message: message)
 	}
 	
-	public func info(_ message: @autoclosure() -> Message) {
+	public func info(_ message: @autoclosure () -> Message) {
 		self.trace(severity: .info, message: message)
 	}
 	
-	public func debug(_ message: @autoclosure() -> Message) {
+	public func debug(_ message: @autoclosure () -> Message) {
 		self.trace(severity: .debug, message: message)
 	}
 	
-	public func verbose(_ message: @autoclosure() -> Message) {
+	public func verbose(_ message: @autoclosure () -> Message) {
 		self.trace(severity: .verbose, message: message)
 	}
 }

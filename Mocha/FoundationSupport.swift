@@ -1,41 +1,5 @@
 import Foundation
 
-// Finally, matching operations where append*() was applicable, for remove*()
-public extension Array where Element : Equatable {
-	public mutating func remove(_ item: Element) {
-		if let index = self.index(of: item) {
-			self.remove(at: index)
-		}
-	}
-}
-
-// Optional Setter
-infix operator ??= : AssignmentPrecedence
-public func ??= <T>(lhs: inout T?,  rhs: @autoclosure () -> T) {
-	lhs = lhs ?? rhs()
-}
-
-// Because warnings are bad.
-public extension Optional {
-	@discardableResult
-	public func _flatMap<U>(_ f: (Wrapped) throws -> U?) rethrows -> U? {
-		return try flatMap(f)
-	}
-}
-
-public extension Collection {
-    public func dictionaryMap<K, V>(transform: (_ element: Self.Iterator.Element) -> [K: V]) -> [K: V] {
-        var dictionary = [K: V]()
-        self.forEach {
-            let dict = transform($0)
-            for (key, value) in dict {
-                dictionary[key] = value
-            }
-        }
-        return dictionary
-    }
-}
-
 // Needs to be fixed somehow to not use NSString stuff.
 public extension String {
 	
@@ -53,42 +17,6 @@ public extension String {
 	
 	public func encodeURL() -> String {
 		return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-	}
-	
-	// Will return any JSON object, array, number, or string.
-	// If there is an error, the error will be presented instead.
-	// Allows fragments, and always returns mutable object types.
-	public func decodeJSON() throws -> AnyObject {
-		let _str = (self as NSString).data(using: String.Encoding.utf8.rawValue)
-		guard let _ = _str else {
-			throw NSError(domain: NSStringEncodingErrorKey, code: Int(String.Encoding.utf8.rawValue), userInfo: nil)
-		}
-		
-		let options: JSONSerialization.ReadingOptions = [.allowFragments, .mutableContainers, .mutableLeaves]
-		do {
-			let obj = try JSONSerialization.jsonObject(with: _str!, options: options)
-			return obj as AnyObject
-		} catch {
-			throw error
-		}
-	}
-	
-	// Will return a String from any Array, Dictionary, Number, or String.
-	// If there is an error, the error will be presented instead.
-	// Allows fragments and can optionally return a pretty-printed string.
-	public static func encodeJSON(object: AnyObject, pretty: Bool = false) throws -> String {
-		let options: JSONSerialization.WritingOptions = pretty ? [.prettyPrinted] : []
-		do {
-			let obj = try JSONSerialization.data(withJSONObject: object, options: options)
-            let str = NSString(data: obj, encoding: String.Encoding.utf8.rawValue) as String?
-			
-			guard let _ = str else {
-				throw NSError(domain: NSStringEncodingErrorKey, code: Int(String.Encoding.utf8.rawValue), userInfo: nil)
-			}
-			return str!
-		} catch {
-			throw error
-		}
 	}
 }
 
@@ -249,11 +177,5 @@ public extension Date {
         var next = c.dateComponents(Set<Calendar.Component>([.minute]), from: self)
         next.minute = (next.minute ?? -1) + 1
         return c.nextDate(after: self, matching: next, matchingPolicy: .strict) ?? self
-    }
-}
-
-public extension Collection {
-    public subscript (safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
     }
 }

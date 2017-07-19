@@ -13,15 +13,15 @@ public class IConversation: ParrotServiceExtension.Conversation {
     
     public var client: Client
     public var conversation: Conversation
-    public var events_dict: Dictionary<IEvent.ID, IEvent> = Dictionary<IEvent.ID, IEvent>() {
+    public var events_dict: [IEvent.ID: IEvent] = [:] {
         didSet {
             self._cachedEvents = nil
         }
     }
     
 	fileprivate var readStates: [UserReadState] = []
-    fileprivate var typingStatuses = Dictionary<User.ID, TypingType>()
-    fileprivate var focuses = Dictionary<User.ID, Bool>()
+    fileprivate var typingStatuses: [User.ID: TypingType] = [:]
+    fileprivate var focuses: [User.ID: Bool] = [:]
 
     //public var delegate: ConversationDelegate?
     public var conversationList: ConversationList {
@@ -480,7 +480,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
             _ = self.client.userList.addPeople(from: ret)
             
             let r: [String: ParrotServiceExtension.Conversation]? = ret.count > 0
-                ? ret.dictionaryMap { return [$0.identifier: $0 as ParrotServiceExtension.Conversation] }
+                ? ret.mapKeyValues { return ($0.identifier, $0 as ParrotServiceExtension.Conversation) }
                 : nil
             handler(r)
         }

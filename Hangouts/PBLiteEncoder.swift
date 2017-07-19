@@ -556,7 +556,18 @@ fileprivate extension SingleValueEncodingChildContainer {
 //
 //
 
-fileprivate extension Dictionary {
+internal extension Array {
+    func mapKeyValues<K, V> (transform: (Element) -> (K, V)) -> Dictionary<K, V> {
+        var results: Dictionary<K, V> = [:]
+        for k in self {
+            let (u, w) = transform(k)
+            results.updateValue(w, forKey: u)
+        }
+        return results
+    }
+}
+
+internal extension Dictionary {
     func mapKeyValues<K, V> (transform: (Key, Value) -> (K, V)) -> Dictionary<K, V> {
         var results: Dictionary<K, V> = [:]
         for k in self.keys {

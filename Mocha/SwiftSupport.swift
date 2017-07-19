@@ -1,8 +1,29 @@
 
+// Finally, matching operations where append*() was applicable, for remove*()
+public extension Array where Element : Equatable {
+    public mutating func remove(_ item: Element) {
+        if let index = self.index(of: item) {
+            self.remove(at: index)
+        }
+    }
+}
+
+// Optional Setter
+infix operator ??= : AssignmentPrecedence
+public func ??= <T>(lhs: inout T?,  rhs: @autoclosure () -> T) {
+    lhs = lhs ?? rhs()
+}
+
+public extension Collection {
+    public subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
+
 // All default Swift types:
-//Boolean
-//BinaryInteger
-//BinaryFloatingPoint
+//  - Boolean
+//  - BinaryInteger
+//  - BinaryFloatingPoint
 
 /// from @full-descent: https://stackoverflow.com/questions/31943797/extending-generic-integer-types-in-swift/43769799#43769799
 public extension Comparable {

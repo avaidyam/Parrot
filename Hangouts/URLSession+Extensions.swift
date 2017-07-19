@@ -154,17 +154,39 @@ public let _defaultHTTPHeaders: [String: String] = {
 			var mutableUserAgent = NSMutableString(string: "\(executable)/\(bundle) (\(version); OS \(os))") as CFMutableString
 			let transform = NSString(string: "Any-Latin; Latin-ASCII; [:^ASCII:] Remove") as CFString
 			
-			if CFStringTransform(mutableUserAgent, nil, transform, false) {
-				return mutableUserAgent as String
-			}
-		}
-		
-		return "Hangouts"
-	}()
-	
-	return [
-		"Accept-Encoding": acceptEncoding,
-		"Accept-Language": acceptLanguage,
-		"User-Agent": userAgent
-	]
+         if CFStringTransform(mutableUserAgent, nil, transform, false) {
+                return mutableUserAgent as String
+            }
+        }
+        
+        return "Hangouts"
+    }()
+    
+    return [
+        "Accept-Encoding": acceptEncoding,
+        "Accept-Language": acceptLanguage,
+        "User-Agent": userAgent
+    ]
 }()
+
+extension String {
+    
+    // Will return any JSON object, array, number, or string.
+    // If there is an error, the error will be presented instead.
+    // Allows fragments, and always returns mutable object types.
+    func decodeJSON() throws -> AnyObject {
+        let _str = (self as NSString).data(using: String.Encoding.utf8.rawValue)
+        guard let _ = _str else {
+            throw NSError(domain: NSStringEncodingErrorKey, code: Int(String.Encoding.utf8.rawValue), userInfo: nil)
+        }
+        
+        let options: JSONSerialization.ReadingOptions = [.allowFragments, .mutableContainers, .mutableLeaves]
+        do {
+            let obj = try JSONSerialization.jsonObject(with: _str!, options: options)
+            return obj as AnyObject
+        } catch {
+            throw error
+        }
+    }
+    
+}
