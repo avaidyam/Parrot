@@ -18,9 +18,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         c.selectionType = .any
         
         let l = NSCollectionViewListLayout()
+        l.globalSections = (32, 0)
         l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 48)))
         c.collectionViewLayout = l
-        c.register(PersonCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"))
+        c.register(PersonCell.self,
+                   forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"))
+        c.register(SearchCell.self, forSupplementaryViewOfKind: .globalHeader,
+                   withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"))
         return c
     }()
     
@@ -41,15 +45,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return t
     }()
     
-    private lazy var searchField: NSSearchField = {
-        let s = NSSearchField().modernize(wantsLayer: true)
-        s.disableToolbarLook()
-        s.performedAction = {
-            self.searchQuery = s.stringValue
-        }
-        return s
-    }()
-    
     private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
         let v = NSView()
         v.add(subviews: [self.titleText])
@@ -59,19 +54,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.titleText.top == v.top + 2.0
         let t = NSTitlebarAccessoryViewController()
         t.view = v
-        t.layoutAttribute = .bottom
-        return t
-    }()
-    
-    private lazy var searchAccessory: NSTitlebarAccessoryViewController = {
-        let t = NSTitlebarAccessoryViewController()
-        t.view = NSView()
-        t.view.frame.size.height = 22.0 + 12.0
-        t.view.addSubview(self.searchField)
-        self.searchField.left == t.view.left + 8.0
-        self.searchField.right == t.view.right - 8.0
-        self.searchField.top == t.view.top + 4.0
-        self.searchField.bottom == t.view.bottom - 8.0
         t.layoutAttribute = .bottom
         return t
     }()
@@ -161,7 +143,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         _ = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
         window.addTitlebarAccessoryViewController(self.titleAccessory)
-        window.addTitlebarAccessoryViewController(self.searchAccessory)
         
         /// Re-synchronizes the conversation name and identifier with the window.
         /// Center by default, but load a saved frame if available, and autosave.
@@ -220,6 +201,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"), for: indexPath)
         item.representedObject = self.currentSource()[indexPath.item]
         return item
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
+        let header = collectionView.makeSupplementaryView(ofKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
+        header.handler = {
+            self.searchQuery = $0
+        }
+        return header
     }
     
     public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {

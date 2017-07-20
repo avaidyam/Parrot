@@ -27,8 +27,10 @@ public class SearchCell: NSView {
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
         
         self.addSubview(self.searchField)
-        self.centerX == self.searchField.centerX
-        self.centerY == self.searchField.centerY
+        self.left == self.searchField.left - 5.0
+        self.right == self.searchField.right + 5.0
+        self.top == self.searchField.top - 5.0
+        self.bottom == self.searchField.bottom + 5.0
     }
     
     public override var allowsVibrancy: Bool { return true }
@@ -38,7 +40,7 @@ public class SearchCell: NSView {
     }
     
     public override func prepareForReuse() {
-        self.handler = {_ in}
+        //self.handler = {_ in}
     }
 }
 
