@@ -350,3 +350,17 @@ fileprivate extension Presence {
     }
 }
 
+/*
+ GetEntityByIdResult is extremely confusing: it seems to return two similar but distinct result sets, only one of which will ever contain PARTICIPANT_TYPE_GOOGLE_VOICE entities.
+ 
+ the .entity result set appears to only return PARTICIPANT_TYPE_GAIA entities, even if lookup is by phone number (e.g. if I'm in your Google Contacts and you lookup my phone number, it will return the gaia ID corresponding to my gmail address)
+ the .entity_results field will return PARTICIPANT_TYPE_GOOGLE_VOICE entities when lookup is by .phone, with create_offnetwork_gaia=True
+ both the .entity and .entity_results field will return blank entities if you lookup using a
+ non-GMail address address, even if create_offnetwork_gaia=True
+ 
+ the entity results contain all the data on a particular contact that exists in the user's Google Contacts — the official Hangouts apps definitely use these to show contacts, and they give a slightly different view than apps that use the native Google Contacts API.
+ the entity_results contain whatever gaia ID is needed to create a new contract (whether by Google Voice or by "normal" chat) … although they still don't return anything for non-Google email addresses, so there must be yet another invite mechanism used in that case (the off-network invite request)
+ 
+ let req = GetEntityByIdRequest(batch_lookup_spec: [EntityLookupSpec(phone: "+1XXXXXXXXXX", create_offnetwork_gaia: true)])
+ self.client.execute(GetEntityById.self, with: req) { a, b in print(a?.entity_result[0].entity) }
+ */

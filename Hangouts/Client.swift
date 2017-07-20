@@ -116,7 +116,7 @@ public final class Client: Service {
                         guard event.timestamp! > self.lastUpdate else { continue }
                         
                         if let conv = self.conversationList.conv_dict[event.conversation_id!.id!] {
-                            let conv_event = conv.add_event(event: event)
+                            let conv_event = conv.add(event: event)
                             
                             //self.conversationList.delegate?.conversationList(self.conversationList, didReceiveEvent: conv_event)
                             conv.handleEvent(event: conv_event)

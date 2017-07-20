@@ -17,6 +17,19 @@ public class IEvent: ServiceOriginating, Hashable, Equatable {
     public var serviceIdentifier: String {
         return type(of: self.client).identifier
     }
+    
+    // Wrap ClientEvent in Event subclass.
+    internal class func wrap_event(_ client: Client, event: Event) -> IEvent {
+        if event.chat_message != nil {
+            return IChatMessageEvent(client, event: event)
+        } else if event.conversation_rename != nil {
+            return IRenameEvent(client, event: event)
+        } else if event.membership_change != nil {
+            return IMembershipChangeEvent(client, event: event)
+        } else {
+            return IEvent(client, event: event)
+        }
+    }
 	
     public init(_ client: Client, event: Event) {
         self.client = client

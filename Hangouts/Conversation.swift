@@ -13,39 +13,22 @@ public class IConversation: ParrotServiceExtension.Conversation {
     
     public var client: Client
     public var conversation: Conversation
-    public var events_dict: [IEvent.ID: IEvent] = [:] {
-        didSet {
-            self._cachedEvents = nil
-        }
+    
+    // The conversation's internal ID.
+    private var id: ConversationId {
+        return self.conversation.conversation_id!
     }
     
 	fileprivate var readStates: [UserReadState] = []
     fileprivate var typingStatuses: [User.ID: TypingType] = [:]
     fileprivate var focuses: [User.ID: Bool] = [:]
-
-    //public var delegate: ConversationDelegate?
-    public var conversationList: ConversationList {
-        return self.client.conversationList
-    }
     
-    public init(client: Client,
-        conversation: Conversation,
-        events: [Event] = []
-    ) {
+    public init(client: Client, conversation: Conversation, events: [Event] = []) {
         self.client = client
         self.conversation = conversation
         for event in events {
-            add_event(event: event)
+            self.add(event: event)
         }
-    }
-	
-	// Update the conversations latest_read_timestamp.
-    public func on_watermark_notification(notif: IWatermarkNotification) {
-        if self.client.userList[notif.userID].me {
-			//FIXME: Oops.
-            //self.conversation.self_conversation_state.selfReadState.latestReadTimestamp = notif.readTimestamp
-        }
-		log.info("watermark for \(notif.userID)")
     }
 	
 	// Update the internal Conversation.
@@ -54,6 +37,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	// refactored, hide this by saving and restoring previous values where
 	// necessary.
     public func update_conversation(conversation: Conversation) {
+        
 		
 		/* TODO: Enable this. */
 		/*
@@ -73,23 +57,18 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
 
         NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: self)
-        //delegate?.conversationDidUpdate(conversation: self)
     }
-	
-	// Wrap ClientEvent in Event subclass.
-    private class func wrap_event(_ client: Client, event: Event) -> IEvent {
-        if event.chat_message != nil {
-            return IChatMessageEvent(client, event: event)
-        } else if event.conversation_rename != nil {
-            return IRenameEvent(client, event: event)
-        } else if event.membership_change != nil {
-            return IMembershipChangeEvent(client, event: event)
-        } else {
-            return IEvent(client, event: event)
+    
+    //
+    //
+    //
+    
+	private var _cachedEvents: [IEvent]? = nil
+    public var events_dict: [IEvent.ID: IEvent] = [:] {
+        didSet {
+            self._cachedEvents = nil
         }
     }
-
-	private var _cachedEvents: [IEvent]? = nil
     public var events: [IEvent] {
         get {
             if _cachedEvents == nil {
@@ -99,21 +78,87 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
     
-	// Add a ClientEvent to the Conversation.
-	// Returns an instance of Event or subclass.
+    //
+    //
+    //
+    
 	@discardableResult
-    public func add_event(event: Event) -> IEvent {
-        let conv_event = IConversation.wrap_event(self.client, event: event)
-		//conv_event.client = self.client
-		/* TODO: Enable this. */
-		/*if !self.events_dict.contains(conv_event.id) {
-			self.events.append(conv_event)
-			self.events_dict[conv_event.id] = conv_event
-		} else {
-			return nil
-		}*/
-		self.events_dict[conv_event.id] = conv_event
-        return conv_event
+    internal func add(event: Event) -> IEvent {
+        let wrapped = IEvent.wrap_event(self.client, event: event)
+		self.events_dict[wrapped.id] = wrapped
+        return wrapped
+    }
+    
+    public var users: [User] {
+        return self.conversation.participant_data.map {
+            self.client.userList[User.ID(
+                chatID: $0.id!.chat_id!,
+                gaiaID: $0.id!.gaia_id!
+            )]
+        }
+    }
+    
+    public var participants: [Person] {
+        return self.users.map { $0 as Person }
+    }
+    
+    public var identifier: String {
+        return self.conversation.conversation_id!.id!
+    }
+    
+    public var messages: [Message] {
+        return self.events.flatMap { $0 as? IChatMessageEvent }.map { $0 as Message }
+    }
+    
+    public var name: String {
+        get {
+            if let name = self.conversation.name {
+                return name
+            } else {
+                return users.filter { !$0.me }.map { $0.fullName }.joined(separator: ", ")
+            }
+        }
+        set {
+            let req = RenameConversationRequest(conversation_id: self.id, new_name: newValue,
+                                                event_request_header: self.eventHeader(.ConversationRename))
+            self.client.execute(RenameConversation.self, with: req) {_,_ in}
+        }
+    }
+    
+    public var archived: Bool {
+        get {
+            return self.conversation.self_conversation_state!.view.contains(.Archived)
+        }
+        set {
+            //last_event_timestamp: <#T##UInt64?#>?
+            let req = ModifyConversationViewRequest(conversation_id: self.id, new_view: (newValue ? .Archived : .Inbox))
+            self.client.execute(ModifyConversationView.self, with: req) {_,_ in}
+        }
+    }
+    
+    public var timestamp: Date {
+        get {
+            //self_read_state!.latest_read_timestamp?
+            return Date(UTC: self.conversation.self_conversation_state?.sort_timestamp ?? 0)
+        }
+        set {
+            let req = UpdateWatermarkRequest(conversation_id: self.id, last_read_timestamp: newValue.toUTC())
+            self.client.execute(UpdateWatermark.self, with: req) {_,_ in}
+        }
+    }
+    
+    // List of Events that are unread.
+    // Events are sorted oldest to newest.
+    // Note that some Hangouts clients don't update the read timestamp for
+    // certain event types, such as membership changes, so this method may
+    // return more unread events than these clients will show. There's also a
+    // delay between sending a message and the user's own message being
+    // considered read.
+    public var unreadCount: Int {
+        return events
+            .filter { $0.event.advances_sort_timestamp ?? false }
+            .filter { $0.timestamp > self.timestamp }
+            .count
     }
     
     public var focus: [Person.IdentifierType: FocusMode] {
@@ -309,7 +354,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
                 log.error("Invalid request! \(String(describing: res!.response_header))")
                 return
             }
-            let conv_events = res!.conversation_state!.event.map { IConversation.wrap_event(self.client, event: $0) }
+            let conv_events = res!.conversation_state!.event.map { IEvent.wrap_event(self.client, event: $0) }
             self.readStates = res!.conversation_state!.conversation!.read_state
             
             for conv_event in conv_events {
@@ -320,11 +365,6 @@ public class IConversation: ParrotServiceExtension.Conversation {
             NotificationCenter.default.post(name: Notification.Conversation.DidUpdateEvents, object: self)
             //self.delegate?.conversationDidUpdateEvents(self)
         }
-    }
-    
-    // The conversation's internal ID.
-    public var id: ConversationId {
-        return self.conversation.conversation_id!
     }
     
     // Return default DeliveryMedium to use for sending messages.
@@ -350,75 +390,6 @@ public class IConversation: ParrotServiceExtension.Conversation {
                                   expected_otr: self.conversation.otr_status,
                                   delivery_medium: self.getDefaultDeliveryMedium(),
                                   event_type: type)
-    }
-    
-    public var users: [User] {
-        return self.conversation.participant_data.map {
-            self.client.userList[User.ID(
-                chatID: $0.id!.chat_id!,
-                gaiaID: $0.id!.gaia_id!
-            )]
-        }
-    }
-    
-    public var participants: [Person] {
-        return self.users.map { $0 as Person }
-    }
-    
-    public var identifier: String {
-        return self.conversation.conversation_id!.id!
-    }
-    
-    public var messages: [Message] {
-        return self.events.flatMap { $0 as? IChatMessageEvent }.map { $0 as Message }
-    }
-    
-    public var name: String {
-        get {
-            if let name = self.conversation.name {
-                return name
-            } else {
-                return users.filter { !$0.me }.map { $0.fullName }.joined(separator: ", ")
-            }
-        }
-        set {
-            let req = RenameConversationRequest(conversation_id: self.id, new_name: newValue,
-                                                event_request_header: self.eventHeader(.ConversationRename))
-            self.client.execute(RenameConversation.self, with: req) {_,_ in}
-        }
-    }
-    
-    public var archived: Bool {
-        get {
-            return self.conversation.self_conversation_state!.view.contains(.Archived)
-        }
-        set {
-            //last_event_timestamp: <#T##UInt64?#>?
-            let req = ModifyConversationViewRequest(conversation_id: self.id, new_view: (newValue ? .Archived : .Inbox))
-            self.client.execute(ModifyConversationView.self, with: req) {_,_ in}
-        }
-    }
-    
-    public var timestamp: Date {
-        get {
-            //self_read_state!.latest_read_timestamp?
-            return Date(UTC: self.conversation.self_conversation_state?.sort_timestamp ?? 0)
-        }
-        set {
-            let req = UpdateWatermarkRequest(conversation_id: self.id, last_read_timestamp: newValue.toUTC())
-            self.client.execute(UpdateWatermark.self, with: req) {_,_ in}
-        }
-    }
-    
-    // List of Events that are unread.
-    // Events are sorted oldest to newest.
-    // Note that some Hangouts clients don't update the read timestamp for
-    // certain event types, such as membership changes, so this method may
-    // return more unread events than these clients will show. There's also a
-    // delay between sending a message and the user's own message being
-    // considered read.
-    public var unreadCount: Int {
-        return events.filter { $0.timestamp > self.timestamp }.count
     }
 }
 
@@ -545,7 +516,7 @@ extension ConversationList {
             // Be sure to maintain the event sync_timestamp for sync'ing.
             //sync_timestamp = Date(UTC: event.timestamp)
             if let conv = conv_dict[event.conversation_id!.id!] {
-                let conv_event = conv.add_event(event: note.event!)
+                let conv_event = conv.add(event: note.event!)
                 conv.handleEvent(event: conv_event)
             } else {
                 log.warning("Received ClientEvent for unknown conversation \(event.conversation_id!.id!)")
