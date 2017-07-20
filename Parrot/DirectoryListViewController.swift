@@ -107,13 +107,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     var directory: ParrotServiceExtension.Directory? {
         didSet {
-            UI {
-                self.collectionView.reloadData()
-                //self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
-                //                                             scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
-                self.updateInterpolation.animate(duration: 1.5)
+            DispatchQueue.global(qos: .background).async {
+                self.cachedFavorites = self.directory?.list(25) ?? []
+                UI {
+                    self.collectionView.reloadData()
+                    //self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
+                    //                                             scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
+                    self.updateInterpolation.animate(duration: 1.5)
+                }
             }
-            self.cachedFavorites = self.directory?.list(200) ?? []//.search(by: "Test", limit: 200) ?? []
         }
     }
     
@@ -121,17 +123,19 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public var selectable = false {
         didSet {
             self.collectionView.isSelectable = self.selectable
-            self.collectionView.allowsMultipleSelection = self.selectable
+            //self.collectionView.allowsMultipleSelection = self.selectable
         }
     }
     
     public private(set) var selection: [Person] = []
+    public var selectionHandler: (() -> ())? = nil
     
     //
     //
     //
     
     public override func loadView() {
+        self.title = "Directory"
         self.view = NSVisualEffectView()
         self.view.add(subviews: [self.scrollView, self.indicator])
         
@@ -162,8 +166,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         /// Re-synchronizes the conversation name and identifier with the window.
         /// Center by default, but load a saved frame if available, and autosave.
         window.center()
-        window.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
-        window.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: "Directory"))
+        window.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: self.title!))
+        window.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: self.title!))
     }
     
     public override func viewDidLoad() {
@@ -174,7 +178,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             guard let c = note.object as? Service else { return }
             self.directory = c.directory
             UI {
-                self.title = c.directory.me.fullName
                 self.collectionView.reloadData()
             }
         }
@@ -220,15 +223,17 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-        self.selection.append(contentsOf: indexPaths.map { self.currentSource()[$0.item] })
-        print(self.selection, self.collectionView.selectionIndexPaths)
+        //self.selection.append(contentsOf: indexPaths.map { self.currentSource()[$0.item] })
+        self.selection = indexPaths.map { self.currentSource()[$0.item] }
+        self.selectionHandler?()
     }
     
     public func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
-        for a in (indexPaths.map { self.currentSource()[$0.item] }) {
+        /*for a in (indexPaths.map { self.currentSource()[$0.item] }) {
             let idx = self.selection.index { $0.identifier == a.identifier }
             self.selection.remove(at: idx!)
-        }
-        print(self.selection, self.collectionView.selectionIndexPaths)
+        }*/
+        
+        self.selectionHandler?()
     }
 }

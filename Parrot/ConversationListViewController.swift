@@ -72,11 +72,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             d.view.frame.size.width = self.view.frame.width
             d.view.frame.size.height = (self.view.frame.height / 3).clamped(to: 128.0...4000.0)
             d.selectable = true
+            
             self.presentViewControllerAsSheet(d)
             self.titleText.stringValue = " Create"
-            DispatchQueue.main.asyncAfter(deadline: 3.seconds.later) {
+            d.selectionHandler = {
+                guard d.selection.count > 0 else { return }
                 self.dismissViewController(d)
                 self.titleText.stringValue = " Conversations"
+                self.startNewConversation(with: d.selection[0])
             }
         }
         return b
@@ -368,6 +371,18 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             .flatMap { id in self.dataSource.index { $0.identifier == id } }
             .map { IndexPath(item: $0, section: 0) }
         self.collectionView.selectionIndexPaths = Set(paths)
+    }
+    
+    //
+    //
+    //
+    
+    private func startNewConversation(with person: Person) {
+        guard let c = self.conversationList?.begin(with: person) else {
+            NSAlert(style: .critical, message: "Couldn't start a conversation with \"\(person.fullName)\"", buttons: ["Okay"]).runModal()
+            return
+        }
+        MessageListViewController.show(conversation: c, parent: self.parent)
     }
 }
 

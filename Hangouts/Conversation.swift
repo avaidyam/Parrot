@@ -493,7 +493,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         let resp = try? self.client.execute(CreateConversation.self, with: req)
         
         guard let c = resp?.conversation else { return nil }
-        if (resp?.new_conversation_created ?? false) {
+        if (resp?.new_conversation_created ?? false) || (self.conv_dict[c.conversation_id!.id!] == nil) {
             return self.add_conversation(client_conversation: c)
         } else {
             return self.conv_dict[c.conversation_id!.id!]
