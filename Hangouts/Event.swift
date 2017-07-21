@@ -73,7 +73,25 @@ public func ==(lhs: IEvent, rhs: IEvent) -> Bool {
 // An event containing a chat message.
 public class IChatMessageEvent: IEvent, Message {
     
+    // CACHE IT!
     public var content: Content {
+        let raws = self.event.chat_message?.message_content?.attachment ?? []
+        if let attachment = raws[safe: 0] {
+            if attachment.embed_item!.type.contains(.PlusPhoto) { // PLUS_PHOTO
+                if let url = attachment.embed_item?.plus_photo?.url {
+                    let (data, _, _) = URLSession.shared.synchronousRequest(URL(string: url)!)
+                    return .image(data!, "")
+                }
+            } else if attachment.embed_item!.type.contains(.VoicePhoto) { // VOICE_PHOTO
+                if let url = attachment.embed_item?.voice_photo?.url {
+                    let (data, _, _) = URLSession.shared.synchronousRequest(URL(string: url)!)
+                    return .image(data!, "")
+                }
+            } /*else if attachment.embed_item!.type == [.Place, .PlaceV2, .Thing] { // FIXME this is bad swift
+                let coords = attachment.embed_item?.place?.location_info?.latlng
+                return .location(coords?.lat ?? 0, coords?.lng ?? 0)
+            }*/
+        }
         return .text(self.text)
     }
     

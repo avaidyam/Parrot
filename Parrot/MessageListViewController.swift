@@ -142,6 +142,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         l.layoutDefinition = .custom
         c.collectionViewLayout = l
         c.register(MessageCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"))
+        c.register(PhotoCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PhotoCell.self)"))
         c.register(ReloadCell.self, forSupplementaryViewOfKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"))
         return c
     }()
@@ -346,12 +347,24 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
         let msg = self.dataSource[indexPath.item]
-        return NSSize(width: collectionView.bounds.width,
-                      height: MessageCell.measure(msg.text, collectionView.bounds.width))
+        switch msg.content {
+        case .image(let data, _):
+            return NSSize(width: collectionView.bounds.width,
+                          height: PhotoCell.measure(data, collectionView.bounds.width))
+        default:
+            return NSSize(width: collectionView.bounds.width,
+                          height: MessageCell.measure(msg.text, collectionView.bounds.width))
+        }
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"), for: indexPath)
+        let item: NSCollectionViewItem
+        switch self.dataSource[indexPath.item].content {
+        case .image(_, _):
+            item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PhotoCell.self)"), for: indexPath)
+        default:
+            item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"), for: indexPath)
+        }
         
         let row = indexPath.item
         let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
