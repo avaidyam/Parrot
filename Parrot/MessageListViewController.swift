@@ -143,6 +143,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         c.collectionViewLayout = l
         c.register(MessageCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"))
         c.register(PhotoCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PhotoCell.self)"))
+        c.register(LocationCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(LocationCell.self)"))
         c.register(ReloadCell.self, forSupplementaryViewOfKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"))
         return c
     }()
@@ -351,6 +352,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         case .image(let data, _):
             return NSSize(width: collectionView.bounds.width,
                           height: PhotoCell.measure(data, collectionView.bounds.width))
+        case .location(_, _):
+            return NSSize(width: collectionView.bounds.width,
+                          height: LocationCell.measure(collectionView.bounds.width))
         default:
             return NSSize(width: collectionView.bounds.width,
                           height: MessageCell.measure(msg.text, collectionView.bounds.width))
@@ -362,6 +366,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         switch self.dataSource[indexPath.item].content {
         case .image(_, _):
             item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PhotoCell.self)"), for: indexPath)
+        case .location(_, _):
+            item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(LocationCell.self)"), for: indexPath)
         default:
             item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"), for: indexPath)
         }

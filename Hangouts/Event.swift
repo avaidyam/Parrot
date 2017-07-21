@@ -77,20 +77,20 @@ public class IChatMessageEvent: IEvent, Message {
     public var content: Content {
         let raws = self.event.chat_message?.message_content?.attachment ?? []
         if let attachment = raws[safe: 0] {
-            if attachment.embed_item!.type.contains(.PlusPhoto) { // PLUS_PHOTO
+            if attachment.embed_item!.type.contains(.PlusPhoto) {
                 if let url = attachment.embed_item?.plus_photo?.url {
                     let (data, _, _) = URLSession.shared.synchronousRequest(URL(string: url)!)
                     return .image(data!, "")
                 }
-            } else if attachment.embed_item!.type.contains(.VoicePhoto) { // VOICE_PHOTO
+            } else if attachment.embed_item!.type.contains(.VoicePhoto) {
                 if let url = attachment.embed_item?.voice_photo?.url {
                     let (data, _, _) = URLSession.shared.synchronousRequest(URL(string: url)!)
                     return .image(data!, "")
                 }
-            } /*else if attachment.embed_item!.type == [.Place, .PlaceV2, .Thing] { // FIXME this is bad swift
+            } else if attachment.embed_item!.type.contains(.Place) {
                 let coords = attachment.embed_item?.place?.location_info?.latlng
                 return .location(coords?.lat ?? 0, coords?.lng ?? 0)
-            }*/
+            }
         }
         return .text(self.text)
     }
