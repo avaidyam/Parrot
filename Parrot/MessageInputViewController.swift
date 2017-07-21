@@ -28,7 +28,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
                 self.host?.send(images: urls)
             }
         }
-        menu.addItem(title: "Send Audio") {
+        /*menu.addItem(title: "Send Audio") {
             log.debug("Cannot send audio yet.")
         }
         menu.addItem(title: "Send Video") {
@@ -36,7 +36,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         }
         menu.addItem(title: "Send Document") {
             log.debug("Cannot send documents yet.")
-        }
+        }*/
         menu.addItem(title: "Send Location") {
             self.host?.sendLocation()
         }

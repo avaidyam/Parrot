@@ -66,6 +66,7 @@ public class PhotoCell: NSCollectionViewItem {
             layer.cornerRadius = layer.bounds.width / 2.0
         }
         
+        self.photoView.layer!.backgroundColor = NSColor.white.cgColor
         self.photoView.layer?.masksToBounds = true
         self.photoView.layer?.cornerRadius = 10.0
     }
@@ -79,6 +80,6 @@ public class PhotoCell: NSCollectionViewItem {
         let ph = q[kCGImagePropertyPixelHeight as String] as! Int
         let dims = CGSize(width: pw, height: ph)
         
-        return dims.height * (width / dims.width)
+        return dims.height * ((width - 46.0) / dims.width)
     }
 }

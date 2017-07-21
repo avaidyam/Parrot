@@ -19,10 +19,10 @@ public class ConversationDetailsViewController: NSViewController {
     }
     
     private lazy var muteButton: NSButton = {
-        let v = NSButton(title: "Mute", image: #imageLiteral(resourceName: "NSImageNameVolumeMute"), target: self,
+        let v = NSButton(title: "Mute", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
                          action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
         v.alternateTitle = "Unmute"
-        v.alternateImage = #imageLiteral(resourceName: "NSImageNameVolumeMute")
+        v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
         v.bezelStyle = .texturedRounded
         
         v.setButtonType(.pushOnPushOff)
@@ -32,10 +32,10 @@ public class ConversationDetailsViewController: NSViewController {
     }()
     
     private lazy var blockButton: NSButton = {
-        let v = NSButton(title: "Block", image: #imageLiteral(resourceName: "NSImageNameVolumeMute"), target: self,
+        let v = NSButton(title: "Block", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
                          action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
         v.alternateTitle = "Unblock"
-        v.alternateImage = #imageLiteral(resourceName: "NSImageNameVolumeMute")
+        v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
         v.bezelStyle = .texturedRounded
         
         v.setButtonType(.pushOnPushOff)
@@ -45,10 +45,10 @@ public class ConversationDetailsViewController: NSViewController {
     }()
     
     private lazy var archiveButton: NSButton = {
-        let v = NSButton(title: "Archive", image: #imageLiteral(resourceName: "NSImageNameVolumeMute"), target: self,
+        let v = NSButton(title: "Archive", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
                          action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
         v.alternateTitle = "Unarchive"
-        v.alternateImage = #imageLiteral(resourceName: "NSImageNameVolumeMute")
+        v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
         v.bezelStyle = .texturedRounded
         
         v.setButtonType(.pushOnPushOff)
@@ -58,10 +58,10 @@ public class ConversationDetailsViewController: NSViewController {
     }()
     
     private lazy var deleteButton: NSButton = {
-        let v = NSButton(title: "Delete", image: #imageLiteral(resourceName: "NSImageNameVolumeMute"), target: self,
+        let v = NSButton(title: "Delete", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
                          action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
         v.alternateTitle = "Undelete"
-        v.alternateImage = #imageLiteral(resourceName: "NSImageNameVolumeMute")
+        v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
         v.bezelStyle = .texturedRounded
         
         v.setButtonType(.pushOnPushOff)
