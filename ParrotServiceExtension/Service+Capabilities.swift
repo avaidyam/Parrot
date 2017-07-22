@@ -32,11 +32,6 @@ public protocol Service: class {
 	/// This is required in case network connection is lost or switched.
 	/// Returns true if synchronization succeeded, or false if it failed.
 	func synchronize()
-    
-    /// The userInteractionState follows the user's activity in the app and mirrors
-    /// it across the entire platform; that is, if the user is currently looking
-    /// at a screen in Parrot, they should not receive notifications on other devices.
-    var userInteractionState: Bool { get set }
 	
 	/// The current connection state of the service.
 	/// See connect() and disconnect().
@@ -49,6 +44,11 @@ public protocol Service: class {
 	/// The list of conversations that are either ongoing or have ended between
 	/// the logged in user and other people on the Service.
 	var conversations: ConversationList { get }
+    
+    /// The setInteractingIfNeeded follows the user's activity in the app and mirrors
+    /// it across the entire platform; that is, if the user is currently looking
+    /// at a screen in Parrot, they should not receive notifications on other devices.
+    func setInteractingIfNeeded()
 }
 
 /// Service supports multi-user (group) conversations.

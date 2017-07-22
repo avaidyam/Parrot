@@ -14,10 +14,11 @@ public final class Client: Service {
 	internal static let didUpdateStateKey = "Hangouts.Client.UpdateState.Key"
 	
 	// Timeout to send for setactiveclient requests:
-	public static let ACTIVE_TIMEOUT_SECS: UInt64 = 120
-	
+	public static let ACTIVE_TIMEOUT_SECS: UInt64 = 60 * 5 // 5 minutes
 	// Minimum timeout between subsequent setactiveclient requests:
-	public static let SETACTIVECLIENT_LIMIT_SECS: UInt64 = 60
+	public static let SETACTIVECLIENT_LIMIT_SECS: UInt64 = 60 // 1 minute
+    public var last_active_secs: NSNumber? = 0
+    public var active_client_state: ActiveClientState?
 	
 	public var channel: Channel?
     
@@ -27,8 +28,6 @@ public final class Client: Service {
 	
 	public var email: String?
 	public var client_id: String?
-	public var last_active_secs: NSNumber? = 0
-	public var active_client_state: ActiveClientState?
     
     /// The last logged time that we received a BatchUpdate from the server.
     private var lastUpdate: UInt64 = 0
@@ -141,7 +140,7 @@ public final class Client: Service {
 	// Call this method whenever there is an indication the user is
 	// interacting with this client. This method may be called very
 	// frequently, and it will only make a request when necessary.
-	public func setActive() {
+	public func setInteractingIfNeeded() {
 		
 		// If the client_id hasn't been received yet, we can't set the active client.
 		guard self.client_id != nil else {
@@ -162,9 +161,8 @@ public final class Client: Service {
             
 			// The first time this is called, we need to retrieve the user's email address.
 			if self.email == nil {
-                self.execute(GetSelfInfoRequest()) { res, _ in
-                    self.email = res!.self_entity!.properties!.email[0] as String
-                }
+                let res = try? self.execute(GetSelfInfoRequest())
+                self.email = res!.self_entity!.properties!.email[0] as String
 			}
             
             let req = SetActiveClientRequest(is_active: true,
@@ -173,19 +171,6 @@ public final class Client: Service {
             self.execute(req) {_,_ in}
         }
 	}
-    
-    public var userInteractionState: Bool {
-        get {
-            return (active_client_state == ActiveClientState.IsActive)
-        }
-        set {
-            if userInteractionState {
-                self.setActive()
-            } else {
-                // uh just let it expire...
-            }
-        }
-    }
     
     // Parse channel array and call the appropriate events.
     public func channel(channel: Channel, didReceiveMessage message: [Any]) {

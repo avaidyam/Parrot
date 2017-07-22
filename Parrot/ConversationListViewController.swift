@@ -242,12 +242,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return false
     }
     
-    public func windowDidChangeOcclusionState(_ notification: Notification) {
-        for (_, s) in ServiceRegistry.services {
-            s.userInteractionState = true // FIXME
-        }
-    }
-    
     ///
     ///
     ///

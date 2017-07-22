@@ -20,6 +20,7 @@ public class ParrotAppController: NSApplicationController {
     private var disconnectSub: Subscription? = nil
     private var notificationHelper: Subscription? = nil
     private var notificationReplyHelper: Subscription? = nil
+    private var idleTimer: DispatchSourceTimer? = nil
     
     /// Lazy-init for Preferences.
     public lazy var preferencesController: PreferencesViewController = {
@@ -216,6 +217,21 @@ public class ParrotAppController: NSApplicationController {
                 NSApp.setActivationPolicy(.regular)
             }
         }
+        
+        // Wallclock for system idle.
+        self.idleTimer = DispatchSource.makeTimerSource(queue: .main)
+        self.idleTimer?.scheduleRepeating(wallDeadline: .now(), interval: 5.seconds, leeway: 5.seconds)
+        self.idleTimer?.setEventHandler {
+            let CGEventType_anyInput = CGEventType(rawValue: ~0)!
+            let idleTime = CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: CGEventType_anyInput)
+            
+            if idleTime < 5.minutes.toSeconds() {
+                for (_, s) in ServiceRegistry.services {
+                    s.setInteractingIfNeeded()
+                }
+            }
+        }
+        self.idleTimer?.resume()
     }
     private var menubarSub: NSKeyValueObservation? = nil
     

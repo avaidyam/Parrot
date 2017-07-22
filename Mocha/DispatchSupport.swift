@@ -1,6 +1,12 @@
 import Dispatch
 
 public extension Int {
+    public var hours: DispatchTimeInterval {
+        return DispatchTimeInterval.seconds(self * 60 * 60)
+    }
+    public var minutes: DispatchTimeInterval {
+        return DispatchTimeInterval.seconds(self * 60)
+    }
     public var seconds: DispatchTimeInterval {
         return DispatchTimeInterval.seconds(self)
     }
