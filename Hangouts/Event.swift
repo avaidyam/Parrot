@@ -246,47 +246,7 @@ public class IChatMessageSegment {
 		self.underline = segment.formatting?.underline ?? false
 		self.linkTarget = segment.link_data?.link_target ?? nil
 	}
-	
-	// Serialize the segment to pblite.
-	public func serialize() -> [Any] {
-		return [
-			0,//self.type.representation,
-			self.text,
-			[
-				self.bold ? 1 : 0,
-				self.italic ? 1 : 0,
-				self.strikethrough ? 1 : 0,
-				self.underline ? 1 : 0,
-			],
-			[(self.linkTarget ?? None) as Any]
-		]
-	}
 }
-
-//
-// UTC Microseconds
-//
-
-
-// Convert a microsecond timestamp to an Date instance.
-// Convert UTC datetime to microsecond timestamp used by Hangouts.
-private let MicrosecondsPerSecond: Double = 1000000.0
-extension Date {
-    init(UTC: UInt64?) {
-        self = Date(timeIntervalSince1970: (Double(UTC ?? 0) / MicrosecondsPerSecond))
-    }
-    func toUTC() -> UInt64 {
-        return UInt64(self.timeIntervalSince1970 * MicrosecondsPerSecond)
-    }
-}
-/*
-// nil Date = 0 UTC microseconds
-public extension Optional where Wrapped == Date {
-    public func toUTC() -> UInt64 {
-        return self?.toUTC() ?? 0
-    }
-}
-*/
 
 //
 // TypingStatusMessage & WatermarkNotification

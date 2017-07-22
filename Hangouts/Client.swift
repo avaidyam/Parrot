@@ -14,14 +14,15 @@ public final class Client: Service {
 	internal static let didUpdateStateKey = "Hangouts.Client.UpdateState.Key"
 	
 	// Timeout to send for setactiveclient requests:
-	public static let ACTIVE_TIMEOUT_SECS = 120
+	public static let ACTIVE_TIMEOUT_SECS: UInt64 = 120
 	
 	// Minimum timeout between subsequent setactiveclient requests:
-	public static let SETACTIVECLIENT_LIMIT_SECS = 60
+	public static let SETACTIVECLIENT_LIMIT_SECS: UInt64 = 60
 	
 	public var channel: Channel?
     
     /// The internal operation queue to use.
+    // TODO: opQueue should be serial!
     internal var opQueue = DispatchQueue(label: "Hangouts.Client", qos: .userInitiated, attributes: .concurrent)
 	
 	public var email: String?
@@ -108,7 +109,7 @@ public final class Client: Service {
         guard self.lastUpdate > 0 else { return }
         let req = SyncAllNewEventsRequest(last_sync_timestamp: self.lastUpdate,
                                           max_response_size_bytes: 1048576)
-        self.execute(SyncAllNewEvents.self, with: req) { res, _ in
+        self.execute(req) { res, _ in
             for conv_state in res!.conversation_state {
                 if let conv = self.conversationList.conv_dict[conv_state.conversation_id!.id!] {
                     conv.update_conversation(conversation: conv_state.conversation!)
@@ -161,12 +162,15 @@ public final class Client: Service {
             
 			// The first time this is called, we need to retrieve the user's email address.
 			if self.email == nil {
-                self.execute(GetSelfInfo.self, with: GetSelfInfoRequest()) { res, _ in
+                self.execute(GetSelfInfoRequest()) { res, _ in
                     self.email = res!.self_entity!.properties!.email[0] as String
                 }
 			}
-			
-			setActiveClient(is_active: true, timeout_secs: Client.ACTIVE_TIMEOUT_SECS)
+            
+            let req = SetActiveClientRequest(is_active: true,
+                                             full_jid: "\(self.email!)/" + (self.client_id ?? ""),
+                                             timeout_secs: Client.ACTIVE_TIMEOUT_SECS)
+            self.execute(req) {_,_ in}
         }
 	}
     
@@ -241,5 +245,89 @@ public final class Client: Service {
                 log.warning("Ignoring message: \(payload[0])")
             }
         }
+    }
+    
+    /// Asynchronously execute the API transaction with the service endpoint.
+    /// - `request`: The request to send the service endpoint.
+    /// - `handler`: The response from executing the operation, or any error that occurred.
+    internal func execute<T: ServiceRequest>(_ request: T, handler: @escaping (T.Response?, Error?) -> ()) {
+        self.opQueue.async {
+            do {
+                var request = request // shadow
+                request.request_header = RequestHeader.header(for: self.client_id)
+                let input: Any = try PBLiteEncoder().encode(request)
+                
+                let endpoint = type(of: request).location
+                log.debug("REQUEST: \(endpoint)")
+                let data = try JSONSerialization.data(withJSONObject: input, options: [])
+                self.channel?.base_request(path: "https://clients6.google.com/chat/v1/\(endpoint)",
+                content_type: "application/json+protobuf", data: data, use_json: false) { r in
+                    guard let response = r.data else {
+                        return handler(nil, r.error ?? ServiceError.unknown)
+                    }
+                    
+                    do {
+                        let output: T.Response = try PBLiteDecoder().decode(data: response)!
+                        if output.response_header!.status! == .Ok {
+                            handler(output, nil)
+                        } else {
+                            handler(nil, ServiceError.server(output.response_header!.status!,
+                                                             output.response_header!.error_description!))
+                        }
+                    } catch(let error) {
+                        handler(nil, error)
+                    }
+                }
+            } catch(let error) {
+                handler(nil, error)
+            }
+        }
+    }
+    
+    /// Synchronously execute the API transaction with the service endpoint.
+    /// - `request`: The request to send the service endpoint.
+    /// - `handler`: The response from executing the operation, or any error that occurred.
+    internal func execute<T: ServiceRequest>(_ request: T) throws -> T.Response {
+        return try self.opQueue.sync {
+            var request = request // shadow
+            request.request_header = RequestHeader.header(for: self.client_id)
+            let input: Any = try PBLiteEncoder().encode(request)
+            
+            let endpoint = type(of: request).location
+            log.debug("REQUEST: \(endpoint)")
+            let data = try JSONSerialization.data(withJSONObject: input, options: [])
+            
+            var result: Result? = nil
+            let sem = DispatchSemaphore(value: 0)
+            self.channel?.base_request(path: "https://clients6.google.com/chat/v1/\(endpoint)",
+            content_type: "application/json+protobuf", data: data, use_json: false) { r in
+                result = r
+                sem.signal()
+            }
+            sem.wait()
+            
+            guard let response = result?.data else {
+                throw result?.error ?? ServiceError.unknown
+            }
+            
+            let output: T.Response = try PBLiteDecoder().decode(data: response)!
+            if output.response_header!.status! != .Ok {
+                throw ServiceError.server(output.response_header!.status!,
+                                                 output.response_header!.error_description!)
+            }
+            
+            return output
+        }
+    }
+}
+
+public extension RequestHeader {
+    public static func header(for clientID: String? = "") -> RequestHeader {
+        return RequestHeader(client_version: ClientVersion(major_version: "parrot"),
+                             client_identifier: ClientIdentifier(resource: clientID),
+                             language_code: "en")
+    }
+    public static func uniqueID() -> UInt64 {
+        return random64(UInt64(pow(2.0, 32.0)))
     }
 }

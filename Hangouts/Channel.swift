@@ -315,26 +315,13 @@ public final class Channel : NSObject {
     // Valid formats are: 'json' (JSON), 'protojson' (pblite), and 'proto'
     // (binary Protocol Buffer). 'proto' requires manually setting an extra
     // header 'X-Goog-Encode-Response-If-Executable: base64'.
-	internal func request(
-		endpoint: String,
-		body: Any,
-		use_json: Bool = true,
-		content_type: String = "application/json+protobuf",
-		cb: @escaping (Result) -> Void
-        ) {
-        log.debug("REQUEST: \(endpoint)")
-        let path = "https://clients6.google.com/chat/v1/\(endpoint)"
-        let data = try! JSONSerialization.data(withJSONObject: body, options: [])
-		base_request(path: path, data: data, use_json: use_json, cb: cb
-		)
-	}
 	internal func base_request(
 		path: String,
 		content_type: String = "application/json+protobuf",
 		data: Data,
 		use_json: Bool = true,
-		cb: @escaping (Result) -> Void
-		) {
+		cb: @escaping (Result) -> Void)
+    {
 		let params = ["alt": use_json ? "json" : "protojson"]
 		let url = URL(string: (path + "?key=" + Channel.APIKey + "&" + params.encodeURL()))!
 		let request = NSMutableURLRequest(url: url)

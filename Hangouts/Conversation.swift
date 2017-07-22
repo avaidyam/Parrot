@@ -121,7 +121,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         set {
             let req = RenameConversationRequest(conversation_id: self.id, new_name: newValue,
                                                 event_request_header: self.eventHeader(.ConversationRename))
-            self.client.execute(RenameConversation.self, with: req) {_,_ in}
+            self.client.execute(req) {_,_ in}
         }
     }
     
@@ -132,7 +132,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         set {
             //last_event_timestamp: <#T##UInt64?#>?
             let req = ModifyConversationViewRequest(conversation_id: self.id, new_view: (newValue ? .Archived : .Inbox))
-            self.client.execute(ModifyConversationView.self, with: req) {_,_ in}
+            self.client.execute(req) {_,_ in}
         }
     }
     
@@ -143,7 +143,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
         set {
             let req = UpdateWatermarkRequest(conversation_id: self.id, last_read_timestamp: newValue.toUTC())
-            self.client.execute(UpdateWatermark.self, with: req) {_,_ in}
+            self.client.execute(req) {_,_ in}
         }
     }
     
@@ -197,10 +197,10 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
         
         let req1 = SetTypingRequest(conversation_id: self.id, type: self.typingStatuses[id]!)
-        self.client.execute(SetTyping.self, with: req1) {_,_ in}
+        self.client.execute(req1) {_,_ in}
         //timeout_secs: <#T##UInt32?#>?
         let req2 = SetFocusRequest(conversation_id: self.id, type: (self.focuses[id]! ? .Focused : .Unfocused))
-        self.client.execute(SetFocus.self, with: req2) {_,_ in}
+        self.client.execute(req2) {_,_ in}
     }
 	
 	public var muted: Bool {
@@ -210,36 +210,27 @@ public class IConversation: ParrotServiceExtension.Conversation {
 		set {
             //revert_timeout_secs: 0
             let req = SetConversationLevelRequest(conversation_id: self.id, level: (newValue ? .Quiet : .Ring))
-            self.client.execute(SetConversationLevel.self, with: req) {_, _ in}
+            self.client.execute(req) {_, _ in}
 		}
 	}
     
-    // TODO: opQueue should be serial!
     public func send(message: Message) throws {
-        let otr = self.conversation.otr_status ?? .OnTheRecord
-        let medium = self.getDefaultDeliveryMedium().medium_type!
-        
         switch message.content {
         case .text(let text) where text.characters.count > 0:
             let seg = Segment(type: .Text, text: text)
             let req = SendChatMessageRequest(message_content: MessageContent(segment: [seg]),
                                              event_request_header: self.eventHeader(.RegularChatMessage))
-            self.client.execute(SendChatMessage.self, with: req) {_,_ in}
+            self.client.execute(req) {_,_ in}
         case .image(let photo, let name):
-            let s = DispatchSemaphore(value: 0)
-            self.client.opQueue.async {
-                self.client.uploadIfNeeded(photo: .new(data: photo, name: name)) { photoID, userID in
-                    self.client.sendChatMessage(conversation_id: self.identifier,
-                                                segments: [],
-                                                image_id: photoID,
-                                                image_user_id: userID,
-                                                otr_status: otr,
-                                                delivery_medium: medium) { _ in s.signal() }
-                }
+            self.client.uploadIfNeeded(photo: .new(data: photo, name: name)) { photoID, userID in
+                let req = SendChatMessageRequest(existing_media: ExistingMedia(photo: Photo(photo_id: photoID, user_id: userID)),
+                                                 event_request_header: self.eventHeader(.RegularChatMessage))
+                self.client.execute(req) {_,_ in}
             }
-            s.wait()
         /*
         case .image(let photoID, let name):
+            let otr = self.conversation.otr_status ?? .OnTheRecord
+            let medium = self.getDefaultDeliveryMedium().medium_type!
             let s = DispatchSemaphore(value: 0)
             self.client.opQueue.async {
                 self.client.uploadIfNeeded(photo: .existing(id: photoID, name: name)) { photoID, userID in
@@ -256,17 +247,12 @@ public class IConversation: ParrotServiceExtension.Conversation {
         case .location(let lat, let long):
             let loc = "https://maps.google.com/maps?q=\(lat),\(long)"
             let img = "https://maps.googleapis.com/maps/api/staticmap?center=\(lat),\(long)&markers=color:red%7C\(lat),\(long)&size=400x400"
-            //let seg = Segment(type: .Link, text: loc, link_data: LinkData(link_target: loc))
             
             let rep = RepresentativeImage(type: [.Thing, .Place, .init(336), .init(338), .init(339)], url: img, image: VoicePhoto(url: img))
             let place = Place(url: loc, name: "Current Location", display_info: PlaceDisplayInfo(description: PlaceDescription(text: "Current Location")), location_info: PlaceLocationInfo(latlng: Coordinates(lat: lat, lng: long)), representative_image: rep)
             
-            //let place_v2 = Place(url: loc, name: "Current Location", representative_image: rep)
-            //let attach = Attachment(embed_item: EmbedItem(type: [.Thing, .Place, .PlaceV2], id: "and0", place: place, place_v2: place_v2), id: "and0")
-            //message_content: MessageContent(segment: [seg], attachment: [attach])
-            
             let req = SendChatMessageRequest(event_request_header: self.eventHeader(.RegularChatMessage), attach_location: LocationSpec(place: place))
-            self.client.execute(SendChatMessage.self, with: req) {_,_ in}
+            self.client.execute(req) {_,_ in}
         default: throw MessageError.unsupported
         }
     }
@@ -276,11 +262,11 @@ public class IConversation: ParrotServiceExtension.Conversation {
         case .Group:
             //participant_id: self?
             let req = RemoveUserRequest(conversation_id: self.id, event_request_header: self.eventHeader(.RemoveUser))
-            self.client.execute(RemoveUser.self, with: req) {_,_ in}
+            self.client.execute(req) {_,_ in}
         case .OneToOne:
             //delete_upper_bound_timestamp: <#T##UInt64?#>?
             let req = DeleteConversationRequest(conversation_id: self.id)
-            self.client.execute(DeleteConversation.self, with: req) {_,_ in}
+            self.client.execute(req) {_,_ in}
         default: break
         }
     }
@@ -325,10 +311,6 @@ public class IConversation: ParrotServiceExtension.Conversation {
     // necessary. If the beginning of the conversation is reached, an empty
     // list will be returned.
     public func getEvents(event_id: String? = nil, max_events: Int = 50, cb: (([IEvent]) -> Void)? = nil) {
-        /*guard let event_id = event_id else {
-         cb?(events)
-         return
-         }*/
         
         // If event_id is provided, return the events we have that are
         // older, or request older events if event_id corresponds to the
@@ -344,26 +326,24 @@ public class IConversation: ParrotServiceExtension.Conversation {
                 }
             }
             ts = conv_event.timestamp
-        }/* else {
-         log.error("Event not found.")
-         return
-         }*/
+        }
         
-        self.client.getConversation(conversation_id: self.identifier, event_timestamp: ts, max_events: max_events) { res in
-            if res!.response_header!.status == ResponseStatus.InvalidRequest {
-                log.error("Invalid request! \(String(describing: res!.response_header))")
-                return
-            }
-            let conv_events = res!.conversation_state!.event.map { IEvent.wrap_event(self.client, event: $0) }
-            self.readStates = res!.conversation_state!.conversation!.read_state
+        let req = GetConversationRequest(conversation_spec: ConversationSpec(conversation_id: self.id),
+                                         include_conversation_metadata: true,
+                                         include_event: true,
+                                         max_events_per_conversation: UInt64(max_events),
+                                         event_continuation_token: EventContinuationToken(event_timestamp: ts.toUTC()),
+                                         include_presence: true)
+        self.client.execute(req) { res, _ in
+            guard let res = res else { cb?([]); return }
+            let conv_events = res.conversation_state!.event.map { IEvent.wrap_event(self.client, event: $0) }
+            self.readStates = res.conversation_state!.conversation!.read_state
             
             for conv_event in conv_events {
-                //conv_event.client = self.client
                 self.events_dict[conv_event.id] = conv_event
             }
             cb?(conv_events)
             NotificationCenter.default.post(name: Notification.Conversation.DidUpdateEvents, object: self)
-            //self.delegate?.conversationDidUpdateEvents(self)
         }
     }
     
@@ -436,7 +416,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
                                                  max_conversations: UInt64(count),
                                                  max_events_per_conversation: UInt64(1),
                                                  sync_filter: [.Inbox, .Active, .Invited])
-        self.client.execute(SyncRecentConversations.self, with: req) { response, err in
+        self.client.execute(req) { response, err in
             let conv_states = response!.conversation_state
             if let ts = response?.continuation_end_timestamp {
                 //let sync_timestamp = response!.syncTimestamp// use current_server_time?
@@ -461,7 +441,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         let req = CreateConversationRequest(type: with.count > 1 ? .Group : .OneToOne,
                                             client_generated_id: RequestHeader.uniqueID(),
                                             invitee_id: with.map { InviteeID(gaia_id: $0.identifier) })
-        let resp = try? self.client.execute(CreateConversation.self, with: req)
+        let resp = try? self.client.execute(req)
         
         guard let c = resp?.conversation else { return nil }
         if (resp?.new_conversation_created ?? false) || (self.conv_dict[c.conversation_id!.id!] == nil) {

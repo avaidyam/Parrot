@@ -56,8 +56,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }()
     
     private lazy var addButton: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImage.Name(rawValue: "NSAddBookmarkTemplate"))!,
-                         target: nil, action: nil).modernize()
+        let b = NSButton(title: "", image: #imageLiteral(resourceName: "Compose"), target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         b.performedAction = {

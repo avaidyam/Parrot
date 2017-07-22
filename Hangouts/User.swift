@@ -153,35 +153,28 @@ public class UserList: Directory {
     }
     
     internal func addPeople(from conversations: [Conversation]) -> [Person] {
-        var ret = [Person]()
-        let s = DispatchSemaphore(value: 0)
-        
         // Prepare a set of all conversation participant data first to batch the query.
         var required = Set<ConversationParticipantData>()
         conversations.forEach { conv in conv.participant_data.forEach { required.insert($0) } }
         
         // Required step: get the base User objects prepared.
-        self.client.opQueue.sync {
-            self.client.getEntitiesByID(chat_id_list: required.flatMap { $0.id?.chat_id }) { response in
-                let entities = response?.entity_result.flatMap { $0.entity } ?? []
-                for entity in entities {
-                    guard entity.id != nil else { continue } // if no id, we can't use it!
-                    let user = User(self.client, entity: entity, selfUser: (self.me as! User).id)
-                    if self.users[user.id] == nil {
-                        self.users[user.id] = user
-                    }
-                    ret.append(user as Person)
-                }
-                self.cache(presencesFor: entities.map { $0.id! })
-                s.signal()
+        let specs = required.flatMap { EntityLookupSpec(gaia_id: $0.id!.gaia_id!) }
+        let req = GetEntityByIdRequest(batch_lookup_spec: specs)
+        let response = try? self.client.execute(req)
+        
+        let entities = response?.entity_result.flatMap { $0.entity } ?? []
+        self.cache(presencesFor: entities.map { $0.id! })
+        return entities.filter { $0.id != nil }.map { entity in
+            let user = User(self.client, entity: entity, selfUser: (self.me as! User).id)
+            if self.users[user.id] == nil {
+                self.users[user.id] = user
             }
-            s.wait()
+            return user as Person
         }
-        return ret
     }
     
     internal static func getSelfInfo(_ client: Client) -> User {
-        let res = try! client.execute(GetSelfInfo.self, with: GetSelfInfoRequest())
+        let res = try! client.execute(GetSelfInfoRequest())
         let selfUser = User(client, entity: res.self_entity!, selfUser: nil)
         return selfUser
     }
@@ -189,7 +182,7 @@ public class UserList: Directory {
     ///
     public func search(by: String, limit: Int) -> [Person] {
         let req = SearchEntitiesRequest(query: by, max_count: UInt64(limit))
-        let vals = try? self.client.execute(SearchEntities.self, with: req)
+        let vals = try? self.client.execute(req)
         return vals?.entity.map { User(self.client, entity: $0, selfUser: (self.me as! User).id) } ?? []
     }
     
@@ -204,7 +197,7 @@ public class UserList: Directory {
         let req = GetSuggestedEntitiesRequest(max_count: UInt64(limit))
         var vals: GetSuggestedEntitiesResponse? = nil
         do {
-            vals = try self.client.execute(GetSuggestedEntities.self, with: req)
+            vals = try self.client.execute(req)
         } catch(let error) {
             print("\n\n", error, "\n\n")
         }
@@ -261,7 +254,7 @@ public class UserList: Directory {
         for q in queries {
             let req = QueryPresenceRequest(participant_id: [q],
                                            field_mask: [.Reachable, .Available, .Mood, .Location, .InCall, .Device, .LastSeen])
-            self.client.execute(QueryPresence.self, with: req) { req, _ in
+            self.client.execute(req) { req, _ in
                 for pres2 in req!.presence_result {
                     guard   let id1 = pres2.user_id?.chat_id, let id2 = pres2.user_id?.gaia_id,
                         let user = self.users[User.ID(chatID: id1, gaiaID: id2)],
@@ -362,5 +355,5 @@ fileprivate extension Presence {
  the entity_results contain whatever gaia ID is needed to create a new contract (whether by Google Voice or by "normal" chat) … although they still don't return anything for non-Google email addresses, so there must be yet another invite mechanism used in that case (the off-network invite request)
  
  let req = GetEntityByIdRequest(batch_lookup_spec: [EntityLookupSpec(phone: "+1XXXXXXXXXX", create_offnetwork_gaia: true)])
- self.client.execute(GetEntityById.self, with: req) { a, b in print(a?.entity_result[0].entity) }
+ self.client.execute(req) { a, b in print(a?.entity_result[0].entity) }
  */
