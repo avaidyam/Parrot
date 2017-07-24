@@ -1,6 +1,6 @@
 import Cocoa
 
-/* TODO: Support window key-ness (NSWindowDidBecome/ResignKeyNotification). */
+/* TODO: Support window key-ness: -_windowChangedKeyState. */
 
 /// adapted from from @Tueno: https://github.com/Tueno/MessageProgressView
 public class MessageProgressView: NSView {

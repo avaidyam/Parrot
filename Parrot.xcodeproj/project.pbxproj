@@ -92,6 +92,7 @@
 		48834E3F1C1B4098009BC442 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E371C1B4098009BC442 /* Event.swift */; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
+		488EC0D11F267CF90022F6EB /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488EC0D01F267CF90022F6EB /* Animation.swift */; };
 		488F652A1EF97CD50085325F /* GooglePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F65291EF97CD50085325F /* GooglePhoto.swift */; };
 		489018AC1D3C8FE400CFCA5F /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person.swift */; };
 		489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */; };
@@ -419,6 +420,7 @@
 		48834E391C1B4098009BC442 /* FoundationSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationSupport.swift; sourceTree = "<group>"; };
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		488EC0D01F267CF90022F6EB /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		488F65291EF97CD50085325F /* GooglePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePhoto.swift; sourceTree = "<group>"; };
 		489018AB1D3C8FE400CFCA5F /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
@@ -669,6 +671,7 @@
 				48403CA21DF0BF6B0009897A /* Interpolate.swift */,
 				489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */,
 				489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */,
+				488EC0D01F267CF90022F6EB /* Animation.swift */,
 			);
 			name = Interpolate;
 			sourceTree = "<group>";
@@ -1708,6 +1711,7 @@
 				489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */,
 				48D3CD0E1DE945C1003D6C02 /* NSDrawer+Extensions.swift in Sources */,
 				48D3CD141DE945C1003D6C02 /* UserNotification+Extensions.swift in Sources */,
+				488EC0D11F267CF90022F6EB /* Animation.swift in Sources */,
 				4869A9A71EE0FC2C00764594 /* NSAppearance+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
