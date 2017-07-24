@@ -1,6 +1,8 @@
 import Foundation
 import AddressBook
 import protocol ParrotServiceExtension.Person
+import enum ParrotServiceExtension.MessageError
+import enum Hangouts.ServiceError
 
 // FIXME: Temporary location...
 public func searchContacts(person user: Person) -> [ABPerson] {
@@ -69,5 +71,41 @@ public extension NSObjectProtocol where Self: NSView {
             self.wantsLayer = true
         }
         return self
+    }
+}
+
+extension MessageError: LocalizedError {
+    public var errorDescription: String? {
+        return "The message couldn't be sent."
+    }
+    
+    public var failureReason: String? {
+        return "The messaging service doesn't support the kind of message you're trying to send."
+    }
+    
+    public var recoverySuggestion: String? {
+        return "Try sending a different kind of message instead, or use a provider."
+    }
+    
+    public var helpAnchor: String? {
+        return "Some services don't support rich messages like video or files, so you'll have to use a provider instead if you want to send those kinds of messages."
+    }
+}
+
+extension ServiceError: LocalizedError {
+    public var errorDescription: String? {
+        return "An action you just made could not be completed."
+    }
+    
+    public var failureReason: String? {
+        return "Couldn't communicate with the service."
+    }
+    
+    public var recoverySuggestion: String? {
+        return "Make sure you're connected to the internet and allowed access for Parrot in your firewall settings."
+    }
+    
+    public var helpAnchor: String? {
+        return "Sometimes communicating with a remote service fails for unknown reasons. Try that again and it might work."
     }
 }

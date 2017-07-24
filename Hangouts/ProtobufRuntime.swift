@@ -60,7 +60,7 @@ internal protocol ServiceResponse: ProtoMessage {
 
 
 /// An error that may occur during Service RPC transmission.
-internal enum ServiceError: Error {
+public enum ServiceError: Error {
     
     /// The server returned an error (status code and description).
     case server(ResponseStatus, String)
