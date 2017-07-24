@@ -220,7 +220,7 @@ public class ParrotAppController: NSApplicationController {
         
         // Wallclock for system idle.
         self.idleTimer = DispatchSource.makeTimerSource(queue: .main)
-        self.idleTimer?.scheduleRepeating(wallDeadline: .now(), interval: 5.seconds, leeway: 5.seconds)
+        self.idleTimer?.scheduleRepeating(wallDeadline: .now(), interval: 5.minutes, leeway: 1.minutes)
         self.idleTimer?.setEventHandler {
             let CGEventType_anyInput = CGEventType(rawValue: ~0)!
             let idleTime = CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: CGEventType_anyInput)
