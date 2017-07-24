@@ -112,7 +112,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             text.appearance = NSAppearance.current == .dark ? .light : .dark
             text.layer?.masksToBounds = true
             text.layer?.cornerRadius = 10.0
-            text.layer?.backgroundColor = NSColor.secondaryLabelColor.cgColor//NSColor.darkOverlay(forAppearance: self.view.window!.effectiveAppearance).cgColor
+            text.layer?.backgroundColor = .ns(.secondaryLabelColor)//NSColor.darkOverlay(forAppearance: self.view.window!.effectiveAppearance).cgColor
             
             text.textColor = NSColor.labelColor
             text.font = NSFont.systemFont(ofSize: 12.0)
@@ -168,7 +168,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     //
     
     private func resizeModule() {
-        NSAnimationContext.animate(duration: 0.6) { // TODO: FIX THIS
+        NSAnimationContext.animate(duration: 600.milliseconds) { // TODO: FIX THIS
             self.textView.invalidateIntrinsicContentSize()
             self.textView.superview?.needsLayout = true
             self.textView.superview?.layoutSubtreeIfNeeded()

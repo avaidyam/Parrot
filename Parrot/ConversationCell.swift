@@ -15,7 +15,7 @@ public class ConversationCell: NSCollectionViewItem {
         let l = CALayer()
         l.shadowRadius = 4
         l.shadowOpacity = 0.25
-        l.shadowColor = NSColor.black.cgColor
+        l.shadowColor = .ns(.black)
         l.shadowOffset = CGSize(width: 0, height: 0)
         
         let s = CALayer()
@@ -30,8 +30,8 @@ public class ConversationCell: NSCollectionViewItem {
     private lazy var badgeLayer: CALayer = {
         let l = CATextLayer()
         l.masksToBounds = true
-        l.backgroundColor = NSColor.selectedMenuItemColor.cgColor
-        l.foregroundColor = NSColor.white.cgColor
+        l.backgroundColor = .ns(.selectedMenuItemColor)
+        l.foregroundColor = .ns(.white)
         l.fontSize = 9.0
         l.string = "1"
         return l
@@ -131,9 +131,9 @@ public class ConversationCell: NSCollectionViewItem {
     public override var highlightState: NSCollectionViewItem.HighlightState {
         didSet {
             if self.highlightState != .none {
-                self.layer.backgroundColor = NSColor.selectedMenuItemColor.cgColor
+                self.layer.backgroundColor = .ns(.selectedMenuItemColor)
             } else {
-                self.layer.backgroundColor = NSColor.clear.cgColor
+                self.layer.backgroundColor = .ns(.clear)
             }
         }
     }
@@ -142,13 +142,13 @@ public class ConversationCell: NSCollectionViewItem {
         didSet {
             //let appearance = self.view.appearance ?? NSAppearance.current()
             if self.isSelected {
-                self.layer.backgroundColor = NSColor.selectedMenuItemColor.cgColor
+                self.layer.backgroundColor = .ns(.selectedMenuItemColor)
                 //self.appearance = .light
                 //self.layer.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0.1997270976).cgColor
                 //self.effect?.animator().isHidden = false
                 //self.separator?.animator().isHidden = true
             } else {
-                self.layer.backgroundColor = NSColor.clear.cgColor
+                self.layer.backgroundColor = .ns(.clear)
                 //self.appearance = .dark
                 //self.layer.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
                 //self.effect?.animator().isHidden = true

@@ -46,7 +46,7 @@ public class MessageProgressView: NSView {
     private func commonInit() {
         self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
-        self.layer!.backgroundColor = NSColor.clear.cgColor
+        self.layer!.backgroundColor = .ns(.clear)
         self.layer!.masksToBounds = false
         
         self.updateLayer() // bootstrapping

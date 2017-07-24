@@ -53,32 +53,6 @@ public extension NSWindow {
     }
 }
 
-// TODO: Switch for actually using NSUIAnimator or the animator() proxy.
-public extension NSAnimationContext {
-    
-    @discardableResult
-    public static func animate(duration: TimeInterval = 1.0, timingFunction: CAMediaTimingFunction? = nil, _ animations: () -> ()) -> NSAnimationContext {
-        NSAnimationContext.beginGrouping()
-        NSAnimationContext.current.allowsImplicitAnimation = true
-        NSAnimationContext.current.duration = duration
-        NSAnimationContext.current.timingFunction = timingFunction
-        animations()
-        NSAnimationContext.endGrouping()
-        return NSAnimationContext.current
-    }
-    
-    public static func disableAnimations(_ animations: () -> ()) {
-        NSAnimationContext.beginGrouping()
-        NSAnimationContext.current.duration = 0
-        animations()
-        NSAnimationContext.endGrouping()
-    }
-    
-    public func onCompletion(_ handler: @escaping () -> ()) {
-        self.completionHandler = handler
-    }
-}
-
 public extension NSWindow {
     
     // Animate the change in appearance.

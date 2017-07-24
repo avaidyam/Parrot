@@ -94,8 +94,8 @@ public class PersonCell: NSCollectionViewItem {
     public override var isSelected: Bool {
         didSet {
             self.view.layer?.backgroundColor = isSelected
-                ? NSColor.selectedMenuItemColor.cgColor
-                : NSColor.clear.cgColor
+                ? .ns(.selectedMenuItemColor)
+                : .ns(.clear)
         }
     }
     

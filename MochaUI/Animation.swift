@@ -2,9 +2,9 @@ import AppKit
 import QuartzCore
 import Mocha
 
-// CAMediaTiming stuff?
-// custom interps?
-// isAdditive, isCumulative, timingFunction
+// custom interpolators?
+// isAdditive, isCumulative?
+//
 // auto-fill-forward without keeping anim
 // auto-fill-backward before start of anim
 // delegate + removedOnCompletion ignored in groups...
@@ -17,6 +17,12 @@ protocol Animatable {
 
 public struct Animation {
     fileprivate let underlying: CAAnimation
+    
+    /// repeat amount and whether to autoreverse
+    public enum Repeat {
+        case times(Float, Bool)
+        case `for`(DispatchTimeInterval, Bool)
+    }
     
     //
     private class UnderlyingDelegate: NSObject, CAAnimationDelegate {
@@ -43,6 +49,7 @@ public struct Animation {
         anim.fromValue = fromValue
         anim.byValue = byValue
         anim.toValue = toValue
+        //anim.isAdditive = ???
         
         if let handler = handler {
             anim.delegate = UnderlyingDelegate(handler)
@@ -50,16 +57,33 @@ public struct Animation {
         return Animation(underlying: anim)
     }
     
+    ///
     public static func with(animation anim: CAAnimation) -> Animation {
         return Animation(underlying: anim)
     }
     
     ///
-    public static func group(_ group: [Animation],
+    public static func `repeat`(_ root: Animation, behavior: Repeat) -> Animation {
+        let anim = root.underlying
+        switch behavior {
+        case .times(let t, let a):
+            anim.repeatCount = t
+            anim.autoreverses = a
+        case .for(let t, let a):
+            anim.repeatDuration = t.toSeconds()
+            anim.autoreverses = a
+        }
+        //anim.isCumulative = ???
+        return Animation(underlying: anim)
+    }
+    
+    ///
+    public static func group(_ group: [Animation], timing: CAMediaTimingFunction = .linear,
                              then handler: (() -> ())? = nil) -> Animation {
         assert(group.count > 0, "An animation group must always have at least one element.")
         
         let anim = CAAnimationGroup()
+        anim.timingFunction = timing
         anim.animations = group.map { $0.underlying }
         anim.duration = group.map { $0.underlying.duration }.max() ?? 0.0
         
@@ -70,11 +94,12 @@ public struct Animation {
     }
     
     ///
-    public static func sequence(_ group: [Animation],
+    public static func sequence(_ group: [Animation], timing: CAMediaTimingFunction = .linear,
                                 then handler: (() -> ())? = nil) -> Animation {
         assert(group.count > 0, "An animation sequence must always have at least one element.")
         
         let anim = CAAnimationGroup()
+        anim.timingFunction = timing
         anim.animations = group.map { $0.underlying }
         
         // Adjust beginTimes to sequentialize:
@@ -110,6 +135,42 @@ extension CALayer: Animatable {
 public extension CGColor {
     public static func ns(_ color: NSColor) -> CGColor {
         return color.cgColor
+    }
+}
+
+public extension CAMediaTimingFunction {
+    public static let linear = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+    public static let easeIn = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+    public static let easeOut = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+    public static let easeInOut = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+}
+
+// TODO: Switch for actually using NSUIAnimator or the animator() proxy.
+public extension NSAnimationContext {
+    
+    @discardableResult
+    public static func animate(duration: DispatchTimeInterval = 250.milliseconds,
+                               timingFunction: CAMediaTimingFunction = .linear,
+                               _ animations: () -> ()) -> NSAnimationContext
+    {
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current.allowsImplicitAnimation = true
+        NSAnimationContext.current.duration = duration.toSeconds()
+        NSAnimationContext.current.timingFunction = timingFunction
+        animations()
+        NSAnimationContext.endGrouping()
+        return NSAnimationContext.current
+    }
+    
+    public static func disableAnimations(_ animations: () -> ()) {
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current.duration = 0
+        animations()
+        NSAnimationContext.endGrouping()
+    }
+    
+    public func onCompletion(_ handler: @escaping () -> ()) {
+        self.completionHandler = handler
     }
 }
 

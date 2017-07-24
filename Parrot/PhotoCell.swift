@@ -66,7 +66,7 @@ public class PhotoCell: NSCollectionViewItem {
             layer.cornerRadius = layer.bounds.width / 2.0
         }
         
-        self.photoView.layer!.backgroundColor = NSColor.white.cgColor
+        self.photoView.layer!.backgroundColor = .ns(.white)
         self.photoView.layer?.masksToBounds = true
         self.photoView.layer?.cornerRadius = 10.0
     }

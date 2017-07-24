@@ -19,7 +19,7 @@ public class Switch: NSControl {
     private lazy var knobLayer: CALayer = {
         let layer = CALayer()
         layer.autoresizingMask = [.layerWidthSizable]
-        layer.backgroundColor = NSColor.white.cgColor
+        layer.backgroundColor = .ns(.white)
         layer.frame = self.knobContainer.bounds
         layer.cornerRadius = ceil(self.knobContainer.bounds.height / 2)
         return layer
@@ -39,8 +39,8 @@ public class Switch: NSControl {
         layer.frame = self.knobContainer.bounds.insetBy(dx: 2, dy: 2)
         layer.autoresizingMask = [.layerWidthSizable]
         layer.cornerRadius = ceil(layer.bounds.height / 2)
-        layer.backgroundColor = NSColor.red.cgColor
-        layer.shadowColor = NSColor.black.cgColor
+        layer.backgroundColor = .ns(.red)
+        layer.shadowColor = .ns(.black)
         layer.shadowOffset = CGSize(width: 0.0, height: -3 * self.scaleFactor)
         layer.shadowOpacity = 0.12
         layer.shadowRadius = 2.0 * self.scaleFactor
