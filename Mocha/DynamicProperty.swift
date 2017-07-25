@@ -4,6 +4,9 @@ public protocol DynamicProperty {
     associatedtype T
     associatedtype U
     subscript(_ object: T) -> U? { mutating get mutating set }
+    
+    subscript(_ object: T, default default: @autoclosure () -> (U)) -> U { mutating get }
+    subscript(_ object: T, creating creating: @autoclosure () -> (U)) -> U { mutating get }
 }
 
 public struct KeyValueProperty<T: NSObject, U>: DynamicProperty {
@@ -44,5 +47,23 @@ public struct AssociatedProperty<T, U>: DynamicProperty {
     public subscript(_ object: T) -> U? {
         mutating get { return objc_getAssociatedObject(object, &key) as? U }
         mutating set { objc_setAssociatedObject(object, &key, newValue, self.strength._objc) }
+    }
+}
+
+public extension DynamicProperty {
+    public subscript(_ object: T, default default: @autoclosure () -> (U)) -> U {
+        mutating get { return self[object] ?? `default`() }
+    }
+    
+    public subscript(_ object: T, creating creating: @autoclosure () -> (U)) -> U {
+        mutating get {
+            if let ret = self[object] {
+                return ret
+            } else {
+                let ret = creating()
+                self[object] = ret
+                return ret
+            }
+        }
     }
 }

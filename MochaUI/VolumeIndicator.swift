@@ -26,7 +26,7 @@ public class VolumeIndicator: NSView {
     private let segmentSize = NSSize(width: 9, height: 6)
     private let segmentSpacing: CGFloat = 1
     
-    private var backgroundColor: NSColor {
+    private var barColor: NSColor {
         return self.drawColors[self.colorMode]![.background]!
     }
 
@@ -67,7 +67,7 @@ public class VolumeIndicator: NSView {
     }
     public override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-        self.backgroundColor.set()
+        self.barColor.set()
         dirtyRect.fill()
 
         var segmentIndex = 0

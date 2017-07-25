@@ -143,15 +143,7 @@ public extension CALayer {
     /// Note: this does not happen automatically; in your NSView, override
     /// layout() while invoking super, and call syncLayout() manually.
     public fileprivate(set) var layout: NSLayoutGuide {
-        get {
-            if let _l = CALayer.layoutProp[self] {
-                return _l
-            } else {
-                let guide = NSLayoutGuide()
-                CALayer.layoutProp[self] = guide
-                return guide
-            }
-        }
+        get { return CALayer.layoutProp[self, creating: NSLayoutGuide()] }
         set { CALayer.layoutProp[self] = newValue }
     }
     

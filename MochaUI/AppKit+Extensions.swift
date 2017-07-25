@@ -3,6 +3,57 @@ import Mocha
 
 /* TODO: Localization support for NSDateFormatter stuff. */
 
+public typealias Block = @convention(block) () -> ()
+
+public extension NSView {
+    
+    /*@nonobjc public var backgroundColor: NSColor {
+        get { return NSView.backgroundColorKey[self, default: .clear] }
+        set { NSView.backgroundColorKey[self] = newValue }
+    }*/
+    
+    @nonobjc public var cornerRadius: CGFloat {
+        get { return NSView.cornerRadiusKey[self, default: 0.0] }
+        set { NSView.cornerRadiusKey[self] = newValue }
+    }
+    
+    @nonobjc public var clipsToBounds: Bool {
+        get { return NSView.clipsToBoundsKey[self, default: false] }
+        set { NSView.clipsToBoundsKey[self] = newValue }
+    }
+    
+    @nonobjc public var ignoreHitTest: Bool {
+        get { return NSView.ignoreHitTestKey[self, default: false] }
+        set { NSView.ignoreHitTestKey[self] = newValue }
+    }
+    
+    @nonobjc public var updateLayerHandler: Block {
+        get { return NSView.updateLayerHandlerKey[self, default: {}] }
+        set { NSView.updateLayerHandlerKey[self] = newValue }
+    }
+    
+    @nonobjc func set(flipped newValue: Bool) {
+        NSView.flippedKey[self] = newValue
+    }
+    
+    @nonobjc func set(opaque newValue: Bool) {
+        NSView.opaqueKey[self] = newValue
+    }
+    
+    @nonobjc func set(allowsVibrancy newValue: Bool) {
+        NSView.allowsVibrancyKey[self] = newValue
+    }
+    
+    private static var flippedKey = KeyValueProperty<NSView, Bool>("flipped")
+    private static var opaqueKey = KeyValueProperty<NSView, Bool>("opaque")
+    private static var backgroundColorKey = KeyValueProperty<NSView, NSColor>("backgroundColor")
+    private static var cornerRadiusKey = KeyValueProperty<NSView, CGFloat>("cornerRadius")
+    private static var clipsToBoundsKey = KeyValueProperty<NSView, Bool>("clipsToBounds")
+    private static var ignoreHitTestKey = KeyValueProperty<NSView, Bool>("ignoreHitTest")
+    private static var allowsVibrancyKey = KeyValueProperty<NSView, Bool>("allowsVibrancy")
+    private static var updateLayerHandlerKey = KeyValueProperty<NSView, Block>("updateLayerHandler")
+}
+
 public extension NSView {
 	
 	/// Snapshots the view as it exists and return an NSImage of it.
@@ -246,7 +297,7 @@ public extension NSCollectionView {
     
     /// Determines the selection capabilities of the ListView.
     public var selectionType: SelectionType {
-        get { return NSCollectionView.selectionTypeProp[self] ?? .none }
+        get { return NSCollectionView.selectionTypeProp[self, default: .none] }
         set(s) { NSCollectionView.selectionTypeProp[self] = s
             
             self.allowsMultipleSelection = (s == .leastOne || s == .any)
