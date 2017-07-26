@@ -17,13 +17,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         c.backgroundColors = [.clear]
         c.selectionType = .any
         
-        let l = NSCollectionViewListLayout()
-        l.globalSections = (32, 0)
-        l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 48)))
+        let l = NSCollectionViewFlowLayout()//NSCollectionViewListLayout()
+        //l.globalSections = (32, 0)
+        //l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 48)))
+        l.minimumInteritemSpacing = 0.0
+        l.minimumLineSpacing = 0.0
         c.collectionViewLayout = l
         c.register(PersonCell.self,
                    forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"))
-        c.register(SearchCell.self, forSupplementaryViewOfKind: .globalHeader,
+        c.register(SearchCell.self, forSupplementaryViewOfKind: .sectionHeader,
                    withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"))
         return c
     }()
@@ -184,6 +186,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         ParrotAppearance.unregisterListener(observer: self)
     }
     
+    public override func viewWillLayout() {
+        super.viewWillLayout()
+        let ctx = NSCollectionViewFlowLayoutInvalidationContext()
+        ctx.invalidateFlowLayoutDelegateMetrics = true
+        self.collectionView.collectionViewLayout?.invalidateLayout(with: ctx)
+    }
+    
     ///
     ///
     ///
@@ -204,11 +213,23 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
-        let header = collectionView.makeSupplementaryView(ofKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
+        let header = collectionView.makeSupplementaryView(ofKind: .sectionHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
         header.handler = {
             self.searchQuery = $0
         }
         return header
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
+        return NSSize(width: collectionView.bounds.width, height: 48.0)
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> NSSize {
+        return NSSize(width: collectionView.bounds.width, height: 32.0)
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForFooterInSection section: Int) -> NSSize {
+        return .zero
     }
     
     public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
