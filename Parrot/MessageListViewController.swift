@@ -135,7 +135,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         c.dataSource = self
         c.delegate = self
         c.backgroundColors = [.clear]
-        c.selectionType = .none
+        c.selectionType = .one
+        
+        c.registerForDraggedTypes([.png, .string, .filePromise])
+        c.setDraggingSourceOperationMask([.copy], forLocal: true)
+        c.setDraggingSourceOperationMask([.copy], forLocal: false)
         
         let l = NSCollectionViewFlowLayout()//NSCollectionViewListLayout()
         //l.globalSections = (32, 0)
@@ -404,6 +408,21 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return .zero
     }
     
+    public func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
+        return true
+    }
+    
+    public func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
+        switch self.dataSource[indexPath.item].content {
+        case .image(let data, _):
+            return NSImage(data: data)
+        case .text(let text):
+            return text as NSString
+        default:
+            return nil
+        }
+    }
+    
     //
     // MARK: Misc. Methods
     //
@@ -471,7 +490,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                         let t = (0..<self.dataSource.count).map {
                             IndexPath(item: $0, section: 0)
                         }
-                        self.collectionView.insertItems(at: Set(t))
+                        self.collectionView.animator().insertItems(at: Set(t))
                     }, completionHandler: { b in
                         group.animate(duration: 0.5)
                         self.collectionView.animator().scrollToItems(at: [self.collectionView.indexPathForLastItem()],
@@ -492,7 +511,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             
             self.dataSource.insert(event)
             self.collectionView.performBatchUpdates({
-                self.collectionView.insertItems(at: [IndexPath(item: self.dataSource.count - 1, section: 0)])
+                self.collectionView.animator().insertItems(at: [IndexPath(item: self.dataSource.count - 1, section: 0)])
             }, completionHandler: { b in
                 guard shouldScroll else { return }
                 self.collectionView.animator().scrollToItems(at: [self.collectionView.indexPathForLastItem()],
@@ -636,7 +655,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 let idxs = (0..<(self.dataSource.count - count)).map {
                     IndexPath(item: $0, section: 0)
                 }
-                self.collectionView.insertItems(at: Set(idxs))
+                self.collectionView.animator().insertItems(at: Set(idxs))
                 self.updateToken = false
             }
         }
