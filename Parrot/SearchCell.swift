@@ -3,9 +3,34 @@ import MochaUI
 
 public class SearchCell: NSView {
     
+    private lazy var recentsMenu: NSMenu = {
+        let recentsMenu = NSMenu(title: "Recents")
+        
+        let sort = recentsMenu.addItem(withTitle: "Sort", action: nil, keyEquivalent: "")
+        sort.tag = 104402048273 // ??? why even
+        recentsMenu.addItem(NSMenuItem.separator())
+        
+        let title = recentsMenu.addItem(withTitle: "Recent Searches", action: nil, keyEquivalent: "")
+        title.tag = NSSearchField.recentsTitleMenuItemTag
+        
+        let recents = recentsMenu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+        recents.tag = NSSearchField.recentsMenuItemTag
+        
+        recentsMenu.addItem(NSMenuItem.separator())
+        
+        let none = recentsMenu.addItem(withTitle: "No Recents", action: nil, keyEquivalent: "")
+        none.tag = NSSearchField.noRecentsMenuItemTag
+        
+        let clear = recentsMenu.addItem(withTitle: "Clear Recents", action: nil, keyEquivalent: "")
+        clear.tag = NSSearchField.clearRecentsMenuItemTag
+        
+        return recentsMenu
+    }()
+    
     private lazy var searchField: NSSearchField = {
         let s = NSSearchField().modernize(wantsLayer: true)
         s.disableToolbarLook()
+        s.searchMenuTemplate = self.recentsMenu
         s.performedAction = {
             self.handler(s.stringValue)
         }

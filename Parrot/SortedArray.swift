@@ -59,6 +59,11 @@ public struct SortedArray<Element> {
         _elements.append(contentsOf: newElements)
         _elements.sort(by: areInIncreasingOrder)
     }
+    
+    /// Re-sorts the array, preserving the sort order.
+    public mutating func resort() {
+        _elements.sort(by: areInIncreasingOrder)
+    }
 }
 
 extension SortedArray where Element: Comparable {

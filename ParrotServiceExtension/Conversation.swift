@@ -31,6 +31,7 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
     
     var archived: Bool { get set }
     
+    // TODO: not here? instead, check conv.messages.last?.timestamp
     var timestamp: Date { get }
     
 	/// Create a Conversation from the identifier given on the Service given.

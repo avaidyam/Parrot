@@ -8,6 +8,17 @@ import ParrotServiceExtension
 /* TODO: Show DND icon in Cell when conversation is muted. */
 /* TODO: Support not sending Read Receipts. */
 
+// Plan for this class:
+//
+// - ModelController <--> Controller <--> ViewController
+// - Yeah, that's *three* controller classes.
+// - The ViewInteracting/ModelInteracting protocols describe interactions between them.
+// - Alternatively, better `Bindable` or `Observable` support would help.
+// - `Controller` would then be a wrapper for all the bindings and house both `Model/ViewController`s
+// - `Controller` probably needs a better name...
+// - `ModelController` will handle dataSource-side events and all.
+// - Use something like NSViewControllerEmptyPresenting or NSViewControllerLoadingPresenting?
+
 //private let log = Logger(subsystem: "Parrot.ConversationListViewController")
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
@@ -30,6 +41,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         //l.disappearEffect = [.effectFade, .slideDown]
         l.minimumInteritemSpacing = 0.0
         l.minimumLineSpacing = 0.0
+        l.sectionInset = NSEdgeInsetsZero
         c.collectionViewLayout = l
         c.register(ConversationCell.self,
                    forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"))
@@ -312,7 +324,20 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     /* TODO: Just update the row that is updated. */
     @objc public func conversationDidReceiveEvent(_ notification: Notification) {
-        self.updateList()
+        let conv = notification.object as? Conversation
+        let obj = self.dataSource.filter { conv!.identifier == $0.identifier }.first
+        print(conv?.timestamp, obj?.timestamp)
+        
+        
+        UI { SystemBezel.create(text: "Update!", image: NSImage(named: .addTemplate)).show(autohide: .seconds(2)) }
+        
+        let oldVal = self.dataSource.map { $0.identifier }
+        self.dataSource.resort()
+        //self.dataSource.insert(contentsOf: newContent.filter { !$0.archived })
+        let updates = Changeset.edits(from: oldVal, to: self.dataSource.map { $0.identifier })
+        UI { self.collectionView.update(with: updates, in: 0) {_ in} }
+        
+        //self.updateList()
     }
     @objc public func conversationDidUpdate(_ notification: Notification) {
         self.updateList()
@@ -333,6 +358,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     private func updateList() {
+        /*
+        let oldVal = self.dataSource.map { $0.identifier }
+        let updates = Changeset.edits(from: oldVal, to: self.dataSource.map { $0.identifier })
+        UI { self.collectionView.update(with: updates, in: 0) {_ in} }
+        */
         UI {
             self.collectionView.reloadData()
             self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
@@ -369,4 +399,3 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         MessageListViewController.show(conversation: c, parent: self.parent)
     }
 }
-

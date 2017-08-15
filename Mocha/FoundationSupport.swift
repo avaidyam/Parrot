@@ -110,6 +110,12 @@ public extension URLSession {
     }
 }
 
+extension URL: ExpressibleByStringLiteral {
+    public init(stringLiteral value: StaticString) {
+        self = URL(string: "\(value)")!
+    }
+}
+
 /// from @jack205: https://gist.github.com/jacks205/4a77fb1703632eb9ae79
 public extension Date {
     public func relativeString(numeric: Bool = false, seconds: Bool = false) -> String {
