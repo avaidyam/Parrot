@@ -11,20 +11,12 @@ public class ConversationCell: NSCollectionViewItem {
     private static var wallclock = Wallclock()
     private var id = UUID() // for Wallclock
     
-    private lazy var photoLayer: CALayer = {
-        let l = CALayer()
-        l.shadowRadius = 4
-        l.shadowOpacity = 0.25
-        l.shadowColor = .ns(.black)
-        l.shadowOffset = CGSize(width: 0, height: 0)
-        
-        let s = CALayer()
-        s.masksToBounds = true
-        s.cornerRadius = 8.0
-        s.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
-        
-        l.addSublayer(s)
-        return l
+    private lazy var photoView: NSImageView = {
+        let v = NSImageView().modernize(wantsLayer: true)
+        v.allowsCutCopyPaste = false
+        v.isEditable = false
+        v.animates = true
+        return v
     }()
     
     private lazy var badgeLayer: CALayer = {
@@ -70,16 +62,15 @@ public class ConversationCell: NSCollectionViewItem {
     public override func loadView() {
         self.view = NSVibrantView()
         self.view.wantsLayer = true
-        self.view.add(subviews: [self.nameLabel, self.timeLabel, self.textLabel])
-        self.view.add(sublayer: self.photoLayer)
+        self.view.add(subviews: [self.photoView, self.nameLabel, self.timeLabel, self.textLabel])
         //self.view.add(sublayer: self.badgeLayer) // will not participate in autolayout
         
-        self.photoLayer.layout.left == self.view.left + 8
-        self.photoLayer.layout.centerY == self.view.centerY
-        self.photoLayer.layout.width == 48
-        self.photoLayer.layout.height == 48
-        self.photoLayer.layout.right == self.nameLabel.left - 8
-        self.photoLayer.layout.right == self.textLabel.left - 8
+        self.photoView.left == self.view.left + 8
+        self.photoView.centerY == self.view.centerY
+        self.photoView.width == 48
+        self.photoView.height == 48
+        self.photoView.right == self.nameLabel.left - 8
+        self.photoView.right == self.textLabel.left - 8
         self.nameLabel.top == self.view.top + 8
         self.nameLabel.right == self.timeLabel.left - 4
         self.nameLabel.bottom == self.textLabel.top - 4
@@ -99,7 +90,7 @@ public class ConversationCell: NSCollectionViewItem {
 			let messageSender = conversation.messages.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
 			if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
-                self.photoLayer.sublayers?[0].contents = firstParticipant.image
+                self.photoView.image = firstParticipant.image
 			}
 			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
 			let subtitle = (conversation.messages.last?.text ?? "")
@@ -189,11 +180,11 @@ public class ConversationCell: NSCollectionViewItem {
 	
 	// Allows the photo view's circle crop to dynamically match size.
 	public override func viewDidLayout() {
-        let p = self.photoLayer, b = self.badgeLayer
-        p.syncLayout()
-        b.frame = NSRect(x: p.frame.minX, y: p.frame.midY, width: p.frame.width / 2, height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
-        self.photoLayer.sublayers?[0].cornerRadius = p.frame.width / 2.0
-        b.cornerRadius = b.frame.width / 2.0
+        let p = self.photoView//, b = self.badgeLayer
+        //p.syncLayout()
+        //b.frame = NSRect(x: p.frame.minX, y: p.frame.midY, width: p.frame.width / 2, height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
+        p.layer!.cornerRadius = p.frame.width / 2.0
+        //b.cornerRadius = b.frame.width / 2.0
 	}
     
     public override func viewDidAppear() {

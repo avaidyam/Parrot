@@ -3,11 +3,13 @@ import MochaUI
 
 public class SearchCell: NSView {
     
+    private static let sortTag = 104402048273 // ??? why even
+    
     private lazy var recentsMenu: NSMenu = {
         let recentsMenu = NSMenu(title: "Recents")
         
         let sort = recentsMenu.addItem(withTitle: "Sort", action: nil, keyEquivalent: "")
-        sort.tag = 104402048273 // ??? why even
+        sort.tag = SearchCell.sortTag
         recentsMenu.addItem(NSMenuItem.separator())
         
         let title = recentsMenu.addItem(withTitle: "Recent Searches", action: nil, keyEquivalent: "")
@@ -31,8 +33,8 @@ public class SearchCell: NSView {
         let s = NSSearchField().modernize(wantsLayer: true)
         s.disableToolbarLook()
         s.searchMenuTemplate = self.recentsMenu
-        s.performedAction = {
-            self.handler(s.stringValue)
+        s.performedAction = { [weak self] in
+            self?.handler(s.stringValue)
         }
         return s
     }()

@@ -31,9 +31,6 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
     
     var archived: Bool { get set }
     
-    // TODO: not here? instead, check conv.messages.last?.timestamp
-    var timestamp: Date { get }
-    
 	/// Create a Conversation from the identifier given on the Service given.
     //init?(withIdentifier: String, on: Service)
 		
@@ -46,6 +43,14 @@ public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
     func focus(mode: FocusMode)
     
     func send(message: Message) throws // MessageError
+}
+
+public extension Conversation {
+    
+    /// The timestamp used when sorting a list of recent conversations.
+    public var sortTimestamp: Date {
+        return self.messages.last?.timestamp ?? Date()
+    }
 }
 
 public enum FocusMode {

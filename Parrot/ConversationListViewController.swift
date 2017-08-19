@@ -140,7 +140,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     private var dataSource = SortedArray<Conversation>() { a, b in
-        return a.timestamp > b.timestamp
+        return a.sortTimestamp > b.sortTimestamp
     }
     
     //
@@ -268,12 +268,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     ///
     
     public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.dataSource.count
+        return self.currentDataSource().count
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"), for: indexPath)
-        item.representedObject = self.dataSource[indexPath.item]
+        item.representedObject = self.currentDataSource()[indexPath.item]
         return item
     }
     
@@ -281,9 +281,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         switch kind {
         case .sectionHeader:
             let header = collectionView.makeSupplementaryView(ofKind: .sectionHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
-            header.handler = {
-                print("got string \(String(describing: $0))")
-            }
+            header.handler = self.searchTerm(_:)
             return header
         case .sectionFooter:
             let footer = collectionView.makeSupplementaryView(ofKind: .sectionFooter, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"), for: indexPath) as! ReloadCell
@@ -322,29 +320,58 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     //
     
-    /* TODO: Just update the row that is updated. */
+    // Re-sort the conversation list based on the latest sort timestamps and update the list.
     @objc public func conversationDidReceiveEvent(_ notification: Notification) {
-        let conv = notification.object as? Conversation
-        let obj = self.dataSource.filter { conv!.identifier == $0.identifier }.first
-        print(conv?.timestamp, obj?.timestamp)
-        
-        
-        UI { SystemBezel.create(text: "Update!", image: NSImage(named: .addTemplate)).show(autohide: .seconds(2)) }
-        
-        let oldVal = self.dataSource.map { $0.identifier }
+        let oldVal = self.currentDataSource().map { $0.identifier }
         self.dataSource.resort()
-        //self.dataSource.insert(contentsOf: newContent.filter { !$0.archived })
-        let updates = Changeset.edits(from: oldVal, to: self.dataSource.map { $0.identifier })
+        let updates = Changeset.edits(from: oldVal, to: self.currentDataSource().map { $0.identifier })
         UI { self.collectionView.update(with: updates, in: 0) {_ in} }
-        
-        //self.updateList()
     }
+    
+    /* TODO: Just update the row that is updated. */
     @objc public func conversationDidUpdate(_ notification: Notification) {
-        self.updateList()
+        self.conversationDidUpdateList(notification)
     }
     @objc public func conversationDidUpdateList(_ notification: Notification) {
-        self.updateList()
+        /*
+         let oldVal = self.dataSource.map { $0.identifier }
+         let updates = Changeset.edits(from: oldVal, to: self.dataSource.map { $0.identifier })
+         UI { self.collectionView.update(with: updates, in: 0) {_ in} }
+         */
+        UI {
+            self.collectionView.reloadData()
+            self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
+                                                         scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
+            let unread = self.dataSource.map { $0.unreadCount }.reduce(0, +)
+            NSApp.badgeCount = UInt(unread)
+            self.updateSelectionIndexes()
+        }
     }
+    
+    //
+    //
+    //
+    
+    // filters stuff too!
+    private func currentDataSource() -> SortedArray<Conversation> {
+        if let st = self.searchTerm {
+            return self.dataSource.filter { $0.name.lowercased().contains(st.lowercased()) }
+        } else {
+            return self.dataSource
+        }
+    }
+    private var searchTerm: String? = nil
+    private func searchTerm(_ str: String) {
+        let oldVal = self.currentDataSource().map { $0.identifier }
+        self.searchTerm = str == "" ? nil : str
+        let updates = Changeset.edits(from: oldVal, to: self.currentDataSource().map { $0.identifier })
+        UI { self.collectionView.update(with: updates, in: 0) {_ in} }
+        
+    }
+    
+    //
+    //
+    //
     
     private func scrollback() {
         guard self.updateToken == false else { return }
@@ -357,26 +384,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.updateToken = true
     }
     
-    private func updateList() {
-        /*
-        let oldVal = self.dataSource.map { $0.identifier }
-        let updates = Changeset.edits(from: oldVal, to: self.dataSource.map { $0.identifier })
-        UI { self.collectionView.update(with: updates, in: 0) {_ in} }
-        */
-        UI {
-            self.collectionView.reloadData()
-            self.collectionView.animator().scrollToItems(at: [IndexPath(item: 0, section: 0)],
-                                                         scrollPosition: [.centeredHorizontally, .nearestVerticalEdge])
-            let unread = self.dataSource.map { $0.unreadCount }.reduce(0, +)
-            NSApp.badgeCount = UInt(unread)
-            self.updateSelectionIndexes()
-        }
-    }
-    
     private func updateDataSource(_ newContent: [Conversation], _ handler: @escaping () -> () = {}) {
-        let oldVal = self.dataSource.map { $0.identifier }
+        let oldVal = self.currentDataSource().map { $0.identifier }
         self.dataSource.insert(contentsOf: newContent.filter { !$0.archived })
-        let updates = Changeset.edits(from: oldVal, to: self.dataSource.map { $0.identifier })
+        let updates = Changeset.edits(from: oldVal, to: self.currentDataSource().map { $0.identifier })
         UI { self.collectionView.update(with: updates, in: 0) { _ in handler() } }
     }
     

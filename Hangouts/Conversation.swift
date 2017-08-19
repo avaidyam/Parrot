@@ -285,6 +285,12 @@ public class IConversation: ParrotServiceExtension.Conversation {
     }
     
     public func handleEvent(event: IEvent) {
+        if let advance = event.event.advances_sort_timestamp,
+            let ts = event.event.timestamp, advance {
+            log.debug("Advancing timestamp to \(ts) from \(self.timestamp.toUTC())")
+            self.timestamp = Date(UTC: ts)
+        }
+        
         NotificationCenter.default.post(name: Notification.Conversation.DidReceiveEvent, object: self, userInfo: ["event": event])
         /*if let delegate = delegate {
          delegate.conversation(self, didReceiveEvent: event)
