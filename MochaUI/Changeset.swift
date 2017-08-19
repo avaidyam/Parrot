@@ -234,7 +234,7 @@ extension NSCollectionView {
         guard !edits.isEmpty else { return }
         let indexPaths = batchIndexPaths(from: edits, in: section)
         
-        self.performBatchUpdates({
+        self.animator().performBatchUpdates({
             if !indexPaths.deletions.isEmpty { self.deleteItems(at: Set(indexPaths.deletions)) }
             if !indexPaths.insertions.isEmpty { self.insertItems(at: Set(indexPaths.insertions)) }
             if !indexPaths.updates.isEmpty { self.reloadItems(at: Set(indexPaths.updates)) }
