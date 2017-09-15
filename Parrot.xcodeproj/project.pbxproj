@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4803639D1C1D08490008E9F5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4803639C1C1D08490008E9F5 /* main.swift */; };
 		4807F4FB1EF1E58F00C32132 /* ReloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4FA1EF1E58F00C32132 /* ReloadCell.swift */; };
+		4812A7B01F51F76500B0B738 /* AppSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4812A7AF1F51F76500B0B738 /* AppSupport.swift */; };
 		4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300391D25B54300768D79 /* ServiceRegistry.swift */; };
 		4813004B1D26BD4900768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		4813004C1D26BD4900768D79 /* ParrotServiceExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -321,6 +322,7 @@
 		4803639A1C1D08490008E9F5 /* parrot-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "parrot-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4803639C1C1D08490008E9F5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4807F4FA1EF1E58F00C32132 /* ReloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadCell.swift; sourceTree = "<group>"; };
+		4812A7AF1F51F76500B0B738 /* AppSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSupport.swift; sourceTree = "<group>"; };
 		481300341D257FE300768D79 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		481300391D25B54300768D79 /* ServiceRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServiceRegistry.swift; path = ParrotServiceExtension/ServiceRegistry.swift; sourceTree = SOURCE_ROOT; };
 		481300441D26BD4900768D79 /* ParrotServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ParrotServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -938,6 +940,7 @@
 				481300341D257FE300768D79 /* Logger.swift */,
 				4835ECB61C1C672900193EBC /* Emoji.swift */,
 				48574F121D11F9FC002375E1 /* AppManagement.swift */,
+				4812A7AF1F51F76500B0B738 /* AppSupport.swift */,
 				48BFAECF1D1CF19100ADBA3A /* AppActivity.swift */,
 				48D4C9FD1DBD5F2F001CF7AD /* Subscription.swift */,
 				4848A5BE1EFF1BED008B2DE2 /* Binding.swift */,
@@ -1628,6 +1631,7 @@
 				48ED2BE01F0BD4B9001A547F /* SwiftSupport.swift in Sources */,
 				48D3CD1C1DE94BBD003D6C02 /* Emoji.swift in Sources */,
 				4894216A1EC11BCE0047FDBB /* DispatchSupport.swift in Sources */,
+				4812A7B01F51F76500B0B738 /* AppSupport.swift in Sources */,
 				4848A5BF1EFF1BED008B2DE2 /* Binding.swift in Sources */,
 				48D3CD1F1DE94BEC003D6C02 /* Subscription.swift in Sources */,
 				481D933E1DF5D7D100EB23A1 /* Wallclock.swift in Sources */,

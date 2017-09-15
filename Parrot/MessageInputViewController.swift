@@ -8,7 +8,7 @@ public protocol TextInputHost {
     func resized(to: Double)
     func typing()
     func send(message: String)
-    func send(images: [URL])
+    func send(image: Data, filename: String)
     func sendLocation()
 }
 
@@ -23,11 +23,46 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     
     private lazy var photoMenu: NSMenu = {
         let menu = NSMenu()
-        menu.addItem(title: "Send Photo") {
+        menu.addItem(title: "Send Image") {
             runSelectionPanel(for: self.view.window!, fileTypes: [kUTTypeImage as String], multiple: true) { urls in
-                self.host?.send(images: urls)
+                for url in urls {
+                    self.host?.send(image: try! Data(contentsOf: url), filename: url.lastPathComponent)
+                }
             }
         }
+        menu.addItem(title: "Send Screenshot") {
+            let v = self.view.superview!
+            DispatchQueue.global(qos: .userInteractive).async {
+                do {
+                    let img = try screenshot(interactive: true)
+                    let marked = try markup(for: img, in: v)
+                    guard let dat = marked.data(for: .png) else { throw CocoaError(.userCancelled) }
+                    self.host?.send(image: dat, filename: "Screenshot.png")
+                } catch {
+                    log.debug("Something happened while taking a screenshot or marking it up!")
+                }
+            }
+        }
+        menu.addItem(title: "Send Drawing") {
+            let v = self.view.superview!
+            DispatchQueue.global(qos: .userInteractive).async {
+                do {
+                    let img = NSImage(size: NSSize(width: 1024, height: 1024), flipped: false) { rect in
+                        NSColor.white.drawSwatch(in: rect); return true
+                    }
+                    
+                    let marked = try markup(for: img, in: v)
+                    guard let dat = marked.data(for: .png) else { throw CocoaError(.userCancelled) }
+                    self.host?.send(image: dat, filename: "Screenshot.png")
+                } catch {
+                    log.debug("Something happened while taking a screenshot or marking it up!")
+                }
+            }
+        }
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(withTitle: "Send Audio", action: nil, keyEquivalent: "")
+        menu.addItem(withTitle: "Send Video", action: nil, keyEquivalent: "")
+        menu.addItem(withTitle: "Send File", action: nil, keyEquivalent: "")
         /*menu.addItem(title: "Send Audio") {
             log.debug("Cannot send audio yet.")
         }

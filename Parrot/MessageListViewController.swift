@@ -676,17 +676,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         try! self.conversation!.send(message: PlaceholderMessage(content: .text(text)))
     }
     
-    public func send(images: [URL]) {
-        for url in images {
-            let img = try! Data(contentsOf: url)
-            let fname = url.lastPathComponent
-            do {
-                try self.conversation?.send(message: PlaceholderMessage(content: .image(img, fname)))
-            } catch {
-                log.debug("sending an image was not supported; sending text after provider upload instead")
-                // upload the image on a different provider
-                // send a link to it here
-            }
+    public func send(image: Data, filename: String) {
+        do {
+            try self.conversation?.send(message: PlaceholderMessage(content: .image(image, filename)))
+        } catch {
+            log.debug("sending an image was not supported; sending text after provider upload instead")
+            // upload the image on a different provider
+            // send a link to it here
         }
     }
     

@@ -226,9 +226,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             PopWindowAnimator.show(self.view.window!)
         }
         
-        let frame = self.scrollView.layer!.frame
-        self.scrollView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        self.scrollView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
+        //let frame = self.scrollView.layer!.frame
+        //self.scrollView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        //self.scrollView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
         self.scrollView.alphaValue = 0.0
         self.indicator.startAnimation()
         

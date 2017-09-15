@@ -250,6 +250,18 @@ public extension NSHapticFeedbackManager {
     }
 }
 
+public extension NSImage {
+    
+    /// Produce Data from this NSImage with the contained FileType image information.
+    public func data(for type: NSBitmapImageRep.FileType) -> Data? {
+        guard   let tiff = self.tiffRepresentation,
+                let rep = NSBitmapImageRep(data: tiff),
+                let dat = rep.representation(using: type, properties: [:])
+        else { return nil }
+        return dat
+    }
+}
+
 public func runSelectionPanel(for window: NSWindow, fileTypes: [String],
                               multiple: Bool = false, _ handler: @escaping ([URL]) -> () = {_ in}) {
 	let p = NSOpenPanel()
@@ -394,3 +406,80 @@ public func UI<T>(_ handler: @escaping () throws -> (T)) rethrows -> T {
         return try DispatchQueue.main.sync(execute: handler)
     }
 }
+
+// Take a screenshot using the system function and provide it as an image.
+public func screenshot(interactive: Bool = false) throws -> NSImage {
+    let task = Process()
+    task.launchPath = "/usr/sbin/screencapture"
+    task.arguments = [interactive ? "-ci" : "-cm"]
+    task.launch()
+    
+    var img: NSImage? = nil
+    let s = DispatchSemaphore(value: 0)
+    task.terminationHandler = { _ in
+        guard let pb = NSPasteboard.general.pasteboardItems?.first, pb.types.contains(.png) else {
+            s.signal(); return
+        }
+        guard let data = pb.data(forType: .png), let image = NSImage(data: data) else {
+            s.signal(); return
+        }
+        img = image
+        NSPasteboard.general.clearContents()
+        s.signal()
+    }
+    s.wait()
+    
+    guard img != nil else { throw CocoaError(.fileNoSuchFile) }
+    return img!
+}
+
+// Trigger the Preview MarkupUI for the given image.
+public func markup(for image: NSImage, in view: NSView) throws -> NSImage {
+    class MarkupDelegate: NSObject, NSSharingServiceDelegate {
+        private let view: NSView
+        private let handler: (NSImage?) -> ()
+        init(view: NSView, handler: @escaping (NSImage?) -> ()) {
+            self.view = view
+            self.handler = handler
+        }
+        
+        func sharingService(_ sharingService: NSSharingService, sourceFrameOnScreenForShareItem item: Any) -> NSRect {
+            return self.view.window!.frame.insetBy(dx: 0, dy: 16).offsetBy(dx: 0, dy: -16)
+        }
+        
+        func sharingService(_ sharingService: NSSharingService, sourceWindowForShareItems items: [Any], sharingContentScope: UnsafeMutablePointer<NSSharingService.SharingContentScope>) -> NSWindow? {
+            return self.view.window!
+        }
+        
+        func sharingService(_ sharingService: NSSharingService, didShareItems items: [Any]) {
+            let itp = items[0] as! NSItemProvider
+            itp.loadItem(forTypeIdentifier: "public.url", options: nil) { (url, _) in
+                self.handler(NSImage(contentsOf: url as! URL))
+            }
+        }
+    }
+    
+    var img: NSImage? = nil
+    let s = DispatchSemaphore(value: 0)
+    
+    // Allocate the MarkupUI service.
+    var service_ = NSSharingService(named: NSSharingService.Name(rawValue: "com.apple.MarkupUI.Markup"))
+    if service_ == nil {
+        service_ = NSSharingService(named: NSSharingService.Name(rawValue: "com.apple.Preview.Markup"))
+    }
+    guard let service = service_ else { throw CocoaError(.fileNoSuchFile) }
+    
+    // Perform the UI action.
+    let markup = MarkupDelegate(view: view) {
+        img = $0; s.signal()
+    }
+    service.delegate = markup
+    DispatchQueue.main.async {
+        service.perform(withItems: [image])
+    }
+    
+    s.wait()
+    guard img != nil else { throw CocoaError(.fileNoSuchFile) }
+    return img!
+}
+
