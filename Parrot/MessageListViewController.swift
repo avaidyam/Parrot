@@ -611,7 +611,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 		
 		// Mute or unmute the conversation.
 		let cv = self.conversation!
-        cv.muted = (button.state == NSControl.StateValue.onState ? true : false)
+        cv.muted = (button.state == .on)
 	}
 	
     // MARK: Window notifications

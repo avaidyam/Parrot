@@ -29,11 +29,6 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>ParrotLink.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>6</integer>
-		</dict>
 		<key>ParrotServiceExtension.xcscheme</key>
 		<dict>
 			<key>orderHint</key>

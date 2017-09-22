@@ -23,14 +23,16 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     
     private lazy var photoMenu: NSMenu = {
         let menu = NSMenu()
-        menu.addItem(title: "Send Image") {
+        menu.addItem(withTitle: "Send...", action: nil, keyEquivalent: "")
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(title: " Image") {
             runSelectionPanel(for: self.view.window!, fileTypes: [kUTTypeImage as String], multiple: true) { urls in
                 for url in urls {
                     self.host?.send(image: try! Data(contentsOf: url), filename: url.lastPathComponent)
                 }
             }
         }
-        menu.addItem(title: "Send Screenshot") {
+        menu.addItem(title: " Screenshot") {
             let v = self.view.superview!
             DispatchQueue.global(qos: .userInteractive).async {
                 do {
@@ -43,7 +45,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
                 }
             }
         }
-        menu.addItem(title: "Send Drawing") {
+        menu.addItem(title: " Drawing") {
             let v = self.view.superview!
             DispatchQueue.global(qos: .userInteractive).async {
                 do {
@@ -60,19 +62,19 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             }
         }
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(withTitle: "Send Audio", action: nil, keyEquivalent: "")
-        menu.addItem(withTitle: "Send Video", action: nil, keyEquivalent: "")
-        menu.addItem(withTitle: "Send File", action: nil, keyEquivalent: "")
-        /*menu.addItem(title: "Send Audio") {
+        menu.addItem(withTitle: " Audio", action: nil, keyEquivalent: "")
+        menu.addItem(withTitle: " Video", action: nil, keyEquivalent: "")
+        menu.addItem(withTitle: " File", action: nil, keyEquivalent: "")
+        /*menu.addItem(title: " Audio") {
             log.debug("Cannot send audio yet.")
         }
-        menu.addItem(title: "Send Video") {
+        menu.addItem(title: " Video") {
             log.debug("Cannot send video yet.")
         }
-        menu.addItem(title: "Send Document") {
+        menu.addItem(title: " Document") {
             log.debug("Cannot send documents yet.")
         }*/
-        menu.addItem(title: "Send Location") {
+        menu.addItem(title: " Location") {
             self.host?.sendLocation()
         }
         return menu
@@ -221,8 +223,8 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         storage.applyFontTraits([.unboldFontMask, .unitalicFontMask], range: base)
         
         for res in matches {
-            let range = res.rangeAt(2)
-            switch storage.attributedSubstring(from: res.rangeAt(1)).string {
+            let range = res.range(at: 2)
+            switch storage.attributedSubstring(from: res.range(at: 1)).string {
             case "*": // bold
                 storage.applyFontTraits(.boldFontMask, range: range)
             case "_": // italics

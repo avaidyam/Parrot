@@ -46,7 +46,7 @@ public extension String {
 			}
 		} else {
 			return results.map {
-				self.substring(with: NSRangeToRange(s: self, r: $0.rangeAt(1)))
+                self.substring(with: NSRangeToRange(s: self, r: $0.range(at: 1)))
 			}
 		}
 	}
@@ -58,7 +58,7 @@ public extension String {
         return results.map {
             var set = [String]()
             for i in 0..<$0.numberOfRanges {
-                let r = $0.rangeAt(i)
+                let r = $0.range(at: i)
                 set.append(r.location == NSNotFound ? "" : _s.substring(with: r) as String)
             }
             return set

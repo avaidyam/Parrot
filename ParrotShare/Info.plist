@@ -8,8 +8,8 @@
 	<string>Parrot</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-    <key>CFBundleIconFile</key>
-    <string>icon</string>
+	<key>CFBundleIconFile</key>
+	<string>icon</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -50,6 +50,8 @@
 		<string>com.apple.share-services</string>
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).ShareViewController</string>
+		<key>NSExtensionServiceRoleType</key>
+		<string>NSExtensionServiceRoleTypeEditor</string>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2015 Aditya Vaidyam. All rights reserved.</string>

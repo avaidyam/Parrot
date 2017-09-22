@@ -52,12 +52,13 @@ public class PBLiteEncoder {
     
     ///
     private class KeyedContainer<Key: CodingKey>: KeyedEncodingChildContainer {
+        
         let owner: PBLiteEncoder
-        var codingPath: [CodingKey?]
+        var codingPath: [CodingKey]
         var children: [Int: EncodingChildContainer] = [:]
         var content: [Int: Encodable] = [:]
         
-        init(owner: PBLiteEncoder, codingPath: [CodingKey?]) {
+        init(owner: PBLiteEncoder, codingPath: [CodingKey]) {
             self.owner = owner
             self.codingPath = codingPath
         }
@@ -82,6 +83,14 @@ public class PBLiteEncoder {
             let c = EncoderContainer(owner: self.owner, codingPath: self.codingPath + [key])
             try value.encode(to: c)
             self.content[key.value()] = (c.values() as! Encodable)
+        }
+        
+        func encodeNil(forKey key: Key) throws { // FIXME!!!
+            if let _ = self.content.index(forKey: key.value()), !self.owner.options.contains(.overwriteDuplicates) {
+                let desc = "Key \(key) already exists in the container."
+                throw EncodingError.invalidValue(Optional<Any>.none as Any, EncodingError.Context(codingPath: self.codingPath, debugDescription: desc))
+            }
+            self.content[key.value()] = Optional<Any>.none as Encodable
         }
         
         func values() -> Any {
@@ -152,11 +161,14 @@ public class PBLiteEncoder {
     ///
     private class UnkeyedContainer: UnkeyedEncodingChildContainer {
         let owner: PBLiteEncoder
-        var codingPath: [CodingKey?]
+        var codingPath: [CodingKey]
         var children: [EncodingChildContainer] = []
         var content: [Encodable] = []
+        var count: Int { // FIXME!!!
+            return self.content.count
+        }
         
-        init(owner: PBLiteEncoder, codingPath: [CodingKey?]) {
+        init(owner: PBLiteEncoder, codingPath: [CodingKey]) {
             self.owner = owner
             self.codingPath = codingPath
         }
@@ -170,9 +182,13 @@ public class PBLiteEncoder {
         }
         
         func encode<T: Encodable>(_ value: T) throws {
-            let c = EncoderContainer(owner: self.owner, codingPath: self.codingPath + [nil])
+            let c = EncoderContainer(owner: self.owner, codingPath: self.codingPath + [PBLiteKey(intValue: self.count)!])
             try value.encode(to: c)
             self.content.append((c.values() as! Encodable))
+        }
+        
+        func encodeNil() throws {
+            self.content.append(Optional<Any>.none)
         }
         
         func values() -> Any {
@@ -184,19 +200,19 @@ public class PBLiteEncoder {
         //
         
         func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> {
-            let container = KeyedContainer<NestedKey>(owner: self.owner, codingPath: self.codingPath + [nil])
+            let container = KeyedContainer<NestedKey>(owner: self.owner, codingPath: self.codingPath + [PBLiteKey(intValue: self.count)!])
             self.children.append(container)
             return KeyedEncodingContainer(container)
         }
         
         func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
-            let container = UnkeyedContainer(owner: self.owner, codingPath: self.codingPath + [nil])
+            let container = UnkeyedContainer(owner: self.owner, codingPath: self.codingPath + [PBLiteKey(intValue: self.count)!])
             self.children.append(container)
             return container
         }
         
         func superEncoder() -> Encoder {
-            let container = EncoderContainer(owner: self.owner, codingPath: self.codingPath + [nil])
+            let container = EncoderContainer(owner: self.owner, codingPath: self.codingPath + [PBLiteKey(intValue: self.count)!])
             self.children.append(container)
             return container
         }
@@ -221,6 +237,10 @@ public class PBLiteEncoder {
     
     ///
     private class SingleValueContainer: SingleValueEncodingChildContainer {
+        
+        // FIXME!!!
+        var codingPath: [CodingKey] = []
+        
         fileprivate var children: [EncodingChildContainer] {
             get { return [] } set { }
         }
@@ -257,7 +277,7 @@ public class PBLiteEncoder {
                 let desc = "Value already exists in the container."
                 throw EncodingError.invalidValue(value as Any, EncodingError.Context(codingPath: [], debugDescription: desc))
             }
-            let c = EncoderContainer(owner: self.owner, codingPath: [nil])
+            let c = EncoderContainer(owner: self.owner, codingPath: [PBLiteKey(intValue: 0)!])
             try value.encode(to: c)
             self.content = [c.values() as! Encodable]
         }
@@ -278,11 +298,11 @@ public class PBLiteEncoder {
     
     private class EncoderContainer: EncoderEncodingChildContainer {
         fileprivate let owner: PBLiteEncoder
-        public var codingPath: [CodingKey?]
+        public var codingPath: [CodingKey]
         public var userInfo: [CodingUserInfoKey : Any] = [:]
         internal var children: [EncodingChildContainer] = []
         
-        init(owner: PBLiteEncoder, codingPath: [CodingKey?]) {
+        init(owner: PBLiteEncoder, codingPath: [CodingKey]) {
             self.owner = owner
             self.codingPath = codingPath
         }

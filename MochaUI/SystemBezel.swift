@@ -81,7 +81,7 @@ public class SystemBezel {
         self.window.ignoresMouseEvents = true
         self.window.backgroundColor = NSColor.clear
         self.window.isOpaque = false
-        self.window.level = .screenSaverWindowLevel
+        self.window.level = .screenSaver
         self.window.collectionBehavior = [.canJoinAllSpaces, .ignoresCycle, .stationary,
                                           .fullScreenNone, .fullScreenDisallowsTiling]
         

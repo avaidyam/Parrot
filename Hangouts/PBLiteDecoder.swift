@@ -64,12 +64,13 @@ public class PBLiteDecoder {
     
     ///
     private class KeyedContainer<Key: CodingKey>: KeyedDecodingChildContainer {
-        var codingPath: [CodingKey?]
+        
+        var codingPath: [CodingKey]
         var children: [DecodingChildContainer] = []
         private let content: [Int: Any]
         
         let owner: PBLiteDecoder
-        init(owner: PBLiteDecoder, codingPath: [CodingKey?], content: [Any]) {
+        init(owner: PBLiteDecoder, codingPath: [CodingKey], content: [Any]) {
             self.owner = owner
             self.codingPath = codingPath
             self.content = KeyedContainer.transform(content)
@@ -79,9 +80,17 @@ public class PBLiteDecoder {
         // MARK: PBLiteDecoder -> KeyedContainer -> Decoding
         //
         
-        func decodeValue<T: Decodable>(forKey key: Key) throws -> T? {
+        func decodeNil(forKey key: Key) throws -> Bool {
+            if let outerValue = self.content[key.value()], (outerValue is NSNull) {
+                return true
+            }
+            return false
+        }
+        
+        func decodeValue<T: Decodable>(forKey key: Key) throws -> T {
             guard let outerValue = self.content[key.value()], !(outerValue is NSNull) else {
-                return nil
+                let desc = "Expected type \(T.self) but container stored nil."
+                throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             guard let value = outerValue as? T else {
                 let desc = "Expected type \(T.self) but container stored value \(outerValue)."
@@ -90,13 +99,14 @@ public class PBLiteDecoder {
             return value
         }
         
-        func decodeIfPresent<T: Decodable>(_ type: T.Type, forKey key: Key) throws -> T? {
+        func decode<T: Decodable>(_ type: T.Type, forKey key: Key) throws -> T {
             guard let outerValue = self.content[key.value()], !(outerValue is NSNull) else {
                 if "\(type)".starts(with: "Array<") {
                     return ([] as! T)
                     //print("\n\n", "GOT ARRAY FOR \(key) => \(type)", "\n\n")
                 }
-                return nil
+                let desc = "Expected type \(T.self) but container stored nil."
+                throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             return try T(from: DecoderContainer(owner: self.owner, codingPath: self.codingPath + [key], content: outerValue))
         }
@@ -195,12 +205,15 @@ public class PBLiteDecoder {
     /// TODO: Fix the NSNull stuff here
     private class UnkeyedContainer: UnkeyedDecodingChildContainer {
         private let content: [Any]
-        var codingPath: [CodingKey?]
+        var codingPath: [CodingKey]
         var count: Int? = nil
         var children: [DecodingChildContainer] = []
+        var currentIndex: Int {
+            return self.content.count - (self.count ?? 0)
+        }
         
         let owner: PBLiteDecoder
-        init(owner: PBLiteDecoder, codingPath: [CodingKey?], content: [Any]) {
+        init(owner: PBLiteDecoder, codingPath: [CodingKey], content: [Any]) {
             self.owner = owner
             self.codingPath = codingPath
             self.content = content
@@ -211,9 +224,14 @@ public class PBLiteDecoder {
         // MARK: PBLiteDecoder -> UnkeyedContainer -> Decoding
         //
         
-        func decodeValue<T: Decodable>() throws -> T? {
+        func decodeNil() throws -> Bool {
+            return (self.count ?? 0) == 0
+        }
+        
+        func decodeValue<T: Decodable>() throws -> T {
             guard let count = self.count, count > 0 else {
-                return nil
+                let desc = "Expected type \(T.self) but container had nothing left."
+                throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             let outerValue = self.content[self.content.count - count]
             guard let value = outerValue as? T else {
@@ -225,13 +243,14 @@ public class PBLiteDecoder {
             return value
         }
         
-        func decodeIfPresent<T: Decodable>(_ type: T.Type) throws -> T? {
+        func decode<T: Decodable>(_ type: T.Type) throws -> T {
             guard let count = self.count, count > 0 else {
-                return nil
+                let desc = "Expected type \(T.self) but container had nothing left."
+                throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             let outerValue = self.content[self.content.count - count]
             self.count = count - 1 // decrement
-            return try T(from: DecoderContainer(owner: self.owner, codingPath: self.codingPath + [nil], content: outerValue))
+            return try T(from: DecoderContainer(owner: self.owner, codingPath: self.codingPath + [PBLiteKey(intValue: self.count ?? 0)!], content: outerValue))
         }
         
         //
@@ -250,7 +269,7 @@ public class PBLiteDecoder {
                 throw DecodingError.typeMismatch(Array<Any>.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             
-            let container = KeyedContainer<NestedKey>(owner: self.owner, codingPath: self.codingPath + [nil], content: inside)
+            let container = KeyedContainer<NestedKey>(owner: self.owner, codingPath: self.codingPath + [PBLiteKey(intValue: self.count ?? 0)!], content: inside)
             self.children.append(container)
             self.count = count - 1 // decrement
             return KeyedDecodingContainer(container)
@@ -268,7 +287,7 @@ public class PBLiteDecoder {
                 throw DecodingError.typeMismatch(Array<Any>.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             
-            let container = UnkeyedContainer(owner: self.owner, codingPath: self.codingPath + [nil], content: inside)
+            let container = UnkeyedContainer(owner: self.owner, codingPath: self.codingPath + [PBLiteKey(intValue: self.count ?? 0)!], content: inside)
             self.children.append(container)
             self.count = count - 1 // decrement
             return container
@@ -280,7 +299,7 @@ public class PBLiteDecoder {
                 throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             let outerValue = self.content[self.content.count - count]
-            let container = DecoderContainer(owner: self.owner, codingPath: self.codingPath + [nil], content: outerValue)
+            let container = DecoderContainer(owner: self.owner, codingPath: self.codingPath + [PBLiteKey(intValue: self.count ?? 0)!], content: outerValue)
             self.children.append(container)
             self.count = count - 1 // decrement
             return container
@@ -301,10 +320,12 @@ public class PBLiteDecoder {
     
     ///
     private class SingleValueContainer: SingleValueDecodingChildContainer {
-        
         private let content: Any
         fileprivate var children: [DecodingChildContainer] {
             get { return [] } set { }
+        }
+        var codingPath: [CodingKey] {
+            return []
         }
         
         let owner: PBLiteDecoder
@@ -350,7 +371,7 @@ public class PBLiteDecoder {
                 print("\n\n", #line, #function, self.content, "\n\n")
                 throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: [], debugDescription: desc))
             }
-            return try T(from: DecoderContainer(owner: self.owner, codingPath: [nil], content: value))
+            return try T(from: DecoderContainer(owner: self.owner, codingPath: [PBLiteKey(intValue: 0)!], content: value))
         }
     }
     
@@ -359,13 +380,13 @@ public class PBLiteDecoder {
     //
     
     private class DecoderContainer: DecoderDecodingChildContainer {
-        public var codingPath: [CodingKey?]
+        public var codingPath: [CodingKey]
         public var userInfo: [CodingUserInfoKey : Any] = [:]
         fileprivate let owner: PBLiteDecoder
         internal var children: [DecodingChildContainer] = []
         fileprivate var content: Any = Optional<Any>.none as Any
         
-        fileprivate init(owner: PBLiteDecoder, codingPath: [CodingKey?], content: Any) {
+        fileprivate init(owner: PBLiteDecoder, codingPath: [CodingKey], content: Any) {
             self.owner = owner
             self.codingPath = codingPath
             self.content = content
@@ -423,6 +444,20 @@ public class PBLiteDecoder {
 // MARK: Helpers
 //
 
+internal struct PBLiteKey: CodingKey {
+    init?(intValue: Int) {
+        self.intValue = intValue
+    }
+    init?(stringValue: String) {
+        return nil
+    }
+    
+    var intValue: Int?
+    var stringValue: String {
+        return "\(self.intValue ?? 0)"
+    }
+}
+
 ///
 fileprivate extension CodingKey {
     func value() -> String {
@@ -439,128 +474,117 @@ fileprivate protocol DecodingChildContainer {}
 
 fileprivate protocol DecoderDecodingChildContainer: Decoder, DecodingChildContainer {}
 fileprivate protocol KeyedDecodingChildContainer: KeyedDecodingContainerProtocol, DecodingChildContainer {
-    func decodeValue<T: Decodable>(forKey: Key) throws -> T?
+    //func decodeNil(forKey key: Self.Key) throws -> Bool
+    func decodeValue<T: Decodable>(forKey: Key) throws -> T
 }
 fileprivate protocol UnkeyedDecodingChildContainer: UnkeyedDecodingContainer, DecodingChildContainer {
-    mutating func decodeValue<T: Decodable>() throws -> T?
+    //mutating func decodeNil() throws -> Bool
+    mutating func decodeValue<T: Decodable>() throws -> T
 }
 fileprivate protocol SingleValueDecodingChildContainer: SingleValueDecodingContainer, DecodingChildContainer {
-    func decodeNil() -> Bool
+    //func decodeNil() -> Bool
     func decodeValue<T: Decodable>() throws -> T
 }
 
 fileprivate extension KeyedDecodingChildContainer {
-    func decodeIfPresent(_ type: Bool.Type, forKey key: Key) throws -> Bool? {
+    func decode(_ type: Bool.Type, forKey key: Key) throws -> Bool {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: Int.Type, forKey key: Key) throws -> Int? {
+    func decode(_ type: Int.Type, forKey key: Key) throws -> Int {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: Int8.Type, forKey key: Key) throws -> Int8? {
+    func decode(_ type: Int8.Type, forKey key: Key) throws -> Int8 {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: Int16.Type, forKey key: Key) throws -> Int16? {
+    func decode(_ type: Int16.Type, forKey key: Key) throws -> Int16 {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: Int32.Type, forKey key: Key) throws -> Int32? {
+    func decode(_ type: Int32.Type, forKey key: Key) throws -> Int32 {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: Int64.Type, forKey key: Key) throws -> Int64? {
+    func decode(_ type: Int64.Type, forKey key: Key) throws -> Int64 {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: UInt.Type, forKey key: Key) throws -> UInt? {
+    func decode(_ type: UInt.Type, forKey key: Key) throws -> UInt {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: UInt8.Type, forKey key: Key) throws -> UInt8? {
+    func decode(_ type: UInt8.Type, forKey key: Key) throws -> UInt8 {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: UInt16.Type, forKey key: Key) throws -> UInt16? {
+    func decode(_ type: UInt16.Type, forKey key: Key) throws -> UInt16 {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: UInt32.Type, forKey key: Key) throws -> UInt32? {
+    func decode(_ type: UInt32.Type, forKey key: Key) throws -> UInt32 {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: UInt64.Type, forKey key: Key) throws -> UInt64? {
+    func decode(_ type: UInt64.Type, forKey key: Key) throws -> UInt64 {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: Float.Type, forKey key: Key) throws -> Float? {
+    func decode(_ type: Float.Type, forKey key: Key) throws -> Float {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: Double.Type, forKey key: Key) throws -> Double? {
+    func decode(_ type: Double.Type, forKey key: Key) throws -> Double {
         return try decodeValue(forKey: key)
     }
-    
-    func decodeIfPresent(_ type: String.Type, forKey key: Key) throws -> String? {
+    func decode(_ type: String.Type, forKey key: Key) throws -> String {
         return try decodeValue(forKey: key)
     }
 }
 
 fileprivate extension UnkeyedDecodingChildContainer {
-    mutating func decodeIfPresent(_ type: Bool.Type) throws -> Bool? {
+    mutating func decode(_ type: Bool.Type) throws -> Bool {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: Int.Type) throws -> Int? {
+    mutating func decode(_ type: Int.Type) throws -> Int {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: Int8.Type) throws -> Int8? {
+    mutating func decode(_ type: Int8.Type) throws -> Int8 {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: Int16.Type) throws -> Int16? {
+    mutating func decode(_ type: Int16.Type) throws -> Int16 {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: Int32.Type) throws -> Int32? {
+    mutating func decode(_ type: Int32.Type) throws -> Int32 {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: Int64.Type) throws -> Int64? {
+    mutating func decode(_ type: Int64.Type) throws -> Int64 {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: UInt.Type) throws -> UInt? {
+    mutating func decode(_ type: UInt.Type) throws -> UInt {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: UInt8.Type) throws -> UInt8? {
+    mutating func decode(_ type: UInt8.Type) throws -> UInt8 {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: UInt16.Type) throws -> UInt16? {
+    mutating func decode(_ type: UInt16.Type) throws -> UInt16 {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: UInt32.Type) throws -> UInt32? {
+    mutating func decode(_ type: UInt32.Type) throws -> UInt32 {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: UInt64.Type) throws -> UInt64? {
+    mutating func decode(_ type: UInt64.Type) throws -> UInt64 {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: Float.Type) throws -> Float? {
+    mutating func decode(_ type: Float.Type) throws -> Float {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: Double.Type) throws -> Double? {
+    mutating func decode(_ type: Double.Type) throws -> Double {
         return try decodeValue()
     }
     
-    mutating func decodeIfPresent(_ type: String.Type) throws -> String? {
+    mutating func decode(_ type: String.Type) throws -> String {
         return try decodeValue()
     }
 }

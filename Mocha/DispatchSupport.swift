@@ -33,6 +33,8 @@ public extension DispatchTimeInterval {
             return Double(UInt64(us) * NSEC_PER_USEC) / Double(NSEC_PER_SEC)
         case let .nanoseconds(ns):
             return Double(ns) / Double(NSEC_PER_SEC)
+        case .never:
+            return .greatestFiniteMagnitude
         }
     }
     

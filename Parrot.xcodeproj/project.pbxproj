@@ -131,8 +131,6 @@
 		48D7EE181F14587C005C7E16 /* ProtobufRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */; };
 		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
 		48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		48DE52E41C1CC1D300647C63 /* RequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52E31C1CC1D300647C63 /* RequestHandler.swift */; };
-		48DE52E81C1CC1D300647C63 /* ParrotLink.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48DE52F71C1CC28000647C63 /* ParrotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52F61C1CC28000647C63 /* ParrotViewController.swift */; };
 		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
 		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -178,6 +176,55 @@
 			remoteGlobalIDString = 481300431D26BD4900768D79;
 			remoteInfo = ParrotServiceExtension;
 		};
+		4825FB2D1F6CC39C00D8F118 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48D3CCE11DE94433003D6C02;
+			remoteInfo = Mocha;
+		};
+		4825FB2F1F6CC39E00D8F118 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 481300431D26BD4900768D79;
+			remoteInfo = ParrotServiceExtension;
+		};
+		4825FB311F6CC39F00D8F118 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48834DEB1C1B372D009BC442;
+			remoteInfo = Hangouts;
+		};
+		4825FB351F6CC3CC00D8F118 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48834DEB1C1B372D009BC442;
+			remoteInfo = Hangouts;
+		};
+		4825FB371F6CC3CE00D8F118 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48D3CCE11DE94433003D6C02;
+			remoteInfo = Mocha;
+		};
+		4825FB391F6CC3CF00D8F118 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48D3CCF41DE9446D003D6C02;
+			remoteInfo = MochaUI;
+		};
+		4825FB3B1F6CC3D100D8F118 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 481300431D26BD4900768D79;
+			remoteInfo = ParrotServiceExtension;
+		};
 		48834DFF1C1B372E009BC442 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
@@ -212,13 +259,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 48DE52C71C1CC12900647C63;
 			remoteInfo = ParrotShare;
-		};
-		48DE52E61C1CC1D300647C63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 48DE52DB1C1CC1D300647C63;
-			remoteInfo = ParrotLink;
 		};
 		48DE52FF1C1CC28000647C63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -303,7 +343,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */,
-				48DE52E81C1CC1D300647C63 /* ParrotLink.appex in Embed App Extensions */,
 				48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -441,11 +480,7 @@
 		48DE52CD1C1CC12900647C63 /* ParrotShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotShare.entitlements; sourceTree = "<group>"; };
 		48DE52CE1C1CC12900647C63 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		48DE52D01C1CC12900647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotLink.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52DE1C1CC1D300647C63 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		48DE52E21C1CC1D300647C63 /* ParrotLink.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotLink.entitlements; sourceTree = "<group>"; };
-		48DE52E31C1CC1D300647C63 /* RequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestHandler.swift; sourceTree = "<group>"; };
-		48DE52E51C1CC1D300647C63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DE52F01C1CC28000647C63 /* ParrotToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52F11C1CC28000647C63 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		48DE52F51C1CC28000647C63 /* ParrotToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotToday.entitlements; sourceTree = "<group>"; };
@@ -544,13 +579,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		48DE52C51C1CC12900647C63 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		48DE52D91C1CC1D300647C63 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -806,7 +834,6 @@
 				48834DEC1C1B372D009BC442 /* Hangouts.framework */,
 				48834E111C1B38B9009BC442 /* parrotd.xpc */,
 				48DE52C81C1CC12900647C63 /* ParrotShare.appex */,
-				48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */,
 				48DE52F01C1CC28000647C63 /* ParrotToday.appex */,
 				4803639A1C1D08490008E9F5 /* parrot-cli */,
 				481300441D26BD4900768D79 /* ParrotServiceExtension.framework */,
@@ -1013,24 +1040,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		48DE52E01C1CC1D300647C63 /* ParrotLink */ = {
-			isa = PBXGroup;
-			children = (
-				48DE52E31C1CC1D300647C63 /* RequestHandler.swift */,
-				48DE52E11C1CC1D300647C63 /* Supporting Files */,
-			);
-			path = ParrotLink;
-			sourceTree = "<group>";
-		};
-		48DE52E11C1CC1D300647C63 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				48DE52E51C1CC1D300647C63 /* Info.plist */,
-				48DE52E21C1CC1D300647C63 /* ParrotLink.entitlements */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		48DE52F31C1CC28000647C63 /* ParrotToday */ = {
 			isa = PBXGroup;
 			children = (
@@ -1055,7 +1064,6 @@
 			isa = PBXGroup;
 			children = (
 				48DE52C91C1CC12900647C63 /* ParrotShare */,
-				48DE52E01C1CC1D300647C63 /* ParrotLink */,
 				48DE52F31C1CC28000647C63 /* ParrotToday */,
 			);
 			name = Extensions;
@@ -1162,7 +1170,6 @@
 				48834E001C1B372E009BC442 /* PBXTargetDependency */,
 				48834E1B1C1B38B9009BC442 /* PBXTargetDependency */,
 				48DE52D21C1CC12900647C63 /* PBXTargetDependency */,
-				48DE52E71C1CC1D300647C63 /* PBXTargetDependency */,
 				48DE53001C1CC28000647C63 /* PBXTargetDependency */,
 				4813004A1D26BD4900768D79 /* PBXTargetDependency */,
 				48D3CCE81DE94433003D6C02 /* PBXTargetDependency */,
@@ -1256,27 +1263,13 @@
 			buildRules = (
 			);
 			dependencies = (
+				4825FB321F6CC39F00D8F118 /* PBXTargetDependency */,
+				4825FB301F6CC39E00D8F118 /* PBXTargetDependency */,
+				4825FB2E1F6CC39C00D8F118 /* PBXTargetDependency */,
 			);
 			name = ParrotShare;
 			productName = ParrotShare;
 			productReference = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		48DE52DB1C1CC1D300647C63 /* ParrotLink */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 48DE52E91C1CC1D300647C63 /* Build configuration list for PBXNativeTarget "ParrotLink" */;
-			buildPhases = (
-				48DE52D81C1CC1D300647C63 /* Sources */,
-				48DE52D91C1CC1D300647C63 /* Frameworks */,
-				48DE52DA1C1CC1D300647C63 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ParrotLink;
-			productName = ParrotLink;
-			productReference = 48DE52DC1C1CC1D300647C63 /* ParrotLink.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		48DE52EF1C1CC28000647C63 /* ParrotToday */ = {
@@ -1290,6 +1283,10 @@
 			buildRules = (
 			);
 			dependencies = (
+				4825FB3C1F6CC3D100D8F118 /* PBXTargetDependency */,
+				4825FB361F6CC3CC00D8F118 /* PBXTargetDependency */,
+				4825FB381F6CC3CE00D8F118 /* PBXTargetDependency */,
+				4825FB3A1F6CC3CF00D8F118 /* PBXTargetDependency */,
 			);
 			name = ParrotToday;
 			productName = ParrotToday;
@@ -1329,7 +1326,7 @@
 								enabled = 1;
 							};
 							com.apple.Keychain = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -1379,24 +1376,7 @@
 								enabled = 1;
 							};
 							com.apple.Keychain = {
-								enabled = 0;
-							};
-							com.apple.Sandbox = {
 								enabled = 1;
-							};
-						};
-					};
-					48DE52DB1C1CC1D300647C63 = {
-						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = 2754ZHC8VE;
-						LastSwiftMigration = 0900;
-						ProvisioningStyle = Automatic;
-						SystemCapabilities = {
-							com.apple.ApplicationGroups.Mac = {
-								enabled = 1;
-							};
-							com.apple.Keychain = {
-								enabled = 0;
 							};
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -1413,7 +1393,7 @@
 								enabled = 1;
 							};
 							com.apple.Keychain = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -1443,7 +1423,6 @@
 				480363991C1D08490008E9F5 /* parrot-cli */,
 				48834DEB1C1B372D009BC442 /* Hangouts */,
 				48DE52C71C1CC12900647C63 /* ParrotShare */,
-				48DE52DB1C1CC1D300647C63 /* ParrotLink */,
 				48DE52EF1C1CC28000647C63 /* ParrotToday */,
 			);
 		};
@@ -1495,13 +1474,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		48DE52C61C1CC12900647C63 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		48DE52DA1C1CC1D300647C63 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1685,14 +1657,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		48DE52D81C1CC1D300647C63 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				48DE52E41C1CC1D300647C63 /* RequestHandler.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		48DE52EC1C1CC28000647C63 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1720,6 +1684,41 @@
 			target = 481300431D26BD4900768D79 /* ParrotServiceExtension */;
 			targetProxy = 481300491D26BD4900768D79 /* PBXContainerItemProxy */;
 		};
+		4825FB2E1F6CC39C00D8F118 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48D3CCE11DE94433003D6C02 /* Mocha */;
+			targetProxy = 4825FB2D1F6CC39C00D8F118 /* PBXContainerItemProxy */;
+		};
+		4825FB301F6CC39E00D8F118 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 481300431D26BD4900768D79 /* ParrotServiceExtension */;
+			targetProxy = 4825FB2F1F6CC39E00D8F118 /* PBXContainerItemProxy */;
+		};
+		4825FB321F6CC39F00D8F118 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48834DEB1C1B372D009BC442 /* Hangouts */;
+			targetProxy = 4825FB311F6CC39F00D8F118 /* PBXContainerItemProxy */;
+		};
+		4825FB361F6CC3CC00D8F118 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48834DEB1C1B372D009BC442 /* Hangouts */;
+			targetProxy = 4825FB351F6CC3CC00D8F118 /* PBXContainerItemProxy */;
+		};
+		4825FB381F6CC3CE00D8F118 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48D3CCE11DE94433003D6C02 /* Mocha */;
+			targetProxy = 4825FB371F6CC3CE00D8F118 /* PBXContainerItemProxy */;
+		};
+		4825FB3A1F6CC3CF00D8F118 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48D3CCF41DE9446D003D6C02 /* MochaUI */;
+			targetProxy = 4825FB391F6CC3CF00D8F118 /* PBXContainerItemProxy */;
+		};
+		4825FB3C1F6CC3D100D8F118 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 481300431D26BD4900768D79 /* ParrotServiceExtension */;
+			targetProxy = 4825FB3B1F6CC3D100D8F118 /* PBXContainerItemProxy */;
+		};
 		48834E001C1B372E009BC442 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 48834DEB1C1B372D009BC442 /* Hangouts */;
@@ -1744,11 +1743,6 @@
 			isa = PBXTargetDependency;
 			target = 48DE52C71C1CC12900647C63 /* ParrotShare */;
 			targetProxy = 48DE52D11C1CC12900647C63 /* PBXContainerItemProxy */;
-		};
-		48DE52E71C1CC1D300647C63 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 48DE52DB1C1CC1D300647C63 /* ParrotLink */;
-			targetProxy = 48DE52E61C1CC1D300647C63 /* PBXContainerItemProxy */;
 		};
 		48DE53001C1CC28000647C63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2279,6 +2273,7 @@
 				CODE_SIGN_ENTITLEMENTS = ParrotShare/ParrotShare.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = ParrotShare/Info.plist;
@@ -2300,54 +2295,12 @@
 				CODE_SIGN_ENTITLEMENTS = ParrotShare/ParrotShare.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = ParrotShare/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotShare;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
-			};
-			name = Release;
-		};
-		48DE52EA1C1CC1D300647C63 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = ParrotLink/ParrotLink.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 2754ZHC8VE;
-				INFOPLIST_FILE = ParrotLink/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotLink;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
-			};
-			name = Debug;
-		};
-		48DE52EB1C1CC1D300647C63 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = ParrotLink/ParrotLink.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 2754ZHC8VE;
-				INFOPLIST_FILE = ParrotLink/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.ParrotLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2481,15 +2434,6 @@
 			buildConfigurations = (
 				48DE52D41C1CC12900647C63 /* Debug */,
 				48DE52D51C1CC12900647C63 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		48DE52E91C1CC1D300647C63 /* Build configuration list for PBXNativeTarget "ParrotLink" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				48DE52EA1C1CC1D300647C63 /* Debug */,
-				48DE52EB1C1CC1D300647C63 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

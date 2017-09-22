@@ -162,8 +162,8 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         storage.applyFontTraits([.unboldFontMask, .unitalicFontMask], range: base)
         
         for res in matches {
-            let range = res.rangeAt(2)
-            switch storage.attributedSubstring(from: res.rangeAt(1)).string {
+            let range = res.range(at: 2)
+            switch storage.attributedSubstring(from: res.range(at: 1)).string {
             case "*": // bold
                 storage.applyFontTraits(.boldFontMask, range: range)
             case "_": // italics

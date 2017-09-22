@@ -11,6 +11,8 @@ import Foundation
 /// `where X == Y` will not compile otherwise due to conflicting overrides.
 public class Transformer<X, Y> {
     
+    public init() {}
+    
     /// Transform the value `x` from origin type `X` to destination type `Y`.
     /// Note: this is considered to be the reverse transformation of `transform(y:)`.
     public func transform(x: X) -> Y {
