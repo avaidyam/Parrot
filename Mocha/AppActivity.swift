@@ -13,6 +13,11 @@ private let log = Logger(subsystem: "MochaUI.AppActivity")
 	return AppActivity.current.logger
 }*/
 
+// sessions: app launch -> death
+// exceptions: swift.Error
+// event: ??
+// screenview: ??
+
 /// A proxy for NSProcessInfo's BackgroundActivity API.
 /// Simplified for internal use only.
 public struct AppActivity {
@@ -35,7 +40,16 @@ public struct AppActivity {
 		let holder = ProcessInfo.processInfo.beginActivity(options: mode, reason: string)
 		activities[string] = holder
 		log.info("Starting activity \"\(string)\"")
+        //GoogleReporter.shared.event(<#T##category: String##String#>, action: <#T##String#>, label: <#T##String#>, parameters: <#T##[String : String]#>)
+        //GoogleReporter.shared.screenView(<#T##name: String##String#>, parameters: <#T##[String : String]#>)
 	}
+    
+    public static func report(error: LocalizedError, fatal: Bool = false) {
+        GoogleReporter.shared.exception(error.localizedDescription, isFatal: fatal, parameters: [
+            NSLocalizedDescriptionKey: error.errorDescription ?? "",
+            NSLocalizedFailureReasonErrorKey: error.failureReason ?? "",
+        ])
+    }
 	
 	public static func end(_ string: String) {
 		if let act = activities[string] {

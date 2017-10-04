@@ -66,13 +66,31 @@ public class ParrotAppController: NSApplicationController {
         // Note: in the future, this will be invoked by the Parrot Daemon periodically
         // and the UI client will simply display the message; when updating, the
         // daemon will pre-cache the download and replace the executable.
-		checkForUpdates(prerelease: true)
+        if let release = AppRelease.checkForUpdates(prerelease: true) {
+            let a = NSAlert(style: .informational, message: "\(release.releaseName) available",
+                information: release.releaseNotes, buttons: ["Update", "Ignore"],
+                showSuppression: true) // FIXME suppression
+            a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
+            if let vev = a.window.titlebar.view as? NSVisualEffectView {
+                vev.material = .appearanceBased
+                vev.state = .active
+                vev.blendingMode = .withinWindow
+            }
+            if a.runModal() == .alertFirstButtonReturn {
+                NSWorkspace.shared.open(release.githubURL)
+            }
+        }
+        
+        // Set up the Google Analytics reporting.
+        GoogleReporter.shared.configure(withTrackerId: "UA-63931980-2")
+        GoogleReporter.shared.session(start: true)
         
         /*subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.giveConversations")) {
             log.debug("RESULTS: \($0)")
         }*/
 		
 		// Register the default completions if none are in the user settings.
+        // Note: we're not using the registered defaults domain on purpose for this.
 		if Settings.completions.count == 0 {
 			let defaultC = ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]
 			Settings.completions = defaultC
@@ -235,6 +253,12 @@ public class ParrotAppController: NSApplicationController {
     }
     private var menubarSub: NSKeyValueObservation? = nil
     
+    public func applicationWillTerminate(_ notification: Notification) {
+        
+        // End the reporting session.
+        GoogleReporter.shared.session(start: false)
+    }
+    
     /// Right clicking the status item causes the app to close; left click causes it to become visible.
     @objc func showConversationWindow(_ sender: NSStatusBarButton?) {
         let event = NSApp.currentEvent!
@@ -335,25 +359,5 @@ public class ParrotAppController: NSApplicationController {
     ///
 	@IBAction func feedback(_ sender: AnyObject?) {
         NSWorkspace.shared.open(URL(string: "https://gitreports.com/issue/avaidyam/Parrot")!)
-    }
-}
-
-// For initial release alerts.
-public func checkForUpdates(prerelease: Bool = false) {
-    guard let buildTag = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String else { return }
-    guard let release = GithubRelease.latest(prerelease: prerelease) else { return }
-    guard release.buildTag > Semver(buildTag) else { return }
-    
-    let a = NSAlert(style: .informational, message: "\(release.releaseName) available",
-                    information: release.releaseNotes, buttons: ["Update", "Ignore"],
-                    showSuppression: true) // FIXME suppression
-    a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
-    if let vev = a.window.titlebar.view as? NSVisualEffectView {
-        vev.material = .appearanceBased
-        vev.state = .active
-        vev.blendingMode = .withinWindow
-    }
-    if a.runModal().rawValue == 1000 /*NSAlertFirstButtonReturn*/ {
-        NSWorkspace.shared.open(release.githubURL)
     }
 }

@@ -1,5 +1,6 @@
 import Foundation
 
+/*
 public protocol Drawable {
     var frame: Rect { get set }
     func draw()
@@ -8,36 +9,50 @@ public protocol Drawable {
 }
 
 public protocol Orderable {
-    var parent: Orderable? { get }
-    func add(child: Orderable)
-    func remove(child: Orderable)
+    
+    var parent: Self? { get }
+    var children: [Self] { get }
+    
+    func add(child: Self)
+    func remove(child: Self)
 }
 
 public protocol Respondable {
     associatedtype Consumable
+    func becomeFirstResponder()
+    func resignFirstResponder()
     func handle(event: Consumable) -> Bool
 }
 
-public class View: Drawable, Orderable, Respondable {
+public extension Respondable {
+    func becomeFirstResponder() {}
+    func resignFirstResponder() {}
+}
+*/
+
+
+public class View {//}: Drawable, Orderable, Respondable {
     public typealias Consumable = Event
     
-    public required init(frame: Rect) {
-        self.frame = frame
-    }
+    public var contents: [[Cell]] = [[]]
     
+    public private(set) var parent: View? = nil
+    public private(set) var children: [View] = []
     public var frame: Rect {
         didSet {
             
         }
     }
     
-    public private(set) var parent: Orderable?
+    public required init(frame: Rect) {
+        self.frame = frame
+    }
     
-    public func add(child: Orderable) {
+    public func add(child: View) {
         
     }
     
-    public func remove(child: Orderable) {
+    public func remove(child: View) {
         
     }
     
@@ -58,20 +73,22 @@ public class View: Drawable, Orderable, Respondable {
     }
 }
 
-// TODO FIXME
-public struct Window {
+public class Window: View {
     
-    public var frame: Rect
-    public var foreground: Attributes
-    public var background: Attributes
+    public var foreground: Attributes = .white
+    public var background: Attributes = .black
     
-    public init(frame: Rect, foreground: Attributes, background: Attributes) {
-        self.frame = frame
+    public required init(frame: Rect) {
+        super.init(frame: frame)
+    }
+    
+    public convenience init(frame: Rect, foreground: Attributes, background: Attributes) {
+        self.init(frame: frame)
         self.foreground = foreground
         self.background = background
     }
     
-    public func draw() {
+    public override func draw() {
         
     }
 }

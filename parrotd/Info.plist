@@ -26,8 +26,10 @@
 	<string>Copyright © 2015 Aditya Vaidyam. All rights reserved.</string>
 	<key>XPCService</key>
 	<dict>
+		<key>RunLoopType</key>
+		<string>_NSApplicationMain</string>
 		<key>ServiceType</key>
-		<string>Application</string>
+		<string>User</string>
 	</dict>
 </dict>
 </plist>
