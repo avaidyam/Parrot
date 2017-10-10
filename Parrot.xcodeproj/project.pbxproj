@@ -17,6 +17,8 @@
 		481300531D26BD9800768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		481300541D26BD9D00768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		48158E441D29C28A00ED369C /* Service+Capabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48158E431D29C28A00ED369C /* Service+Capabilities.swift */; };
+		481891D11F87389400AB918B /* Auth+WebDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */; };
+		481891D31F8745E100AB918B /* XPCService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481891D21F8745E100AB918B /* XPCService.swift */; };
 		4819BF601D52D78800CF609C /* emoji_charset.bitmap in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191D1D37D16C001F969E /* emoji_charset.bitmap */; };
 		4819BF611D52D78800CF609C /* emoji_descriptors.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191E1D37D16C001F969E /* emoji_descriptors.plist */; };
 		4819BF621D52D78800CF609C /* emoji_emoticons.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191F1D37D16C001F969E /* emoji_emoticons.plist */; };
@@ -55,6 +57,18 @@
 		4848A5851EFEBE35008B2DE2 /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4848A5841EFEBE35008B2DE2 /* SortedArray.swift */; };
 		4848A5BF1EFF1BED008B2DE2 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4848A5BE1EFF1BED008B2DE2 /* Binding.swift */; };
 		484E8CA01D37FF2500E1D1D5 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E8C9F1D37FF2500E1D1D5 /* Message.swift */; };
+		4859B8221F8480DE00BFF0CE /* XPCCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */; };
+		4859B8231F8480DE00BFF0CE /* XPCTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */; };
+		4859B8241F8480DE00BFF0CE /* XPCConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B8211F8480DE00BFF0CE /* XPCConnection.swift */; };
+		4859B8251F8481F100BFF0CE /* XPCTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */; };
+		4859B8261F8481F300BFF0CE /* XPCConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B8211F8480DE00BFF0CE /* XPCConnection.swift */; };
+		4859B8271F8481F600BFF0CE /* XPCCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */; };
+		4859B82D1F85433000BFF0CE /* XPCConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B8211F8480DE00BFF0CE /* XPCConnection.swift */; };
+		4859B82E1F85433300BFF0CE /* XPCCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */; };
+		4859B82F1F85433600BFF0CE /* XPCTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */; };
+		4859B8301F854B5100BFF0CE /* XPCCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */; };
+		4859B8311F854B5400BFF0CE /* XPCConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B8211F8480DE00BFF0CE /* XPCConnection.swift */; };
+		4859B8321F854B5600BFF0CE /* XPCTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */; };
 		485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485B12EC1F1A904400432A36 /* LocationHelper.swift */; };
 		4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */; };
 		4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9331ED9480C00764594 /* DynamicProperty.swift */; };
@@ -79,7 +93,6 @@
 		48834E021C1B372E009BC442 /* Hangouts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48834E1C1C1B38B9009BC442 /* parrotd.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 48834E111C1B38B9009BC442 /* parrotd.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48834E221C1B399A009BC442 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E211C1B399A009BC442 /* main.swift */; };
-		48834E251C1B3B9B009BC442 /* ParrotProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E241C1B3B9B009BC442 /* ParrotProvider.swift */; };
 		48834E281C1B3E03009BC442 /* Hangouts.h in Headers */ = {isa = PBXBuildFile; fileRef = 48834E271C1B3D98009BC442 /* Hangouts.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48834E3C1C1B4098009BC442 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E341C1B4098009BC442 /* Channel.swift */; };
 		48834E3D1C1B4098009BC442 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E351C1B4098009BC442 /* Client.swift */; };
@@ -363,6 +376,7 @@
 		48158E431D29C28A00ED369C /* Service+Capabilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Service+Capabilities.swift"; sourceTree = "<group>"; };
 		481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+Extensions.swift"; sourceTree = "<group>"; };
 		4816872B1C3A340E0070EEF6 /* URLSession+Delegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+Delegate.swift"; sourceTree = "<group>"; };
+		481891D21F8745E100AB918B /* XPCService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCService.swift; sourceTree = "<group>"; };
 		481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayLink.swift; sourceTree = "<group>"; };
 		481D933D1DF5D7D100EB23A1 /* Wallclock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wallclock.swift; sourceTree = "<group>"; };
 		48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationSettingsViewController.swift; sourceTree = "<group>"; };
@@ -406,6 +420,9 @@
 		484E8C9F1D37FF2500E1D1D5 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		48574F121D11F9FC002375E1 /* AppManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppManagement.swift; sourceTree = "<group>"; };
+		4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCCoder.swift; sourceTree = "<group>"; };
+		4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCTransaction.swift; sourceTree = "<group>"; };
+		4859B8211F8480DE00BFF0CE /* XPCConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCConnection.swift; sourceTree = "<group>"; };
 		485B12EC1F1A904400432A36 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
 		4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarItemContainer.swift; sourceTree = "<group>"; };
 		4869A9331ED9480C00764594 /* DynamicProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicProperty.swift; sourceTree = "<group>"; };
@@ -439,7 +456,6 @@
 		48834E111C1B38B9009BC442 /* parrotd.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = parrotd.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		48834E191C1B38B9009BC442 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48834E211C1B399A009BC442 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		48834E241C1B3B9B009BC442 /* ParrotProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotProvider.swift; sourceTree = "<group>"; };
 		48834E261C1B3D5B009BC442 /* parrotd.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = parrotd.entitlements; sourceTree = "<group>"; };
 		48834E271C1B3D98009BC442 /* Hangouts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Hangouts.h; sourceTree = "<group>"; };
 		48834E341C1B4098009BC442 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
@@ -893,7 +909,11 @@
 		48834E121C1B38B9009BC442 /* parrotd */ = {
 			isa = PBXGroup;
 			children = (
-				48834E241C1B3B9B009BC442 /* ParrotProvider.swift */,
+				4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */,
+				4859B8211F8480DE00BFF0CE /* XPCConnection.swift */,
+				4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */,
+				481891D21F8745E100AB918B /* XPCService.swift */,
+				48834E211C1B399A009BC442 /* main.swift */,
 				48834E231C1B3B2C009BC442 /* Supporting Files */,
 			);
 			path = parrotd;
@@ -904,7 +924,6 @@
 			children = (
 				48834E261C1B3D5B009BC442 /* parrotd.entitlements */,
 				48834E191C1B38B9009BC442 /* Info.plist */,
-				48834E211C1B399A009BC442 /* main.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1163,6 +1182,7 @@
 				48DE52D71C1CC12900647C63 /* Embed App Extensions */,
 				480363A61C1D08960008E9F5 /* CopyFiles */,
 				4819BF651D53B77F00CF609C /* CopyFiles */,
+				4859B82C1F853AB600BFF0CE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1346,7 +1366,7 @@
 						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Keychain = {
 								enabled = 0;
@@ -1490,21 +1510,40 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4859B82C1F853AB600BFF0CE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script is required because without the XPCServices folder containing the services you wish to connect to, launchd does not consider them part of the app/ex's namespace. This means, a host app's XPCServices are \"invisible\" to its extension. Relative symbolic linking fixes that. :)\n\n# Link XPCServices into ParrotShare.appex\ncd ${CONFIGURATION_BUILD_DIR}/Parrot.app/Contents/PlugIns/ParrotShare.appex/Contents/\nrm -rf ./XPCServices\nln -s ../../../XPCServices/ .\n\n# Link XPCServices into ParrotToday.appex\ncd ${CONFIGURATION_BUILD_DIR}/Parrot.app/Contents/PlugIns/ParrotToday.appex/Contents/\nrm -rf ./XPCServices\nln -s ../../../XPCServices/ .";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		480363961C1D08490008E9F5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				482323E01E1CBD3A00318380 /* View.swift in Sources */,
+				4859B8311F854B5400BFF0CE /* XPCConnection.swift in Sources */,
 				482323E91E1D61E100318380 /* AttributedString.swift in Sources */,
 				482323D91E1CBBA100318380 /* Application.swift in Sources */,
 				482323D71E1776DC00318380 /* Event.swift in Sources */,
 				482323DD1E1CBC1000318380 /* Cell.swift in Sources */,
+				4859B8321F854B5600BFF0CE /* XPCTransaction.swift in Sources */,
 				482323E71E1D406200318380 /* Auth.swift in Sources */,
 				482323DB1E1CBBE000318380 /* Drawing.swift in Sources */,
 				4803639D1C1D08490008E9F5 /* main.swift in Sources */,
 				48FB444E1DBF5288004BE55A /* utf8.c in Sources */,
 				48FB444D1DBF5288004BE55A /* termbox.c in Sources */,
+				4859B8301F854B5100BFF0CE /* XPCCoder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1527,6 +1566,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48AD39F81EE7FE2900C33E40 /* AccountsPrefs.swift in Sources */,
+				4859B82E1F85433300BFF0CE /* XPCCoder.swift in Sources */,
 				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
 				4869A9B01EE16F5D00764594 /* Auth+WebDelegate.swift in Sources */,
 				488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */,
@@ -1536,11 +1576,13 @@
 				4869A9431EDF456C00764594 /* Event.swift in Sources */,
 				48EC1BEC1F1FBC0B000C40C1 /* SearchCell.swift in Sources */,
 				4835ECAF1C1C620E00193EBC /* ConversationListViewController.swift in Sources */,
+				4859B82D1F85433000BFF0CE /* XPCConnection.swift in Sources */,
 				4869A9D61EE5C78200764594 /* PersonIndicatorViewController.swift in Sources */,
 				4807F4FB1EF1E58F00C32132 /* ReloadCell.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* MessageListViewController.swift in Sources */,
 				48EC1BF01F21201F000C40C1 /* PhotoCell.swift in Sources */,
 				48AD39FC1EE8005C00C33E40 /* TextPrefs.swift in Sources */,
+				4859B82F1F85433600BFF0CE /* XPCTransaction.swift in Sources */,
 				48AD39FA1EE7FEB200C33E40 /* Preferences.swift in Sources */,
 				48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */,
 				489FB08D1DF7E0CB00AEBD1D /* TypingHelper.swift in Sources */,
@@ -1585,8 +1627,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48834E251C1B3B9B009BC442 /* ParrotProvider.swift in Sources */,
+				4859B8221F8480DE00BFF0CE /* XPCCoder.swift in Sources */,
+				481891D11F87389400AB918B /* Auth+WebDelegate.swift in Sources */,
+				4859B8241F8480DE00BFF0CE /* XPCConnection.swift in Sources */,
+				481891D31F8745E100AB918B /* XPCService.swift in Sources */,
 				48834E221C1B399A009BC442 /* main.swift in Sources */,
+				4859B8231F8480DE00BFF0CE /* XPCTransaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1653,7 +1699,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D4CA011DBE657D001CF7AD /* Subscription.swift in Sources */,
+				4859B8271F8481F600BFF0CE /* XPCCoder.swift in Sources */,
+				4859B8261F8481F300BFF0CE /* XPCConnection.swift in Sources */,
 				48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */,
+				4859B8251F8481F100BFF0CE /* XPCTransaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2109,12 +2158,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_ENTITLEMENTS = parrotd/parrotd.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = parrotd/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../../../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../../../../Frameworks @executable_path/../../../../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.parrotd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2127,12 +2175,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_ENTITLEMENTS = parrotd/parrotd.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 2754ZHC8VE;
 				INFOPLIST_FILE = parrotd/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../../../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../../../../Frameworks @executable_path/../../../../../../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Parrot.parrotd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

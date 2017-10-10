@@ -41,7 +41,7 @@ internal class WebDelegate: NSObject, WebPolicyDelegate, WebResourceLoadDelegate
         
         let window = NSWindow(contentRect: NSMakeRect(0, 0, 386, 512),
                               styleMask: [.titled, .closable],
-                              backing: .buffered, defer: false)
+                              backing: .buffered, defer: false, screen: NSScreen.main)
         window.title = "Login to Parrot"
         window.isOpaque = false
         window.isMovableByWindowBackground = true
@@ -50,7 +50,8 @@ internal class WebDelegate: NSObject, WebPolicyDelegate, WebResourceLoadDelegate
         window.titlebarAppearsTransparent = true
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
-        window.collectionBehavior = [.moveToActiveSpace, .transient, .ignoresCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
+        //window.collectionBehavior = [.moveToActiveSpace, .transient, .ignoresCycle, .fullScreenAuxiliary, .fullScreenDisallowsTiling]
+        NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
         
         WebDelegate.window = window
@@ -77,6 +78,8 @@ internal class WebDelegate: NSObject, WebPolicyDelegate, WebResourceLoadDelegate
     }
     
     func authenticationMethod(_ oauth_url: URL, _ result: @escaping AuthenticationResult) {
-        WebDelegate.prompt(url: oauth_url, cb: result)
+        DispatchQueue.main.async {
+            WebDelegate.prompt(url: oauth_url, cb: result)
+        }
     }
 }

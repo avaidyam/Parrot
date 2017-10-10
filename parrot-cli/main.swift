@@ -1,14 +1,32 @@
 import Hangouts
 import Dispatch
+import Foundation
+import os
 
-// Sign in first.
-let client = Auth.signin()
-
-if !CommandLine.arguments.contains("--interactive") {
+var client: Client! = nil
+host { c in
+    os_log("got result %@", String(describing: c))
+    
+    let urlsess = URLSessionConfiguration.default
+    c.asCookies().forEach {
+        urlsess.httpCookieStorage?.setCookie($0)
+    }
+    
+    let client = Client(configuration: urlsess)
     client.conversationList.conversations.forEach {
         print($0.value.identifier + "\t" + $0.value.name)
     }
-    exit(0)
+}
+
+// Sign in first.
+//let client = Auth.signin()
+
+if !CommandLine.arguments.contains("--interactive") {
+    /*client.conversationList.conversations.forEach {
+        print($0.value.identifier + "\t" + $0.value.name)
+    }*/
+    dispatchMain()
+    //exit(0)
 }
 
 // Block CTRL-C in favor of our `q` action.

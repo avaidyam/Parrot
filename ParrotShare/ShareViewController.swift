@@ -99,6 +99,9 @@ public final class ShareViewController: SLComposeServiceViewController {
 	
     public override func didSelectCancel() {
         self.extensionContext!.cancelRequest(withError: CocoaError(.userCancelled))
+        DispatchQueue.main.async {
+            NSApp.terminate(self)
+        }
     }
     
     public override func isContentValid() -> Bool {
@@ -197,6 +200,7 @@ public struct Auth: AuthenticatorDelegate {
         assert(false, "Cannot authenticate from the console! You must launch the GUI.")
     }
     
+    private static var con: xpc_connection_t? = nil
     public static func signin() -> Client {
         Authenticator.delegate = Auth()
         

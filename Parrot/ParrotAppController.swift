@@ -106,7 +106,7 @@ public class ParrotAppController: NSApplicationController {
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
-		
+        
 		log.verbose("Initializing Parrot...")
 		//AppActivity.start("Authenticate")
         Authenticator.delegate = WebDelegate.delegate
