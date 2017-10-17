@@ -2,6 +2,7 @@ import Hangouts
 import Dispatch
 import Foundation
 import os
+import XPCTransport
 
 var client: Client! = nil
 host { c in

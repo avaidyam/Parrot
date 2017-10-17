@@ -3,6 +3,7 @@ import Cocoa
 import os
 import Mocha
 import Hangouts
+import XPCTransport
 
 public class ParrotAgentController: XPCService {
     
