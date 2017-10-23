@@ -3,101 +3,114 @@ import XPC
 import os
 import ServiceManagement
 
-// TODO: Test
-public struct Person2: Codable {
-    public var name: String
-    public var address: String
-    public var height: Float
-    public var locale: Int
-    public var _flags: UInt8
-}
-
-public struct _CookieRequest: Codable {
-    
-}
-
-public struct _CookieResponse: Codable {
-    var cookies: [[String: String]]
-    
-    public init(_ cookies: [HTTPCookie]) {
-        self.cookies = cookies.map {
-            var d = [String: String]()
-            for c in ($0.properties ?? [:]) {
-                if let str = c.value as? String {
-                    d[c.key.rawValue] = str
-                } else if let url = c.value as? URL {
-                    d[c.key.rawValue] = url.absoluteString
-                } else if let date = c.value as? Date {
-                    d[c.key.rawValue] = date.description
-                }
-            }
-            return d
-        }
-    }
-    
-    public func asCookies() -> [HTTPCookie] {
-        return self.cookies.flatMap {
-            let d = $0.map { (HTTPCookiePropertyKey(rawValue: $0.key), $0.value) }
-            return HTTPCookie(properties: Dictionary(uniqueKeysWithValues: d))
-        }
-    }
-}
-
-var _ccon: XPCConnection? = nil
-
-// stub:
-public func host(_ handle: @escaping (_CookieResponse) -> ()) {
-    os_log("LAUNCHING XPC CLIENT")
-    _ccon = XPCConnection(name: "com.avaidyam.Parrot.parrotd")
-    _ccon?.active = true
-    
-    /*
-    try? _ccon?.send(message: "function_name") { (resp: _CookieResponse) in
-        os_log("RESPONSE DATA: %@", String(describing: resp))
-        handle(resp)
-    }
-    */
-}
-
-
-
-
-
-
-//
-//
-//
-
-
-
-
-
-
-
-public enum XPCError {
-    case connectionInterrupted, connectionInvalid, replyInvalid, terminationImminent
-}
-
-/*
- //xpc_connection_create(nil, nil) -> anonymous
- //xpc_connection_send_barrier
- //xpc_connection_cancel + activate
- //xpc_connection_get_euid
- //xpc_connection_get_egid
- //xpc_connection_get_pid
- //xpc_connection_get_asid
- // xpc_dictionary_get_remote_connection ???
- */
 /// Note: trying to {en,de}code this results in gibberish unless using XPC{En,De}Coder.
 public final class XPCConnection: Codable, RemoteService {
+    
+    public enum Error {
+        case connectionInterrupted, connectionInvalid, replyInvalid, terminationImminent
+    }
     
     private enum CodingKeys: String, CodingKey {
         case name
     }
     
+    /// Acts as an intermediate because type-erasure is difficult when you need to use Codable.
+    // Note: we don't keep a shared/global {en,de}coder because we'll need threading primitives;
+    // the XPC{En,De}coder is lightweight enough that it's not worth locking.
+    // But, please use this on a background queue...
+    private struct _MessageHandler {
+        let requiresReply: Bool
+        let handler: (xpc_object_t?) throws -> (xpc_object_t?, xpc_object_t?)
+        
+        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> ()) {
+            self.requiresReply = false
+            self.handler = { _ in
+                try handler()
+                return (nil, nil)
+            }
+        }
+        
+        init<RMI: RequestingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> ()) {
+            self.requiresReply = false
+            self.handler = {
+                try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
+                return (nil, nil)
+            }
+        }
+        
+        init<RMI: RespondingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response)) {
+            self.requiresReply = true
+            self.handler = { _ in
+                let t = try handler()
+                return (try XPCEncoder().encode(t), nil)
+            }
+        }
+        
+        init<RMI: ThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.ErrorType?)) {
+            self.requiresReply = true
+            self.handler = { _ in
+                let t = try handler()
+                return (nil, t != nil ? try XPCEncoder().encode(t) : nil)
+            }
+        }
+        
+        init<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.ErrorType?)) {
+            self.requiresReply = true
+            self.handler = {
+                let t = try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
+                return (nil, t != nil ? try XPCEncoder().encode(t) : nil)
+            }
+        }
+        
+        init<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.ErrorType?)) {
+            self.requiresReply = true
+            self.handler = { _ in
+                let t = try handler()
+                return (t.0 != nil ? try XPCEncoder().encode(t.0) : nil,
+                        t.1 != nil ? try XPCEncoder().encode(t.1) : nil)
+            }
+        }
+        
+        init<RMI: RequestingRespondingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response)) {
+            self.requiresReply = true
+            self.handler = {
+                let t = try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
+                return (try XPCEncoder().encode(t), nil)
+            }
+        }
+        
+        init<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.ErrorType?)) {
+            self.requiresReply = true
+            self.handler = {
+                let t = try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
+                return (t.0 != nil ? try XPCEncoder().encode(t.0) : nil,
+                        t.1 != nil ? try XPCEncoder().encode(t.1) : nil)
+            }
+        }
+    }
+    
+    ///
     public let name: String
+    
+    ///
     internal var connection: xpc_connection_t! = nil
+    
+    ///
     internal var replyQueue = DispatchQueue(label: "")
+    
+    ///
+    private var replyHandlers = [String: _MessageHandler]()
+    
+    /*
+     //xpc_connection_create(nil, nil) -> anonymous
+     //xpc_connection_send_barrier
+     //xpc_connection_cancel + activate
+     //xpc_connection_get_euid
+     //xpc_connection_get_egid
+     //xpc_connection_get_pid
+     //xpc_connection_get_asid
+     // xpc_dictionary_get_remote_connection ???
+     */
     
     // Note: NOP for unconfigured connection.
     public var active: Bool = false {
@@ -111,201 +124,218 @@ public final class XPCConnection: Codable, RemoteService {
         }
     }
     
+    /// Create an XPCConnection for an existing underlying connection type.
     internal init(_ connection: xpc_connection_t) {
         self.connection = connection
         self.name = "<unknown>"//String(cString: xpc_connection_get_name(connection)!)
     }
     
+    /// Connect to a service in the local bootstrap domain called `name`.
+    /// Wire messages will be serviced on the designated `queue`.
     public init(name: String, on queue: DispatchQueue = DispatchQueue.global()) {
         self.name = name
         name.withCString {
             self.connection = xpc_connection_create($0, queue)
         }
-        
-        xpc_connection_set_event_handler(self.connection) { event in
-            self.handle(event: event)
-        }
+        xpc_connection_set_event_handler(self.connection, self._recv(_:))
     }
     
-    private func handle(event: xpc_object_t) {
-        if event === XPC_ERROR_CONNECTION_INVALID {
-            os_log("INVALIDATED!")
+    /// Connect to a service in the global bootstrap domain called `machName`.
+    /// Wire messages will be serviced on the designated `queue`.
+    public init(machName: String, on queue: DispatchQueue = DispatchQueue.global()) {
+        self.name = machName
+        name.withCString {
+            self.connection = xpc_connection_create_mach_service($0, queue, 0)
         }
-        os_log("EVENT: %@", event.description)
+        xpc_connection_set_event_handler(self.connection, self._recv(_:))
+    }
+    
+    /// Connect to a privileged service in the global bootstrap domain called `privilegedMachName`.
+    /// Wire messages will be serviced on the designated `queue`.
+    public init(privilegedMachName: String, on queue: DispatchQueue = DispatchQueue.global()) {
+        self.name = privilegedMachName
+        name.withCString {
+            self.connection = xpc_connection_create_mach_service($0, queue, UInt64(XPC_CONNECTION_MACH_SERVICE_PRIVILEGED))
+        }
+        xpc_connection_set_event_handler(self.connection, self._recv(_:))
     }
 }
 
+/// Primitive send & recv utilities.
 public extension XPCConnection {
-    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type) throws where RMI.Service == XPCConnection {
+    
+    /// Sends a handled message on the internal XPC connection with an optional reply.
+    private func _send(_ event: xpc_object_t, _ reply: ((xpc_object_t) throws -> ())? = nil) {
+        if reply != nil {
+            xpc_connection_send_message_with_reply(self.connection, event, self.replyQueue) {
+                do {
+                    try reply!($0)
+                } catch(let error) {
+                    os_log("remote coding error! %@", error.localizedDescription)
+                }
+            }
+        } else {
+            xpc_connection_send_message(self.connection, event)
+        }
+    }
+    
+    /// Receives a handled message on the internal XPC connection. Note: needs a preset handler.
+    private func _recv(_ event: xpc_object_t) {
+        if event === XPC_ERROR_CONNECTION_INVALID {
+            os_log("INVALIDATED!")
+            return
+        }
+        
+        // Dispatch the message to an applicable handler on our reply queue.
+        if  let identity = xpc_dictionary_get_string(event, "identity"),
+            let handler = self.replyHandlers[String(cString: identity)] {
+            self.replyQueue.async {
+                do {
+                    let x = try handler.handler(xpc_dictionary_get_value(event, "request"))
+                    
+                    // If the remote end awaits on a reply, respond.
+                    if handler.requiresReply == true {
+                        let dict = xpc_dictionary_create_reply(event)!
+                        xpc_dictionary_set_value(dict, "response", x.0)
+                        xpc_dictionary_set_value(dict, "error", x.1)
+                        xpc_connection_send_message(self.connection, dict)
+                    }
+                } catch(let error) {
+                    
+                    // If we catch a handler error and we need to send a reply, send the
+                    // error description if possible. (TODO: CodableError?)
+                    if handler.requiresReply == true {
+                        let dict = xpc_dictionary_create_reply(event)!
+                        error.localizedDescription.withCString {
+                            xpc_dictionary_set_string(dict, "__error", $0)
+                        }
+                        xpc_connection_send_message(self.connection, dict)
+                    }
+                }
+            }
+        } else {
+            os_log("ignoring unregistered message: %@", event.description)
+        }
+    }
+}
+
+/// Over-the-wire packaging and unpackaging utilities.
+public extension XPCConnection {
+    
+    /// Create a wire package (optionally with an embedded request).
+    private func _package<RMI: RemoteMethodBase>(_ rmi: RMI.Type) throws -> xpc_object_t {
         let message = xpc_dictionary_create(nil, nil, 0)
         RMI.qualifiedName.withCString {
             xpc_dictionary_set_string(message, "identity", $0)
         }
-        RMI.Subsystem.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "subsystem", $0)
+        return message
+    }
+    
+    /// Variant of _package(_:) to support RemoteRequestables.
+    private func _package<RMI: RemoteMethodBase & RemoteRequestable>(_ rmi: RMI.Type, _ request: RMI.Request) throws -> xpc_object_t {
+        let message = xpc_dictionary_create(nil, nil, 0)
+        RMI.qualifiedName.withCString {
+            xpc_dictionary_set_string(message, "identity", $0)
         }
-        
-        xpc_connection_send_message(self.connection, message)
+        xpc_dictionary_set_value(message, "request", try XPCEncoder().encode(request))
+        return message
+    }
+    
+    /// Retrieve the response from the wire package.
+    /// Variant of _unpackage(_:_:) to support RemoteRespondables.
+    private func _unpackage<RMI: RemoteMethodBase & RemoteRespondable>(_ rmi: RMI.Type, _ event: xpc_object_t) throws -> RMI.Response {
+        guard let r = xpc_dictionary_get_value(event, "response") else {
+            throw RemoteError.invalid
+        }
+        return try XPCDecoder().decode(RMI.Response.self, from: r)
+    }
+    
+    /// Retrieve the error from the wire package.
+    /// Variant of _unpackage(_:_:) to support RemoteThrowables.
+    private func _unpackage<RMI: RemoteMethodBase & RemoteThrowable>(_ rmi: RMI.Type, _ event: xpc_object_t) throws -> RMI.ErrorType? {
+        guard let r = xpc_dictionary_get_value(event, "error") else { return nil }
+        return try XPCDecoder().decode(RMI.ErrorType.self, from: r)
+    }
+}
+
+/// XPCConnection: RemoteService (Async)
+public extension XPCConnection {
+    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type) throws where RMI.Service == XPCConnection {
+        self._send(try self._package(rmi))
     }
     
     public func async<RMI: RequestingMethod>(_ rmi: RMI.Type, with request: RMI.Request) throws where RMI.Service == XPCConnection {
-        let message = xpc_dictionary_create(nil, nil, 0)
-        RMI.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "identity", $0)
-        }
-        RMI.Subsystem.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "subsystem", $0)
-        }
-        xpc_dictionary_set_value(message, "request", try XPCEncoder(options: .primitiveRootValues).encode(request))
-        
-        xpc_connection_send_message(self.connection, message)
+        self._send(try self._package(rmi, request))
     }
     
     public func async<RMI: RespondingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Response) -> ()) throws where RMI.Service == XPCConnection {
-        let message = xpc_dictionary_create(nil, nil, 0)
-        RMI.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "identity", $0)
-        }
-        RMI.Subsystem.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "subsystem", $0)
-        }
-
-        xpc_connection_send_message_with_reply(self.connection, message, self.replyQueue) {
-            do {
-                let response: RMI.Response = try XPCDecoder(options: .primitiveRootValues).decode($0)
-                
-            } catch(let error) {
-                
-            }
+        self._send(try self._package(rmi)) {
+            response(try self._unpackage(rmi, $0))
         }
     }
     
     public func async<RMI: ThrowingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.ErrorType?) -> ()) throws where RMI.Service == XPCConnection {
-        let message = xpc_dictionary_create(nil, nil, 0)
-        RMI.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "identity", $0)
-        }
-        RMI.Subsystem.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "subsystem", $0)
-        }
-
-        xpc_connection_send_message_with_reply(self.connection, message, self.replyQueue) {
-            do {
-                let response: RMI.ErrorType = try XPCDecoder(options: .primitiveRootValues).decode($0)
-                
-            } catch(let error) {
-                
-            }
+        self._send(try self._package(rmi)) {
+            response(try self._unpackage(rmi, $0))
         }
     }
     
     public func async<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.ErrorType?) -> ()) throws where RMI.Service == XPCConnection {
-        let message = xpc_dictionary_create(nil, nil, 0)
-        RMI.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "identity", $0)
-        }
-        RMI.Subsystem.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "subsystem", $0)
-        }
-        xpc_dictionary_set_value(message, "request", try XPCEncoder(options: .primitiveRootValues).encode(request))
-
-        xpc_connection_send_message_with_reply(self.connection, message, self.replyQueue) {
-            do {
-                let response: RMI.ErrorType = try XPCDecoder(options: .primitiveRootValues).decode($0)
-                
-            } catch(let error) {
-                
-            }
+        self._send(try self._package(rmi, request)) {
+            response(try self._unpackage(rmi, $0))
         }
     }
     
     public func async<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Response?, RMI.ErrorType?) -> ()) throws where RMI.Service == XPCConnection {
-        let message = xpc_dictionary_create(nil, nil, 0)
-        RMI.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "identity", $0)
-        }
-        RMI.Subsystem.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "subsystem", $0)
-        }
-
-        xpc_connection_send_message_with_reply(self.connection, message, self.replyQueue) {
-            do {
-                let response: RMI.Response = try XPCDecoder(options: .primitiveRootValues).decode($0)
-                
-            } catch(let error) {
-                
-            }
+        self._send(try self._package(rmi)) {
+            response(try self._unpackage(rmi, $0), try self._unpackage(rmi, $0))
         }
     }
     
     public func async<RMI: RequestingRespondingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Response) -> ()) throws where RMI.Service == XPCConnection {
-        let message = xpc_dictionary_create(nil, nil, 0)
-        RMI.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "identity", $0)
-        }
-        RMI.Subsystem.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "subsystem", $0)
-        }
-        xpc_dictionary_set_value(message, "request", try XPCEncoder(options: .primitiveRootValues).encode(request))
-
-        xpc_connection_send_message_with_reply(self.connection, message, self.replyQueue) {
-            do {
-                let response: RMI.Response = try XPCDecoder(options: .primitiveRootValues).decode($0)
-                
-            } catch(let error) {
-                
-            }
+        self._send(try self._package(rmi, request)) {
+            response(try self._unpackage(rmi, $0))
         }
     }
     
     public func async<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Response?, RMI.ErrorType?) -> ()) throws where RMI.Service == XPCConnection {
-        let message = xpc_dictionary_create(nil, nil, 0)
-        RMI.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "identity", $0)
-        }
-        RMI.Subsystem.qualifiedName.withCString {
-            xpc_dictionary_set_string(message, "subsystem", $0)
-        }
-        xpc_dictionary_set_value(message, "request", try XPCEncoder(options: .primitiveRootValues).encode(request))
-
-        xpc_connection_send_message_with_reply(self.connection, message, self.replyQueue) {
-            do {
-                let response: RMI.Response = try XPCDecoder(options: .primitiveRootValues).decode($0)
-                
-            } catch(let error) {
-                
-            }
+        self._send(try self._package(rmi, request)) {
+            response(try self._unpackage(rmi, $0), try self._unpackage(rmi, $0))
         }
     }
 }
 
-/*
- xpc_object_t xpc_connection_copy_entitlement_value(xpc_connection_t, const char* entitlement);
- void xpc_connection_get_audit_token(xpc_connection_t, audit_token_t*);
- void xpc_connection_kill(xpc_connection_t, int);
- void xpc_connection_set_instance(xpc_connection_t, uuid_t);
- mach_port_t xpc_dictionary_copy_mach_send(xpc_object_t, const char*);
- void xpc_dictionary_set_mach_send(xpc_object_t, const char*, mach_port_t);
- void xpc_connection_set_bootstrap(xpc_connection_t, xpc_object_t bootstrap);
- xpc_object_t xpc_copy_bootstrap(void);
- void xpc_connection_set_oneshot_instance(xpc_connection_t, uuid_t instance);
- 
- SecTaskRef SecTaskCreateWithAuditToken(CFAllocatorRef, audit_token_t);
- SecTaskRef SecTaskCreateFromSelf(CFAllocatorRef);
- CFTypeRef SecTaskCopyValueForEntitlement(SecTaskRef, CFStringRef entitlement, CFErrorRef *);
- CFStringRef SecTaskCopySigningIdentifier(SecTaskRef, CFErrorRef *); //__MAC_OS_X_VERSION_MIN_REQUIRED >= 101200
- 
- void xpc_dictionary_set_mach_send(xpc_object_t dictionary, const char* name, mach_port_t port);
- void xpc_dictionary_get_audit_token(xpc_object_t dictionary, audit_token_t* token);
- mach_port_t xpc_mach_send_get_right(xpc_object_t value);
- void xpc_dictionary_get_audit_token(xpc_object_t xdict, audit_token_t *token);
-
- xpc_pipe_t xpc_pipe_create(const char *name, uint64_t flags);
- void xpc_pipe_invalidate(xpc_pipe_t pipe);
- xpc_pipe_t xpc_pipe_create_from_port(mach_port_t port, int flags);
- int xpc_pipe_receive(mach_port_t port, xpc_object_t* message);
- int xpc_pipe_routine(xpc_pipe_t pipe, xpc_object_t request, xpc_object_t* reply);
- int xpc_pipe_routine_reply(xpc_object_t reply);
- int xpc_pipe_simpleroutine(xpc_pipe_t pipe, xpc_object_t message);
- int xpc_pipe_routine_forward(xpc_pipe_t forward_to, xpc_object_t request);
- */
+/// XPCConnection: RemoteService (Recv)
+public extension XPCConnection {
+    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> ()) where RMI.Service == XPCConnection {
+        self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
+    }
+    
+    public func recv<RMI: RequestingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> ()) where RMI.Service == XPCConnection {
+        self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
+    }
+    
+    public func recv<RMI: RespondingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response)) where RMI.Service == XPCConnection {
+        self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
+    }
+    
+    public func recv<RMI: ThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.ErrorType?)) where RMI.Service == XPCConnection {
+        self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
+    }
+    
+    public func recv<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.ErrorType?)) where RMI.Service == XPCConnection {
+        self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
+    }
+    
+    public func recv<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.ErrorType?)) where RMI.Service == XPCConnection {
+        self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
+    }
+    
+    public func recv<RMI: RequestingRespondingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response)) where RMI.Service == XPCConnection {
+        self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
+    }
+    
+    public func recv<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.ErrorType?)) where RMI.Service == XPCConnection {
+        self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
+    }
+}

@@ -48,7 +48,7 @@ public class XPCDecoder {
         public static let multipleRootContainers = Options(rawValue: 1 << 0)
         
         ///
-        public static let primitiveRootValues = Options(rawValue: 1 << 1)
+        public static let noPrimitiveRootValues = Options(rawValue: 1 << 1)
     }
     
     public let options: Options
@@ -57,7 +57,7 @@ public class XPCDecoder {
     }
     
     private var root: DecoderContainer? = nil
-    public func decode<T: Decodable>(_ value: xpc_object_t) throws -> T {
+    public func decode<T: Decodable>(_ type: T.Type, from value: xpc_object_t) throws -> T {
         self.root = DecoderContainer(owner: self, codingPath: [], content: value)
         return try T(from: self.root!)
     }
@@ -687,7 +687,7 @@ public class XPCDecoder {
         
         public func singleValueContainer() throws -> SingleValueDecodingContainer {
             try! throwIfExists()
-            if !self.owner.options.contains(.primitiveRootValues) {
+            if self.owner.options.contains(.noPrimitiveRootValues) {
                 fatalError("This decoder does not support primitive root values.")
             }
             
@@ -728,7 +728,7 @@ public class XPCEncoder {
         public static let multipleRootContainers = Options(rawValue: 1 << 0)
         
         ///
-        public static let primitiveRootValues = Options(rawValue: 1 << 1)
+        public static let noPrimitiveRootValues = Options(rawValue: 1 << 1)
         
         ///
         public static let overwriteDuplicates = Options(rawValue: 1 << 2)
@@ -1349,7 +1349,7 @@ public class XPCEncoder {
         // values
         func singleValueContainer() -> SingleValueEncodingContainer {
             try! throwIfExists()
-            if !self.owner.options.contains(.primitiveRootValues) {
+            if self.owner.options.contains(.noPrimitiveRootValues) {
                 fatalError("This encoder does not support primitive root values.")
             }
             

@@ -1,5 +1,7 @@
 import Cocoa
 
+// TODO: Create dynamically using XPC_CONNECTION_MACH_SERVICE_LISTENER.
+
 /// Note: requires the XPCService dictionary in the Info.plist to set RunLoopType=_NSApplicationMain.
 open class XPCService {
     
@@ -130,7 +132,7 @@ open class XPCService {
     }
     
     // ???
-    open func serviceConnection(_ connection: XPCConnection, experienced error: XPCError) {
+    open func serviceConnection(_ connection: XPCConnection, experienced error: XPCConnection.Error) {
         
     }
 }

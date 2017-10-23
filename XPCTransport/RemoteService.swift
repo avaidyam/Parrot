@@ -1,5 +1,9 @@
 import Dispatch
 
+public enum RemoteError: Error {
+    case invalid
+}
+
 public protocol RemoteRequestable {
     associatedtype Request: Codable
 }
@@ -26,10 +30,6 @@ public protocol RespondingThrowingMethod: RemoteMethodBase, RemoteRespondable, R
 public protocol RequestingRespondingMethod: RemoteMethodBase, RemoteRequestable, RemoteRespondable {}
 /// func method(Self.Request) throws[Self.ErrorType] -> Self.Response
 public protocol RequestingRespondingThrowingMethod: RemoteMethodBase, RemoteRequestable, RemoteRespondable, RemoteThrowable {}
-
-public enum RemoteServiceError: Error {
-    case invalidSync
-}
 
 public protocol RemoteService {
     func async<RMI: RemoteMethod>(_: RMI.Type) throws
@@ -65,32 +65,34 @@ public protocol RemoteService {
         where RMI.Service == Self
     func sync<RMI: RequestingRespondingThrowingMethod>(_: RMI.Type, with: RMI.Request) throws -> (RMI.Response?, RMI.ErrorType?)
         where RMI.Service == Self
+    
+    func recv<RMI: RemoteMethod>(_: RMI.Type, handler: @escaping () throws -> ())
+        where RMI.Service == Self
+    func recv<RMI: RequestingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> ())
+        where RMI.Service == Self
+    func recv<RMI: RespondingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.Response))
+        where RMI.Service == Self
+    func recv<RMI: ThrowingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.ErrorType?))
+        where RMI.Service == Self
+    func recv<RMI: RequestingThrowingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.ErrorType?))
+        where RMI.Service == Self
+    func recv<RMI: RespondingThrowingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.ErrorType?))
+        where RMI.Service == Self
+    func recv<RMI: RequestingRespondingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response))
+        where RMI.Service == Self
+    func recv<RMI: RequestingRespondingThrowingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.ErrorType?))
+        where RMI.Service == Self
 }
 
 /// Will never be instantiated.
 public protocol RemoteSubsystem {
     associatedtype ParentService: RemoteService
-    static var qualifiedName: String { get }
 }
 
 /// Will never be instantiated.
 public protocol RemoteMethodBase {
     associatedtype Subsystem: RemoteSubsystem where Self.Subsystem.ParentService == Self.Service
     associatedtype Service
-    
-    static var qualifiedName: String { get }
-}
-
-public extension RemoteSubsystem {
-    static var qualifiedName: String {
-        return "\(type(of: self))".components(separatedBy: ".").first!
-    }
-}
-
-public extension RemoteMethodBase {
-    static var qualifiedName: String {
-        return "\(type(of: self))".components(separatedBy: ".").first!
-    }
 }
 
 public extension RemoteService {
@@ -110,7 +112,7 @@ public extension RemoteService {
             s.signal()
         }
         s.wait()
-        guard response != nil else { throw RemoteServiceError.invalidSync }
+        guard response != nil else { fatalError("async(...) was not supposed to be nil!") }
         return response!
     }
     
@@ -122,7 +124,7 @@ public extension RemoteService {
             s.signal()
         }
         s.wait()
-        guard response != nil else { throw RemoteServiceError.invalidSync }
+        guard response != nil else { fatalError("async(...) was not supposed to be nil!") }
         return response!
     }
     
@@ -134,7 +136,7 @@ public extension RemoteService {
             s.signal()
         }
         s.wait()
-        guard response != nil else { throw RemoteServiceError.invalidSync }
+        guard response != nil else { fatalError("async(...) was not supposed to be nil!") }
         return response!
     }
     
@@ -146,7 +148,7 @@ public extension RemoteService {
             s.signal()
         }
         s.wait()
-        guard response != nil else { throw RemoteServiceError.invalidSync }
+        guard response != nil else { fatalError("async(...) was not supposed to be nil!") }
         return response!
     }
     
@@ -158,7 +160,7 @@ public extension RemoteService {
             s.signal()
         }
         s.wait()
-        guard response != nil else { throw RemoteServiceError.invalidSync }
+        guard response != nil else { fatalError("async(...) was not supposed to be nil!") }
         return response!
     }
     
@@ -170,8 +172,14 @@ public extension RemoteService {
             s.signal()
         }
         s.wait()
-        guard response != nil else { throw RemoteServiceError.invalidSync }
+        guard response != nil else { fatalError("async(...) was not supposed to be nil!") }
         return response!
+    }
+}
+
+public extension RemoteMethodBase {
+    public static var qualifiedName: String {
+        return "\(type(of: Subsystem.self))/\(type(of: self))"
     }
 }
 
@@ -181,6 +189,7 @@ public extension RemoteService {
 //
 
 
+/*
 public struct ChatService: RemoteService {
     public func async<RMI: RemoteMethod>(_ rmi: RMI.Type) throws where RMI.Service == ChatService {
         
@@ -213,6 +222,38 @@ public struct ChatService: RemoteService {
     public func async<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Response?, RMI.ErrorType?) -> ()) throws where RMI.Service == ChatService {
         
     }
+    
+    public func recv<RMI: RemoteMethod>(_: RMI.Type, handler: @escaping () throws -> ()) where RMI.Service == ChatService {
+        
+    }
+    
+    public func recv<RMI: RequestingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> ()) where RMI.Service == ChatService {
+        
+    }
+    
+    public func recv<RMI: RespondingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.Response)) where RMI.Service == ChatService {
+        
+    }
+    
+    public func recv<RMI: ThrowingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.ErrorType?)) where RMI.Service == ChatService {
+        
+    }
+    
+    public func recv<RMI: RequestingThrowingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.ErrorType?)) where RMI.Service == ChatService {
+        
+    }
+    
+    public func recv<RMI: RespondingThrowingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.ErrorType?)) where RMI.Service == ChatService {
+        
+    }
+    
+    public func recv<RMI: RequestingRespondingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response)) where RMI.Service == ChatService {
+        
+    }
+    
+    public func recv<RMI: RequestingRespondingThrowingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.ErrorType?)) where RMI.Service == ChatService {
+        
+    }
 }
 
 public struct AuthenticationSubsystem: RemoteSubsystem {
@@ -240,8 +281,11 @@ public struct AuthenticateInvocation: RequestingRespondingThrowingMethod {
     public typealias ErrorType = AuthenticationError
 }
 
-func tester() throws {
+func testMain() throws {
     let service = ChatService()
     (_, _) = try service.sync(AuthenticateInvocation.self, with: "test")
-    
+    service.recv(AuthenticateInvocation.self) { _ in
+        return ("failed", nil)
+    }
 }
+*/

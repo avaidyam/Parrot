@@ -38,7 +38,7 @@ public class ParrotAgentController: XPCService {
                 let person = _CookieResponse(response)
                 
                 do {
-                    let encoded = try XPCEncoder(options: [.primitiveRootValues, .overwriteDuplicates]).encode(person)
+                    let encoded = try XPCEncoder(options: .overwriteDuplicates).encode(person)
                     xpc_dictionary_set_value(msg, "response", encoded)
                 } catch(let err) {
                     os_log("ENCODE ERROR %@", String(describing: err))
