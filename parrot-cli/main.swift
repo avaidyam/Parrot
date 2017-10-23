@@ -5,11 +5,15 @@ import os
 import XPCTransport
 
 var client: Client! = nil
-host { c in
-    os_log("got result %@", String(describing: c))
+
+// Sign in first.
+var serverConnection = XPCConnection(name: "com.avaidyam.Parrot.parrotd")
+serverConnection.active = true
+try? serverConnection.async(AuthenticationSubsystem.AuthenticationInvocation.self) { c in
+    os_log("RESPONSE DATA: %@", String(describing: c))
     
     let urlsess = URLSessionConfiguration.default
-    c.asCookies().forEach {
+    AuthenticationSubsystem.AuthenticationInvocation.unpackage(c).forEach {
         urlsess.httpCookieStorage?.setCookie($0)
     }
     
@@ -19,15 +23,9 @@ host { c in
     }
 }
 
-// Sign in first.
-//let client = Auth.signin()
-
+// Non-interactive: block the interactive screen mode and enter the runloop.
 if !CommandLine.arguments.contains("--interactive") {
-    /*client.conversationList.conversations.forEach {
-        print($0.value.identifier + "\t" + $0.value.name)
-    }*/
     dispatchMain()
-    //exit(0)
 }
 
 // Block CTRL-C in favor of our `q` action.

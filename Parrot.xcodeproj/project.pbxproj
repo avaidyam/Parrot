@@ -83,6 +83,7 @@
 		486DBB431F94802000ECA84B /* XPCTransport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 486DBB301F947FB900ECA84B /* XPCTransport.framework */; };
 		486DBB4B1F9480AD00ECA84B /* RemoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486DBB4A1F9480AD00ECA84B /* RemoteService.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
+		487385881F9DFAAE00CC5853 /* CookieTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487385871F9DFAAE00CC5853 /* CookieTransport.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
 		48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ParrotAppController.swift */; };
 		48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48834D991C1B3602009BC442 /* Assets.xcassets */; };
@@ -471,6 +472,7 @@
 		486DBB331F947FB900ECA84B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		486DBB4A1F9480AD00ECA84B /* RemoteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteService.swift; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
+		487385871F9DFAAE00CC5853 /* CookieTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieTransport.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = ../Parrot/PreferencesViewController.swift; sourceTree = "<group>"; };
 		488201B51D4A962B00C545F0 /* ExtendedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedTextView.swift; sourceTree = "<group>"; };
 		488201BB1D4A970400C545F0 /* PersonaImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonaImage.swift; sourceTree = "<group>"; };
@@ -828,6 +830,7 @@
 				481891D21F8745E100AB918B /* XPCService.swift */,
 				4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */,
 				4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */,
+				487385871F9DFAAE00CC5853 /* CookieTransport.swift */,
 				486DBB3C1F947FD100ECA84B /* Supporting Files */,
 			);
 			path = XPCTransport;
@@ -1666,6 +1669,7 @@
 				486DBB3F1F947FF800ECA84B /* XPCTransaction.swift in Sources */,
 				486DBB4B1F9480AD00ECA84B /* RemoteService.swift in Sources */,
 				486DBB3D1F947FEF00ECA84B /* XPCCoder.swift in Sources */,
+				487385881F9DFAAE00CC5853 /* CookieTransport.swift in Sources */,
 				486DBB3E1F947FF300ECA84B /* XPCConnection.swift in Sources */,
 				486DBB401F94800000ECA84B /* XPCService.swift in Sources */,
 			);

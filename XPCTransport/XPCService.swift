@@ -71,28 +71,12 @@ open class XPCService {
     fileprivate final func handle(peer rawPeer: xpc_connection_t) {
         let peer = XPCConnection(rawPeer)
         guard self.serviceShouldAccept(connection: peer) else { return }
+        peer.bootstrap() // automatically does: .active = true
         
-        xpc_connection_set_event_handler(peer.connection, { event in
-            if xpc_get_type(event) == XPC_TYPE_DICTIONARY {
-                self.serviceConnection(peer, received: event)
-            } else if xpc_get_type(event) == XPC_TYPE_ERROR {
-                if event === XPC_ERROR_CONNECTION_INVALID {
-                    self.serviceConnection(peer, experienced: .connectionInvalid)
-                } else if event === XPC_ERROR_CONNECTION_INTERRUPTED {
-                    self.serviceConnection(peer, experienced: .connectionInterrupted)
-                } else if event === XPC_ERROR_TERMINATION_IMMINENT {
-                    self.serviceConnection(peer, experienced: .terminationImminent)
-                }
-            } else {
-                //???
-            }
-            
-            if let peerIdx = (self.peers.index { xpc_equal($0.connection, peer.connection) }) {
-                self.peers.remove(at: peerIdx)
-            }
-        })
-        
-        xpc_connection_resume(peer.connection)
+        // Update peer list, removing duplicates (reconnecting peers).
+        if let peerIdx = self.peers.index(of: peer) {
+            self.peers.remove(at: peerIdx)
+        }
         self.peers.append(peer)
     }
     
@@ -121,18 +105,10 @@ open class XPCService {
         return error
     }
     
-    // ???
+    /// If a peer attempts to connect, here is where you configure the connection.
+    /// If this function returns `true`, the connection will be activated and start listening.
+    /// If it returns `false`, it is discarded and invalidated.
     open func serviceShouldAccept(connection: XPCConnection) -> Bool {
         return false
-    }
-    
-    // ???
-    open func serviceConnection(_ connection: XPCConnection, received payload: xpc_object_t) {
-        
-    }
-    
-    // ???
-    open func serviceConnection(_ connection: XPCConnection, experienced error: XPCConnection.Error) {
-        
     }
 }
