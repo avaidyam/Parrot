@@ -43,8 +43,7 @@ public extension DispatchTimeInterval {
     }
 }
 
-// Marks global and main queues in an accessible way. Must call setupQueues() on
-// app init, and then current will work.
+// Marks global and main queues in an accessible way.
 public extension DispatchQueue {
     
     public enum QueueType: Equatable {

@@ -1,13 +1,18 @@
-//import XPCServices
 import Cocoa
 import os
 import Mocha
 import Hangouts
 import XPCTransport
+import ParrotServiceExtension
 
 public class ParrotAgentController: XPCService {
     
+    /// Once launched, the Agent shouldn't die as it is the global event pump for Parrot.
+    public static var keepAlive: XPCTransaction? = nil
+    
     public override func serviceDidFinishLaunching() {
+        ParrotAgentController.keepAlive = XPCTransaction()
+        
         os_log("launched app")
         let u = NSUserNotification()
         u.title = "Parrot is running in the background."
@@ -22,7 +27,7 @@ public class ParrotAgentController: XPCService {
     }
     
     public override func serviceShouldAccept(connection: XPCConnection) -> Bool {
-        connection.recv(AuthenticationSubsystem.AuthenticationInvocation.self) {
+        connection.recv(AuthenticationInvocation.self) {
             return self.cookies
         }
         return true
@@ -34,7 +39,7 @@ public class ParrotAgentController: XPCService {
         let s = DispatchSemaphore(value: 0)
         Authenticator.authenticateClient {
             let response = $0.httpCookieStorage!.cookies ?? []
-            r = AuthenticationSubsystem.AuthenticationInvocation.package(response)
+            r = AuthenticationInvocation.package(response)
             s.signal()
         }
         s.wait()

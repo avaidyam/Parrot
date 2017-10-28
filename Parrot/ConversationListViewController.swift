@@ -118,7 +118,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             }
         }
         indicatorAnim.handlerRunPolicy = .always
-        let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { [weak self] scale in
+        let scaleAnim = Interpolate(from: CGAffineTransform(translationX: 0, y: 196), to: .identity, interpolator: EaseInOutInterpolator()) { [weak self] scale in
             self?.scrollView.layer!.setAffineTransform(scale)
         }
         let group = Interpolate.group(indicatorAnim, scaleAnim)

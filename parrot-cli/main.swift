@@ -3,28 +3,23 @@ import Dispatch
 import Foundation
 import os
 import XPCTransport
-
-var client: Client! = nil
+import ParrotServiceExtension
 
 // Sign in first.
-var serverConnection = XPCConnection(name: "com.avaidyam.Parrot.parrotd")
-serverConnection.active = true
-try? serverConnection.async(AuthenticationSubsystem.AuthenticationInvocation.self) { c in
-    os_log("RESPONSE DATA: %@", String(describing: c))
-    
-    let urlsess = URLSessionConfiguration.default
-    AuthenticationSubsystem.AuthenticationInvocation.unpackage(c).forEach {
-        urlsess.httpCookieStorage?.setCookie($0)
-    }
-    
-    let client = Client(configuration: urlsess)
-    client.conversationList.conversations.forEach {
-        print($0.value.identifier + "\t" + $0.value.name)
-    }
+var server = XPCConnection(name: "com.avaidyam.Parrot.parrotd")
+server.active = true
+let cookies = try! server.sync(AuthenticationInvocation.self)
+let config = URLSessionConfiguration.default
+AuthenticationInvocation.unpackage(cookies).forEach {
+    config.httpCookieStorage?.setCookie($0)
 }
+let client = Client(configuration: config)
 
 // Non-interactive: block the interactive screen mode and enter the runloop.
 if !CommandLine.arguments.contains("--interactive") {
+    client.conversationList.conversations.forEach {
+        print($0.value.identifier + "\t" + $0.value.name)
+    }
     dispatchMain()
 }
 

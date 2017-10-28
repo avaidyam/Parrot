@@ -6,8 +6,35 @@ import ServiceManagement
 /// Note: trying to {en,de}code this results in gibberish unless using XPC{En,De}Coder.
 public final class XPCConnection: Hashable, Codable, RemoteService {
     
-    public enum Error {
-        case connectionInterrupted, connectionInvalid, replyInvalid, terminationImminent
+    /// Describes any remote transport/wire/serialization errors that XPC may emit.
+    public enum XPCError: Int, Error, Codable {
+        case connectionInterrupted, connectionInvalid, terminationImminent
+        case codingError, replyInvalid, unregisteredMessage
+        
+        /// Attempt to map an XPC_ERROR_TYPE to an XPCError.
+        /// Note: not all XPC_ERROR_* are mappable to XPCErrors.
+        public init?(from obj: xpc_object_t) {
+            if xpc_equal(obj, XPC_ERROR_CONNECTION_INTERRUPTED) {
+                self = .connectionInterrupted
+            } else if xpc_equal(obj, XPC_ERROR_CONNECTION_INVALID) {
+                self = .connectionInvalid
+            } else if xpc_equal(obj, XPC_ERROR_TERMINATION_IMMINENT) {
+                self = .terminationImminent
+            } else {
+                return nil
+            }
+        }
+        
+        /// Attempt to map an XPCError to an XPC_ERROR_TYPE.
+        /// Note: not all XPCErrors are mappable to XPC_ERROR_*.
+        var underlyingError: xpc_object_t? {
+            switch self {
+            case .connectionInterrupted: return XPC_ERROR_CONNECTION_INTERRUPTED
+            case .connectionInvalid: return XPC_ERROR_CONNECTION_INVALID
+            case .terminationImminent: return XPC_ERROR_TERMINATION_IMMINENT
+            default: return nil
+            }
+        }
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -100,6 +127,9 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
     
     ///
     private var replyHandlers = [String: _MessageHandler]()
+    
+    ///
+    private var errorHandlers = [XPCError: [() -> ()]]()
     
     /*
      //xpc_connection_create(nil, nil) -> anonymous
@@ -198,7 +228,8 @@ public extension XPCConnection {
                 do {
                     try reply!($0)
                 } catch(let error) {
-                    os_log("remote coding error! %@", error.localizedDescription)
+                    os_log("remote coding error: %@", error.localizedDescription)
+                    self.errorHandlers[.codingError]?.forEach { $0() }
                 }
             }
         } else {
@@ -208,9 +239,12 @@ public extension XPCConnection {
     
     /// Receives a handled message on the internal XPC connection. Note: needs a preset handler.
     private func _recv(_ event: xpc_object_t) {
-        guard xpc_get_type(event) == XPC_TYPE_DICTIONARY else { //XPC_TYPE_ERROR
-            os_log("ERROR!")
-            return
+        
+        // If the event isn't a dictionary (it's an error), trigger the error handlers.
+        guard xpc_get_type(event) == XPC_TYPE_DICTIONARY else {
+            if let err = XPCError(from: event) {
+                self.errorHandlers[err]?.forEach { $0() }
+            }; return
         }
         
         // Dispatch the message to an applicable handler on our reply queue.
@@ -242,7 +276,13 @@ public extension XPCConnection {
             }
         } else {
             os_log("ignoring unregistered message: %@", event.description)
+            self.errorHandlers[.unregisteredMessage]?.forEach { $0() }
         }
+    }
+    
+    /// Installs an error handler for the given error type (one-to-many).
+    public func handle(error: XPCConnection.XPCError, with handler: @escaping () -> ()) {
+        self.errorHandlers[error, default: []].append(handler)
     }
 }
 

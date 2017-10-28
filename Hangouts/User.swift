@@ -142,7 +142,7 @@ public class UserList: Directory {
         if let user = self.users[userID] {
             return user
         } else {
-            //log.warning("UserList returning unknown User for User.ID \(userID)")
+            //log.info("UserList returning unknown User for User.ID \(userID)")
             return User(self.client, userID: userID)
         }
     }
@@ -313,7 +313,7 @@ fileprivate extension MoodContent {
             case SegmentType.LineBreak:
                 lines += "\n"
             default:
-                log.warning("Ignoring unknown chat message segment type: \(segment.type)")
+                log.info("Ignoring unknown chat message segment type: \(segment.type)")
             }
         }
         return lines

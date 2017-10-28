@@ -38,7 +38,6 @@
 		482323E91E1D61E100318380 /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323E81E1D61E100318380 /* AttributedString.swift */; };
 		4826D3881F03B853000FE44F /* Transformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4826D3871F03B853000FE44F /* Transformer.swift */; };
 		4831BC971ECF72C900C30413 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4831BC961ECF72C900C30413 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		4831BC9C1ECFA1A300C30413 /* NSExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BC9B1ECFA1A300C30413 /* NSExtension.swift */; };
 		4831BCC91ED09C9800C30413 /* GeneralPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCC81ED09C9800C30413 /* GeneralPrefs.swift */; };
 		4831BCCB1ED0C21200C30413 /* NSViewController+Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCCA1ED0C21200C30413 /* NSViewController+Window.swift */; };
 		4831BCCE1ED1FAF000C30413 /* TodayConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCCC1ED1F9F100C30413 /* TodayConversationCell.swift */; };
@@ -68,7 +67,6 @@
 		4869A9A71EE0FC2C00764594 /* NSAppearance+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9A61EE0FC2C00764594 /* NSAppearance+Extensions.swift */; };
 		4869A9A91EE1058100764594 /* WindowAnimators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9A81EE1058100764594 /* WindowAnimators.swift */; };
 		4869A9AE1EE1528100764594 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9AD1EE1528100764594 /* Notification.swift */; };
-		4869A9B01EE16F5D00764594 /* Auth+WebDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */; };
 		4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9B11EE17A3800764594 /* SplitWindowController.swift */; };
 		4869A9D61EE5C78200764594 /* PersonIndicatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9D51EE5C78200764594 /* PersonIndicatorViewController.swift */; };
 		486C99FD1F103A36007D7BAA /* PBLiteDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486C99FC1F103A36007D7BAA /* PBLiteDecoder.swift */; };
@@ -83,7 +81,7 @@
 		486DBB431F94802000ECA84B /* XPCTransport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 486DBB301F947FB900ECA84B /* XPCTransport.framework */; };
 		486DBB4B1F9480AD00ECA84B /* RemoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486DBB4A1F9480AD00ECA84B /* RemoteService.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
-		487385881F9DFAAE00CC5853 /* CookieTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487385871F9DFAAE00CC5853 /* CookieTransport.swift */; };
+		487385891F9E1A6D00CC5853 /* CookieTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487385871F9DFAAE00CC5853 /* CookieTransport.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
 		48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ParrotAppController.swift */; };
 		48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48834D991C1B3602009BC442 /* Assets.xcassets */; };
@@ -417,7 +415,6 @@
 		4826D3871F03B853000FE44F /* Transformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformer.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		4831BC961ECF72C900C30413 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		4831BC9B1ECFA1A300C30413 /* NSExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSExtension.swift; sourceTree = "<group>"; };
 		4831BCC81ED09C9800C30413 /* GeneralPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPrefs.swift; sourceTree = "<group>"; };
 		4831BCCA1ED0C21200C30413 /* NSViewController+Window.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSViewController+Window.swift"; sourceTree = "<group>"; };
 		4831BCCC1ED1F9F100C30413 /* TodayConversationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayConversationCell.swift; sourceTree = "<group>"; };
@@ -696,6 +693,7 @@
 				4869A93F1EDF2EDC00764594 /* Directory.swift */,
 				48158E431D29C28A00ED369C /* Service+Capabilities.swift */,
 				4869A9AD1EE1528100764594 /* Notification.swift */,
+				487385871F9DFAAE00CC5853 /* CookieTransport.swift */,
 				481300501D26BD6700768D79 /* Supporting Files */,
 			);
 			path = ParrotServiceExtension;
@@ -830,7 +828,6 @@
 				481891D21F8745E100AB918B /* XPCService.swift */,
 				4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */,
 				4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */,
-				487385871F9DFAAE00CC5853 /* CookieTransport.swift */,
 				486DBB3C1F947FD100ECA84B /* Supporting Files */,
 			);
 			path = XPCTransport;
@@ -976,6 +973,7 @@
 			isa = PBXGroup;
 			children = (
 				48834E211C1B399A009BC442 /* main.swift */,
+				4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */,
 				48834E231C1B3B2C009BC442 /* Supporting Files */,
 			);
 			path = parrotd;
@@ -1017,7 +1015,6 @@
 			children = (
 				4884927C1D0B46BB0003D522 /* Main.storyboard */,
 				48834D951C1B3602009BC442 /* ParrotAppController.swift */,
-				4869A9AF1EE16F5C00764594 /* Auth+WebDelegate.swift */,
 				4831BCC61ED09C6300C30413 /* Preferences */,
 			);
 			name = "App UI";
@@ -1028,7 +1025,6 @@
 			children = (
 				486E7DED1DA8556300C1953B /* Promise.swift */,
 				4869A9331ED9480C00764594 /* DynamicProperty.swift */,
-				4831BC9B1ECFA1A300C30413 /* NSExtension.swift */,
 				489421691EC11BCE0047FDBB /* DispatchSupport.swift */,
 				48834E391C1B4098009BC442 /* FoundationSupport.swift */,
 				48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */,
@@ -1659,6 +1655,7 @@
 				481300511D26BD7700768D79 /* Conversation.swift in Sources */,
 				4869A93E1EDF2E9E00764594 /* ConversationList.swift in Sources */,
 				4869A9401EDF2EDC00764594 /* Directory.swift in Sources */,
+				487385891F9E1A6D00CC5853 /* CookieTransport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1669,7 +1666,6 @@
 				486DBB3F1F947FF800ECA84B /* XPCTransaction.swift in Sources */,
 				486DBB4B1F9480AD00ECA84B /* RemoteService.swift in Sources */,
 				486DBB3D1F947FEF00ECA84B /* XPCCoder.swift in Sources */,
-				487385881F9DFAAE00CC5853 /* CookieTransport.swift in Sources */,
 				486DBB3E1F947FF300ECA84B /* XPCConnection.swift in Sources */,
 				486DBB401F94800000ECA84B /* XPCService.swift in Sources */,
 			);
@@ -1681,7 +1677,6 @@
 			files = (
 				48AD39F81EE7FE2900C33E40 /* AccountsPrefs.swift in Sources */,
 				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
-				4869A9B01EE16F5D00764594 /* Auth+WebDelegate.swift in Sources */,
 				488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */,
 				4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */,
 				48EC1BF21F217D7A000C40C1 /* LocationCell.swift in Sources */,
@@ -1748,7 +1743,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D3CD051DE944A6003D6C02 /* FoundationSupport.swift in Sources */,
-				4831BC9C1ECFA1A300C30413 /* NSExtension.swift in Sources */,
 				4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */,
 				4826D3881F03B853000FE44F /* Transformer.swift in Sources */,
 				48D3CD221DE94C9C003D6C02 /* KeyValueStore.swift in Sources */,
@@ -2048,6 +2042,7 @@
 		486DBB391F947FB900ECA84B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2081,6 +2076,7 @@
 		486DBB3A1F947FB900ECA84B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

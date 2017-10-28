@@ -111,7 +111,7 @@ public class IChatMessageEvent: IEvent, Message {
             case SegmentType.LineBreak:
                 lines.append("")
             default:
-                log.warning("Ignoring unknown chat message segment type: \(segment.type)")
+                log.info("Ignoring unknown chat message segment type: \(segment.type)")
             }
         }
 		

@@ -126,39 +126,3 @@ extension ParrotViewController: NCWidgetProviding {
 		return false
 	}
 }
-
-internal class AuthDelegate: NSObject, AuthenticatorDelegate {
-    
-    private static let GROUP_DOMAIN = "group.com.avaidyam.Parrot"
-    private static let ACCESS_TOKEN = "access_token"
-    private static let REFRESH_TOKEN = "refresh_token"
-    
-    internal static var window: NSWindow? = nil
-    internal static var validURL: URL? = nil
-    internal static var handler: ((_ oauth_code: String) -> Void)? = nil
-    internal static var delegate = AuthDelegate()
-    
-    var authenticationTokens: AuthenticationTokens? {
-        get {
-            let at = SecureSettings[AuthDelegate.ACCESS_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] as? String
-            let rt = SecureSettings[AuthDelegate.REFRESH_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] as? String
-            
-            if let at = at, let rt = rt {
-                return (access_token: at, refresh_token: rt)
-            } else {
-                SecureSettings[AuthDelegate.ACCESS_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] = nil
-                SecureSettings[AuthDelegate.REFRESH_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] = nil
-                return nil
-            }
-        }
-        set {
-            SecureSettings[AuthDelegate.ACCESS_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] = newValue?.access_token ?? nil
-            SecureSettings[AuthDelegate.REFRESH_TOKEN, domain: AuthDelegate.GROUP_DOMAIN] = newValue?.refresh_token ?? nil
-        }
-    }
-    
-    func authenticationMethod(_ oauth_url: URL, _ result: @escaping AuthenticationResult) {
-        log.debug("TEST \(String(describing: self.authenticationTokens))")
-        result("")
-    }
-}

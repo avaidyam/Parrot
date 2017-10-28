@@ -121,7 +121,7 @@ public final class Client: Service {
                             //self.conversationList.delegate?.conversationList(self.conversationList, didReceiveEvent: conv_event)
                             conv.handleEvent(event: conv_event)
                         } else {
-                            log.warning("Received ClientEvent for unknown conversation \(event.conversation_id!.id!)")
+                            log.info("Received ClientEvent for unknown conversation \(event.conversation_id!.id!)")
                         }
                     }
                 } else {
@@ -227,7 +227,7 @@ public final class Client: Service {
                         userInfo: [Client.didUpdateStateKey: state_update])
                 }
             } else {
-                log.warning("Ignoring message: \(payload[0])")
+                log.info("Ignoring message: \(payload[0])")
             }
         }
     }

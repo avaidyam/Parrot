@@ -23,6 +23,7 @@ internal class WebDelegate: NSObject, WebPolicyDelegate, WebResourceLoadDelegate
             else { return }
         WebDelegate.handler?(cookie)
         sender.close()
+        sender.window?.close()
     }
     
     internal class func prompt(url: URL, cb: @escaping AuthenticationResult) {

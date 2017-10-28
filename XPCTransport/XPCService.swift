@@ -74,8 +74,10 @@ open class XPCService {
         peer.bootstrap() // automatically does: .active = true
         
         // Update peer list, removing duplicates (reconnecting peers).
-        if let peerIdx = self.peers.index(of: peer) {
-            self.peers.remove(at: peerIdx)
+        peer.handle(error: .connectionInvalid) {
+            if let peerIdx = self.peers.index(of: peer) {
+                self.peers.remove(at: peerIdx)
+            }
         }
         self.peers.append(peer)
     }

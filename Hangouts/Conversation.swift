@@ -505,7 +505,7 @@ extension ConversationList {
                 let conv_event = conv.add(event: note.event!)
                 conv.handleEvent(event: conv_event)
             } else {
-                log.warning("Received ClientEvent for unknown conversation \(event.conversation_id!.id!)")
+                log.info("Received ClientEvent for unknown conversation \(event.conversation_id!.id!)")
             }
             
         } else if let note = update.focus_notification {
@@ -514,7 +514,7 @@ extension ConversationList {
                 conv.focuses[userid] = note.type! == .Focused
                 NotificationCenter.default.post(name: Notification.Conversation.DidChangeFocus, object: conv)
             } else {
-                log.warning("Received SetFocusNotification for unknown conversation \(note.conversation_id!.id!)")
+                log.info("Received SetFocusNotification for unknown conversation \(note.conversation_id!.id!)")
             }
             
         } else if let note = update.typing_notification {
@@ -526,7 +526,7 @@ extension ConversationList {
                 )]
                 conv.handleTypingStatus(status: res.status, forUser: user)
             } else {
-                log.warning("Received ClientSetTypingNotification for unknown conversation \(note.conversation_id!.id!)")
+                log.info("Received ClientSetTypingNotification for unknown conversation \(note.conversation_id!.id!)")
             }
             
         } else if let note = update.notification_level_notification {
@@ -537,7 +537,7 @@ extension ConversationList {
                 NotificationCenter.default.post(name: Notification.Conversation.DidReceiveWatermark,
                                                 object: conv, userInfo: ["status": res])
             } else {
-                log.warning("Received WatermarkNotification for unknown conversation \(note.conversation_id!.id!)")
+                log.info("Received WatermarkNotification for unknown conversation \(note.conversation_id!.id!)")
             }
             
         } else if let note = update.view_modification {
