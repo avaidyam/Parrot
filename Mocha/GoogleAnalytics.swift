@@ -151,6 +151,7 @@ public struct GoogleAnalytics {
     
     private static func send(type: String?, parameters: [String: String]) {
         guard let sessionTrackingIdentifier = sessionTrackingIdentifier else { return }
+        
         var arguments: [String: String] = [
             "tid": sessionTrackingIdentifier,
             "aid": AppProperties.appIdentifier,
@@ -171,11 +172,11 @@ public struct GoogleAnalytics {
         }.joined(separator: "&")
         
         let baseURL = URL(string: "https://www.google-analytics.com/")!
-        guard let url = URL(string: path, relativeTo: baseURL) else { return }
-        URLSession.shared.dataTask(with: url) { _, _, error in
-            if let errorResponse = error?.localizedDescription {
-                print("Failed to deliver GA Request. ", errorResponse)
-            }
-        }.resume()
+        guard let url = URL(string: "collect?" + path, relativeTo: baseURL) else { return }
+        
+        let res = URLSession.shared.synchronousRequest(url)
+        if let err = res.2?.localizedDescription {
+            print("Failed to deliver GA Request: ", err)
+        }
     }
 }
