@@ -178,10 +178,35 @@ public extension Date {
         return (includeTime ? Date.fullFormatter : Date.dateFormatter).string(from: self)
     }
     
-    public func nearestMinute() -> Date {
+    public func nearest(_ component: Calendar.Component) -> Date {
         let c = Calendar.current
-        var next = c.dateComponents(Set<Calendar.Component>([.minute]), from: self)
-        next.minute = (next.minute ?? -1) + 1
+        var next = c.dateComponents(Set<Calendar.Component>([component]), from: self)
+        next.setValue((next.value(for: component) ?? -1) + 1, for: component)
         return c.nextDate(after: self, matching: next, matchingPolicy: .strict) ?? self
+    }
+}
+
+/// Wrapper for ProcessInfo.processInfo.*Activity(...)
+public class ProcessActivity {
+    public typealias Options = ProcessInfo.ActivityOptions
+    
+    public let identifier: String
+    public let options: Options
+    private let _internal: NSObjectProtocol
+    
+    public init(identifier: String, options: Options = []) {
+        self.identifier = identifier
+        self.options = options
+        self._internal = ProcessInfo.processInfo.beginActivity(options: self.options, reason: self.identifier)
+    }
+    
+    deinit {
+        ProcessInfo.processInfo.endActivity(self._internal)
+    }
+    
+    public static func perform(identifier: String, options: Options = [], activity: () throws -> ()) rethrows {
+        var _activity: ProcessActivity? = ProcessActivity(identifier: identifier, options: options); _ = _activity
+        try activity()
+        _activity = nil
     }
 }

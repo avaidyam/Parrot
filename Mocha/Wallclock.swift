@@ -21,7 +21,7 @@ open class Wallclock {
             
             // Create the underlying DispatchSourceTimer.
             self.wallclock = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
-            self.wallclock?.schedule(wallDeadline: .now() + Date().nearestMinute().timeIntervalSinceNow, repeating: 60.0, leeway: .seconds(3))
+            self.wallclock?.schedule(wallDeadline: .now() + Date().nearest(.minute).timeIntervalSinceNow, repeating: 60.0, leeway: .seconds(3))
             self.wallclock?.setEventHandler {
                 self.targets.values.forEach { $0.action() }
             }

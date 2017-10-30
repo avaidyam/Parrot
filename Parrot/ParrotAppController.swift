@@ -85,8 +85,7 @@ public class ParrotAppController: NSApplicationController {
         }
         
         // Set up the Google Analytics reporting.
-        GoogleReporter.shared.configure(withTrackerId: "UA-63931980-2")
-        GoogleReporter.shared.session(start: true)
+        GoogleAnalytics.sessionTrackingIdentifier = "UA-63931980-2"
         
         /*subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.giveConversations")) {
             log.debug("RESULTS: \($0)")
@@ -272,7 +271,7 @@ public class ParrotAppController: NSApplicationController {
     public func applicationWillTerminate(_ notification: Notification) {
         
         // End the reporting session.
-        GoogleReporter.shared.session(start: false)
+        GoogleAnalytics.sessionTrackingIdentifier = nil
     }
     
     /// Right clicking the status item causes the app to close; left click causes it to become visible.
