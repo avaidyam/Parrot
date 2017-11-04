@@ -34,7 +34,7 @@ public struct GenericMethod: RequestingRespondingThrowingMethod, Codable, Error 
     public typealias Service = XPCConnection
     public typealias Request = UntypedMethod
     public typealias Response = UntypedMethod
-    public typealias Exception = UntypedMethod
+    public typealias Error = UntypedMethod
     
     var value: [String: String]
 }

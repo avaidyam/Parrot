@@ -135,6 +135,11 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         self.textView.height >= self.photoView.height
     }
     
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        GoogleAnalytics.view(screen: GoogleAnalytics.Screen("\(type(of: self))"))
+    }
+    
     // Set up dark/light notifications.
     public override func viewDidAppear() {
         super.viewDidAppear()

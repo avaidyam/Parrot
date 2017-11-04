@@ -106,16 +106,13 @@ public final class Promise<T> {
     }
 }
 
-/// A Callback mimics the Swift do-catch-finally block asynchronously.
-/// It's something like a Promise, but not chainable or "evaluatable."
+/// An asynchronous do-catch-finally block.
+/// (It's something like a Promise, but not chainable or "evaluatable.")
 ///
 /// sync: `do { ... } catch(...) { ... } finally { ... }`
 ///
 /// async: `myFunc().do { value in ... }.catch { error in ... }.finally { ... }`
 ///
-/// Note: `finally` always executes on the queue of the block executed
-/// before itself; that is, if the `do` block was executed on a queue A,
-/// `finally` will also execute there (and similarly for `catch`).
 public final class Callback<T> {
     public enum Result {
         case result(T)
@@ -130,9 +127,11 @@ public final class Callback<T> {
     
     private var do_queue: DispatchQueue? = nil
     private var catch_queue: DispatchQueue? = nil
-    //private var finally_queue: DispatchQueue? = nil
+    private var finally_queue: DispatchQueue? = nil
     
     /// do { ... }
+    /// - Note: if `queue` is nil, the `do { .... }` handler will be executed on the
+    /// same queue as the callee's current queue when completing the `Callback`.
     public func `do`(on queue: DispatchQueue? = nil, _ handler: @escaping (T) -> ()) -> Callback<T> {
         self.do_queue = queue
         self.do_handler = handler
@@ -140,6 +139,8 @@ public final class Callback<T> {
     }
     
     /// catch(let error) { ... }
+    /// - Note: if `queue` is nil, the `catch { .... }` handler will be executed on the
+    /// same queue as the callee's current queue when completing the `Callback`.
     public func `catch`(on queue: DispatchQueue? = nil, _ handler: @escaping (Error) -> ()) -> Callback<T> {
         self.catch_queue = queue
         self.catch_handler = handler
@@ -147,13 +148,16 @@ public final class Callback<T> {
     }
     
     /// finally { ... }
-    public func `finally`(/*on queue: DispatchQueue? = nil, */_ handler: @escaping () -> ()) -> Callback<T> {
-        //self.finally_queue = queue
+    /// - Note: if `queue` is `nil`, the `finally { ... }` handler will be executed on the
+    /// same queue as either the `do` or `catch` handlers, whichever occurs.
+    public func `finally`(on queue: DispatchQueue? = nil, _ handler: @escaping () -> ()) -> Callback<T> {
+        self.finally_queue = queue
         self.finally_handler = handler
         return self
     }
     
-    // Server-side completion.
+    /// Server-side completion. At the time of completion, whichever handlers are registered
+    /// will be invoked on their respective queues (if applicable).
     public func complete(with result: Result) {
         guard !self.completed else { return }
         self.completed = true
@@ -162,12 +166,29 @@ public final class Callback<T> {
         case .result(let value):
             self.perform(on: self.do_queue) {
                 self.do_handler(value)
-                self.finally_handler()
+                self.perform(on: self.finally_queue, self.finally_handler)
             }
         case .error(let error):
             self.perform(on: self.catch_queue) {
                 self.catch_handler(error)
-                self.finally_handler()
+                self.perform(on: self.finally_queue, self.finally_handler)
+            }
+        }
+    }
+    
+    /// Server-side completion via throwing handler block.
+    /// - Note: not providing a `queue` may cause completion before a handler can
+    /// be registed on the "client-side" or caller-side.
+    public func complete(on queue: DispatchQueue? = nil, with handler: @escaping () throws -> (T)) {
+        guard !self.completed else { return }
+        self.completed = true
+        
+        self.perform(on: queue) {
+            do {
+                let result = try handler()
+                self.complete(with: .result(result))
+            } catch(let error) {
+                self.complete(with: .error(error))
             }
         }
     }

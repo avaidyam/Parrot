@@ -1,10 +1,10 @@
 import Foundation
 import XPC
 import os
-import ServiceManagement
 
 /// Note: trying to {en,de}code this results in gibberish unless using XPC{En,De}Coder.
 public final class XPCConnection: Hashable, Codable, RemoteService {
+    private enum CodingKeys: CodingKey {}
     
     /// Describes any remote transport/wire/serialization errors that XPC may emit.
     public enum XPCError: Int, Error, Codable {
@@ -35,10 +35,6 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             default: return nil
             }
         }
-    }
-    
-    private enum CodingKeys: String, CodingKey {
-        case name
     }
     
     /// Acts as an intermediate because type-erasure is difficult when you need to use Codable.
@@ -73,7 +69,7 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: ThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Exception?)) {
+        init<RMI: ThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Error?)) {
             self.requiresReply = true
             self.handler = { _ in
                 let t = try handler()
@@ -81,7 +77,7 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Exception?)) {
+        init<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Error?)) {
             self.requiresReply = true
             self.handler = {
                 let t = try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
@@ -89,7 +85,7 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Exception?)) {
+        init<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Error?)) {
             self.requiresReply = true
             self.handler = { _ in
                 let t = try handler()
@@ -106,7 +102,7 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Exception?)) {
+        init<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Error?)) {
             self.requiresReply = true
             self.handler = {
                 let t = try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
@@ -116,8 +112,34 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
         }
     }
     
-    ///
-    public let name: String
+    /// Encapsulates all the properties of the wire underlying the XPCConnection.
+    /// - Note: internally, XPC uses `audit_token_to_au32(...)` to provide this information.
+    public struct XPCConnectionProperties: Codable {
+        public let euid: uid_t
+        public let egid: gid_t
+        public let pid: pid_t
+        public let asid: au_asid_t
+        
+        //xpc_connection_get_audit_token(...)?
+        internal init(_ connection: xpc_connection_t) {
+            self.euid = xpc_connection_get_euid(connection)
+            self.egid = xpc_connection_get_egid(connection)
+            self.pid = xpc_connection_get_pid(connection)
+            self.asid = xpc_connection_get_asid(connection)
+        }
+    }
+    
+    /// The name of the endpoint (other end) the XPCConnection is connected to.
+    public var name: String {
+        guard let c = self.connection else { return "" }
+        guard let n = xpc_connection_get_name(c) else { return "" }
+        return String(cString: n)
+    }
+    
+    /// The properties of the wire underlying the XPCConnection.
+    public var properties: XPCConnectionProperties {
+        return XPCConnectionProperties(self.connection)
+    }
     
     ///
     internal var connection: xpc_connection_t! = nil
@@ -131,18 +153,7 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
     ///
     private var errorHandlers = [XPCError: [() -> ()]]()
     
-    /*
-     //xpc_connection_create(nil, nil) -> anonymous
-     //xpc_connection_send_barrier
-     //xpc_connection_cancel + activate
-     //xpc_connection_get_euid
-     //xpc_connection_get_egid
-     //xpc_connection_get_pid
-     //xpc_connection_get_asid
-     // xpc_dictionary_get_remote_connection ???
-     */
-    
-    // Note: NOP for unconfigured connection.
+    /// - Note: Does nothing for an unconfigured XPCConnection.
     public var active: Bool = false {
         didSet {
             guard self.connection != nil else { return }
@@ -157,7 +168,6 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
     /// Create an XPCConnection for an existing underlying connection.
     internal init(_ connection: xpc_connection_t) {
         self.connection = connection
-        self.name = "<unknown>"//String(cString: xpc_connection_get_name(connection)!)
     }
     
     /// When creating an XPCConnection for an existing underlying connection, the event handler
@@ -169,41 +179,36 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
     
     /// Connect to a service in the local bootstrap domain called `name`.
     /// Wire messages will be serviced on the designated `queue`.
-    public init(name: String, on queue: DispatchQueue = DispatchQueue.global(), active: Bool = false) {
-        self.name = name
+    public init(name: String, active: Bool = false) {
         name.withCString {
-            self.connection = xpc_connection_create($0, queue)
+            self.connection = xpc_connection_create($0, nil)
         }
         xpc_connection_set_event_handler(self.connection, self._recv(_:))
-        if active {
-            xpc_connection_resume(self.connection)
-        }
+        if active { defer { self.active = true } }
     }
     
     /// Connect to a service in the global bootstrap domain called `machName`.
     /// Wire messages will be serviced on the designated `queue`.
-    public init(machName: String, on queue: DispatchQueue = DispatchQueue.global(), active: Bool = false) {
-        self.name = machName
+    public init(machName name: String, active: Bool = false) {
         name.withCString {
-            self.connection = xpc_connection_create_mach_service($0, queue, 0)
+            self.connection = xpc_connection_create_mach_service($0, nil, 0)
         }
         xpc_connection_set_event_handler(self.connection, self._recv(_:))
-        if active {
-            xpc_connection_resume(self.connection)
-        }
+        if active { defer { self.active = true } }
     }
     
     /// Connect to a privileged service in the global bootstrap domain called `privilegedMachName`.
     /// Wire messages will be serviced on the designated `queue`.
-    public init(privilegedMachName: String, on queue: DispatchQueue = DispatchQueue.global(), active: Bool = false) {
-        self.name = privilegedMachName
+    public init(privilegedMachName name: String, active: Bool = false) {
         name.withCString {
-            self.connection = xpc_connection_create_mach_service($0, queue, UInt64(XPC_CONNECTION_MACH_SERVICE_PRIVILEGED))
+            self.connection = xpc_connection_create_mach_service($0, nil, UInt64(XPC_CONNECTION_MACH_SERVICE_PRIVILEGED))
         }
         xpc_connection_set_event_handler(self.connection, self._recv(_:))
-        if active {
-            xpc_connection_resume(self.connection)
-        }
+        if active { defer { self.active = true } }
+    }
+    
+    deinit {
+        xpc_connection_cancel(self.connection)
     }
 }
 
@@ -284,6 +289,13 @@ public extension XPCConnection {
     public func handle(error: XPCConnection.XPCError, with handler: @escaping () -> ()) {
         self.errorHandlers[error, default: []].append(handler)
     }
+    
+    /// The block executes on the same serial queue that messages are handled on.
+    /// This ensures that no messages are sent while this block executes.
+    public func perform(block barrier: @escaping () -> ()) {
+        guard self.connection != nil else { return }
+        xpc_connection_send_barrier(self.connection, barrier)
+    }
 }
 
 /// Over-the-wire packaging and unpackaging utilities.
@@ -319,9 +331,9 @@ public extension XPCConnection {
     
     /// Retrieve the error from the wire package.
     /// Variant of _unpackage(_:_:) to support RemoteThrowables.
-    private func _unpackage<RMI: RemoteMethodBase & RemoteThrowable>(_ rmi: RMI.Type, _ event: xpc_object_t) throws -> RMI.Exception? {
+    private func _unpackage<RMI: RemoteMethodBase & RemoteThrowable>(_ rmi: RMI.Type, _ event: xpc_object_t) throws -> RMI.Error? {
         guard let r = xpc_dictionary_get_value(event, "error") else { return nil }
-        return try XPCDecoder().decode(RMI.Exception.self, from: r)
+        return try XPCDecoder().decode(RMI.Error.self, from: r)
     }
 }
 
@@ -341,19 +353,19 @@ public extension XPCConnection {
         }
     }
     
-    public func async<RMI: ThrowingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Exception?) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: ThrowingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Error?) -> ()) throws where RMI.Service == XPCConnection {
         self._send(try self._package(rmi)) {
             response(try self._unpackage(rmi, $0))
         }
     }
     
-    public func async<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Exception?) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Error?) -> ()) throws where RMI.Service == XPCConnection {
         self._send(try self._package(rmi, request)) {
             response(try self._unpackage(rmi, $0))
         }
     }
     
-    public func async<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Response?, RMI.Exception?) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Response?, RMI.Error?) -> ()) throws where RMI.Service == XPCConnection {
         self._send(try self._package(rmi)) {
             response(try self._unpackage(rmi, $0), try self._unpackage(rmi, $0))
         }
@@ -365,7 +377,7 @@ public extension XPCConnection {
         }
     }
     
-    public func async<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Response?, RMI.Exception?) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Response?, RMI.Error?) -> ()) throws where RMI.Service == XPCConnection {
         self._send(try self._package(rmi, request)) {
             response(try self._unpackage(rmi, $0), try self._unpackage(rmi, $0))
         }
@@ -386,15 +398,15 @@ public extension XPCConnection {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: ThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Exception?)) where RMI.Service == XPCConnection {
+    public func recv<RMI: ThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Error?)) where RMI.Service == XPCConnection {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Exception?)) where RMI.Service == XPCConnection {
+    public func recv<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Error?)) where RMI.Service == XPCConnection {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Exception?)) where RMI.Service == XPCConnection {
+    public func recv<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Error?)) where RMI.Service == XPCConnection {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
@@ -402,7 +414,7 @@ public extension XPCConnection {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Exception?)) where RMI.Service == XPCConnection {
+    public func recv<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Error?)) where RMI.Service == XPCConnection {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
 }

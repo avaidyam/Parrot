@@ -4,6 +4,7 @@ import Dispatch
 // TODO: RemoteValue = a promise-like type that wraps an async send()
 // TODO: Swap recv(...) to yield a closure that can return instead of forcing a return inline
 // TODO: Remove RemoteMethodBase.Service --> or make it a static descriptor
+// TODO: Simplify to RemoteInvocation with Void to indicate inability of parameter
 
 public enum RemoteError: Error {//}, Codable {
     
@@ -43,12 +44,17 @@ public enum RemoteError: Error {//}, Codable {
     */
 }
 
+
 /// Will never be instantiated.
 public protocol RemoteMethodBase {
     associatedtype Service
+    static var options: [AnyHashable: Any] { get }
 }
 
 public extension RemoteMethodBase {
+    
+    public static var options: [AnyHashable: Any] { return [:] }
+    
     public static var qualifiedName: String {
         return "\(type(of: self))".components(separatedBy: ".").joined(separator: "/")
     }
@@ -61,7 +67,7 @@ public protocol RemoteRespondable {
     associatedtype Response: Codable
 }
 public protocol RemoteThrowable {
-    associatedtype Exception: Codable, Error
+    associatedtype Error: Codable, Swift.Error
 }
 
 /// func method()
@@ -70,15 +76,15 @@ public protocol RemoteMethod: RemoteMethodBase {}
 public protocol RequestingMethod: RemoteMethodBase, RemoteRequestable {}
 /// func method() -> Self.Response
 public protocol RespondingMethod: RemoteMethodBase, RemoteRespondable {}
-/// func method() throws[Self.Exception]
+/// func method() throws[Self.Error]
 public protocol ThrowingMethod: RemoteMethodBase, RemoteThrowable {}
-/// func method(Self.Request) throws[Self.Exception]
+/// func method(Self.Request) throws[Self.Error]
 public protocol RequestingThrowingMethod: RemoteMethodBase, RemoteRequestable, RemoteThrowable {}
-/// func method() throws[Self.Exception] -> Self.Response
+/// func method() throws[Self.Error] -> Self.Response
 public protocol RespondingThrowingMethod: RemoteMethodBase, RemoteRespondable, RemoteThrowable {}
 /// func method(Self.Request) -> Self.Response
 public protocol RequestingRespondingMethod: RemoteMethodBase, RemoteRequestable, RemoteRespondable {}
-/// func method(Self.Request) throws[Self.Exception] -> Self.Response
+/// func method(Self.Request) throws[Self.Error] -> Self.Response
 public protocol RequestingRespondingThrowingMethod: RemoteMethodBase, RemoteRequestable, RemoteRespondable, RemoteThrowable {}
 
 public protocol RemoteService {
@@ -88,15 +94,15 @@ public protocol RemoteService {
         where RMI.Service == Self
     func async<RMI: RespondingMethod>(_: RMI.Type, response: @escaping (RMI.Response) -> ()) throws
         where RMI.Service == Self
-    func async<RMI: ThrowingMethod>(_: RMI.Type, response: @escaping (RMI.Exception?) -> ()) throws
+    func async<RMI: ThrowingMethod>(_: RMI.Type, response: @escaping (RMI.Error?) -> ()) throws
         where RMI.Service == Self
-    func async<RMI: RequestingThrowingMethod>(_: RMI.Type, with: RMI.Request, response: @escaping (RMI.Exception?) -> ()) throws
+    func async<RMI: RequestingThrowingMethod>(_: RMI.Type, with: RMI.Request, response: @escaping (RMI.Error?) -> ()) throws
         where RMI.Service == Self
-    func async<RMI: RespondingThrowingMethod>(_: RMI.Type, response: @escaping (RMI.Response?, RMI.Exception?) -> ()) throws
+    func async<RMI: RespondingThrowingMethod>(_: RMI.Type, response: @escaping (RMI.Response?, RMI.Error?) -> ()) throws
         where RMI.Service == Self
     func async<RMI: RequestingRespondingMethod>(_: RMI.Type, with: RMI.Request, response: @escaping (RMI.Response) -> ()) throws
         where RMI.Service == Self
-    func async<RMI: RequestingRespondingThrowingMethod>(_: RMI.Type, with: RMI.Request, response: @escaping (RMI.Response?, RMI.Exception?) -> ()) throws
+    func async<RMI: RequestingRespondingThrowingMethod>(_: RMI.Type, with: RMI.Request, response: @escaping (RMI.Response?, RMI.Error?) -> ()) throws
         where RMI.Service == Self
     
     func sync<RMI: RemoteMethod>(_: RMI.Type) throws
@@ -105,15 +111,15 @@ public protocol RemoteService {
         where RMI.Service == Self
     func sync<RMI: RespondingMethod>(_: RMI.Type) throws -> RMI.Response
         where RMI.Service == Self
-    func sync<RMI: ThrowingMethod>(_: RMI.Type) throws -> RMI.Exception?
+    func sync<RMI: ThrowingMethod>(_: RMI.Type) throws -> RMI.Error?
         where RMI.Service == Self
-    func sync<RMI: RequestingThrowingMethod>(_: RMI.Type, with: RMI.Request) throws -> RMI.Exception?
+    func sync<RMI: RequestingThrowingMethod>(_: RMI.Type, with: RMI.Request) throws -> RMI.Error?
         where RMI.Service == Self
-    func sync<RMI: RespondingThrowingMethod>(_: RMI.Type) throws -> (RMI.Response?, RMI.Exception?)
+    func sync<RMI: RespondingThrowingMethod>(_: RMI.Type) throws -> (RMI.Response?, RMI.Error?)
         where RMI.Service == Self
     func sync<RMI: RequestingRespondingMethod>(_: RMI.Type, with: RMI.Request) throws -> RMI.Response
         where RMI.Service == Self
-    func sync<RMI: RequestingRespondingThrowingMethod>(_: RMI.Type, with: RMI.Request) throws -> (RMI.Response?, RMI.Exception?)
+    func sync<RMI: RequestingRespondingThrowingMethod>(_: RMI.Type, with: RMI.Request) throws -> (RMI.Response?, RMI.Error?)
         where RMI.Service == Self
     
     func recv<RMI: RemoteMethod>(_: RMI.Type, handler: @escaping () throws -> ())
@@ -122,15 +128,15 @@ public protocol RemoteService {
         where RMI.Service == Self
     func recv<RMI: RespondingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.Response))
         where RMI.Service == Self
-    func recv<RMI: ThrowingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.Exception?))
+    func recv<RMI: ThrowingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.Error?))
         where RMI.Service == Self
-    func recv<RMI: RequestingThrowingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Exception?))
+    func recv<RMI: RequestingThrowingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Error?))
         where RMI.Service == Self
-    func recv<RMI: RespondingThrowingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Exception?))
+    func recv<RMI: RespondingThrowingMethod>(_: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Error?))
         where RMI.Service == Self
     func recv<RMI: RequestingRespondingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response))
         where RMI.Service == Self
-    func recv<RMI: RequestingRespondingThrowingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Exception?))
+    func recv<RMI: RequestingRespondingThrowingMethod>(_: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Error?))
         where RMI.Service == Self
 }
 
@@ -155,8 +161,8 @@ public extension RemoteService {
         return response!
     }
     
-    public func sync<RMI: ThrowingMethod>(_ rmi: RMI.Type) throws -> RMI.Exception? where RMI.Service == Self {
-        var response: (RMI.Exception?)? = nil
+    public func sync<RMI: ThrowingMethod>(_ rmi: RMI.Type) throws -> RMI.Error? where RMI.Service == Self {
+        var response: (RMI.Error?)? = nil
         let s = DispatchSemaphore(value: 0)
         try self.async(rmi) {
             response = $0
@@ -167,8 +173,8 @@ public extension RemoteService {
         return response!
     }
     
-    public func sync<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request) throws -> RMI.Exception? where RMI.Service == Self {
-        var response: (RMI.Exception?)? = nil
+    public func sync<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request) throws -> RMI.Error? where RMI.Service == Self {
+        var response: (RMI.Error?)? = nil
         let s = DispatchSemaphore(value: 0)
         try self.async(rmi, with: request) {
             response = $0
@@ -179,8 +185,8 @@ public extension RemoteService {
         return response!
     }
     
-    public func sync<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type) throws -> (RMI.Response?, RMI.Exception?) where RMI.Service == Self {
-        var response: (RMI.Response?, RMI.Exception?)? = nil
+    public func sync<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type) throws -> (RMI.Response?, RMI.Error?) where RMI.Service == Self {
+        var response: (RMI.Response?, RMI.Error?)? = nil
         let s = DispatchSemaphore(value: 0)
         try self.async(rmi) {
             response = ($0, $1)
@@ -203,8 +209,8 @@ public extension RemoteService {
         return response!
     }
     
-    public func sync<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request) throws -> (RMI.Response?, RMI.Exception?) where RMI.Service == Self {
-        var response: (RMI.Response?, RMI.Exception?)? = nil
+    public func sync<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request) throws -> (RMI.Response?, RMI.Error?) where RMI.Service == Self {
+        var response: (RMI.Response?, RMI.Error?)? = nil
         let s = DispatchSemaphore(value: 0)
         try self.async(rmi, with: request) {
             response = ($0, $1)

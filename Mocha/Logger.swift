@@ -1,8 +1,6 @@
 import Foundation.NSDate
 
-/* TODO: Support Logger hierarchies like NSProgress. */
 /* TODO: Support separator + terminator on Any... type. */
-/* TODO: Support dumping backtraces using Thread.callStackSymbols. */
 
 /// A Logger is responsible for persisting text information to disk or memory
 /// for logging purposes. It relies on its Severity and Channel to do so.
@@ -42,9 +40,8 @@ public final class Logger {
         /// Note: it does not log many particulars that ASL or os_log would log.
 		public static let print = Channel {
 			var output = ""
-			_ = $2 >= .info
-				? debugPrint($1, terminator: "", to: &output)
-				: Swift.print($1, terminator: "", to: &output)
+			//_ = $2 >= .info ? debugPrint($1, terminator: "", to: &output) : // don't debug-print a string...
+            Swift.print($1, terminator: "", to: &output)
 			Swift.print("[\(Date())] [\($3)] [\($2)]: \(output)")
 		}
 	}

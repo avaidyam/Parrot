@@ -1,6 +1,7 @@
 import Cocoa
 
 // TODO: Create dynamically using XPC_CONNECTION_MACH_SERVICE_LISTENER.
+// TODO: Fix the whole anonymous endpoint stuff...
 
 /// Note: requires the XPCService dictionary in the Info.plist to set RunLoopType=_NSApplicationMain.
 open class XPCService {
