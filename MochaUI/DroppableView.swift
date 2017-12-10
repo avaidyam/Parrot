@@ -1,10 +1,12 @@
 import Cocoa
 
-protocol DroppableViewDraggingDelegate {
+/* TODO: DroppableView.types should take UTI types that filter pasteboard items. */
+
+public protocol DroppableViewDraggingDelegate {
     func dragging(state: DroppableView.DragState, for: NSDraggingInfo) -> NSDragOperation
 }
 
-protocol DroppableViewOperationDelegate {
+public protocol DroppableViewOperationDelegate {
     func dragging(state: DroppableView.OperationState, for: NSDraggingInfo) -> Bool
 }
 
@@ -51,8 +53,8 @@ public class DroppableView: NSView {
             for ext in self.extensions {
                 types.append("NSTypedFilenamesPboardType:\(ext)")
             }
-            // FIXME: Doing nothing with the `types`
-            self.registerForDraggedTypes([.filePromise])
+            // FIXME: Doing nothing with the `types` //._URL too?
+            self.registerForDraggedTypes([._fileURL])
         }
     }
     
@@ -125,16 +127,18 @@ public class DroppableView: NSView {
     public override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
         self.currentDragState = .entered
         guard let d = self.delegate as? DroppableViewDraggingDelegate else {
-            return !self.hasValidFiles(sender) ? [] : self.defaultOperation
+            return self.hasValidFiles(sender) ? self.defaultOperation : []
         }
+        print("\n\n\(#function)\n\n")
         return d.dragging(state: .entered, for: sender)
     }
     
     public override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
         self.currentDragState = .updated
         guard let d = self.delegate as? DroppableViewDraggingDelegate else {
-            return !self.hasValidFiles(sender) ? [] : self.defaultOperation
+            return self.hasValidFiles(sender) ? self.defaultOperation : []
         }
+        print("\n\n\(#function)\n\n")
         return d.dragging(state: .updated, for: sender)
     }
     
@@ -142,6 +146,7 @@ public class DroppableView: NSView {
         self.currentDragState = .exited
         guard let d = self.delegate as? DroppableViewDraggingDelegate else { return }
         _ = d.dragging(state: .exited, for: sender!)
+        print("\n\n\(#function)\n\n")
     }
     
     public override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
@@ -163,26 +168,39 @@ public class DroppableView: NSView {
     //
     
     // TODO: if dragging an image that isn't on-disk, this crashes.
-    private class func fileUrls(fromInfo info: NSDraggingInfo) -> [NSURL]? {
+    public class func fileUrls(from info: NSDraggingInfo) -> [URL]? {
         let pboard = info.draggingPasteboard()
-        if pboard.types!.contains(.filePromise) {
-            let urls = pboard.readObjects(forClasses: [NSURL.self], options: nil) as? [NSURL]
-            var realUrls = [NSURL]()
-            for url in urls! {
-                realUrls.append(url.filePathURL! as NSURL) // use filePathURL to avoid file:// file id's
-            }
-            return realUrls
+        guard pboard.types!.contains(._fileURL) else { return nil }
+        
+        let urls = pboard.readObjects(forClasses: [NSURL.self], options: nil) as? [NSURL]
+        var realUrls = [URL]()
+        for url in urls! where url.filePathURL != nil {
+            realUrls.append(url.filePathURL!) // use filePathURL to avoid file:// file id's
         }
-        return nil
+        return realUrls
     }
     
     private func hasValidFiles(_ info: NSDraggingInfo) -> Bool {
-        var hasValidFiles = false
-        let urls = DroppableView.fileUrls(fromInfo: info)
-        if urls == nil { return false }
-        for url in urls! {
-            if self.extensions.contains(url.pathExtension!) { hasValidFiles = true }
-        }
-        return hasValidFiles
+        guard let urls = DroppableView.fileUrls(from: info) else { return false }
+        return urls.filter { !self.extensions.contains($0.pathExtension) }.count == 0
+            && urls.count > 0 // so we need at least 1 url, and all url extensions must be ok
     }
+}
+
+// Some backward compatible extensions since macOS 10.13 did some weird things.
+public extension NSPasteboard.PasteboardType {
+    public static let _URL: NSPasteboard.PasteboardType = {
+        if #available(macOS 10.13, *) {
+            return NSPasteboard.PasteboardType.URL
+        } else {
+            return NSPasteboard.PasteboardType(kUTTypeURL as String)
+        }
+    }()
+    public static let _fileURL: NSPasteboard.PasteboardType = {
+        if #available(macOS 10.13, *) {
+            return NSPasteboard.PasteboardType.fileURL
+        } else {
+            return NSPasteboard.PasteboardType(kUTTypeFileURL as String)
+        }
+    }()
 }

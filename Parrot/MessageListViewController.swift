@@ -70,7 +70,7 @@ public extension Notification.Name {
     public static let OpenConversationsUpdated = Notification.Name(rawValue: "Parrot.OpenConversationsUpdated")
 }
 
-public class MessageListViewController: NSViewController, WindowPresentable, TextInputHost,
+public class MessageListViewController: NSViewController, WindowPresentable, TextInputHost, DroppableViewOperationDelegate,
 NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
     
     /// The openConversations keeps track of all open conversations and when the
@@ -173,8 +173,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     /// The dropping zone.
     private lazy var dropZone: DroppableView = {
         let v = DroppableView().modernize()
-        v.extensions = ["swift"]
+        v.extensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff"]
         v.defaultOperation = .copy
+        v.delegate = self
         return v
     }()
     
@@ -295,8 +296,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.textInputCell.view.bottom == self.moduleView.bottom
         self.dropZone.left == self.view.left
         self.dropZone.right == self.view.right
-        self.dropZone.bottom == self.view.bottom
-        self.dropZone.top == self.view.top
+        self.dropZone.bottom == self.moduleView.top
+        self.dropZone.top == self.view.top + 36 /* toolbar */
     }
     
     public func prepare(window: NSWindow) {
@@ -705,6 +706,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
         try! conversation.send(message: PlaceholderMessage(content: .text(text)))
     }
+    
+    public func dragging(state: DroppableView.OperationState, for info: NSDraggingInfo) -> Bool {
+        guard case .performing = state else { return true }
+        for url in DroppableView.fileUrls(from: info) ?? [] {
+            self.send(image: try! Data(contentsOf: url), filename: url.lastPathComponent)
+        }
+        return true
+    }
+    
     
     //
     //
