@@ -2,11 +2,13 @@ import Cocoa
 
 /* TODO: DroppableView.types should take UTI types that filter pasteboard items. */
 
-public protocol DroppableViewDraggingDelegate {
+public protocol DroppableViewDelegate { }
+
+public protocol DroppableViewDraggingDelegate: DroppableViewDelegate {
     func dragging(state: DroppableView.DragState, for: NSDraggingInfo) -> NSDragOperation
 }
 
-public protocol DroppableViewOperationDelegate {
+public protocol DroppableViewOperationDelegate: DroppableViewDelegate {
     func dragging(state: DroppableView.OperationState, for: NSDraggingInfo) -> Bool
 }
 
@@ -45,16 +47,14 @@ public class DroppableView: NSView {
         return animation
     }()
     
-    public var delegate: AnyObject? = nil
+    // Conformance is split into DroppableView{Dragging, Operation}Delegate. Only one delegate may be provided though.
+    public var delegate: DroppableViewDelegate? = nil
     
-    public var extensions: [String] = [] {
+    /// Also accepts fileURLs whose UTI conforms to these types.
+    public var acceptedTypes: [NSPasteboard.PasteboardType] = [] {
         didSet {
-            var types: [String] = []
-            for ext in self.extensions {
-                types.append("NSTypedFilenamesPboardType:\(ext)")
-            }
-            // FIXME: Doing nothing with the `types` //._URL too?
-            self.registerForDraggedTypes([._fileURL])
+            self.registerForDraggedTypes(self.acceptedTypes + [._fileURL])
+            // register for the raw kUTTypes AND manually process fileURL types.
         }
     }
     
@@ -65,6 +65,8 @@ public class DroppableView: NSView {
             self.needsDisplay = true
         }
     }
+    
+    public var hapticResponse: Bool = true
     
     private var currentDragState: DragState = .exited {
         didSet {
@@ -104,6 +106,8 @@ public class DroppableView: NSView {
     private func blink() {
         self.ringLayer.opacity = 0.0
         self.ringLayer.add(self.blinkAnim, forKey: "opacity")
+        self.currentDragState = .exited
+        self.needsDisplay = false // otherwise animation fails to run
     }
     
     //
@@ -125,70 +129,108 @@ public class DroppableView: NSView {
     //
     
     public override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        self.currentDragState = .entered
-        guard let d = self.delegate as? DroppableViewDraggingDelegate else {
-            return self.hasValidFiles(sender) ? self.defaultOperation : []
+        let valid = self.isValid(sender)
+        self.currentDragState = valid ? .entered : .exited
+        if valid && self.hapticResponse {
+            NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .drawCompleted)
         }
-        print("\n\n\(#function)\n\n")
+        guard let d = self.delegate as? DroppableViewDraggingDelegate else {
+            return valid ? self.defaultOperation : []
+        }
         return d.dragging(state: .entered, for: sender)
     }
     
     public override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
-        self.currentDragState = .updated
+        let valid = self.isValid(sender)
+        self.currentDragState = valid ? .updated : .exited
         guard let d = self.delegate as? DroppableViewDraggingDelegate else {
-            return self.hasValidFiles(sender) ? self.defaultOperation : []
+            return valid ? self.defaultOperation : []
         }
-        print("\n\n\(#function)\n\n")
         return d.dragging(state: .updated, for: sender)
     }
     
     public override func draggingExited(_ sender: NSDraggingInfo?) {
+        if sender != nil && self.isValid(sender!) && self.hapticResponse {
+            NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .drawCompleted)
+        }
         self.currentDragState = .exited
         guard let d = self.delegate as? DroppableViewDraggingDelegate else { return }
         _ = d.dragging(state: .exited, for: sender!)
-        print("\n\n\(#function)\n\n")
     }
     
     public override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        self.currentDragState = .entered
-        guard let d = self.delegate as? DroppableViewOperationDelegate else { return true }
-        return d.dragging(state: .preparing, for: sender)
+        guard let d = self.delegate as? DroppableViewOperationDelegate else {
+            self.currentDragState = .exited
+            return false
+        }
+        
+        let accepted = d.dragging(state: .preparing, for: sender)
+        if accepted {
+            self.currentDragState = .exited
+        }
+        return accepted
     }
     
     public override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        self.blink()
-        self.currentDragState = .exited
-        self.needsDisplay = false // otherwise animation fails to run
-        guard let d = self.delegate as? DroppableViewOperationDelegate else { return true }
-        return d.dragging(state: .performing, for: sender)
-    }
-    
-    //
-    //
-    //
-    
-    // TODO: if dragging an image that isn't on-disk, this crashes.
-    public class func fileUrls(from info: NSDraggingInfo) -> [URL]? {
-        let pboard = info.draggingPasteboard()
-        guard pboard.types!.contains(._fileURL) else { return nil }
-        
-        let urls = pboard.readObjects(forClasses: [NSURL.self], options: nil) as? [NSURL]
-        var realUrls = [URL]()
-        for url in urls! where url.filePathURL != nil {
-            realUrls.append(url.filePathURL!) // use filePathURL to avoid file:// file id's
+        guard let d = self.delegate as? DroppableViewOperationDelegate else {
+            self.currentDragState = .exited
+            return false
         }
-        return realUrls
+        
+        let accepted = d.dragging(state: .performing, for: sender)
+        if accepted {
+            self.blink()
+            if self.hapticResponse {
+                NSHapticFeedbackManager.defaultPerformer.perform(.levelChange, performanceTime: .drawCompleted)
+            }
+        } else {
+            self.currentDragState = .exited
+        }
+        return accepted
     }
     
-    private func hasValidFiles(_ info: NSDraggingInfo) -> Bool {
-        guard let urls = DroppableView.fileUrls(from: info) else { return false }
-        return urls.filter { !self.extensions.contains($0.pathExtension) }.count == 0
-            && urls.count > 0 // so we need at least 1 url, and all url extensions must be ok
+    /// Performs a series of conformation validity checks on each pasteboard item.
+    /// This is necessary to allow both a "direct" UTI such as `public.image`
+    /// in addition to a file with an "indirect" UTI type (as above) which would normally
+    /// have the UTI of `public.file-url`. This does not allow for `public.url` types.
+    private func isValid(_ info: NSDraggingInfo) -> Bool {
+        for item in info.draggingPasteboard().pasteboardItems ?? [] {
+            if let _ = item.availableType(from: self.acceptedTypes) {
+                continue // a raw type is available, so don't process file-inferred types
+            } else if let _ = item.availableType(from: [._fileURL]) {
+                if  let plist = item.propertyList(forType: ._fileURL),
+                    let url = NSURL(pasteboardPropertyList: plist, ofType: ._fileURL),
+                    let fileURL = url.filePathURL,
+                    let type = (try? fileURL.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier {
+                    // we have an inference file type now instead of the public.file-url UTI...
+                    
+                    for possible in self.acceptedTypes where !UTTypeConformsTo(type as CFString, possible.rawValue as CFString) {
+                        return false // the file-inferred types did not match a real UTI type
+                    }
+                } else {
+                    return false // we couldn't extract the url filetype somehow
+                }
+            } else {
+                return false // no raw or file-inferred types were found
+            }
+        }
+        return true // every item conformed directly or through inferrence
+    }
+}
+
+// The union of all types the pasteboard items collectively hold. Use this instead of
+// NSPasteboard's `types` accessor for a UTI-only world.
+public extension Array where Element == NSPasteboardItem {
+    public var allTypes: [NSPasteboard.PasteboardType] {
+        return self.flatMap { $0.types }
     }
 }
 
 // Some backward compatible extensions since macOS 10.13 did some weird things.
 public extension NSPasteboard.PasteboardType {
+    public static func of(_ uti: CFString) -> NSPasteboard.PasteboardType {
+        return NSPasteboard.PasteboardType(uti as String)
+    }
     public static let _URL: NSPasteboard.PasteboardType = {
         if #available(macOS 10.13, *) {
             return NSPasteboard.PasteboardType.URL

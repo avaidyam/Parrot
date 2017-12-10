@@ -173,7 +173,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     /// The dropping zone.
     private lazy var dropZone: DroppableView = {
         let v = DroppableView().modernize()
-        v.extensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff"]
+        v.acceptedTypes = [.of(kUTTypeImage)]
         v.defaultOperation = .copy
         v.delegate = self
         return v
@@ -709,8 +709,22 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func dragging(state: DroppableView.OperationState, for info: NSDraggingInfo) -> Bool {
         guard case .performing = state else { return true }
-        for url in DroppableView.fileUrls(from: info) ?? [] {
-            self.send(image: try! Data(contentsOf: url), filename: url.lastPathComponent)
+        for item in info.draggingPasteboard().pasteboardItems ?? [] {
+            
+            // We have a "direct" image UTI type.
+            if let type = item.availableType(from: [.of(kUTTypeImage)]),
+                let data = item.data(forType: type),
+                let img = NSImage(data: data) {
+                self.send(image: img.data(for: .png)!, filename: "Image.png")
+                
+            // We have an "indirect" fileURL UTI type.
+            } else if let _ = item.availableType(from: [._fileURL]),
+                let plist = item.propertyList(forType: ._fileURL),
+                let url = NSURL(pasteboardPropertyList: plist, ofType: ._fileURL) as URL? {
+                self.send(image: try! Data(contentsOf: url), filename: url.lastPathComponent)
+            } else {
+                NSAlert(style: .critical, message: "Couldn't send that file!", information: "Here's some debug information:\n\(item.types.map { $0.rawValue })").runModal()
+            }
         }
         return true
     }
