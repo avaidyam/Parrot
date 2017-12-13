@@ -2,6 +2,7 @@ import Cocoa
 
 /* TODO: concludeDragOperation, wantsPeriodicDraggingUpdates, updateDraggingItemsForDrag. */
 /* TODO: what if spring-loading a child window and deciding not to continue, and then un-spring? */
+/* TODO: what if the acceptedTypes = [._fileURL] already? just short-circuit the verification? */
 
 @objc public protocol DroppableViewDelegate {
     @objc optional func dragging(state: DroppableView.DragState, for: NSDraggingInfo) -> NSDragOperation

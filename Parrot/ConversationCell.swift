@@ -210,7 +210,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     
     public func springLoading(phase: DroppableView.SpringLoadingPhase, for: NSDraggingInfo) {
         guard case .activated = phase else { return }
-        NSAlert(message: "Spring!").runModal()
+        NSAlert(message: "Sending document...").beginPopover(for: self.view, on: .minY)
     }
 }
 

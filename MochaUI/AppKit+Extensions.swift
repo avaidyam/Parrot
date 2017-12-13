@@ -179,8 +179,6 @@ public extension NSView {
 public extension NSAlert {
     
     /// Convenience to initialize a canned NSAlert.
-    /// TODO: Add help and info buttons to the button array as attributes.
-    // .style(.informational), .button("hi"), .help, .suppress, etc.
     public convenience init(style: NSAlert.Style = .warning, message: String = "",
                             information: String = "", buttons: [String] = [],
                             showSuppression: Bool = false) {
@@ -195,6 +193,35 @@ public extension NSAlert {
         self.layout()
     }
     
+    public func beginPopover(for view: NSView, on preferredEdge: NSRectEdge,
+                             completionHandler handler: ((NSApplication.ModalResponse) -> Void)? = nil)
+    {
+        // Copy the appearance to match the popover to the view's window.
+        let popover = NSPopover()
+        popover.appearance = view.window?.appearance
+        
+        // For a popover, when no buttons are manually added, the alert adds an unmanaged one.
+        if self.buttons.count == 0 {
+            self.addButton(withTitle: "OK") // TODO: LOCALIZE
+            self.buttons[0].keyEquivalent = "\r"
+        }
+        
+        // Reset the button's bezel style to match a popover and hijack its click action.
+        for (idx, button) in self.buttons.enumerated() {
+            button.bezelStyle = .texturedRounded
+            button.performedAction = { [popover, handler] in
+                
+                // Close the popover and complete the handler with the clicked index.
+                popover.close()
+                handler?(NSApplication.ModalResponse(rawValue: 1000 + idx))
+            }
+        }
+        
+        // Signal the layout pass and mount the popover on the view.
+        self.layout()
+        popover.contentView = self.window.contentView!
+        popover.show(relativeTo: view.bounds, of: view, preferredEdge: preferredEdge)
+    }
 }
 
 public extension Date {
