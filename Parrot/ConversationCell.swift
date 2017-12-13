@@ -6,7 +6,7 @@ import protocol ParrotServiceExtension.Message
 import protocol ParrotServiceExtension.Conversation
 
 // A visual representation of a Conversation in a ListView.
-public class ConversationCell: NSCollectionViewItem {
+public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     
     private static var wallclock = Wallclock()
     private var id = UUID() // for Wallclock
@@ -58,11 +58,20 @@ public class ConversationCell: NSCollectionViewItem {
         return v
     }()
     
+    private lazy var dropZone: DroppableView = {
+        let v = DroppableView().modernize()
+        v.acceptedTypes = [.of(kUTTypeImage)]
+        v.operation = .copy
+        v.allowsSpringLoading = true
+        v.delegate = self
+        return v
+    }()
+    
     // Constraint setup here.
     public override func loadView() {
         self.view = NSVibrantView()
         self.view.wantsLayer = true
-        self.view.add(subviews: [self.photoView, self.nameLabel, self.timeLabel, self.textLabel])
+        self.view.add(subviews: [self.photoView, self.nameLabel, self.timeLabel, self.textLabel, self.dropZone])
         //self.view.add(sublayer: self.badgeLayer) // will not participate in autolayout
         
         self.photoView.left == self.view.left + 8
@@ -80,6 +89,10 @@ public class ConversationCell: NSCollectionViewItem {
         self.timeLabel.bottom == self.textLabel.top - 4
         self.textLabel.right == self.view.right - 8
         self.textLabel.bottom == self.view.bottom - 8
+        self.dropZone.left == self.view.left
+        self.dropZone.right == self.view.right
+        self.dropZone.top == self.view.top
+        self.dropZone.bottom == self.view.bottom
     }
 	
 	// Upon assignment of the represented object, configure the subview contents.
@@ -193,6 +206,11 @@ public class ConversationCell: NSCollectionViewItem {
     
     public override func viewDidDisappear() {
         ConversationCell.wallclock.remove(target: (self, self.id, self.updateTimestamp))
+    }
+    
+    public func springLoading(phase: DroppableView.SpringLoadingPhase, for: NSDraggingInfo) {
+        guard case .activated = phase else { return }
+        NSAlert(message: "Spring!").runModal()
     }
 }
 

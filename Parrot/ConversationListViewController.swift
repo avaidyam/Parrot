@@ -7,6 +7,7 @@ import ParrotServiceExtension
 /* TODO: Support stickers, photos, videos, files, audio, and location. */
 /* TODO: Show DND icon in Cell when conversation is muted. */
 /* TODO: Support not sending Read Receipts. */
+/* TODO: NSSpringLoadingDestination to drop onto the conversation list. */
 
 // Plan for this class:
 //

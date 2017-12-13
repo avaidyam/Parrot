@@ -70,7 +70,7 @@ public extension Notification.Name {
     public static let OpenConversationsUpdated = Notification.Name(rawValue: "Parrot.OpenConversationsUpdated")
 }
 
-public class MessageListViewController: NSViewController, WindowPresentable, TextInputHost, DroppableViewOperationDelegate,
+public class MessageListViewController: NSViewController, WindowPresentable, TextInputHost, DroppableViewDelegate,
 NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
     
     /// The openConversations keeps track of all open conversations and when the
@@ -174,7 +174,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private lazy var dropZone: DroppableView = {
         let v = DroppableView().modernize()
         v.acceptedTypes = [.of(kUTTypeImage)]
-        v.defaultOperation = .copy
+        v.operation = .copy
         v.delegate = self
         return v
     }()
@@ -707,8 +707,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         try! conversation.send(message: PlaceholderMessage(content: .text(text)))
     }
     
-    public func dragging(state: DroppableView.OperationState, for info: NSDraggingInfo) -> Bool {
-        guard case .performing = state else { return true }
+    public func dragging(phase: DroppableView.OperationPhase, for info: NSDraggingInfo) -> Bool {
+        guard case .performing = phase else { return true }
         for item in info.draggingPasteboard().pasteboardItems ?? [] {
             
             // We have a "direct" image UTI type.
@@ -728,7 +728,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
         return true
     }
-    
     
     //
     //
