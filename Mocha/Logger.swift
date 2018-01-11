@@ -9,7 +9,7 @@ public final class Logger {
 	public typealias Message = String //`Any...` ?
     
     /// A FileRef describes the spatial code location where the trace was caused.
-    public struct FileRef: CustomStringConvertible {
+    public struct FileRef: Codable, CustomStringConvertible {
         public let file: String
         public let line: Int
         public let function: String
@@ -26,13 +26,29 @@ public final class Logger {
             return self.backtrace ? "backtrace" : "\(self.file.split(separator: "/").last ?? "<?>"):\(self.line)[\(self.function)]"
         }
     }
+    
+    /// A LogUnit describes an instance of a log.
+    public struct LogUnit: Codable {
+        public let timestamp: TimeInterval = Date().timeIntervalSince1970
+        public let fileRef: FileRef
+        public let subsystem: Subsystem
+        public let severity: Severity
+        public let message: Message
+        
+        public init(_ fileRef: FileRef, _ subsystem: Subsystem, _ severity: Severity, _ message: Message) {
+            self.fileRef = fileRef
+            self.subsystem = subsystem
+            self.severity = severity
+            self.message = message
+        }
+    }
 	
 	/// A Channel is a pathway in which the logged data flows. For example,
 	/// it may simply be printed to stdout, stderr, or sent to a system logging
 	/// facility, or even displayed to the user visually if needed.
 	public struct Channel {
-		public let operation: (FileRef, Message, Severity, Subsystem) -> ()
-        public init(operation: @escaping (FileRef, Message, Severity, Subsystem) -> ()) {
+		public let operation: (LogUnit) -> ()
+        public init(operation: @escaping (LogUnit) -> ()) {
             self.operation = operation
         }
 		
@@ -41,33 +57,27 @@ public final class Logger {
 		public static let print = Channel {
 			var output = ""
 			//_ = $2 >= .info ? debugPrint($1, terminator: "", to: &output) : // don't debug-print a string...
-            Swift.print($1, terminator: "", to: &output)
-			Swift.print("[\(Date())] [\($3)] [\($2)]: \(output)")
+            Swift.print($0.message, terminator: "", to: &output)
+			Swift.print("[\(Date())] [\($0.subsystem)] [\($0.severity)]: \(output)")
 		}
 	}
 	
-	public enum Severity: Int, Comparable {
+	public enum Severity: Int, Comparable, Codable {
 		
 		/// The application has encountered a catastrophic failure.
 		case fatal
-		
-		/// The application has encountered a serious failure in a major component.
-		//case critical
 		
 		/// The application has encountered an error that may be possible to recover from.
 		case error
 		
 		/// The application has noticed internal inconsistencies.
-		//case warning
+		case warning
 		
 		/// The lowest priority in development, used for debugging purposes.
 		case debug
         
         /// The lowest priority that you would normally log, purely informational in nature.
         case info
-		
-		/// The lowest priority, not commonly logged unless requested.
-		//case verbose
         
         public static func ==(lhs: Logger.Severity, rhs: Logger.Severity) -> Bool {
             return lhs.rawValue == rhs.rawValue
@@ -89,6 +99,9 @@ public final class Logger {
     #else
     public static let defaultChannels: [Channel] = [.print]
     #endif
+    
+    // This can be globally mutated (NOT THREAD SAFE) to force Loggers.
+    public static var globalChannels: [Channel] = []
 	
 	/// Initialize a Logger for a particular subsystem. 
 	/// Note: the subsystem should preferrably be a unique reverse domain name.
@@ -107,13 +120,17 @@ public final class Logger {
     {
 		guard self.severity >= severity else { return }
         let ref = FileRef(file, line, function)
-		self.channels.forEach { $0.operation(ref, message(), severity, self.subsystem) }
+		(self.channels + Logger.globalChannels).forEach {
+            $0.operation(LogUnit(ref, self.subsystem, severity, message()))
+        }
 	}
     
     public func backtrace(severity: Severity) {
         guard self.severity >= severity else { return }
         let cs = Thread.callStackSymbols.dropFirst().joined(separator: "\n")
-        self.channels.forEach { $0.operation(FileRef(backtrace: true), cs, severity, self.subsystem) }
+        (self.channels + Logger.globalChannels).forEach {
+            $0.operation(LogUnit(FileRef(backtrace: true), self.subsystem, severity, cs))
+        }
     }
 }
 
@@ -124,24 +141,22 @@ public extension Logger.Channel {
     /// Channel.ASL uses the Apple System Logging facility to submit the message.
     /// Note: ASL may not accept the message flow if its configuration severity
     /// is at a different level than what is set here.
-    public static let ASL = Logger.Channel { ref, message, severity, subsystem in
+    public static let ASL = Logger.Channel { unit in
         withVaList([]) { args in
             var s = ASL_LEVEL_DEBUG
-            switch severity {
+            switch unit.severity {
             case .fatal: s = ASL_LEVEL_EMERG
-            //case .critical: s = ASL_LEVEL_CRIT
             case .error: s = ASL_LEVEL_ERR
-            //case .warning: s = ASL_LEVEL_WARNING
+            case .warning: s = ASL_LEVEL_WARNING
             case .debug: s = ASL_LEVEL_NOTICE
             case .info: s = ASL_LEVEL_INFO
-            //case .verbose: s = ASL_LEVEL_DEBUG
             }
             
             // For whatever reason, ASL_LEVEL_NOTICE and *_DEBUG are swapped around?
-            subsystem.withCString {
+            unit.subsystem.withCString {
                 let _l = asl_open(nil, $0, 0)
                 defer { asl_close(_l) }
-                asl_vlog(_l, asl_new(UInt32(ASL_TYPE_MSG)), s, ref.description + ":\n" + message, args)
+                asl_vlog(_l, asl_new(UInt32(ASL_TYPE_MSG)), s, unit.fileRef.description + ":\n" + unit.message, args)
             }
         }
     }
@@ -154,17 +169,13 @@ public extension Logger {
 		self.trace(severity: .fatal, message: message, file, line, function)
 	}
 	
-	//public func critical(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
-	//	self.trace(severity: .critical, message: message, file, line, function)
-	//}
-	
 	public func error(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
 		self.trace(severity: .error, message: message, file, line, function)
 	}
 	
-	//public func warning(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
-	//	self.trace(severity: .warning, message: message, file, line, function)
-	//}
+	public func warning(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
+		self.trace(severity: .warning, message: message, file, line, function)
+	}
 	
 	public func info(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
 		self.trace(severity: .info, message: message, file, line, function)
@@ -173,8 +184,4 @@ public extension Logger {
 	public func debug(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
 		self.trace(severity: .debug, message: message, file, line, function)
 	}
-	
-	//public func verbose(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
-	//	self.trace(severity: .verbose, message: message, file, line, function)
-	//}
 }

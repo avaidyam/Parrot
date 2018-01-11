@@ -1,5 +1,6 @@
 import Foundation
 import XPCTransport
+import class Mocha.Logger
 
 public enum AuthenticationInvocation: RespondingMethod {
     public typealias Service = XPCConnection
@@ -27,6 +28,11 @@ public enum AuthenticationInvocation: RespondingMethod {
             return HTTPCookie(properties: Dictionary(uniqueKeysWithValues: d))
         }
     }
+}
+
+public enum SendLogInvocation: RequestingMethod {
+    public typealias Service = XPCConnection
+    public typealias Request = Logger.LogUnit
 }
 
 /*

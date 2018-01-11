@@ -30,6 +30,9 @@ public class ParrotAgentController: XPCService {
         connection.recv(AuthenticationInvocation.self) {
             return self.cookies
         }
+        connection.recv(SendLogInvocation.self) { [weak connection] unit in
+            Logger.default.debug("\(connection?.name ?? "<null>") received log unit: \(unit)")
+        }
         return true
     }
     

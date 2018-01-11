@@ -2,6 +2,9 @@ import Foundation
 import XPC
 import os
 
+/* TODO: Add `slots: [String: Codable]` that syncs across the connection. */
+/* TODO: Change RemoteMethod.Service to an abstract type, not the actual service. */
+
 /// Note: trying to {en,de}code this results in gibberish unless using XPC{En,De}Coder.
 public final class XPCConnection: Hashable, Codable, RemoteService {
     private enum CodingKeys: CodingKey {}

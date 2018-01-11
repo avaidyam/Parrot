@@ -107,7 +107,7 @@ public final class Channel : NSObject {
     private var needsSID = true
     
     // NOTE: getCookieValue causes a CFNetwork leak repeatedly.
-    private lazy var cachedSAPISID: String = {
+    internal lazy var cachedSAPISID: String = {
         Channel.getCookieValue(key: "SAPISID")!
     }()
 	
@@ -391,5 +391,26 @@ public final class Channel : NSObject {
 			"X-Goog-Authuser": "0",
 		]
 	}
+    
+    public static func getAuthorizationHeaders2(_ sapisid_cookie: String) -> Dictionary<String, String> {
+        let ORIGIN_URL = "https://hangouts.google.com"
+        func sha1(_ source: String) -> String {
+            let str = Array(source.utf8).map { Int8($0) }
+            var store = [Int8](repeating: 0, count: 20)
+            SHA1(&store, str, Int32(str.count))
+            return store.map { String(format: "%02hhx", $0) }.joined(separator: "")
+        }
+        
+        let time_msec = Int(Date().timeIntervalSince1970 * 1000)
+        let auth_string = "\(time_msec) \(sapisid_cookie) \(ORIGIN_URL)"
+        let auth_hash = sha1(auth_string)
+        let sapisidhash = "SAPISIDHASH \(time_msec)_\(auth_hash)"
+        return [
+            "Authorization": sapisidhash,
+            "Origin": ORIGIN_URL,
+            "X-Goog-Authuser": "0",
+            "X-HTTP-Method-Override": "GET"
+        ]
+    }
 }
 

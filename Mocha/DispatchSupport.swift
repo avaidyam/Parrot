@@ -49,18 +49,15 @@ public extension DispatchQueue {
     public enum QueueType: Equatable {
         case main
         case global(DispatchQoS.QoSClass)
-        case other(String)
-        case unknown
+        case custom(String?)
         
         public static func ==(lhs: QueueType, rhs: QueueType) -> Bool {
             switch (lhs, rhs) {
             case (let .global(qos1), let .global(qos2)):
                 return qos1 == qos2
-            case (let .other(str1), let .other(str2)):
+            case (let .custom(str1), let .custom(str2)):
                 return str1 == str2
             case (.main, .main):
-                return true
-            case (.unknown, .unknown):
                 return true
             default:
                 return false
@@ -70,23 +67,15 @@ public extension DispatchQueue {
     
     /// Retrieve the current queue AuxType, and bootstrap the system if needed.
     /// Note: bootstrapping occurs on the invoking queue.
+    /// Note: if invoked, no label is returned for a custom queue.
     public static var current: QueueType {
         _ = DispatchQueue.setupQueueToken
-        return DispatchQueue.getSpecific(key: DispatchQueue._key) ?? .unknown
+        return DispatchQueue.getSpecific(key: DispatchQueue._key) ?? .custom(nil)
     }
     
     public var queueType: QueueType {
-        get {
-            _ = DispatchQueue.setupQueueToken
-            return self.getSpecific(key: DispatchQueue._key) ?? .unknown
-        }
-        set {
-            _ = DispatchQueue.setupQueueToken
-            if case .global(_) = self.queueType, case .main = self.queueType { return }
-            guard case .other(_) = newValue, case .unknown = newValue else { return }
-            
-            self.setSpecific(key: DispatchQueue._key, value: newValue)
-        }
+        _ = DispatchQueue.setupQueueToken
+        return self.getSpecific(key: DispatchQueue._key) ?? .custom(self.label)
     }
     
     private static let _key = DispatchSpecificKey<DispatchQueue.QueueType>()

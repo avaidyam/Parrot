@@ -193,6 +193,11 @@ public extension NSAlert {
         self.layout()
     }
     
+    public func beginModal(completionHandler handler: ((NSApplication.ModalResponse) -> Void)? = nil) {
+        let val = self.runModal()
+        handler?(val)
+    }
+    
     public func beginPopover(for view: NSView, on preferredEdge: NSRectEdge,
                              completionHandler handler: ((NSApplication.ModalResponse) -> Void)? = nil)
     {

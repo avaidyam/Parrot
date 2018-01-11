@@ -15,6 +15,10 @@ AuthenticationInvocation.unpackage(cookies).forEach {
 }
 let client = Client(configuration: config)
 
+client.TEST()
+
+
+
 // Non-interactive: block the interactive screen mode and enter the runloop.
 if !CommandLine.arguments.contains("--interactive") {
     client.conversationList.conversations.forEach {

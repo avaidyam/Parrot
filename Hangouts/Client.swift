@@ -316,3 +316,196 @@ public extension RequestHeader {
         return random64(UInt64(pow(2.0, 32.0)))
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// TODO: people-pa + drive support
+public extension Client {
+    
+    public func TEST() {
+        
+        // https://people-pa.clients6.google.com/v2/people/
+        /*
+         Name: Value
+         personId: 105428764906982332483
+         ...
+         personId: 114754752003084982184
+         requestMask.includeField.paths: person.email
+         requestMask.includeField.paths: person.gender
+         requestMask.includeField.paths: person.in_app_reachability
+         requestMask.includeField.paths: person.metadata
+         requestMask.includeField.paths: person.name
+         requestMask.includeField.paths: person.phone
+         requestMask.includeField.paths: person.photo
+         requestMask.includeField.paths: person.read_only_profile_info
+         requestMask.includeField.paths: person.organization
+         requestMask.includeField.paths: person.location
+         requestMask.includeField.paths: person.cover_photo
+         extensionSet.extensionNames: HANGOUTS_ADDITIONAL_DATA
+         extensionSet.extensionNames: HANGOUTS_OFF_NETWORK_GAIA_GET
+         extensionSet.extensionNames: HANGOUTS_PHONE_DATA
+         includedProfileStates: ADMIN_BLOCKED
+         includedProfileStates: DELETED
+         includedProfileStates: PRIVATE_PROFILE
+         mergedPersonSourceOptions.includeAffinity: CHAT_AUTOCOMPLETE
+         coreIdParams.useRealtimeNotificationExpandedAcls: true
+         key: AIzaSyBokvzEPUrkgfws0OrFWkpKkVBVuhRfKpk
+         */
+        
+        
+        // https://people-pa.clients6.google.com/v2/people/lookup
+        /*
+         Name: Value
+         id: +13174592894
+         ...
+         id: +14159093818
+         type: PHONE
+         matchType: LENIENT
+         requestMask.includeField.paths: person.email
+         requestMask.includeField.paths: person.gender
+         requestMask.includeField.paths: person.in_app_reachability
+         requestMask.includeField.paths: person.metadata
+         requestMask.includeField.paths: person.name
+         requestMask.includeField.paths: person.phone
+         requestMask.includeField.paths: person.photo
+         requestMask.includeField.paths: person.read_only_profile_info
+         extensionSet.extensionNames: HANGOUTS_ADDITIONAL_DATA
+         extensionSet.extensionNames: HANGOUTS_OFF_NETWORK_GAIA_LOOKUP
+         extensionSet.extensionNames: HANGOUTS_PHONE_DATA
+         coreIdParams.useRealtimeNotificationExpandedAcls: true
+         quotaFilterType: PHONE
+         key: AIzaSyBokvzEPUrkgfws0OrFWkpKkVBVuhRfKpk
+         */
+        
+        let _url = URL(string: "https://people-pa.clients6.google.com/v2/people/autocomplete")!
+        let _post = ["query": "hi", "client": "HANGOUTS_WITH_DATA", "pageSize": "15", "key": "AIzaSyBokvzEPUrkgfws0OrFWkpKkVBVuhRfKpk"]
+        
+        var request = URLRequest(url: _url)
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        request.httpBody = _post.map { "\($0)=\($1)" }.joined(separator: "&").data(using: .utf8)
+        
+        for (k, v) in Channel.getAuthorizationHeaders2(self.channel!.cachedSAPISID) {
+            request.setValue(v, forHTTPHeaderField: k)
+        }
+        
+        let task = self.channel?.session.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("error=\(String(describing: error))"); return
+            }
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
+                print("statusCode should be 200, but is \(httpStatus.statusCode)\nresponse = \(String(describing: response))")
+            }
+            print("responseString = \(String(describing: String(data: data, encoding: .utf8)))")
+        }
+        task?.resume()
+    }
+    
+    public static func synchronousRequest(_ request: URLRequest) throws -> (Data?, URLResponse?) {
+        var data: Data?, response: URLResponse?, error: Error?
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        URLSession.shared.dataTask(with: request) {
+            data = $0; response = $1; error = $2
+            semaphore.signal()
+            }.resume()
+        
+        _ = semaphore.wait()
+        if let error = error {
+            throw error
+        }
+        return (data, response)
+    }
+    
+    public static func jsonRequest(_ method: String, _ location: String, _ body: [String: Any],
+                                   _ query: [String: String] = [:], _ headers: [String: String] = [:])
+        throws -> ([String: Any]?, HTTPURLResponse?)
+    {
+        let data = try JSONSerialization.data(withJSONObject: body, options: [])
+        let querystr = query.map { $0.key + "=" + $0.value }.joined(separator: "&")
+        var request = URLRequest(url: URL(string: location + (query.count > 0 ? "?" : "") + querystr)!)
+        request.httpMethod = method
+        request.httpBody = data
+        request.allHTTPHeaderFields = headers
+        request.setValue("\(data.count)", forHTTPHeaderField: "Content-Length")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let (a, b) = try Client.synchronousRequest(request)
+        if let a = a, a.count > 0 {
+            let json = try JSONSerialization.jsonObject(with: a, options: [.allowFragments]) as? [String: Any]
+            return (json, b as? HTTPURLResponse)
+        } else {
+            return (nil, b as? HTTPURLResponse)
+        }
+    }
+    
+    public static func dataRequest(_ method: String, _ location: String, _ data: Data,
+                                   _ query: [String: String] = [:], _ headers: [String: String] = [:])
+        throws -> (Data?, HTTPURLResponse?)
+    {
+        let querystr = query.map { $0.key + "=" + $0.value }.joined(separator: "&")
+        var request = URLRequest(url: URL(string: location + (query.count > 0 ? "?" : "") + querystr)!)
+        request.httpMethod = method
+        request.httpBody = data
+        request.allHTTPHeaderFields = headers
+        request.setValue("\(data.count)", forHTTPHeaderField: "Content-Length")
+        request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
+        let (a, b) = try Client.synchronousRequest(request)
+        return (a, b as? HTTPURLResponse)
+    }
+    
+    public func share(file url: URL, with email: String, auth: String) throws -> URL {
+        let reach = try url.checkResourceIsReachable()
+        guard url.isFileURL && reach else { throw NSError(domain: "unreach", code: 0) }
+        let data = try Data(contentsOf: url)
+        
+        let (_, response1) = try Client.jsonRequest("POST", "https://www.googleapis.com/upload/drive/v3/files", [
+            "name": url.lastPathComponent,
+            "description": "Shared by Parrot."
+        ], [
+            "uploadType": "resumable"
+        ], [
+            "Authorization": "Bearer \(auth)",
+            "X-Upload-Content-Length": "\(data.count)",
+        ])
+        
+        guard let location = response1?.allHeaderFields["Location"] as? String else { throw NSError(domain: "noloc", code: 0) }
+        let (data2, _) = try Client.dataRequest("POST", location, data, [:], [
+            "Content-Range": "bytes 0-\(data.count - 1)/\(data.count)",
+        ])
+        
+        let json2 = try JSONSerialization.jsonObject(with: data2!, options: [.allowFragments]) as? [String: Any]
+        guard let fileID = json2?["id"] as? String else { throw NSError(domain: "noid", code: 0) }
+        let (_, _) = try Client.jsonRequest("POST", "https://www.googleapis.com/drive/v3/files/\(fileID)/permissions", [
+            "role": "reader",
+            "type": "user",
+            "emailAddress": email
+        ], [:], [
+            "Authorization": "Bearer \(auth)"
+        ])
+        return URL(string: "https://docs.google.com/uc?id=\(fileID)")!
+    }
+    
+    public func TEST3() {
+        let fileUrl = URL(string: "file://" + "/Users/USERNAME/Desktop/DECgHBrWsAAdd15.jpg")!
+        do {
+            let url = try share(file: fileUrl, with: "PERSON@gmail.com", auth: "ya29.GluHBJ-4fA1TUtTCpcmtI9DINHO8QKm8lNdm2iwYRFuIw7N4ec6TPZ8vSHWT5oesyMflT5opzzxqEHjG6WfNIID7d14nrJbn9g6zsW2poWFMVWKju-K2A8wKaAfy")
+            
+            print(url)
+        } catch(let error) {
+            print(error)
+        }
+    }
+}

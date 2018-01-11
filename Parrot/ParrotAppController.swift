@@ -23,7 +23,11 @@ public class ParrotAppController: NSApplicationController {
     private var notificationReplyHelper: Subscription? = nil
     private var idleTimer: DispatchSourceTimer? = nil
     
-    private var server = XPCConnection(name: "com.avaidyam.Parrot.parrotd", active: true)
+    fileprivate var server = XPCConnection(name: "com.avaidyam.Parrot.parrotd", active: true)
+    private static let xpcChannel = Logger.Channel { unit in
+        // any failure in these ?'s will kill the logunit
+        try? (NSApp.delegate as? ParrotAppController)?.server.async(SendLogInvocation.self, with: unit)
+    }
     
     /// Lazy-init for Preferences.
     public lazy var preferencesController: PreferencesViewController = {
@@ -58,12 +62,22 @@ public class ParrotAppController: NSApplicationController {
         DirectoryListViewController()
     }()
     
+    private lazy var dualController: NSSplitViewController = {
+        let sp = NSSplitViewController()
+        sp.addSplitViewItem(NSSplitViewItem(sidebarWithViewController: self.conversationsController))
+        sp.addSplitViewItem(NSSplitViewItem(viewController: NSViewController()))
+        return sp
+    }()
+    
     private lazy var statusItem: NSStatusItem = {
         NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
     }()
 	
 	public override init() {
 		super.init()
+        
+        // Well let's see if this works.
+        Logger.globalChannels = [ParrotAppController.xpcChannel]
 		
 		// Check for updates if any are available.
         // Note: in the future, this will be invoked by the Parrot Daemon periodically
