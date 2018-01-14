@@ -110,6 +110,8 @@
 		48AD39F81EE7FE2900C33E40 /* AccountsPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39F71EE7FE2900C33E40 /* AccountsPrefs.swift */; };
 		48AD39FA1EE7FEB200C33E40 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39F91EE7FEB200C33E40 /* Preferences.swift */; };
 		48AD39FC1EE8005C00C33E40 /* TextPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39FB1EE8005C00C33E40 /* TextPrefs.swift */; };
+		48AFC0DA200ACB8C003E878D /* PeopleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */; };
+		48AFC0DB200B069A003E878D /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
 		48D3CCE91DE94433003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		48D3CCEA1DE94433003D6C02 /* Mocha.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48D3CCEF1DE9444F003D6C02 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCEE1DE9444F003D6C02 /* Foundation.framework */; };
@@ -142,7 +144,6 @@
 		48DE52F71C1CC28000647C63 /* ParrotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52F61C1CC28000647C63 /* ParrotViewController.swift */; };
 		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
 		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		48DF84981D04E1F800F39444 /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
 		48E39C601ED516AC00EF578D /* BezelContentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5D1ED516AC00EF578D /* BezelContentViews.swift */; };
 		48E39C611ED516AC00EF578D /* SystemBezel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5E1ED516AC00EF578D /* SystemBezel.swift */; };
 		48E39C621ED516AC00EF578D /* VolumeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */; };
@@ -274,6 +275,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 48834E101C1B38B9009BC442;
 			remoteInfo = HangoutsProvider;
+		};
+		48AFC0DC200B071A003E878D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 486DBB2F1F947FB900ECA84B;
+			remoteInfo = XPCTransport;
 		};
 		48D3CCE71DE94433003D6C02 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -507,6 +515,7 @@
 		48AD39F71EE7FE2900C33E40 /* AccountsPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsPrefs.swift; sourceTree = "<group>"; };
 		48AD39F91EE7FEB200C33E40 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		48AD39FB1EE8005C00C33E40 /* TextPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPrefs.swift; sourceTree = "<group>"; };
+		48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleAPI.swift; sourceTree = "<group>"; };
 		48BA5B481C379CCF00ACA29B /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
 		48BFD0341D13694900DAE29E /* hangouts.proto */ = {isa = PBXFileReference; lastKnownFileType = text; path = hangouts.proto; sourceTree = "<group>"; };
 		48D3CCDB1DE93248003D6C02 /* NSPopover+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPopover+Extensions.swift"; sourceTree = "<group>"; };
@@ -862,6 +871,7 @@
 				48834E3A1C1B4098009BC442 /* User.swift */,
 				4835ECAE1C1C620E00193EBC /* Authenticator.swift */,
 				488F65291EF97CD50085325F /* GooglePhoto.swift */,
+				48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -1227,6 +1237,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				48AFC0DD200B071A003E878D /* PBXTargetDependency */,
 			);
 			name = ParrotServiceExtension;
 			productName = ParrotServiceExtension;
@@ -1269,13 +1280,13 @@
 			);
 			dependencies = (
 				48834E001C1B372E009BC442 /* PBXTargetDependency */,
+				486DBB361F947FB900ECA84B /* PBXTargetDependency */,
 				48834E1B1C1B38B9009BC442 /* PBXTargetDependency */,
 				48DE52D21C1CC12900647C63 /* PBXTargetDependency */,
 				48DE53001C1CC28000647C63 /* PBXTargetDependency */,
 				4813004A1D26BD4900768D79 /* PBXTargetDependency */,
 				48D3CCE81DE94433003D6C02 /* PBXTargetDependency */,
 				48D3CCFB1DE9446D003D6C02 /* PBXTargetDependency */,
-				486DBB361F947FB900ECA84B /* PBXTargetDependency */,
 			);
 			name = Parrot;
 			productName = Parrot;
@@ -1710,14 +1721,15 @@
 			files = (
 				486C99FD1F103A36007D7BAA /* PBLiteDecoder.swift in Sources */,
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
-				48DF84981D04E1F800F39444 /* Hangouts.proto.swift in Sources */,
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				488F652A1EF97CD50085325F /* GooglePhoto.swift in Sources */,
 				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
 				48F7E80A1F1099B70059E5CD /* ServiceEndpoint.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
+				48AFC0DA200ACB8C003E878D /* PeopleAPI.swift in Sources */,
 				48EA55C81D26CAAA00C3BC80 /* URLSession+Extensions.swift in Sources */,
+				48AFC0DB200B069A003E878D /* Hangouts.proto.swift in Sources */,
 				48F7E8081F108FE20059E5CD /* PBLiteEncoder.swift in Sources */,
 				4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */,
 				48D7EE181F14587C005C7E16 /* ProtobufRuntime.swift in Sources */,
@@ -1891,6 +1903,11 @@
 			isa = PBXTargetDependency;
 			target = 48834E101C1B38B9009BC442 /* parrotd */;
 			targetProxy = 48834E1A1C1B38B9009BC442 /* PBXContainerItemProxy */;
+		};
+		48AFC0DD200B071A003E878D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 486DBB2F1F947FB900ECA84B /* XPCTransport */;
+			targetProxy = 48AFC0DC200B071A003E878D /* PBXContainerItemProxy */;
 		};
 		48D3CCE81DE94433003D6C02 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

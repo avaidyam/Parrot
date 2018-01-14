@@ -408,7 +408,7 @@ public final class Channel : NSObject {
         return [
             "Authorization": sapisidhash,
             "Origin": ORIGIN_URL,
-            "X-Goog-Authuser": "0",
+            "X-Goog-AuthUser": "0",
             "X-HTTP-Method-Override": "GET"
         ]
     }

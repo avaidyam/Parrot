@@ -28,7 +28,7 @@ public final class Logger {
     }
     
     /// A LogUnit describes an instance of a log.
-    public struct LogUnit: Codable {
+    public struct LogUnit: Codable, CustomStringConvertible {
         public let timestamp: TimeInterval = Date().timeIntervalSince1970
         public let fileRef: FileRef
         public let subsystem: Subsystem
@@ -40,6 +40,11 @@ public final class Logger {
             self.subsystem = subsystem
             self.severity = severity
             self.message = message
+        }
+        
+        public var description: String {
+            let date = Date(timeIntervalSince1970: self.timestamp)
+            return "\(date) @ \(self.fileRef) [\(self.subsystem): \(self.severity)]:\n\(self.message)"
         }
     }
 	
@@ -54,12 +59,7 @@ public final class Logger {
 		
 		/// Channel.print sends the message to stdout, with a debugging-suitable transformation.
         /// Note: it does not log many particulars that ASL or os_log would log.
-		public static let print = Channel {
-			var output = ""
-			//_ = $2 >= .info ? debugPrint($1, terminator: "", to: &output) : // don't debug-print a string...
-            Swift.print($0.message, terminator: "", to: &output)
-			Swift.print("[\(Date())] [\($0.subsystem)] [\($0.severity)]: \(output)")
-		}
+		public static let print = Channel { Swift.print($0) }
 	}
 	
 	public enum Severity: Int, Comparable, Codable {
@@ -177,11 +177,11 @@ public extension Logger {
 		self.trace(severity: .warning, message: message, file, line, function)
 	}
 	
-	public func info(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
-		self.trace(severity: .info, message: message, file, line, function)
-	}
-	
 	public func debug(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
 		self.trace(severity: .debug, message: message, file, line, function)
 	}
+    
+    public func info(_ message: @autoclosure () -> Message, _ file: String = #file, _ line: Int = #line, _ function: String = #function) {
+        self.trace(severity: .info, message: message, file, line, function)
+    }
 }
