@@ -6,7 +6,7 @@ public struct PeopleAPI {
     private static let baseURL = "https://people-pa.clients6.google.com/v2/people"
     private static let APIKey = "AIzaSyBokvzEPUrkgfws0OrFWkpKkVBVuhRfKpk"
     
-    public static func list(on channel: Channel, id: String...) {
+    public static func list(on channel: Channel, id: String..., completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
         self._post(channel, "", [
             "requestMask.includeField.paths": "person.email",
             "requestMask.includeField.paths": "person.gender",
@@ -28,10 +28,10 @@ public struct PeopleAPI {
             "mergedPersonSourceOptions.includeAffinity": "CHAT_AUTOCOMPLETE",
             "coreIdParams.useRealtimeNotificationExpandedAcls": "true",
             "key": PeopleAPI.APIKey
-        ], id.map { "personId=" + $0 }.joined(separator: "&"))
+        ], id.map { "personId=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
-    public static func lookup(on channel: Channel, phone: String...) {
+    public static func lookup(on channel: Channel, phone: String..., completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
         self._post(channel, "/lookup", [
             "type": "PHONE",
             "matchType": "LENIENT",
@@ -49,27 +49,31 @@ public struct PeopleAPI {
             "coreIdParams.useRealtimeNotificationExpandedAcls": "true",
             "quotaFilterType": "PHONE",
             "key": PeopleAPI.APIKey
-        ], phone.map { "id=" + $0 }.joined(separator: "&"))
+        ], phone.map { "id=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
-    public static func autocomplete(on channel: Channel, query: String, length: UInt = 15) {
+    public static func autocomplete(on channel: Channel, query: String, length: UInt = 15,
+                                    completionHandler: @escaping ([String: Any]?, Error?) -> ())
+    {
         self._post(channel, "/autocomplete", [
             "query": query,
             "client": "HANGOUTS_WITH_DATA",
             "pageSize": "\(length)",
             "key": PeopleAPI.APIKey
-        ])
+        ], nil, completionHandler)
     }
     
     // Note: DictionaryLiteral accepts duplicate keys and preserves order.
     // Note: `prefix` is a silly hack for multiple `id`'s which are dynamic and cannot be in a literal.
-    private static func _post(_ channel: Channel, _ api: String, _ params: DictionaryLiteral<String, String>, _ prefix: String? = nil) {
+    private static func _post(_ channel: Channel, _ api: String, _ params: DictionaryLiteral<String, String>,
+                              _ prefix: String? = nil, _ completionHandler: @escaping ([String: Any]?, Error?) -> ())
+    {
         var merge = params.map { "\($0)=\($1)" }.joined(separator: "&")
         if let prefix2 = prefix {
             merge = prefix2 + "&" + merge
         }
-        merge = merge.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!.replacingOccurrences(of: "+", with: "%2B")
-        print("\n\(merge)\n")
+        merge = merge.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            .replacingOccurrences(of: "+", with: "%2B") // since + is somehow allowed???
         
         var request = URLRequest(url: URL(string: PeopleAPI.baseURL + api)!)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -80,14 +84,21 @@ public struct PeopleAPI {
         }
         
         channel.session.dataTask(with: request) { data, response, error in
-            print("\n\n--------------------------------\n\n")
             guard let data = data, error == nil else {
-                print("error=\(String(describing: error))"); return
+                completionHandler(nil, error); return
             }
             if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
-                print("statusCode should be 200, but is \(httpStatus.statusCode)\nresponse = \(String(describing: response))")
+                completionHandler(nil, NSError(domain: NSURLErrorDomain, code: httpStatus.statusCode, userInfo: [
+                    "status": httpStatus,
+                    "response": data
+                ]))
             }
-            print("responseString = \(String(describing: String(data: data, encoding: .utf8)))")
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? [String: Any]
+                completionHandler(json, nil)
+            } catch(let error) {
+                completionHandler(nil, error)
+            }
         }.resume()
     }
 }

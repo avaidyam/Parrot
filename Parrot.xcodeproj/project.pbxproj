@@ -82,6 +82,7 @@
 		486DBB4B1F9480AD00ECA84B /* RemoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486DBB4A1F9480AD00ECA84B /* RemoteService.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		487385891F9E1A6D00CC5853 /* CookieTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487385871F9DFAAE00CC5853 /* CookieTransport.swift */; };
+		487D6020200BD88A0009E5F1 /* DriveAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487D601F200BD88A0009E5F1 /* DriveAPI.swift */; };
 		488201BC1D4A970400C545F0 /* PersonaImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* PersonaImage.swift */; };
 		48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ParrotAppController.swift */; };
 		48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48834D991C1B3602009BC442 /* Assets.xcassets */; };
@@ -477,6 +478,7 @@
 		486DBB4A1F9480AD00ECA84B /* RemoteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteService.swift; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		487385871F9DFAAE00CC5853 /* CookieTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieTransport.swift; sourceTree = "<group>"; };
+		487D601F200BD88A0009E5F1 /* DriveAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAPI.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = ../Parrot/PreferencesViewController.swift; sourceTree = "<group>"; };
 		488201B51D4A962B00C545F0 /* ExtendedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedTextView.swift; sourceTree = "<group>"; };
 		488201BB1D4A970400C545F0 /* PersonaImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonaImage.swift; sourceTree = "<group>"; };
@@ -872,6 +874,7 @@
 				4835ECAE1C1C620E00193EBC /* Authenticator.swift */,
 				488F65291EF97CD50085325F /* GooglePhoto.swift */,
 				48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */,
+				487D601F200BD88A0009E5F1 /* DriveAPI.swift */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -1727,6 +1730,7 @@
 				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
 				48F7E80A1F1099B70059E5CD /* ServiceEndpoint.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
+				487D6020200BD88A0009E5F1 /* DriveAPI.swift in Sources */,
 				48AFC0DA200ACB8C003E878D /* PeopleAPI.swift in Sources */,
 				48EA55C81D26CAAA00C3BC80 /* URLSession+Extensions.swift in Sources */,
 				48AFC0DB200B069A003E878D /* Hangouts.proto.swift in Sources */,
