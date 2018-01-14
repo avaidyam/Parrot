@@ -170,10 +170,6 @@ public class ParrotAppController: NSApplicationController {
             Settings.openConversations
                 .flatMap { c.conversationList?.conversations[$0] }
                 .forEach { MessageListViewController.show(conversation: $0 as! IConversation) }
-            
-            
-            //PeopleAPI.lookup(on: c.channel!, phone: "+14089058132", "+14083189739")
-            PeopleAPI.list(on: c.channel!, ids: "105428764906982332483", "114754752003084982184")
         }
         
         self.disconnectSub = AutoSubscription(from: c, kind: Notification.Service.DidDisconnect) { _ in

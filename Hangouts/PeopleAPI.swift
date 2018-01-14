@@ -6,7 +6,7 @@ public struct PeopleAPI {
     private static let baseURL = "https://people-pa.clients6.google.com/v2/people"
     private static let APIKey = "AIzaSyBokvzEPUrkgfws0OrFWkpKkVBVuhRfKpk"
     
-    public static func list(on channel: Channel, ids: String...) {
+    public static func list(on channel: Channel, id: String...) {
         self._post(channel, "", [
             "requestMask.includeField.paths": "person.email",
             "requestMask.includeField.paths": "person.gender",
@@ -20,7 +20,7 @@ public struct PeopleAPI {
             "requestMask.includeField.paths": "person.location",
             "requestMask.includeField.paths": "person.cover_photo",
             "extensionSet.extensionNames": "HANGOUTS_ADDITIONAL_DATA",
-            "extensionSet.extensionNames": "HANGOUTS_OFF_NETWORK_GAIA_LOOKUP",
+            "extensionSet.extensionNames": "HANGOUTS_OFF_NETWORK_GAIA_GET",
             "extensionSet.extensionNames": "HANGOUTS_PHONE_DATA",
             "includedProfileStates": "ADMIN_BLOCKED",
             "includedProfileStates": "DELETED",
@@ -28,7 +28,7 @@ public struct PeopleAPI {
             "mergedPersonSourceOptions.includeAffinity": "CHAT_AUTOCOMPLETE",
             "coreIdParams.useRealtimeNotificationExpandedAcls": "true",
             "key": PeopleAPI.APIKey
-        ], ids.map { "personId=" + $0 }.joined(separator: "&"))
+        ], id.map { "personId=" + $0 }.joined(separator: "&"))
     }
     
     public static func lookup(on channel: Channel, phone: String...) {
@@ -41,6 +41,7 @@ public struct PeopleAPI {
             "requestMask.includeField.paths": "person.metadata",
             "requestMask.includeField.paths": "person.name",
             "requestMask.includeField.paths": "person.phone",
+            "requestMask.includeField.paths": "person.photo",
             "requestMask.includeField.paths": "person.read_only_profile_info",
             "extensionSet.extensionNames": "HANGOUTS_ADDITIONAL_DATA",
             "extensionSet.extensionNames": "HANGOUTS_OFF_NETWORK_GAIA_LOOKUP",
@@ -67,6 +68,8 @@ public struct PeopleAPI {
         if let prefix2 = prefix {
             merge = prefix2 + "&" + merge
         }
+        merge = merge.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!.replacingOccurrences(of: "+", with: "%2B")
+        print("\n\(merge)\n")
         
         var request = URLRequest(url: URL(string: PeopleAPI.baseURL + api)!)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
