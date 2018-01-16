@@ -289,6 +289,7 @@ message PlaceLocationInfo {
   optional Coordinates latlng = 36736749;
 }
 
+// TODO: https://github.com/tdryer/hangups/commit/6ba86d3a6a8cf65eac86ef2b7dadf712b492030f#diff-abc0cb9e161ad0fd9be1c2dc6c6c3acf
 // Place that can be embedded in a chat message via Google Maps.
 message Place {
 
@@ -502,8 +503,8 @@ enum ConversationType {
 
 message UserReadState {
   optional ParticipantId participant_id = 1;
+  // Timestamp of the user's last read message in the conversation.
   optional uint64 latest_read_timestamp = 2;
-
   // TODO: is latest_read_timestamp always 0?
 }
 
@@ -603,6 +604,7 @@ message Conversation {
   optional ConversationType type = 2;
   optional string name = 3;
   optional UserConversationState self_conversation_state = 4;
+  // Read state (watermark position) for every conversation participant.
   repeated UserReadState read_state = 8;
   // True if the conversation has an active Hangout.
   optional bool has_active_hangout = 9;
