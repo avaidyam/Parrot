@@ -1,7 +1,20 @@
 import Foundation
 
+/*
+DispatchQueue.global(qos: .background).async {
+    do {
+        let q = try DriveAPI.share(on: c.channel!, file: URL(fileURLWithPath: ""), with: "")
+        print(q)
+    } catch(let error) {
+        print(error)
+    }
+}
+*/
 public struct DriveAPI {
     private init() {}
+    
+    /* supportsTeamDrives=true&pinned=true&convert=false&fields=kind,title,mimeType,createdDate,modifiedDate,modifiedByMeDate,lastViewedByMeDate,fileSize,owners(kind,permissionId,displayName,picture,emailAddress,domain),lastModifyingUser(kind,permissionId,displayName,picture,emailAddress),hasThumbnail,thumbnailVersion,iconLink,id,shared,sharedWithMeDate,userPermission(role),explicitlyTrashed,quotaBytesUsed,shareable,copyable,subscribed,folderColor,hasChildFolders,fileExtension,primarySyncParentId,sharingUser(kind,permissionId,displayName,picture,emailAddress),flaggedForAbuse,folderFeatures,spaces,sourceAppId,editable,recency,recencyReason,version,actionItems,teamDriveId,hasAugmentedPermissions,primaryDomainName,organizationDisplayName,passivelySubscribed,trashingUser(kind,permissionId,displayName,picture,emailAddress),trashedDate,hasVisitorPermissions,parents(id),labels(starred,hidden,trashed,restricted,viewed),capabilities(canCopy,canDownload,canEdit,canAddChildren,canDelete,canRemoveChildren,canShare,canTrash,canRename,canReadTeamDrive,canMoveTeamDriveItem,canMoveItemIntoTeamDrive)&openDrive=false&reason=202&syncType=0&errorRecovery=false
+     */
     
     private static let baseURL = "https://clients6.google.com/upload/drive/v2internal/files"
     private static let permsURL = "https://clients6.google.com/drive/v2internal/files"
@@ -65,53 +78,50 @@ public struct DriveAPI {
         return (a, b as? HTTPURLResponse)
     }
     
-    public static func share(on c: Channel, file url: URL, with email: String) throws -> URL {
+    public static func share(on c: Channel, file url: URL, with emails: [String] = []) throws -> URL {
+        
+        // Verify file data accessibility
         let reach = try url.checkResourceIsReachable()
         guard url.isFileURL && reach else { throw URLError(.resourceUnavailable) }
         let data = try Data(contentsOf: url)
         
+        // Create file entry in Drive (resumable, so we can upload separately)
         let (_, response1) = try DriveAPI.jsonRequest(c, "POST", DriveAPI.baseURL, [
             "title": url.lastPathComponent,
             "description": "Shared by Parrot."
-            ], [
-                "uploadType": "resumable",
-                "key": DriveAPI.APIKey
-            ], [
-                "X-Upload-Content-Length": "\(data.count)",
-            ])
+        ], [
+            "uploadType": "resumable",
+            "key": DriveAPI.APIKey
+        ], [
+            "X-Upload-Content-Length": "\(data.count)",
+        ])
         
-        /* supportsTeamDrives=true&pinned=true&convert=false&fields=kind,title,mimeType,createdDate,modifiedDate,modifiedByMeDate,lastViewedByMeDate,fileSize,owners(kind,permissionId,displayName,picture,emailAddress,domain),lastModifyingUser(kind,permissionId,displayName,picture,emailAddress),hasThumbnail,thumbnailVersion,iconLink,id,shared,sharedWithMeDate,userPermission(role),explicitlyTrashed,quotaBytesUsed,shareable,copyable,subscribed,folderColor,hasChildFolders,fileExtension,primarySyncParentId,sharingUser(kind,permissionId,displayName,picture,emailAddress),flaggedForAbuse,folderFeatures,spaces,sourceAppId,editable,recency,recencyReason,version,actionItems,teamDriveId,hasAugmentedPermissions,primaryDomainName,organizationDisplayName,passivelySubscribed,trashingUser(kind,permissionId,displayName,picture,emailAddress),trashedDate,hasVisitorPermissions,parents(id),labels(starred,hidden,trashed,restricted,viewed),capabilities(canCopy,canDownload,canEdit,canAddChildren,canDelete,canRemoveChildren,canShare,canTrash,canRename,canReadTeamDrive,canMoveTeamDriveItem,canMoveItemIntoTeamDrive)&openDrive=false&reason=202&syncType=0&errorRecovery=false
-         */
-        
+        // Upload the actual file data if possible.
         guard let location = response1?.allHeaderFields["Location"] as? String else { throw NSError(domain: "noloc", code: 0) }
-        let (data2, _) = try DriveAPI.dataRequest(c, "POST", location, data, [:], [
-            "Content-Range": "bytes 0-\(data.count - 1)/\(data.count)",
-            ])
-        
+        let (data2, _) = try DriveAPI.dataRequest(c, "POST", location, data, [:],
+                                                  ["Content-Range": "bytes 0-\(data.count - 1)/\(data.count)"])
         let json2 = try JSONSerialization.jsonObject(with: data2!, options: [.allowFragments]) as? [String: Any]
         guard let fileID = json2?["id"] as? String else { throw URLError(.unsupportedURL) }
-        let (_, _) = try DriveAPI.jsonRequest(c, "POST", DriveAPI.permsURL + "/\(fileID)/permissions", [
-            "role": "reader",
-            "type": "user",
-            "value": "aditya.vaidyam@gmail.com",
-            //"withLink": "true"
+        
+        // Insert the appropriate permissions
+        if emails.count == 0 { // global link-access perm
+            let (_, _) = try DriveAPI.jsonRequest(c, "POST", DriveAPI.permsURL + "/\(fileID)/permissions", [
+                "role": "reader",
+                "type": "anyone",
+                "withLink": "true"
+            ], ["key": DriveAPI.APIKey], [:])
+        } else { for email in emails { // batch insert perms
+            let (_, _) = try DriveAPI.jsonRequest(c, "POST", DriveAPI.permsURL + "/\(fileID)/permissions", [
+                "role": "reader",
+                "type": "user",
+                "value": email,
             ], [
-                //"sendNotificationEmails": "false", // broken?
+                //"sendNotificationEmail": "false", // broken?
                 "key": DriveAPI.APIKey
             ], [:])
+        } }
+        
+        // Return the preview URL
         return URL(string: DriveAPI.viewURL + "?id=\(fileID)")!
     }
-    
-    /*
-    public func TEST3() {
-        let fileUrl = URL(string: "file://" + "/Users/USERNAME/Desktop/DECgHBrWsAAdd15.jpg")!
-        do {
-            let url = try share(file: fileUrl, with: "PERSON@gmail.com", auth: DriveAPI.APIKey)
-            
-            print(url)
-        } catch(let error) {
-            print(error)
-        }
-    }
-    */
 }

@@ -62,6 +62,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             }
         }
         menu.addItem(NSMenuItem.separator())
+        menu.addItem(withTitle: " Photo", action: nil, keyEquivalent: "")
         menu.addItem(withTitle: " Audio", action: nil, keyEquivalent: "")
         menu.addItem(withTitle: " Video", action: nil, keyEquivalent: "")
         menu.addItem(withTitle: " File", action: nil, keyEquivalent: "")

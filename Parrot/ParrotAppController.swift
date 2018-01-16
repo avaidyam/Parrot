@@ -170,23 +170,6 @@ public class ParrotAppController: NSApplicationController {
             Settings.openConversations
                 .flatMap { c.conversationList?.conversations[$0] }
                 .forEach { MessageListViewController.show(conversation: $0 as! IConversation) }
-            
-            
-            /*
-            PeopleAPI.list(on: c.channel!, id: c.directory.me.identifier) {
-                print($0, $1)
-            }
-            */
-            /*
-            DispatchQueue.global(qos: .background).async {
-                do {
-                    let q = try DriveAPI.share(on: c.channel!, file: URL(fileURLWithPath: ""), with: "")
-                    print(q)
-                } catch(let error) {
-                    print(error)
-                }
-            }
-            */
         }
         
         self.disconnectSub = AutoSubscription(from: c, kind: Notification.Service.DidDisconnect) { _ in

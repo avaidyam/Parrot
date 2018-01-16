@@ -1,5 +1,10 @@
 import Foundation
 
+/*
+ PeopleAPI.list(on: c.channel!, id: c.directory.me.identifier) {
+     print($0, $1)
+ }
+ */
 public struct PeopleAPI {
     private init() {}
     
