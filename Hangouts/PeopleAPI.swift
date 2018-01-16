@@ -79,7 +79,9 @@ public struct PeopleAPI {
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         request.httpBody = merge.data(using: .utf8)
-        for (k, v) in Channel.getAuthorizationHeaders2(channel.cachedSAPISID) {
+        for (k, v) in Channel.getAuthorizationHeaders(channel.cachedSAPISID,
+                                                      origin: "https://hangouts.google.com",
+                                                      extras: ["X-HTTP-Method-Override": "GET"]) {
             request.setValue(v, forHTTPHeaderField: k)
         }
         
