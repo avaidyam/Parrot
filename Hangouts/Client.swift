@@ -5,6 +5,28 @@ import ParrotServiceExtension
 private let log = Logger(subsystem: "Hangouts.Client")
 internal let hangoutsCenter = NotificationCenter()
 
+
+/*
+ UNIMPLEMENTED PROTOBUF:
+ 
+ * For `UpdateFavoriteContact`:
+ ```
+ //LOCATION: contacts/updatefavoritecontact
+ //REQUEST: [[[44,3,"chat_frontend_20170704.12_p0",1499200377],["lcsw_hangouts_09AD1933","A7FBD6D5E46F7388"],null,"en"],[[[["110325279767392021429"]],true]],""]
+ //RESPONSE: ["cufcrp",[4,null,""],1,[[["110325279767392021429","110325279767392021429"]],[["116593784082165979236","116593784082165979236"]],[["114754752003084982184","114754752003084982184"]]],"CAAQ4Ma8w5+C1QI\u003d"]
+ //REQUEST: [[[44,3,"chat_frontend_20170704.12_p0",1499200377],["lcsw_hangouts_09AD1933","A7FBD6D5E46F7388"],null,"en"],[[[["110325279767392021429"]],true]],"CAAQ4Ma8w5+C1QI="]
+ //RESPONSE: ["cufcrp",[1,null,""],null,[],"CAAQkoTr16KC1QI\u003d"]
+ ```
+ 
+ * For `DismissSuggestedContacts`:
+ ```
+ //LOCATION: contacts/dismisssuggestedcontacts
+ //REQUEST: [[[44,3,"chat_frontend_20170704.12_p0",1499200377],["lcsw_hangouts_DB3E7684","5D774512E46F7388"],null,"en"],[["114754752003084982184"]]]
+ //RESPONSE: ["cdscrp",[1,null,"","-2446617729322783353",1499812078776000],[["114754752003084982184","114754752003084982184"]]]
+ ```
+ 
+ */
+
 public final class Client: Service {
 	
 	// NotificationCenter notification and userInfo keys.

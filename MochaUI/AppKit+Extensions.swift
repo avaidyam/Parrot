@@ -294,7 +294,7 @@ public extension NSImage {
     }
 }
 
-public func runSelectionPanel(for window: NSWindow, fileTypes: [String],
+public func runSelectionPanel(for window: NSWindow, fileTypes: [String]?,
                               multiple: Bool = false, _ handler: @escaping ([URL]) -> () = {_ in}) {
 	let p = NSOpenPanel()
 	p.allowsMultipleSelection = multiple

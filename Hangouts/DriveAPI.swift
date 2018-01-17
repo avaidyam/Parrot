@@ -116,7 +116,7 @@ public struct DriveAPI {
                 "type": "user",
                 "value": email,
             ], [
-                //"sendNotificationEmail": "false", // broken?
+                "sendNotificationEmails": "false",
                 "key": DriveAPI.APIKey
             ], [:])
         } }

@@ -4,7 +4,7 @@ import Foundation
  PeopleAPI.list(on: c.channel!, id: c.directory.me.identifier) {
      print($0, $1)
  }
- */
+*/
 public struct PeopleAPI {
     private init() {}
     
@@ -109,3 +109,39 @@ public struct PeopleAPI {
         }.resume()
     }
 }
+/* SAMPLE PHONE DATA:
+    "phone": [
+     {
+      "metadata": {
+       "writeable": true,
+       "container": "CONTACT",
+       "containerType": "CONTACT",
+       "containerId": "8079549805121237877",
+       "encodedContainerId": "702053bd8f53f375",
+       "primary": true,
+       "containerPrimary": true
+      },
+      "value": "<phone number>",
+      "type": "mobile",
+      "formattedType": "Mobile",
+      "canonicalizedForm": "<phone number>",
+      "uri": "tel:<phone number>",
+      "extendedData": {
+       "structuredPhone": {
+        "phoneNumber": {
+         "e164": "<phone number>",
+         "i18nData": {
+          "nationalNumber": "<phone number>",
+          "internationalNumber": "<phone number>",
+          "countryCode": 1,
+          "regionCode": "US",
+          "isValid": true,
+          "validationResult": "IS_POSSIBLE"
+         }
+        },
+        "type": "mobile"
+       }
+      }
+     }
+    ]
+*/

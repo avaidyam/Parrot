@@ -2,6 +2,7 @@ import AppKit
 import Mocha
 import ParrotServiceExtension
 import MochaUI
+import AVKit
 
 public protocol TextInputHost {
     var image: NSImage? { get }
@@ -9,6 +10,8 @@ public protocol TextInputHost {
     func typing()
     func send(message: String)
     func send(image: Data, filename: String)
+    func send(video: URL)
+    func send(file: URL)
     func sendLocation()
 }
 
@@ -64,17 +67,35 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         menu.addItem(NSMenuItem.separator())
         menu.addItem(withTitle: " Photo", action: nil, keyEquivalent: "")
         menu.addItem(withTitle: " Audio", action: nil, keyEquivalent: "")
-        menu.addItem(withTitle: " Video", action: nil, keyEquivalent: "")
-        menu.addItem(withTitle: " File", action: nil, keyEquivalent: "")
-        /*menu.addItem(title: " Audio") {
-            log.debug("Cannot send audio yet.")
-        }
         menu.addItem(title: " Video") {
-            log.debug("Cannot send video yet.")
+            let width = self.view.bounds.width, height = (width * 9.0 / 16.0)
+            let tmp = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("Movie Recording \(Date().fullString(true)).mp4")
+            
+            let popover = NSPopover()
+            let av = AVCaptureView(frame: NSRect(x: 0, y: 0, width: width, height: height))
+            let avcp = AVCaptureViewCompanion(url: tmp) { [weak self, popover] in
+                if let error = $0 {
+                    log.debug("Something happened while saving your video.")
+                } else {
+                    self?.host?.send(video: tmp)
+                }
+                popover.close()
+                popover.contentViewController = nil
+            }
+            
+            /* TODO: There's a retain cycle somewhere here; when the convo window closes, the iSight LED still glows. */
+            
+            av.companion = avcp
+            popover.contentView = av
+            popover.behavior = .applicationDefined
+            popover.appearance = .dark
+            popover.show(relativeTo: self.view.bounds, of: self.view, preferredEdge: .maxY)
         }
-        menu.addItem(title: " Document") {
-            log.debug("Cannot send documents yet.")
-        }*/
+        menu.addItem(title: " File") {
+            runSelectionPanel(for: self.view.window!, fileTypes: nil, multiple: false) { urls in
+                self.host?.send(file: urls[0])
+            }
+        }
         menu.addItem(title: " Location") {
             self.host?.sendLocation()
         }

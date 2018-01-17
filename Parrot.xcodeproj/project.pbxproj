@@ -98,6 +98,7 @@
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
 		488EC0D11F267CF90022F6EB /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488EC0D01F267CF90022F6EB /* Animation.swift */; };
+		488F1E7F200ED7DF008E0752 /* AVCaptureViewCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1E7E200ED7DF008E0752 /* AVCaptureViewCompanion.swift */; };
 		488F652A1EF97CD50085325F /* GooglePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F65291EF97CD50085325F /* GooglePhoto.swift */; };
 		489018AC1D3C8FE400CFCA5F /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person.swift */; };
 		489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */; };
@@ -503,6 +504,7 @@
 		48834E3A1C1B4098009BC442 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		488EC0D01F267CF90022F6EB /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
+		488F1E7E200ED7DF008E0752 /* AVCaptureViewCompanion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureViewCompanion.swift; sourceTree = "<group>"; };
 		488F65291EF97CD50085325F /* GooglePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePhoto.swift; sourceTree = "<group>"; };
 		489018AB1D3C8FE400CFCA5F /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
@@ -892,6 +894,7 @@
 				481300391D25B54300768D79 /* ServiceRegistry.swift */,
 				4869A9B11EE17A3800764594 /* SplitWindowController.swift */,
 				485B12EC1F1A904400432A36 /* LocationHelper.swift */,
+				488F1E7E200ED7DF008E0752 /* AVCaptureViewCompanion.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -1711,6 +1714,7 @@
 				4869A9381EDB858A00764594 /* DirectoryListViewController.swift in Sources */,
 				4869A9A91EE1058100764594 /* WindowAnimators.swift in Sources */,
 				4835ECAB1C1C620000193EBC /* ConversationCell.swift in Sources */,
+				488F1E7F200ED7DF008E0752 /* AVCaptureViewCompanion.swift in Sources */,
 				485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
 				48212BE91ECCEB7700B7765B /* ConversationSettingsViewController.swift in Sources */,
