@@ -181,6 +181,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
     // FIXME: ugh...
     public func focus(mode: FocusMode) {
         let id = (self.client.userList.me as! User).id
+        let oldTyping = self.typingStatuses[id], oldFocus = self.focuses[id]
         
         if mode == .typing && self.typingStatuses[id] != .Started {
             self.typingStatuses[id] = .Started
@@ -196,11 +197,16 @@ public class IConversation: ParrotServiceExtension.Conversation {
             self.focuses[id] = false
         }
         
-        let req1 = SetTypingRequest(conversation_id: self.id, type: self.typingStatuses[id]!)
-        self.client.execute(req1) {_,_ in}
-        //timeout_secs: <#T##UInt32?#>?
-        let req2 = SetFocusRequest(conversation_id: self.id, type: (self.focuses[id]! ? .Focused : .Unfocused))
-        self.client.execute(req2) {_,_ in}
+        // Only update typing or focus IFF it has changed
+        if oldTyping != self.typingStatuses[id] {
+            let req1 = SetTypingRequest(conversation_id: self.id, type: self.typingStatuses[id]!)
+            self.client.execute(req1) {_,_ in}
+        }
+        //timeout_secs: UInt32?
+        if oldFocus != self.focuses[id] {
+            let req2 = SetFocusRequest(conversation_id: self.id, type: (self.focuses[id]! ? .Focused : .Unfocused))
+            self.client.execute(req2) {_,_ in}
+        }
     }
 	
 	public var muted: Bool {
