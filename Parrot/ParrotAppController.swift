@@ -15,13 +15,10 @@ internal let log = Logger(subsystem: "Parrot.Global")
 @NSApplicationMain
 public class ParrotAppController: NSApplicationController {
     
-    let net = NetworkReachabilityManager(host: "google.com")
-    
-    private var connectSub: Subscription? = nil
-    private var disconnectSub: Subscription? = nil
-    private var notificationHelper: Subscription? = nil
-    private var notificationReplyHelper: Subscription? = nil
+    private let net = NetworkReachabilityManager(host: "google.com")
+    private var menubarSub: NSKeyValueObservation? = nil
     private var idleTimer: DispatchSourceTimer? = nil
+    internal var watching: [Subscription] = []
     
     fileprivate var server = XPCConnection(name: "com.avaidyam.Parrot.parrotd", active: true)
     private static let xpcChannel = Logger.Channel { unit in
@@ -54,7 +51,7 @@ public class ParrotAppController: NSApplicationController {
     }()
     
 	/// Lazy-init for the main conversations NSWindowController.
-	private lazy var conversationsController: NSViewController = {
+	internal lazy var conversationsController: NSViewController = {
 		ConversationListViewController()
 	}()
     
@@ -103,24 +100,10 @@ public class ParrotAppController: NSApplicationController {
 			Settings.completions = defaultC
 		}
 	}
-    
-    deinit {
-        self.connectSub = nil
-        self.disconnectSub = nil
-        self.notificationHelper = nil
-        self.notificationReplyHelper = nil
-    }
 	
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
-        
         log.info("Initializing Parrot...")
-        //AppActivity.start("Authenticate")
-        //Authenticator.delegate = WebDelegate.delegate
-        //Authenticator.authenticateClient {
-        //AppActivity.end("Authenticate")
-        
-        
         
         // Sign in first.
         let cookies = try! server.sync(AuthenticationInvocation.self)
@@ -128,17 +111,10 @@ public class ParrotAppController: NSApplicationController {
         AuthenticationInvocation.unpackage(cookies).forEach {
             config.httpCookieStorage?.setCookie($0)
         }
-        let c = Client(configuration: config)
+        ServiceRegistry.add(service: Client(configuration: config))
         
-        DispatchQueue.main.async {
-            self.mainController.presentAsWindow()
-        }
-        
-        //let c = Client(configuration: $0)
-        ServiceRegistry.add(service: c)
-        
-        
-        net?.listener = {
+        // Install reachability for connect/disconnect.
+        self.net?.listen() {
             for (name, service) in ServiceRegistry.services {
                 switch $0 {
                 case .reachable(_) where !service.connected:
@@ -151,11 +127,12 @@ public class ParrotAppController: NSApplicationController {
                 }
             }
         }
-        self.net?.startListening()
+        self.registerEvents()
         
-        self.connectSub = AutoSubscription(from: c, kind: Notification.Service.DidConnect) { _ in
-            UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
-                             contentImage: NSImage(named: NSImage.Name.caution)).post()
+        // Show main window.
+        DispatchQueue.main.async {
+            self.mainController.presentAsWindow()
+            let c = ServiceRegistry.services.first!.value as! Client
             
             // FIXME: If an old opened conversation isn't in the recents, it won't open!
             if self._prefersShoeboxAppStyle { // only open one recent conv
@@ -171,83 +148,7 @@ public class ParrotAppController: NSApplicationController {
             }
         }
         
-        self.disconnectSub = AutoSubscription(from: c, kind: Notification.Service.DidDisconnect) { _ in
-            DispatchQueue.main.async { // FIXME why does wrapping it twice work??
-                NSUserNotification.notifications()
-                    .filter { $0.identifier == "Parrot.ConnectionStatus" }
-                    .forEach { $0.remove() }
-                let u = UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has disconnected.",
-                                         contentImage: NSImage(named: NSImage.Name.caution))
-                u.set(option: .alwaysShow, value: true)
-                u.post()
-            }
-        }
-        
-        self.notificationHelper = AutoSubscription(kind: Notification.Conversation.DidReceiveEvent) {
-            guard let event = $0.userInfo?["event"] as? IChatMessageEvent else { return }
-            
-            var showNote = true
-            if let c = MessageListViewController.openConversations[event.conversation_id] {
-                showNote = !(c.view.window?.isKeyWindow ?? false)
-            }
-            
-            if let user = c.userList.people[event.userID.gaiaID], !user.me && showNote {
-                
-                // add "action" property -- if the event is "acted on", the handler is invoked
-                // i.e. notification button
-                // i.e. dock bounce --> NSAppDelegate checks if bounce, then calls handler (otherwise bail)
-                /*
-                 let ev = Event(identifier: event.conversation_id, contents: user.firstName + " (via Hangouts)",
-                                description: event.text, image: fetchImage(user: user, monogram: true))
-                 let actions: [EventAction.Type] = [BannerAction.self, BezelAction.self, SoundAction.self, VibrateAction.self, BounceDockAction.self, FlashLEDAction.self, SpeakAction.self, ScriptAction.self]
-                 actions.forEach {
-                     $0.perform(with: ev)
-                 }
-                 */
-                
-                ///*
-                let notification = NSUserNotification()
-                notification.identifier = event.conversation_id
-                notification.title = user.firstName + " (via Hangouts)" /* FIXME */
-                //notification.subtitle = "via Hangouts"
-                notification.informativeText = event.text
-                notification.deliveryDate = Date()
-                notification.alwaysShowsActions = true
-                notification.hasReplyButton = true
-                notification.otherButtonTitle = "Mute"
-                notification.responsePlaceholder = "Send a message..."
-                notification.identityImage = user.image
-                notification.identityStyle = .circle
-                //notification.soundName = "texttone:Bamboo" // this works!!
-                notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
-                notification.set(option: .vibrateForceTouch, value: true)
-                notification.set(option: .alwaysShow, value: true)
-                
-                // Post the notification "uniquely" -- that is, replace it while it is displayed.
-                NSUserNotification.notifications()
-                    .filter { $0.identifier == notification.identifier }
-                    .forEach { $0.remove() }
-                notification.post()
-                //*/
-            }
-            
-            self.notificationReplyHelper = AutoSubscription(kind: NSUserNotification.didActivateNotification) {
-                guard    let notification = $0.object as? NSUserNotification,
-                    var conv = c.conversationList?.conversations[notification.identifier ?? ""]
-                    else { return }
-                
-                switch notification.activationType {
-                case .contentsClicked:
-                    MessageListViewController.show(conversation: conv as! IConversation, parent: self.conversationsController)
-                case .actionButtonClicked:
-                    conv.muted = true
-                case .replied where notification.response?.string != nil:
-                    MessageListViewController.sendMessage(notification.response!.string, conv)
-                default: break
-                }
-            }
-		}
-        
+        // Watch the menubarIcon setting to toggle the statusbar item.
         self.menubarSub = Settings.observe(\.menubarIcon, options: [.new, .initial]) { _, _ in
             if Settings.menubarIcon {
                 let image = NSImage(named: NSImage.Name.applicationIcon)
@@ -264,7 +165,7 @@ public class ParrotAppController: NSApplicationController {
             }
         }
         
-        // Wallclock for system idle.
+        // Wallclock for system idle -> service interaction.
         self.idleTimer = DispatchSource.makeTimerSource(queue: .main)
         self.idleTimer?.schedule(wallDeadline: .now(), repeating: 5.minutes, leeway: 1.minutes)
         self.idleTimer?.setEventHandler {
@@ -279,11 +180,8 @@ public class ParrotAppController: NSApplicationController {
         }
         self.idleTimer?.resume()
     }
-    private var menubarSub: NSKeyValueObservation? = nil
     
     public func applicationWillTerminate(_ notification: Notification) {
-        
-        // End the reporting session.
         GoogleAnalytics.sessionTrackingIdentifier = nil
     }
     

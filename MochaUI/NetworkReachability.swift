@@ -147,6 +147,11 @@ public class NetworkReachabilityManager {
     
     // MARK: - Listening
     
+    public func listen(_ listener: @escaping Listener) {
+        self.listener = listener
+        self.startListening()
+    }
+    
     /// Starts listening for changes in network reachability status.
     ///
     /// - returns: `true` if listening was started successfully, `false` otherwise.

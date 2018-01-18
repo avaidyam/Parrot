@@ -1,6 +1,7 @@
 import Cocoa
 import Mocha
 import MochaUI
+import Hangouts // TODO: REMOVE
 
 public struct Event {
     public let identifier: String
@@ -109,30 +110,90 @@ public struct ScriptAction: EventAction {
     }
 }
 
-/// An archive of all the Hangouts events we're watching; besides connect/disconnect,
-/// they all have to do with Conversation changes like focus/events/participants.
-private let watching: [AutoSubscription] = [
-       AutoSubscription(kind: Notification.Service.DidConnect) { _ in
-        
-    }, AutoSubscription(kind: Notification.Service.DidDisconnect) { _ in
-        
-    }, AutoSubscription(kind: Notification.Conversation.DidJoin) { _ in
-        
-    }, AutoSubscription(kind: Notification.Conversation.DidLeave) { _ in
-        
-    }, AutoSubscription(kind: Notification.Conversation.DidChangeFocus) { _ in
-        
-    }, AutoSubscription(kind: Notification.Conversation.DidChangeTypingStatus) { _ in
-        
-    }, AutoSubscription(kind: Notification.Conversation.DidReceiveWatermark) { _ in
-        
-    }, AutoSubscription(kind: Notification.Conversation.DidReceiveEvent) { _ in
-        
-    },
-]
-
-public func registerEvents() {
-    _ = watching // triggers the whole thing
+public extension ParrotAppController {
+    
+    /// An archive of all the Hangouts events we're watching; besides connect/disconnect,
+    /// they all have to do with Conversation changes like focus/events/participants.
+    public func registerEvents() {
+        self.watching = [
+               AutoSubscription(kind: Notification.Service.DidConnect) { _ in
+                UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
+                                 contentImage: NSImage(named: NSImage.Name.caution)).post()
+                
+            }, AutoSubscription(kind: Notification.Service.DidDisconnect) { _ in
+                DispatchQueue.main.async { // FIXME why does wrapping it twice work??
+                    NSUserNotification.notifications()
+                        .filter { $0.identifier == "Parrot.ConnectionStatus" }
+                        .forEach { $0.remove() }
+                    let u = UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has disconnected.",
+                                             contentImage: NSImage(named: NSImage.Name.caution))
+                    u.set(option: .alwaysShow, value: true)
+                    u.post()
+                }
+                
+            }, AutoSubscription(kind: Notification.Conversation.DidJoin) { _ in
+                
+            }, AutoSubscription(kind: Notification.Conversation.DidLeave) { _ in
+                
+            }, AutoSubscription(kind: Notification.Conversation.DidChangeFocus) { _ in
+                
+            }, AutoSubscription(kind: Notification.Conversation.DidChangeTypingStatus) { _ in
+                
+            }, AutoSubscription(kind: Notification.Conversation.DidReceiveWatermark) { _ in
+                
+            }, AutoSubscription(kind: Notification.Conversation.DidReceiveEvent) { e in
+                let c = ServiceRegistry.services.first!.value as! Client
+                guard let event = e.userInfo?["event"] as? IChatMessageEvent else { return }
+                
+                var showNote = true
+                if let c = MessageListViewController.openConversations[event.conversation_id] {
+                    showNote = !(c.view.window?.isKeyWindow ?? false)
+                }
+                
+                if let user = c.userList.people[event.userID.gaiaID], !user.me && showNote {
+                    
+                    let notification = NSUserNotification()
+                    notification.identifier = event.conversation_id
+                    notification.title = user.firstName + " (via Hangouts)" /* FIXME */
+                    //notification.subtitle = "via Hangouts"
+                    notification.informativeText = event.text
+                    notification.deliveryDate = Date()
+                    notification.alwaysShowsActions = true
+                    notification.hasReplyButton = true
+                    notification.otherButtonTitle = "Mute"
+                    notification.responsePlaceholder = "Send a message..."
+                    notification.identityImage = user.image
+                    notification.identityStyle = .circle
+                    //notification.soundName = "texttone:Bamboo" // this works!!
+                    notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
+                    notification.set(option: .vibrateForceTouch, value: true)
+                    notification.set(option: .alwaysShow, value: true)
+                    
+                    // Post the notification "uniquely" -- that is, replace it while it is displayed.
+                    NSUserNotification.notifications()
+                        .filter { $0.identifier == notification.identifier }
+                        .forEach { $0.remove() }
+                    notification.post()
+                }
+                
+            }, AutoSubscription(kind: NSUserNotification.didActivateNotification) {
+                let c = ServiceRegistry.services.first!.value as! Client
+                guard   let notification = $0.object as? NSUserNotification,
+                        var conv = c.conversationList?.conversations[notification.identifier ?? ""]
+                else { return }
+                
+                switch notification.activationType {
+                case .contentsClicked:
+                    MessageListViewController.show(conversation: conv as! IConversation, parent: self.conversationsController)
+                case .actionButtonClicked:
+                    conv.muted = true
+                case .replied where notification.response?.string != nil:
+                    MessageListViewController.sendMessage(notification.response!.string, conv)
+                default: break
+                }
+            }
+        ]
+    }
 }
 
 /*
@@ -144,6 +205,18 @@ public func registerEvents() {
  MentionEvent: A name or a keyword was mentioned in a conversation.
  */
 
+
+// add "action" property -- if the event is "acted on", the handler is invoked
+// i.e. notification button
+// i.e. dock bounce --> NSAppDelegate checks if bounce, then calls handler (otherwise bail)
+/*
+ let ev = Event(identifier: event.conversation_id, contents: user.firstName + " (via Hangouts)",
+ description: event.text, image: fetchImage(user: user, monogram: true))
+ let actions: [EventAction.Type] = [BannerAction.self, BezelAction.self, SoundAction.self, VibrateAction.self, BounceDockAction.self, FlashLEDAction.self, SpeakAction.self, ScriptAction.self]
+ actions.forEach {
+ $0.perform(with: ev)
+ }
+ */
 
 
 
