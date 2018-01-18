@@ -92,32 +92,9 @@ public class ParrotAppController: NSApplicationController {
         
         // Well let's see if this works.
         Logger.globalChannels = [ParrotAppController.xpcChannel]
-		
-		// Check for updates if any are available.
-        // Note: in the future, this will be invoked by the Parrot Daemon periodically
-        // and the UI client will simply display the message; when updating, the
-        // daemon will pre-cache the download and replace the executable.
-        if let release = AppRelease.checkForUpdates(prerelease: true) {
-            let a = NSAlert(style: .informational, message: "\(release.releaseName) available",
-                information: release.releaseNotes, buttons: ["Update", "Ignore"],
-                showSuppression: true) // FIXME suppression
-            a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
-            if let vev = a.window.titlebar.view as? NSVisualEffectView {
-                vev.material = .appearanceBased
-                vev.state = .active
-                vev.blendingMode = .withinWindow
-            }
-            if a.runModal() == .alertFirstButtonReturn {
-                NSWorkspace.shared.open(release.githubURL)
-            }
-        }
         
         // Set up the Google Analytics reporting.
         GoogleAnalytics.sessionTrackingIdentifier = "UA-63931980-2"
-        
-        /*subscribe(on: .system, source: nil, Notification.Name("com.avaidyam.Parrot.Service.giveConversations")) {
-            log.debug("RESULTS: \($0)")
-        }*/
 		
 		// Register the default completions if none are in the user settings.
         // Note: we're not using the registered defaults domain on purpose for this.

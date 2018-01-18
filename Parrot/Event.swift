@@ -2,13 +2,13 @@ import Cocoa
 import Mocha
 import MochaUI
 
-private let SOUNDFILE = "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf"
-
 public struct Event {
     public let identifier: String
     public let contents: String?
     public let description: String?
     public let image: NSImage?
+    public let sound: URL?
+    public let script: URL?
 }
 
 public protocol EventAction {
@@ -32,8 +32,8 @@ public struct BannerAction: EventAction {
         //notification.responsePlaceholder = "Send a message..."
         notification.identityImage = event.image
         notification.identityStyle = .circle
-        //notification.soundName = "texttone:Bamboo" // this works!!
-        //notification.set(option: .customSoundPath, value: SOUNDFILE)
+        //notification.soundName = event.sound?.absoluteString//"texttone:Bamboo" // this works!!
+        //notification.set(option: .customSoundPath, value: event.sound?.absoluteString)
         //notification.set(option: .vibrateForceTouch, value: true)
         notification.set(option: .alwaysShow, value: true)
         
@@ -58,7 +58,8 @@ public struct BezelAction: EventAction {
 public struct SoundAction: EventAction {
     private init() {}
     public static func perform(with event: Event) {
-        NSSound(contentsOfFile: SOUNDFILE, byReference: true)?.play()
+        guard let s = event.sound?.absoluteString else { return }
+        NSSound(contentsOfFile: s, byReference: true)?.play()
     }
 }
 
@@ -74,7 +75,10 @@ public struct VibrateAction: EventAction {
 public struct BounceDockAction: EventAction {
     private init() {}
     public static func perform(with event: Event) {
-        NSApp.requestUserAttention(.criticalRequest)
+        let id = NSApp.requestUserAttention(.criticalRequest)
+        DispatchQueue.main.asyncAfter(deadline: 2.seconds.later) {
+            NSApp.cancelUserAttentionRequest(id)
+        }
     }
 }
 
@@ -100,6 +104,49 @@ public struct SpeakAction: EventAction {
 public struct ScriptAction: EventAction {
     private init() {}
     public static func perform(with event: Event) {
-        _ = try? NSUserAppleScriptTask(url: URL(fileURLWithPath: "")).execute(withAppleEvent: nil, completionHandler: nil)
+        guard let s = event.script else { return }
+        _ = try? NSUserAppleScriptTask(url: s).execute(withAppleEvent: nil, completionHandler: nil)
     }
 }
+
+/// An archive of all the Hangouts events we're watching; besides connect/disconnect,
+/// they all have to do with Conversation changes like focus/events/participants.
+private let watching: [AutoSubscription] = [
+       AutoSubscription(kind: Notification.Service.DidConnect) { _ in
+        
+    }, AutoSubscription(kind: Notification.Service.DidDisconnect) { _ in
+        
+    }, AutoSubscription(kind: Notification.Conversation.DidJoin) { _ in
+        
+    }, AutoSubscription(kind: Notification.Conversation.DidLeave) { _ in
+        
+    }, AutoSubscription(kind: Notification.Conversation.DidChangeFocus) { _ in
+        
+    }, AutoSubscription(kind: Notification.Conversation.DidChangeTypingStatus) { _ in
+        
+    }, AutoSubscription(kind: Notification.Conversation.DidReceiveWatermark) { _ in
+        
+    }, AutoSubscription(kind: Notification.Conversation.DidReceiveEvent) { _ in
+        
+    },
+]
+
+public func registerEvents() {
+    _ = watching // triggers the whole thing
+}
+
+/*
+ FocusEvent: A person changed their focus (viewing or typing in a conversation). Includes self.
+ PresenceEvent: A person's presence changed. Includes self. Includes dis/connections.
+ MessageEvent: A message was sent or received. Includes self.
+         Properties: Group?, Background?, Sent?
+ InvitationEvent: A person was invited to join a conversation.
+ MentionEvent: A name or a keyword was mentioned in a conversation.
+ */
+
+
+
+
+
+
+

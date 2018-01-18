@@ -5,6 +5,9 @@ import Hangouts
 import XPCTransport
 import ParrotServiceExtension
 
+/* TODO: Check for updates every 2-3 days and cache it. */
+/* TODO: In-place update Parrot.app if needed. */
+
 public class ParrotAgentController: XPCService {
     
     /// Once launched, the Agent shouldn't die as it is the global event pump for Parrot.
@@ -17,6 +20,17 @@ public class ParrotAgentController: XPCService {
         let u = NSUserNotification()
         u.title = "Parrot is running in the background."
         NSUserNotificationCenter.default.deliver(u)
+        
+        // Check for updates if any are available.
+        if let release = AppRelease.checkForUpdates(prerelease: true) {
+            NSAlert(style: .informational, message: "\(release.releaseName) available",
+                information: release.releaseNotes, buttons: ["Update", "Ignore"],
+                suppressionIdentifier: "update.\(release.buildTag)").beginModal {
+                    if $0 == .alertFirstButtonReturn {
+                        NSWorkspace.shared.open(release.githubURL)
+                    }
+            }
+        }
     }
     
     public override func serviceWillTerminate() {
@@ -52,3 +66,18 @@ public class ParrotAgentController: XPCService {
 
 Authenticator.delegate = WebDelegate.delegate
 ParrotAgentController.run()
+
+
+// TODO: Dynamic please?
+public extension NSAlert {
+    @discardableResult
+    public func customize() -> Self {
+        self.window.appearance = .dark
+        if let vev = self.window.titlebar.view as? NSVisualEffectView {
+            vev.material = .appearanceBased
+            vev.state = .active
+            vev.blendingMode = .withinWindow
+        }
+        return self
+    }
+}

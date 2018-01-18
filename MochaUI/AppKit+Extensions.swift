@@ -181,7 +181,7 @@ public extension NSAlert {
     /// Convenience to initialize a canned NSAlert.
     public convenience init(style: NSAlert.Style = .warning, message: String = "",
                             information: String = "", buttons: [String] = [],
-                            showSuppression: Bool = false) {
+                            suppressionIdentifier: String = "") {
         self.init()
         self.alertStyle = style
         self.messageText = message
@@ -189,7 +189,17 @@ public extension NSAlert {
         for b in buttons {
             self.addButton(withTitle: b)
         }
-        self.showsSuppressionButton = showSuppression
+        
+        // Enable alert suppression via unique ID.
+        if suppressionIdentifier != "" {
+            self.showsSuppressionButton = true
+            let key = "alert.suppression.\(suppressionIdentifier)"
+            
+            self.suppressionButton?.boolValue = UserDefaults.standard.bool(forKey: key)
+            self.suppressionButton?.performedAction = {
+                UserDefaults.standard.set(self.suppressionButton?.boolValue ?? false, forKey: key)
+            }
+        }
         self.layout()
     }
     
