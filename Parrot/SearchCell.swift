@@ -8,7 +8,7 @@ public class SearchCell: NSView {
     private lazy var recentsMenu: NSMenu = {
         let recentsMenu = NSMenu(title: "Recents")
         
-        let sort = recentsMenu.addItem(withTitle: "Sort", action: nil, keyEquivalent: "")
+        let sort = recentsMenu.addItem(withTitle: "Sort By", action: nil, keyEquivalent: "")
         sort.tag = SearchCell.sortTag
         recentsMenu.addItem(NSMenuItem.separator())
         
@@ -40,6 +40,28 @@ public class SearchCell: NSView {
     }()
     
     public var handler: (String) -> () = {_ in}
+    public var sortHandler: (Int) -> () = {_ in}
+    
+    public var sortOptions: [String] = [] {
+        didSet {
+            self.sortSelectedIndex = -1
+            
+            if let item = self.recentsMenu.item(withTag: SearchCell.sortTag) {
+                item.isEnabled = true
+                let m = NSMenu(title: "Sort By")
+                for (idx, val) in self.sortOptions.enumerated() {
+                    m.addItem(title: val) { [weak self] in self?.sortSelectedIndex = idx }
+                }
+                item.submenu = m
+            }
+        }
+    }
+    public var sortSelectedIndex: Int = -1 {
+        didSet {
+            guard self.sortSelectedIndex >= 0 else { return }
+            self.sortHandler(self.sortSelectedIndex)
+        }
+    }
     
     public override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

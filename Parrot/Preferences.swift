@@ -83,6 +83,11 @@ public struct Preferences {
 
 public extension UserDefaults {
     
+    public var prefersShoeboxAppStyle: Bool {
+        get { return self.get(default: false) }
+        set { self.set(value: newValue) }
+    }
+    
     public var systemInterfaceStyle: Bool {
         get { return self.get(default: false) }
         set { self.set(value: newValue) }

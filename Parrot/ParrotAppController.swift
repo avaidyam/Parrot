@@ -63,9 +63,11 @@ public class ParrotAppController: NSApplicationController {
     }()
     
     private lazy var dualController: NSSplitViewController = {
-        let sp = NSSplitViewController()
-        sp.addSplitViewItem(NSSplitViewItem(sidebarWithViewController: self.conversationsController))
-        sp.addSplitViewItem(NSSplitViewItem(viewController: NSViewController()))
+        let sp = SplitWindowController()
+        let item = NSSplitViewItem(sidebarWithViewController: self.conversationsController)
+        item.isSpringLoaded = true
+        item.collapseBehavior = .preferResizingSiblingsWithFixedSplitView
+        sp.addSplitViewItem(item)
         return sp
     }()
     
@@ -73,6 +75,18 @@ public class ParrotAppController: NSApplicationController {
         NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
     }()
 	
+    // cached!
+    private lazy var _prefersShoeboxAppStyle: Bool = {
+        return Settings.prefersShoeboxAppStyle
+    }()
+    private var mainController: NSViewController {
+        if self._prefersShoeboxAppStyle {
+            return self.dualController
+        } else {
+            return self.conversationsController
+        }
+    }
+    
 	public override init() {
 		super.init()
         
@@ -140,7 +154,7 @@ public class ParrotAppController: NSApplicationController {
         let c = Client(configuration: config)
         
         DispatchQueue.main.async {
-            self.conversationsController.presentAsWindow()
+            self.mainController.presentAsWindow()
         }
         
         //let c = Client(configuration: $0)
@@ -167,9 +181,17 @@ public class ParrotAppController: NSApplicationController {
                              contentImage: NSImage(named: NSImage.Name.caution)).post()
             
             // FIXME: If an old opened conversation isn't in the recents, it won't open!
-            Settings.openConversations
-                .flatMap { c.conversationList?.conversations[$0] }
-                .forEach { MessageListViewController.show(conversation: $0 as! IConversation) }
+            if self._prefersShoeboxAppStyle { // only open one recent conv
+                if let id = Settings.openConversations.first, let conv = c.conversationList?.conversations[id] {
+                    MessageListViewController.show(conversation: conv as! IConversation,
+                                                   parent: self.conversationsController)
+                }
+            } else {
+                Settings.openConversations
+                    .flatMap { c.conversationList?.conversations[$0] }
+                    .forEach { MessageListViewController.show(conversation: $0 as! IConversation,
+                                                              parent: self.conversationsController) }
+            }
         }
         
         self.disconnectSub = AutoSubscription(from: c, kind: Notification.Service.DidDisconnect) { _ in
@@ -239,7 +261,7 @@ public class ParrotAppController: NSApplicationController {
                 
                 switch notification.activationType {
                 case .contentsClicked:
-                    MessageListViewController.show(conversation: conv as! IConversation)
+                    MessageListViewController.show(conversation: conv as! IConversation, parent: self.conversationsController)
                 case .actionButtonClicked:
                     conv.muted = true
                 case .replied where notification.response?.string != nil:
@@ -295,7 +317,7 @@ public class ParrotAppController: NSApplicationController {
             NSApp.terminate(self)
         } else {
             DispatchQueue.main.async {
-                self.conversationsController.presentAsWindow()
+                self.mainController.presentAsWindow()
                 NSApp.activate(ignoringOtherApps: true)
             }
         }
@@ -304,7 +326,7 @@ public class ParrotAppController: NSApplicationController {
     /// If the Conversations window is closed, tapping the dock icon will reopen it.
     public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         DispatchQueue.main.async {
-            self.conversationsController.presentAsWindow()
+            self.mainController.presentAsWindow()
         }
 		return true
 	}
@@ -352,7 +374,7 @@ public class ParrotAppController: NSApplicationController {
 		menu.addItem(title: "Open Conversations") {
 			log.info("Open Conversations")
             DispatchQueue.main.async {
-                self.conversationsController.presentAsWindow()
+                self.mainController.presentAsWindow()
             }
 		}
 		menu.addItem(withTitle: "Log Out...",
@@ -366,7 +388,7 @@ public class ParrotAppController: NSApplicationController {
     }
     
     @IBAction func showConversations(_ sender: Any?) {
-        self.conversationsController.presentAsWindow()
+        self.mainController.presentAsWindow()
     }
     
     @IBAction func showDirectory(_ sender: Any?) {

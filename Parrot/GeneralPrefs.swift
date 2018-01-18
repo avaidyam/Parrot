@@ -42,22 +42,25 @@ public extension Preferences.Controllers {
         }()
         
         private lazy var autoEmoji: NSButton = {
-            let v = NSButton(checkboxWithTitle: "Automatically convert emoji", target: nil, action: nil)
-            v.setupForBindings()
-            return v
+            return NSButton(checkboxWithTitle: "Automatically convert emoji",
+                            target: nil, action: nil).setupForBindings()
         }()
         
         private lazy var menubarIcon: NSButton = {
-            let v = NSButton(checkboxWithTitle: "Display in menu bar only", target: nil, action: nil)
-            v.setupForBindings()
-            return v
+            return NSButton(checkboxWithTitle: "Display in menu bar only",
+                            target: nil, action: nil).setupForBindings()
+        }()
+        
+        private lazy var shoeboxAppStyle: NSButton = {
+            return NSButton(checkboxWithTitle: "Show recents and conversations as one window (requires restart)",
+                            target: nil, action: nil).setupForBindings()
         }()
         
         private var bindings: [AnyBinding] = []
         
         public override func loadView() {
             let stack: NSStackView = NSStackView(views: [
-                self.textSize, self.interfaceStyle, self.vibrancyStyle, self.autoEmoji, self.menubarIcon
+                self.textSize, self.interfaceStyle, self.vibrancyStyle, self.autoEmoji, self.menubarIcon, self.shoeboxAppStyle
             ]).modernize()
             
             stack.edgeInsets = NSEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
@@ -78,8 +81,12 @@ public extension Preferences.Controllers {
                 Binding(between: (self.autoEmoji, \.boolValue),
                         and: (Settings, \.autoEmoji), with: .right),
                 Binding(between: (self.menubarIcon, \.boolValue),
-                        and: (Settings, \.menubarIcon), with: .right)
+                        and: (Settings, \.menubarIcon), with: .right),
             ]
+            self.bindings.append(
+                Binding(between: (self.shoeboxAppStyle, \.boolValue),
+                        and: (Settings, \.prefersShoeboxAppStyle), with: .right)
+            )
         }
     }
 }

@@ -380,9 +380,11 @@ public extension NSWindow {
 public extension NSControl {
     
     /// Mutually exclusive with target/action/handlers.
-    public func setupForBindings() {
+    @discardableResult
+    public func setupForBindings() -> Self {
         self.target = self
         self.action = #selector(self.bindingTrampoline(_:))
+        return self
     }
     
     /// Allows triggering of all KVO bindings.

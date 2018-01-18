@@ -4,10 +4,8 @@ import Mocha
 import MochaUI
 import ParrotServiceExtension
 
-/* TODO: Support stickers, photos, videos, files, audio, and location. */
 /* TODO: Show DND icon in Cell when conversation is muted. */
 /* TODO: Support not sending Read Receipts. */
-/* TODO: NSSpringLoadingDestination to drop onto the conversation list. */
 
 // Plan for this class:
 //
@@ -283,6 +281,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         case .sectionHeader:
             let header = collectionView.makeSupplementaryView(ofKind: .sectionHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
             header.handler = self.searchTerm(_:)
+            header.sortOptions = ["Name", "Date"]
             return header
         case .sectionFooter:
             let footer = collectionView.makeSupplementaryView(ofKind: .sectionFooter, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"), for: indexPath) as! ReloadCell
