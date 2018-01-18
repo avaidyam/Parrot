@@ -47,6 +47,17 @@ public class ParrotAgentController: XPCService {
         connection.recv(SendLogInvocation.self) { [weak connection] unit in
             Logger.default.debug("\(connection?.name ?? "<null>") received log unit: \(unit)")
         }
+        connection.recv(LogOutInvocation.self) {
+            let cookieStorage = HTTPCookieStorage.shared
+            if let cookies = cookieStorage.cookies {
+                for cookie in cookies {
+                    cookieStorage.deleteCookie(cookie)
+                }
+            }
+            self.cookies = []
+            WebDelegate.delegate.authenticationTokens = nil
+            NSApp.terminate(self)
+        }
         return true
     }
     

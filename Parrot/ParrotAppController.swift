@@ -209,22 +209,8 @@ public class ParrotAppController: NSApplicationController {
     public func application(_ application: NSApplication, open urls: [URL]) {
 		// Create an alert handler to catch any issues with the host or path fragments.
 		let alertHandler = {
-			let a = NSAlert()
-			a.alertStyle = .informational
-			a.messageText = "Parrot couldn't open that location!"
-			a.informativeText = urls[0].absoluteString
-			a.addButton(withTitle: "OK")
-			
-			a.layout()
-			a.window.appearance = ParrotAppearance.interfaceStyle().appearance()
-            if let vev = a.window.titlebar.view as? NSVisualEffectView {
-                vev.material = .appearanceBased
-                vev.state = .active
-                vev.blendingMode = .withinWindow
-            }
-			if a.runModal().rawValue == 1000 /*NSAlertFirstButtonReturn*/ {
-				log.info("Done with alert.")
-			}
+            NSAlert(style: .informational, message: "Parrot couldn't open that location!",
+                    information: urls[0].absoluteString, buttons: ["OK"]).beginModal()
 		}
 		
 		/// If the URL host is a Service we have registered, comprehend it.
@@ -270,27 +256,11 @@ public class ParrotAppController: NSApplicationController {
         self.directoryController.presentAsWindow()
     }
     
-	/// If the user requests logging out, clear the authentication tokens.
 	@IBAction func logoutSelected(_ sender: AnyObject) {
-        NSAlert(
-            style: .critical,
-            message: "Logout failed!",
-            information: "It's not yet completely implemented. Sorry!"
-        ).runModal()
-        
-        /*
-		let cookieStorage = HTTPCookieStorage.shared
-		if let cookies = cookieStorage.cookies {
-			for cookie in cookies {
-				cookieStorage.deleteCookie(cookie)
-			}
-		}
-		WebDelegate.delegate.authenticationTokens = nil
-		NSApp.terminate(self)
-        */
+        try! server.sync(LogOutInvocation.self)
+        NSApp.terminate(self)
 	}
 	
-    ///
 	@IBAction func feedback(_ sender: AnyObject?) {
         NSWorkspace.shared.open(URL(string: "https://gitreports.com/issue/avaidyam/Parrot")!)
     }

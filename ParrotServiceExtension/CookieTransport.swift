@@ -35,6 +35,10 @@ public enum SendLogInvocation: RequestingMethod {
     public typealias Request = Logger.LogUnit
 }
 
+public enum LogOutInvocation: RemoteMethod {
+    public typealias Service = XPCConnection
+}
+
 /*
 public struct GenericMethod: RequestingRespondingThrowingMethod, Codable, Error {
     public typealias Service = XPCConnection
