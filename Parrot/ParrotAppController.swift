@@ -104,6 +104,7 @@ public class ParrotAppController: NSApplicationController {
 	// First begin authentication and setup for any services.
 	func applicationWillFinishLaunching(_ notification: Notification) {
         log.info("Initializing Parrot...")
+        self.registerEvents()
         
         // Sign in first.
         let cookies = try! server.sync(AuthenticationInvocation.self)
@@ -127,7 +128,6 @@ public class ParrotAppController: NSApplicationController {
                 }
             }
         }
-        self.registerEvents()
         
         // Show main window.
         DispatchQueue.main.async {

@@ -47,10 +47,26 @@ public struct BannerAction: EventAction {
 }
 
 // input: contents, image
+// FIXME: there's a crashing zombie somewhere here
 public struct BezelAction: EventAction {
     private init() {}
+    
+    private static var bezels: [SystemBezel] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                if bezels.count > 0 {
+                    bezels.first?.show(autohide: 2.seconds)
+                    DispatchQueue.main.asyncAfter(deadline: 2.seconds.later) {
+                        bezels.remove(at: 0)
+                    }
+                }
+            }
+        }
+    }
+    
     public static func perform(with event: Event) {
-        SystemBezel.create(text: event.contents, image: event.image).show(autohide: .seconds(2))
+        let bezel = SystemBezel.create(text: event.contents, image: event.image)
+        bezels.append(bezel)
     }
 }
 
@@ -117,18 +133,16 @@ public extension ParrotAppController {
     public func registerEvents() {
         self.watching = [
                AutoSubscription(kind: Notification.Service.DidConnect) { _ in
-                UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has connected.",
-                                 contentImage: NSImage(named: NSImage.Name.caution)).post()
-                
+                let event = Event(identifier: "Parrot.ConnectionStatus", contents: "Parrot has connected.",
+                                  description: nil, image: NSImage(named: .caution), sound: nil, script: nil)
+                let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
+                actions.forEach { $0.perform(with: event) }
             }, AutoSubscription(kind: Notification.Service.DidDisconnect) { _ in
                 DispatchQueue.main.async { // FIXME why does wrapping it twice work??
-                    NSUserNotification.notifications()
-                        .filter { $0.identifier == "Parrot.ConnectionStatus" }
-                        .forEach { $0.remove() }
-                    let u = UserNotification(identifier: "Parrot.ConnectionStatus", title: "Parrot has disconnected.",
-                                             contentImage: NSImage(named: NSImage.Name.caution))
-                    u.set(option: .alwaysShow, value: true)
-                    u.post()
+                    let event = Event(identifier: "Parrot.ConnectionStatus", contents: "Parrot has disconnected.",
+                                      description: nil, image: NSImage(named: .caution), sound: nil, script: nil)
+                    let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
+                    actions.forEach { $0.perform(with: event) }
                 }
                 
             }, AutoSubscription(kind: Notification.Conversation.DidJoin) { _ in
@@ -151,29 +165,10 @@ public extension ParrotAppController {
                 }
                 
                 if let user = c.userList.people[event.userID.gaiaID], !user.me && showNote {
-                    
-                    let notification = NSUserNotification()
-                    notification.identifier = event.conversation_id
-                    notification.title = user.firstName + " (via Hangouts)" /* FIXME */
-                    //notification.subtitle = "via Hangouts"
-                    notification.informativeText = event.text
-                    notification.deliveryDate = Date()
-                    notification.alwaysShowsActions = true
-                    notification.hasReplyButton = true
-                    notification.otherButtonTitle = "Mute"
-                    notification.responsePlaceholder = "Send a message..."
-                    notification.identityImage = user.image
-                    notification.identityStyle = .circle
-                    //notification.soundName = "texttone:Bamboo" // this works!!
-                    notification.set(option: .customSoundPath, value: "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf")
-                    notification.set(option: .vibrateForceTouch, value: true)
-                    notification.set(option: .alwaysShow, value: true)
-                    
-                    // Post the notification "uniquely" -- that is, replace it while it is displayed.
-                    NSUserNotification.notifications()
-                        .filter { $0.identifier == notification.identifier }
-                        .forEach { $0.remove() }
-                    notification.post()
+                    let event2 = Event(identifier: event.conversation_id, contents: user.firstName,
+                                      description: event.text, image: user.image, sound: nil, script: nil)
+                    let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
+                    actions.forEach { $0.perform(with: event2) }
                 }
                 
             }, AutoSubscription(kind: NSUserNotification.didActivateNotification) {
