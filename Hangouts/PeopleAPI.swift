@@ -11,7 +11,8 @@ public struct PeopleAPI {
     private static let baseURL = "https://people-pa.clients6.google.com/v2/people"
     private static let APIKey = "AIzaSyBokvzEPUrkgfws0OrFWkpKkVBVuhRfKpk"
     
-    public static func list(on channel: Channel, id: String..., completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+    public static func list(on channel: Channel, ids: [String], completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+        guard ids.count > 0 else { return }
         self._post(channel, "", [
             "requestMask.includeField.paths": "person.email",
             "requestMask.includeField.paths": "person.gender",
@@ -33,10 +34,11 @@ public struct PeopleAPI {
             "mergedPersonSourceOptions.includeAffinity": "CHAT_AUTOCOMPLETE",
             "coreIdParams.useRealtimeNotificationExpandedAcls": "true",
             "key": PeopleAPI.APIKey
-        ], id.map { "personId=" + $0 }.joined(separator: "&"), completionHandler)
+        ], ids.map { "personId=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
-    public static func lookup(on channel: Channel, phone: String..., completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+    public static func lookup(on channel: Channel, phones: [String], completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+        guard phones.count > 0 else { return }
         self._post(channel, "/lookup", [
             "type": "PHONE",
             "matchType": "LENIENT",
@@ -54,7 +56,7 @@ public struct PeopleAPI {
             "coreIdParams.useRealtimeNotificationExpandedAcls": "true",
             "quotaFilterType": "PHONE",
             "key": PeopleAPI.APIKey
-        ], phone.map { "id=" + $0 }.joined(separator: "&"), completionHandler)
+        ], phones.map { "id=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
     public static func autocomplete(on channel: Channel, query: String, length: UInt = 15,

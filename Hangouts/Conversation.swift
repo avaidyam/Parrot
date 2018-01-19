@@ -400,10 +400,14 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         self._sync()
         hangoutsCenter.addObserver(self, selector: #selector(ConversationList.clientDidUpdateState(_:)),
                                    name: Client.didUpdateStateNotification, object: client)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.personDidUpdate(_:)),
+                                               name: Notification.Person.DidUpdate, object: nil)
     }
     
     deinit {
         hangoutsCenter.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     public var conversations: [String: ParrotServiceExtension.Conversation] {
@@ -487,6 +491,14 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 
 // Receive client updates and fan them out to conversation notifications.
 extension ConversationList {
+    
+    // If a person changed, any conversations with that person also have changed.
+    @objc func personDidUpdate(_ note: Notification) {
+        guard let user = note.object as? User else { return }
+        for conv in (self.conv_dict.values.filter { $0.users.contains(user) }) {
+            NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: conv)
+        }
+    }
     
     // Receive a ClientStateUpdate and fan out to Conversations
     @objc public func clientDidUpdateState(_ note: Notification) {

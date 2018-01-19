@@ -12,6 +12,7 @@ public class User: Person, Hashable, Equatable {
     }
     
     public static let DEFAULT_NAME = "Unknown"
+    public static let GVoiceLocation = "OffNetworkPhone"
     
     /// A chat user identifier.
     public struct ID: Hashable, Equatable {
@@ -23,9 +24,9 @@ public class User: Person, Hashable, Equatable {
     public var identifier: String {
         return id.gaiaID
     }
-    public let nameComponents: [String]
-    public let photoURL: String?
-    public let locations: [String]
+    public internal(set) var nameComponents: [String] = []
+    public internal(set) var photoURL: String? = nil
+    public internal(set) var locations: [String] = []
     public private(set) var me: Bool
     public var blocked: Bool = false
     
@@ -78,6 +79,9 @@ public class User: Person, Hashable, Equatable {
         }
         if let p = phoneI18N {
             locations.append(p)
+        }
+        if let type = entity.entity_type, type == .OffNetworkPhone {
+            locations.append(User.GVoiceLocation) // tag the contact
         }
         
         // Initialize the user.
@@ -164,6 +168,9 @@ public class UserList: Directory {
         
         let entities = response?.entity_result.flatMap { $0.entity } ?? []
         self.cache(presencesFor: entities.map { $0.id! })
+        self.cache(namesFor: entities.flatMap {
+            $0.properties?.phones.first?.phone_number?.i18n_data?.international_number
+        })
         return entities.filter { $0.id != nil }.map { entity in
             let user = User(self.client, entity: entity, selfUser: (self.me as! User).id)
             if self.users[user.id] == nil {
@@ -273,6 +280,79 @@ public class UserList: Directory {
                     
                     NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
                 }
+            }
+        }
+    }
+    
+    // Now for all GVoice ID's, grab their real names:
+    private func cache(namesFor phones: [String]) {
+        PeopleAPI.lookup(on: self.client.channel!, phones: phones) { res, err in
+            guard let results = res else {
+                log.debug("Encountered a GVoice lookup error: \(String(describing: err))"); return
+            }
+            
+            guard let matches = results["matches"] as? [[String: Any]] else { return }
+            guard let people = results["people"] as? [String: Any] else { return }
+
+            // Locate the primary OffNetworkPhone User for each match.
+            for match in matches {
+                guard var ids = match["personId"] as? [String], ids.count >= 2 else { continue }
+                guard let primary = ids
+                    .flatMap({ self.users[User.ID(chatID: $0, gaiaID: $0)] })
+                    .filter({ $0.locations.contains(User.GVoiceLocation) })
+                    .first
+                else { continue }
+                ids.remove(primary.id.gaiaID)
+                
+                // Now merge the information from the other contact(s).
+                for other_ in ids {
+                    guard let other = people[other_] as? [String: Any] else { continue }
+                    if let ext = other["extendedData"] as? [String: Any] {
+                        guard   let h = ext["hangoutsExtendedData"] as? [String: Any],
+                                let u = h["userType"] as? String,
+                                u == "GAIA" else { continue }
+                        // Confirm that this is either a Contact or a GAIA type.
+                        // Contact types do not have "extendedData", and GAIA types display their type as such.
+                    }
+                    
+                    // other["name"].filter { $0["metadata"]["container"] == "CONTACT" }.first
+                    if let names = other["name"] as? [[String: Any]] { //(PROFILE vs CONTACT?)
+                        let values = names
+                            .filter { (($0["metadata"] as? [String: Any])?["containerType"] as? String) == "CONTACT" }
+                            .flatMap { $0["displayName"] as? String }
+                        if let name = values.first {
+                            primary.nameComponents = name.components(separatedBy: " ")
+                        }
+                    }
+                    
+                    // other["photo"].filter { $0["isMonogram"] != "1" }.map { $0["url"] }.first
+                    if let photos = other["photo"] as? [[String: Any]] {
+                        let values = photos
+                            .filter { ($0["isMonogram"] as? Int) != 1 }
+                            .flatMap { $0["url"] as? String }
+                        if let photo = values.first {
+                            primary.photoURL = photo
+                        }
+                    }
+                    
+                    // other["phone"].map { $0["value"] }
+                    if let phones = other["phone"] as? [[String: Any]] {
+                        let values = phones
+                            .flatMap { $0["value"] as? String }
+                        primary.locations += values
+                    }
+                    
+                    // other["email"].map { $0["value"] }
+                    if let emails = other["email"] as? [[String: Any]] {
+                        let values = emails
+                            .flatMap { $0["value"] as? String }
+                        primary.locations += values
+                    }
+                }
+                
+                // Remove duplicate locations and signal the update.
+                primary.locations = Array(Set(primary.locations))
+                NotificationCenter.default.post(name: Notification.Person.DidUpdate, object: primary, userInfo: nil)
             }
         }
     }
