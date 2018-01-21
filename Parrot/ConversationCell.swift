@@ -194,7 +194,6 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
 	// Allows the photo view's circle crop to dynamically match size.
 	public override func viewDidLayout() {
         let p = self.photoView//, b = self.badgeLayer
-        //p.syncLayout()
         //b.frame = NSRect(x: p.frame.minX, y: p.frame.midY, width: p.frame.width / 2, height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
         p.layer!.cornerRadius = p.frame.width / 2.0
         //b.cornerRadius = b.frame.width / 2.0

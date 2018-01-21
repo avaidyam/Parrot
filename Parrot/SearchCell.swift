@@ -34,13 +34,24 @@ public class SearchCell: NSView {
         s.disableToolbarLook()
         s.searchMenuTemplate = self.recentsMenu
         s.performedAction = { [weak self] in
-            self?.handler(s.stringValue)
+            self?.searchHandler(s.stringValue)
         }
         return s
     }()
     
-    public var handler: (String) -> () = {_ in}
+    private lazy var addButton: NSButton = {
+        let b = NSButton(title: "", image: #imageLiteral(resourceName: "Compose"), target: nil, action: nil).modernize()
+        b.bezelStyle = .texturedRounded
+        b.imagePosition = .imageOnly
+        b.performedAction = { [weak self] in
+            self?.addHandler()
+        }
+        return b
+    }()
+    
+    public var searchHandler: (String) -> () = {_ in}
     public var sortHandler: (Int) -> () = {_ in}
+    public var addHandler: () -> () = {}
     
     public var sortOptions: [String] = [] {
         didSet {
@@ -75,11 +86,15 @@ public class SearchCell: NSView {
         self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
         
-        self.addSubview(self.searchField)
-        self.left == self.searchField.left - 5.0
-        self.right == self.searchField.right + 5.0
+        self.add(subviews: [self.searchField, self.addButton])
+        self.addButton.width == self.addButton.height + 4.0
         self.top == self.searchField.top - 5.0
         self.bottom == self.searchField.bottom + 5.0
+        self.addButton.top == self.searchField.top
+        self.addButton.bottom == self.searchField.bottom
+        self.left == self.searchField.left - 5.0
+        self.right == self.addButton.right + 5.0
+        self.searchField.right == self.addButton.left - 5.0
     }
     
     public override var allowsVibrancy: Bool { return true }

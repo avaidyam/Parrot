@@ -160,15 +160,23 @@ public extension ParrotAppController {
                 guard let event = e.userInfo?["event"] as? IChatMessageEvent else { return }
                 
                 var showNote = true
-                if let c = MessageListViewController.openConversations[event.conversation_id] {
-                    showNote = !(c.view.window?.isKeyWindow ?? false)
+                if let m = MessageListViewController.openConversations[event.conversation_id] {
+                    showNote = !(m.view.window?.isKeyWindow ?? false)
                 }
                 
                 if let user = c.userList.people[event.userID.gaiaID], !user.me && showNote {
-                    let event2 = Event(identifier: event.conversation_id, contents: user.firstName,
-                                      description: event.text, image: user.image, sound: nil, script: nil)
-                    let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
-                    actions.forEach { $0.perform(with: event2) }
+                    if event.text.contains(c.userList.me.firstName) || event.text.contains(c.userList.me.fullName) {
+                        let event2 = Event(identifier: event.conversation_id, contents: user.firstName,
+                                           description: "Mentioned you", image: user.image, sound: nil, script: nil)
+                        let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
+                        actions.forEach { $0.perform(with: event2) }
+                        
+                    } else { // not a mention
+                        let event2 = Event(identifier: event.conversation_id, contents: user.firstName,
+                                           description: event.text, image: user.image, sound: nil, script: nil)
+                        let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
+                        actions.forEach { $0.perform(with: event2) }
+                    }
                 }
                 
             }, AutoSubscription(kind: NSUserNotification.didActivateNotification) {

@@ -45,14 +45,14 @@ public class ToolbarItemContainer: NSObject, NSToolbarDelegate {
     public var itemOrder: [NSToolbarItem.Identifier] = [] {
         willSet {
             guard self.toolbar != nil else { return }
-            for i in 0..<(self.toolbar?.items.count ?? 0) {
+            for (i, _) in self.toolbar!.items.enumerated().reversed() {
                 self.toolbar?.removeItem(at: i)
             }
         }
         didSet {
             guard self.toolbar != nil else { return }
-            for i in 0..<(self.itemOrder.count) {
-                self.toolbar?.insertItem(withItemIdentifier: self.itemOrder[i], at: i)
+            for (i, item) in self.itemOrder.enumerated() {
+                self.toolbar?.insertItem(withItemIdentifier: item, at: i)
             }
         }
     }

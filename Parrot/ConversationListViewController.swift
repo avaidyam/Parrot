@@ -68,28 +68,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return t
     }()
     
-    private lazy var addButton: NSButton = {
-        let b = NSButton(title: "", image: #imageLiteral(resourceName: "Compose"), target: nil, action: nil).modernize()
-        b.bezelStyle = .texturedRounded
-        b.imagePosition = .imageOnly
-        b.performedAction = {
-            let d = DirectoryListViewController()
-            d.view.frame.size.width = self.view.frame.width
-            d.view.frame.size.height = (self.view.frame.height / 3).clamped(to: 128.0...4000.0)
-            d.selectable = true
-            
-            self.presentViewControllerAsSheet(d)
-            self.titleText.stringValue = " Create"
-            d.selectionHandler = {
-                guard d.selection.count > 0 else { return }
-                self.dismissViewController(d)
-                self.titleText.stringValue = " Conversations"
-                self.startNewConversation(with: d.selection[0])
-            }
-        }
-        return b
-    }()
-    
     private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
         let v = NSView()
         v.add(subviews: [self.titleText/*, self.addButton*//*, self.searchField*/])
@@ -183,15 +161,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             vev.blendingMode = .withinWindow
         }
         window.titleVisibility = .hidden
-        let container = window.installToolbar()
+        _ = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
         window.addTitlebarAccessoryViewController(self.titleAccessory)
         
-        let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "add"))
-        item.view = self.addButton
-        item.label = "Add"
-        container.templateItems = [item]
-        container.itemOrder = [.flexibleSpace, NSToolbarItem.Identifier(rawValue: "add")]
+        //let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "add"))
+        //item.view = self.addButton
+        //item.label = "Add"
+        //container.templateItems = [item]
+        //container.itemOrder = [.flexibleSpace, NSToolbarItem.Identifier(rawValue: "add")]
     }
     
     public override func viewDidLoad() {
@@ -280,8 +258,23 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         switch kind {
         case .sectionHeader:
             let header = collectionView.makeSupplementaryView(ofKind: .sectionHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
-            header.handler = self.searchTerm(_:)
+            header.searchHandler = self.searchTerm(_:)
             header.sortOptions = ["Name", "Date"]
+            header.addHandler = {
+                let d = DirectoryListViewController()
+                d.view.frame.size.width = self.view.frame.width
+                d.view.frame.size.height = (self.view.frame.height / 3).clamped(to: 128.0...4000.0)
+                d.selectable = true
+                
+                self.presentViewControllerAsSheet(d)
+                self.titleText.stringValue = " Create"
+                d.selectionHandler = {
+                    guard d.selection.count > 0 else { return }
+                    self.dismissViewController(d)
+                    self.titleText.stringValue = " Conversations"
+                    self.startNewConversation(with: d.selection[0])
+                }
+            }
             return header
         case .sectionFooter:
             let footer = collectionView.makeSupplementaryView(ofKind: .sectionFooter, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"), for: indexPath) as! ReloadCell

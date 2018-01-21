@@ -7,6 +7,27 @@ private let log = Logger(subsystem: "Hangouts.Event")
 /* TODO: Refactor ChatMessageSegment to match hangups and Protobuf docs. */
 /* TODO: Include Markdown, HTML, and URL formatting parsers. */
 
+
+/*
+ ConversationNotification
+ EventNotification
+ SetFocusNotification
+ SetTypingNotification
+ SetConversationNotificationLevelNotification
+ ReplyToInviteNotification
+ WatermarkNotification
+ ConversationViewModification
+ SelfPresenceNotification
+ DeleteActionNotification
+ PresenceNotification
+ BlockNotification
+ SetNotificationSettingNotification
+ RichPresenceEnabledStateNotification
+ */
+
+
+
+
 // An event which becomes part of the permanent record of a conversation.
 // Acts as a base class for the events defined below.
 public class IEvent: ServiceOriginating, Hashable, Equatable {

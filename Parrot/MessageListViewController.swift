@@ -243,7 +243,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private var showingFocus: Bool = false
     private var lastWatermarkIdx = -1
 	private var _previews = [String: [LinkPreviewType]]()
-    private var toolbarContainer = ToolbarItemContainer()
+    internal var toolbarContainer = ToolbarItemContainer() {
+        didSet {
+            self._setToolbar()
+        }
+    }
     
     /// The currently active user's image or monogram.
     public var image: NSImage? {
@@ -312,7 +316,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         //window.titlebarAppearsTransparent = true
         self.toolbarContainer = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
-        self._setToolbar()
     }
     
     public override func viewDidLoad() {
@@ -796,21 +799,17 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return self._usersToIndicators.values.map { $0.toolbarItem }
     }
     private func _setToolbar() {
+        let h = self.toolbarContainer
+        h.templateItems = Set(_usersToItems())
+        h.itemOrder = [.flexibleSpace] + _usersToItems().map { $0.itemIdentifier } + [.flexibleSpace]
+        
         /*
         let i = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "search"))
         i.view = self.searchToggle
         i.label = "Search"
         */
-        
-        let h = self.toolbarContainer
-        h.templateItems = Set(_usersToItems())
         //h.templateItems.insert(i)
-        var order = _usersToItems().map { $0.itemIdentifier }
-        order.insert(.flexibleSpace, at: 0)
-        order.append(.flexibleSpace)
         //order.append(NSToolbarItem.Identifier(rawValue: "search"))
-        h.itemOrder = order
-        
         /*
         let item = NSToolbarItem(itemIdentifier: "add")
         item.view = self.addButton

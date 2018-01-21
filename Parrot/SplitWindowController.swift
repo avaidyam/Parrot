@@ -24,6 +24,8 @@ import MochaUI
 */
 public class SplitWindowController: NSSplitViewController, WindowPresentable {
     
+    private var toolbarContainer = ToolbarItemContainer()
+    
     public func prepare(window: NSWindow) {
         window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
         window.appearance = ParrotAppearance.interfaceStyle().appearance()
@@ -33,7 +35,7 @@ public class SplitWindowController: NSSplitViewController, WindowPresentable {
             vev.blendingMode = .withinWindow
         }
         window.titleVisibility = .hidden
-        _ = window.installToolbar()
+        self.toolbarContainer = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
     }
     
@@ -46,5 +48,12 @@ public class SplitWindowController: NSSplitViewController, WindowPresentable {
         guard self.view.window != nil else { return true }
         ZoomWindowAnimator.hide(self.view.window!)
         return false
+    }
+    
+    public override func addChildViewController(_ childViewController: NSViewController) {
+        super.addChildViewController(childViewController)
+        if let vc = childViewController as? MessageListViewController {
+            vc.toolbarContainer = self.toolbarContainer
+        }
     }
 }

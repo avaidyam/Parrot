@@ -138,13 +138,13 @@ public class ParrotAppController: NSApplicationController {
             if self._prefersShoeboxAppStyle { // only open one recent conv
                 if let id = Settings.openConversations.first, let conv = c.conversationList?.conversations[id] {
                     MessageListViewController.show(conversation: conv as! IConversation,
-                                                   parent: self.conversationsController)
+                                                   parent: self.conversationsController.parent)
                 }
             } else {
                 Settings.openConversations
                     .flatMap { c.conversationList?.conversations[$0] }
                     .forEach { MessageListViewController.show(conversation: $0 as! IConversation,
-                                                              parent: self.conversationsController) }
+                                                              parent: self.conversationsController.parent) }
             }
         }
         
