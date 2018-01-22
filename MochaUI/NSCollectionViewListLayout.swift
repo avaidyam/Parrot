@@ -142,34 +142,34 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
         }
     }
     
-    private func didCompute(_ i: DynamicCache.ItemType, _ idx: IndexPath, _ m: DynamicCache.MeasuredItem) {
+    private func didCompute(_ i: DynamicCache.ItemType, _ idx: IndexPath, _ m: NSRect) {
         var attributes: NSCollectionViewLayoutAttributes? = nil
         switch i {
         case .header:
             attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: .sectionHeader, with: idx)
-            attributes!.frame = self.cache.frame(for: m)
+            attributes!.frame = m//self.cache.frame(for: m)
             self.sections[idx.section].header = attributes!
         case .item:
             attributes = NSCollectionViewLayoutAttributes(forItemWith: idx)
-            attributes!.frame = self.cache.frame(for: m)
+            attributes!.frame = m//self.cache.frame(for: m)
             self.sections[idx.section].items.insert(attributes!, at: idx.item)
         case .footer:
             attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: .sectionFooter, with: idx)
-            attributes!.frame = self.cache.frame(for: m)
+            attributes!.frame = m//self.cache.frame(for: m)
             self.sections[idx.section].footer = attributes!
         }
         self.flattenedSections.append(attributes!)
     }
     
-    private func didGlobalCompute(_ footer: Bool, _ m: DynamicCache.MeasuredItem) {
+    private func didGlobalCompute(_ footer: Bool, _ m: NSRect) {
         if !footer {
             let attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: .globalHeader, with: .zero)
-            attributes.frame = self.cache.frame(for: m)
+            attributes.frame = m//self.cache.frame(for: m)
             self.globalSection.0 = attributes
             self.flattenedSections.append(attributes)
         } else {
             let attributes = NSCollectionViewLayoutAttributes(forSupplementaryViewOfKind: .globalFooter, with: .zero)
-            attributes.frame = self.cache.frame(for: m)
+            attributes.frame = m//self.cache.frame(for: m)
             self.globalSection.1 = attributes
             self.flattenedSections.append(attributes)
         }
@@ -416,7 +416,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             if let listHeaderMetric = layout.globalSections.0 {
                 let m = MeasuredItem(origin: currentOrigin, size: listHeaderMetric)
                 currentOrigin += listHeaderMetric
-                layout.didGlobalCompute(false, m)
+                layout.didGlobalCompute(false, self.frame(for: m))
             }
             
             // List Contents
@@ -428,7 +428,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
                     let headerSize = headerMetric.value(forAxis: self.axis)
                     currentSection.header = MeasuredItem(origin: currentOrigin, size: headerSize)
                     currentOrigin += headerSize
-                    layout.didCompute(.header, IndexPath(item: 0, section: i), currentSection.header!)
+                    layout.didCompute(.header, IndexPath(item: 0, section: i), self.frame(for: currentSection.header!))
                 }
                 
                 // Section Contents
@@ -440,7 +440,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
                     let itemMeasure = MeasuredItem(origin: currentOrigin, size: itemSize)
                     sectionItems.insert(itemMeasure, at: j)
                     currentOrigin += itemSize
-                    layout.didCompute(.item, IndexPath(item: j, section: i), itemMeasure)
+                    layout.didCompute(.item, IndexPath(item: j, section: i), self.frame(for: itemMeasure))
                 }
                 currentSection.items = sectionItems
                 currentSection.count = counts[i]
@@ -450,7 +450,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
                     let footerSize = footerMetric.value(forAxis: self.axis)
                     currentSection.footer = MeasuredItem(origin: currentOrigin, size: footerSize)
                     currentOrigin += footerSize
-                    layout.didCompute(.footer, IndexPath(item: 0, section: i), currentSection.footer!)
+                    layout.didCompute(.footer, IndexPath(item: 0, section: i), self.frame(for: currentSection.footer!))
                 }
                 
                 self.sections.insert(currentSection, at: i)
@@ -460,7 +460,7 @@ public class NSCollectionViewListLayout: NSCollectionViewLayout {
             if let listFooterMetric = layout.globalSections.1 {
                 let m = MeasuredItem(origin: currentOrigin, size: listFooterMetric)
                 currentOrigin += listFooterMetric
-                layout.didGlobalCompute(true, m)
+                layout.didGlobalCompute(true, self.frame(for: m))
             }
             
             // Aggregate

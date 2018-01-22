@@ -33,20 +33,20 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         c.backgroundColors = [.clear]
         c.selectionType = .any
         
-        let l = NSCollectionViewFlowLayout()//NSCollectionViewListLayout()
-        //l.globalSections = (32, 32)
-        //l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 64)))
-        //l.appearEffect = [.effectFade, .slideUp]
-        //l.disappearEffect = [.effectFade, .slideDown]
-        l.minimumInteritemSpacing = 0.0
-        l.minimumLineSpacing = 0.0
-        l.sectionInset = NSEdgeInsetsZero
+        let l = NSCollectionViewListLayout()
+        l.globalSections = (32, 32)
+        l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 64)))
+        l.appearEffect = [.effectFade, .slideUp]
+        l.disappearEffect = [.effectFade, .slideDown]
+        //l.minimumInteritemSpacing = 0.0
+        //l.minimumLineSpacing = 0.0
+        //l.sectionInset = NSEdgeInsetsZero
         c.collectionViewLayout = l
         c.register(ConversationCell.self,
                    forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"))
-        c.register(ReloadCell.self, forSupplementaryViewOfKind: .sectionFooter,
+        c.register(ReloadCell.self, forSupplementaryViewOfKind: .globalFooter,
                    withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"))
-        c.register(SearchCell.self, forSupplementaryViewOfKind: .sectionHeader,
+        c.register(SearchCell.self, forSupplementaryViewOfKind: .globalHeader,
                    withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"))
         return c
     }()
@@ -237,6 +237,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         super.viewWillLayout()
         let ctx = NSCollectionViewFlowLayoutInvalidationContext()
         ctx.invalidateFlowLayoutDelegateMetrics = true
+        ctx.invalidateFlowLayoutAttributes = true
         self.collectionView.collectionViewLayout?.invalidateLayout(with: ctx)
     }
     
@@ -256,8 +257,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
         switch kind {
-        case .sectionHeader:
-            let header = collectionView.makeSupplementaryView(ofKind: .sectionHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
+        case .globalHeader:
+            let header = collectionView.makeSupplementaryView(ofKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
             header.searchHandler = self.searchTerm(_:)
             header.sortOptions = ["Name", "Date"]
             header.addHandler = {
@@ -276,8 +277,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 }
             }
             return header
-        case .sectionFooter:
-            let footer = collectionView.makeSupplementaryView(ofKind: .sectionFooter, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"), for: indexPath) as! ReloadCell
+        case .globalFooter:
+            let footer = collectionView.makeSupplementaryView(ofKind: .globalFooter, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"), for: indexPath) as! ReloadCell
             footer.handler = self.scrollback
             return footer
         default:
