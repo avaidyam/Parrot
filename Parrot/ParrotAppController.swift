@@ -86,6 +86,7 @@ public class ParrotAppController: NSApplicationController {
     
 	public override init() {
 		super.init()
+        ToolTipManager.modernize()
         
         // Well let's see if this works.
         Logger.globalChannels = [ParrotAppController.xpcChannel]

@@ -55,6 +55,7 @@
 		4848A5851EFEBE35008B2DE2 /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4848A5841EFEBE35008B2DE2 /* SortedArray.swift */; };
 		4848A5BF1EFF1BED008B2DE2 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4848A5BE1EFF1BED008B2DE2 /* Binding.swift */; };
 		484E8CA01D37FF2500E1D1D5 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E8C9F1D37FF2500E1D1D5 /* Message.swift */; };
+		48557ED720156D8B009D302F /* NSToolTipManager+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */; };
 		485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485B12EC1F1A904400432A36 /* LocationHelper.swift */; };
 		4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */; };
 		4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9331ED9480C00764594 /* DynamicProperty.swift */; };
@@ -451,6 +452,7 @@
 		4848A5841EFEBE35008B2DE2 /* SortedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
 		4848A5BE1EFF1BED008B2DE2 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		484E8C9F1D37FF2500E1D1D5 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSToolTipManager+Appearance.swift"; sourceTree = "<group>"; };
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		48574F121D11F9FC002375E1 /* AppRelease.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRelease.swift; sourceTree = "<group>"; };
 		4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCCoder.swift; sourceTree = "<group>"; };
@@ -1069,6 +1071,7 @@
 				48403CA01DF0B9930009897A /* Changeset.swift */,
 				48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */,
 				4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */,
+				48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */,
 				48E39C631ED516AF00EF578D /* SystemBezel */,
 				4831BC9A1ECF734A00C30413 /* Views */,
 				4831BCF01ED2830600C30413 /* ViewControllers */,
@@ -1801,6 +1804,7 @@
 				4831BCCB1ED0C21200C30413 /* NSViewController+Window.swift in Sources */,
 				48D3CD0F1DE945C1003D6C02 /* NSPopover+Extensions.swift in Sources */,
 				4848A5831EFD1A0D008B2DE2 /* BlockTrampoline.swift in Sources */,
+				48557ED720156D8B009D302F /* NSToolTipManager+Appearance.swift in Sources */,
 				4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */,
 				48AD39F61EE7FDF000C33E40 /* PreferencesViewController.swift in Sources */,
 				489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */,
