@@ -24,7 +24,7 @@ public extension String {
 	public func substring(between start: String, and to: String) -> String? {
 		return (range(of: start)?.upperBound).flatMap { startIdx in
 			(range(of: to, range: startIdx..<endIndex)?.lowerBound).map { endIdx in
-				substring(with: startIdx..<endIdx)
+                String(self[startIdx..<endIdx])
 			}
 		}
 	}
@@ -42,11 +42,11 @@ public extension String {
 		
 		if all {
 			return results.map {
-				self.substring(with: NSRangeToRange(s: self, r: $0.range))
+				String(self[NSRangeToRange(s: self, r: $0.range)])
 			}
 		} else {
 			return results.map {
-                self.substring(with: NSRangeToRange(s: self, r: $0.range(at: 1)))
+                String(self[NSRangeToRange(s: self, r: $0.range(at: 1))])
 			}
 		}
 	}
@@ -67,7 +67,7 @@ public extension String {
 	
 	public func find(matching regex: NSRegularExpression) -> [String] {
 		return regex.matches(in: self, options:[], range:NSMakeRange(0, self.characters.count)).map {
-			self.substring(with: NSRangeToRange(s: self, r: $0.range))
+			String(self[NSRangeToRange(s: self, r: $0.range)])
 		}
 	}
 }

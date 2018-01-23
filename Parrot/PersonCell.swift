@@ -45,7 +45,7 @@ public class PersonCell: NSCollectionViewItem {
         self.view.translatesAutoresizingMaskIntoConstraints = false
         //self.canDrawSubviewsIntoLayer = true
         self.view.wantsLayer = true
-        self.view.add(subviews: [self.photoButton, self.nameLabel, self.timeLabel, self.textLabel])
+        self.view.add(subviews: self.photoButton, self.nameLabel, self.timeLabel, self.textLabel)
         
         self.photoButton.left == self.view.left + 4
         self.photoButton.centerY == self.view.centerY

@@ -71,7 +71,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     public override func loadView() {
         self.view = NSVibrantView()
         self.view.wantsLayer = true
-        self.view.add(subviews: [self.photoView, self.nameLabel, self.timeLabel, self.textLabel, self.dropZone])
+        self.view.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel, self.dropZone)
         //self.view.add(sublayer: self.badgeLayer) // will not participate in autolayout
         
         self.photoView.left == self.view.left + 8

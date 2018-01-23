@@ -2,44 +2,61 @@ import AppKit
 import Mocha
 
 /* TODO: Localization support for NSDateFormatter stuff. */
+/* TODO: Add NSView._semanticContext: Int, NSView._viewController: NSViewController. */
 
 public typealias Block = @convention(block) () -> ()
 
 public extension NSView {
     
-    /*@nonobjc public var backgroundColor: NSColor {
+    /// Corresponds to `CALayer.backgroundColor`.
+    @nonobjc public var fillColor: NSColor {
         get { return NSView.backgroundColorKey[self, default: .clear] }
         set { NSView.backgroundColorKey[self] = newValue }
-    }*/
+    }
     
+    /// Corresponds to `CALayer.cornerRadius`.
     @nonobjc public var cornerRadius: CGFloat {
         get { return NSView.cornerRadiusKey[self, default: 0.0] }
         set { NSView.cornerRadiusKey[self] = newValue }
     }
     
+    /// Corresponds to `CALayer.masksToBounds`.
     @nonobjc public var clipsToBounds: Bool {
         get { return NSView.clipsToBoundsKey[self, default: false] }
         set { NSView.clipsToBoundsKey[self] = newValue }
     }
     
+    /// Corresponds to `CALayer.mask` with a `CAShapeLayer` whose path is this value.
+    @nonobjc public var clipPath: NSBezierPath? {
+        get { return NSView.clipPathKey[self, default: nil] }
+        set { NSView.clipPathKey[self] = newValue }
+    }
+    
+    /// Forces NSView to return `nil` from every `hitTest(_:)`, making it "invisible"
+    /// to events.
     @nonobjc public var ignoreHitTest: Bool {
         get { return NSView.ignoreHitTestKey[self, default: false] }
         set { NSView.ignoreHitTestKey[self] = newValue }
     }
     
-    @nonobjc public var updateLayerHandler: Block {
-        get { return NSView.updateLayerHandlerKey[self, default: {}] }
+    /// Forces `wantsUpdateLayer` to be `true`, and invokes the block handler during
+    /// the `updateLayer` pass; `drawRect(_:)` will not be called.
+    @nonobjc public var updateLayerHandler: Block? {
+        get { return NSView.updateLayerHandlerKey[self, default: nil] }
         set { NSView.updateLayerHandlerKey[self] = newValue }
     }
     
+    /// Sets the view's `isFlipped` value without overriding the class.
     @nonobjc func set(flipped newValue: Bool) {
         NSView.flippedKey[self] = newValue
     }
     
+    /// Sets the view's `isOpaque` value without overriding the class.
     @nonobjc func set(opaque newValue: Bool) {
         NSView.opaqueKey[self] = newValue
     }
     
+    /// Sets the view's `allowsVibrancy` value without overriding the class.
     @nonobjc func set(allowsVibrancy newValue: Bool) {
         NSView.allowsVibrancyKey[self] = newValue
     }
@@ -49,9 +66,10 @@ public extension NSView {
     private static var backgroundColorKey = KeyValueProperty<NSView, NSColor>("backgroundColor")
     private static var cornerRadiusKey = KeyValueProperty<NSView, CGFloat>("cornerRadius")
     private static var clipsToBoundsKey = KeyValueProperty<NSView, Bool>("clipsToBounds")
+    private static var clipPathKey = KeyValueProperty<NSView, NSBezierPath?>("clipPath")
     private static var ignoreHitTestKey = KeyValueProperty<NSView, Bool>("ignoreHitTest")
     private static var allowsVibrancyKey = KeyValueProperty<NSView, Bool>("allowsVibrancy")
-    private static var updateLayerHandlerKey = KeyValueProperty<NSView, Block>("updateLayerHandler")
+    private static var updateLayerHandlerKey = KeyValueProperty<NSView, Block?>("updateLayerHandler")
 }
 
 public extension NSView {
@@ -78,7 +96,7 @@ public extension NSView {
 	}
     
     /// Add multiple subviews at a time to an NSView.
-    public func add(subviews: [NSView]) {
+    public func add(subviews: NSView...) {
         for s in subviews {
             self.addSubview(s)
         }
@@ -155,25 +173,13 @@ fileprivate class NSDeadView: NSView {
     }
 }
 
-public extension NSView {
-	
-	/* TODO: Finish this stuff here. */
-    public var occlusionState: NSWindow.OcclusionState {
-		let selfRect = self.window!.frame
-		let windows = CGWindowListCopyWindowInfo(.optionOnScreenAboveWindow, CGWindowID(self.window!.windowNumber))!
-		for dict in (windows as [AnyObject]) {
-			guard let window = dict as? NSDictionary else { return .visible }
-			guard let detail = window[kCGWindowBounds as String] as? NSDictionary else { return .visible }
-			let rect = NSRect(x: detail["X"] as? Int ?? 0, y: detail["Y"] as? Int ?? 0,
-			                  width: detail["Width"] as? Int ?? 0, height: detail["Height"] as? Int ?? 0)
-			//guard rect.contains(selfRect) else { continue }
-			let intersected = self.window!.convertFromScreen(rect.intersection(selfRect))
-			Swift.print("intersect => \(intersected)")
-			
-			//log.info("alpha: \(window[kCGWindowAlpha as String])")
-		}
-		return .visible
-	}
+public class NSScrollableSlider: NSSlider {
+    public override func scrollWheel(with event: NSEvent) {
+        if event.momentumPhase != .changed && abs(event.deltaY) > 1.0 {
+            self.doubleValue += Double(event.deltaY) / 100 * (self.maxValue - self.minValue)
+            self.sendAction(self.action, to: self.target)
+        }
+    }
 }
 
 public extension NSAlert {

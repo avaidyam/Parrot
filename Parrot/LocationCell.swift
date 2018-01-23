@@ -30,7 +30,7 @@ public class LocationCell: NSCollectionViewItem {
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.wantsLayer = true
         
-        self.view.add(subviews: [self.mapView, self.personView])
+        self.view.add(subviews: self.mapView, self.personView)
         
         // Install constraints.
         self.personView.left == self.view.left + 8.0

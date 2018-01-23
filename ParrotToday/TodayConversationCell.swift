@@ -64,7 +64,7 @@ public class TodayConversationCell: NSTableCellView {
         self.translatesAutoresizingMaskIntoConstraints = false
         //self.canDrawSubviewsIntoLayer = true
         self.wantsLayer = true
-        self.add(subviews: [self.photoView, self.nameLabel, self.timeLabel, self.textLabel])
+        self.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel)
         
         self.photoView.left == self.left + 8
         self.photoView.centerY == self.centerY

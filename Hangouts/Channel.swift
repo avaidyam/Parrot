@@ -55,7 +55,7 @@ public final class Channel : NSObject {
 					
 					let lengths = decoded.findAllOccurrences(matching: "([0-9]+)\n", all: true)
 					if let length_str = lengths.first { //length_str.endIndex.advancedBy(n: -1)
-						let length_str_without_newline = length_str.substring(to: length_str.index(length_str.endIndex, offsetBy: -1))
+						let length_str_without_newline = length_str[..<length_str.index(length_str.endIndex, offsetBy: -1)]
 						if let length = Int(length_str_without_newline) {
 							if (decodedUtf16LengthInChars - length_str.utf16.count) < length {
 								break

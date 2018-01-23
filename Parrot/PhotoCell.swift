@@ -29,7 +29,7 @@ public class PhotoCell: NSCollectionViewItem {
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.wantsLayer = true
         
-        self.view.add(subviews: [self.personView, self.photoView])
+        self.view.add(subviews: self.personView, self.photoView)
         
         // Install constraints.
         self.personView.left == self.view.left + 8.0

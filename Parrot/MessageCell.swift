@@ -50,7 +50,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             self.setColors()
         }
         
-        self.view.add(subviews: [self.photoView, self.textLabel])
+        self.view.add(subviews: self.photoView, self.textLabel)
         
         // Install constraints.
         self.photoView.left == self.view.left + 8.0

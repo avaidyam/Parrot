@@ -280,7 +280,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public override func loadView() {
         self.view = NSVisualEffectView()
-        self.view.add(subviews: [self.scrollView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone])
+        self.view.add(subviews: self.scrollView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone)
         
         self.view.width >= 96
         self.view.height >= 128

@@ -49,7 +49,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
         let v = NSView()
-        v.add(subviews: [self.titleText])
+        v.add(subviews: self.titleText)
         v.autoresizingMask = [.width]
         v.frame.size.height = 44.0//80.0
         self.titleText.left == v.left + 2.0
@@ -121,7 +121,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public override func loadView() {
         self.title = "Directory"
         self.view = NSVisualEffectView()
-        self.view.add(subviews: [self.scrollView, self.indicator])
+        self.view.add(subviews: self.scrollView, self.indicator)
         
         self.view.width >= 128
         self.view.height >= 128

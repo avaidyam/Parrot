@@ -179,9 +179,9 @@ public struct LinkPreviewParser {
 		if _YTDomains.contains(url.host ?? "") {
 			var id = ""
 			if let loc = url.absoluteString.range(of: "youtu.be/") {
-				id = (url.absoluteString.substring(from: loc.upperBound))
+                id = String(url.absoluteString[loc.upperBound...])
 			} else if let loc = url.absoluteString.range(of: "youtube.com/watch?v=") {
-				id = (url.absoluteString.substring(from: loc.upperBound))
+				id = String(url.absoluteString[loc.upperBound...])
 			} else { throw LinkPreviewError.unhandleableUrl(url, id) }
 			
 			// domain-specialized case (not MIME type)

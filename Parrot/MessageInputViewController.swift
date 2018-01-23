@@ -141,7 +141,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     // Constraint setup here.
     public override func loadView() {
         self.view = NSView().modernize(wantsLayer: true)
-        self.view.add(subviews: [self.photoView, self.textView])
+        self.view.add(subviews: self.photoView, self.textView)
         
         // Install constraints.
         self.photoView.left == self.view.left + 8.0

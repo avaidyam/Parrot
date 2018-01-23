@@ -85,8 +85,8 @@ public class SearchCell: NSView {
     private func setup() {
         self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
+        self.add(subviews: self.searchField, self.addButton)
         
-        self.add(subviews: [self.searchField, self.addButton])
         self.addButton.width == self.addButton.height + 4.0
         self.top == self.searchField.top - 5.0
         self.bottom == self.searchField.bottom + 5.0
