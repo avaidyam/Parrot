@@ -167,19 +167,17 @@ public class ParrotAppController: NSApplicationController {
         }
         
         // Wallclock for system idle -> service interaction.
-        self.idleTimer = DispatchSource.makeTimerSource(queue: .main)
-        self.idleTimer?.schedule(wallDeadline: .now(), repeating: 5.minutes, leeway: 1.minutes)
-        self.idleTimer?.setEventHandler {
-            let CGEventType_anyInput = CGEventType(rawValue: ~0)!
-            let idleTime = CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: CGEventType_anyInput)
-            
+        let work = DispatchWorkItem {
+            let idleTime = CGEventSource.secondsSinceLastEventType(.combinedSessionState,
+                                         eventType: CGEventType(rawValue: ~0)!)
             if idleTime < 5.minutes.toSeconds() {
                 for (_, s) in ServiceRegistry.services {
                     s.setInteractingIfNeeded()
                 }
             }
         }
-        self.idleTimer?.resume()
+        self.idleTimer = DispatchSource.timer(flags: .strict, queue: .global(qos: .background),
+                         wallDeadline: .now(), repeating: 5.minutes, leeway: 1.minutes, handler: work)
     }
     
     public func applicationWillTerminate(_ notification: Notification) {

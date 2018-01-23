@@ -183,8 +183,12 @@ public final class Client: Service {
             
 			// The first time this is called, we need to retrieve the user's email address.
 			if self.email == nil {
-                let res = try? self.execute(GetSelfInfoRequest())
-                self.email = res!.self_entity!.properties!.email[0] as String
+                if self.userList.me.locations.count > 0 {
+                    self.email = self.userList.me.locations[0]
+                } else {
+                    let res = try? self.execute(GetSelfInfoRequest())
+                    self.email = res!.self_entity!.properties!.email[0] as String
+                }
 			}
             
             let req = SetActiveClientRequest(is_active: true,

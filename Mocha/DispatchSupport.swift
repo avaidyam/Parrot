@@ -1,5 +1,7 @@
 import Dispatch
 
+/* TODO: DispatchWorkItem: name, dependencies, isExecuting, Result<Any, Error> + retry. */
+
 public extension Int {
     public var hours: DispatchTimeInterval {
         return DispatchTimeInterval.seconds(self * 60 * 60)
@@ -40,6 +42,30 @@ public extension DispatchTimeInterval {
     
     public var later: DispatchTime {
         return DispatchTime.now() + self
+    }
+}
+
+public extension DispatchSource {
+    public static func timer(flags: DispatchSource.TimerFlags = [], queue: DispatchQueue? = nil,
+                              deadline: DispatchTime, repeating interval: DispatchTimeInterval = .never,
+                              leeway: DispatchTimeInterval = .nanoseconds(0), handler: DispatchWorkItem) -> DispatchSourceTimer
+    {
+        let t = DispatchSource.makeTimerSource(flags: flags, queue: queue)
+        t.schedule(deadline: deadline, repeating: interval, leeway: leeway)
+        t.setEventHandler(handler: handler)
+        t.resume()
+        return t
+    }
+    
+    public static func timer(flags: DispatchSource.TimerFlags = [], queue: DispatchQueue? = nil,
+                              wallDeadline: DispatchWallTime, repeating interval: DispatchTimeInterval = .never,
+                              leeway: DispatchTimeInterval = .nanoseconds(0), handler: DispatchWorkItem) -> DispatchSourceTimer
+    {
+        let t = DispatchSource.makeTimerSource(flags: flags, queue: queue)
+        t.schedule(wallDeadline: wallDeadline, repeating: interval, leeway: leeway)
+        t.setEventHandler(handler: handler)
+        t.resume()
+        return t
     }
 }
 
