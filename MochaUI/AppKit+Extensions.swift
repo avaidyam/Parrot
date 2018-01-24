@@ -150,8 +150,10 @@ public extension NSView {
     
     // Internal "super-overlay" view used to fade appearance animations.
     fileprivate func superlay(_ handler: (NSView) -> () = {v in}) {
-        let v = NSDeadView(frame: self.frame)
+        let v = NSView(frame: self.frame)
         v.wantsLayer = true
+        //v.acceptsFirstMouse == false?
+        v.ignoreHitTest = true
         v.layer?.contents = self.snapshot()
         
         if let s = self.superview {
@@ -160,16 +162,6 @@ public extension NSView {
             self.addSubview(v, positioned: .above, relativeTo: nil)
         }
         handler(v)
-    }
-}
-
-// Doesn't respond to any mouse events.
-fileprivate class NSDeadView: NSView {
-    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
-        return false
-    }
-    override func hitTest(_ point: NSPoint) -> NSView? {
-        return nil //ignoresHitTest property
     }
 }
 

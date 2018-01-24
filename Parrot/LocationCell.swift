@@ -26,10 +26,10 @@ public class LocationCell: NSCollectionViewItem {
     }()
     
     public override func loadView() {
-        self.view = NSVibrantView()
+        self.view = NSView()
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.wantsLayer = true
-        
+        self.view.set(allowsVibrancy: true)
         self.view.add(subviews: self.mapView, self.personView)
         
         // Install constraints.

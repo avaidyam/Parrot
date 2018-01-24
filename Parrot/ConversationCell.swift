@@ -69,8 +69,9 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     
     // Constraint setup here.
     public override func loadView() {
-        self.view = NSVibrantView()
+        self.view = NSView()
         self.view.wantsLayer = true
+        self.view.set(allowsVibrancy: true)
         self.view.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel, self.dropZone)
         //self.view.add(sublayer: self.badgeLayer) // will not participate in autolayout
         
@@ -193,9 +194,10 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
 	
 	// Allows the photo view's circle crop to dynamically match size.
 	public override func viewDidLayout() {
-        let p = self.photoView//, b = self.badgeLayer
+        self.photoView.clipPath = NSBezierPath(ovalIn: self.photoView.bounds)
+        //let p = self.photoView//, b = self.badgeLayer
         //b.frame = NSRect(x: p.frame.minX, y: p.frame.midY, width: p.frame.width / 2, height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
-        p.layer!.cornerRadius = p.frame.width / 2.0
+        //p.layer!.cornerRadius = p.frame.width / 2.0
         //b.cornerRadius = b.frame.width / 2.0
 	}
     
@@ -210,11 +212,5 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     public func springLoading(phase: DroppableView.SpringLoadingPhase, for: NSDraggingInfo) {
         guard case .activated = phase else { return }
         NSAlert(message: "Sending document...").beginPopover(for: self.view, on: .minY)
-    }
-}
-
-public class NSVibrantView: NSView {
-    public override var allowsVibrancy: Bool {
-        return true
     }
 }

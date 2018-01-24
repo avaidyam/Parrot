@@ -41,10 +41,10 @@ public class PersonCell: NSCollectionViewItem {
     
     // Constraint setup here.
     public override func loadView() {
-        self.view = NSVibrantView()
+        self.view = NSView()
         self.view.translatesAutoresizingMaskIntoConstraints = false
-        //self.canDrawSubviewsIntoLayer = true
         self.view.wantsLayer = true
+        self.view.set(allowsVibrancy: true)
         self.view.add(subviews: self.photoButton, self.nameLabel, self.timeLabel, self.textLabel)
         
         self.photoButton.left == self.view.left + 4

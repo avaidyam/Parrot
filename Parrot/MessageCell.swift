@@ -43,9 +43,10 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
     
     // Constraint setup here.
     public override func loadView() {
-        self.view = NSVibrantView()
+        self.view = NSView()
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.wantsLayer = true
+        self.view.set(allowsVibrancy: true)
         self.token = AutoSubscription(from: nil, kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
             self.setColors()
         }
