@@ -3,7 +3,7 @@ import AppKit
 import MochaUI
 
 public extension Preferences.Controllers {
-    public class Accounts: NSViewController {
+    public class Accounts: NSViewController, PreferencePane {
         public var image: NSImage? = NSImage(named: .userGroup)
         public override var title: String? {
             set{} get { return "Accounts" }

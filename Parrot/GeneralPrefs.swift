@@ -4,7 +4,7 @@ import Mocha
 import MochaUI
 
 public extension Preferences.Controllers {
-    public class General: NSViewController {
+    public class General: NSViewController, PreferencePane {
         public var image: NSImage? = NSImage(named: .advanced)
         public override var title: String? {
             set{} get { return "General" }

@@ -1,7 +1,18 @@
 import AppKit
 
+@objc public protocol PreferencePane: NSObjectProtocol {
+    var image: NSImage? { get }
+    var title: String? { get }
+}
+
 public class PreferencesViewController: NSTabViewController {
     private var _sizes = [String : NSSize]()
+    
+    public override func loadView() {
+        super.loadView()
+        self.tabStyle = .toolbar
+        self.transitionOptions = [.allowUserInteraction, .crossfade]
+    }
     
     public override func viewWillAppear() {
         self.view.window?.center()
@@ -44,5 +55,12 @@ public class PreferencesViewController: NSTabViewController {
         frame.size.height = contentFrame.size.height
         frame.size.width = contentFrame.size.width
         return frame
+    }
+    
+    /// Use this to append preference panes.
+    public func add<T: NSViewController & PreferencePane>(pane p: T) {
+        let tab = NSTabViewItem(viewController: p)
+        tab.image = p.image
+        self.addTabViewItem(tab)
     }
 }

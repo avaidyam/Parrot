@@ -780,10 +780,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     
     private lazy var addButton: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImage.Name(rawValue: "NSAddBookmarkTemplate"))!,
+        let b = NSButton(title: "", image: NSImage(named: .actionTemplate)!,
                          target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
+        b.performedAction = {
+            let c = ConversationDetailsViewController()
+            c.conversation = self.conversation
+            self.presentViewController(c, asPopoverRelativeTo: b.bounds, of: b, preferredEdge: .maxY, behavior: .transient)
+        }
         return b
     }()
     
@@ -810,26 +815,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return self._usersToIndicators.values.map { $0.toolbarItem }
     }
     private func _setToolbar() {
+        let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "add"))
+        item.view = self.addButton
+        item.label = "Add"
+        
         let h = self.toolbarContainer
         h.templateItems = Set(_usersToItems())
         h.itemOrder = [.flexibleSpace] + _usersToItems().map { $0.itemIdentifier } + [.flexibleSpace]
         
-        /*
-        let i = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "search"))
-        i.view = self.searchToggle
-        i.label = "Search"
-        */
-        //h.templateItems.insert(i)
-        //order.append(NSToolbarItem.Identifier(rawValue: "search"))
-        /*
-        let item = NSToolbarItem(itemIdentifier: "add")
-        item.view = self.addButton
-        item.label = "Add"
-        let item2 = NSToolbarItem(itemIdentifier: "search")
-        item2.view = self.searchToggle
-        item2.label = "Search"
-        container.templateItems = [item, item2]
-        container.itemOrder = [NSToolbarFlexibleSpaceItemIdentifier, "add", "search"]
-        */
+        h.templateItems.insert(item)
+        h.itemOrder.append(NSToolbarItem.Identifier(rawValue: "add"))
     }
 }

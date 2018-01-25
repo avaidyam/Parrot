@@ -3,7 +3,7 @@ import AppKit
 import MochaUI
 
 public extension Preferences.Controllers {
-    public class Text: NSViewController {
+    public class Text: NSViewController, PreferencePane {
         public var image: NSImage? = NSImage(named: .colorPanel)
         public override var title: String? {
             set{} get { return "Text" }

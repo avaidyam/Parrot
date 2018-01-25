@@ -29,24 +29,9 @@ public class ParrotAppController: NSApplicationController {
     /// Lazy-init for Preferences.
     public lazy var preferencesController: PreferencesViewController = {
         let p = PreferencesViewController()
-        p.tabStyle = .toolbar
-        p.transitionOptions = [.allowUserInteraction, .crossfade, .slideDown]
-        
-        let general = Preferences.Controllers.General()
-        let generalTab = NSTabViewItem(viewController: general)
-        generalTab.image = general.image
-        
-        let text = Preferences.Controllers.Text()
-        let textTab = NSTabViewItem(viewController: text)
-        textTab.image = text.image
-        
-        let accounts = Preferences.Controllers.Accounts()
-        let accountsTab = NSTabViewItem(viewController: accounts)
-        accountsTab.image = accounts.image
-        
-        p.addTabViewItem(generalTab)
-        p.addTabViewItem(textTab)
-        p.addTabViewItem(accountsTab)
+        p.add(pane: Preferences.Controllers.General())
+        p.add(pane: Preferences.Controllers.Text())
+        p.add(pane: Preferences.Controllers.Accounts())
         return p
     }()
     
