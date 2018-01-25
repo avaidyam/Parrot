@@ -454,6 +454,26 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         }
     }
     
+    /// Retrieve a particular conversation.
+    private func getConversation(id: String, _ max_events: Int = 5, handler cb: @escaping (IConversation?, Error?) -> ()) {
+        let req = GetConversationRequest(conversation_spec: ConversationSpec(conversation_id: ConversationId(id: id)),
+                                         include_conversation_metadata: true,
+                                         include_event: true,
+                                         max_events_per_conversation: UInt64(max_events),
+                                         include_presence: true)
+        self.client.execute(req) { res, err in
+            guard let res = res else { cb(nil, err); return }
+            
+            // Initialize the list of conversations from Client's list of ClientConversationStates.
+            let conv = self.add_conversation(client_conversation: res.conversation_state!.conversation!,
+                                             client_events: res.conversation_state!.event)
+            _ = self.client.userList.addPeople(from: [conv])
+            
+            cb(conv, nil)
+            NotificationCenter.default.post(name: Notification.Conversation.DidUpdateList, object: self)
+        }
+    }
+    
     public func begin(with: Person...) -> ParrotServiceExtension.Conversation? {
         let req = CreateConversationRequest(type: with.count > 1 ? .Group : .OneToOne,
                                             client_generated_id: RequestHeader.uniqueID(),
@@ -524,7 +544,14 @@ extension ConversationList {
                 let conv_event = conv.add(event: note.event!)
                 conv.handleEvent(event: conv_event)
             } else {
-                log.info("Received ClientEvent for unknown conversation \(event.conversation_id!.id!)")
+                self.getConversation(id: event.conversation_id!.id!) { conv, err in
+                    guard err == nil && conv != nil else {
+                        log.info("Received ClientEvent for unknown conversation \(event.conversation_id!.id!): \(String(describing: err))")
+                        return
+                    }
+                    let conv_event = conv!.add(event: note.event!)
+                    conv!.handleEvent(event: conv_event)
+                }
             }
             
         } else if let note = update.focus_notification {

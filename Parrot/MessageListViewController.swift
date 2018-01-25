@@ -144,6 +144,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let l = NSCollectionViewListLayout()
         l.globalSections = (32, 0)
         l.layoutDefinition = .custom
+        l.appearEffect = [.effectFade, .slideUp]
         //l.minimumInteritemSpacing = 0.0
         //l.minimumLineSpacing = 0.0
         c.collectionViewLayout = l
@@ -493,7 +494,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 
                 let group = self.updateInterpolation // lazy
                 UI {
-                    self.collectionView.performBatchUpdates({
+                    self.collectionView.animator().performBatchUpdates({
                         let t = (0..<self.dataSource.count).map {
                             IndexPath(item: $0, section: 0)
                         }
@@ -512,12 +513,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     @objc public func conversationDidReceiveEvent(_ notification: Notification) {
         guard let event = notification.userInfo?["event"] as? IChatMessageEvent else { return }
         
-        // Support mentioning a person's name. // TODO, FIXME
+        self.dataSource.insert(event)
         UI {
-            let shouldScroll = self.collectionView.indexPathsForVisibleItems().contains(IndexPath(item: self.dataSource.count - 1, section: 0))
+            // First check if we're at the bottom of the screen already to scroll.
+            let idx = self.collectionView.indexPathForLastItem()
+            let attrs = self.collectionView.layoutAttributesForItem(at: idx)?.frame ?? .zero
+            let shouldScroll = self.collectionView.visibleRect.contains(attrs)
             
-            self.dataSource.insert(event)
-            self.collectionView.performBatchUpdates({
+            self.collectionView.animator().performBatchUpdates({
                 self.collectionView.animator().insertItems(at: [IndexPath(item: self.dataSource.count - 1, section: 0)])
             }, completionHandler: { b in
                 guard shouldScroll else { return }
