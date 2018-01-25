@@ -9,7 +9,7 @@ public protocol TextInputHost {
     func resized(to: Double)
     func typing()
     func send(message: String)
-    func send(image: Data, filename: String)
+    func send(image: URL)
     func send(video: URL)
     func send(file: URL)
     func sendLocation()
@@ -31,7 +31,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         menu.addItem(title: " Image") {
             runSelectionPanel(for: self.view.window!, fileTypes: [kUTTypeImage as String], multiple: true) { urls in
                 for url in urls {
-                    self.host?.send(image: try! Data(contentsOf: url), filename: url.lastPathComponent)
+                    self.host?.send(image: url)
                 }
             }
         }
@@ -42,9 +42,13 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
                     let img = try screenshot(interactive: true)
                     let marked = try markup(for: img, in: v)
                     guard let dat = marked.data(for: .png) else { throw CocoaError(.userCancelled) }
-                    self.host?.send(image: dat, filename: "Screenshot.png")
-                } catch {
+                    
+                    let url = URL(temporaryFileWithExtension: "png")
+                    try dat.write(to: url, options: .atomic)
+                    self.host?.send(image: url)
+                } catch(let error) {
                     log.debug("Something happened while taking a screenshot or marking it up!")
+                    log.debug("\(error)")
                 }
             }
         }
@@ -53,14 +57,20 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             DispatchQueue.global(qos: .userInteractive).async {
                 do {
                     let img = NSImage(size: NSSize(width: 1024, height: 1024), flipped: false) { rect in
-                        NSColor.white.drawSwatch(in: rect); return true
+                        NSColor.white.set()
+                        rect.fill()
+                        return true
                     }
                     
                     let marked = try markup(for: img, in: v)
                     guard let dat = marked.data(for: .png) else { throw CocoaError(.userCancelled) }
-                    self.host?.send(image: dat, filename: "Screenshot.png")
-                } catch {
+                    
+                    let url = URL(temporaryFileWithExtension: "png")
+                    try dat.write(to: url, options: .atomic)
+                    self.host?.send(image: url)
+                } catch(let error) {
                     log.debug("Something happened while taking a screenshot or marking it up!")
+                    log.debug("\(error)")
                 }
             }
         }

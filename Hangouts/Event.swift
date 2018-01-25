@@ -100,13 +100,11 @@ public class IChatMessageEvent: IEvent, Message {
         if let attachment = raws[safe: 0] {
             if attachment.embed_item!.type.contains(.PlusPhoto) {
                 if let url = attachment.embed_item?.plus_photo?.url {
-                    let (data, _, _) = URLSession.shared.synchronousRequest(URL(string: url)!)
-                    return .image(data!, "")
+                    return .image(URL(string: url)!)
                 }
             } else if attachment.embed_item!.type.contains(.VoicePhoto) {
                 if let url = attachment.embed_item?.voice_photo?.url {
-                    let (data, _, _) = URLSession.shared.synchronousRequest(URL(string: url)!)
-                    return .image(data!, "")
+                    return .image(URL(string: url)!)
                 }
             } else if attachment.embed_item!.type.contains(.Place) {
                 let coords = attachment.embed_item?.place?.location_info?.latlng

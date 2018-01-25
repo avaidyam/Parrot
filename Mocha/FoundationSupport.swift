@@ -1,5 +1,7 @@
 import Foundation
 
+/* TODO: Switch all uses of URL temp to TemporaryFile. */
+
 // Needs to be fixed somehow to not use NSString stuff.
 public extension String {
 	
@@ -210,3 +212,40 @@ public class ProcessActivity {
         _activity = nil
     }
 }
+
+public extension URL {
+    
+    ///
+    public init(temporaryFileWithExtension ext: String) {
+        self = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension(ext)
+    }
+}
+
+/// Manages a `TemporaryFile` for the lifetime of this object tracked by a `URL`.
+/// Note: files made in `NSTemporaryDirectory()` are already automatically cleared
+/// after three days (but persist across login/reboot until then).
+public final class TemporaryFile {
+    
+    /// The `URL` this `TemporaryFile` exists at.
+    public let contentURL: URL
+    
+    /// Create a `TemporaryFile` with a provided extension.
+    public init(extension ext: String) {
+        self.contentURL = URL(temporaryFileWithExtension: ext)
+    }
+    
+    /// Upon de-init, remove the temporary file item.
+    deinit {
+        DispatchQueue.global(qos: .background).async { [url = self.contentURL] in
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
+    
+    /// Allows capturing the context that includes the `TemporaryFile`.
+    public func mark() {
+        // no-op
+    }
+}
+

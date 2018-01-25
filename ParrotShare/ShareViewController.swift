@@ -78,9 +78,15 @@ public final class ShareViewController: SLComposeServiceViewController {
         for item in self.items() {
             item.loadItem(forTypeIdentifier: kUTTypeImage as String, options: [:]) { obj, err in
                 if let data = obj as? Data {
-                    self.send(.image(data, "Shared.png"))
-                } else if let url = obj as? URL, let data = try? Data(contentsOf: url) {
-                    self.send(.image(data, url.lastPathComponent))
+                    do {
+                        let url = URL(temporaryFileWithExtension: "png")
+                        try data.write(to: url, options: .atomic)
+                        self.send(.image(url))
+                    } catch(let error) {
+                        self.extensionContext!.cancelRequest(withError: error)
+                    }
+                } else if let url = obj as? URL {
+                    self.send(.image(url))
                 } else {
                     self.extensionContext!.cancelRequest(withError: err)
                 }

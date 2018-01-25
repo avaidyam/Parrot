@@ -36,6 +36,7 @@
 		482323E51E1D3C0700318380 /* parrot-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4803639A1C1D08490008E9F5 /* parrot-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		482323E71E1D406200318380 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323E61E1D406200318380 /* Auth.swift */; };
 		482323E91E1D61E100318380 /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323E81E1D61E100318380 /* AttributedString.swift */; };
+		48267A4E2019893300D9D8A9 /* CGIncrementalImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267A4D2019893300D9D8A9 /* CGIncrementalImage.swift */; };
 		4826D3881F03B853000FE44F /* Transformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4826D3871F03B853000FE44F /* Transformer.swift */; };
 		4831BC971ECF72C900C30413 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4831BC961ECF72C900C30413 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		4831BCC91ED09C9800C30413 /* GeneralPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCC81ED09C9800C30413 /* GeneralPrefs.swift */; };
@@ -422,6 +423,7 @@
 		482323DF1E1CBD3A00318380 /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		482323E61E1D406200318380 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		482323E81E1D61E100318380 /* AttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
+		48267A4D2019893300D9D8A9 /* CGIncrementalImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGIncrementalImage.swift; sourceTree = "<group>"; };
 		4826D3871F03B853000FE44F /* Transformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformer.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		4831BC961ECF72C900C30413 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -1063,6 +1065,7 @@
 				488239A21C455CED00C5E8EB /* AppKit+Extensions.swift */,
 				4848A5821EFD1A0D008B2DE2 /* BlockTrampoline.swift */,
 				488201BB1D4A970400C545F0 /* NSMonogramImageRep.swift */,
+				48267A4D2019893300D9D8A9 /* CGIncrementalImage.swift */,
 				4869A9A61EE0FC2C00764594 /* NSAppearance+Extensions.swift */,
 				4869A93B1EDD250C00764594 /* ViewAttachmentCell.swift */,
 				48A452261D19B16500CB588A /* TLTone.swift */,
@@ -1791,6 +1794,7 @@
 				4831BCF41ED356B300C30413 /* DroppableView.swift in Sources */,
 				489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */,
 				48E39C621ED516AC00EF578D /* VolumeIndicator.swift in Sources */,
+				48267A4E2019893300D9D8A9 /* CGIncrementalImage.swift in Sources */,
 				489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */,
 				48D3CD131DE945C1003D6C02 /* TLTone.swift in Sources */,
 				48403CA31DF0BF6B0009897A /* Interpolate.swift in Sources */,

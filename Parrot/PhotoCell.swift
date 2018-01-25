@@ -24,6 +24,8 @@ public class PhotoCell: NSCollectionViewItem {
         return v
     }()
     
+    private var incrementalImage: CGIncrementalImage? = nil
+    
     public override func loadView() {
         self.view = NSView()
         self.view.translatesAutoresizingMaskIntoConstraints = false
@@ -50,12 +52,16 @@ public class PhotoCell: NSCollectionViewItem {
     public override var representedObject: Any? {
         didSet {
             guard let b = self.representedObject as? MessageBundle else { return }
-            guard case .image(let data, _) = b.current.content else { return }
+            guard case .image(let url) = b.current.content else { return }
             
             //self.orientation = b.current.sender!.me ? .rightToLeft : .leftToRight // FIXME
             self.personView.image = b.current.sender!.image
             self.personView.isHidden = /*(o.sender?.me ?? false) || */(b.previous?.sender?.identifier == b.current.sender?.identifier)
-            self.photoView.image = NSImage(data: data)
+            
+            // Set up incremental loading of the image from the url.
+            self.incrementalImage = CGIncrementalImage(url: url) { image, _, _ in
+                self.photoView.image = image
+            }
         }
     }
     
@@ -72,14 +78,21 @@ public class PhotoCell: NSCollectionViewItem {
     }
     
     // Given a string, a font size, and a base width, return the measured height of the cell.
-    // EXPECTS: NSImage compatible data.
-    public static func measure(_ data: Data, _ width: CGFloat) -> CGFloat {
-        let c = CGImageSourceCreateWithData(data as CFData, nil)!
-        let q = CGImageSourceCopyPropertiesAtIndex(c, 0, nil) as! [String: Any]
-        let pw = q[kCGImagePropertyPixelWidth as String] as! Int
-        let ph = q[kCGImagePropertyPixelHeight as String] as! Int
-        let dims = CGSize(width: pw, height: ph)
-        
-        return dims.height * ((width - 46.0) / dims.width)
+    public static func measure(_ url: URL, _ width: CGFloat) -> CGFloat {
+        if let dims = PhotoCell.urlSizeMap[url] {
+            return dims.height * ((width - 46.0) / dims.width)
+        } else {
+            
+            // Download and cache the info here.
+            let header = CGIncrementalImage.retrieve(headersOf: url)
+            let dims = header?.size ?? .zero
+            PhotoCell.urlSizeMap[url] = dims
+            
+            return dims.height * ((width - 46.0) / dims.width)
+        }
     }
+    
+    /// Cache the URL to a size; not sure if we should expect the same url to return
+    /// different sizes at any point, so this may be inaccurate. (Reload it maybe?)
+    private static var urlSizeMap: [URL: CGSize] = [:]
 }

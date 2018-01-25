@@ -1,13 +1,5 @@
 import CoreLocation
 
-/*
-locate(for: "Testing.") {
-    guard let coord = $0?.coordinate else { return $1 != nil }
-    print(coord.latitude, coord.longitude)
-    return false
-}
-*/
-
 /// Locate the device's current location; return true from the handler to stop.
 public func locate(reason: String, _ handler: @escaping (CLLocation?, Error?) -> (Bool)) {
     class CLLocator: NSObject, CLLocationManagerDelegate {

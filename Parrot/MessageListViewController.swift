@@ -368,9 +368,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
         let msg = self.dataSource[indexPath.item]
         switch msg.content {
-        case .image(let data, _):
+        case .image(let url):
             return NSSize(width: collectionView.bounds.width,
-                          height: PhotoCell.measure(data, collectionView.bounds.width))
+                          height: PhotoCell.measure(url, collectionView.bounds.width))
         case .location(_, _):
             return NSSize(width: collectionView.bounds.width,
                           height: LocationCell.measure(collectionView.bounds.width))
@@ -383,7 +383,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let item: NSCollectionViewItem
         switch self.dataSource[indexPath.item].content {
-        case .image(_, _):
+        case .image(_):
             item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PhotoCell.self)"), for: indexPath)
         case .location(_, _):
             item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(LocationCell.self)"), for: indexPath)
@@ -420,8 +420,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
         switch self.dataSource[indexPath.item].content {
-        case .image(let data, _):
-            return NSImage(data: data)
+        case .image(let url):
+            let (data, _, _) = URLSession.shared.synchronousRequest(url)
+            return NSImage(data: data!)
         case .text(let text):
             return text as NSString
         default:
@@ -682,9 +683,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         try! self.conversation!.send(message: PlaceholderMessage(content: .text(text)))
     }
     
-    public func send(image: Data, filename: String) {
+    public func send(image: URL) {
         do {
-            try self.conversation?.send(message: PlaceholderMessage(content: .image(image, filename)))
+            try self.conversation?.send(message: PlaceholderMessage(content: .image(image)))
         } catch {
             log.debug("sending an image was not supported; sending text after provider upload instead")
             // upload the image on a different provider
@@ -749,17 +750,23 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             
             // We have a "direct" image UTI type.
             if let type = item.availableType(from: [.of(kUTTypeImage)]),
-                let data = item.data(forType: type),
-                let img = NSImage(data: data) {
-                self.send(image: img.data(for: .png)!, filename: "Image.png")
+                let data = item.data(forType: type)  {
+                
+                do {
+                    let url = URL(temporaryFileWithExtension: "png")
+                    try data.write(to: url, options: .atomic)
+                    self.send(image: url)
+                } catch {
+                    NSAlert(style: .critical, message: "Couldn't send that file - write error!").beginModal()
+                }
                 
             // We have an "indirect" fileURL UTI type.
             } else if let _ = item.availableType(from: [._fileURL]),
                 let plist = item.propertyList(forType: ._fileURL),
                 let url = NSURL(pasteboardPropertyList: plist, ofType: ._fileURL) as URL? {
-                self.send(image: try! Data(contentsOf: url), filename: url.lastPathComponent)
+                self.send(image: url)
             } else {
-                NSAlert(style: .critical, message: "Couldn't send that file!", information: "Here's some debug information:\n\(item.types.map { $0.rawValue })").runModal()
+                NSAlert(style: .critical, message: "Couldn't send that file!", information: "Here's some debug information:\n\(item.types.map { $0.rawValue })").beginModal()
             }
         }
         return true

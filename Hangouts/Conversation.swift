@@ -227,8 +227,9 @@ public class IConversation: ParrotServiceExtension.Conversation {
             let req = SendChatMessageRequest(message_content: MessageContent(segment: [seg]),
                                              event_request_header: self.eventHeader(.RegularChatMessage))
             self.client.execute(req) {_,_ in}
-        case .image(let photo, let name):
-            self.client.uploadIfNeeded(photo: .new(data: photo, name: name)) { photoID, userID in
+        case .image(let url):
+            let photo = try! Data(contentsOf: url), filename = url.lastPathComponent
+            self.client.uploadIfNeeded(photo: .new(data: photo, name: filename)) { photoID, userID in
                 let req = SendChatMessageRequest(existing_media: ExistingMedia(photo: Photo(photo_id: photoID, user_id: userID)),
                                                  event_request_header: self.eventHeader(.RegularChatMessage))
                 self.client.execute(req) {_,_ in}
