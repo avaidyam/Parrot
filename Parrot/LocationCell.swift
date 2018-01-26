@@ -33,15 +33,15 @@ public class LocationCell: NSCollectionViewItem {
         self.view.add(subviews: self.mapView, self.personView)
         
         // Install constraints.
-        self.personView.left == self.view.left + 8.0
-        self.personView.bottom == self.view.bottom - 4.0
-        self.personView.height == 24.0
-        self.personView.width == 24.0
+        self.personView.leftAnchor == self.view.leftAnchor + 8.0
+        self.personView.bottomAnchor == self.view.bottomAnchor - 4.0
+        self.personView.heightAnchor == 24.0
+        self.personView.widthAnchor == 24.0
         
-        self.mapView.left == self.view.left + 4.0
-        self.mapView.right == self.view.right - 4.0
-        self.mapView.top == self.view.top + 4.0
-        self.mapView.bottom == self.view.bottom - 4.0
+        self.mapView.leftAnchor == self.view.leftAnchor + 4.0
+        self.mapView.rightAnchor == self.view.rightAnchor - 4.0
+        self.mapView.topAnchor == self.view.topAnchor + 4.0
+        self.mapView.bottomAnchor == self.view.bottomAnchor - 4.0
         
         // So, since the photoView can be hidden (height = 0), we should manually
         // declare the height minimum constraint here.

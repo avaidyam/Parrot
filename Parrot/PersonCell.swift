@@ -47,21 +47,21 @@ public class PersonCell: NSCollectionViewItem {
         self.view.set(allowsVibrancy: true)
         self.view.add(subviews: self.photoButton, self.nameLabel, self.timeLabel, self.textLabel)
         
-        self.photoButton.left == self.view.left + 4
-        self.photoButton.centerY == self.view.centerY
-        self.photoButton.width == 40
-        self.photoButton.height == 40
-        self.photoButton.right == self.nameLabel.left - 4
-        self.photoButton.right == self.textLabel.left - 4
-        self.nameLabel.top == self.view.top + 4
-        self.nameLabel.right == self.timeLabel.left - 4
-        self.nameLabel.bottom == self.textLabel.top - 4
-        self.nameLabel.centerY == self.timeLabel.centerY
-        self.timeLabel.top == self.view.top + 4
-        self.timeLabel.right == self.view.right - 4
-        self.timeLabel.bottom == self.textLabel.top - 4
-        self.textLabel.right == self.view.right - 4
-        self.textLabel.bottom == self.view.bottom - 4
+        self.photoButton.leftAnchor == self.view.leftAnchor + 4
+        self.photoButton.centerYAnchor == self.view.centerYAnchor
+        self.photoButton.widthAnchor == 40
+        self.photoButton.heightAnchor == 40
+        self.photoButton.rightAnchor == self.nameLabel.leftAnchor - 4
+        self.photoButton.rightAnchor == self.textLabel.leftAnchor - 4
+        self.nameLabel.topAnchor == self.view.topAnchor + 4
+        self.nameLabel.rightAnchor == self.timeLabel.leftAnchor - 4
+        self.nameLabel.bottomAnchor == self.textLabel.topAnchor - 4
+        self.nameLabel.centerYAnchor == self.timeLabel.centerYAnchor
+        self.timeLabel.topAnchor == self.view.topAnchor + 4
+        self.timeLabel.rightAnchor == self.view.rightAnchor - 4
+        self.timeLabel.bottomAnchor == self.textLabel.topAnchor - 4
+        self.textLabel.rightAnchor == self.view.rightAnchor - 4
+        self.textLabel.bottomAnchor == self.view.bottomAnchor - 4
         
         self.presenceSubscription = AutoSubscription(kind: Notification.Person.DidChangePresence, self.updateStatusText)
     }

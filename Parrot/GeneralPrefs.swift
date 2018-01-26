@@ -68,7 +68,7 @@ public extension Preferences.Controllers {
             stack.orientation = .vertical
             stack.alignment = .centerX
             stack.distribution = .fill
-            stack.width == 400.0
+            stack.widthAnchor == 400.0
             self.view = stack
             
             self.bindings = [

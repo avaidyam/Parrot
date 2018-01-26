@@ -34,19 +34,19 @@ public class PhotoCell: NSCollectionViewItem {
         self.view.add(subviews: self.personView, self.photoView)
         
         // Install constraints.
-        self.personView.left == self.view.left + 8.0
-        self.personView.bottom == self.view.bottom - 4.0
-        self.personView.height == 24.0
-        self.personView.width == 24.0
+        self.personView.leftAnchor == self.view.leftAnchor + 8.0
+        self.personView.bottomAnchor == self.view.bottomAnchor - 4.0
+        self.personView.heightAnchor == 24.0
+        self.personView.widthAnchor == 24.0
         
-        self.photoView.left == self.personView.right + 8.0
-        self.photoView.right == self.view.right - 8.0
-        self.photoView.top == self.view.top + 4.0
-        self.photoView.bottom == self.view.bottom - 4.0
+        self.photoView.leftAnchor == self.personView.rightAnchor + 8.0
+        self.photoView.rightAnchor == self.view.rightAnchor - 8.0
+        self.photoView.topAnchor == self.view.topAnchor + 4.0
+        self.photoView.bottomAnchor == self.view.bottomAnchor - 4.0
         
         // So, since the photoView can be hidden (height = 0), we should manually
         // declare the height minimum constraint here.
-        self.photoView.height >= 24.0 /* personView.height */
+        self.photoView.heightAnchor >= 24.0 /* personView.height */
     }
     
     public override var representedObject: Any? {

@@ -36,8 +36,8 @@ public class ReloadCell: NSView {
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
         
         self.addSubview(self.button)
-        self.centerX == self.button.centerX
-        self.centerY == self.button.centerY
+        self.centerXAnchor == self.button.centerXAnchor
+        self.centerYAnchor == self.button.centerYAnchor
     }
     
     public override var allowsVibrancy: Bool { return true }

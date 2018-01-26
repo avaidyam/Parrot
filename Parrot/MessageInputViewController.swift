@@ -154,17 +154,17 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         self.view.add(subviews: self.photoView, self.textView)
         
         // Install constraints.
-        self.photoView.left == self.view.left + 8.0
-        self.photoView.bottom == self.view.bottom - 4.0
-        self.photoView.height == 24.0
-        self.photoView.width == 24.0
-        self.photoView.bottom == self.textView.bottom
+        self.photoView.leftAnchor == self.view.leftAnchor + 8.0
+        self.photoView.bottomAnchor == self.view.bottomAnchor - 4.0
+        self.photoView.heightAnchor == 24.0
+        self.photoView.widthAnchor == 24.0
+        self.photoView.bottomAnchor == self.textView.bottomAnchor
         
-        self.textView.left == self.photoView.right + 8.0
-        self.textView.bottom == self.view.bottom - 4.0
-        self.textView.right == self.view.right - 8.0
-        self.textView.top == self.view.top + 4.0
-        self.textView.height >= self.photoView.height
+        self.textView.leftAnchor == self.photoView.rightAnchor + 8.0
+        self.textView.bottomAnchor == self.view.bottomAnchor - 4.0
+        self.textView.rightAnchor == self.view.rightAnchor - 8.0
+        self.textView.topAnchor == self.view.topAnchor + 4.0
+        self.textView.heightAnchor >= self.photoView.heightAnchor
     }
     
     public override func viewDidLoad() {

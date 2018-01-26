@@ -890,8 +890,8 @@
 		488201BD1D4AA2D700C545F0 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				48F077161D1DE8DC003964FD /* ParrotAppearance.swift */,
 				4848A5841EFEBE35008B2DE2 /* SortedArray.swift */,
+				48F077161D1DE8DC003964FD /* ParrotAppearance.swift */,
 				4869A9A81EE1058100764594 /* WindowAnimators.swift */,
 				48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */,
 				48EB54F51D209DD100F77C2C /* Cache.swift */,

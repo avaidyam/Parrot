@@ -73,8 +73,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         v.add(subviews: self.titleText/*, self.addButton*//*, self.searchField*/)
         v.autoresizingMask = [.width]
         v.frame.size.height = 44.0//80.0
-        self.titleText.left == v.left + 2.0
-        self.titleText.top == v.top + 2.0
+        self.titleText.leftAnchor == v.leftAnchor + 2.0
+        self.titleText.topAnchor == v.topAnchor + 2.0
         let t = NSTitlebarAccessoryViewController()
         t.view = v
         t.layoutAttribute = .bottom
@@ -128,14 +128,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.view = NSVisualEffectView()
         self.view.add(subviews: self.scrollView, self.indicator)
         
-        self.view.width >= 128
-        self.view.height >= 128
-        self.view.centerX == self.indicator.centerX
-        self.view.centerY == self.indicator.centerY
-        self.view.centerX == self.scrollView.centerX
-        self.view.centerY == self.scrollView.centerY
-        self.view.width == self.scrollView.width
-        self.view.height == self.scrollView.height
+        self.view.widthAnchor >= 128
+        self.view.heightAnchor >= 128
+        self.view.centerXAnchor == self.indicator.centerXAnchor
+        self.view.centerYAnchor == self.indicator.centerYAnchor
+        self.view.centerXAnchor == self.scrollView.centerXAnchor
+        self.view.centerYAnchor == self.scrollView.centerYAnchor
+        self.view.widthAnchor == self.scrollView.widthAnchor
+        self.view.heightAnchor == self.scrollView.heightAnchor
         
         // Register for Conversation "delegate" changes.
         let c = NotificationCenter.default

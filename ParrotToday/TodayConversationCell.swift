@@ -66,21 +66,21 @@ public class TodayConversationCell: NSTableCellView {
         self.wantsLayer = true
         self.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel)
         
-        self.photoView.left == self.left + 8
-        self.photoView.centerY == self.centerY
-        self.photoView.width == 48
-        self.photoView.height == 48
-        self.photoView.right == self.nameLabel.left - 8
-        self.photoView.right == self.textLabel.left - 8
-        self.nameLabel.top == self.top + 8
-        self.nameLabel.right == self.timeLabel.left - 4
-        self.nameLabel.bottom == self.textLabel.top - 4
-        self.nameLabel.centerY == self.timeLabel.centerY
-        self.timeLabel.top == self.top + 8
-        self.timeLabel.right == self.right - 8
-        self.timeLabel.bottom == self.textLabel.top - 4
-        self.textLabel.right == self.right - 8
-        self.textLabel.bottom == self.bottom - 8
+        self.photoView.leftAnchor == self.leftAnchor + 8
+        self.photoView.centerYAnchor == self.centerYAnchor
+        self.photoView.widthAnchor == 48
+        self.photoView.heightAnchor == 48
+        self.photoView.rightAnchor == self.nameLabel.leftAnchor - 8
+        self.photoView.rightAnchor == self.textLabel.leftAnchor - 8
+        self.nameLabel.topAnchor == self.topAnchor + 8
+        self.nameLabel.rightAnchor == self.timeLabel.leftAnchor - 4
+        self.nameLabel.bottomAnchor == self.textLabel.topAnchor - 4
+        self.nameLabel.centerYAnchor == self.timeLabel.centerYAnchor
+        self.timeLabel.topAnchor == self.topAnchor + 8
+        self.timeLabel.rightAnchor == self.rightAnchor - 8
+        self.timeLabel.bottomAnchor == self.textLabel.topAnchor - 4
+        self.textLabel.rightAnchor == self.rightAnchor - 8
+        self.textLabel.bottomAnchor == self.bottomAnchor - 8
     }
     
     // Upon assignment of the represented object, configure the subview contents.

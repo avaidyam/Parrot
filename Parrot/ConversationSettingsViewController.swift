@@ -84,7 +84,7 @@ public class ConversationDetailsViewController: NSViewController {
         stack.alignment = .centerX
         stack.distribution = .fill
         
-        stack.width == 128.0
+        stack.widthAnchor == 128.0
         self.view = stack
     }
     

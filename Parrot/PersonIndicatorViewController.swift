@@ -27,10 +27,10 @@ fileprivate class PersonIndicatorToolTipController: NSViewController {
         self.text.font = NSFont.systemFont(ofSize: 11.0, weight: NSFont.Weight.semibold)
         self.view.addSubview(self.text)
         
-        self.text.top == self.view.top + 4.0
-        self.text.bottom == self.view.bottom - 4.0
-        self.text.left == self.view.left + 4.0
-        self.text.right == self.view.right - 4.0
+        self.text.topAnchor == self.view.topAnchor + 4.0
+        self.text.bottomAnchor == self.view.bottomAnchor - 4.0
+        self.text.leftAnchor == self.view.leftAnchor + 4.0
+        self.text.rightAnchor == self.view.rightAnchor - 4.0
     }
 }
 

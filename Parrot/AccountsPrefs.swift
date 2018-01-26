@@ -11,8 +11,8 @@ public extension Preferences.Controllers {
         
         public override func loadView() {
             self.view = NSView()
-            self.view.width == 400.0
-            self.view.height == 400.0
+            self.view.widthAnchor == 400.0
+            self.view.heightAnchor == 400.0
         }
     }
 }

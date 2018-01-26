@@ -75,25 +75,25 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
         self.view.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel, self.dropZone)
         //self.view.add(sublayer: self.badgeLayer) // will not participate in autolayout
         
-        self.photoView.left == self.view.left + 8
-        self.photoView.centerY == self.view.centerY
-        self.photoView.width == 48
-        self.photoView.height == 48
-        self.photoView.right == self.nameLabel.left - 8
-        self.photoView.right == self.textLabel.left - 8
-        self.nameLabel.top == self.view.top + 8
-        self.nameLabel.right == self.timeLabel.left - 4
-        self.nameLabel.bottom == self.textLabel.top - 4
-        self.nameLabel.centerY == self.timeLabel.centerY
-        self.timeLabel.top == self.view.top + 8
-        self.timeLabel.right == self.view.right - 8
-        self.timeLabel.bottom == self.textLabel.top - 4
-        self.textLabel.right == self.view.right - 8
-        self.textLabel.bottom == self.view.bottom - 8
-        self.dropZone.left == self.view.left
-        self.dropZone.right == self.view.right
-        self.dropZone.top == self.view.top
-        self.dropZone.bottom == self.view.bottom
+        self.photoView.leftAnchor == self.view.leftAnchor + 8
+        self.photoView.centerYAnchor == self.view.centerYAnchor
+        self.photoView.widthAnchor == 48
+        self.photoView.heightAnchor == 48
+        self.photoView.rightAnchor == self.nameLabel.leftAnchor - 8
+        self.photoView.rightAnchor == self.textLabel.leftAnchor - 8
+        self.nameLabel.topAnchor == self.view.topAnchor + 8
+        self.nameLabel.rightAnchor == self.timeLabel.leftAnchor - 4
+        self.nameLabel.bottomAnchor == self.textLabel.topAnchor - 4
+        self.nameLabel.centerYAnchor == self.timeLabel.centerYAnchor
+        self.timeLabel.topAnchor == self.view.topAnchor + 8
+        self.timeLabel.rightAnchor == self.view.rightAnchor - 8
+        self.timeLabel.bottomAnchor == self.textLabel.topAnchor - 4
+        self.textLabel.rightAnchor == self.view.rightAnchor - 8
+        self.textLabel.bottomAnchor == self.view.bottomAnchor - 8
+        self.dropZone.leftAnchor == self.view.leftAnchor
+        self.dropZone.rightAnchor == self.view.rightAnchor
+        self.dropZone.topAnchor == self.view.topAnchor
+        self.dropZone.bottomAnchor == self.view.bottomAnchor
     }
 	
 	// Upon assignment of the represented object, configure the subview contents.

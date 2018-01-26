@@ -555,3 +555,46 @@ public func markup(for image: NSImage, in view: NSView) throws -> NSImage {
     return img!
 }
 
+public extension CALayer {
+    fileprivate static var layoutProp = AssociatedProperty<CALayer, NSLayoutGuide>(.strong)
+    
+    /// Provides an optional NSLayoutGuide for use in a containing NSView.
+    /// This allows CALayers to be laid out by the NSLayoutConstraint engine.
+    ///
+    /// Note: this does not happen automatically; in your NSView, override
+    /// layout() while invoking super, and call syncLayout() manually.
+    public fileprivate(set) var layout: NSLayoutGuide {
+        get { return CALayer.layoutProp[self, creating: NSLayoutGuide()] }
+        set { CALayer.layoutProp[self] = newValue }
+    }
+    
+    /// Allows the CALayer to reconcile the frame calculated by the NSLayoutConstraint
+    /// engine, if applicable; not animatable (yet).
+    public func syncLayout() {
+        guard self.layout.owningView != nil else { return }
+        self.frame = self.layout.frame
+    }
+}
+
+public extension NSView {
+    
+    /// The preferred method of adding a sublayer to a view. Allows the CALayer
+    /// to use an NSLayoutGuide and participate in the NSLayoutConstraint cycle.
+    ///
+    /// Note: does not do anything if the view is not layer-backed.
+    public func add(sublayer layer: CALayer) {
+        layer.removeFromSuperlayer()
+        guard let superlayer = self.layer else { return }
+        superlayer.addSublayer(layer)
+        self.addLayoutGuide(layer.layout)
+    }
+    
+    /// The preferred method of removing a sublayer from a view. Allows the CALayer
+    /// to unregister its NSLayoutGuide from the NSView.
+    public func remove(sublayer layer: CALayer) {
+        guard let superlayer = self.layer, layer.superlayer == superlayer else { return }
+        layer.removeFromSuperlayer()
+        guard layer.layout.owningView == self else { return }
+        self.removeLayoutGuide(layer.layout)
+    }
+}

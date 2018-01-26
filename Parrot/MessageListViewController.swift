@@ -284,26 +284,26 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.view = NSVisualEffectView()
         self.view.add(subviews: self.scrollView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone)
         
-        self.view.width >= 96
-        self.view.height >= 128
-        self.view.centerX == self.indicator.centerX
-        self.view.centerY == self.indicator.centerY
-        self.view.centerX == self.scrollView.centerX
-        self.view.centerY == self.scrollView.centerY
-        self.view.width == self.scrollView.width
-        self.view.height == self.scrollView.height
-        self.moduleView.left == self.view.left
-        self.moduleView.right == self.view.right
-        self.moduleView.bottom == self.view.bottom
-        self.moduleView.height <= 250
-        self.textInputCell.view.left == self.moduleView.left
-        self.textInputCell.view.right == self.moduleView.right
-        self.textInputCell.view.top == self.moduleView.top
-        self.textInputCell.view.bottom == self.moduleView.bottom
-        self.dropZone.left == self.view.left
-        self.dropZone.right == self.view.right
-        self.dropZone.bottom == self.moduleView.top
-        self.dropZone.top == self.view.top + 36 /* toolbar */
+        self.view.widthAnchor >= 96
+        self.view.heightAnchor >= 128
+        self.view.centerXAnchor == self.indicator.centerXAnchor
+        self.view.centerYAnchor == self.indicator.centerYAnchor
+        self.view.centerXAnchor == self.scrollView.centerXAnchor
+        self.view.centerYAnchor == self.scrollView.centerYAnchor
+        self.view.widthAnchor == self.scrollView.widthAnchor
+        self.view.heightAnchor == self.scrollView.heightAnchor
+        self.moduleView.leftAnchor == self.view.leftAnchor
+        self.moduleView.rightAnchor == self.view.rightAnchor
+        self.moduleView.bottomAnchor == self.view.bottomAnchor
+        self.moduleView.heightAnchor <= 250
+        self.textInputCell.view.leftAnchor == self.moduleView.leftAnchor
+        self.textInputCell.view.rightAnchor == self.moduleView.rightAnchor
+        self.textInputCell.view.topAnchor == self.moduleView.topAnchor
+        self.textInputCell.view.bottomAnchor == self.moduleView.bottomAnchor
+        self.dropZone.leftAnchor == self.view.leftAnchor
+        self.dropZone.rightAnchor == self.view.rightAnchor
+        self.dropZone.bottomAnchor == self.moduleView.topAnchor
+        self.dropZone.topAnchor == self.view.topAnchor + 36 /* toolbar */
     }
     
     public func prepare(window: NSWindow) {

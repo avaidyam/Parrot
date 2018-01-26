@@ -54,18 +54,18 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         self.view.add(subviews: self.photoView, self.textLabel)
         
         // Install constraints.
-        self.photoView.left == self.view.left + 8.0
-        self.photoView.bottom == self.view.bottom - 4.0
-        self.photoView.height == 24.0
-        self.photoView.width == 24.0
-        self.textLabel.left == self.photoView.right + 8.0
-        self.textLabel.right == self.view.right - 8.0
-        self.textLabel.top == self.view.top + 4.0
-        self.textLabel.bottom == self.view.bottom - 4.0
+        self.photoView.leftAnchor == self.view.leftAnchor + 8.0
+        self.photoView.bottomAnchor == self.view.bottomAnchor - 4.0
+        self.photoView.heightAnchor == 24.0
+        self.photoView.widthAnchor == 24.0
+        self.textLabel.leftAnchor == self.photoView.rightAnchor + 8.0
+        self.textLabel.rightAnchor == self.view.rightAnchor - 8.0
+        self.textLabel.topAnchor == self.view.topAnchor + 4.0
+        self.textLabel.bottomAnchor == self.view.bottomAnchor - 4.0
         
         // So, since the photoView can be hidden (height = 0), we should manually
         // declare the height minimum constraint here.
-        self.textLabel.height >= 24.0 /* photoView.height */
+        self.textLabel.heightAnchor >= 24.0 /* photoView.height */
     }
     
     deinit {
