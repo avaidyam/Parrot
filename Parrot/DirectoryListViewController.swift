@@ -24,9 +24,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         l.minimumLineSpacing = 0.0
         c.collectionViewLayout = l
         c.register(PersonCell.self,
-                   forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"))
+                   forItemWithIdentifier: .personCell)
         c.register(SearchCell.self, forSupplementaryViewOfKind: .sectionHeader,
-                   withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"))
+                   withIdentifier: .searchCell)
         return c
     }()
     
@@ -207,13 +207,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)"), for: indexPath)
+        let item = collectionView.makeItem(withIdentifier: .personCell, for: indexPath)
         item.representedObject = self.currentSource()[indexPath.item]
         return item
     }
     
     public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
-        let header = collectionView.makeSupplementaryView(ofKind: .sectionHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
+        let header = collectionView.makeSupplementaryView(ofKind: .sectionHeader, withIdentifier: .searchCell, for: indexPath) as! SearchCell
         header.searchHandler = {
             self.searchQuery = $0
         }

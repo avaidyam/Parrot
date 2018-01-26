@@ -137,7 +137,7 @@ public class ParrotAppController: NSApplicationController {
         // Watch the menubarIcon setting to toggle the statusbar item.
         self.menubarSub = Settings.observe(\.menubarIcon, options: [.new, .initial]) { _, _ in
             if Settings.menubarIcon {
-                let image = NSImage(named: NSImage.Name.applicationIcon)
+                let image = NSImage(named: .applicationIcon)
                 image?.size = NSSize(width: 16, height: 16)
                 self.statusItem.image = image
                 self.statusItem.button?.target = self

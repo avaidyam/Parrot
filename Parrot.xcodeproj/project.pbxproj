@@ -24,6 +24,7 @@
 		4819BF631D52D78800CF609C /* emoji_equivalences.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 484019201D37D16C001F969E /* emoji_equivalences.plist */; };
 		481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */; };
 		481D933E1DF5D7D100EB23A1 /* DispatchSourceTimer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933D1DF5D7D100EB23A1 /* DispatchSourceTimer+Extensions.swift */; };
+		481F0D7F201ACE540037141F /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481F0D7E201ACE540037141F /* Resources.swift */; };
 		48212BE91ECCEB7700B7765B /* ConversationSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */; };
 		482323D71E1776DC00318380 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D61E1776DC00318380 /* Event.swift */; };
 		482323D91E1CBBA100318380 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D81E1CBBA100318380 /* Application.swift */; };
@@ -415,6 +416,7 @@
 		481891D21F8745E100AB918B /* XPCService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCService.swift; sourceTree = "<group>"; };
 		481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayLink.swift; sourceTree = "<group>"; };
 		481D933D1DF5D7D100EB23A1 /* DispatchSourceTimer+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchSourceTimer+Extensions.swift"; sourceTree = "<group>"; };
+		481F0D7E201ACE540037141F /* Resources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
 		48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationSettingsViewController.swift; sourceTree = "<group>"; };
 		482323D61E1776DC00318380 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		482323D81E1CBBA100318380 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
@@ -942,6 +944,7 @@
 		48834D941C1B3602009BC442 /* Parrot */ = {
 			isa = PBXGroup;
 			children = (
+				481F0D7E201ACE540037141F /* Resources.swift */,
 				48076BFA1F429F070002225C /* UI Cells */,
 				4869A9411EDF456000764594 /* Events */,
 				4869A9351EDB857200764594 /* Directory List */,
@@ -1698,6 +1701,7 @@
 				48AD39F81EE7FE2900C33E40 /* AccountsPrefs.swift in Sources */,
 				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
 				4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */,
+				481F0D7F201ACE540037141F /* Resources.swift in Sources */,
 				48EC1BF21F217D7A000C40C1 /* LocationCell.swift in Sources */,
 				4869A93A1EDB859700764594 /* PersonCell.swift in Sources */,
 				4869A9431EDF456C00764594 /* Event.swift in Sources */,

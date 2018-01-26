@@ -149,10 +149,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         //l.minimumInteritemSpacing = 0.0
         //l.minimumLineSpacing = 0.0
         c.collectionViewLayout = l
-        c.register(MessageCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"))
-        c.register(PhotoCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PhotoCell.self)"))
-        c.register(LocationCell.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(LocationCell.self)"))
-        c.register(ReloadCell.self, forSupplementaryViewOfKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"))
+        c.register(MessageCell.self, forItemWithIdentifier: .messageCell)
+        c.register(PhotoCell.self, forItemWithIdentifier: .photoCell)
+        c.register(LocationCell.self, forItemWithIdentifier: .locationCell)
+        c.register(ReloadCell.self, forSupplementaryViewOfKind: .globalHeader, withIdentifier: .reloadCell)
         return c
     }()
     
@@ -386,11 +386,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let item: NSCollectionViewItem
         switch self.dataSource[indexPath.item].content {
         case .image(_):
-            item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(PhotoCell.self)"), for: indexPath)
+            item = collectionView.makeItem(withIdentifier: .photoCell, for: indexPath)
         case .location(_, _):
-            item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(LocationCell.self)"), for: indexPath)
+            item = collectionView.makeItem(withIdentifier: .locationCell, for: indexPath)
         default:
-            item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)"), for: indexPath)
+            item = collectionView.makeItem(withIdentifier: .messageCell, for: indexPath)
         }
         
         let row = indexPath.item
@@ -403,7 +403,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
-        let footer = collectionView.makeSupplementaryView(ofKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"), for: indexPath) as! ReloadCell
+        let footer = collectionView.makeSupplementaryView(ofKind: .globalHeader, withIdentifier: .reloadCell, for: indexPath) as! ReloadCell
         footer.handler = self.scrollback
         return footer
     }
@@ -684,12 +684,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func send(message text: String) {
-        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
+        NSSound(assetName: .sentMessage)?.play()
         try! self.conversation!.send(message: PlaceholderMessage(content: .text(text)))
     }
     
     public func send(image: URL) {
-        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
+        NSSound(assetName: .sentMessage)?.play()
         do {
             try self.conversation?.send(message: PlaceholderMessage(content: .image(image)))
         } catch {
@@ -703,7 +703,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         locate(reason: "Send location.") { loc, _ in
             guard let coord = loc?.coordinate else { return true }
             do {
-                NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
+                NSSound(assetName: .sentMessage)?.play()
                 try self.conversation?.send(message: PlaceholderMessage(content: .location(coord.latitude, coord.longitude)))
             } catch {
                 log.debug("sending a location was not supported; sending maps link instead")
@@ -715,7 +715,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func send(video: URL) {
-        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
+        NSSound(assetName: .sentMessage)?.play()
         // Screw Google Photos upload!
         self.send(file: video)
         try? FileManager.default.trashItem(at: video, resultingItemURL: nil) // get rid of the temp file
@@ -729,7 +729,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 if locs.count > 0 { // is this a 1v1 convo with a Gmail user?
                     do {
                         let res = try DriveAPI.share(on: c, file: file, with: [locs.first!])
-                        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
+                        NSSound(assetName: .sentMessage)?.play()
                         try! self.conversation?.send(message: PlaceholderMessage(content: .text(res.absoluteString)))
                     } catch(let error) {
                         log.debug("couldn't share file: \(error)")
@@ -742,7 +742,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         // We're in a GVoice convo, or a group convo, so just send a group link.
         do {
             let res = try DriveAPI.share(on: c, file: file, with: [])
-            NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
+            NSSound(assetName: .sentMessage)?.play()
             try! self.conversation?.send(message: PlaceholderMessage(content: .text(res.absoluteString)))
         } catch(let error) {
             log.debug("couldn't share file: \(error)")
@@ -751,7 +751,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     // LEGACY
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
-        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
+        NSSound(assetName: .sentMessage)?.play()
         try! conversation.send(message: PlaceholderMessage(content: .text(text)))
     }
     
@@ -801,7 +801,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }()
     
     private lazy var searchToggle: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: NSImage.Name.revealFreestandingTemplate)!,
+        let b = NSButton(title: "", image: NSImage(named: .revealFreestandingTemplate)!,
                          target: nil, action: nil)
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
@@ -823,7 +823,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return self._usersToIndicators.values.map { $0.toolbarItem }
     }
     private func _setToolbar() {
-        let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "add"))
+        let item = NSToolbarItem(itemIdentifier: .add)
         item.view = self.addButton
         item.label = "Add"
         
@@ -832,6 +832,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         h.itemOrder = [.flexibleSpace] + _usersToItems().map { $0.itemIdentifier } + [.flexibleSpace]
         
         h.templateItems.insert(item)
-        h.itemOrder.append(NSToolbarItem.Identifier(rawValue: "add"))
+        h.itemOrder.append(.add)
     }
 }

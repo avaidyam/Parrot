@@ -217,7 +217,7 @@ public func defaultImageForString(forString source: String, size: NSSize = NSSiz
         rect.fill()
         var r = rect.insetBy(dx: -size.width * 0.05, dy: -size.height * 0.05)
         r.origin.y -= size.height * 0.1
-        NSImage(named: NSImage.Name(rawValue: "NSUserGuest"))!.draw(in: r) // composite this somehow.
+        NSImage(named: .userGuest)!.draw(in: r) // composite this somehow.
         return true
     }
 }

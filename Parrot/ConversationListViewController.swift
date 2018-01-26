@@ -43,11 +43,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         //l.sectionInset = NSEdgeInsetsZero
         c.collectionViewLayout = l
         c.register(ConversationCell.self,
-                   forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"))
+                   forItemWithIdentifier: .conversationCell)
         c.register(ReloadCell.self, forSupplementaryViewOfKind: .globalFooter,
-                   withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"))
+                   withIdentifier: .reloadCell)
         c.register(SearchCell.self, forSupplementaryViewOfKind: .globalHeader,
-                   withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"))
+                   withIdentifier: .searchCell)
         return c
     }()
     
@@ -165,11 +165,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         window.toolbar?.showsBaselineSeparator = false
         window.addTitlebarAccessoryViewController(self.titleAccessory)
         
-        //let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "add"))
+        //let item = NSToolbarItem(itemIdentifier: .add)
         //item.view = self.addButton
         //item.label = "Add"
         //container.templateItems = [item]
-        //container.itemOrder = [.flexibleSpace, NSToolbarItem.Identifier(rawValue: "add")]
+        //container.itemOrder = [.flexibleSpace, .add]
     }
     
     public override func viewDidLoad() {
@@ -250,7 +250,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)"), for: indexPath)
+        let item = collectionView.makeItem(withIdentifier: .conversationCell, for: indexPath)
         item.representedObject = self.currentDataSource()[indexPath.item]
         return item
     }
@@ -258,7 +258,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
         switch kind {
         case .globalHeader:
-            let header = collectionView.makeSupplementaryView(ofKind: .globalHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)"), for: indexPath) as! SearchCell
+            let header = collectionView.makeSupplementaryView(ofKind: .globalHeader, withIdentifier: .searchCell, for: indexPath) as! SearchCell
             header.searchHandler = self.searchTerm(_:)
             header.sortOptions = ["Name", "Date"]
             header.addHandler = {
@@ -278,7 +278,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             }
             return header
         case .globalFooter:
-            let footer = collectionView.makeSupplementaryView(ofKind: .globalFooter, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)"), for: indexPath) as! ReloadCell
+            let footer = collectionView.makeSupplementaryView(ofKind: .globalFooter, withIdentifier: .reloadCell, for: indexPath) as! ReloadCell
             footer.handler = self.scrollback
             return footer
         default:

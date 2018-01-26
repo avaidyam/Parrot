@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13122.17" systemVersion="17A291j" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13122.17"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
@@ -680,7 +680,7 @@
         <!--Messages-->
         <scene sceneID="u1m-pE-gEh">
             <objects>
-                <viewController title="Messages" id="MRF-LU-YO2" customClass="TextPreferencesController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Messages" storyboardIdentifier="MessagesPane" id="MRF-LU-YO2" customClass="TextPreferencesController" customModule="Parrot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="2kt-Lw-ez7">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -824,7 +824,7 @@
                                 <rect key="frame" x="20" y="29" width="21" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="kDA-nW-PYO" secondAttribute="height" multiplier="1:1" id="4i2-HX-9Cj"/>
-                                    <constraint firstAttribute="width" constant="21" id="PqL-Ez-E7V"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="21" id="PqL-Ez-E7V"/>
                                 </constraints>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7Bt-7r-BXW">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -854,7 +854,7 @@
                             <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="b3K-zW-1MU" userLabel="Remove">
                                 <rect key="frame" x="40" y="29" width="21" height="23"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="21" id="Lf1-r5-CuQ"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="21" id="Lf1-r5-CuQ"/>
                                     <constraint firstAttribute="width" secondItem="b3K-zW-1MU" secondAttribute="height" multiplier="1:1" id="hF3-RV-2Rz"/>
                                 </constraints>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="m5F-XM-Yni">

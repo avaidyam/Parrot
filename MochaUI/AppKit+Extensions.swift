@@ -251,6 +251,15 @@ public extension NSFont {
 	}
 }
 
+public extension NSSound {
+    
+    /// Load a sound from an `NSDataAsset` (Xcode Asset Catalog).
+    public convenience init?(assetName name: NSDataAsset.Name, bundle: Bundle = .main) {
+        guard let asset = NSDataAsset(name: name, bundle: bundle) else { return nil }
+        self.init(data: asset.data)
+    }
+}
+
 /// Register for AppleEvents that follow our URL scheme as a compatibility
 /// layer for macOS 10.13 methods.
 ///
