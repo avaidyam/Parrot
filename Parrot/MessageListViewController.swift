@@ -2,6 +2,7 @@ import Foundation
 import AppKit
 import Mocha
 import MochaUI
+import AVFoundation
 import Hangouts // FIXME ASAP!!!
 import ParrotServiceExtension
 
@@ -683,10 +684,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func send(message text: String) {
+        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
         try! self.conversation!.send(message: PlaceholderMessage(content: .text(text)))
     }
     
     public func send(image: URL) {
+        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
         do {
             try self.conversation?.send(message: PlaceholderMessage(content: .image(image)))
         } catch {
@@ -700,6 +703,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         locate(reason: "Send location.") { loc, _ in
             guard let coord = loc?.coordinate else { return true }
             do {
+                NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
                 try self.conversation?.send(message: PlaceholderMessage(content: .location(coord.latitude, coord.longitude)))
             } catch {
                 log.debug("sending a location was not supported; sending maps link instead")
@@ -711,6 +715,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func send(video: URL) {
+        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
         // Screw Google Photos upload!
         self.send(file: video)
         try? FileManager.default.trashItem(at: video, resultingItemURL: nil) // get rid of the temp file
@@ -724,6 +729,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 if locs.count > 0 { // is this a 1v1 convo with a Gmail user?
                     do {
                         let res = try DriveAPI.share(on: c, file: file, with: [locs.first!])
+                        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
                         try! self.conversation?.send(message: PlaceholderMessage(content: .text(res.absoluteString)))
                     } catch(let error) {
                         log.debug("couldn't share file: \(error)")
@@ -736,6 +742,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         // We're in a GVoice convo, or a group convo, so just send a group link.
         do {
             let res = try DriveAPI.share(on: c, file: file, with: [])
+            NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
             try! self.conversation?.send(message: PlaceholderMessage(content: .text(res.absoluteString)))
         } catch(let error) {
             log.debug("couldn't share file: \(error)")
@@ -744,6 +751,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     // LEGACY
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
+        NSSound(data: NSDataAsset(name: NSDataAsset.Name(rawValue: "Sent Message"))!.data)?.play()
         try! conversation.send(message: PlaceholderMessage(content: .text(text)))
     }
     
