@@ -396,30 +396,10 @@ public extension NSWindow {
 
 public extension NSControl {
     
-    /// Mutually exclusive with target/action/handlers.
     @discardableResult
     public func setupForBindings() -> Self {
-        self.target = self
-        self.action = #selector(self.bindingTrampoline(_:))
+        NSControlValueBindingTrampoline(for: self, continuous: true)
         return self
-    }
-    
-    /// Allows triggering of all KVO bindings.
-    public func triggerBindings() {
-        self.bindingTrampoline(self)
-    }
-    
-    @objc private func bindingTrampoline(_ sender: NSControl!) {
-        let keys = ["objectValue", "attributedStringValue", "stringValue", "doubleValue",
-                    "floatValue", "integerValue", "intValue", "boolValue"]
-        for key in keys {
-            sender.willChangeValue(forKey: key)
-            sender.cell?.willChangeValue(forKey: key)
-        }
-        for key in keys {
-            sender.cell?.didChangeValue(forKey: key)
-            sender.didChangeValue(forKey: key)
-        }
     }
     
     @objc public dynamic var boolValue: Bool {
@@ -430,6 +410,47 @@ public extension NSControl {
     @IBAction public func takeBoolValueFrom(_ sender: Any?) {
         guard let sender = sender as? NSControl else { return }
         self.boolValue = sender.boolValue
+    }
+}
+
+/// A trampoline for `NSControl`'s `value` NSBinding into KVO. This is required
+/// if a client of an `NSControl` wishes to observe the user's action, as it
+/// may not (i.e. in the case of `NSTextField`) provide KVO notifications, but,
+/// notifies classic Cocoa Bindings clients.
+private class NSControlValueBindingTrampoline: NSObject {
+    
+    /// The `control` currently bound.
+    private weak var control: NSControl? = nil
+    
+    /// The `value` receipt: this value is never used or modified, but upon the
+    /// triggering of the NSBinding, it is trampolined here through `didSet`.
+    @objc dynamic var value: NSObject? = nil {
+        didSet {
+            let keys = ["objectValue", "attributedStringValue", "stringValue", "doubleValue",
+                        "floatValue", "integerValue", "intValue", "boolValue"]
+            for key in keys {
+                self.control?.willChangeValue(forKey: key)
+                self.control?.cell?.willChangeValue(forKey: key)
+            }
+            for key in keys {
+                self.control?.cell?.didChangeValue(forKey: key)
+                self.control?.didChangeValue(forKey: key)
+            }
+        }
+    }
+    
+    /// Set up the trampoline for the provided `control`. A weak ref is maintained.
+    /// Note: if `continuous` is `true`, the `value` binding updates with each
+    /// user interaction, and not just when the user is done editing the control.
+    /// Note: if no `value` binding is present, the `selectedIndex` binding takes precedence.
+    @discardableResult
+    public required init(for control: NSControl, continuous: Bool = false) {
+        super.init()
+        self.control = control
+        let binding: NSBindingName = control.exposedBindings.contains(.selectedIndex) ? .selectedIndex : .value
+        control.bind(binding, to: self, withKeyPath: "value", options: [
+            .continuouslyUpdatesValue: continuous
+        ])
     }
 }
 
