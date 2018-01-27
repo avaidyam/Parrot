@@ -8,8 +8,8 @@ import protocol ParrotServiceExtension.Conversation
 // A visual representation of a Conversation in a ListView.
 public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     
-    private static var wallclock = Wallclock()
-    private var id = UUID() // for Wallclock
+    private static var wallclock = Wallclock() // global
+    private var timeObserver: Any? = nil
     
     private lazy var photoView: NSImageView = {
         let v = NSImageView().modernize(wantsLayer: true)
@@ -221,11 +221,11 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
 	}
     
     public override func viewDidAppear() {
-        ConversationCell.wallclock.add(target: (self, self.id, self.updateTimestamp))
+        self.timeObserver = ConversationCell.wallclock.observe(self.updateTimestamp)
     }
     
     public override func viewDidDisappear() {
-        ConversationCell.wallclock.remove(target: (self, self.id, self.updateTimestamp))
+        self.timeObserver = nil
     }
     
     public func springLoading(phase: DroppableView.SpringLoadingPhase, for: NSDraggingInfo) {

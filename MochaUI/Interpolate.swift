@@ -22,9 +22,9 @@ open class Interpolate {
         case always
     }
     
-    private static let displayLink = DisplayLink()
+    private static let displayLink = DisplayLink() // global!!
+    fileprivate var fpsObserver: Any? = nil
     
-    fileprivate let id = UUID()
     fileprivate var current: IPValue
     fileprivate let values: [IPValue]
     fileprivate var valuesCount: CGFloat { get { return CGFloat(values.count) } }
@@ -127,9 +127,9 @@ open class Interpolate {
         didSet {
             guard self.animating != oldValue else { return }
             if self.animating {
-                Interpolate.displayLink.add(target: (self, self.id, self.next))
+                self.fpsObserver = Interpolate.displayLink.observe(self.next)
             } else {
-                Interpolate.displayLink.remove(target: (self, self.id, self.next))
+                self.fpsObserver = nil
             }
         }
     }
@@ -205,7 +205,7 @@ open class Interpolate {
     
     // Determine and run all handlers between the previous fractionComplete and the current one.
     private func _executeHandlers(_ old: Double, _ new: Double) {
-        DisplayLink.backgroundQueue.async {
+        Interpolate.backgroundQueue.async {
             // This is required because we check `progress > old` and not `>=`...
             if (old == 0.0) { self.handlers[0.0]?.forEach { $0() } }
             Array(self.handlers.keys).lazy.sorted()
@@ -213,4 +213,6 @@ open class Interpolate {
                 .forEach { self.handlers[$0]?.forEach { $0() } }
         }
     }
+    
+    public static var backgroundQueue: DispatchQueue = DispatchQueue(label: "InterpolateCallbackQueue", qos: .userInteractive)
 }

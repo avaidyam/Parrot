@@ -13,8 +13,9 @@ public class TodayConversationCell: NSTableCellView {
     
     public override var allowsVibrancy: Bool { return true }
     
-    private static var wallclock = Wallclock()
-    private var id = UUID() // for wallclock
+    private static var wallclock = Wallclock() // global
+    private var timeObserver: Any? = nil
+    
     public var isSelected: Bool = false
     
     private lazy var photoView: NSImageView = {
@@ -136,9 +137,9 @@ public class TodayConversationCell: NSTableCellView {
     
     public override func viewDidMoveToSuperview() {
         if let _ = self.superview { // onscreen
-            TodayConversationCell.wallclock.add(target: (self, self.id, self.updateTimestamp))
+            self.timeObserver = TodayConversationCell.wallclock.observe(self.updateTimestamp)
         } else { // offscreen
-            TodayConversationCell.wallclock.remove(target: (self, self.id, self.updateTimestamp))
+            self.timeObserver = nil
         }
     }
 }

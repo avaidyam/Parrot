@@ -141,39 +141,47 @@ public extension DispatchSource {
 }
 
 open class Wallclock {
-    public typealias Target = (target: Any, id: UUID, action: () -> ())
     
-    // The underlying DispatchSourceTimer.
+    /// The underlying DispatchSourceTimer.
     fileprivate var wallclock: DispatchSourceTimer?
     
-    // The targets to fire when the DispatchSourceTimer fires.
-    fileprivate var targets = [UUID: Target]()
+    /// The queue for the display link to call out to observers in.
+    public var queue: DispatchQueue = .main
     
-    public init() {}
-    
-    //
-    open func add(target: Target) {
-        self.targets[target.id] = target
-        if self.wallclock == nil && self.targets.count > 0 {
-            
-            // Create the underlying DispatchSourceTimer.
-            self.wallclock = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
-            self.wallclock?.schedule(wallDeadline: .now() + Date().nearest(.minute).timeIntervalSinceNow, repeating: 60.0, leeway: .seconds(3))
-            self.wallclock?.setEventHandler {
-                self.targets.values.forEach { $0.action() }
+    /// An internal map of all active observers of the display link.
+    private var observers: [Int: () -> ()] = [:] {
+        didSet {
+            if self.wallclock == nil && self.observers.count > 0 { // start
+                
+                // Create the underlying DispatchSourceTimer.
+                self.wallclock = DispatchSource.makeTimerSource(flags: [], queue: self.queue)
+                self.wallclock?.schedule(wallDeadline: .now() + Date().nearest(.minute).timeIntervalSinceNow,
+                                         repeating: 60.0, leeway: .seconds(1))
+                self.wallclock?.setEventHandler {
+                    self.observers.values.forEach { $0() }
+                }
+                
+                self.wallclock?.resume()
+            } else if self.wallclock != nil && self.observers.count == 0 { // stop
+                self.wallclock?.cancel()
+                self.wallclock = nil
             }
-            self.wallclock?.resume()
         }
     }
     
-    //
-    open func remove(target: Target) {
-        self.targets[target.id] = nil
-        if self.wallclock != nil && self.targets.count == 0 {
-            
-            // Destroy the underlying DispatchSourceTimer.
-            self.wallclock?.cancel()
-            self.wallclock = nil
+    /// An id generator for observation tracking.
+    private var idVendor = (Int.min...).makeIterator()
+    
+    public init() {}
+    
+    /// Observe each frame synchronized to the main display with a handler.
+    /// To cancel the observation, call `invalidate()` on the returned object,
+    /// or it will be automatically invalidated on deinit.
+    public func observe(_ handler: @escaping () -> ()) -> Observation {
+        let id = self.idVendor.next()!
+        self.observers[id] = handler
+        return Observation { [weak self, id] in
+            self?.observers[id] = nil
         }
     }
 }
