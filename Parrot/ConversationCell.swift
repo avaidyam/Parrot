@@ -115,7 +115,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
                                                string: "?", backgroundColor: #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1))
                 self.badgeLabel.isHidden = true
             }
-			self.prefix = messageSender != selfSender ? "↙ " : "↗ "
+			self.prefix = conversation.muted ? "◉ " : (messageSender != selfSender ? "↙ " : "↗ ")
 			let subtitle = (conversation.messages.last?.text ?? "")
 			let time = conversation.messages.last?.timestamp ?? .origin
 			
@@ -125,7 +125,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
 			self.textLabel.stringValue = subtitle
 			self.textLabel.toolTip = subtitle
 			self.timeLabel.stringValue = self.prefix + time.relativeString()
-			self.timeLabel.toolTip = time.fullString()
+			self.timeLabel.toolTip = (conversation.muted ? "(muted) " : "") + time.fullString()
             
 			if conversation.unreadCount > 0 && (messageSender != selfSender) {
 				self.timeLabel.textColor = #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1)
