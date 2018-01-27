@@ -59,6 +59,7 @@
 		484E8CA01D37FF2500E1D1D5 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E8C9F1D37FF2500E1D1D5 /* Message.swift */; };
 		48557ED720156D8B009D302F /* NSToolTipManager+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */; };
 		485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485B12EC1F1A904400432A36 /* LocationHelper.swift */; };
+		48675357201C535400284050 /* PersonIndicatorTooltipController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48675356201C535400284050 /* PersonIndicatorTooltipController.swift */; };
 		4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */; };
 		4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9331ED9480C00764594 /* DynamicProperty.swift */; };
 		4869A9381EDB858A00764594 /* DirectoryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9371EDB858A00764594 /* DirectoryListViewController.swift */; };
@@ -463,6 +464,7 @@
 		4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCTransaction.swift; sourceTree = "<group>"; };
 		4859B8211F8480DE00BFF0CE /* XPCConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCConnection.swift; sourceTree = "<group>"; };
 		485B12EC1F1A904400432A36 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
+		48675356201C535400284050 /* PersonIndicatorTooltipController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonIndicatorTooltipController.swift; sourceTree = "<group>"; };
 		4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarItemContainer.swift; sourceTree = "<group>"; };
 		4869A9331ED9480C00764594 /* DynamicProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicProperty.swift; sourceTree = "<group>"; };
 		4869A9371EDB858A00764594 /* DirectoryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryListViewController.swift; sourceTree = "<group>"; };
@@ -826,6 +828,7 @@
 			children = (
 				4869A9371EDB858A00764594 /* DirectoryListViewController.swift */,
 				4869A9D51EE5C78200764594 /* PersonIndicatorViewController.swift */,
+				48675356201C535400284050 /* PersonIndicatorTooltipController.swift */,
 			);
 			name = "Directory List";
 			sourceTree = "<group>";
@@ -1736,6 +1739,7 @@
 				488F1E7F200ED7DF008E0752 /* AVCaptureViewCompanion.swift in Sources */,
 				485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
+				48675357201C535400284050 /* PersonIndicatorTooltipController.swift in Sources */,
 				48212BE91ECCEB7700B7765B /* ConversationSettingsViewController.swift in Sources */,
 				4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */,
 			);

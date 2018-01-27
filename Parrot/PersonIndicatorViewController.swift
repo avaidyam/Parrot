@@ -7,35 +7,9 @@ import ContactsUI
 
 // away vs here == alphaValue of toolbar item
 // typing == hidden value of tooltipcontroller messageprogressview
-// 2 second timer to autohide unless another hover occurs
 
-fileprivate class PersonIndicatorToolTipController: NSViewController {
-    fileprivate static var popover: NSPopover = {
-        let p = NSPopover()
-        p.behavior = .applicationDefined
-        p.contentViewController = PersonIndicatorToolTipController()
-        return p
-    }()
-    
-    public var text: NSTextField!
-    public override func loadView() {
-        self.view = NSView()
-        self.view.wantsLayer = true
-        self.text = NSTextField(labelWithString: "").modernize()
-        self.text.translatesAutoresizingMaskIntoConstraints = false
-        self.text.alignment = .center
-        self.text.font = NSFont.systemFont(ofSize: 11.0, weight: NSFont.Weight.semibold)
-        self.view.addSubview(self.text)
-        
-        self.text.topAnchor == self.view.topAnchor + 4.0
-        self.text.bottomAnchor == self.view.bottomAnchor - 4.0
-        self.text.leftAnchor == self.view.leftAnchor + 4.0
-        self.text.rightAnchor == self.view.rightAnchor - 4.0
-    }
-}
-
+/// TODO: this class isn't very composable yet...
 public class PersonIndicatorViewController: NSViewController {
-    
     public static let contactStore = CNContactStore()
     
     public lazy var toolbarItem: NSToolbarItem = {

@@ -205,9 +205,19 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
 	public override func viewDidLayout() {
         self.photoView.clipPath = NSBezierPath(ovalIn: self.photoView.bounds)
         //let p = self.photoView//, b = self.badgeLayer
-        //b.frame = NSRect(x: p.frame.minX, y: p.frame.midY, width: p.frame.width / 2, height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
+        //b.frame = NSRect(x: p.frame.minX, y: p.frame.midY, width: p.frame.width / 2,
+        //                    height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
         //p.layer!.cornerRadius = p.frame.width / 2.0
         //b.cornerRadius = b.frame.width / 2.0
+        
+        self.view.trackingAreas.forEach {
+            self.view.removeTrackingArea($0)
+        }
+        
+        let trackingArea = NSTrackingArea(rect: self.photoView.frame,
+                                          options: [.activeAlways, .mouseEnteredAndExited],
+                                          owner: self, userInfo: nil)
+        self.view.addTrackingArea(trackingArea)
 	}
     
     public override func viewDidAppear() {
@@ -221,5 +231,44 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     public func springLoading(phase: DroppableView.SpringLoadingPhase, for: NSDraggingInfo) {
         guard case .activated = phase else { return }
         NSAlert(message: "Sending document...").beginPopover(for: self.view, on: .minY)
+    }
+    
+    public override func mouseEntered(with event: NSEvent) {
+        guard let conversation = self.representedObject as? Conversation else { return }
+        if conversation.participants.count > 2 { // group!
+            guard let vc = GroupIndicatorToolTipController.popover.contentViewController
+                as? GroupIndicatorToolTipController else { return }
+            
+            vc.images = conversation.participants.filter { !$0.me }.map { $0.image }
+            GroupIndicatorToolTipController.popover.show(relativeTo: self.photoView.bounds,
+                                                         of: self.photoView, preferredEdge: .minY)
+        } else {
+            guard   let vc = PersonIndicatorToolTipController.popover.contentViewController
+                             as? PersonIndicatorToolTipController,
+                    let firstParticipant = (conversation.participants.filter { !$0.me }.first)
+            else { return }
+            
+            var prefix = ""
+            switch firstParticipant.reachability {
+            case .unavailable: break
+            case .phone: prefix = "📱  "
+            case .tablet: prefix = "📱  " //💻
+            case .desktop: prefix = "🖥  "
+            }
+            
+            _ = vc.view // loadView()
+            vc.text?.stringValue = prefix + firstParticipant.fullName
+            PersonIndicatorToolTipController.popover.show(relativeTo: self.photoView.bounds,
+                                                          of: self.photoView, preferredEdge: .minY)
+        }
+    }
+    
+    public override func mouseExited(with event: NSEvent) {
+        guard let conversation = self.representedObject as? Conversation else { return }
+        if conversation.participants.count > 2 { // group!
+            GroupIndicatorToolTipController.popover.performClose(nil)
+        } else {
+            PersonIndicatorToolTipController.popover.performClose(nil)
+        }
     }
 }
