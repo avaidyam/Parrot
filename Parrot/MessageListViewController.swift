@@ -283,27 +283,20 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public override func loadView() {
         self.view = NSVisualEffectView()
         self.view.add(subviews: self.scrollView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone)
-        
-        self.view.widthAnchor >= 96
-        self.view.heightAnchor >= 128
-        self.view.centerXAnchor == self.indicator.centerXAnchor
-        self.view.centerYAnchor == self.indicator.centerYAnchor
-        self.view.centerXAnchor == self.scrollView.centerXAnchor
-        self.view.centerYAnchor == self.scrollView.centerYAnchor
-        self.view.widthAnchor == self.scrollView.widthAnchor
-        self.view.heightAnchor == self.scrollView.heightAnchor
-        self.moduleView.leftAnchor == self.view.leftAnchor
-        self.moduleView.rightAnchor == self.view.rightAnchor
-        self.moduleView.bottomAnchor == self.view.bottomAnchor
-        self.moduleView.heightAnchor <= 250
-        self.textInputCell.view.leftAnchor == self.moduleView.leftAnchor
-        self.textInputCell.view.rightAnchor == self.moduleView.rightAnchor
-        self.textInputCell.view.topAnchor == self.moduleView.topAnchor
-        self.textInputCell.view.bottomAnchor == self.moduleView.bottomAnchor
-        self.dropZone.leftAnchor == self.view.leftAnchor
-        self.dropZone.rightAnchor == self.view.rightAnchor
-        self.dropZone.bottomAnchor == self.moduleView.topAnchor
-        self.dropZone.topAnchor == self.view.topAnchor + 36 /* toolbar */
+        batch {
+            self.view.sizeAnchors >= CGSize(width: 96, height: 128)
+            self.view.centerAnchors == self.indicator.centerAnchors
+            self.view.edgeAnchors == self.scrollView.edgeAnchors
+            
+            self.view.horizontalAnchors == self.moduleView.horizontalAnchors
+            self.textInputCell.view.edgeAnchors == self.moduleView.edgeAnchors
+            self.moduleView.bottomAnchor == self.view.bottomAnchor
+            self.moduleView.heightAnchor <= 250
+            
+            self.view.horizontalAnchors == self.dropZone.horizontalAnchors
+            self.dropZone.bottomAnchor == self.moduleView.topAnchor
+            self.dropZone.topAnchor == self.view.topAnchor + 36 /* toolbar */
+        }
     }
     
     public func prepare(window: NSWindow) {

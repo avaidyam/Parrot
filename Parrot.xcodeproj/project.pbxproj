@@ -162,6 +162,7 @@
 		48ED2BE01F0BD4B9001A547F /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */; };
 		48EF2AB720181DC1007086A9 /* NSMonogramImageRep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* NSMonogramImageRep.swift */; };
 		48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
+		48F301BE201C476B006D3261 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F301BD201C476B006D3261 /* Observable.swift */; };
 		48F7E8081F108FE20059E5CD /* PBLiteEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7E8071F108FE20059E5CD /* PBLiteEncoder.swift */; };
 		48F7E80A1F1099B70059E5CD /* ServiceEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */; };
 		48FB444D1DBF5288004BE55A /* termbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FB444B1DBF5288004BE55A /* termbox.c */; };
@@ -561,6 +562,7 @@
 		48EC1BF11F217D7A000C40C1 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
 		48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftSupport.swift; sourceTree = "<group>"; };
 		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
+		48F301BD201C476B006D3261 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		48F7E8071F108FE20059E5CD /* PBLiteEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBLiteEncoder.swift; sourceTree = "<group>"; };
 		48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEndpoint.swift; sourceTree = "<group>"; };
 		48FB44451DBF4FF1004BE55A /* libtermbox.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtermbox.1.0.0.dylib; path = "../../../Desktop/termbox-master/usr/local/lib/libtermbox.1.0.0.dylib"; sourceTree = "<group>"; };
@@ -1053,10 +1055,9 @@
 				48574F121D11F9FC002375E1 /* AppRelease.swift */,
 				4812A7AF1F51F76500B0B738 /* GoogleAnalytics.swift */,
 				48D4C9FD1DBD5F2F001CF7AD /* Subscription.swift */,
-				4848A5BE1EFF1BED008B2DE2 /* Binding.swift */,
-				4826D3871F03B853000FE44F /* Transformer.swift */,
 				48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */,
 				486E7DED1DA8556300C1953B /* Promise.swift */,
+				48F301BF201C4849006D3261 /* Bindings */,
 				48D3CD071DE944B7003D6C02 /* Supporting Files */,
 			);
 			path = Mocha;
@@ -1176,6 +1177,16 @@
 				48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */,
 			);
 			name = SystemBezel;
+			sourceTree = "<group>";
+		};
+		48F301BF201C4849006D3261 /* Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				48F301BD201C476B006D3261 /* Observable.swift */,
+				4848A5BE1EFF1BED008B2DE2 /* Binding.swift */,
+				4826D3871F03B853000FE44F /* Transformer.swift */,
+			);
+			name = Bindings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1769,6 +1780,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D3CD051DE944A6003D6C02 /* FoundationSupport.swift in Sources */,
+				48F301BE201C476B006D3261 /* Observable.swift in Sources */,
 				4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */,
 				4826D3881F03B853000FE44F /* Transformer.swift in Sources */,
 				48D3CD221DE94C9C003D6C02 /* KeyValueStore.swift in Sources */,

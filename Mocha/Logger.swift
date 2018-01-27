@@ -8,6 +8,9 @@ public final class Logger {
 	public typealias Subsystem = String
 	public typealias Message = String //`Any...` ?
     
+    /// The serial queue to queue all logging on.
+    fileprivate static let queue = DispatchQueue(label: "com.avaidyam.Mocha.Logger", qos: .utility)
+    
     /// A FileRef describes the spatial code location where the trace was caused.
     public struct FileRef: Codable, CustomStringConvertible {
         public let file: String
@@ -119,17 +122,21 @@ public final class Logger {
                       _ file: String = #file, _ line: Int = #line, _ function: String = #function)
     {
 		guard self.severity >= severity else { return }
-        let ref = FileRef(file, line, function)
-		(self.channels + Logger.globalChannels).forEach {
-            $0.operation(LogUnit(ref, self.subsystem, severity, message()))
+        let ref = FileRef(file, line, function), message = message()
+        Logger.queue.async {
+            (self.channels + Logger.globalChannels).forEach {
+                $0.operation(LogUnit(ref, self.subsystem, severity, message))
+            }
         }
 	}
     
-    public func backtrace(severity: Severity) {
+    public func backtrace(_ severity: Severity) {
         guard self.severity >= severity else { return }
         let cs = Thread.callStackSymbols.dropFirst().joined(separator: "\n")
-        (self.channels + Logger.globalChannels).forEach {
-            $0.operation(LogUnit(FileRef(backtrace: true), self.subsystem, severity, cs))
+        Logger.queue.async {
+            (self.channels + Logger.globalChannels).forEach {
+                $0.operation(LogUnit(FileRef(backtrace: true), self.subsystem, severity, cs))
+            }
         }
     }
 }

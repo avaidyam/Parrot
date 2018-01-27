@@ -5,7 +5,6 @@ import MochaUI
 import ParrotServiceExtension
 
 /* TODO: Show DND icon in Cell when conversation is muted. */
-/* TODO: Support not sending Read Receipts. */
 
 // Plan for this class:
 //
@@ -127,15 +126,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public override func loadView() {
         self.view = NSVisualEffectView()
         self.view.add(subviews: self.scrollView, self.indicator)
-        
-        self.view.widthAnchor >= 128
-        self.view.heightAnchor >= 128
-        self.view.centerXAnchor == self.indicator.centerXAnchor
-        self.view.centerYAnchor == self.indicator.centerYAnchor
-        self.view.centerXAnchor == self.scrollView.centerXAnchor
-        self.view.centerYAnchor == self.scrollView.centerYAnchor
-        self.view.widthAnchor == self.scrollView.widthAnchor
-        self.view.heightAnchor == self.scrollView.heightAnchor
+        batch {
+            self.view.sizeAnchors >= CGSize(width: 128, height: 128)
+            self.view.centerAnchors == self.indicator.centerAnchors
+            self.view.edgeAnchors == self.scrollView.edgeAnchors
+        }
         
         // Register for Conversation "delegate" changes.
         let c = NotificationCenter.default
