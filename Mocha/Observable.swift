@@ -28,7 +28,8 @@ public final class Observable<A> {
     }
     
     ///
-    internal init(get: @escaping () -> A, set: @escaping (A) -> (), observe: @escaping (@escaping Observer) -> Observation) {
+    internal init(get: @escaping () -> A, set: @escaping (A) -> (), 
+                  observe: @escaping (@escaping Observer) -> Observation) {
         self._get = get
         self._set = set
         self._observe = observe

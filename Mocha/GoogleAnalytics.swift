@@ -1,8 +1,7 @@
 import AppKit
 import Foundation
 
-/// parts from @ksmandersen: https://github.com/ksmandersen/GoogleReporter/blob/swift-4/GoogleReporter.swift
-
+/// portions from @ksmandersen: https://github.com/ksmandersen/GoogleReporter/blob/swift-4/GoogleReporter.swift
 public struct AppProperties {
     private init() {}
     

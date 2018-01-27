@@ -1,6 +1,6 @@
 import Cocoa
 
-public class ViewAttachmentCell : NSTextAttachmentCell {
+public class ViewAttachmentCell: NSTextAttachmentCell {
     
     /// The view to be embed in the NSTextView this attachment is contained within.
     public private(set) var view: NSView

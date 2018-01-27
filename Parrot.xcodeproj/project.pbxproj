@@ -141,7 +141,6 @@
 		48D3CD221DE94C9C003D6C02 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */; };
 		48D3CD421DEAF238003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		48D3CD431DEAF23A003D6C02 /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
-		48D4CA011DBE657D001CF7AD /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D4C9FD1DBD5F2F001CF7AD /* Subscription.swift */; };
 		48D7EE181F14587C005C7E16 /* ProtobufRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */; };
 		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
 		48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -1054,7 +1053,6 @@
 				4835ECB61C1C672900193EBC /* Emoji.swift */,
 				48574F121D11F9FC002375E1 /* AppRelease.swift */,
 				4812A7AF1F51F76500B0B738 /* GoogleAnalytics.swift */,
-				48D4C9FD1DBD5F2F001CF7AD /* Subscription.swift */,
 				48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */,
 				486E7DED1DA8556300C1953B /* Promise.swift */,
 				48F301BF201C4849006D3261 /* Bindings */,
@@ -1185,6 +1183,7 @@
 				48F301BD201C476B006D3261 /* Observable.swift */,
 				4848A5BE1EFF1BED008B2DE2 /* Binding.swift */,
 				4826D3871F03B853000FE44F /* Transformer.swift */,
+				48D4C9FD1DBD5F2F001CF7AD /* Subscription.swift */,
 			);
 			name = Bindings;
 			sourceTree = "<group>";
@@ -1839,7 +1838,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48D4CA011DBE657D001CF7AD /* Subscription.swift in Sources */,
 				48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
