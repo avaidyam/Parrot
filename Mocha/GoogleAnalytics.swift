@@ -1,6 +1,8 @@
 import AppKit
 import Foundation
 
+/* TODO: In the future, more Analytics providers may be supported. */
+
 /// portions from @ksmandersen: https://github.com/ksmandersen/GoogleReporter/blob/swift-4/GoogleReporter.swift
 public struct AppProperties {
     private init() {}
@@ -67,13 +69,11 @@ public struct GoogleAnalytics {
     
     public struct Screen: RawRepresentable, Equatable, Hashable {
         public let rawValue: String
-        public init(_ rawValue: String) { self.rawValue = rawValue }
         public init(rawValue: String) { self.rawValue = rawValue }
     }
     
     public struct Category: RawRepresentable, Equatable, Hashable {
         public let rawValue: String
-        public init(_ rawValue: String) { self.rawValue = rawValue }
         public init(rawValue: String) { self.rawValue = rawValue }
     }
     
@@ -167,15 +167,18 @@ public struct GoogleAnalytics {
         }
 
         let path = arguments.merging(parameters){$1}.map {
-            "\($0)=\($1.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)!)"
+            "\($0)=\($1.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)"
         }.joined(separator: "&")
         
         let baseURL = URL(string: "https://www.google-analytics.com/")!
         guard let url = URL(string: "collect?" + path, relativeTo: baseURL) else { return }
         
-        let res = URLSession.shared.synchronousRequest(url)
-        if let err = res.2?.localizedDescription {
-            print("Failed to deliver GA Request: ", err)
-        }
+        URLSession.shared.dataTask(with: url) { _, _, err in
+            if err != nil {
+                print("Failed to submit analytics event [\(err!)]: ", err!.localizedDescription)
+            }
+        }.resume()
     }
 }
+
+public typealias Analytics = GoogleAnalytics

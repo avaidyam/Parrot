@@ -164,6 +164,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 self.collectionView.reloadData()
             }
         }
+        GoogleAnalytics.view(screen: .conversation)
     }
     
     public override func viewWillAppear() {

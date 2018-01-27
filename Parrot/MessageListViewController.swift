@@ -316,7 +316,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public override func viewDidLoad() {
         self.indicator.startAnimation(nil)
         self.scrollView.alphaValue = 0.0
-        GoogleAnalytics.view(screen: GoogleAnalytics.Screen("\(type(of: self))"))
+        GoogleAnalytics.view(screen: .conversation)
     }
     
     public override func viewWillAppear() {

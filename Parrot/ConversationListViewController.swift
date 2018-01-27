@@ -190,6 +190,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             let unread = self.dataSource.map { $0.unreadCount }.reduce(0, +)
             NSApp.badgeCount = UInt(unread)
         }
+        GoogleAnalytics.view(screen: .conversationList)
     }
     
     public override func viewWillAppear() {

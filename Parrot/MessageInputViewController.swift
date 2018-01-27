@@ -167,11 +167,6 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         }
     }
     
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        GoogleAnalytics.view(screen: GoogleAnalytics.Screen("\(type(of: self))"))
-    }
-    
     // Set up dark/light notifications.
     public override func viewDidAppear() {
         super.viewDidAppear()

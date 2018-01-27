@@ -230,6 +230,7 @@ public class ParrotAppController: NSApplicationController {
     
     @IBAction func showPreferences(_ sender: Any?) {
         self.preferencesController.presentAsWindow()
+        GoogleAnalytics.view(screen: .preferences)
     }
     
     @IBAction func showConversations(_ sender: Any?) {

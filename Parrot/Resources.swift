@@ -1,4 +1,5 @@
 import Cocoa
+import Mocha
 
 /* TODO: Generate portions of this file from Xcode Assets. */
 
@@ -14,7 +15,7 @@ public extension NSColor/*.Name*/ {
 
 // Fonts
 public extension NSFont/*.Name*/ {
-    
+    //".SFCompactRounded-Medium"
 }
 
 // Images
@@ -73,4 +74,17 @@ public extension NSUserInterfaceItemIdentifier {
 public extension NSToolbarItem.Identifier {
     public static let add = NSToolbarItem.Identifier(rawValue: "add")
     public static let search = NSToolbarItem.Identifier(rawValue: "search")
+}
+
+// Screens
+public extension Analytics.Screen {
+    public static let conversation = Analytics.Screen(rawValue: "ConversationScreen")
+    public static let conversationList = Analytics.Screen(rawValue: "ConversationListScreen")
+    public static let directory = Analytics.Screen(rawValue: "DirectoryScreen")
+    public static let preferences = Analytics.Screen(rawValue: "PreferencesScreen")
+}
+
+// Categories
+public extension Analytics.Category {
+    public static let misc = Analytics.Category(rawValue: "PreferencesScreen")
 }
