@@ -86,5 +86,5 @@ public extension Analytics.Screen {
 
 // Categories
 public extension Analytics.Category {
-    public static let misc = Analytics.Category(rawValue: "PreferencesScreen")
+    public static let misc = Analytics.Category(rawValue: "Misc")
 }

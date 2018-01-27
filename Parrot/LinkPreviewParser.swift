@@ -45,8 +45,6 @@ public enum LinkPreviewType {
 	case link(LinkMeta)
 	/// Special: long text messages
 	case summary(String)
-	/// Special: heartbeat bpm
-	case heartbeat(UInt)
 }
 
 public struct LinkPreviewParser {

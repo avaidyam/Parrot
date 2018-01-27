@@ -1,7 +1,77 @@
 import Foundation
 import Dispatch
 
-/* TODO: Return a subscription object instead here. */
+/* TODO: Return a subscription object for Wallclock. */
+
+/// from @jack205: https://gist.github.com/jacks205/4a77fb1703632eb9ae79
+public extension Date {
+    public func relativeString(numeric: Bool = false, seconds: Bool = false) -> String {
+        
+        let date = self, now = Date()
+        let calendar = Calendar.current
+        let earliest = (now as NSDate).earlierDate(date) as Date
+        let latest = (earliest == now) ? date : now
+        let units = Set<Calendar.Component>([.second, .minute, .hour, .day, .weekOfYear, .month, .year])
+        let components = calendar.dateComponents(units, from: earliest, to: latest)
+        
+        if components.year ?? -1 > 45 {
+            return "a while ago"
+        } else if (components.year ?? -1 >= 2) {
+            return "\(components.year!) years ago"
+        } else if (components.year ?? -1 >= 1) {
+            return numeric ? "1 year ago" : "last year"
+        } else if (components.month ?? -1 >= 2) {
+            return "\(components.month!) months ago"
+        } else if (components.month ?? -1 >= 1) {
+            return numeric ? "1 month ago" : "last month"
+        } else if (components.weekOfYear ?? -1 >= 2) {
+            return "\(components.weekOfYear!) weeks ago"
+        } else if (components.weekOfYear ?? -1 >= 1) {
+            return numeric ? "1 week ago" : "last week"
+        } else if (components.day ?? -1 >= 2) {
+            return "\(components.day!) days ago"
+        } else if (components.day ?? -1 >= 1) {
+            return numeric ? "1 day ago" : "a day ago"
+        } else if (components.hour ?? -1 >= 2) {
+            return "\(components.hour!) hours ago"
+        } else if (components.hour ?? -1 >= 1){
+            return numeric ? "1 hour ago" : "an hour ago"
+        } else if (components.minute ?? -1 >= 2) {
+            return "\(components.minute!) minutes ago"
+        } else if (components.minute ?? -1 >= 1) {
+            return numeric ? "1 minute ago" : "a minute ago"
+        } else if (components.second ?? -1 >= 3 && seconds) {
+            return "\(components.second!) seconds ago"
+        } else {
+            return "just now"
+        }
+    }
+    
+    private static var fullFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        formatter.timeStyle = .long
+        return formatter
+    }()
+    
+    private static var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
+    
+    public func fullString(_ includeTime: Bool = true) -> String {
+        return (includeTime ? Date.fullFormatter : Date.dateFormatter).string(from: self)
+    }
+    
+    public func nearest(_ component: Calendar.Component) -> Date {
+        let c = Calendar.current
+        var next = c.dateComponents(Set<Calendar.Component>([component]), from: self)
+        next.setValue((next.value(for: component) ?? -1) + 1, for: component)
+        return c.nextDate(after: self, matching: next, matchingPolicy: .strict) ?? self
+    }
+}
 
 public extension Int {
     public var hours: DispatchTimeInterval {
