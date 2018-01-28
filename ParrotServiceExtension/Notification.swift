@@ -19,7 +19,6 @@ public extension Notification {
         public static let DidChangeMute = NSNotification.Name(rawValue: "Parrot.Conversation.DidChangeMute")
         
         public static let DidChangeFocus = NSNotification.Name(rawValue: "Parrot.Conversation.DidChangeFocus")
-        public static let DidChangeTypingStatus = NSNotification.Name(rawValue: "Parrot.Conversation.DidChangeTypingStatus")
         public static let DidReceiveWatermark = NSNotification.Name(rawValue: "Parrot.Conversation.DidReceiveWatermark")
         
         public static let DidReceiveEvent = NSNotification.Name(rawValue: "Parrot.Conversation.DidReceiveEvent")

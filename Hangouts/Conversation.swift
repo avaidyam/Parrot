@@ -309,12 +309,27 @@ public class IConversation: ParrotServiceExtension.Conversation {
          }*/
     }
     
+    // note: a GVoice user is always considered "here"
+    public func handleFocus(status: Bool, forUser user: User) {
+        let existingFocus = focuses[user.id]
+        if existingFocus == nil || existingFocus! != status {
+            focuses[user.id] = status
+            let fused = FocusMode(typingStatus: typingStatuses[user.id] ?? .Stopped,
+                                  focus: focuses[user.id] ?? self.conversation.network_type.contains(.Phone))
+            NotificationCenter.default.post(name: Notification.Conversation.DidChangeFocus,
+                                            object: self, userInfo: ["user": user, "status": fused])
+        }
+    }
+    
+    // note: a GVoice user is always considered "here"
     public func handleTypingStatus(status: TypingType, forUser user: User) {
         let existingTypingStatus = typingStatuses[user.id]
         if existingTypingStatus == nil || existingTypingStatus! != status {
             typingStatuses[user.id] = status
-            NotificationCenter.default.post(name: Notification.Conversation.DidChangeTypingStatus,
-                                            object: self, userInfo: ["user": user, "status": status])
+            let fused = FocusMode(typingStatus: typingStatuses[user.id] ?? .Stopped,
+                                  focus: focuses[user.id] ?? self.conversation.network_type.contains(.Phone))
+            NotificationCenter.default.post(name: Notification.Conversation.DidChangeFocus,
+                                            object: self, userInfo: ["user": user, "status": fused])
         }
     }
     
@@ -556,9 +571,11 @@ extension ConversationList {
             
         } else if let note = update.focus_notification {
             if let conv = self.conv_dict[note.conversation_id!.id!] {
-                let userid = User.ID(chatID: note.sender_id!.chat_id!, gaiaID: note.sender_id!.gaia_id!)
-                conv.focuses[userid] = note.type! == .Focused
-                NotificationCenter.default.post(name: Notification.Conversation.DidChangeFocus, object: conv)
+                let user = self.client.userList[User.ID(
+                    chatID: note.sender_id!.chat_id!,
+                    gaiaID: note.sender_id!.gaia_id!
+                )]
+                conv.handleFocus(status: note.type! == .Focused, forUser: user)
             } else {
                 log.info("Received SetFocusNotification for unknown conversation \(note.conversation_id!.id!)")
             }
@@ -594,3 +611,29 @@ extension ConversationList {
     }
 }
 
+fileprivate extension FocusMode {
+    
+    init(typingStatus type: TypingType, focus: Bool) {
+        if type == .Started {
+            self = .typing
+        } else if type == .Paused {
+            self = .enteredText
+        } else if focus {
+            self = .here
+        } else {
+            self = .away // DNE
+        }
+    }
+    
+    var components: (TypingType, Bool) {
+        if self == .typing {
+            return (.Started, true)
+        } else if self == .enteredText {
+            return (.Paused, true)
+        } else if self == .here {
+            return (.Stopped, true)
+        } else { // if self == .away
+            return (.Stopped, false)
+        }
+    }
+}

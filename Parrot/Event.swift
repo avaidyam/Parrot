@@ -1,5 +1,5 @@
 import MochaUI
-import Hangouts // TODO: REMOVE
+import ParrotServiceExtension
 
 public struct Event {
     public let identifier: String
@@ -149,28 +149,26 @@ public extension ParrotAppController {
                 
             }, AutoSubscription(kind: Notification.Conversation.DidChangeFocus) { _ in
                 
-            }, AutoSubscription(kind: Notification.Conversation.DidChangeTypingStatus) { _ in
-                
             }, AutoSubscription(kind: Notification.Conversation.DidReceiveWatermark) { _ in
                 
             }, AutoSubscription(kind: Notification.Conversation.DidReceiveEvent) { e in
-                let c = ServiceRegistry.services.first!.value as! Client
-                guard let event = e.userInfo?["event"] as? IChatMessageEvent else { return }
+                let c = ServiceRegistry.services.first!.value
+                guard let event = e.userInfo?["event"] as? Message, let conv = e.object as? Conversation else { return }
                 
                 var showNote = true
-                if let m = MessageListViewController.openConversations[event.conversation_id] {
+                if let m = MessageListViewController.openConversations[conv.identifier] {
                     showNote = !(m.view.window?.isKeyWindow ?? false)
                 }
                 
-                if let user = c.userList.people[event.userID.gaiaID], !user.me && showNote {
-                    if event.text.contains(c.userList.me.firstName) || event.text.contains(c.userList.me.fullName) {
-                        let event2 = Event(identifier: event.conversation_id, contents: user.firstName,
+                if let user = event.sender, !user.me && showNote {
+                    if event.text.contains(c.directory.me.firstName) || event.text.contains(c.directory.me.fullName) {
+                        let event2 = Event(identifier: conv.identifier, contents: user.firstName,
                                            description: "Mentioned you", image: user.image, sound: nil, script: nil)
                         let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
                         actions.forEach { $0.perform(with: event2) }
                         
                     } else { // not a mention
-                        let event2 = Event(identifier: event.conversation_id, contents: user.firstName,
+                        let event2 = Event(identifier: conv.identifier, contents: user.firstName,
                                            description: event.text, image: user.image, sound: nil, script: nil)
                         let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
                         actions.forEach { $0.perform(with: event2) }
@@ -178,14 +176,14 @@ public extension ParrotAppController {
                 }
                 
             }, AutoSubscription(kind: NSUserNotification.didActivateNotification) {
-                let c = ServiceRegistry.services.first!.value as! Client
+                let c = ServiceRegistry.services.first!.value
                 guard   let notification = $0.object as? NSUserNotification,
-                        var conv = c.conversationList?.conversations[notification.identifier ?? ""]
+                        var conv = c.conversations.conversations[notification.identifier ?? ""]
                 else { return }
                 
                 switch notification.activationType {
                 case .contentsClicked:
-                    MessageListViewController.show(conversation: conv as! IConversation, parent: self.conversationsController)
+                    MessageListViewController.show(conversation: conv, parent: self.conversationsController)
                 case .actionButtonClicked:
                     conv.muted = true
                 case .replied where notification.response?.string != nil:

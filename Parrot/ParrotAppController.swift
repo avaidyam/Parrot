@@ -1,6 +1,6 @@
 import MochaUI
 import WebKit
-import Hangouts
+import Hangouts // required for Client.init(configuration:)
 import XPCTransport
 import ParrotServiceExtension
 
@@ -115,19 +115,19 @@ public class ParrotAppController: NSApplicationController {
         // Show main window.
         DispatchQueue.main.async {
             self.mainController.presentAsWindow()
-            let c = ServiceRegistry.services.first!.value as! Client
+            let c = ServiceRegistry.services.first!.value
             
             // FIXME: If an old opened conversation isn't in the recents, it won't open!
             if self._prefersShoeboxAppStyle { // only open one recent conv
-                if let id = Settings.openConversations.first, let conv = c.conversationList?.conversations[id] {
-                    MessageListViewController.show(conversation: conv as! IConversation,
-                                                   parent: self.conversationsController.parent)
+                if let id = Settings.openConversations.first, let conv = c.conversations.conversations[id] {
+                    MessageListViewController.show(conversation: conv,
+                                    parent: self.conversationsController.parent)
                 }
             } else {
                 Settings.openConversations
-                    .flatMap { c.conversationList?.conversations[$0] }
-                    .forEach { MessageListViewController.show(conversation: $0 as! IConversation,
-                                                              parent: self.conversationsController.parent) }
+                    .flatMap { c.conversations.conversations[$0] }
+                    .forEach { MessageListViewController.show(conversation: $0,
+                                     parent: self.conversationsController.parent) }
             }
         }
         

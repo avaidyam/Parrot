@@ -1,7 +1,8 @@
 import MochaUI
 import AVFoundation
-import Hangouts // FIXME ASAP!!!
 import ParrotServiceExtension
+import Hangouts // Required for [IConversation.client, .getEvents(...), .update(readTimestamp:)]
+import struct Hangouts.DriveAPI // FIXME this should be internal?
 
 /* TODO: Re-enable link previews later when they're not terrible... */
 /* TODO: Use the PlaceholderMessage for sending messages. */
@@ -85,7 +86,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             log.debug("Conversation NOT found for id \(conv.identifier)")
             UI {
                 let wc = MessageListViewController()
-                wc.conversation = (conv as! IConversation)
+                wc.conversation = conv
                 MessageListViewController.openConversations[conv.identifier] = wc
                 if let p = parent {
                     p.addChildViewController(wc)
@@ -245,7 +246,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     /// The currently active user's image or monogram.
     public var image: NSImage? {
-        if let me = self.conversation?.client.userList.me {
+        if let me = (self.conversation as? IConversation)?.client.userList.me {
             return (me as! User).image
         }
         return nil
@@ -433,7 +434,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.view.window?.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: id))
     }
     
-	var conversation: IConversation? {
+	var conversation: ParrotServiceExtension.Conversation? {
         didSet {
             NotificationCenter.default.removeObserver(self)
             
@@ -448,12 +449,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                           name: Notification.Conversation.DidReceiveEvent, object: self.conversation!)
             c.addObserver(self, selector: #selector(self.conversationDidReceiveWatermark(_:)),
                           name: Notification.Conversation.DidReceiveWatermark, object: self.conversation!)
-            c.addObserver(self, selector: #selector(self.conversationDidChangeTypingStatus(_:)),
-                          name: Notification.Conversation.DidChangeTypingStatus, object: self.conversation!)
             c.addObserver(self, selector: #selector(self.conversationDidChangeFocus(_:)),
                           name: Notification.Conversation.DidChangeFocus, object: self.conversation!)
 			
-			self.conversation?.getEvents(event_id: nil, max_events: 50) { events in
+			(self.conversation as? IConversation)?.getEvents(event_id: nil, max_events: 50) { events in
 				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
 					self.dataSource.insert(chat)
                     
@@ -497,7 +496,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     @objc public func conversationDidReceiveEvent(_ notification: Notification) {
-        guard let event = notification.userInfo?["event"] as? IChatMessageEvent else { return }
+        guard let event = notification.userInfo?["event"] as? Message else { return }
         
         self.dataSource.insert(event)
         UI {
@@ -516,26 +515,33 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }
     
-    @objc public func conversationDidChangeTypingStatus(_ notification: Notification) {
-        guard let status = notification.userInfo?["status"] as? ITypingStatusMessage else { return }
-        guard let forUser = notification.userInfo?["user"] as? User else { return }
-        
-        var mode = FocusMode.here
-        switch status.status {
-        case TypingType.Started:
-            mode = .typing
-        case TypingType.Paused:
-            mode = .enteredText
-        case TypingType.Stopped: fallthrough
-        default: // TypingType.Unknown:
-            mode = .here
-        }
-        self.focusModeChanged(mode, forUser)
-    }
-    
     @objc public func conversationDidChangeFocus(_ notification: Notification) {
+        guard let mode = notification.userInfo?["status"] as? FocusMode else { return }
+        guard let user = notification.userInfo?["user"] as? Person else { return }
+        
+        // First reset all the focus indicators.
         for (u, f) in self.conversation!.focus {
             self._usersToIndicators[u]?.isDimmed = f == .away
+        }
+        guard !user.me else { return }
+        
+        // handle other-user typing cases:
+        UI {
+            switch mode {
+            case .typing: fallthrough
+            case .enteredText:
+                log.debug("typing start")
+                guard !self.showingFocus else { return }
+                self.showingFocus = true
+                //self.listView.insert(at: [(section: 1, item: 0)])
+            //self.listView.scroll(toRow: self.dataSource.count)
+            case .here: fallthrough
+            case .away:
+                log.debug("typing stop")
+                guard self.showingFocus else { return }
+                self.showingFocus = false
+                //self.listView.remove(at: [(section: 1, item: 0)])
+            }
         }
     }
     
@@ -571,27 +577,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }*/
     
-    public func focusModeChanged(_ focus: FocusMode, _ user: User) {
-        guard !user.me else { return }
-        UI {
-            switch focus {
-            case .typing: fallthrough
-            case .enteredText:
-                log.debug("typing start")
-                guard !self.showingFocus else { return }
-                self.showingFocus = true
-                //self.listView.insert(at: [(section: 1, item: 0)])
-                //self.listView.scroll(toRow: self.dataSource.count)
-            case .here: fallthrough
-            case .away:
-                log.debug("typing stop")
-                guard self.showingFocus else { return }
-                self.showingFocus = false
-                //self.listView.remove(at: [(section: 1, item: 0)])
-            }
-        }
-    }
-    
 	@IBAction public func toggleMute(_ sender: AnyObject?) {
 		guard let button = sender as? NSButton else { return }
 		
@@ -606,7 +591,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 		button.title = altT
 		
 		// Mute or unmute the conversation.
-		let cv = self.conversation!
+		var cv = self.conversation! // don't cause didSet to fire!
         cv.muted = (button.state == .on)
 	}
 	
@@ -622,7 +607,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             if let window = self.view.window, window.isKeyWindow {
                 self.focusComponents.1 = true // set it here too just in case.
             }
-			self.conversation?.update(readTimestamp: nil)
+			(self.conversation as? IConversation)?.update(readTimestamp: nil)
         }
     }
     
@@ -643,10 +628,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     private func scrollback() {
         guard self.updateToken == false else { return }
-        let first = self.dataSource[0] as! IChatMessageEvent
-        self.conversation?.getEvents(event_id: first.event.event_id, max_events: 50) { events in
+        let first = self.dataSource[0]
+        (self.conversation as? IConversation)?.getEvents(event_id: first.identifier, max_events: 50) { events in
             let count = self.dataSource.count
-            self.dataSource.insert(contentsOf: events.flatMap { $0 as? IChatMessageEvent })
+            self.dataSource.insert(contentsOf: events.flatMap { $0 as? Message })
             UI {
                 let idxs = (0..<(self.dataSource.count - count)).map {
                     IndexPath(item: $0, section: 0)
@@ -707,7 +692,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func send(file: URL) {
-        guard let c = self.conversation?.client.channel else { return }
+        guard let c = (self.conversation as? IConversation)?.client.channel else { return }
         if self.conversation?.participants.count == 2 { // it's just you and me...
             if let p = (self.conversation?.participants.filter { !$0.me })?.first { // grab your ref
                 let locs = p.locations.filter { $0.contains("@gmail.com") } // grab all your gmails
@@ -798,7 +783,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private var _usersToIndicators: [Person.IdentifierType: PersonIndicatorViewController] = [:]
     private func _usersToItems() -> [NSToolbarItem] {
         if _usersToIndicators.count == 0 {
-            self.conversation?.users.filter { !$0.me }.forEach {
+            self.conversation?.participants.filter { !$0.me }.forEach {
                 let vc = PersonIndicatorViewController()
                 vc.person = $0
                 vc.isDimmed = self.conversation!.focus[$0.identifier] == .away
