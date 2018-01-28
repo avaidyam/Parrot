@@ -4,8 +4,6 @@ import Mocha
 import MochaUI
 import ParrotServiceExtension
 
-/* TODO: Show DND icon in Cell when conversation is muted. */
-
 // Plan for this class:
 //
 // - ModelController <--> Controller <--> ViewController
@@ -168,7 +166,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public override func viewDidLoad() {
-        self.childrenSub = AutoSubscription(kind: .OpenConversationsUpdated) { _ in
+        self.childrenSub = AutoSubscription(kind: .openConversationsUpdated) { _ in
             log.debug("Updating childConversations... \(Array(MessageListViewController.openConversations.keys))")
             self.updateSelectionIndexes()
         }

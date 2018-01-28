@@ -84,17 +84,16 @@ public class Interpolate<T: Interpolatable>: AnyInterpolate {
         self.init(values: [from, to], interpolator: interpolator, apply: apply)
     }
     
-    public convenience init<A>(values: [T], interpolator: Interpolator = LinearInterpolator(),
-                               on object: inout A, keyPath: ReferenceWritableKeyPath<A, T>) {
-        var shadow = object; defer { object = shadow }
+    public convenience init<A: AnyObject>(values: [T], interpolator: Interpolator = LinearInterpolator(),
+                                          on object: A, keyPath: ReferenceWritableKeyPath<A, T>) {
         self.init(values: values, interpolator: interpolator) { value in
-            shadow[keyPath: keyPath] = value
+            object[keyPath: keyPath] = value
         }
     }
     
-    public convenience init<A>(from: T, to: T, interpolator: Interpolator = LinearInterpolator(),
-                               on object: inout A, keyPath: ReferenceWritableKeyPath<A, T>) {
-        self.init(values: [from, to], interpolator: interpolator, on: &object, keyPath: keyPath)
+    public convenience init<A: AnyObject>(from: T, to: T, interpolator: Interpolator = LinearInterpolator(),
+                                          on object: A, keyPath: ReferenceWritableKeyPath<A, T>) {
+        self.init(values: [from, to], interpolator: interpolator, on: object, keyPath: keyPath)
     }
     
     /// Progress variable. Takes a value between 0.0 and 1.0. CGFloat. Setting it triggers the apply closure.

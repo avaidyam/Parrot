@@ -2,21 +2,6 @@ import Foundation
 import AppKit
 import Mocha
 
-/*
- func show(_ vc: UIViewController, sender: Any?)
- 
- You use this method to decouple the need to display a view controller from the process of actually presenting that view controller onscreen. Using this method, a view controller does not need to know whether it is embedded inside a navigation controller or split-view controller. It calls the same method for both. The UISplitViewController and UINavigationController classes override this method and handle the presentation according to their design. For example, a navigation controller overrides this method and uses it to push vc onto its navigation stack.
- The default implementation of this method calls the targetViewController(forAction:sender:) method to locate an object in the view controller hierarchy that overrides this method. It then calls the method on that target object, which displays the view controller in an appropriate way. If the targetViewController(forAction:sender:) method returns nil, this method uses the window’s root view controller to present vc modally.
- You can override this method in custom view controllers to display vc yourself. Use this method to display vc in a primary context. For example, a container view controller might use this method to replace its primary child. Your implementation should adapt its behavior for both regular and compact environments.
- 
- --
- 
- func targetViewController(forAction action: Selector, sender: Any?) -> UIViewController?
- 
- This method returns the current view controller if that view controller overrides the method indicated by the action parameter. If the current view controller does not override that method, UIKit walks up the view hierarchy and returns the first view controller that does override it. If no view controller handles the action, this method returns nil.
- A view controller can selectively respond to an action by returning an appropriate value from its canPerformAction(_:withSender:) method.
- */
-
 /* TODO: Support utility, modal, normal windows, AND drawer/panel? */
 // NSApp.runModalForWindow(), NSApp.stopModal(), [.utilityWindow]
 /* TODO: Deprecate the _rootAnimator property and use presentionAnimator. */

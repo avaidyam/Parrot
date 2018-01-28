@@ -287,32 +287,3 @@ public class DroppableView: NSView, NSSpringLoadingDestination /*NSDraggingDesti
         return true // every item conformed directly or through inferrence
     }
 }
-
-// The union of all types the pasteboard items collectively hold. Use this instead of
-// NSPasteboard's `types` accessor for a UTI-only world.
-public extension Array where Element == NSPasteboardItem {
-    public var allTypes: [NSPasteboard.PasteboardType] {
-        return self.flatMap { $0.types }
-    }
-}
-
-// Some backward compatible extensions since macOS 10.13 did some weird things.
-public extension NSPasteboard.PasteboardType {
-    public static func of(_ uti: CFString) -> NSPasteboard.PasteboardType {
-        return NSPasteboard.PasteboardType(uti as String)
-    }
-    public static let _URL: NSPasteboard.PasteboardType = {
-        if #available(macOS 10.13, *) {
-            return NSPasteboard.PasteboardType.URL
-        } else {
-            return NSPasteboard.PasteboardType(kUTTypeURL as String)
-        }
-    }()
-    public static let _fileURL: NSPasteboard.PasteboardType = {
-        if #available(macOS 10.13, *) {
-            return NSPasteboard.PasteboardType.fileURL
-        } else {
-            return NSPasteboard.PasteboardType(kUTTypeFileURL as String)
-        }
-    }()
-}

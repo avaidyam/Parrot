@@ -116,7 +116,7 @@ public class ConversationDetailsViewController: NSViewController {
          
          }*/
         
-        Subscription.Event(name: Notification.Name(rawValue: "com.avaidyam.Parrot.UpdateColors"), object: self).post()
+        Subscription.Event(name: .updateColors, object: self).post()
     }
     
     /*@IBAction public func colorWellSelected(_ sender: AnyObject?) {

@@ -142,13 +142,13 @@ extension NSColor: Interpolatable {
     }
     public var components: [CGFloat]  {
         var white: CGFloat = 0, alpha: CGFloat = 0 /* alpha is reused */
-        if [NSColorSpaceName.calibratedWhite, NSColorSpaceName.deviceWhite].contains(colorSpaceName) {
+        if [NSColorSpaceName.calibratedWhite, .deviceWhite].contains(colorSpaceName) {
             getWhite(&white, alpha: &alpha)
             return [white, alpha]
         }
         
         var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
-        if [NSColorSpaceName.calibratedRGB, NSColorSpaceName.deviceRGB].contains(colorSpaceName) {
+        if [NSColorSpaceName.calibratedRGB, .deviceRGB].contains(colorSpaceName) {
             getRed(&red, green: &green, blue: &blue, alpha: &alpha)
             return [red, green, blue, alpha]
         }

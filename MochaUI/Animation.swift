@@ -139,6 +139,7 @@ public extension CGColor {
 }
 
 public extension CAMediaTimingFunction {
+    public static let `default` = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
     public static let linear = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
     public static let easeIn = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
     public static let easeOut = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)

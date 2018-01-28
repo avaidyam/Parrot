@@ -66,11 +66,6 @@ public enum MessagePromise: Message {
 }
 */
 
-// TODO: not here...
-public extension Notification.Name {
-    public static let OpenConversationsUpdated = Notification.Name(rawValue: "Parrot.OpenConversationsUpdated")
-}
-
 public class MessageListViewController: NSViewController, WindowPresentable, TextInputHost, DroppableViewDelegate,
 NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
     
@@ -79,7 +74,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public /*private(set)*/ static var openConversations = [String: MessageListViewController]() {
         didSet {
             Settings.openConversations = Array(self.openConversations.keys)
-            Subscription.Event(name: .OpenConversationsUpdated).post()
+            Subscription.Event(name: .openConversationsUpdated).post()
         }
     }
     
@@ -326,7 +321,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
         
         // Monitor changes to the view background and colors.
-        self.colorsSub = AutoSubscription(kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
+        self.colorsSub = AutoSubscription(kind: .updateColors) { _ in
             self.layer.contents = Settings.conversationBackground
         }
         self.colorsSub?.trigger()

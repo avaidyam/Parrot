@@ -133,7 +133,6 @@
 		48D3CD0D1DE945C1003D6C02 /* AppKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488239A21C455CED00C5E8EB /* AppKit+Extensions.swift */; };
 		48D3CD0E1DE945C1003D6C02 /* NSDrawer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E0E81F1D584FCC00EE4464 /* NSDrawer+Extensions.swift */; };
 		48D3CD0F1DE945C1003D6C02 /* NSPopover+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D3CCDB1DE93248003D6C02 /* NSPopover+Extensions.swift */; };
-		48D3CD131DE945C1003D6C02 /* TLTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A452261D19B16500CB588A /* TLTone.swift */; };
 		48D3CD141DE945C1003D6C02 /* UserNotification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECB31C1C672900193EBC /* UserNotification+Extensions.swift */; };
 		48D3CD161DE945C1003D6C02 /* ExtendedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201B51D4A962B00C545F0 /* ExtendedTextView.swift */; };
 		48D3CD191DE945C1003D6C02 /* NetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */; };
@@ -523,7 +522,6 @@
 		489C8D5C1DF40012007B3392 /* Interpolate+Interpolatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolatable.swift"; sourceTree = "<group>"; };
 		489FB0881DF7CC4900AEBD1D /* MessageInputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageInputViewController.swift; sourceTree = "<group>"; };
 		489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypingHelper.swift; sourceTree = "<group>"; };
-		48A452261D19B16500CB588A /* TLTone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLTone.swift; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyValueStore.swift; path = Mocha/KeyValueStore.swift; sourceTree = SOURCE_ROOT; };
 		48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPreviewParser.swift; sourceTree = "<group>"; };
 		48AD39F71EE7FE2900C33E40 /* AccountsPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsPrefs.swift; sourceTree = "<group>"; };
@@ -1100,7 +1098,6 @@
 				48267A4D2019893300D9D8A9 /* CGIncrementalImage.swift */,
 				4869A9A61EE0FC2C00764594 /* NSAppearance+Extensions.swift */,
 				4869A93B1EDD250C00764594 /* ViewAttachmentCell.swift */,
-				48A452261D19B16500CB588A /* TLTone.swift */,
 				4835ECB31C1C672900193EBC /* UserNotification+Extensions.swift */,
 				483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */,
 				48403CA01DF0B9930009897A /* Changeset.swift */,
@@ -1843,7 +1840,6 @@
 				48E39C621ED516AC00EF578D /* VolumeIndicator.swift in Sources */,
 				48267A4E2019893300D9D8A9 /* CGIncrementalImage.swift in Sources */,
 				489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */,
-				48D3CD131DE945C1003D6C02 /* TLTone.swift in Sources */,
 				48403CA31DF0BF6B0009897A /* Interpolate.swift in Sources */,
 				4831BCFA1ED4151800C30413 /* MessageProgressView.swift in Sources */,
 				48D3CD191DE945C1003D6C02 /* NetworkReachability.swift in Sources */,

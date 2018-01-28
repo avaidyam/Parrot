@@ -47,7 +47,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.wantsLayer = true
         self.view.set(allowsVibrancy: true)
-        self.token = AutoSubscription(from: nil, kind: Notification.Name("com.avaidyam.Parrot.UpdateColors")) { _ in
+        self.token = AutoSubscription(from: nil, kind: .updateColors) { _ in
             self.setColors()
         }
         

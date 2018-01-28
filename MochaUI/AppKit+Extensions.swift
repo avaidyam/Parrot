@@ -598,3 +598,84 @@ public extension NSView {
         self.removeLayoutGuide(layer.layout)
     }
 }
+
+public extension NSRectEdge {
+    
+    /// `.leading` is equivalent to either `.minX` or `.maxX` depending on the
+    /// system language's UI layout direction.
+    public static var leading: NSRectEdge {
+        switch NSApp.userInterfaceLayoutDirection {
+        case .leftToRight: return .minX
+        case .rightToLeft: return .maxX
+        }
+    }
+    
+    /// `.trailing` is equivalent to either `.minX` or `.maxX` depending on the
+    /// system language's UI layout direction.
+    public static var trailing: NSRectEdge {
+        switch NSApp.userInterfaceLayoutDirection {
+        case .leftToRight: return .maxX
+        case .rightToLeft: return .minX
+        }
+    }
+}
+
+public extension String {
+    
+    /// Verify that the path extension of @{path} matches the UTI provided.
+    /// Note that this is actually a terrible idea and should be replaced by
+    /// a separate UTI class wrapper.
+    public func conformsToUTI(_ UTI: CFString) -> Bool {
+        let ext = (self as NSString).pathExtension
+        let fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)!.takeRetainedValue()
+        return UTTypeConformsTo(fileUTI, UTI)
+    }
+}
+
+public extension NSBezierPath {
+    
+    public var cgPath: CGPath {
+        let path = CGMutablePath()
+        var points = [CGPoint](repeating: .zero, count: 3)
+        for i in 0 ..< self.elementCount {
+            let type = self.element(at: i, associatedPoints: &points)
+            switch type {
+            case .moveToBezierPathElement: path.move(to: points[0])
+            case .lineToBezierPathElement: path.addLine(to: points[0])
+            case .curveToBezierPathElement: path.addCurve(to: points[2], control1: points[0], control2: points[1])
+            case .closePathBezierPathElement: path.closeSubpath()
+            }
+        }
+        return path
+    }
+}
+
+// The union of all types the pasteboard items collectively hold. Use this instead of
+// NSPasteboard's `types` accessor for a UTI-only world.
+public extension Array where Element == NSPasteboardItem {
+    public var allTypes: [NSPasteboard.PasteboardType] {
+        return self.flatMap { $0.types }
+    }
+}
+
+// Some backward compatible extensions since macOS 10.13 did some weird things.
+public extension NSPasteboard.PasteboardType {
+    public static func of(_ uti: CFString) -> NSPasteboard.PasteboardType {
+        return NSPasteboard.PasteboardType(uti as String)
+    }
+    public static let _URL: NSPasteboard.PasteboardType = {
+        if #available(macOS 10.13, *) {
+            return NSPasteboard.PasteboardType.URL
+        } else {
+            return NSPasteboard.PasteboardType(kUTTypeURL as String)
+        }
+    }()
+    public static let _fileURL: NSPasteboard.PasteboardType = {
+        if #available(macOS 10.13, *) {
+            return NSPasteboard.PasteboardType.fileURL
+        } else {
+            return NSPasteboard.PasteboardType(kUTTypeFileURL as String)
+        }
+    }()
+}
+

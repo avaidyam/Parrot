@@ -56,7 +56,8 @@ public extension NSDataAsset.Name {
 
 // Notifications
 public extension NSNotification.Name {
-    
+    public static let openConversationsUpdated = NSNotification.Name(rawValue: "com.avaidyam.Parrot.OpenConversationsUpdated")
+    public static let updateColors = NSNotification.Name(rawValue: "com.avaidyam.Parrot.UpdateColors")
 }
 
 // Views
