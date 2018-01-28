@@ -1,20 +1,31 @@
 import Foundation
 import CoreGraphics
 
-/* TODO: Multiple animation blocks (after adding generics to Interpolate). */
+/* TODO: Multiple animation blocks. */
 /* TODO: Different interpolators between values (a la CAKeyframeAnimation). */
 /* TODO: Use CAAnimation to enable presentation layer (a la UIViewPropertyAnimator). */
 /* TODO: Turn on implicit animation in a CATransaction group. */
+/* TODO: Better NSColor interpolation. */
 
-public protocol Interpolator {
-    func apply(_ progress: CGFloat) -> CGFloat
+private let Interpolate_displayLink = DisplayLink() // global!!
+private let Interpolate_backgroundQueue = DispatchQueue(label: "InterpolateCallbackQueue", qos: .userInteractive)
+
+public class AnyInterpolate {
+    open var fractionComplete: CGFloat = 0.0
+    
+    /// All interpolations in the group will not execute their handlers unless the policy is set to .always.
+    //@available(*, deprecated: 1.0)
+    public static func group(_ interpolations: AnyInterpolate...) -> Interpolate<Double> {
+        return Interpolate(from: 0.0, to: 1.0, interpolator: LinearInterpolator()) { progress in
+            interpolations.forEach { interp in
+                interp.fractionComplete = CGFloat(progress)
+            }
+        }
+    }
 }
 
-public protocol Interpolatable {
-    func vectorize() -> IPValue
-}
 
-open class Interpolate {
+public class Interpolate<T: Interpolatable>: AnyInterpolate {
     
     public enum HandlerRunPolicy {
         case never
@@ -22,13 +33,12 @@ open class Interpolate {
         case always
     }
     
-    private static let displayLink = DisplayLink() // global!!
     fileprivate var fpsObserver: Any? = nil
     
-    fileprivate var current: IPValue
-    fileprivate let values: [IPValue]
+    fileprivate var current: IPValue<T>
+    fileprivate let values: [IPValue<T>]
     fileprivate var valuesCount: CGFloat { get { return CGFloat(values.count) } }
-    fileprivate var vectorCount: Int { get { return current.vectors.count } }
+    fileprivate var vectorCount: Int { get { return current.components.count } }
     fileprivate var duration: CGFloat = 0.2
     fileprivate var diffVectors = [[CGFloat]]()
     fileprivate let function: Interpolator
@@ -40,15 +50,6 @@ open class Interpolate {
     
     public var handlerRunPolicy = HandlerRunPolicy.onlyWhenAnimating
     
-    /// All interpolations in the group will not execute their handlers unless the policy is set to .always.
-    public static func group(_ interpolations: Interpolate ...) -> Interpolate {
-        return Interpolate(from: 0.0, to: 1.0, interpolator: LinearInterpolator()) { progress in
-            interpolations.forEach {
-                $0.fractionComplete = CGFloat(progress)
-            }
-        }
-    }
-    
     /**
      Initialises an Interpolate object.
      
@@ -58,16 +59,16 @@ open class Interpolate {
      
      - returns: an Interpolate object.
      */
-    public init<T: Interpolatable>(values: [T], interpolator: Interpolator = LinearInterpolator(), apply: @escaping ((T) -> ())) {
+    public init(values: [T], interpolator: Interpolator = LinearInterpolator(), apply: @escaping ((T) -> ())) {
         assert(values.count >= 2, "You should provide at least two values")
-        let vectorizedValues = values.map({$0.vectorize()})
+        let vectorizedValues = values.map({IPValue(value: $0)})
         self.values = vectorizedValues
-        self.current = IPValue(value: self.values[0])
+        self.current = IPValue(from: self.values[0])
         self.apply = { let _ = ($0 as? T).flatMap(apply) }
         self.function = interpolator
+        super.init()
         self.diffVectors = self.calculateDiff(vectorizedValues)
     }
-    
     
     /**
      Initialises an Interpolate object.
@@ -79,16 +80,31 @@ open class Interpolate {
      
      - returns: an Interpolate object.
      */
-    public convenience init<T: Interpolatable>(from: T, to: T, interpolator: Interpolator = LinearInterpolator(), apply: @escaping ((T) -> ())) {
-        let values = [from, to]
-        self.init(values: values, interpolator: interpolator, apply: apply)
+    public convenience init(from: T, to: T, interpolator: Interpolator = LinearInterpolator(), apply: @escaping ((T) -> ())) {
+        self.init(values: [from, to], interpolator: interpolator, apply: apply)
     }
     
-    /// Progress variable. Takes a value between 0.0 and 1,0. CGFloat. Setting it triggers the apply closure.
-    open var fractionComplete: CGFloat = 0.0 {
+    public convenience init<A>(values: [T], interpolator: Interpolator = LinearInterpolator(),
+                               on object: inout A, keyPath: ReferenceWritableKeyPath<A, T>) {
+        var shadow = object; defer { object = shadow }
+        self.init(values: values, interpolator: interpolator) { value in
+            shadow[keyPath: keyPath] = value
+        }
+    }
+    
+    public convenience init<A>(from: T, to: T, interpolator: Interpolator = LinearInterpolator(),
+                               on object: inout A, keyPath: ReferenceWritableKeyPath<A, T>) {
+        self.init(values: [from, to], interpolator: interpolator, on: &object, keyPath: keyPath)
+    }
+    
+    /// Progress variable. Takes a value between 0.0 and 1.0. CGFloat. Setting it triggers the apply closure.
+    open override var fractionComplete: CGFloat {
         didSet {
             // We make sure fractionComplete is between 0.0 and 1.0
-            fractionComplete = max(0, min(fractionComplete, 1.0))
+            guard (0.0...1.0).contains(fractionComplete) else {
+                fractionComplete = fractionComplete.clamped(to: 0.0...1.0)
+                return
+            }
             internalProgress = function.apply(fractionComplete)
             let valueForProgress = internalProgress*(valuesCount - 1)
             let diffVectorIndex = max(Int(ceil(valueForProgress)) - 1, 0)
@@ -96,9 +112,9 @@ open class Interpolate {
             let originValue = values[diffVectorIndex]
             let adjustedProgress = valueForProgress - CGFloat(diffVectorIndex)
             for index in 0..<vectorCount {
-                current.vectors[index] = originValue.vectors[index] + diffVector[index]*adjustedProgress
+                current.components[index] = originValue.components[index] + diffVector[index]*adjustedProgress
             }
-            apply?(current.toInterpolatable())
+            apply?(current.value)
             
             // Execute handlers if only when animating.
             if self.handlerRunPolicy == .always {
@@ -108,18 +124,14 @@ open class Interpolate {
     }
     
     public func add(at fractionComplete: Double = 1.0, handler: @escaping () -> ()) {
-        if self.handlers[fractionComplete] != nil {
-            self.handlers[fractionComplete]! += [handler]
-        } else {
-            self.handlers[fractionComplete] = [handler]
-        }
+        self.handlers[fractionComplete, default: []] += [handler]
     }
     
     /**
      Invalidates the apply function
      */
     open func invalidate() {
-        apply = nil
+        self.apply = nil
     }
     
     ///
@@ -127,7 +139,7 @@ open class Interpolate {
         didSet {
             guard self.animating != oldValue else { return }
             if self.animating {
-                self.fpsObserver = Interpolate.displayLink.observe(self.next)
+                self.fpsObserver = Interpolate_displayLink.observe(self.next)
             } else {
                 self.fpsObserver = nil
             }
@@ -163,14 +175,14 @@ open class Interpolate {
      
      - returns: Array of diffs. CGFloat
      */
-    fileprivate func calculateDiff(_ values: [IPValue]) -> [[CGFloat]] {
+    fileprivate func calculateDiff(_ values: [IPValue<T>]) -> [[CGFloat]] {
         var valuesDiffArray = [[CGFloat]]()
         for i in 0..<(values.count - 1) {
             var diffArray = [CGFloat]()
             let from = values[i]
             let to = values[i+1]
-            for index in 0..<from.vectors.count {
-                let vectorDiff = to.vectors[index] - from.vectors[index]
+            for index in 0..<from.components.count {
+                let vectorDiff = to.components[index] - from.components[index]
                 diffArray.append(vectorDiff)
             }
             valuesDiffArray.append(diffArray)
@@ -205,7 +217,7 @@ open class Interpolate {
     
     // Determine and run all handlers between the previous fractionComplete and the current one.
     private func _executeHandlers(_ old: Double, _ new: Double) {
-        Interpolate.backgroundQueue.async {
+        Interpolate_backgroundQueue.async {
             // This is required because we check `progress > old` and not `>=`...
             if (old == 0.0) { self.handlers[0.0]?.forEach { $0() } }
             Array(self.handlers.keys).lazy.sorted()
@@ -213,6 +225,4 @@ open class Interpolate {
                 .forEach { self.handlers[$0]?.forEach { $0() } }
         }
     }
-    
-    public static var backgroundQueue: DispatchQueue = DispatchQueue(label: "InterpolateCallbackQueue", qos: .userInteractive)
 }

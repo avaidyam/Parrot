@@ -4,6 +4,17 @@ import class Mocha.Observation
 
 /* TODO: Use CVDisplayLinkIsRunning() instead of re-initializing the display link each time. */
 
+/* TODO:
+ public struct Frame: Equatable {
+     var timestamp: Double = 0.0
+     var duration: Double = 0.0
+ 
+     public static func ==(lhs: DisplayLink.Frame, rhs: DisplayLink.Frame) -> Bool {
+         return lhs.timestamp == rhs.timestamp && lhs.duration == rhs.duration
+     }
+ }
+ */
+
 open class DisplayLink {
     
     /// The internal CVDisplayLink to control.

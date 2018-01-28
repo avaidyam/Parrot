@@ -24,7 +24,7 @@ public struct PopWindowAnimator: WindowAnimator {
         window.alphaValue = 0.0
         window.makeKeyAndOrderFront(nil)
         
-        let group = Interpolate.group(scale, alpha)
+        let group = AnyInterpolate.group(scale, alpha)
         group.animate(duration: 0.35)
     }
     
@@ -35,7 +35,7 @@ public struct PopWindowAnimator: WindowAnimator {
         let alpha = Interpolate(from: 1.0, to: 0.0, interpolator: EaseInOutInterpolator()) { [weak window] alpha in
             window?.alphaValue = CGFloat(alpha)
         }
-        let group = Interpolate.group(scale, alpha)
+        let group = AnyInterpolate.group(scale, alpha)
         group.add(at: 1.0) {
             DispatchQueue.main.async { [weak window] in
                 window?.close()
@@ -68,7 +68,7 @@ public struct ZoomWindowAnimator: WindowAnimator {
         window.setFrame(rect, display: false)
         window.makeKeyAndOrderFront(nil)
         
-        let group = Interpolate.group(scale, alpha, frame)
+        let group = AnyInterpolate.group(scale, alpha, frame)
         group.animate(duration: 0.25)
     }
     
@@ -87,7 +87,7 @@ public struct ZoomWindowAnimator: WindowAnimator {
             window?.setFrame(frame, display: false)
         }
         
-        let group = Interpolate.group(scale, alpha, frame)
+        let group = AnyInterpolate.group(scale, alpha, frame)
         group.add {
             DispatchQueue.main.asyncAfter(deadline: 200.milliseconds.later) { [weak window] in
                 window?.setFrame(old_rect, display: false)

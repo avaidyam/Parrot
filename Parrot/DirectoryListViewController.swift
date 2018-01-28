@@ -60,7 +60,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return t
     }()
     
-    private lazy var updateInterpolation: Interpolate = {
+    private lazy var updateInterpolation: Interpolate<Double> = {
         let indicatorAnim = Interpolate(from: 0.0, to: 1.0, interpolator: EaseInOutInterpolator()) { [weak self] alpha in
             self?.scrollView.alphaValue = CGFloat(alpha)
             self?.indicator.alphaValue = CGFloat(1.0 - alpha)
@@ -72,7 +72,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let scaleAnim = Interpolate(from: CGAffineTransform(scaleX: 1.5, y: 1.5), to: .identity, interpolator: EaseInOutInterpolator()) { [weak self] scale in
             self?.scrollView.layer!.setAffineTransform(scale)
         }
-        let group = Interpolate.group(indicatorAnim, scaleAnim)
+        let group = AnyInterpolate.group(indicatorAnim, scaleAnim)
         return group
     }()
     

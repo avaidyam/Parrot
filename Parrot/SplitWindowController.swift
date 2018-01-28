@@ -41,6 +41,7 @@ public class SplitWindowController: NSSplitViewController, WindowPresentable {
     
     public override func viewWillAppear() {
         super.viewWillAppear()
+        guard self.view.window != nil else { return }
         PopWindowAnimator.show(self.view.window!)
     }
     

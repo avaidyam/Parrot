@@ -1,5 +1,9 @@
 import Foundation
 
+public protocol Interpolator {
+    func apply(_ progress: CGFloat) -> CGFloat
+}
+
 public struct LinearInterpolator: Interpolator {
     public init() {}
     
