@@ -1,4 +1,5 @@
 import AppKit
+import Mocha
 
 public extension NSDrawer {
 	

@@ -1,8 +1,6 @@
-import AppKit
-import Mocha
-import ParrotServiceExtension
 import MochaUI
 import AVKit
+import ParrotServiceExtension
 
 public protocol TextInputHost {
     var image: NSImage? { get }

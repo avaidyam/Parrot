@@ -1,4 +1,3 @@
-import AppKit
 import Foundation
 
 /* TODO: In the future, more Analytics providers may be supported. */
@@ -55,10 +54,12 @@ public struct AppProperties {
         return locale
     }()
     
+    /*
     public static var screenResolution: String = {
         let size = NSScreen.main?.frame.size ?? .zero
         return "\(size.width)x\(size.height)"
     }()
+    */
 }
 
 /// GoogleAnalytics enables tracking events using the [Google Analytics Measurement
@@ -159,7 +160,7 @@ public struct GoogleAnalytics {
             "av": AppProperties.formattedVersion,
             "ua": AppProperties.userAgent,
             "ul": AppProperties.userLanguage,
-            "sr": AppProperties.screenResolution,
+            //"sr": AppProperties.screenResolution,
             "v": "1"
         ]
         if let type = type, !type.isEmpty {

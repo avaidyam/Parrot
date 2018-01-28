@@ -1,4 +1,5 @@
 import AppKit
+import Mocha
 
 @objc public protocol PreferencePane: NSObjectProtocol {
     var image: NSImage? { get }

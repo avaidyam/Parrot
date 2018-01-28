@@ -1,4 +1,5 @@
 import AppKit
+import Mocha
 
 @IBDesignable
 public class Switch: NSControl {

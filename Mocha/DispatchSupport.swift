@@ -1,4 +1,4 @@
-import Dispatch
+import Foundation
 
 /* TODO: DispatchWorkItem: name, dependencies, isExecuting, Result<Any, Error> + retry. */
 

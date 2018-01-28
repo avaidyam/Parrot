@@ -1,5 +1,4 @@
 import Foundation
-import Dispatch
 
 /* TODO: Return a subscription object for Wallclock. */
 

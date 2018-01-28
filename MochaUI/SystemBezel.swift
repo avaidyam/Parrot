@@ -1,4 +1,5 @@
-import Cocoa
+import AppKit
+import Mocha
 
 // adapted from @mattprowse: https://github.com/mattprowse/SystemBezelWindowController
 

@@ -1,5 +1,5 @@
 import Foundation
-import Security
+import Security // FIXME: Cannot import this here!
 
 /* TODO: Switch KeyValueStore to strongly-typed struct instead of String for Key. */
 /* TODO: Find a way to do SecKeychain* snapshot(). */

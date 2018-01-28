@@ -1,5 +1,4 @@
-import Cocoa
-import Mocha
+import MochaUI
 
 /* TODO: Generate portions of this file from Xcode Assets. */
 

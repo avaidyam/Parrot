@@ -1,4 +1,5 @@
 import AppKit
+import Mocha
 
 @objc public protocol NSTextViewExtendedDelegate: NSTextViewDelegate {
 	@objc(textView:didInsertText:replacementRange:)

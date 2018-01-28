@@ -1,9 +1,6 @@
-import Foundation
-import AppKit
-import Mocha
 import MochaUI
-import ParrotServiceExtension
 import MapKit
+import ParrotServiceExtension
 
 public class LocationCell: NSCollectionViewItem {
     

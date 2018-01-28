@@ -1,6 +1,6 @@
 import AppKit
-import QuartzCore
 import Mocha
+import QuartzCore
 
 // custom interpolators?
 // isAdditive, isCumulative?

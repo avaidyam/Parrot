@@ -1,4 +1,5 @@
 import AppKit
+import Mocha
 import IOKit
 
 /* TODO: Never tested on non-MacBooks! */

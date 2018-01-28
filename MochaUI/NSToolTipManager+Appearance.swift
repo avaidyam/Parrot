@@ -1,4 +1,5 @@
-import Cocoa
+import AppKit
+import Mocha
 
 // FIXME: The tooltip text appears blank either for the first tooltip or after an appearance change.
 @objc public class ToolTipManager: NSObject {

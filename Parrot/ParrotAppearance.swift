@@ -1,5 +1,3 @@
-import AppKit
-import Mocha
 import MochaUI
 
 /* TODO: Remove NSAppearance from ParrotAppearance and add an extension for it. */

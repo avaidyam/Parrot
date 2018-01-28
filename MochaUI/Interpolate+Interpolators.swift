@@ -1,4 +1,5 @@
-import Foundation
+import AppKit
+import Mocha
 
 public protocol Interpolator {
     func apply(_ progress: CGFloat) -> CGFloat

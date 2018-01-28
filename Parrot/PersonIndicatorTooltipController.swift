@@ -1,6 +1,3 @@
-import Foundation
-import Cocoa
-import Mocha
 import MochaUI
 
 /// Only one may be visible on screen at a time!

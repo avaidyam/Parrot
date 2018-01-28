@@ -1,4 +1,5 @@
-import Cocoa
+import AppKit
+import Mocha
 
 /* TODO: Support window key-ness: -_windowChangedKeyState. */
 

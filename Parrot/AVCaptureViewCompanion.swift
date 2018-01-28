@@ -1,7 +1,5 @@
-import Cocoa
-import Mocha
+import MochaUI
 import AVKit
-import AVFoundation
 import CoreMediaIO
 
 /// `AVCaptureViewCompanion` should be the delegate of the `AVCaptureView`.

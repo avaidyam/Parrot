@@ -1,4 +1,5 @@
-import Cocoa
+import AppKit
+import Mocha
 
 /* TODO: concludeDragOperation, wantsPeriodicDraggingUpdates, updateDraggingItemsForDrag. */
 /* TODO: what if spring-loading a child window and deciding not to continue, and then un-spring? */

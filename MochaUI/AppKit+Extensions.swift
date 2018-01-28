@@ -1,5 +1,5 @@
-import AppKit
-import Mocha
+@_exported import AppKit
+@_exported import Mocha
 
 /* TODO: Localization support for NSDateFormatter stuff. */
 /* TODO: Add NSView._semanticContext: Int, NSView._viewController: NSViewController. */

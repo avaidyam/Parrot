@@ -1,9 +1,6 @@
-import Foundation
-import AppKit
-import Mocha
 import MochaUI
-import Hangouts
 import WebKit
+import Hangouts
 import XPCTransport
 import ParrotServiceExtension
 

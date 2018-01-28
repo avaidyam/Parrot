@@ -1,4 +1,4 @@
-import AppKit
+import MochaUI
 import protocol ParrotServiceExtension.Person
 import protocol ParrotServiceExtension.Conversation
 

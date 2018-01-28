@@ -1,5 +1,5 @@
-import Foundation
 import AppKit
+import Mocha
 import QuartzCore
 
 public protocol Interpolatable {

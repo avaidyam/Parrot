@@ -1,4 +1,5 @@
-import Cocoa
+import AppKit
+import Mocha
 
 public class ViewAttachmentCell: NSTextAttachmentCell {
     

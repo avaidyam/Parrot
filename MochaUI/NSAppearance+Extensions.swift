@@ -1,4 +1,5 @@
-import Cocoa
+import AppKit
+import Mocha
 
 public extension NSAppearance {
     public static let aqua = NSAppearance(named: .aqua)!

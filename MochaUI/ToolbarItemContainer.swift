@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 import Mocha
 
 /* TODO: Support item types: allowed, required, default, customized(user). */

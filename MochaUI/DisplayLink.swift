@@ -1,6 +1,6 @@
-import Dispatch
+import AppKit
+import Mocha
 import CoreVideo
-import class Mocha.Observation
 
 /* TODO: Use CVDisplayLinkIsRunning() instead of re-initializing the display link each time. */
 

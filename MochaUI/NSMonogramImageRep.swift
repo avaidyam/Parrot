@@ -1,4 +1,5 @@
 import AppKit
+import Mocha
 
 /// A monogram image rep that draws a single initial letter from the given string
 /// over a gradient background, optionally masking with an overlay image instead.

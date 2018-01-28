@@ -1,9 +1,7 @@
-import Cocoa
-import Mocha
 import MochaUI
-import ParrotServiceExtension
 import Contacts
 import ContactsUI
+import ParrotServiceExtension
 
 // away vs here == alphaValue of toolbar item
 // typing == hidden value of tooltipcontroller messageprogressview

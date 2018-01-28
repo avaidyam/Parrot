@@ -1,5 +1,3 @@
-import Cocoa
-import Mocha
 import MochaUI
 import Hangouts // TODO: REMOVE
 

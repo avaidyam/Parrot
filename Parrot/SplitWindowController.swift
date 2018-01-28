@@ -1,5 +1,3 @@
-import Cocoa
-import Mocha
 import MochaUI
 
 /* TODO: In the future, add NSViewController docking (attach/detach) support. */

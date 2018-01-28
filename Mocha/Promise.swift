@@ -1,4 +1,4 @@
-import Dispatch
+import Foundation
 
 /// TODO: Convert blocks to @escaping @throws... with (T) -> (U), () -> (T), (T) -> () forms.
 

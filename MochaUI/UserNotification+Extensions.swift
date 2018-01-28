@@ -1,4 +1,5 @@
 import AppKit
+import Mocha
 
 /* TODO: Support pattern-based haptic feedback. */
 /* TODO: Support NSApp.dockTileBadge better, as the number of outstanding notifications. */

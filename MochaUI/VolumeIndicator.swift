@@ -1,4 +1,5 @@
-import Cocoa
+import AppKit
+import Mocha
 
 /* TODO: Convert to CALayer drawing instead. */
 

@@ -1,4 +1,5 @@
-import Foundation
+import AppKit
+import Mocha
 import CoreGraphics
 
 /* TODO: Multiple animation blocks. */

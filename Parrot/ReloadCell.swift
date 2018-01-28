@@ -1,4 +1,3 @@
-import Cocoa
 import MochaUI
 
 public class ReloadCell: NSView {

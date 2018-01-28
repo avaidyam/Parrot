@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 import Mocha
 
 public protocol BlockTrampolineSupporting: NSObjectProtocol {

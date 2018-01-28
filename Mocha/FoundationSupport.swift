@@ -1,4 +1,4 @@
-import Foundation
+@_exported import Foundation
 
 /* TODO: Switch all uses of URL temp to TemporaryFile. */
 

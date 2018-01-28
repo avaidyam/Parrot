@@ -1,6 +1,3 @@
-import Foundation
-import AppKit
-import Mocha
 import MochaUI
 import protocol ParrotServiceExtension.Message
 import protocol ParrotServiceExtension.Conversation
