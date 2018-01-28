@@ -1,3 +1,5 @@
+#pragma once
+
 enum {
     T_ENTER_CA,
     T_EXIT_CA,

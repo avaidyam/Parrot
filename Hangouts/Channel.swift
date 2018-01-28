@@ -377,9 +377,10 @@ public final class Channel : NSObject {
                                                extras: [String: String] = [:]) -> [String: String]
     {
 		func sha1(_ source: String) -> String {
-			let str = Array(source.utf8).map { Int8($0) }
-			var store = [Int8](repeating: 0, count: 20)
-			SHA1(&store, str, Int32(str.count))
+			let str = Array(source.utf8).map { UInt8($0) } // Int8
+			//var store = [Int8](repeating: 0, count: 20)
+            //SHA1(&store, str, Int32(str.count))
+            let store = SHA1().calculate(for: str)
 			return store.map { String(format: "%02hhx", $0) }.joined(separator: "")
 		}
 		

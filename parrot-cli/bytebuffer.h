@@ -1,3 +1,5 @@
+#pragma once
+
 struct bytebuffer {
     char *buf;
     int len;

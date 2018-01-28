@@ -94,7 +94,6 @@
 		48834E021C1B372E009BC442 /* Hangouts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48834E1C1C1B38B9009BC442 /* parrotd.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 48834E111C1B38B9009BC442 /* parrotd.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48834E221C1B399A009BC442 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E211C1B399A009BC442 /* main.swift */; };
-		48834E281C1B3E03009BC442 /* Hangouts.h in Headers */ = {isa = PBXBuildFile; fileRef = 48834E271C1B3D98009BC442 /* Hangouts.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48834E3C1C1B4098009BC442 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E341C1B4098009BC442 /* Channel.swift */; };
 		48834E3D1C1B4098009BC442 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E351C1B4098009BC442 /* Client.swift */; };
 		48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E361C1B4098009BC442 /* Conversation.swift */; };
@@ -118,6 +117,7 @@
 		48AD39FC1EE8005C00C33E40 /* TextPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39FB1EE8005C00C33E40 /* TextPrefs.swift */; };
 		48AFC0DA200ACB8C003E878D /* PeopleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */; };
 		48AFC0DB200B069A003E878D /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
+		48BCEE0A201DA7E20087E889 /* CryptoSHA1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BCEE09201DA7E20087E889 /* CryptoSHA1.swift */; };
 		48D3CCE91DE94433003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		48D3CCEA1DE94433003D6C02 /* Mocha.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48D3CCEF1DE9444F003D6C02 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCEE1DE9444F003D6C02 /* Foundation.framework */; };
@@ -504,7 +504,6 @@
 		48834E191C1B38B9009BC442 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48834E211C1B399A009BC442 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		48834E261C1B3D5B009BC442 /* parrotd.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = parrotd.entitlements; sourceTree = "<group>"; };
-		48834E271C1B3D98009BC442 /* Hangouts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Hangouts.h; sourceTree = "<group>"; };
 		48834E341C1B4098009BC442 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		48834E351C1B4098009BC442 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Client.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		48834E361C1B4098009BC442 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
@@ -529,6 +528,7 @@
 		48AD39FB1EE8005C00C33E40 /* TextPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPrefs.swift; sourceTree = "<group>"; };
 		48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleAPI.swift; sourceTree = "<group>"; };
 		48BA5B481C379CCF00ACA29B /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
+		48BCEE09201DA7E20087E889 /* CryptoSHA1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoSHA1.swift; sourceTree = "<group>"; };
 		48BFD0341D13694900DAE29E /* hangouts.proto */ = {isa = PBXFileReference; lastKnownFileType = text; path = hangouts.proto; sourceTree = "<group>"; };
 		48D3CCDB1DE93248003D6C02 /* NSPopover+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPopover+Extensions.swift"; sourceTree = "<group>"; };
 		48D3CCE21DE94433003D6C02 /* Mocha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Mocha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -568,9 +568,9 @@
 		48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEndpoint.swift; sourceTree = "<group>"; };
 		48FB44451DBF4FF1004BE55A /* libtermbox.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtermbox.1.0.0.dylib; path = "../../../Desktop/termbox-master/usr/local/lib/libtermbox.1.0.0.dylib"; sourceTree = "<group>"; };
 		48FB44471DBF5018004BE55A /* termbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = termbox.h; sourceTree = "<group>"; };
-		48FB44481DBF5288004BE55A /* bytebuffer.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bytebuffer.inl; sourceTree = "<group>"; };
-		48FB44491DBF5288004BE55A /* input.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.inl; sourceTree = "<group>"; };
-		48FB444A1DBF5288004BE55A /* term.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = term.inl; sourceTree = "<group>"; };
+		48FB44481DBF5288004BE55A /* bytebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bytebuffer.h; sourceTree = "<group>"; };
+		48FB44491DBF5288004BE55A /* input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input.h; sourceTree = "<group>"; };
+		48FB444A1DBF5288004BE55A /* term.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = term.h; sourceTree = "<group>"; };
 		48FB444B1DBF5288004BE55A /* termbox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = termbox.c; sourceTree = "<group>"; };
 		48FB444C1DBF5288004BE55A /* utf8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utf8.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1020,7 +1020,6 @@
 			isa = PBXGroup;
 			children = (
 				48BFD0341D13694900DAE29E /* hangouts.proto */,
-				48834E271C1B3D98009BC442 /* Hangouts.h */,
 				48834DF01C1B372E009BC442 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -1050,6 +1049,7 @@
 			children = (
 				4816872B1C3A340E0070EEF6 /* URLSession+Delegate.swift */,
 				481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */,
+				48BCEE09201DA7E20087E889 /* CryptoSHA1.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1058,9 +1058,9 @@
 			isa = PBXGroup;
 			children = (
 				48FB44471DBF5018004BE55A /* termbox.h */,
-				48FB44481DBF5288004BE55A /* bytebuffer.inl */,
-				48FB44491DBF5288004BE55A /* input.inl */,
-				48FB444A1DBF5288004BE55A /* term.inl */,
+				48FB44481DBF5288004BE55A /* bytebuffer.h */,
+				48FB44491DBF5288004BE55A /* input.h */,
+				48FB444A1DBF5288004BE55A /* term.h */,
 				48FB444B1DBF5288004BE55A /* termbox.c */,
 				48FB444C1DBF5288004BE55A /* utf8.c */,
 			);
@@ -1236,7 +1236,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48834E281C1B3E03009BC442 /* Hangouts.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1780,6 +1779,7 @@
 				488F652A1EF97CD50085325F /* GooglePhoto.swift in Sources */,
 				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
 				48F7E80A1F1099B70059E5CD /* ServiceEndpoint.swift in Sources */,
+				48BCEE0A201DA7E20087E889 /* CryptoSHA1.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
 				487D6020200BD88A0009E5F1 /* DriveAPI.swift in Sources */,
 				48AFC0DA200ACB8C003E878D /* PeopleAPI.swift in Sources */,

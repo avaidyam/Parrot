@@ -1,3 +1,5 @@
+#pragma once
+
 // if s1 starts with s2 returns true, else false
 // len is the length of s1
 // s2 should be null-terminated
