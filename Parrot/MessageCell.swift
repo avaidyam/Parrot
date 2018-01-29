@@ -44,7 +44,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.wantsLayer = true
         self.view.set(allowsVibrancy: true)
-        self.token = AutoSubscription(from: nil, kind: .updateColors) { _ in
+        self.token = AutoSubscription(from: nil, kind: .conversationAppearanceUpdated) { _ in
             self.setColors()
         }
         

@@ -113,7 +113,7 @@ public class ConversationDetailsViewController: NSViewController {
          
          }*/
         
-        Subscription.Event(name: .updateColors, object: self).post()
+        Subscription.Event(name: .conversationAppearanceUpdated, object: self).post()
     }
     
     /*@IBAction public func colorWellSelected(_ sender: AnyObject?) {

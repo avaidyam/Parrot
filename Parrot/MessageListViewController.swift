@@ -319,7 +319,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
         
         // Monitor changes to the view background and colors.
-        self.colorsSub = AutoSubscription(kind: .updateColors) { _ in
+        self.colorsSub = AutoSubscription(kind: .conversationAppearanceUpdated) { _ in
             self.layer.contents = Settings.conversationBackground
         }
         self.colorsSub?.trigger()

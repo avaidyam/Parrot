@@ -254,8 +254,9 @@ public extension NSFont {
 public extension NSSound {
     
     /// Load a sound from an `NSDataAsset` (Xcode Asset Catalog).
-    public convenience init?(assetName name: NSDataAsset.Name, bundle: Bundle = .main) {
-        guard let asset = NSDataAsset(name: name, bundle: bundle) else { return nil }
+    public convenience init?(assetName name: NSSound.Name, bundle: Bundle = .main) {
+        guard let asset = NSDataAsset(name: NSDataAsset.Name(rawValue: name.rawValue),
+                                      bundle: bundle) else { return nil }
         self.init(data: asset.data)
     }
 }
@@ -679,3 +680,8 @@ public extension NSPasteboard.PasteboardType {
     }()
 }
 
+public extension NotificationCenter {
+    public static var workspace: NotificationCenter {
+        return NSWorkspace.shared.notificationCenter
+    }
+}

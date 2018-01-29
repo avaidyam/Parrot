@@ -4,7 +4,7 @@ import MochaUI
 
 // Strings
 public extension String {
-    
+    public static let test = NSLocalizedString("test", comment: "none")
 }
 
 // Colors
@@ -32,31 +32,31 @@ public extension NSImage.Name {
 
 // Sounds
 public extension NSSound.Name {
-    
+    public static let buddyLoggingIn = NSSound.Name("Buddy Logging In")
+    public static let buddyLoggingOut = NSSound.Name("Buddy Logging Out")
+    public static let fileTransferComplete = NSSound.Name("File Transfer Complete")
+    public static let invitationAccepted = NSSound.Name("Invitation Accepted")
+    public static let invitation = NSSound.Name("Invitation")
+    public static let loggedIn = NSSound.Name("Logged In")
+    public static let mailFetchError = NSSound.Name("Mail Fetch Error")
+    public static let mailSent = NSSound.Name("Mail Sent")
+    public static let newMail = NSSound.Name("New Mail")
+    public static let receivedAcknowledgement = NSSound.Name("Received Acknowledgement")
+    public static let receivedMessage = NSSound.Name("Received Message")
+    public static let ringerPause = NSSound.Name("Ringer Pause")
+    public static let ringer = NSSound.Name("Ringer")
+    public static let sentMessage = NSSound.Name("Sent Message")
 }
 
 // Data
 public extension NSDataAsset.Name {
-    public static let buddyLoggingIn = NSDataAsset.Name("Buddy Logging In")
-    public static let buddyLoggingOut = NSDataAsset.Name("Buddy Logging Out")
-    public static let fileTransferComplete = NSDataAsset.Name("File Transfer Complete")
-    public static let invitationAccepted = NSDataAsset.Name("Invitation Accepted")
-    public static let invitation = NSDataAsset.Name("Invitation")
-    public static let loggedIn = NSDataAsset.Name("Logged In")
-    public static let mailFetchError = NSDataAsset.Name("Mail Fetch Error")
-    public static let mailSent = NSDataAsset.Name("Mail Sent")
-    public static let newMail = NSDataAsset.Name("New Mail")
-    public static let receivedAcknowledgement = NSDataAsset.Name("Received Acknowledgement")
-    public static let receivedMessage = NSDataAsset.Name("Received Message")
-    public static let ringerPause = NSDataAsset.Name("Ringer Pause")
-    public static let ringer = NSDataAsset.Name("Ringer")
-    public static let sentMessage = NSDataAsset.Name("Sent Message")
+    
 }
 
 // Notifications
 public extension NSNotification.Name {
-    public static let openConversationsUpdated = NSNotification.Name(rawValue: "com.avaidyam.Parrot.OpenConversationsUpdated")
-    public static let updateColors = NSNotification.Name(rawValue: "com.avaidyam.Parrot.UpdateColors")
+    public static let openConversationsUpdated = NSNotification.Name(rawValue: "com.avaidyam.Parrot.openConversationsUpdated")
+    public static let conversationAppearanceUpdated = NSNotification.Name(rawValue: "com.avaidyam.Parrot.conversationAppearanceUpdated")
 }
 
 // Views

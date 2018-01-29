@@ -1,10 +1,8 @@
 import Foundation
 
-/* TODO: Add support for strongly typed event types. */
-/* TODO: Add support for SubscriptionPools/Streams with cool batching/grouping features. */
-
-// kind == TestEvent.Type, userInfo == TestEvent()
+/* TODO: Add support for strongly typed event types (requires KeyValue*Coder). */
 /*
+// kind == "Module.TestEvent", userInfo == TestEvent()
 public struct TestEvent: Subscription.Event {
     let str: String
 }
@@ -15,47 +13,18 @@ public class Subscription {
     /// Describes a trigger Event.
     public typealias Event = Notification
     
-    /// Describes the Location where the stream of events come from.
-    public enum Location {
-        
-        /// The events will be broadcast within the current process boundary.
-        case local
-        
-        /// The events will be broadcast between apps about their states.
-        ///case workspace
-        
-        /// The events will be broadcast to all processes owned by the current user.
-        /// Note: the origin `object` parameter of the Event MUST be a string.
-        case system
-        
-        /// The events will be broadcast to all processes owned by any users.
-        // TODO: This is not supported yet.
-        //case global
-        
-        /// The events will be broadcast via Bonjour to any network listener daemons.
-        // TODO: This is not supported yet.
-        //case network
-        
-        fileprivate var underlyingCenter: NotificationCenter {
-            switch self {
-            case .local: return NotificationCenter.default
-            case .system: return DistributedNotificationCenter.default
-            }
-        }
-    }
-    
     fileprivate let handler: (Event) -> Void
     
     public private(set) var active = false
-    public let location: Location
-    public let queue: DispatchQueue
-    public private(set) var source: Any?
+    public weak var location: NotificationCenter?
+    public weak var queue: DispatchQueue?
+    public private(set) var source: Any? //weak?
     public let name: Notification.Name
     
     /// Constructs a new subscription using the `where`, `on`, `from`, and `kind` parameters,
     /// that executes the provided handler when triggered on the `on` queue.
     /// Note: the handler also receives one optional dictionary parameter from the source.
-    public init(where location: Location = .local, on queue: DispatchQueue = .main, from source: Any? = nil,
+    public init(where location: NotificationCenter = .default, on queue: DispatchQueue = .main, from source: Any? = nil,
                 kind name: Notification.Name, _ handler: @escaping (Event) -> Void) {
         self.location = location
         self.queue = queue
@@ -72,7 +41,7 @@ public class Subscription {
     
     /// The worker function bridged into Objective-C.
     @objc private func _runHandler(_ note: Notification) {
-        self.queue.async {
+        (self.queue ?? .main).async {
             self.handler(note)
         }
     }
@@ -82,16 +51,16 @@ public class Subscription {
     /// will be forwarded to the `sink`. Upon registration of the sink, a transient
     /// subscription is returned. Use this to unsubscribe.
     public func activate() {
-        guard !self.active else { return }
-        self.location.underlyingCenter.addObserver(self, selector: #selector(Subscription._runHandler(_:)),
-                                                   name: self.name, object: self.source)
+        guard let center = self.location, !self.active else { return }
+        center.addObserver(self, selector: #selector(Subscription._runHandler(_:)),
+                           name: self.name, object: self.source)
         self.active = true
     }
     
     /// Unsubscribe from a Notification on the chosen Location, removing the sink.
     public func deactivate() {
-        guard self.active else { return }
-        self.location.underlyingCenter.removeObserver(self)
+        guard let center = self.location, self.active else { return }
+        center.removeObserver(self)
         self.active = false
     }
     
@@ -106,7 +75,7 @@ public class Subscription {
 /// The AutoSubscription class operates exactly the same as the Subscription class,
 /// except it automatically activates when created, and deactivates as it is released.
 public class AutoSubscription: Subscription {
-    public override init(where location: Subscription.Location = .local, on queue: DispatchQueue = .main,
+    public override init(where location: NotificationCenter = .default, on queue: DispatchQueue = .main,
                          from source: Any? = nil,  kind name: Notification.Name,
                          _ handler: @escaping (Event) -> Void) {
         super.init(where: location, on: queue, from: source, kind: name, handler)
@@ -117,21 +86,16 @@ public class AutoSubscription: Subscription {
     }
 }
 
-/*
-/// A subscription pool can be automatically cleared and stuff.....?
-public typealias SubscriptionPool = [Subscription]
-public extension Array where Element: Subscription {
-    
-    public mutating func <-(_ lhs: Self, _ rhs: Subscription) {
-        lhs.append(rhs)
-    }
-}
-*/
-
 public extension Subscription.Event {
     
     /// Publish an Event to the chosen Location.
-    public func post(to location: Subscription.Location = .local) {
-        location.underlyingCenter.post(self)
+    public func post(to location: NotificationCenter = .default) {
+        location.post(self)
+    }
+}
+
+public extension NotificationCenter {
+    public static var distributed: DistributedNotificationCenter {
+        return DistributedNotificationCenter.default()
     }
 }
