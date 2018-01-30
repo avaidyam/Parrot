@@ -110,41 +110,45 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
     public func display(viewController: NSViewController) {
         guard viewController._rootAnimator == nil else {
             assert(viewController._rootAnimator == self, "the view controller has a different WindowTransitionAnimator already!")
-            self.window?.makeKeyAndOrderFront(nil)
+            UI { self.window?.makeKeyAndOrderFront(nil) }
             return
         }
         
-        viewController.view.layoutSubtreeIfNeeded()
-        let p = viewController.view.fittingSize
-        
-        let clazz = (viewController as? WindowPresentable)?.windowClass?() ?? NSWindow.self
-        self.window = clazz.init(contentRect: NSRect(x: 0, y: 0, width: p.width, height: p.height),
-                                 styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
-        self.window?.isReleasedWhenClosed = false
-        self.window?.contentView?.superview?.wantsLayer = true // always root-layer-backed
-        NotificationCenter.default.addObserver(self, selector: #selector(NSWindowDelegate.windowWillClose(_:)),
-                                               name: NSWindow.willCloseNotification, object: self.window)
-        
-        self.window?.contentViewController = viewController
-        self.window?.bind(.title, to: viewController, withKeyPath: "title", options: nil)
-        self.window?.appearance = viewController.view.window?.appearance
-        self.window?.delegate = viewController as? NSWindowDelegate
-        self.window?.center()
-        
-        if let vc = viewController as? WindowPresentable, let w = self.window {
-            vc.prepare(window: w)
+        UI {
+            viewController.view.layoutSubtreeIfNeeded()
+            let p = viewController.view.fittingSize
+            
+            let clazz = (viewController as? WindowPresentable)?.windowClass?() ?? NSWindow.self
+            self.window = clazz.init(contentRect: NSRect(x: 0, y: 0, width: p.width, height: p.height),
+                                     styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
+            self.window?.isReleasedWhenClosed = false
+            self.window?.contentView?.superview?.wantsLayer = true // always root-layer-backed
+            NotificationCenter.default.addObserver(self, selector: #selector(NSWindowDelegate.windowWillClose(_:)),
+                                                   name: NSWindow.willCloseNotification, object: self.window)
+            
+            self.window?.contentViewController = viewController
+            self.window?.bind(.title, to: viewController, withKeyPath: "title", options: nil)
+            self.window?.appearance = viewController.view.window?.appearance
+            self.window?.delegate = viewController as? NSWindowDelegate
+            self.window?.center()
+            
+            if let vc = viewController as? WindowPresentable, let w = self.window {
+                vc.prepare(window: w)
+            }
+            viewController._rootAnimator = self
+            self.window?.makeKeyAndOrderFront(nil)
         }
-        viewController._rootAnimator = self
-        self.window?.makeKeyAndOrderFront(nil)
     }
     
     public func undisplay(viewController: NSViewController) {
-        NotificationCenter.default.removeObserver(self)
-        self.window?.orderOut(nil)
-        self.window?.unbind(.title)
-        
-        self.window = nil
-        viewController._rootAnimator = nil
+        UI {
+            NotificationCenter.default.removeObserver(self)
+            self.window?.orderOut(nil)
+            self.window?.unbind(.title)
+            
+            self.window = nil
+            viewController._rootAnimator = nil
+        }
     }
     
     public func animatePresentation(of viewController: NSViewController, from fromViewController: NSViewController) {
@@ -160,7 +164,7 @@ public class WindowTransitionAnimator: NSObject, NSViewControllerPresentationAni
     @objc public func windowWillClose(_ notification: Notification) {
         guard let c = self.window?.contentViewController else { return }
         if let p = c.presenting {
-            p.dismiss(c)
+            UI { p.dismiss(c) }
         } else {
             self.undisplay(viewController: self.window!.contentViewController!)
         }

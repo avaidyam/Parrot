@@ -12,19 +12,47 @@ internal let log = Logger(subsystem: "Parrot.Global")
 @NSApplicationMain
 public class ParrotAppController: NSApplicationController {
     
-    private let net = NetworkReachabilityManager(host: "google.com")
-    private var menubarSub: NSKeyValueObservation? = nil
-    private var idleTimer: DispatchSourceTimer? = nil
-    internal var watching: [Subscription] = []
+    /// An easy accessor for the current `ParrotAppController`.
+    public static var main: ParrotAppController? { return NSApp.delegate as? ParrotAppController }
     
-    fileprivate var server = XPCConnection(name: "com.avaidyam.Parrot.parrotd", active: true)
-    private static let xpcChannel = Logger.Channel { unit in
-        // any failure in these ?'s will kill the logunit
-        try? (NSApp.delegate as? ParrotAppController)?.server.async(SendLogInvocation.self, with: unit)
+    /// The internal connection to the `parrotd` daemon.
+    public var server = XPCConnection(name: .xpcServer, active: true)
+    
+    /// Intended to be a global logger that feeds logs to `parrotd` from all XPC clients.
+    public let serverChannel = Logger.Channel { unit in
+        try? ParrotAppController.main?.server.async(SendLogInvocation.self, with: unit)
     }
     
-    /// Lazy-init for Preferences.
-    public lazy var preferencesController: PreferencesViewController = {
+    /// A reachability manager to detect network changes for `ServiceRegistry`.
+    private let reachability = NetworkReachabilityManager(host: .reachabilityURL)
+    
+    /// A catalog of all the subscriptions we're holding on to.
+    internal var watching: [Any] = []
+    
+    /// If we're in menubar-only mode, we have a status item.
+    private lazy var statusItem: NSStatusItem = {
+        NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    }()
+    
+    /// The application's dock menu - this can be dynamically configured.
+    /// Note that because we aren't using an NSDockTilePlugin, we can't provide
+    /// this menu when the application isn't already open.
+    private lazy var dockMenu: NSMenu = {
+        let menu = NSMenu(title: "Parrot")
+        menu.addItem(title: "Open Conversations") {
+            log.info("Open Conversations")
+            DispatchQueue.main.async {
+                self.mainController.presentAsWindow()
+            }
+        }
+        menu.addItem(withTitle: "Log Out...",
+                     action: #selector(self.logoutSelected(_:)),
+                     keyEquivalent: "")
+        return menu
+    }()
+    
+    /// Lazy-init for all the preferences panes.
+    private lazy var preferencesController: PreferencesViewController = {
         let p = PreferencesViewController()
         p.add(pane: Preferences.Controllers.General())
         p.add(pane: Preferences.Controllers.Text())
@@ -32,15 +60,18 @@ public class ParrotAppController: NSApplicationController {
         return p
     }()
     
-	/// Lazy-init for the main conversations NSWindowController.
+	/// Lazy-init for the conversations NSViewController.
 	internal lazy var conversationsController: NSViewController = {
 		ConversationListViewController()
 	}()
     
+    /// Lazy-init for the directory NSViewController.
     private lazy var directoryController: NSViewController = {
         DirectoryListViewController()
     }()
     
+    /// Lazy-init for the dual conversations+directory NSViewController.
+    /// This won't be initialized unless `Settings.prefersShoeboxAppStyle` = true.
     private lazy var dualController: NSSplitViewController = {
         let sp = SplitWindowController()
         let item = NSSplitViewItem(sidebarWithViewController: self.conversationsController)
@@ -50,14 +81,12 @@ public class ParrotAppController: NSApplicationController {
         return sp
     }()
     
-    private lazy var statusItem: NSStatusItem = {
-        NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-    }()
-	
-    // cached!
+    /// Cached form of `Settings.prefersShoeboxAppStyle` since this setting is volatile.
     private lazy var _prefersShoeboxAppStyle: Bool = {
         return Settings.prefersShoeboxAppStyle
     }()
+    
+    /// Depending on `Settings.prefersShoeboxAppStyle`, we return the correct UI.
     private var mainController: NSViewController {
         if self._prefersShoeboxAppStyle {
             return self.dualController
@@ -65,29 +94,22 @@ public class ParrotAppController: NSApplicationController {
             return self.conversationsController
         }
     }
-    
-	public override init() {
-		super.init()
-        ToolTipManager.modernize()
-        
-        // Well let's see if this works.
-        Logger.globalChannels = [ParrotAppController.xpcChannel]
-        
-        // Set up the Google Analytics reporting.
-        GoogleAnalytics.sessionTrackingIdentifier = "UA-63931980-2"
-		
-		// Register the default completions if none are in the user settings.
-        // Note: we're not using the registered defaults domain on purpose for this.
-		if Settings.completions.count == 0 {
-			let defaultC = ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]
-			Settings.completions = defaultC
-		}
-	}
 	
 	// First begin authentication and setup for any services.
-	func applicationWillFinishLaunching(_ notification: Notification) {
+	public func applicationWillFinishLaunching(_ notification: Notification) {
         log.info("Initializing Parrot...")
+        
+        ToolTipManager.modernize()
+        Logger.globalChannels = [self.serverChannel]
+        GoogleAnalytics.sessionTrackingIdentifier = "UA-63931980-2"
         self.registerEvents()
+        
+        // Register the default completions if none are in the user settings.
+        // Note: we're not using the registered defaults domain on purpose for this.
+        if Settings.completions.count == 0 {
+            let defaultC = ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]
+            Settings.completions = defaultC
+        }
         
         // Sign in first.
         let cookies = try! server.sync(AuthenticationInvocation.self)
@@ -98,7 +120,7 @@ public class ParrotAppController: NSApplicationController {
         ServiceRegistry.add(service: Client(configuration: config))
         
         // Install reachability for connect/disconnect.
-        self.net?.listen() {
+        self.reachability?.listen() {
             for (name, service) in ServiceRegistry.services {
                 switch $0 {
                 case .reachable(_) where !service.connected:
@@ -132,7 +154,7 @@ public class ParrotAppController: NSApplicationController {
         }
         
         // Watch the menubarIcon setting to toggle the statusbar item.
-        self.menubarSub = Settings.observe(\.menubarIcon, options: [.new, .initial]) { _, _ in
+        let sub = Settings.observe(\.menubarIcon, options: [.new, .initial]) { _, _ in
             if Settings.menubarIcon {
                 let image = NSImage(named: .applicationIcon)
                 image?.size = NSSize(width: 16, height: 16)
@@ -147,6 +169,7 @@ public class ParrotAppController: NSApplicationController {
                 NSApp.setActivationPolicy(.regular)
             }
         }
+        self.watching += [sub]
         
         // Wallclock for system idle -> service interaction.
         let work = DispatchWorkItem {
@@ -158,39 +181,25 @@ public class ParrotAppController: NSApplicationController {
                 }
             }
         }
-        self.idleTimer = DispatchSource.timer(flags: .strict, queue: .global(qos: .background),
-                         wallDeadline: .now(), repeating: 5.minutes, leeway: 1.minutes, handler: work)
+        self.watching += [DispatchSource.timer(flags: .strict, queue: .global(qos: .background),
+                          wallDeadline: .now(), repeating: 5.minutes, leeway: 1.minutes, handler: work)]
     }
     
+    /// Before we quit, we have to send the "sign out" analytics.
     public func applicationWillTerminate(_ notification: Notification) {
         GoogleAnalytics.sessionTrackingIdentifier = nil
     }
     
-    /// Right clicking the status item causes the app to close; left click causes it to become visible.
-    @objc func showConversationWindow(_ sender: NSStatusBarButton?) {
-        let event = NSApp.currentEvent!
-        if event.type == NSEvent.EventType.rightMouseUp {
-            NSApp.terminate(self)
-        } else {
-            DispatchQueue.main.async {
-                self.mainController.presentAsWindow()
-                NSApp.activate(ignoringOtherApps: true)
-            }
-        }
-    }
-    
     /// If the Conversations window is closed, tapping the dock icon will reopen it.
     public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        DispatchQueue.main.async {
-            self.mainController.presentAsWindow()
-        }
+        self.mainController.presentAsWindow()
 		return true
 	}
     
     public func application(_ application: NSApplication, open urls: [URL]) {
 		// Create an alert handler to catch any issues with the host or path fragments.
 		let alertHandler = {
-            NSAlert(style: .informational, message: "Parrot couldn't open that location!",
+            NSAlert(style: .informational, message: .openLocationFailed,
                     information: urls[0].absoluteString, buttons: ["OK"]).beginModal()
 		}
 		
@@ -209,41 +218,39 @@ public class ParrotAppController: NSApplicationController {
 		}
 	}
 	
-	/// Provide an application dock menu. Note that because we aren't using an NSDockTilePlugin,
-	/// we can't provide this menu when the application isn't already open.
 	func applicationDockMenu(_ sender: NSApplication) -> NSMenu? {
-		let menu = NSMenu(title: "Parrot")
-		menu.addItem(title: "Open Conversations") {
-			log.info("Open Conversations")
-            DispatchQueue.main.async {
-                self.mainController.presentAsWindow()
-            }
-		}
-		menu.addItem(withTitle: "Log Out...",
-		             action: #selector(self.logoutSelected(_:)),
-		             keyEquivalent: "")
-		return menu
+		return self.dockMenu
 	}
     
-    @IBAction func showPreferences(_ sender: Any?) {
+    /// Right clicking the status item causes the app to close; left click causes it to become visible.
+    @objc func showConversationWindow(_ sender: NSStatusBarButton?) {
+        if NSApp.currentEvent!.type == NSEvent.EventType.rightMouseUp {
+            NSApp.terminate(self)
+        } else {
+            self.mainController.presentAsWindow()
+            NSApp.activate(ignoringOtherApps: true)
+        }
+    }
+    
+    @objc func showPreferences(_ sender: Any?) {
         self.preferencesController.presentAsWindow()
         GoogleAnalytics.view(screen: .preferences)
     }
     
-    @IBAction func showConversations(_ sender: Any?) {
+    @objc func showConversations(_ sender: Any?) {
         self.mainController.presentAsWindow()
     }
     
-    @IBAction func showDirectory(_ sender: Any?) {
+    @objc func showDirectory(_ sender: Any?) {
         self.directoryController.presentAsWindow()
     }
     
-	@IBAction func logoutSelected(_ sender: AnyObject) {
+	@objc func logoutSelected(_ sender: AnyObject) {
         try! server.sync(LogOutInvocation.self)
         NSApp.terminate(self)
 	}
 	
-	@IBAction func feedback(_ sender: AnyObject?) {
-        NSWorkspace.shared.open(URL(string: "https://gitreports.com/issue/avaidyam/Parrot")!)
+	@objc func feedback(_ sender: AnyObject?) {
+        NSWorkspace.shared.open(URL(string: .feedbackURL)!)
     }
 }

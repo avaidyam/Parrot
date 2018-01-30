@@ -4,7 +4,11 @@ import MochaUI
 
 // Strings
 public extension String {
-    public static let test = NSLocalizedString("test", comment: "none")
+    public static let openLocationFailed = NSLocalizedString("Parrot couldn't open that location!", comment: "Parrot URL does not exist.")
+    
+    public static let xpcServer = "com.avaidyam.Parrot.parrotd"
+    public static let feedbackURL = "https://gitreports.com/issue/avaidyam/Parrot"
+    public static let reachabilityURL = "google.com"
 }
 
 // Colors

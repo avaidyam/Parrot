@@ -1,19 +1,14 @@
 import Foundation
 
-/*
- PeopleAPI.list(on: c.channel!, id: c.directory.me.identifier) {
-     print($0, $1)
- }
-*/
 public struct PeopleAPI {
     private init() {}
     
     private static let baseURL = "https://people-pa.clients6.google.com/v2/people"
+    private static let groupsURL = "https://hangoutssearch-pa.clients6.google.com/v1"
     private static let APIKey = "AIzaSyBokvzEPUrkgfws0OrFWkpKkVBVuhRfKpk"
     
-    public static func list(on channel: Channel, ids: [String], completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
-        guard ids.count > 0 else { return }
-        self._post(channel, "", [
+    public static func suggestions(on channel: Channel, completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+        self._post(channel, PeopleAPI.baseURL + "/me/allPeople", [
             "requestMask.includeField.paths": "person.email",
             "requestMask.includeField.paths": "person.gender",
             "requestMask.includeField.paths": "person.in_app_reachability",
@@ -22,9 +17,43 @@ public struct PeopleAPI {
             "requestMask.includeField.paths": "person.phone",
             "requestMask.includeField.paths": "person.photo",
             "requestMask.includeField.paths": "person.read_only_profile_info",
-            "requestMask.includeField.paths": "person.organization",
-            "requestMask.includeField.paths": "person.location",
-            "requestMask.includeField.paths": "person.cover_photo",
+            "extensionSet.extensionNames": "HANGOUTS_ADDITIONAL_DATA",
+            "extensionSet.extensionNames": "HANGOUTS_SUGGESTED_PEOPLE",
+            "extensionSet.extensionNames": "HANGOUTS_PHONE_DATA",
+            "key": PeopleAPI.APIKey
+        ], nil, completionHandler)
+    }
+    
+    public static func phoneSuggestions(on channel: Channel, completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+        self._post(channel, PeopleAPI.baseURL + "/me/allPeople", [
+            "requestMask.includeField.paths": "person.email",
+            "requestMask.includeField.paths": "person.gender",
+            "requestMask.includeField.paths": "person.in_app_reachability",
+            "requestMask.includeField.paths": "person.metadata",
+            "requestMask.includeField.paths": "person.name",
+            "requestMask.includeField.paths": "person.phone",
+            "requestMask.includeField.paths": "person.photo",
+            "requestMask.includeField.paths": "person.read_only_profile_info",
+            "extensionSet.extensionNames": "HANGOUTS_PHONE_DATA",
+            "fieldFilter.field": "PHONE",
+            "key": PeopleAPI.APIKey
+        ], nil, completionHandler)
+    }
+    
+    public static func list(on channel: Channel, ids: [String], completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+        guard ids.count > 0 else { return }
+        self._post(channel, PeopleAPI.baseURL + "", [
+            "requestMask.includeField.paths": "person.email",
+            "requestMask.includeField.paths": "person.gender",
+            "requestMask.includeField.paths": "person.in_app_reachability",
+            "requestMask.includeField.paths": "person.metadata",
+            "requestMask.includeField.paths": "person.name",
+            "requestMask.includeField.paths": "person.phone",
+            "requestMask.includeField.paths": "person.photo",
+            "requestMask.includeField.paths": "person.read_only_profile_info",
+            "requestMask.includeField.paths": "person.organization", // extra
+            "requestMask.includeField.paths": "person.location", // extra
+            "requestMask.includeField.paths": "person.cover_photo", // extra
             "extensionSet.extensionNames": "HANGOUTS_ADDITIONAL_DATA",
             "extensionSet.extensionNames": "HANGOUTS_OFF_NETWORK_GAIA_GET",
             "extensionSet.extensionNames": "HANGOUTS_PHONE_DATA",
@@ -39,7 +68,7 @@ public struct PeopleAPI {
     
     public static func lookup(on channel: Channel, phones: [String], completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
         guard phones.count > 0 else { return }
-        self._post(channel, "/lookup", [
+        self._post(channel, PeopleAPI.baseURL + "/lookup", [
             "type": "PHONE",
             "matchType": "LENIENT",
             "requestMask.includeField.paths": "person.email",
@@ -59,14 +88,47 @@ public struct PeopleAPI {
         ], phones.map { "id=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
+    public static func lookup(on channel: Channel, emails: [String], completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+        guard emails.count > 0 else { return }
+        self._post(channel, PeopleAPI.baseURL + "/lookup", [
+            "type": "EMAIL",
+            "matchType": "EXACT",
+            "requestMask.includeField.paths": "person.email",
+            "requestMask.includeField.paths": "person.gender",
+            "requestMask.includeField.paths": "person.in_app_reachability",
+            "requestMask.includeField.paths": "person.metadata",
+            "requestMask.includeField.paths": "person.name",
+            "requestMask.includeField.paths": "person.phone",
+            "requestMask.includeField.paths": "person.photo",
+            "requestMask.includeField.paths": "person.read_only_profile_info",
+            "extensionSet.extensionNames": "HANGOUTS_ADDITIONAL_DATA",
+            "extensionSet.extensionNames": "HANGOUTS_OFF_NETWORK_GAIA_LOOKUP",
+            "extensionSet.extensionNames": "HANGOUTS_PHONE_DATA",
+            "coreIdParams.useRealtimeNotificationExpandedAcls": "true",
+            "key": PeopleAPI.APIKey
+        ], emails.map { "id=" + $0 }.joined(separator: "&"), completionHandler)
+    }
+    
     public static func autocomplete(on channel: Channel, query: String, length: UInt = 15,
                                     completionHandler: @escaping ([String: Any]?, Error?) -> ())
     {
-        self._post(channel, "/autocomplete", [
+        self._post(channel, PeopleAPI.baseURL + "/autocomplete", [
             "query": query,
             "client": "HANGOUTS_WITH_DATA",
             "pageSize": "\(length)",
             "key": PeopleAPI.APIKey
+        ], nil, completionHandler)
+    }
+    
+    public static func autocompleteGroups(on channel: Channel, query: String, length: UInt = 15, meta: Bool = true,
+                                          completionHandler: @escaping ([String: Any]?, Error?) -> ())
+    {
+        self._post(channel, PeopleAPI.groupsURL + "/metadata:search", [
+            "query": query,
+            "pageSize": "\(length)",
+            "includeMetadata": "\(meta)",
+            "key": PeopleAPI.APIKey,
+            "alt": "json"
         ], nil, completionHandler)
     }
     
@@ -82,7 +144,7 @@ public struct PeopleAPI {
         merge = merge.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             .replacingOccurrences(of: "+", with: "%2B") // since + is somehow allowed???
         
-        var request = URLRequest(url: URL(string: PeopleAPI.baseURL + api)!)
+        var request = URLRequest(url: URL(string: api)!)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         request.httpBody = merge.data(using: .utf8)
@@ -111,6 +173,7 @@ public struct PeopleAPI {
         }.resume()
     }
 }
+
 /* SAMPLE PHONE DATA:
     "phone": [
      {
