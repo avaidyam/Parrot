@@ -287,8 +287,12 @@ public class UserList: Directory {
     // Now for all GVoice ID's, grab their real names:
     private func cache(namesFor phones: [String]) {
         PeopleAPI.lookup(on: self.client.channel!, phones: phones) { res, err in
-            guard let results = res else {
+            guard let data = res else {
                 log.debug("Encountered a GVoice lookup error: \(String(describing: err))"); return
+            }
+            guard let results2 = try? JSONSerialization.jsonObject(with: data, options: [.allowFragments]),
+                    let results = results2 as? [String: Any] else {
+                        log.debug("Encountered a GVoice lookup error: \(String(describing: err))"); return
             }
             
             guard let matches = results["matches"] as? [[String: Any]] else { return }

@@ -7,7 +7,7 @@ public struct PeopleAPI {
     private static let groupsURL = "https://hangoutssearch-pa.clients6.google.com/v1"
     private static let APIKey = "AIzaSyBokvzEPUrkgfws0OrFWkpKkVBVuhRfKpk"
     
-    public static func suggestions(on channel: Channel, completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+    public static func suggestions(on channel: Channel, completionHandler: @escaping (Data?, Error?) -> ()) {
         self._post(channel, PeopleAPI.baseURL + "/me/allPeople", [
             "requestMask.includeField.paths": "person.email",
             "requestMask.includeField.paths": "person.gender",
@@ -24,7 +24,7 @@ public struct PeopleAPI {
         ], nil, completionHandler)
     }
     
-    public static func phoneSuggestions(on channel: Channel, completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+    public static func phoneSuggestions(on channel: Channel, completionHandler: @escaping (Data?, Error?) -> ()) {
         self._post(channel, PeopleAPI.baseURL + "/me/allPeople", [
             "requestMask.includeField.paths": "person.email",
             "requestMask.includeField.paths": "person.gender",
@@ -40,7 +40,7 @@ public struct PeopleAPI {
         ], nil, completionHandler)
     }
     
-    public static func list(on channel: Channel, ids: [String], completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+    public static func list(on channel: Channel, ids: [String], completionHandler: @escaping (Data?, Error?) -> ()) {
         guard ids.count > 0 else { return }
         self._post(channel, PeopleAPI.baseURL + "", [
             "requestMask.includeField.paths": "person.email",
@@ -66,7 +66,7 @@ public struct PeopleAPI {
         ], ids.map { "personId=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
-    public static func lookup(on channel: Channel, phones: [String], completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+    public static func lookup(on channel: Channel, phones: [String], completionHandler: @escaping (Data?, Error?) -> ()) {
         guard phones.count > 0 else { return }
         self._post(channel, PeopleAPI.baseURL + "/lookup", [
             "type": "PHONE",
@@ -88,7 +88,7 @@ public struct PeopleAPI {
         ], phones.map { "id=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
-    public static func lookup(on channel: Channel, emails: [String], completionHandler: @escaping ([String: Any]?, Error?) -> ()) {
+    public static func lookup(on channel: Channel, emails: [String], completionHandler: @escaping (Data?, Error?) -> ()) {
         guard emails.count > 0 else { return }
         self._post(channel, PeopleAPI.baseURL + "/lookup", [
             "type": "EMAIL",
@@ -110,7 +110,7 @@ public struct PeopleAPI {
     }
     
     public static func autocomplete(on channel: Channel, query: String, length: UInt = 15,
-                                    completionHandler: @escaping ([String: Any]?, Error?) -> ())
+                                    completionHandler: @escaping (Data?, Error?) -> ())
     {
         self._post(channel, PeopleAPI.baseURL + "/autocomplete", [
             "query": query,
@@ -121,7 +121,7 @@ public struct PeopleAPI {
     }
     
     public static func autocompleteGroups(on channel: Channel, query: String, length: UInt = 15, meta: Bool = true,
-                                          completionHandler: @escaping ([String: Any]?, Error?) -> ())
+                                          completionHandler: @escaping (Data?, Error?) -> ())
     {
         self._post(channel, PeopleAPI.groupsURL + "/metadata:search", [
             "query": query,
@@ -135,7 +135,7 @@ public struct PeopleAPI {
     // Note: DictionaryLiteral accepts duplicate keys and preserves order.
     // Note: `prefix` is a silly hack for multiple `id`'s which are dynamic and cannot be in a literal.
     private static func _post(_ channel: Channel, _ api: String, _ params: DictionaryLiteral<String, String>,
-                              _ prefix: String? = nil, _ completionHandler: @escaping ([String: Any]?, Error?) -> ())
+                              _ prefix: String? = nil, _ completionHandler: @escaping (Data?, Error?) -> ())
     {
         var merge = params.map { "\($0)=\($1)" }.joined(separator: "&")
         if let prefix2 = prefix {
@@ -164,49 +164,255 @@ public struct PeopleAPI {
                     "response": data
                 ]))
             }
+            completionHandler(data, nil)
+            /*
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? [String: Any]
                 completionHandler(json, nil)
             } catch(let error) {
                 completionHandler(nil, error)
             }
+            */
         }.resume()
     }
 }
 
-/* SAMPLE PHONE DATA:
-    "phone": [
-     {
-      "metadata": {
-       "writeable": true,
-       "container": "CONTACT",
-       "containerType": "CONTACT",
-       "containerId": "8079549805121237877",
-       "encodedContainerId": "702053bd8f53f375",
-       "primary": true,
-       "containerPrimary": true
-      },
-      "value": "<phone number>",
-      "type": "mobile",
-      "formattedType": "Mobile",
-      "canonicalizedForm": "<phone number>",
-      "uri": "tel:<phone number>",
-      "extendedData": {
-       "structuredPhone": {
-        "phoneNumber": {
-         "e164": "<phone number>",
-         "i18nData": {
-          "nationalNumber": "<phone number>",
-          "internationalNumber": "<phone number>",
-          "countryCode": 1,
-          "regionCode": "US",
-          "isValid": true,
-          "validationResult": "IS_POSSIBLE"
-         }
-        },
-        "type": "mobile"
-       }
-      }
-     }
-    ]
-*/
+public struct PeopleAPIData {
+    private init() {}
+    
+    public struct Address: Codable {
+        public var formatted: String? = nil
+        public var type: String? = nil
+    }
+    
+    public struct Location: Codable {
+        public var value: String? = nil
+    }
+    
+    public struct Birthday: Codable {
+        public var dateMs: String? = nil
+        public var dateMsAsNumber: String? = nil
+    }
+    
+    public struct Organization: Codable {
+        public var name: String? = nil
+        public var stringType: String? = nil
+        public var title: String? = nil
+    }
+    
+    public struct Tagline: Codable {
+        public var value: String? = nil
+    }
+    
+    public struct Membership: Codable {
+        public var contactGroupId: String? = nil
+        public var systemContactGroupId: String? = nil
+    }
+    
+    public struct ProfileUrl: Codable {
+        public var url: String? = nil
+    }
+    
+    public struct Email: Codable {
+        public var formattedType: String? = nil
+        public var type: String? = nil
+        public var value: String? = nil
+    }
+    
+    public struct HangoutsExtendedData: Codable {
+        public var hadPastHangoutState: String? = nil
+        public var invitationStatus: String? = nil
+        public var isBot: Bool? = nil
+        public var isDismissed: Bool? = nil
+        public var isFavorite: Bool? = nil
+        public var isPinned: Bool? = nil
+        public var userType: String? = nil
+    }
+    
+    public struct ExtendedData: Codable {
+        public var hangoutsExtendedData: HangoutsExtendedData? = nil
+    }
+    
+    public struct Gender: Codable {
+        public var formattedType: String? = nil
+        public var type: String? = nil
+    }
+    
+    public struct ReachabilityKey: Codable {
+        public var keyType: String? = nil
+        public var keyValue: String? = nil
+    }
+    
+    public struct InAppReachability: Codable {
+        public var appType: String? = nil
+        public var reachabilityKey: ReachabilityKey? = nil
+        public var status: String? = nil
+    }
+    
+    public struct Name: Codable {
+        public var displayName: String? = nil
+        public var displayNameLastFirst: String? = nil
+        public var familyName: String? = nil
+        public var givenName: String? = nil
+        public var unstructuredName: String? = nil
+    }
+    
+    public struct I18nData: Codable {
+        public var countryCode: UInt? = nil
+        public var internationalNumber: String? = nil
+        public var isValid: Bool = false
+        public var nationalNumber: String? = nil
+        public var regionCode: String? = nil
+        public var validationResult: String? = nil
+    }
+    
+    public struct PhoneNumber: Codable {
+        public var e164: String? = nil
+        public var i18nData: I18nData? = nil
+    }
+    
+    public struct StructuredPhone: Codable {
+        public var phoneNumber: PhoneNumber? = nil
+        public var type: String? = nil
+    }
+    
+    public struct PhoneExtendedData: Codable {
+        public var structuredPhone: StructuredPhone? = nil
+    }
+    
+    public struct Phone: Codable {
+        public var canonicalizedForm: String? = nil
+        public var extendedData: PhoneExtendedData? = nil
+        public var formattedType: String? = nil
+        public var type: String? = nil
+        public var uri: String? = nil
+        public var value: String? = nil
+    }
+    
+    public struct Photo: Codable {
+        public var isDefault: Bool? = nil
+        public var isMonogram: Bool? = nil
+        public var monogramBackground: String? = nil
+        public var photoToken: String? = nil
+        public var url: String? = nil
+    }
+    
+    public struct CoverPhoto: Codable {
+        public var imageHeight: UInt? = nil
+        public var imageWidth: UInt? = nil
+        public var imageId: String? = nil
+        public var imageUrl: String? = nil
+    }
+    
+    public struct AccountEmail: Codable {
+        public var email: String? = nil
+    }
+    
+    public struct ProfileInfo: Codable {
+        public var accountEmail: AccountEmail? = nil
+        public var objectType: String? = nil
+    }
+    
+    public struct Person: Codable {
+        public var coverPhoto: CoverPhoto? = nil
+        public var email: [Email]? = nil
+        public var extendedData: ExtendedData? = nil
+        public var fingerprint: String? = nil
+        public var gender: [Gender]? = nil
+        public var inAppReachability: [InAppReachability]? = nil
+        public var name: [Name]? = nil
+        public var personId: String? = nil
+        public var phone: [Phone]? = nil
+        public var photo: [Photo]? = nil
+        public var address: [Address]? = nil
+        public var location: [Location]? = nil
+        public var birthday: [Birthday]? = nil
+        public var organization: [Organization]? = nil
+        public var tagline: [Tagline]? = nil
+        public var membership: [Membership]? = nil
+        public var readOnlyProfileInfo: [ProfileInfo]? = nil
+        public var profileUrlRepeated: [ProfileUrl]? = nil
+    }
+    
+    public struct ConversationId: Codable {
+        public var id: String? = nil
+    }
+    
+    public struct ParticipantId: Codable {
+        public var profileId: String? = nil
+    }
+    
+    public struct Participant: Codable {
+        public var displayName: String? = nil
+        public var email: String? = nil
+        public var id: ParticipantId? = nil
+        public var invitationStatus: String? = nil
+        public var profilePictureUrl: String? = nil
+    }
+    
+    public struct ConversationMetadata: Codable {
+        public var id: ConversationId? = nil
+        public var otrStatus: String? = nil
+        public var participants: [Participant]? = nil
+        public var type: String? = nil
+    }
+    
+    public struct ConversationAndSelfState: Codable {
+        public var conversationMetadata: ConversationMetadata? = nil
+    }
+    
+    public struct ConversationResult: Codable {
+        public var conversationAndSelfState: ConversationAndSelfState? = nil
+    }
+    
+    public struct AutocompleteStatus: Codable {
+        public var personalResultsNotReady: Bool? = nil
+    }
+    
+    public struct Match: Codable {
+        public var lookupId: String? = nil
+        public var personId: [String]? = nil
+    }
+    
+    public struct Suggestion: Codable {
+        public var objectType: String? = nil
+        public var person: Person? = nil
+        public var suggestion: String? = nil
+    }
+    
+    public struct PersonResponse: Codable {
+        public var person: Person? = nil
+        public var personId: String? = nil
+        public var status: String? = nil
+    }
+    
+    public struct GetByIdResponse: Codable {
+        public var personResponse: [PersonResponse]? = nil
+    }
+    
+    public struct LookupResponse: Codable {
+        public var people: [String: Person]? = nil
+        public var matches: [Match]? = nil
+    }
+    
+    public struct ListAllResponse: Codable {
+        public var nextSyncToken: String? = nil
+        public var people: [Person]? = nil
+        public var totalItems: UInt? = nil
+        public var nextPageToken: String? = nil
+    }
+    
+    public struct SuggestionsResponse: Codable {
+        public var people: [Person]? = nil
+    }
+    
+    public struct AutocompleteResponse: Codable {
+        public var status: AutocompleteStatus? = nil
+        public var nextPageToken: String? = nil
+        public var results: [Suggestion]? = nil
+    }
+    
+    public struct AutocompleteGroupResponse: Codable {
+        public var results: [ConversationResult]? = nil
+    }
+}
