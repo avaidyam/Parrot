@@ -287,20 +287,13 @@ public class UserList: Directory {
     // Now for all GVoice ID's, grab their real names:
     private func cache(namesFor phones: [String]) {
         PeopleAPI.lookup(on: self.client.channel!, phones: phones) { res, err in
-            guard let data = res else {
+            guard let results = res, let matches = results.matches, let people = results.people else {
                 log.debug("Encountered a GVoice lookup error: \(String(describing: err))"); return
             }
-            guard let results2 = try? JSONSerialization.jsonObject(with: data, options: [.allowFragments]),
-                    let results = results2 as? [String: Any] else {
-                        log.debug("Encountered a GVoice lookup error: \(String(describing: err))"); return
-            }
-            
-            guard let matches = results["matches"] as? [[String: Any]] else { return }
-            guard let people = results["people"] as? [String: Any] else { return }
 
             // Locate the primary OffNetworkPhone User for each match.
             for match in matches {
-                guard var ids = match["personId"] as? [String], ids.count >= 2 else { continue }
+                guard var ids = match.personId, ids.count >= 2 else { continue }
                 guard let primary = ids
                     .flatMap({ self.users[User.ID(chatID: $0, gaiaID: $0)] })
                     .filter({ $0.locations.contains(User.GVoiceLocation) })
@@ -310,47 +303,32 @@ public class UserList: Directory {
                 
                 // Now merge the information from the other contact(s).
                 for other_ in ids {
-                    guard let other = people[other_] as? [String: Any] else { continue }
-                    if let ext = other["extendedData"] as? [String: Any] {
-                        guard   let h = ext["hangoutsExtendedData"] as? [String: Any],
-                                let u = h["userType"] as? String,
-                                u == "GAIA" else { continue }
-                        // Confirm that this is either a Contact or a GAIA type.
-                        // Contact types do not have "extendedData", and GAIA types display their type as such.
-                    }
+                    guard let other = people[other_] else { continue }
                     
-                    // other["name"].filter { $0["metadata"]["container"] == "CONTACT" }.first
-                    if let names = other["name"] as? [[String: Any]] { //(PROFILE vs CONTACT?)
-                        let values = names
-                            .filter { (($0["metadata"] as? [String: Any])?["containerType"] as? String) == "CONTACT" }
-                            .flatMap { $0["displayName"] as? String }
+                    // Confirm that this is either a Contact or a GAIA type.
+                    // Contact types do not have "extendedData", and GAIA types display their type as such.
+                    guard let u = other.extendedData?.hangoutsExtendedData?.userType, u == "GAIA" else { continue }
+                    
+                    if let names = other.name { //(PROFILE vs CONTACT?)
+                        let values = names.filter { $0.metadata?.containerType == "CONTACT" }.flatMap { $0.displayName }
                         if let name = values.first {
                             primary.nameComponents = name.components(separatedBy: " ")
                         }
                     }
                     
-                    // other["photo"].filter { $0["isMonogram"] != "1" }.map { $0["url"] }.first
-                    if let photos = other["photo"] as? [[String: Any]] {
-                        let values = photos
-                            .filter { ($0["isMonogram"] as? Int) != 1 }
-                            .flatMap { $0["url"] as? String }
+                    if let photos = other.photo {
+                        let values = photos.filter { !($0.isMonogram ?? false) }.flatMap { $0.url }
                         if let photo = values.first {
                             primary.photoURL = photo
                         }
                     }
                     
-                    // other["phone"].map { $0["value"] }
-                    if let phones = other["phone"] as? [[String: Any]] {
-                        let values = phones
-                            .flatMap { $0["value"] as? String }
-                        primary.locations += values
+                    if let phones = other.phone {
+                        primary.locations += phones.flatMap { $0.value }
                     }
                     
-                    // other["email"].map { $0["value"] }
-                    if let emails = other["email"] as? [[String: Any]] {
-                        let values = emails
-                            .flatMap { $0["value"] as? String }
-                        primary.locations += values
+                    if let emails = other.email {
+                        primary.locations += emails.flatMap { $0.value }
                     }
                 }
                 
