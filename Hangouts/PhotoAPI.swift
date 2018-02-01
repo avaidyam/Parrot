@@ -1,7 +1,8 @@
 import Foundation
 
 /// Google Photos Resumable Upload
-public enum GooglePhoto {
+public typealias GooglePhoto = PhotoAPI
+public enum PhotoAPI {
     
     /// The photo is already uploaded and is referenced by its Google Photos ID.
     case existing(id: String, user: String)
@@ -10,9 +11,7 @@ public enum GooglePhoto {
     case new(data: Data, name: String)
 }
 
-internal extension GooglePhoto {
-    
-    // URL for uploading any URL to Photos
+internal extension PhotoAPI {
     private static let UPLOAD_URL = "https://docs.google.com/upload/photos/resumable"
     
 // Google Photos Upload/Resumable FORMAT:

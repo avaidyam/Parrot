@@ -251,6 +251,27 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
             s.wait()
         */
+        case .file(let url):
+            func inner_sendLink(_ list: [String] = []) throws {
+                let res = try DriveAPI.share(on: self.client.channel!, file: url, with: list)
+                let seg = Segment(type: .Text, text: res.absoluteString)
+                let req = SendChatMessageRequest(message_content: MessageContent(segment: [seg]),
+                                                 event_request_header: self.eventHeader(.RegularChatMessage))
+                self.client.execute(req) {_,_ in}
+            }
+            
+            //guard let c = (self.conversation as? IConversation)?.client.channel else { return }
+            if self.participants.count == 2 { // it's just you and me...
+                if let p = (self.participants.filter { !$0.me }).first { // grab your ref
+                    let locs = p.locations.filter { $0.contains("@gmail.com") } // grab all your gmails
+                    if locs.count > 0 { // is this a 1v1 convo with a Gmail user?
+                        try inner_sendLink([locs.first!])
+                        return
+                    }
+                }
+            }
+            // We're in a GVoice convo, or a group convo, so just send a group link.
+            try inner_sendLink()
         case .location(let lat, let long):
             let loc = "https://maps.google.com/maps?q=\(lat),\(long)"
             let img = "https://maps.googleapis.com/maps/api/staticmap?center=\(lat),\(long)&markers=color:red%7C\(lat),\(long)&size=400x400"

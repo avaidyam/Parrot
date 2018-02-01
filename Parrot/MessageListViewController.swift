@@ -2,7 +2,6 @@ import MochaUI
 import AVFoundation
 import ParrotServiceExtension
 import Hangouts // Required for [IConversation.client, .getEvents(...), .update(readTimestamp:)]
-import struct Hangouts.DriveAPI // FIXME this should be internal?
 
 /* TODO: Re-enable link previews later when they're not terrible... */
 /* TODO: Use the PlaceholderMessage for sending messages. */
@@ -684,39 +683,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }
     
-    public func send(video: URL) {
+    public func send(video: URL) { // Screw Google Photos upload!
+        try! self.conversation?.send(message: PlaceholderMessage(content: .file(video)))
         NSSound(assetName: .sentMessage)?.play()
-        // Screw Google Photos upload!
-        self.send(file: video)
-        try? FileManager.default.trashItem(at: video, resultingItemURL: nil) // get rid of the temp file
+        //try? FileManager.default.trashItem(at: video, resultingItemURL: nil) // get rid of the temp file
     }
     
     public func send(file: URL) {
-        guard let c = (self.conversation as? IConversation)?.client.channel else { return }
-        if self.conversation?.participants.count == 2 { // it's just you and me...
-            if let p = (self.conversation?.participants.filter { !$0.me })?.first { // grab your ref
-                let locs = p.locations.filter { $0.contains("@gmail.com") } // grab all your gmails
-                if locs.count > 0 { // is this a 1v1 convo with a Gmail user?
-                    do {
-                        let res = try DriveAPI.share(on: c, file: file, with: [locs.first!])
-                        NSSound(assetName: .sentMessage)?.play()
-                        try! self.conversation?.send(message: PlaceholderMessage(content: .text(res.absoluteString)))
-                    } catch(let error) {
-                        log.debug("couldn't share file: \(error)")
-                    }
-                    return
-                }
-            }
-        }
-        
-        // We're in a GVoice convo, or a group convo, so just send a group link.
-        do {
-            let res = try DriveAPI.share(on: c, file: file, with: [])
-            NSSound(assetName: .sentMessage)?.play()
-            try! self.conversation?.send(message: PlaceholderMessage(content: .text(res.absoluteString)))
-        } catch(let error) {
-            log.debug("couldn't share file: \(error)")
-        }
+        try! self.conversation?.send(message: PlaceholderMessage(content: .file(file)))
+        NSSound(assetName: .sentMessage)?.play() // TODO: no guarantee we've sent anything yet...
     }
     
     // LEGACY

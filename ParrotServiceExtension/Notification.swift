@@ -1,5 +1,9 @@
 import Foundation
 
+/// TODO: (NOTE) When mutating an element of a collection (i.e. Conversation, or Person)
+///       whose containing collection is batching the mutations, send individual
+///       notifications about an element mutation *AND* a single batched notification.
+
 public extension Notification {
     public struct Service { private init() {}
         public static let DidConnect = NSNotification.Name(rawValue: "Parrot.Service.DidConnect")

@@ -1,5 +1,8 @@
 import Foundation
 
+/* supportsTeamDrives=true&pinned=true&convert=false&fields=kind,title,mimeType,createdDate,modifiedDate,modifiedByMeDate,lastViewedByMeDate,fileSize,owners(kind,permissionId,displayName,picture,emailAddress,domain),lastModifyingUser(kind,permissionId,displayName,picture,emailAddress),hasThumbnail,thumbnailVersion,iconLink,id,shared,sharedWithMeDate,userPermission(role),explicitlyTrashed,quotaBytesUsed,shareable,copyable,subscribed,folderColor,hasChildFolders,fileExtension,primarySyncParentId,sharingUser(kind,permissionId,displayName,picture,emailAddress),flaggedForAbuse,folderFeatures,spaces,sourceAppId,editable,recency,recencyReason,version,actionItems,teamDriveId,hasAugmentedPermissions,primaryDomainName,organizationDisplayName,passivelySubscribed,trashingUser(kind,permissionId,displayName,picture,emailAddress),trashedDate,hasVisitorPermissions,parents(id),labels(starred,hidden,trashed,restricted,viewed),capabilities(canCopy,canDownload,canEdit,canAddChildren,canDelete,canRemoveChildren,canShare,canTrash,canRename,canReadTeamDrive,canMoveTeamDriveItem,canMoveItemIntoTeamDrive)&openDrive=false&reason=202&syncType=0&errorRecovery=false
+ */
+
 /*
 DispatchQueue.global(qos: .background).async {
     do {
@@ -10,12 +13,7 @@ DispatchQueue.global(qos: .background).async {
     }
 }
 */
-public struct DriveAPI {
-    private init() {}
-    
-    /* supportsTeamDrives=true&pinned=true&convert=false&fields=kind,title,mimeType,createdDate,modifiedDate,modifiedByMeDate,lastViewedByMeDate,fileSize,owners(kind,permissionId,displayName,picture,emailAddress,domain),lastModifyingUser(kind,permissionId,displayName,picture,emailAddress),hasThumbnail,thumbnailVersion,iconLink,id,shared,sharedWithMeDate,userPermission(role),explicitlyTrashed,quotaBytesUsed,shareable,copyable,subscribed,folderColor,hasChildFolders,fileExtension,primarySyncParentId,sharingUser(kind,permissionId,displayName,picture,emailAddress),flaggedForAbuse,folderFeatures,spaces,sourceAppId,editable,recency,recencyReason,version,actionItems,teamDriveId,hasAugmentedPermissions,primaryDomainName,organizationDisplayName,passivelySubscribed,trashingUser(kind,permissionId,displayName,picture,emailAddress),trashedDate,hasVisitorPermissions,parents(id),labels(starred,hidden,trashed,restricted,viewed),capabilities(canCopy,canDownload,canEdit,canAddChildren,canDelete,canRemoveChildren,canShare,canTrash,canRename,canReadTeamDrive,canMoveTeamDriveItem,canMoveItemIntoTeamDrive)&openDrive=false&reason=202&syncType=0&errorRecovery=false
-     */
-    
+internal enum DriveAPI {
     private static let baseURL = "https://clients6.google.com/upload/drive/v2internal/files"
     private static let permsURL = "https://clients6.google.com/drive/v2internal/files"
     private static let APIKey = "AIzaSyAy9VVXHSpS2IJpptzYtGbLP3-3_l0aBk4"
@@ -78,7 +76,7 @@ public struct DriveAPI {
         return (a, b as? HTTPURLResponse)
     }
     
-    public static func share(on c: Channel, file url: URL, with emails: [String] = []) throws -> URL {
+    internal static func share(on c: Channel, file url: URL, with emails: [String] = []) throws -> URL {
         
         // Verify file data accessibility
         let reach = try url.checkResourceIsReachable()

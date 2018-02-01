@@ -102,7 +102,7 @@
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
 		488EC0D11F267CF90022F6EB /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488EC0D01F267CF90022F6EB /* Animation.swift */; };
 		488F1E7F200ED7DF008E0752 /* AVCaptureViewCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1E7E200ED7DF008E0752 /* AVCaptureViewCompanion.swift */; };
-		488F652A1EF97CD50085325F /* GooglePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F65291EF97CD50085325F /* GooglePhoto.swift */; };
+		488F652A1EF97CD50085325F /* PhotoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F65291EF97CD50085325F /* PhotoAPI.swift */; };
 		489018AC1D3C8FE400CFCA5F /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person.swift */; };
 		489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */; };
 		4894216A1EC11BCE0047FDBB /* DispatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421691EC11BCE0047FDBB /* DispatchSupport.swift */; };
@@ -513,7 +513,7 @@
 		4884927D1D0B46BB0003D522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		488EC0D01F267CF90022F6EB /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		488F1E7E200ED7DF008E0752 /* AVCaptureViewCompanion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureViewCompanion.swift; sourceTree = "<group>"; };
-		488F65291EF97CD50085325F /* GooglePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePhoto.swift; sourceTree = "<group>"; };
+		488F65291EF97CD50085325F /* PhotoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAPI.swift; sourceTree = "<group>"; };
 		489018AB1D3C8FE400CFCA5F /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
 		489421691EC11BCE0047FDBB /* DispatchSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchSupport.swift; sourceTree = "<group>"; };
@@ -917,7 +917,7 @@
 				48834E371C1B4098009BC442 /* Event.swift */,
 				48834E3A1C1B4098009BC442 /* User.swift */,
 				4835ECAE1C1C620E00193EBC /* Authenticator.swift */,
-				488F65291EF97CD50085325F /* GooglePhoto.swift */,
+				488F65291EF97CD50085325F /* PhotoAPI.swift */,
 				48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */,
 				487D601F200BD88A0009E5F1 /* DriveAPI.swift */,
 			);
@@ -1776,7 +1776,7 @@
 				48834E3E1C1B4098009BC442 /* Conversation.swift in Sources */,
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
-				488F652A1EF97CD50085325F /* GooglePhoto.swift in Sources */,
+				488F652A1EF97CD50085325F /* PhotoAPI.swift in Sources */,
 				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
 				48F7E80A1F1099B70059E5CD /* ServiceEndpoint.swift in Sources */,
 				48BCEE0A201DA7E20087E889 /* CryptoSHA1.swift in Sources */,

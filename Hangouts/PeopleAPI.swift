@@ -1,13 +1,11 @@
 import Foundation
 
-public struct PeopleAPI {
-    private init() {}
-    
+internal enum PeopleAPI {
     private static let baseURL = "https://people-pa.clients6.google.com/v2/people"
     private static let groupsURL = "https://hangoutssearch-pa.clients6.google.com/v1"
     private static let APIKey = "AIzaSyBokvzEPUrkgfws0OrFWkpKkVBVuhRfKpk"
     
-    public static func suggestions(on channel: Channel, completionHandler: @escaping (PeopleAPIData.SuggestionsResponse?, Error?) -> ()) {
+    internal static func suggestions(on channel: Channel, completionHandler: @escaping (PeopleAPIData.SuggestionsResponse?, Error?) -> ()) {
         self._post(channel, PeopleAPI.baseURL + "/me/allPeople", [
             "requestMask.includeField.paths": "person.email",
             "requestMask.includeField.paths": "person.gender",
@@ -24,7 +22,7 @@ public struct PeopleAPI {
         ], nil, completionHandler)
     }
     
-    public static func list(on channel: Channel, completionHandler: @escaping (PeopleAPIData.ListAllResponse?, Error?) -> ()) {
+    internal static func list(on channel: Channel, completionHandler: @escaping (PeopleAPIData.ListAllResponse?, Error?) -> ()) {
         self._post(channel, PeopleAPI.baseURL + "/me/allPeople", [
             "requestMask.includeField.paths": "person.email",
             "requestMask.includeField.paths": "person.gender",
@@ -40,7 +38,7 @@ public struct PeopleAPI {
         ], nil, completionHandler)
     }
     
-    public static func lookup(on channel: Channel, ids: [String], completionHandler: @escaping (PeopleAPIData.GetByIdResponse?, Error?) -> ()) {
+    internal static func lookup(on channel: Channel, ids: [String], completionHandler: @escaping (PeopleAPIData.GetByIdResponse?, Error?) -> ()) {
         guard ids.count > 0 else { return }
         self._post(channel, PeopleAPI.baseURL + "", [
             "requestMask.includeField.paths": "person.email",
@@ -66,7 +64,7 @@ public struct PeopleAPI {
         ], ids.map { "personId=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
-    public static func lookup(on channel: Channel, phones: [String], completionHandler: @escaping (PeopleAPIData.LookupResponse?, Error?) -> ()) {
+    internal static func lookup(on channel: Channel, phones: [String], completionHandler: @escaping (PeopleAPIData.LookupResponse?, Error?) -> ()) {
         guard phones.count > 0 else { return }
         self._post(channel, PeopleAPI.baseURL + "/lookup", [
             "type": "PHONE",
@@ -88,7 +86,7 @@ public struct PeopleAPI {
         ], phones.map { "id=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
-    public static func lookup(on channel: Channel, emails: [String], completionHandler: @escaping (PeopleAPIData.LookupResponse?, Error?) -> ()) {
+    internal static func lookup(on channel: Channel, emails: [String], completionHandler: @escaping (PeopleAPIData.LookupResponse?, Error?) -> ()) {
         guard emails.count > 0 else { return }
         self._post(channel, PeopleAPI.baseURL + "/lookup", [
             "type": "EMAIL",
@@ -109,7 +107,7 @@ public struct PeopleAPI {
         ], emails.map { "id=" + $0 }.joined(separator: "&"), completionHandler)
     }
     
-    public static func autocomplete(on channel: Channel, person: String, length: UInt = 15,
+    internal static func autocomplete(on channel: Channel, person: String, length: UInt = 15,
                                     completionHandler: @escaping (PeopleAPIData.AutocompleteResponse?, Error?) -> ())
     {
         self._post(channel, PeopleAPI.baseURL + "/autocomplete", [
@@ -120,7 +118,7 @@ public struct PeopleAPI {
         ], nil, completionHandler)
     }
     
-    public static func autocomplete(on channel: Channel, group: String, length: UInt = 15,
+    internal static func autocomplete(on channel: Channel, group: String, length: UInt = 15,
                                           completionHandler: @escaping (PeopleAPIData.AutocompleteGroupResponse?, Error?) -> ())
     {
         self._post(channel, PeopleAPI.groupsURL + "/metadata:search", [
@@ -174,267 +172,266 @@ public struct PeopleAPI {
     }
 }
 
-public struct PeopleAPIData {
-    private init() {}
+internal enum PeopleAPIData {
     
-    public struct Metadata: Codable {
-        public var container: String? = nil
-        public var containerType: String? = nil
-        public var visibility: String? = nil
-        public var primary: Bool? = nil
-        public var writable: Bool? = nil
+    internal struct Metadata: Codable {
+        internal var container: String? = nil
+        internal var containerType: String? = nil
+        internal var visibility: String? = nil
+        internal var primary: Bool? = nil
+        internal var writable: Bool? = nil
     }
     
-    public struct Address: Codable {
-        public var metadata: Metadata? = nil
-        public var formatted: String? = nil
-        public var type: String? = nil
+    internal struct Address: Codable {
+        internal var metadata: Metadata? = nil
+        internal var formatted: String? = nil
+        internal var type: String? = nil
     }
     
-    public struct Location: Codable {
-        public var metadata: Metadata? = nil
-        public var value: String? = nil
+    internal struct Location: Codable {
+        internal var metadata: Metadata? = nil
+        internal var value: String? = nil
     }
     
-    public struct Birthday: Codable {
-        public var metadata: Metadata? = nil
-        public var dateMs: String? = nil
-        public var dateMsAsNumber: String? = nil
+    internal struct Birthday: Codable {
+        internal var metadata: Metadata? = nil
+        internal var dateMs: String? = nil
+        internal var dateMsAsNumber: String? = nil
     }
     
-    public struct Organization: Codable {
-        public var metadata: Metadata? = nil
-        public var name: String? = nil
-        public var stringType: String? = nil
-        public var title: String? = nil
+    internal struct Organization: Codable {
+        internal var metadata: Metadata? = nil
+        internal var name: String? = nil
+        internal var stringType: String? = nil
+        internal var title: String? = nil
     }
     
-    public struct Tagline: Codable {
-        public var metadata: Metadata? = nil
-        public var value: String? = nil
+    internal struct Tagline: Codable {
+        internal var metadata: Metadata? = nil
+        internal var value: String? = nil
     }
     
-    public struct Membership: Codable {
-        public var contactGroupId: String? = nil
-        public var systemContactGroupId: String? = nil
+    internal struct Membership: Codable {
+        internal var contactGroupId: String? = nil
+        internal var systemContactGroupId: String? = nil
     }
     
-    public struct ProfileUrl: Codable {
-        public var url: String? = nil
+    internal struct ProfileUrl: Codable {
+        internal var url: String? = nil
     }
     
-    public struct Email: Codable {
-        public var metadata: Metadata? = nil
-        public var formattedType: String? = nil
-        public var type: String? = nil
-        public var value: String? = nil
+    internal struct Email: Codable {
+        internal var metadata: Metadata? = nil
+        internal var formattedType: String? = nil
+        internal var type: String? = nil
+        internal var value: String? = nil
     }
     
-    public struct Gender: Codable {
-        public var metadata: Metadata? = nil
-        public var formattedType: String? = nil
-        public var type: String? = nil
+    internal struct Gender: Codable {
+        internal var metadata: Metadata? = nil
+        internal var formattedType: String? = nil
+        internal var type: String? = nil
     }
     
-    public struct Name: Codable {
-        public var metadata: Metadata? = nil
-        public var displayName: String? = nil
-        public var displayNameLastFirst: String? = nil
-        public var familyName: String? = nil
-        public var givenName: String? = nil
-        public var unstructuredName: String? = nil
+    internal struct Name: Codable {
+        internal var metadata: Metadata? = nil
+        internal var displayName: String? = nil
+        internal var displayNameLastFirst: String? = nil
+        internal var familyName: String? = nil
+        internal var givenName: String? = nil
+        internal var unstructuredName: String? = nil
     }
     
-    public struct Photo: Codable {
-        public var metadata: Metadata? = nil
-        public var isDefault: Bool? = nil
-        public var isMonogram: Bool? = nil
-        public var monogramBackground: String? = nil
-        public var photoToken: String? = nil
-        public var url: String? = nil
+    internal struct Photo: Codable {
+        internal var metadata: Metadata? = nil
+        internal var isDefault: Bool? = nil
+        internal var isMonogram: Bool? = nil
+        internal var monogramBackground: String? = nil
+        internal var photoToken: String? = nil
+        internal var url: String? = nil
     }
     
-    public struct CoverPhoto: Codable {
-        public var imageHeight: UInt? = nil
-        public var imageWidth: UInt? = nil
-        public var imageId: String? = nil
-        public var imageUrl: String? = nil
+    internal struct CoverPhoto: Codable {
+        internal var imageHeight: UInt? = nil
+        internal var imageWidth: UInt? = nil
+        internal var imageId: String? = nil
+        internal var imageUrl: String? = nil
     }
     
-    public struct Phone: Codable {
-        public struct PhoneExtendedData: Codable {
-            public struct StructuredPhone: Codable {
-                public struct PhoneNumber: Codable {
-                    public struct I18nData: Codable {
-                        public var countryCode: UInt? = nil
-                        public var internationalNumber: String? = nil
-                        public var isValid: Bool = false
-                        public var nationalNumber: String? = nil
-                        public var regionCode: String? = nil
-                        public var validationResult: String? = nil
+    internal struct Phone: Codable {
+        internal struct PhoneExtendedData: Codable {
+            internal struct StructuredPhone: Codable {
+                internal struct PhoneNumber: Codable {
+                    internal struct I18nData: Codable {
+                        internal var countryCode: UInt? = nil
+                        internal var internationalNumber: String? = nil
+                        internal var isValid: Bool = false
+                        internal var nationalNumber: String? = nil
+                        internal var regionCode: String? = nil
+                        internal var validationResult: String? = nil
                     }
                     
-                    public var e164: String? = nil
-                    public var i18nData: I18nData? = nil
+                    internal var e164: String? = nil
+                    internal var i18nData: I18nData? = nil
                 }
                 
-                public var phoneNumber: PhoneNumber? = nil
-                public var type: String? = nil
+                internal var phoneNumber: PhoneNumber? = nil
+                internal var type: String? = nil
             }
             
-            public var structuredPhone: StructuredPhone? = nil
+            internal var structuredPhone: StructuredPhone? = nil
         }
         
-        public var metadata: Metadata? = nil
-        public var canonicalizedForm: String? = nil
-        public var extendedData: PhoneExtendedData? = nil
-        public var formattedType: String? = nil
-        public var type: String? = nil
-        public var uri: String? = nil
-        public var value: String? = nil
+        internal var metadata: Metadata? = nil
+        internal var canonicalizedForm: String? = nil
+        internal var extendedData: PhoneExtendedData? = nil
+        internal var formattedType: String? = nil
+        internal var type: String? = nil
+        internal var uri: String? = nil
+        internal var value: String? = nil
     }
     
-    public struct InAppReachability: Codable {
-        public struct ReachabilityKey: Codable {
-            public var keyType: String? = nil
-            public var keyValue: String? = nil
+    internal struct InAppReachability: Codable {
+        internal struct ReachabilityKey: Codable {
+            internal var keyType: String? = nil
+            internal var keyValue: String? = nil
         }
         
-        public var appType: String? = nil
-        public var reachabilityKey: ReachabilityKey? = nil
-        public var status: String? = nil
+        internal var appType: String? = nil
+        internal var reachabilityKey: ReachabilityKey? = nil
+        internal var status: String? = nil
     }
     
-    public struct ProfileInfo: Codable {
-        public struct AccountEmail: Codable {
-            public var email: String? = nil
+    internal struct ProfileInfo: Codable {
+        internal struct AccountEmail: Codable {
+            internal var email: String? = nil
         }
         
-        public var accountEmail: AccountEmail? = nil
-        public var objectType: String? = nil
+        internal var accountEmail: AccountEmail? = nil
+        internal var objectType: String? = nil
     }
     
     
-    public struct ExtendedData: Codable {
-        public struct HangoutsExtendedData: Codable {
-            public var hadPastHangoutState: String? = nil
-            public var invitationStatus: String? = nil
-            public var isBot: Bool? = nil
-            public var isDismissed: Bool? = nil
-            public var isFavorite: Bool? = nil
-            public var isPinned: Bool? = nil
-            public var userType: String? = nil
+    internal struct ExtendedData: Codable {
+        internal struct HangoutsExtendedData: Codable {
+            internal var hadPastHangoutState: String? = nil
+            internal var invitationStatus: String? = nil
+            internal var isBot: Bool? = nil
+            internal var isDismissed: Bool? = nil
+            internal var isFavorite: Bool? = nil
+            internal var isPinned: Bool? = nil
+            internal var userType: String? = nil
         }
         
-        public var hangoutsExtendedData: HangoutsExtendedData? = nil
+        internal var hangoutsExtendedData: HangoutsExtendedData? = nil
     }
     
-    public struct Person: Codable {
-        public var coverPhoto: CoverPhoto? = nil
-        public var email: [Email]? = nil
-        public var extendedData: ExtendedData? = nil
-        public var fingerprint: String? = nil
-        public var gender: [Gender]? = nil
-        public var inAppReachability: [InAppReachability]? = nil
-        public var name: [Name]? = nil
-        public var personId: String? = nil
-        public var phone: [Phone]? = nil
-        public var photo: [Photo]? = nil
-        public var address: [Address]? = nil
-        public var location: [Location]? = nil
-        public var birthday: [Birthday]? = nil
-        public var organization: [Organization]? = nil
-        public var tagline: [Tagline]? = nil
-        public var membership: [Membership]? = nil
-        public var readOnlyProfileInfo: [ProfileInfo]? = nil
-        public var profileUrlRepeated: [ProfileUrl]? = nil
+    internal struct Person: Codable {
+        internal var coverPhoto: CoverPhoto? = nil
+        internal var email: [Email]? = nil
+        internal var extendedData: ExtendedData? = nil
+        internal var fingerprint: String? = nil
+        internal var gender: [Gender]? = nil
+        internal var inAppReachability: [InAppReachability]? = nil
+        internal var name: [Name]? = nil
+        internal var personId: String? = nil
+        internal var phone: [Phone]? = nil
+        internal var photo: [Photo]? = nil
+        internal var address: [Address]? = nil
+        internal var location: [Location]? = nil
+        internal var birthday: [Birthday]? = nil
+        internal var organization: [Organization]? = nil
+        internal var tagline: [Tagline]? = nil
+        internal var membership: [Membership]? = nil
+        internal var readOnlyProfileInfo: [ProfileInfo]? = nil
+        internal var profileUrlRepeated: [ProfileUrl]? = nil
     }
     
-    public struct Participant: Codable {
-        public struct Id: Codable {
-            public var profileId: String? = nil
+    internal struct Participant: Codable {
+        internal struct Id: Codable {
+            internal var profileId: String? = nil
         }
         
-        public var displayName: String? = nil
-        public var email: String? = nil
-        public var id: Id? = nil
-        public var invitationStatus: String? = nil
-        public var profilePictureUrl: String? = nil
+        internal var displayName: String? = nil
+        internal var email: String? = nil
+        internal var id: Id? = nil
+        internal var invitationStatus: String? = nil
+        internal var profilePictureUrl: String? = nil
     }
     
-    public struct ConversationResult: Codable {
-        public struct ConversationAndSelfState: Codable {
-            public struct ConversationMetadata: Codable {
-                public struct Id: Codable {
-                    public var id: String? = nil
+    internal struct ConversationResult: Codable {
+        internal struct ConversationAndSelfState: Codable {
+            internal struct ConversationMetadata: Codable {
+                internal struct Id: Codable {
+                    internal var id: String? = nil
                 }
                 
-                public var id: Id? = nil
-                public var otrStatus: String? = nil
-                public var participants: [Participant]? = nil
-                public var type: String? = nil
+                internal var id: Id? = nil
+                internal var otrStatus: String? = nil
+                internal var participants: [Participant]? = nil
+                internal var type: String? = nil
             }
             
-            public var conversationMetadata: ConversationMetadata? = nil
+            internal var conversationMetadata: ConversationMetadata? = nil
         }
         
-        public var conversationAndSelfState: ConversationAndSelfState? = nil
+        internal var conversationAndSelfState: ConversationAndSelfState? = nil
     }
     
-    public struct GetByIdResponse: Codable {
-        public struct Result: Codable {
-            public var person: Person? = nil
-            public var personId: String? = nil
-            public var status: String? = nil
+    internal struct GetByIdResponse: Codable {
+        internal struct Result: Codable {
+            internal var person: Person? = nil
+            internal var personId: String? = nil
+            internal var status: String? = nil
         }
         
-        public var personResponse: [Result]? = nil
+        internal var personResponse: [Result]? = nil
     }
     
-    public struct LookupResponse: Codable {
-        public struct Match: Codable {
-            public var lookupId: String? = nil
-            public var personId: [String]? = nil
+    internal struct LookupResponse: Codable {
+        internal struct Match: Codable {
+            internal var lookupId: String? = nil
+            internal var personId: [String]? = nil
         }
         
-        public var people: [String: Person]? = nil
-        public var matches: [Match]? = nil
+        internal var people: [String: Person]? = nil
+        internal var matches: [Match]? = nil
     }
     
-    public struct ListAllResponse: Codable {
-        public var nextSyncToken: String? = nil
-        public var people: [Person]? = nil
-        public var totalItems: UInt? = nil
-        public var nextPageToken: String? = nil
+    internal struct ListAllResponse: Codable {
+        internal var nextSyncToken: String? = nil
+        internal var people: [Person]? = nil
+        internal var totalItems: UInt? = nil
+        internal var nextPageToken: String? = nil
     }
     
-    public struct SuggestionsResponse: Codable {
-        public var people: [Person]? = nil
+    internal struct SuggestionsResponse: Codable {
+        internal var people: [Person]? = nil
     }
     
-    public struct AutocompleteResponse: Codable {
-        public struct Status: Codable {
-            public var personalResultsNotReady: Bool? = nil
+    internal struct AutocompleteResponse: Codable {
+        internal struct Status: Codable {
+            internal var personalResultsNotReady: Bool? = nil
         }
         
-        public struct Suggestion: Codable {
-            public var objectType: String? = nil
-            public var person: Person? = nil
-            public var suggestion: String? = nil
+        internal struct Suggestion: Codable {
+            internal var objectType: String? = nil
+            internal var person: Person? = nil
+            internal var suggestion: String? = nil
         }
         
-        public var status: Status? = nil
-        public var nextPageToken: String? = nil
-        public var results: [Suggestion]? = nil
+        internal var status: Status? = nil
+        internal var nextPageToken: String? = nil
+        internal var results: [Suggestion]? = nil
     }
     
-    public struct AutocompleteGroupResponse: Codable {
-        public var results: [ConversationResult]? = nil
+    internal struct AutocompleteGroupResponse: Codable {
+        internal var results: [ConversationResult]? = nil
     }
     
     // Convenience for this crazy nesting.
-    public typealias PhoneNumber = Phone.PhoneExtendedData.StructuredPhone.PhoneNumber
-    public typealias I18nData = Phone.PhoneExtendedData.StructuredPhone.PhoneNumber.I18nData
-    public typealias HangoutsExtendedData = ExtendedData.HangoutsExtendedData
-    public typealias ConversationMetadata = ConversationResult.ConversationAndSelfState.ConversationMetadata
+    internal typealias PhoneNumber = Phone.PhoneExtendedData.StructuredPhone.PhoneNumber
+    internal typealias I18nData = Phone.PhoneExtendedData.StructuredPhone.PhoneNumber.I18nData
+    internal typealias HangoutsExtendedData = ExtendedData.HangoutsExtendedData
+    internal typealias ConversationMetadata = ConversationResult.ConversationAndSelfState.ConversationMetadata
 }
