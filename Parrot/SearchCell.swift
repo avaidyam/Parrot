@@ -83,17 +83,18 @@ public class SearchCell: NSView {
     }
     private func setup() {
         self.wantsLayer = true
+        self.translatesAutoresizingMaskIntoConstraints = false
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
         self.add(subviews: self.searchField, self.addButton)
-        
-        self.addButton.widthAnchor == self.addButton.heightAnchor + 4.0
-        self.topAnchor == self.searchField.topAnchor - 5.0
-        self.bottomAnchor == self.searchField.bottomAnchor + 5.0
-        self.addButton.topAnchor == self.searchField.topAnchor
-        self.addButton.bottomAnchor == self.searchField.bottomAnchor
-        self.leftAnchor == self.searchField.leftAnchor - 5.0
-        self.rightAnchor == self.addButton.rightAnchor + 5.0
-        self.searchField.rightAnchor == self.addButton.leftAnchor - 5.0
+        batch {
+            self.addButton.widthAnchor == self.addButton.heightAnchor + 4.0
+            self.verticalAnchors == self.searchField.verticalAnchors - 5.0
+            self.verticalAnchors == self.addButton.verticalAnchors - 5.0
+            
+            self.leftAnchor == self.searchField.leftAnchor - 5.0
+            self.searchField.rightAnchor == self.addButton.leftAnchor - 5.0
+            self.rightAnchor == self.addButton.rightAnchor + 5.0
+        }
     }
     
     public override var allowsVibrancy: Bool { return true }

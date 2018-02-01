@@ -55,26 +55,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return v
     }()
     
-    private lazy var titleText: NSTextField = {
-        let t = NSTextField(labelWithString: " Conversations").modernize(wantsLayer: true)
-        t.textColor = NSColor.labelColor
-        t.font = NSFont.systemFont(ofSize: 32.0, weight: .heavy)
-        return t
-    }()
-    
-    private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
-        let v = NSView()
-        v.add(subviews: self.titleText/*, self.addButton*//*, self.searchField*/)
-        v.autoresizingMask = [.width]
-        v.frame.size.height = 44.0//80.0
-        self.titleText.leftAnchor == v.leftAnchor + 2.0
-        self.titleText.topAnchor == v.topAnchor + 2.0
-        let t = NSTitlebarAccessoryViewController()
-        t.view = v
-        t.layoutAttribute = .bottom
-        return t
-    }()
-    
     private var updateToken: Bool = false
     private var childrenSub: Subscription? = nil
     
@@ -153,7 +133,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         window.titleVisibility = .hidden
         _ = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
-        window.addTitlebarAccessoryViewController(self.titleAccessory)
+        window.addTitlebarAccessoryViewController(LargeTypeTitleController(title: self.title))
         
         //let item = NSToolbarItem(itemIdentifier: .add)
         //item.view = self.addButton
@@ -257,13 +237,18 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 d.view.frame.size.width = self.view.frame.width
                 d.view.frame.size.height = (self.view.frame.height / 3).clamped(to: 128.0...4000.0)
                 d.selectable = true
+                d.displaysCloseOptions = true
                 
                 self.presentViewControllerAsSheet(d)
-                self.titleText.stringValue = " Create"
+                if let t = self.view.window?.titlebarAccessoryViewControllers.filter({ $0 is LargeTypeTitleController }).first {
+                    t.title = "Create"
+                }
                 d.selectionHandler = {
                     guard d.selection.count > 0 else { return }
                     self.dismissViewController(d)
-                    self.titleText.stringValue = " Conversations"
+                    if let t = self.view.window?.titlebarAccessoryViewControllers.filter({ $0 is LargeTypeTitleController }).first {
+                        t.title = "Conversations"
+                    }
                     self.startNewConversation(with: d.selection[0])
                 }
             }

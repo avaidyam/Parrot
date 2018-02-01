@@ -14,47 +14,47 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         c.backgroundColors = [.clear]
         c.selectionType = .any
         
-        let l = NSCollectionViewFlowLayout()//NSCollectionViewListLayout()
-        //l.globalSections = (32, 0)
-        //l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 48)))
-        l.minimumInteritemSpacing = 0.0
-        l.minimumLineSpacing = 0.0
+        let l = NSCollectionViewListLayout()
+        l.globalSections = (32, 0)
+        l.layoutDefinition = .global(SizeMetrics(item: CGSize(width: 0, height: 48)))
+        //l.minimumInteritemSpacing = 0.0
+        //l.minimumLineSpacing = 0.0
+        //l.sectionInset = NSEdgeInsetsZero
         c.collectionViewLayout = l
         c.register(PersonCell.self,
                    forItemWithIdentifier: .personCell)
-        c.register(SearchCell.self, forSupplementaryViewOfKind: .sectionHeader,
+        c.register(SearchCell.self, forSupplementaryViewOfKind: .globalHeader,
                    withIdentifier: .searchCell)
         return c
     }()
     
     private lazy var scrollView: NSScrollView = {
-        let s = NSScrollView(for: self.collectionView).modernize()
-        return s
+        NSScrollView(for: self.collectionView).modernize()
     }()
     
     private lazy var indicator: MessageProgressView = {
-        let v = MessageProgressView().modernize(wantsLayer: true)
+        MessageProgressView().modernize(wantsLayer: true)
+    }()
+    
+    private lazy var cancelButton: NSButton = {
+        let b = NSButton(title: "Cancel", target: self, action: #selector(self.cancelOperation(_:)))
+            .modernize(wantsLayer: true)
+        b.bezelStyle = .roundRect // height = 18px
+        return b
+    }()
+    
+    private lazy var baseView: NSVisualEffectView = {
+        let v = NSVisualEffectView().modernize()
+        v.blendingMode = .withinWindow
+        v.material = .sidebar
+        v.state = .active
+        v.isHidden = true // initial state
+        v.add(subviews: self.cancelButton)
+        batch {
+            v.heightAnchor == (18.0 + 8.0)
+            v.centerAnchors == self.cancelButton.centerAnchors
+        }
         return v
-    }()
-    
-    private lazy var titleText: NSTextField = {
-        let t = NSTextField(labelWithString: " Directory").modernize(wantsLayer: true)
-        t.textColor = NSColor.labelColor
-        t.font = NSFont.systemFont(ofSize: 32.0, weight: .heavy)
-        return t
-    }()
-    
-    private lazy var titleAccessory: NSTitlebarAccessoryViewController = {
-        let v = NSView()
-        v.add(subviews: self.titleText)
-        v.autoresizingMask = [.width]
-        v.frame.size.height = 44.0//80.0
-        self.titleText.leftAnchor == v.leftAnchor + 2.0
-        self.titleText.topAnchor == v.topAnchor + 2.0
-        let t = NSTitlebarAccessoryViewController()
-        t.view = v
-        t.layoutAttribute = .bottom
-        return t
     }()
     
     private lazy var updateInterpolation: Interpolate<Double> = {
@@ -77,19 +77,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     //
     
-    private var cachedFavorites: [Person] = []
-    private var currentSearch: [Person]? = nil
-    private var searchQuery: String = "" { // TODO: BINDING HERE
-        didSet {
-            let oldVal = self.currentSource().map { $0.identifier }
-            self.currentSearch = self.searchQuery == "" ? nil :
-                self.directory?.search(by: self.searchQuery, limit: 25)
-            let newVal = self.currentSource().map { $0.identifier }
-            
-            let updates = Changeset.edits(from: oldVal, to: newVal)
-            UI { self.collectionView.update(with: updates, in: 0) {_ in} }
-        }
-    }
     var directory: ParrotServiceExtension.Directory? {
         didSet {
             DispatchQueue.global(qos: .background).async {
@@ -104,6 +91,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }
     
+    public var displaysCloseOptions = false {
+        didSet {
+            self.scrollView.contentInsets = NSEdgeInsetsMake(0, 0, self.displaysCloseOptions ? 32 : 0, 0)
+            self.baseView.isHidden = !self.displaysCloseOptions
+        }
+    }
+    
     // We should be able to now edit things.
     public var selectable = false {
         didSet {
@@ -112,8 +106,36 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }
     
-    public private(set) var selection: [Person] = []
     public var selectionHandler: (() -> ())? = nil
+    
+    //
+    //
+    //
+    
+    public private(set) var selection: [Person] = []
+    private var cachedFavorites: [Person] = []
+    private var currentSearch: [Person]? = nil
+    
+    private var searchQuery: String = "" { // TODO: BINDING HERE
+        didSet {
+            let oldVal = self.currentSource().map { $0.identifier }
+            self.currentSearch = self.searchQuery == "" ? nil :
+                self.directory?.search(by: self.searchQuery, limit: 25)
+            let newVal = self.currentSource().map { $0.identifier }
+            
+            let updates = Changeset.edits(from: oldVal, to: newVal)
+            UI { self.collectionView.update(with: updates, in: 1) {_ in} }
+        }
+    }
+    
+    private func currentSource() -> [Person] {
+        var active = self.currentSearch != nil ? self.currentSearch! : self.cachedFavorites
+        for s in self.selection {
+            guard let idx = (active.index { $0.identifier == s.identifier }) else { continue }
+            active.remove(at: idx)
+        }
+        return active
+    }
     
     //
     //
@@ -122,16 +144,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public override func loadView() {
         self.title = "Directory"
         self.view = NSVisualEffectView()
-        self.view.add(subviews: self.scrollView, self.indicator)
+        self.view.add(subviews: self.scrollView, self.baseView, self.indicator)
         batch {
-            self.view.widthAnchor >= 128
-            self.view.heightAnchor >= 128
-            self.view.centerXAnchor == self.indicator.centerXAnchor
-            self.view.centerYAnchor == self.indicator.centerYAnchor
-            self.view.centerXAnchor == self.scrollView.centerXAnchor
-            self.view.centerYAnchor == self.scrollView.centerYAnchor
-            self.view.widthAnchor == self.scrollView.widthAnchor
-            self.view.heightAnchor == self.scrollView.heightAnchor
+            self.view.sizeAnchors >= CGSize(width: 128, height: 128)
+            self.view.centerAnchors == self.indicator.centerAnchors
+            self.view.edgeAnchors == self.scrollView.edgeAnchors
+            self.view.bottomAnchor == self.baseView.bottomAnchor
+            self.view.horizontalAnchors == self.baseView.horizontalAnchors
         }
     }
     
@@ -146,7 +165,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         window.titleVisibility = .hidden
         _ = window.installToolbar()
         window.toolbar?.showsBaselineSeparator = false
-        window.addTitlebarAccessoryViewController(self.titleAccessory)
+        window.addTitlebarAccessoryViewController(LargeTypeTitleController(title: self.title))
         
         /// Re-synchronizes the conversation name and identifier with the window.
         /// Center by default, but load a saved frame if available, and autosave.
@@ -193,57 +212,82 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.collectionView.collectionViewLayout?.invalidateLayout(with: ctx)
     }
     
+    public override func cancelOperation(_ sender: Any?) {
+        if let _ = self.presenting {
+            self.dismiss(sender)
+        } else {
+            PopWindowAnimator.hide(self.view.window!)
+        }
+    }
+    
     ///
     ///
     ///
     
-    // account for [selection] too
-    private func currentSource() -> [Person] {
-        return self.currentSearch != nil ? self.currentSearch! : self.cachedFavorites
+    public func numberOfSections(in collectionView: NSCollectionView) -> Int {
+        return 2 // selection, currentSource
     }
     
     public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.currentSource().count
+        return section == 0 ? self.selection.count : self.currentSource().count
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let item = collectionView.makeItem(withIdentifier: .personCell, for: indexPath)
-        item.representedObject = self.currentSource()[indexPath.item]
+        item.representedObject = indexPath.section == 0 ? self.selection[indexPath.item] : self.currentSource()[indexPath.item]
         return item
     }
     
     public func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
-        let header = collectionView.makeSupplementaryView(ofKind: .sectionHeader, withIdentifier: .searchCell, for: indexPath) as! SearchCell
-        header.searchHandler = {
-            self.searchQuery = $0
-        }
+        let header = collectionView.makeSupplementaryView(ofKind: .globalHeader, withIdentifier: .searchCell, for: indexPath) as! SearchCell
+        header.searchHandler = { [weak self] in self?.searchQuery = $0 }
         return header
     }
     
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
-        return NSSize(width: collectionView.bounds.width, height: 48.0)
+    public func collectionView(_ collectionView: NSCollectionView, shouldSelectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
+        return indexPaths.filter { $0.section != 0 } // can't select from the selection group
     }
     
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> NSSize {
-        return NSSize(width: collectionView.bounds.width, height: 32.0)
-    }
-    
-    public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForFooterInSection section: Int) -> NSSize {
-        return .zero
+    public func collectionView(_ collectionView: NSCollectionView, shouldDeselectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
+        return indexPaths.filter { $0.section == 0 } // can't deselect from the currentSource group
     }
     
     public func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-        //self.selection.append(contentsOf: indexPaths.map { self.currentSource()[$0.item] })
-        self.selection = indexPaths.map { self.currentSource()[$0.item] }
-        self.selectionHandler?()
+        self.editSelection {
+            let indexPaths = indexPaths.filter { $0.section != 0 } // can't select from the selection group
+            self.selection.append(contentsOf: (indexPaths.map { self.currentSource()[$0.item] }))
+            //self.selection = indexPaths.map { self.currentSource()[$0.item] }
+        }
     }
     
     public func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
-        /*for a in (indexPaths.map { self.currentSource()[$0.item] }) {
-            let idx = self.selection.index { $0.identifier == a.identifier }
-            self.selection.remove(at: idx!)
-        }*/
+        self.editSelection {
+            let indexPaths = indexPaths.filter { $0.section == 0 }.map { $0.item }.reversed() // can't deselect from the currentSource group
+            for idx in indexPaths { self.selection.remove(at: idx) }
+        }
+    }
+    
+    private func editSelection(_ handler: () -> ()) {
+        // Cache the previous dataSource arrangement.
+        let oldSelectionVal = self.selection.map { $0.identifier }
+        let oldSourceVal = self.currentSource().map { $0.identifier }
         
-        self.selectionHandler?()
+        handler()
+        
+        // Create an update list from the new dataSource arrangement.
+        let newSelectionVal = self.selection.map { $0.identifier }
+        let newSourceVal = self.currentSource().map { $0.identifier }
+        
+        let selectionUpdates = Changeset.edits(from: oldSelectionVal, to: newSelectionVal)
+        let sourceUpdates = Changeset.edits(from: oldSourceVal, to: newSourceVal)
+        UI {
+            self.collectionView.update(with: selectionUpdates, in: 0) {_ in}
+            self.collectionView.update(with: sourceUpdates, in: 1) {_ in}
+            self.collectionView.animator().selectionIndexPaths = Set(self.selection.enumerated().map { IndexPath(item: $0.offset, section: 0) })
+        }
+        
+        // Trigger delegates/handlers/etc.
+        print("\n\n\nselection changed: \(self.selection.map { $0.identifier })")
+        //self.selectionHandler?()
     }
 }

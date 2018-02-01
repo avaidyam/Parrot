@@ -58,6 +58,7 @@
 		4848A5BF1EFF1BED008B2DE2 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4848A5BE1EFF1BED008B2DE2 /* Binding.swift */; };
 		484E8CA01D37FF2500E1D1D5 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E8C9F1D37FF2500E1D1D5 /* Message.swift */; };
 		48557ED720156D8B009D302F /* NSToolTipManager+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */; };
+		48585FCD2023BC6D00556D7A /* LargeTypeTitleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48585FCC2023BC6D00556D7A /* LargeTypeTitleController.swift */; };
 		485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485B12EC1F1A904400432A36 /* LocationHelper.swift */; };
 		48675357201C535400284050 /* PersonIndicatorTooltipController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48675356201C535400284050 /* PersonIndicatorTooltipController.swift */; };
 		48675359201CDF6F00284050 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48675358201CDF6F00284050 /* Activity.swift */; };
@@ -460,6 +461,7 @@
 		48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSToolTipManager+Appearance.swift"; sourceTree = "<group>"; };
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		48574F121D11F9FC002375E1 /* AppRelease.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRelease.swift; sourceTree = "<group>"; };
+		48585FCC2023BC6D00556D7A /* LargeTypeTitleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeTypeTitleController.swift; sourceTree = "<group>"; };
 		4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCCoder.swift; sourceTree = "<group>"; };
 		4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCTransaction.swift; sourceTree = "<group>"; };
 		4859B8211F8480DE00BFF0CE /* XPCConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCConnection.swift; sourceTree = "<group>"; };
@@ -796,6 +798,7 @@
 		4831BCF01ED2830600C30413 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				48585FCC2023BC6D00556D7A /* LargeTypeTitleController.swift */,
 				48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */,
 				4831BCCA1ED0C21200C30413 /* NSViewController+Window.swift */,
 				48E0E81F1D584FCC00EE4464 /* NSDrawer+Extensions.swift */,
@@ -1851,6 +1854,7 @@
 				4831BCCB1ED0C21200C30413 /* NSViewController+Window.swift in Sources */,
 				48D3CD0F1DE945C1003D6C02 /* NSPopover+Extensions.swift in Sources */,
 				4848A5831EFD1A0D008B2DE2 /* BlockTrampoline.swift in Sources */,
+				48585FCD2023BC6D00556D7A /* LargeTypeTitleController.swift in Sources */,
 				48557ED720156D8B009D302F /* NSToolTipManager+Appearance.swift in Sources */,
 				4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */,
 				48AD39F61EE7FDF000C33E40 /* PreferencesViewController.swift in Sources */,
@@ -2133,7 +2137,6 @@
 				INFOPLIST_FILE = XPCTransport/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.XPCTransport;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -2167,7 +2170,6 @@
 				INFOPLIST_FILE = XPCTransport/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.XPCTransport;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -2462,7 +2464,6 @@
 				INFOPLIST_FILE = Mocha/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Mocha;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2493,7 +2494,6 @@
 				INFOPLIST_FILE = Mocha/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.Mocha;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2524,7 +2524,6 @@
 				INFOPLIST_FILE = MochaUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.MochaUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2555,7 +2554,6 @@
 				INFOPLIST_FILE = MochaUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.MochaUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
