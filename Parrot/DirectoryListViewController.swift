@@ -81,9 +81,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private var currentSearch: [Person]? = nil
     private var searchQuery: String = "" { // TODO: BINDING HERE
         didSet {
+            let oldVal = self.currentSource().map { $0.identifier }
             self.currentSearch = self.searchQuery == "" ? nil :
                 self.directory?.search(by: self.searchQuery, limit: 25)
-            self.collectionView.reloadData()
+            let newVal = self.currentSource().map { $0.identifier }
+            
+            let updates = Changeset.edits(from: oldVal, to: newVal)
+            UI { self.collectionView.update(with: updates, in: 0) {_ in} }
         }
     }
     var directory: ParrotServiceExtension.Directory? {
@@ -103,7 +107,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     // We should be able to now edit things.
     public var selectable = false {
         didSet {
-            self.collectionView.isSelectable = self.selectable
+            self.collectionView.selectionType = self.selectable ? .any : .none
             //self.collectionView.allowsMultipleSelection = self.selectable
         }
     }
@@ -119,15 +123,16 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.title = "Directory"
         self.view = NSVisualEffectView()
         self.view.add(subviews: self.scrollView, self.indicator)
-        
-        self.view.widthAnchor >= 128
-        self.view.heightAnchor >= 128
-        self.view.centerXAnchor == self.indicator.centerXAnchor
-        self.view.centerYAnchor == self.indicator.centerYAnchor
-        self.view.centerXAnchor == self.scrollView.centerXAnchor
-        self.view.centerYAnchor == self.scrollView.centerYAnchor
-        self.view.widthAnchor == self.scrollView.widthAnchor
-        self.view.heightAnchor == self.scrollView.heightAnchor
+        batch {
+            self.view.widthAnchor >= 128
+            self.view.heightAnchor >= 128
+            self.view.centerXAnchor == self.indicator.centerXAnchor
+            self.view.centerYAnchor == self.indicator.centerYAnchor
+            self.view.centerXAnchor == self.scrollView.centerXAnchor
+            self.view.centerYAnchor == self.scrollView.centerYAnchor
+            self.view.widthAnchor == self.scrollView.widthAnchor
+            self.view.heightAnchor == self.scrollView.heightAnchor
+        }
     }
     
     public func prepare(window: NSWindow) {
@@ -157,11 +162,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         NotificationCenter.default.addObserver(forName: ServiceRegistry.didAddService, object: nil, queue: nil) { note in
             guard let c = note.object as? Service else { return }
             self.directory = c.directory
-            UI {
-                self.collectionView.reloadData()
-            }
         }
-        GoogleAnalytics.view(screen: .conversation)
+        Analytics.view(screen: .directory)
     }
     
     public override func viewWillAppear() {

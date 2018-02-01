@@ -101,7 +101,7 @@ public class ParrotAppController: NSApplicationController {
         
         ToolTipManager.modernize()
         Logger.globalChannels = [self.serverChannel]
-        GoogleAnalytics.sessionTrackingIdentifier = "UA-63931980-2"
+        Analytics.sessionTrackingIdentifier = "UA-63931980-2"
         self.registerEvents()
         
         // Register the default completions if none are in the user settings.
@@ -187,7 +187,7 @@ public class ParrotAppController: NSApplicationController {
     
     /// Before we quit, we have to send the "sign out" analytics.
     public func applicationWillTerminate(_ notification: Notification) {
-        GoogleAnalytics.sessionTrackingIdentifier = nil
+        Analytics.sessionTrackingIdentifier = nil
     }
     
     /// If the Conversations window is closed, tapping the dock icon will reopen it.
@@ -234,7 +234,7 @@ public class ParrotAppController: NSApplicationController {
     
     @objc func showPreferences(_ sender: Any?) {
         self.preferencesController.presentAsWindow()
-        GoogleAnalytics.view(screen: .preferences)
+        Analytics.view(screen: .preferences)
     }
     
     @objc func showConversations(_ sender: Any?) {
