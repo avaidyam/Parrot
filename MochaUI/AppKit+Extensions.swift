@@ -6,6 +6,16 @@
 
 public typealias Block = @convention(block) () -> ()
 
+/*
+_semanticContext:
+- 0x1 = normal
+- 0x2 = unknown
+- 0x3 = menubar
+- 0x4 = titlebar
+- 0x5 = toolbar
+- 0x6 = tableview
+- 0x7 = menu
+*/
 public extension NSView {
     
     /// Corresponds to `CALayer.backgroundColor`.

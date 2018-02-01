@@ -1,8 +1,8 @@
 import MochaUI
 import WebKit
-import Hangouts // required for Client.init(configuration:)
 import XPCTransport
 import ParrotServiceExtension
+import class Hangouts.Client // required for Client.init(configuration:)
 
 /* TODO: Replace login/logout with removal of account from Preferences. */
 

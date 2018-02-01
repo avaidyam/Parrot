@@ -1,7 +1,7 @@
 import MochaUI
 import AVFoundation
 import ParrotServiceExtension
-import Hangouts // Required for [IConversation.client, .getEvents(...), .update(readTimestamp:)]
+import class Hangouts.IConversation // required for [IConversation.client, .getEvents(...), .update(readTimestamp:)]
 
 /* TODO: Re-enable link previews later when they're not terrible... */
 /* TODO: Use the PlaceholderMessage for sending messages. */
@@ -245,8 +245,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     /// The currently active user's image or monogram.
     public var image: NSImage? {
-        if let me = (self.conversation as? IConversation)?.client.userList.me {
-            return (me as! User).image
+        if let me = (self.conversation as? IConversation)?.client.directory.me {
+            return me.image
         }
         return nil
     }
@@ -452,7 +452,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                           name: Notification.Conversation.DidChangeFocus, object: self.conversation!)
 			
 			(self.conversation as? IConversation)?.getEvents(event_id: nil, max_events: 50) { events in
-				for chat in (events.flatMap { $0 as? IChatMessageEvent }) {
+				for chat in (events.flatMap { $0 as? Message }) {
 					self.dataSource.insert(chat)
                     
 					 // Disabled because it takes a WHILE to run.
