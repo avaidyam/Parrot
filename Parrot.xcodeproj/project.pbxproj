@@ -911,12 +911,12 @@
 		487A0E111C1E0F71007A4696 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				4835ECAE1C1C620E00193EBC /* Authenticator.swift */,
 				48834E351C1B4098009BC442 /* Client.swift */,
 				48834E341C1B4098009BC442 /* Channel.swift */,
 				48834E361C1B4098009BC442 /* Conversation.swift */,
 				48834E371C1B4098009BC442 /* Event.swift */,
 				48834E3A1C1B4098009BC442 /* User.swift */,
-				4835ECAE1C1C620E00193EBC /* Authenticator.swift */,
 				488F65291EF97CD50085325F /* PhotoAPI.swift */,
 				48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */,
 				487D601F200BD88A0009E5F1 /* DriveAPI.swift */,

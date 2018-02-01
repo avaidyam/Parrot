@@ -435,3 +435,7 @@ internal enum PeopleAPIData {
     internal typealias HangoutsExtendedData = ExtendedData.HangoutsExtendedData
     internal typealias ConversationMetadata = ConversationResult.ConversationAndSelfState.ConversationMetadata
 }
+
+internal extension PeopleAPIData.HangoutsExtendedData {
+    var userInterest: Bool { return (self.isFavorite ?? false || self.isPinned ?? false) }
+}

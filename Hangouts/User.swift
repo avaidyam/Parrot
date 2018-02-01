@@ -51,7 +51,7 @@ public class User: Person, Hashable, Equatable {
     
     // Parse and initialize a User from an Entity.
     // Note: If selfUser is nil, assume this is the self user.
-    public convenience init(_ client: Client, entity: Entity, selfUser: User.ID?) {
+    internal convenience init(_ client: Client, entity: Entity, selfUser: User.ID?) {
         
         // Parse User ID and self status.
         let userID = User.ID(chatID: entity.id!.chat_id!,
@@ -88,6 +88,46 @@ public class User: Person, Hashable, Equatable {
         self.init(client, userID: userID,
                   fullName: phoneI18N ?? props.display_name,
                   photoURL: photo, locations: locations, me: isSelf
+        )
+    }
+    
+    // Initialize from a PeopleAPI.Person
+    // Note: If selfUser is nil, assume this is the self user.
+    internal convenience init(_ client: Client, person: PeopleAPIData.Person, selfUser: User.ID?) {
+        
+        // Parse User ID and self status.
+        let userID = User.ID(chatID: person.personId!,
+                             gaiaID: person.personId!)
+        let isSelf = (selfUser != nil ? (selfUser == userID) : true)
+        var fullName: String? = nil, photoURL: String? = nil, locations: [String] = []
+        
+        if let names = person.name { //CONTACT > PROFILE?
+            if let name = (names.filter { $0.metadata?.containerType == "CONTACT" }.flatMap { $0.displayName }).first {
+                fullName = name
+            } else if let name = (names.filter { $0.metadata?.containerType == "PROFILE" }.flatMap { $0.displayName }).first {
+                fullName = name
+            }
+        }
+        if let photos = person.photo {
+            let values = photos.filter { !($0.isMonogram ?? false) }.flatMap { $0.url }
+            if let photo = values.first {
+                photoURL = photo
+            }
+        }
+        if let phones = person.phone {
+            locations += phones.flatMap { $0.value }
+        }
+        if let emails = person.email {
+            locations += emails.flatMap { $0.value }
+        }
+        if let type = person.extendedData?.hangoutsExtendedData?.userType, type != "GAIA" {
+            locations.append(User.GVoiceLocation) // tag the contact
+        }
+        
+        // Initialize the user.
+        self.init(client, userID: userID,
+                  fullName: fullName,
+                  photoURL: photoURL, locations: locations, me: isSelf
         )
     }
 }
@@ -193,22 +233,27 @@ public class UserList: Directory {
         return vals?.entity.map { User(self.client, entity: $0, selfUser: (self.me as! User).id) } ?? []
     }
     
+    /*
+     favorites:    favorites + pinned_favorites
+     frequents:    contacts_you_hangout_with
+     others:       other_contacts + other_contacts_on_hangouts
+     --:           dismissed_contacts
+     */
     ///
-    public func list(_ limit: Int) -> [Person] {
-        /*
-         favorites:    favorites + pinned_favorites
-         frequents:    contacts_you_hangout_with
-         others:       other_contacts + other_contacts_on_hangouts
-         --:           dismissed_contacts
-        */
-        let req = GetSuggestedEntitiesRequest(max_count: UInt64(limit))
-        var vals: GetSuggestedEntitiesResponse? = nil
-        do {
-            vals = try self.client.execute(req)
-        } catch(let error) {
-            print("\n\n", error, "\n\n")
+    public func list(_ limit: Int) -> [Person] { // rename as "suggestions", throws?
+        
+        // Get the response or the error.
+        let s = DispatchSemaphore(value: 0)
+        var vals: (PeopleAPIData.SuggestionsResponse?, Error?) = (nil, nil)
+        PeopleAPI.suggestions(on: self.client.channel!) {
+            vals = ($0, $1); s.signal()
         }
-        return vals?.entity.map { User(self.client, entity: $0, selfUser: (self.me as! User).id) } ?? []
+        s.wait()
+        
+        //
+        guard let res = vals.0, let people = res.people else { return [] }
+        return people.filter { $0.extendedData?.hangoutsExtendedData?.userInterest ?? false }
+            .flatMap { User(self.client, person: $0, selfUser: (self.me as! User).id) }
     }
     
     /// Note: all notification objects are expected to be deltas.
@@ -338,6 +383,11 @@ public class UserList: Directory {
             }
         }
     }
+    
+    // public func suggestions() { ... }
+    // public func list() { ... }
+    // public func lookup() { ... }
+    // public func autocomplete() { ... }
 }
 
 
