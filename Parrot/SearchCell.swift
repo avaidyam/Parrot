@@ -42,15 +42,27 @@ public class SearchCell: NSView {
         let b = NSButton(title: "", image: #imageLiteral(resourceName: "Compose"), target: nil, action: nil).modernize()
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
+        b.isHidden = true // initial state
         b.performedAction = { [weak self] in
-            self?.addHandler()
+            self?.addHandler?()
         }
         return b
     }()
     
     public var searchHandler: (String) -> () = {_ in}
     public var sortHandler: (Int) -> () = {_ in}
-    public var addHandler: () -> () = {}
+    public var addHandler: (() -> ())? = nil {
+        didSet {
+            self.addButton.isHidden = self.addHandler == nil
+            if self.addHandler != nil {
+                self.right_addAnchor.animator().isActive = true
+                self.right_viewAnchor.animator().isActive = false
+            } else {
+                self.right_addAnchor.animator().isActive = false
+                self.right_viewAnchor.animator().isActive = true
+            }
+        }
+    }
     
     public var sortOptions: [String] = [] {
         didSet {
@@ -73,6 +85,9 @@ public class SearchCell: NSView {
         }
     }
     
+    private var right_addAnchor: NSLayoutConstraint! = nil
+    private var right_viewAnchor: NSLayoutConstraint! = nil
+    
     public override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         self.setup()
@@ -92,9 +107,14 @@ public class SearchCell: NSView {
             self.verticalAnchors == self.addButton.verticalAnchors - 5.0
             
             self.leftAnchor == self.searchField.leftAnchor - 5.0
-            self.searchField.rightAnchor == self.addButton.leftAnchor - 5.0
             self.rightAnchor == self.addButton.rightAnchor + 5.0
         }
+        self.right_addAnchor = batch(active: false) {
+            self.searchField.rightAnchor == self.addButton.leftAnchor - 5.0
+        }.first!
+        self.right_viewAnchor = batch(active: true) {
+            self.searchField.rightAnchor == self.rightAnchor - 5.0
+        }.first!
     }
     
     public override var allowsVibrancy: Bool { return true }
