@@ -59,6 +59,7 @@
 		484E8CA01D37FF2500E1D1D5 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E8C9F1D37FF2500E1D1D5 /* Message.swift */; };
 		48557ED720156D8B009D302F /* NSToolTipManager+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */; };
 		48585FCD2023BC6D00556D7A /* LargeTypeTitleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48585FCC2023BC6D00556D7A /* LargeTypeTitleController.swift */; };
+		48585FF72025A61300556D7A /* NSWindow+Transforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48585FF62025A61300556D7A /* NSWindow+Transforms.swift */; };
 		485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485B12EC1F1A904400432A36 /* LocationHelper.swift */; };
 		48675357201C535400284050 /* PersonIndicatorTooltipController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48675356201C535400284050 /* PersonIndicatorTooltipController.swift */; };
 		48675359201CDF6F00284050 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48675358201CDF6F00284050 /* Activity.swift */; };
@@ -462,6 +463,7 @@
 		48574F111D10E76E002375E1 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		48574F121D11F9FC002375E1 /* AppRelease.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRelease.swift; sourceTree = "<group>"; };
 		48585FCC2023BC6D00556D7A /* LargeTypeTitleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeTypeTitleController.swift; sourceTree = "<group>"; };
+		48585FF62025A61300556D7A /* NSWindow+Transforms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSWindow+Transforms.swift"; sourceTree = "<group>"; };
 		4859B81F1F8480DD00BFF0CE /* XPCCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCCoder.swift; sourceTree = "<group>"; };
 		4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCTransaction.swift; sourceTree = "<group>"; };
 		4859B8211F8480DE00BFF0CE /* XPCConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCConnection.swift; sourceTree = "<group>"; };
@@ -1107,6 +1109,7 @@
 				48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */,
 				4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */,
 				48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */,
+				48585FF62025A61300556D7A /* NSWindow+Transforms.swift */,
 				48E39C631ED516AF00EF578D /* SystemBezel */,
 				4831BC9A1ECF734A00C30413 /* Views */,
 				4831BCF01ED2830600C30413 /* ViewControllers */,
@@ -1839,6 +1842,7 @@
 				48E39C611ED516AC00EF578D /* SystemBezel.swift in Sources */,
 				48D3CD0D1DE945C1003D6C02 /* AppKit+Extensions.swift in Sources */,
 				4831BCF41ED356B300C30413 /* DroppableView.swift in Sources */,
+				48585FF72025A61300556D7A /* NSWindow+Transforms.swift in Sources */,
 				489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */,
 				48E39C621ED516AC00EF578D /* VolumeIndicator.swift in Sources */,
 				48267A4E2019893300D9D8A9 /* CGIncrementalImage.swift in Sources */,
@@ -2512,6 +2516,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2529,7 +2534,9 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2542,6 +2549,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2558,6 +2566,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;

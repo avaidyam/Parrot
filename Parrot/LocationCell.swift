@@ -54,12 +54,14 @@ public class LocationCell: NSCollectionViewItem {
             self.personView.image = b.current.sender!.image
             self.personView.isHidden = /*(o.sender?.me ?? false) || */(b.previous?.sender?.identifier == b.current.sender?.identifier)
             
-            let annot = MKPointAnnotation()
-            annot.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-            annot.title = b.current.sender!.firstName
-            annot.subtitle = "Sent " + b.current.timestamp.relativeString(numeric: true, seconds: false)
-            self.mapView.addAnnotation(annot)
-            self.mapView.region = MKCoordinateRegionMakeWithDistance(annot.coordinate, 200, 200)
+            DispatchQueue.main.async {
+                let annot = MKPointAnnotation()
+                annot.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                annot.title = b.current.sender!.firstName
+                annot.subtitle = "Sent " + b.current.timestamp.relativeString(numeric: true, seconds: false)
+                self.mapView.addAnnotation(annot)
+                self.mapView.region = MKCoordinateRegionMakeWithDistance(annot.coordinate, 200, 200)
+            }
         }
     }
     
