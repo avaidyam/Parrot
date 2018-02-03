@@ -79,7 +79,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         if let wc = MessageListViewController.openConversations[conv.identifier] {
             log.debug("Conversation found for id \(conv.identifier)")
             UI {
-                wc.presentAsWindow()
+                if let _ = parent {
+                    // visibility is managed by the parent here
+                } else {
+                    wc.presentAsWindow()
+                }
             }
         } else {
             log.debug("Conversation NOT found for id \(conv.identifier)")

@@ -36,9 +36,23 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         MessageProgressView().modernize(wantsLayer: true)
     }()
     
-    private lazy var cancelButton: NSButton = {
-        let b = NSButton(title: "Cancel", target: self, action: #selector(self.cancelOperation(_:)))
+    private lazy var statusText: NSTextField = {
+        let b = NSTextField(labelWithString: "Create...")
+        b.textColor = .secondaryLabelColor
+        b.controlSize = .small
+        return b
+    }()
+    
+    private lazy var statusButton: NSButton = {
+        let b = NSButton(title: "Cancel", target: nil, action: nil)
             .modernize(wantsLayer: true)
+        b.performedAction = { [weak self] in
+            if (self?.selection.count ?? 0) > 0 {
+                self?.selectionHandler?()
+            } else {
+                self?.cancelOperation(nil)
+            }
+        }
         b.bezelStyle = .roundRect // height = 18px
         return b
     }()
@@ -49,10 +63,14 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         v.material = .sidebar
         v.state = .active
         v.isHidden = true // initial state
-        v.add(subviews: self.cancelButton)
+        v.add(subviews: self.statusText, self.statusButton)
         batch {
             v.heightAnchor == (18.0 + 8.0)
-            v.centerAnchors == self.cancelButton.centerAnchors
+            v.centerYAnchor == self.statusText.centerYAnchor
+            v.centerYAnchor == self.statusButton.centerYAnchor
+            self.statusText.leadingAnchor == v.leadingAnchor + 4.0
+            self.statusButton.trailingAnchor == v.trailingAnchor - 4.0
+            self.statusText.trailingAnchor <= self.statusButton.leadingAnchor - 4.0
         }
         return v
     }()
@@ -245,7 +263,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, shouldSelectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
-        return indexPaths.filter { $0.section != 0 } // can't select from the selection group
+        let existingSMS = self.selection.first?.locations.contains("OffNetworkPhone") ?? false
+        let ret = indexPaths.filter { $0.section != 0 } // can't select from the selection group
+        return ret.filter { // can't mix'n'match SMS + Hangouts
+            let newSMS = self.currentSource()[$0.item].locations.contains("OffNetworkPhone")
+            return (existingSMS && newSMS) || (!existingSMS && !newSMS) // either both are SMS or both are NOT
+        }
     }
     
     public func collectionView(_ collectionView: NSCollectionView, shouldDeselectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
@@ -257,6 +280,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             let indexPaths = indexPaths.filter { $0.section != 0 } // can't select from the selection group
             self.selection.append(contentsOf: (indexPaths.map { self.currentSource()[$0.item] }))
             //self.selection = indexPaths.map { self.currentSource()[$0.item] }
+            self.updateStatus()
         }
     }
     
@@ -264,6 +288,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.editSelection {
             let indexPaths = indexPaths.filter { $0.section == 0 }.map { $0.item }.reversed() // can't deselect from the currentSource group
             for idx in indexPaths { self.selection.remove(at: idx) }
+            self.updateStatus()
         }
     }
     
@@ -283,11 +308,27 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         UI {
             self.collectionView.update(with: selectionUpdates, in: 0) {_ in}
             self.collectionView.update(with: sourceUpdates, in: 1) {_ in}
-            self.collectionView.animator().selectionIndexPaths = Set(self.selection.enumerated().map { IndexPath(item: $0.offset, section: 0) })
+            
+            // Since we can't do cross-section moves with Changeset, and selection is reset:
+            let selectionSet = self.selection.enumerated().map { IndexPath(item: $0.offset, section: 0) }
+            let sourceSet = self.currentSource().enumerated().map { IndexPath(item: $0.offset, section: 1) }
+            self.collectionView.animator().reloadItems(at: Set(selectionSet + sourceSet))
+            self.collectionView.animator().selectionIndexPaths = Set(selectionSet)
         }
-        
-        // Trigger delegates/handlers/etc.
-        print("\n\n\nselection changed: \(self.selection.map { $0.identifier })")
-        //self.selectionHandler?()
+    }
+    
+    private func updateStatus() {
+        if self.selection.count > 1 {
+            let sms = self.selection.first?.locations.contains("OffNetworkPhone") ?? false
+            self.statusText.stringValue = "New group \(sms ? "SMS " : "")conversation..."
+            self.statusButton.title = "Create"
+        } else if self.selection.count == 1 {
+            let sms = self.selection.first?.locations.contains("OffNetworkPhone") ?? false
+            self.statusText.stringValue = "New \(sms ? "SMS " : "")conversation..."
+            self.statusButton.title = "Create"
+        } else {
+            self.statusText.stringValue = "Create..."
+            self.statusButton.title = "Cancel"
+        }
     }
 }

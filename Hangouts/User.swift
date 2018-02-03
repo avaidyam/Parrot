@@ -80,13 +80,16 @@ public class User: Person, Hashable, Equatable {
         if let p = phoneI18N {
             locations.append(p)
         }
+        
+        var visibleName = props.display_name // default
         if let type = entity.entity_type, type == .OffNetworkPhone {
             locations.append(User.GVoiceLocation) // tag the contact
+            visibleName = props.display_name != nil ? props.display_name : phoneI18N
         }
         
         // Initialize the user.
         self.init(client, userID: userID,
-                  fullName: phoneI18N ?? props.display_name,
+                  fullName: visibleName,
                   photoURL: photo, locations: locations, me: isSelf
         )
     }

@@ -510,7 +510,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         }
     }
     
-    public func begin(with: Person...) -> ParrotServiceExtension.Conversation? {
+    public func begin(with: [Person]) -> ParrotServiceExtension.Conversation? {
         let req = CreateConversationRequest(type: with.count > 1 ? .Group : .OneToOne,
                                             client_generated_id: RequestHeader.uniqueID(),
                                             invitee_id: with.map { InviteeID(gaia_id: $0.identifier) })
@@ -518,7 +518,12 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
         
         guard let c = resp?.conversation else { return nil }
         if (resp?.new_conversation_created ?? false) || (self.conv_dict[c.conversation_id!.id!] == nil) {
-            return self.add_conversation(client_conversation: c)
+            let added = self.add_conversation(client_conversation: c)
+            if resp?.new_conversation_created ?? false { // only post this if the server says it's a new conv
+                NotificationCenter.default.post(name: Notification.Conversation.DidCreate, object: added)
+            }
+            NotificationCenter.default.post(name: Notification.Conversation.DidUpdateList, object: self)
+            return added
         } else {
             return self.conv_dict[c.conversation_id!.id!]
         }

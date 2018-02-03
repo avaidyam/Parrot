@@ -4,7 +4,7 @@ public protocol ConversationList: class, ServiceOriginating {
     
     /// Begin a new conversation with the people provided.
     /// Note that this may be a one-on-one conversation if only one exists.
-    func begin(with: Person...) -> Conversation?
+    func begin(with: [Person]) -> Conversation?
     
     /// A list of all conversations mapped by their unique ID.
     /// This list will only contain a certain set of conversations,

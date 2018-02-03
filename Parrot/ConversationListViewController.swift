@@ -249,7 +249,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                     if let t = self.view.window?.titlebarAccessoryViewControllers.filter({ $0 is LargeTypeTitleController }).first {
                         t.title = "Conversations"
                     }
-                    self.startNewConversation(with: d.selection[0])
+                    self.startNewConversation(with: d.selection)
                 }
             }
             return header
@@ -372,9 +372,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     //
     
-    private func startNewConversation(with person: Person) {
-        guard let c = self.conversationList?.begin(with: person) else {
-            NSAlert(style: .critical, message: "Couldn't start a conversation with \"\(person.fullName)\"", buttons: ["Okay"]).runModal()
+    private func startNewConversation(with people: [Person]) {
+        guard let c = self.conversationList?.begin(with: people) else {
+            NSAlert(style: .critical, message: "Couldn't start a conversation with \"\(people.map { $0.fullName })\"", buttons: ["Okay"]).runModal()
             return
         }
         MessageListViewController.show(conversation: c, parent: self.parent)
