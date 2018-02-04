@@ -1,4 +1,6 @@
-import Foundation
+import struct Foundation.Date
+import struct Foundation.URL
+import class Foundation.NSAttributedString
 
 // Convenience...
 public typealias AttributedString = NSAttributedString
@@ -23,16 +25,19 @@ public enum Content {
             self.rawValue = rawValue
         }
         
-        public static let text = "com.avaidyam.Parrot.MessageType.text"
-        public static let richText = "com.avaidyam.Parrot.MessageType.richText"
-        public static let image = "com.avaidyam.Parrot.MessageType.image"
-        public static let audio = "com.avaidyam.Parrot.MessageType.audio"
-        public static let video = "com.avaidyam.Parrot.MessageType.video"
-        public static let file = "com.avaidyam.Parrot.MessageType.file"
-        public static let snippet = "com.avaidyam.Parrot.MessageType.snippet"
+        public static let text = "public.plain-text"
+        public static let richText = "public.rtf"
+        public static let image = "public.image"
+        public static let audio = "public.audio"
+        public static let video = "public.movie"
+        public static let file = "public.file-url"
+        public static let snippet = "com.apple.webarchive"
         //public static let sticker = "com.avaidyam.Parrot.MessageType.sticker"
         //public static let reaction = "com.avaidyam.Parrot.MessageType.reaction"
-        public static let location = "com.avaidyam.Parrot.MessageType.location"
+        public static let location = "public.vlocation"
+        //public.vcard
+        //public.to-do-item
+        //public.calendar-event
     }
     
     /// Service supports plain text in conversations.

@@ -1,4 +1,3 @@
-import Foundation
 
 public protocol Directory: class, ServiceOriginating /*: Collection*/ {
     

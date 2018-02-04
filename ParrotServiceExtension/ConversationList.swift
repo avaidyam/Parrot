@@ -1,4 +1,4 @@
-import Foundation
+import struct Foundation.Date
 
 public protocol ConversationList: class, ServiceOriginating {
     

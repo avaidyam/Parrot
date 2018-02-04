@@ -1,4 +1,4 @@
-import Foundation
+import struct Foundation.Date
 
 /// Describe's a Person's reachability in the Service.
 public enum Reachability {
@@ -18,7 +18,7 @@ public enum Reachability {
 	case desktop
 }
 
-public protocol Person: ServiceOriginating /*: Hashable, Equatable*/ {
+public protocol Person: class, ServiceOriginating /*: Hashable, Equatable*/ {
     
     typealias IdentifierType = String
 	

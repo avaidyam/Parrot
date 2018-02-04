@@ -1,8 +1,8 @@
-import Foundation
+import struct Foundation.Date
 
 /// A Conversation is uniquely identified by its ID, and consists of
 /// the current user, along with either one or more persons as well.
-public protocol Conversation: ServiceOriginating /*: Hashable, Equatable*/ {
+public protocol Conversation: class, ServiceOriginating /*: Hashable, Equatable*/ {
 	
     typealias IdentifierType = String
     

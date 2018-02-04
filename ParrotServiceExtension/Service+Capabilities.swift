@@ -1,4 +1,3 @@
-import Foundation
 
 /// Allows ServiceExtension objects to be traced back to a Service by its identifier.
 public protocol ServiceOriginating {
