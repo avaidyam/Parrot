@@ -822,7 +822,7 @@ public struct Presence: ProtoMessage {
         case device_location = 3
         case in_call = 5
         case device_status = 6
-        case mood_setting = 9
+        case mood_message = 9
         case last_seen = 10
     }
     
@@ -831,21 +831,21 @@ public struct Presence: ProtoMessage {
     public var device_location: [Location] = []
     public var in_call: InCall? = nil
     public var device_status: DeviceStatus? = nil
-    public var mood_setting: MoodSetting? = nil
+    public var mood_message: [MoodMessage] = []
     public var last_seen: LastSeen? = nil
     
-    public init(reachable: Bool? = nil, available: Bool? = nil, device_location: [Location] = [], in_call: InCall? = nil, device_status: DeviceStatus? = nil, mood_setting: MoodSetting? = nil, last_seen: LastSeen? = nil) {
+    public init(reachable: Bool? = nil, available: Bool? = nil, device_location: [Location] = [], in_call: InCall? = nil, device_status: DeviceStatus? = nil, mood_message: [MoodMessage] = [], last_seen: LastSeen? = nil) {
         self.reachable = reachable
         self.available = available
         self.device_location = device_location
         self.in_call = in_call
         self.device_status = device_status
-        self.mood_setting = mood_setting
+        self.mood_message = mood_message
         self.last_seen = last_seen
     }
     
     public var hashValue: Int {
-        return combine(hashes: [self.reachable.hash(), self.available.hash(), self.device_location.hash(), self.in_call.hash(), self.device_status.hash(), self.mood_setting.hash(), self.last_seen.hash()])
+        return combine(hashes: [self.reachable.hash(), self.available.hash(), self.device_location.hash(), self.in_call.hash(), self.device_status.hash(), self.mood_message.hash(), self.last_seen.hash()])
     }
 }
 
@@ -4185,25 +4185,25 @@ public struct SetPresenceRequest: ProtoMessage {
         case presence_state_setting = 2
         case dnd_setting = 3
         case desktop_off_setting = 5
-        case mood_setting = 8
+        case mood_message = 8
     }
     
     public var request_header: RequestHeader? = nil
     public var presence_state_setting: PresenceStateSetting? = nil
     public var dnd_setting: DndSetting? = nil
     public var desktop_off_setting: DesktopOffSetting? = nil
-    public var mood_setting: MoodSetting? = nil
+    public var mood_message: [MoodMessage] = []
     
-    public init(request_header: RequestHeader? = nil, presence_state_setting: PresenceStateSetting? = nil, dnd_setting: DndSetting? = nil, desktop_off_setting: DesktopOffSetting? = nil, mood_setting: MoodSetting? = nil) {
+    public init(request_header: RequestHeader? = nil, presence_state_setting: PresenceStateSetting? = nil, dnd_setting: DndSetting? = nil, desktop_off_setting: DesktopOffSetting? = nil, mood_message: [MoodMessage] = []) {
         self.request_header = request_header
         self.presence_state_setting = presence_state_setting
         self.dnd_setting = dnd_setting
         self.desktop_off_setting = desktop_off_setting
-        self.mood_setting = mood_setting
+        self.mood_message = mood_message
     }
     
     public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.presence_state_setting.hash(), self.dnd_setting.hash(), self.desktop_off_setting.hash(), self.mood_setting.hash()])
+        return combine(hashes: [self.request_header.hash(), self.presence_state_setting.hash(), self.dnd_setting.hash(), self.desktop_off_setting.hash(), self.mood_message.hash()])
     }
 }
 

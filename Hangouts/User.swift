@@ -210,7 +210,7 @@ public class UserList: Directory {
         let response = try? self.client.execute(req)
         
         let entities = response?.entity_result.flatMap { $0.entity } ?? []
-        self.cache(presencesFor: entities.map { $0.id! })
+        self.cache(presencesFor: entities.filter { $0.entity_type != .OffNetworkPhone }.map { $0.id! })
         self.cache(namesFor: entities.flatMap {
             $0.properties?.phones.first?.phone_number?.i18n_data?.international_number
         })
@@ -294,7 +294,7 @@ public class UserList: Directory {
                 //if ??? {
                     user.reachability = pres.toReachability()
                 //}
-                if let mood = pres.mood_setting?.mood_message?.mood_content {
+                if let mood = pres.mood_message.first?.mood_content {
                     user.mood = mood.toText()
                 }
                 
@@ -309,7 +309,7 @@ public class UserList: Directory {
         for q in queries {
             let req = QueryPresenceRequest(participant_id: [q],
                                            field_mask: [.Reachable, .Available, .Mood, .Location, .InCall, .Device, .LastSeen])
-            self.client.execute(req) { req, _ in
+            self.client.execute(req) { req, err in
                 for pres2 in req!.presence_result {
                     guard   let id1 = pres2.user_id?.chat_id, let id2 = pres2.user_id?.gaia_id,
                         let user = self.users[User.ID(chatID: id1, gaiaID: id2)],
@@ -322,7 +322,8 @@ public class UserList: Directory {
                     //if ??? {
                         user.reachability = pres.toReachability()
                     //}
-                    if let mood = pres.mood_setting?.mood_message?.mood_content {
+                    
+                    if let mood = pres.mood_message.first?.mood_content {
                         user.mood = mood.toText()
                     }
                     
