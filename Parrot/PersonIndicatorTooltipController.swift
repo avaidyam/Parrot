@@ -70,7 +70,6 @@ public class GroupIndicatorToolTipController: NSViewController {
     
     private func photoView(for image: NSImage) -> NSImageView {
         let v = NSImageView(frame: NSRect(x: 0, y: 0, width: 48, height: 48)).modernize(wantsLayer: true)
-        v.layer?.backgroundColor = .ns(.red)
         v.allowsCutCopyPaste = false
         v.isEditable = false
         v.animates = true

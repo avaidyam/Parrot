@@ -6,14 +6,16 @@ import Mocha
 public class NSMonogramImageRep: NSImageRep {
     
     public var string: String = ""
-    public var backgroundColor: NSColor = .clear
+    public var color: NSColor = .clear
     public var overlay: NSImage? = nil
+    public var fontName: NSFont.Name? = nil
     
-    public init(size: NSSize, string: String, backgroundColor: NSColor, overlay: NSImage? = nil) {
+    public init(size: NSSize, string: String, color: NSColor, fontName: NSFont.Name? = nil, overlay: NSImage? = nil) {
         super.init()
         self.size = size
         self.string = string
-        self.backgroundColor = backgroundColor
+        self.color = color
+        self.fontName = fontName
         self.overlay = overlay
     }
     
@@ -27,7 +29,7 @@ public class NSMonogramImageRep: NSImageRep {
     
     public override func draw() -> Bool {
         let rect = NSRect(origin: .zero, size: self.size)
-        NSGradient(starting: self.backgroundColor, ending: self.baseColor)?.draw(in: rect, angle: 270)
+        NSGradient(starting: self.color, ending: self.baseColor)?.draw(in: rect, angle: 270)
         
         // If we have an overlay image, draw that via XOR (cutout) if it's a template.
         if let overlay = self.overlay {
@@ -40,7 +42,7 @@ public class NSMonogramImageRep: NSImageRep {
             let textStyle = NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
             textStyle.alignment = .center
             let textSize = rect.size.width * 0.75
-            let font = NSMonogramImageRep.monogramFont(ofSize: textSize)
+            let font = NSMonogramImageRep.monogramFont(name: self.fontName, size: textSize)
             var rect2 = rect
             rect2.origin.y = rect.midY - (font.capHeight / 2)
             
@@ -53,23 +55,25 @@ public class NSMonogramImageRep: NSImageRep {
         return true
     }
     
-    private static func monogramFont(ofSize textSize: CGFloat) -> NSFont {
-        return  NSFont(name: ".SFCompactRounded-Medium", size: textSize) ??
-                NSFont.systemFont(ofSize: textSize, weight: .semibold)
+    private static func monogramFont(name: NSFont.Name?, size textSize: CGFloat) -> NSFont {
+        if let name = name, let font = NSFont(name: name.rawValue, size: textSize) {
+            return font
+        }
+        return  NSFont.systemFont(ofSize: textSize, weight: .semibold)
     }
     
     private var baseColor: NSColor {
-        return self.backgroundColor.blended(withFraction: 0.33, of: .black) ?? self.backgroundColor
+        return self.color.blended(withFraction: 0.33, of: .black) ?? self.color
     }
 }
 
 public extension NSImage {
     public convenience init(monogramOfSize size: NSSize, string: String,
-                            backgroundColor color: NSColor, overlay: NSImage? = nil)
+                            color: NSColor, fontName: NSFont.Name? = nil, overlay: NSImage? = nil)
     {
         self.init()
         self.addRepresentation(NSMonogramImageRep(size: size, string: string,
-                                                  backgroundColor: color, overlay: overlay))
+                                                  color: color, fontName: fontName, overlay: overlay))
     }
 }
 
@@ -80,6 +84,14 @@ public extension NSColor {
         let p3 = self.usingColorSpace(NSColorSpace.deviceRGB)!
         let brightness = (p3.redComponent * 299) + (p3.greenComponent * 587) + (p3.blueComponent * 114)
         return !(brightness < 500)
+    }
+    
+    /// Returns a tinted version of the receiver if the receiver is an RGB color.
+    func tinted() -> NSColor {
+        var h = CGFloat(), s = CGFloat(), b = CGFloat(), a = CGFloat()
+        let rgbColor = usingColorSpaceName(NSColorSpaceName.calibratedRGB)
+        rgbColor?.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        return NSColor(hue: h, saturation: s, brightness: b == 0 ? 0.2 : b * 0.8, alpha: a)
     }
     
     /// Returns an dark overlay color suitable for the given appearance.

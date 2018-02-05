@@ -3,7 +3,7 @@ import MochaUI
 public class ReloadCell: NSView {
     
     private lazy var button: NSButton = {
-        let b = NSButton(title: "Load More", image: NSImage(named: .refreshTemplate)!,
+        let b = LayerButton(title: "Load More", image: NSImage(named: .refreshTemplate)!,
                          target: self, action: #selector(self.reloadPressed(_:)))
             .modernize()
         b.bezelStyle = .texturedRounded

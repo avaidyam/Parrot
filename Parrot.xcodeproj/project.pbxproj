@@ -87,6 +87,7 @@
 		486DBB421F94801B00ECA84B /* XPCTransport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 486DBB301F947FB900ECA84B /* XPCTransport.framework */; };
 		486DBB431F94802000ECA84B /* XPCTransport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 486DBB301F947FB900ECA84B /* XPCTransport.framework */; };
 		486DBB4B1F9480AD00ECA84B /* RemoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486DBB4A1F9480AD00ECA84B /* RemoteService.swift */; };
+		486EDFE82028277A008FBE5F /* LayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDFE72028277A008FBE5F /* LayerButton.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		487385891F9E1A6D00CC5853 /* CookieTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487385871F9DFAAE00CC5853 /* CookieTransport.swift */; };
 		487D6020200BD88A0009E5F1 /* DriveAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487D601F200BD88A0009E5F1 /* DriveAPI.swift */; };
@@ -491,6 +492,7 @@
 		486DBB331F947FB900ECA84B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		486DBB4A1F9480AD00ECA84B /* RemoteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteService.swift; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
+		486EDFE72028277A008FBE5F /* LayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerButton.swift; sourceTree = "<group>"; };
 		487385871F9DFAAE00CC5853 /* CookieTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieTransport.swift; sourceTree = "<group>"; };
 		487D601F200BD88A0009E5F1 /* DriveAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAPI.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = ../Parrot/PreferencesViewController.swift; sourceTree = "<group>"; };
@@ -782,6 +784,7 @@
 				4831BCF31ED356B300C30413 /* DroppableView.swift */,
 				488201B51D4A962B00C545F0 /* ExtendedTextView.swift */,
 				4831BCF91ED4151800C30413 /* MessageProgressView.swift */,
+				486EDFE72028277A008FBE5F /* LayerButton.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1850,6 +1853,7 @@
 				48403CA31DF0BF6B0009897A /* Interpolate.swift in Sources */,
 				4831BCFA1ED4151800C30413 /* MessageProgressView.swift in Sources */,
 				48D3CD191DE945C1003D6C02 /* NetworkReachability.swift in Sources */,
+				486EDFE82028277A008FBE5F /* LayerButton.swift in Sources */,
 				48403CA11DF0B9930009897A /* Changeset.swift in Sources */,
 				4869A93C1EDD250C00764594 /* ViewAttachmentCell.swift in Sources */,
 				48E39C651ED578AF00EF578D /* KeyboardBrightness.swift in Sources */,

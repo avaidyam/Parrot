@@ -252,6 +252,22 @@ public extension Date {
 }
 
 public extension NSFont {
+    
+    public struct Name: RawRepresentable, Equatable, Hashable {
+        public let rawValue: String
+        public init(rawValue: String) { self.rawValue = rawValue }
+        public init(_ rawValue: String) { self.rawValue = rawValue }
+        
+        public static let system = NSFont.Name(rawValue: "_system")
+    }
+    
+    public static func from(name: NSFont.Name, size: CGFloat, weight: NSFont.Weight = .regular) -> NSFont? {
+        if name == .system {
+            return NSFont.systemFont(ofSize: size, weight: weight)
+        } else {
+            return NSFont(name: name.rawValue, size: size)
+        }
+    }
 	
 	/// Load an NSFont from a provided URL.
 	public static func from(_ fontURL: URL, size: CGFloat) -> NSFont? {

@@ -111,7 +111,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     }()
     
     private lazy var photoView: NSButton = {
-        let b = NSButton(title: "", image: NSImage(named: .addTemplate)!,
+        let b = LayerButton(title: "", image: NSImage(named: .addTemplate)!,
                          target: nil, action: nil).modernize(wantsLayer: true)
         b.isBordered = false
         b.wantsLayer = true

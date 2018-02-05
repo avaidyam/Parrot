@@ -71,11 +71,13 @@ public struct GoogleAnalytics {
     public struct Screen: RawRepresentable, Equatable, Hashable {
         public let rawValue: String
         public init(rawValue: String) { self.rawValue = rawValue }
+        public init(_ rawValue: String) { self.rawValue = rawValue }
     }
     
     public struct Category: RawRepresentable, Equatable, Hashable {
         public let rawValue: String
         public init(rawValue: String) { self.rawValue = rawValue }
+        public init(_ rawValue: String) { self.rawValue = rawValue }
     }
     
     /// Sent on session start and end.

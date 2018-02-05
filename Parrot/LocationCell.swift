@@ -2,6 +2,8 @@ import MochaUI
 import MapKit
 import ParrotServiceExtension
 
+/* TODO: Causes _NSDetectedLayoutRecursion. */
+
 public class LocationCell: NSCollectionViewItem {
     
     private lazy var personView: NSImageView = {

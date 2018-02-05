@@ -17,8 +17,66 @@ public extension NSColor/*.Name*/ {
 }
 
 // Fonts
-public extension NSFont/*.Name*/ {
-    //".SFCompactRounded-Medium"
+public extension NSFont.Name {
+    public static let compactDisplayBlack = NSFont.Name(".SFCompactDisplay-Black")
+    public static let compactDisplayBold = NSFont.Name(".SFCompactDisplay-Bold")
+    public static let compactDisplayHeavy = NSFont.Name(".SFCompactDisplay-Heavy")
+    public static let compactDisplayLight = NSFont.Name(".SFCompactDisplay-Light")
+    public static let compactDisplayMedium = NSFont.Name(".SFCompactDisplay-Medium")
+    public static let compactDisplayRegular = NSFont.Name(".SFCompactDisplay-Regular")
+    public static let compactDisplaySemibold = NSFont.Name(".SFCompactDisplay-Semibold")
+    public static let compactDisplayThin = NSFont.Name(".SFCompactDisplay-Thin")
+    public static let compactDisplayUltralight = NSFont.Name(".SFCompactDisplay-Ultralight")
+    public static let compactRoundedBlack = NSFont.Name(".SFCompactRounded-Black")
+    public static let compactRoundedBold = NSFont.Name(".SFCompactRounded-Bold")
+    public static let compactRoundedHeavy = NSFont.Name(".SFCompactRounded-Heavy")
+    public static let compactRoundedLight = NSFont.Name(".SFCompactRounded-Light")
+    public static let compactRoundedMedium = NSFont.Name(".SFCompactRounded-Medium")
+    public static let compactRoundedRegular = NSFont.Name(".SFCompactRounded-Regular")
+    public static let compactRoundedSemibold = NSFont.Name(".SFCompactRounded-Semibold")
+    public static let compactRoundedThin = NSFont.Name(".SFCompactRounded-Thin")
+    public static let compactRoundedUltralight = NSFont.Name(".SFCompactRounded-Ultralight")
+    public static let compactTextBold = NSFont.Name(".SFCompactText-Bold")
+    public static let compactTextBoldItalic = NSFont.Name(".SFCompactText-BoldItalic")
+    public static let compactTextHeavy = NSFont.Name(".SFCompactText-Heavy")
+    public static let compactTextHeavyItalic = NSFont.Name(".SFCompactText-HeavyItalic")
+    public static let compactTextLight = NSFont.Name(".SFCompactText-Light")
+    public static let compactTextLightItalic = NSFont.Name(".SFCompactText-LightItalic")
+    public static let compactTextMedium = NSFont.Name(".SFCompactText-Medium")
+    public static let compactTextMediumItalic = NSFont.Name(".SFCompactText-MediumItalic")
+    public static let compactTextRegular = NSFont.Name(".SFCompactText-Regular")
+    public static let compactTextRegularItalic = NSFont.Name(".SFCompactText-RegularItalic")
+    public static let compactTextSemibold = NSFont.Name(".SFCompactText-Semibold")
+    public static let compactTextSemiboldItalic = NSFont.Name(".SFCompactText-SemiboldItalic")
+    public static let display = NSFont.Name(".SFNSDisplay")
+    public static let displayBlackItalic = NSFont.Name(".SFNSDisplay-BlackItalic")
+    public static let displayBoldItalic = NSFont.Name(".SFNSDisplay-BoldItalic")
+    public static let displayHeavyItalic = NSFont.Name(".SFNSDisplay-HeavyItalic")
+    public static let displayLightItalic = NSFont.Name(".SFNSDisplay-LightItalic")
+    public static let displayMediumItalic = NSFont.Name(".SFNSDisplay-MediumItalic")
+    public static let displayRegularItalic = NSFont.Name(".SFNSDisplay-RegularItalic")
+    public static let displaySemiboldItalic = NSFont.Name(".SFNSDisplay-SemiboldItalic")
+    public static let displayThinItalic = NSFont.Name(".SFNSDisplay-ThinItalic")
+    public static let displayUltralightItalic = NSFont.Name(".SFNSDisplay-UltralightItalic")
+    public static let displayCondensedBlack = NSFont.Name(".SFNSDisplayCondensed-Black")
+    public static let displayCondensedBold = NSFont.Name(".SFNSDisplayCondensed-Bold")
+    public static let displayCondensedHeavy = NSFont.Name(".SFNSDisplayCondensed-Heavy")
+    public static let displayCondensedLight = NSFont.Name(".SFNSDisplayCondensed-Light")
+    public static let displayCondensedMedium = NSFont.Name(".SFNSDisplayCondensed-Medium")
+    public static let displayCondensedRegular = NSFont.Name(".SFNSDisplayCondensed-Regular")
+    public static let displayCondensedSemibold = NSFont.Name(".SFNSDisplayCondensed-Semibold")
+    public static let displayCondensedThin = NSFont.Name(".SFNSDisplayCondensed-Thin")
+    public static let displayCondensedUltralight = NSFont.Name(".SFNSDisplayCondensed-Ultralight")
+    public static let text = NSFont.Name(".SFNSText")
+    public static let textItalic = NSFont.Name(".SFNSTextItalic")
+    public static let textCondensedBold = NSFont.Name(".SFNSTextCondensed-Bold")
+    public static let textCondensedHeavy = NSFont.Name(".SFNSTextCondensed-Heavy")
+    public static let textCondensedLight = NSFont.Name(".SFNSTextCondensed-Light")
+    public static let textCondensedMedium = NSFont.Name(".SFNSTextCondensed-Medium")
+    public static let textCondensedRegular = NSFont.Name(".SFNSTextCondensed-Regular")
+    public static let textCondensedSemibold = NSFont.Name(".SFNSTextCondensed-Semibold")
+    public static let symbolsRegular = NSFont.Name(".SFNSSymbols-Regular")
+    
 }
 
 // Images
@@ -59,36 +117,36 @@ public extension NSDataAsset.Name {
 
 // Notifications
 public extension NSNotification.Name {
-    public static let openConversationsUpdated = NSNotification.Name(rawValue: "com.avaidyam.Parrot.openConversationsUpdated")
-    public static let conversationAppearanceUpdated = NSNotification.Name(rawValue: "com.avaidyam.Parrot.conversationAppearanceUpdated")
+    public static let openConversationsUpdated = NSNotification.Name("com.avaidyam.Parrot.openConversationsUpdated")
+    public static let conversationAppearanceUpdated = NSNotification.Name("com.avaidyam.Parrot.conversationAppearanceUpdated")
 }
 
 // Views
 public extension NSUserInterfaceItemIdentifier {
-    public static let personCell = NSUserInterfaceItemIdentifier(rawValue: "\(PersonCell.self)")
-    public static let searchCell = NSUserInterfaceItemIdentifier(rawValue: "\(SearchCell.self)")
-    public static let reloadCell = NSUserInterfaceItemIdentifier(rawValue: "\(ReloadCell.self)")
-    public static let conversationCell = NSUserInterfaceItemIdentifier(rawValue: "\(ConversationCell.self)")
-    public static let messageCell = NSUserInterfaceItemIdentifier(rawValue: "\(MessageCell.self)")
-    public static let photoCell = NSUserInterfaceItemIdentifier(rawValue: "\(PhotoCell.self)")
-    public static let locationCell = NSUserInterfaceItemIdentifier(rawValue: "\(LocationCell.self)")
+    public static let personCell = NSUserInterfaceItemIdentifier("\(PersonCell.self)")
+    public static let searchCell = NSUserInterfaceItemIdentifier("\(SearchCell.self)")
+    public static let reloadCell = NSUserInterfaceItemIdentifier("\(ReloadCell.self)")
+    public static let conversationCell = NSUserInterfaceItemIdentifier("\(ConversationCell.self)")
+    public static let messageCell = NSUserInterfaceItemIdentifier("\(MessageCell.self)")
+    public static let photoCell = NSUserInterfaceItemIdentifier("\(PhotoCell.self)")
+    public static let locationCell = NSUserInterfaceItemIdentifier("\(LocationCell.self)")
 }
 
 // ToolbarItems
 public extension NSToolbarItem.Identifier {
-    public static let add = NSToolbarItem.Identifier(rawValue: "add")
-    public static let search = NSToolbarItem.Identifier(rawValue: "search")
+    public static let add = NSToolbarItem.Identifier("add")
+    public static let search = NSToolbarItem.Identifier("search")
 }
 
 // Screens
 public extension Analytics.Screen {
-    public static let conversation = Analytics.Screen(rawValue: "ConversationScreen")
-    public static let conversationList = Analytics.Screen(rawValue: "ConversationListScreen")
-    public static let directory = Analytics.Screen(rawValue: "DirectoryScreen")
-    public static let preferences = Analytics.Screen(rawValue: "PreferencesScreen")
+    public static let conversation = Analytics.Screen("ConversationScreen")
+    public static let conversationList = Analytics.Screen("ConversationListScreen")
+    public static let directory = Analytics.Screen("DirectoryScreen")
+    public static let preferences = Analytics.Screen("PreferencesScreen")
 }
 
 // Categories
 public extension Analytics.Category {
-    public static let misc = Analytics.Category(rawValue: "Misc")
+    public static let misc = Analytics.Category("Misc")
 }

@@ -44,7 +44,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }()
     
     private lazy var statusButton: NSButton = {
-        let b = NSButton(title: "Cancel", target: nil, action: nil)
+        let b = LayerButton(title: "Cancel", target: nil, action: nil)
             .modernize(wantsLayer: true)
         b.performedAction = { [weak self] in
             if (self?.selection.count ?? 0) > 0 {

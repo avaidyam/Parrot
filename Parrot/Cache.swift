@@ -62,11 +62,12 @@ public func fetchImage(user: Person, monogram: Bool = false) -> NSImage {
 	} else if let _ = user.fullName.rangeOfCharacter(from: .letters, options: []) {
         let bg = materialColors[abs(user.fullName.hashValue) % materialColors.count]
         img = NSImage(monogramOfSize: NSSize(width: 64.0, height: 64.0),
-                      string: user.fullName, backgroundColor: bg)
+                      string: user.fullName, color: bg, fontName: .compactRoundedMedium)
 	} else {
         let bg = materialColors[abs(user.fullName.hashValue) % materialColors.count]
 		img = NSImage(monogramOfSize: NSSize(width: 64.0, height: 64.0),
-                      string: user.fullName, backgroundColor: bg, overlay: NSImage(named: .user))
+                      string: user.fullName, color: bg, fontName: .compactRoundedMedium,
+                      overlay: NSImage(named: .user))
 	}
 	
 	_imgCache[user.identifier] = img

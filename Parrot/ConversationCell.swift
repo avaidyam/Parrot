@@ -109,7 +109,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
                 self.badgeLabel.isHidden = !firstParticipant.locations.contains("OffNetworkPhone")
             } else {
                 self.photoView.image = NSImage(monogramOfSize: NSSize(width: 64.0, height: 64.0),
-                                               string: "?", backgroundColor: #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1))
+                                               string: "?", color: #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1), fontName: .compactRoundedMedium)
                 self.badgeLabel.isHidden = true
             }
 			self.prefix = conversation.muted ? "◉ " : (messageSender != selfSender ? "↙ " : "↗ ")
