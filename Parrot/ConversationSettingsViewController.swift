@@ -16,53 +16,61 @@ public class ConversationDetailsViewController: NSViewController {
     }
     
     private lazy var muteButton: NSButton = {
-        let v = NSButton(title: "Mute", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
+        let v = LayerButton(title: "Mute", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
                          action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
         v.alternateTitle = "Unmute"
         v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
-        v.bezelStyle = .texturedRounded
+        v.bezelStyle = .texturedSquare
+        v.imageHugsTitle = true
+        v.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         
         v.setButtonType(.pushOnPushOff)
-        v.state = NSControl.StateValue(rawValue: 0)
+        v.state = .off
         v.tag = Tags.mute.rawValue
         return v
     }()
     
     private lazy var blockButton: NSButton = {
-        let v = NSButton(title: "Block", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
+        let v = LayerButton(title: "Block", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
                          action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
         v.alternateTitle = "Unblock"
         v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
-        v.bezelStyle = .texturedRounded
+        v.bezelStyle = .texturedSquare
+        v.imageHugsTitle = true
+        v.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         
         v.setButtonType(.pushOnPushOff)
-        v.state = NSControl.StateValue(rawValue: 0)
+        v.state = .off
         v.tag = Tags.block.rawValue
         return v
     }()
     
     private lazy var archiveButton: NSButton = {
-        let v = NSButton(title: "Archive", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
+        let v = LayerButton(title: "Archive", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
                          action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
         v.alternateTitle = "Unarchive"
         v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
-        v.bezelStyle = .texturedRounded
+        v.bezelStyle = .texturedSquare
+        v.imageHugsTitle = true
+        v.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         
         v.setButtonType(.pushOnPushOff)
-        v.state = NSControl.StateValue(rawValue: 0)
+        v.state = .off
         v.tag = Tags.archive.rawValue
         return v
     }()
     
     private lazy var deleteButton: NSButton = {
-        let v = NSButton(title: "Delete", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
+        let v = LayerButton(title: "Delete", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
                          action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
         v.alternateTitle = "Undelete"
         v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
-        v.bezelStyle = .texturedRounded
+        v.bezelStyle = .texturedSquare
+        v.imageHugsTitle = true
+        v.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         
         v.setButtonType(.pushOnPushOff)
-        v.state = NSControl.StateValue(rawValue: 0)
+        v.state = .off
         v.tag = Tags.delete.rawValue
         return v
     }()
@@ -75,18 +83,16 @@ public class ConversationDetailsViewController: NSViewController {
             self.deleteButton
         ]).modernize()
         
-        stack.edgeInsets = NSEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
+        stack.edgeInsets = NSEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
         stack.spacing = 8.0
         stack.orientation = .vertical
         stack.alignment = .centerX
-        stack.distribution = .fill
+        stack.distribution = .fillEqually
         
-        stack.widthAnchor == 128.0
         self.view = stack
     }
     
-    @objc
-    private func buttonAction(_ sender: Any?) {
+    @objc private func buttonAction(_ sender: Any?) {
         guard   let _ = self.conversation,
                 let button = sender as? NSButton,
                 let tag = Tags(rawValue: button.tag)

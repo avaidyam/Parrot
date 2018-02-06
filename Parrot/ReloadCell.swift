@@ -7,6 +7,7 @@ public class ReloadCell: NSView {
                          target: self, action: #selector(self.reloadPressed(_:)))
             .modernize()
         b.bezelStyle = .texturedRounded
+        b.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         return b
     }()
     

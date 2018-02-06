@@ -739,6 +739,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private lazy var addButton: NSButton = {
         let b = LayerButton(title: "", image: NSImage(named: .actionTemplate)!,
                          target: nil, action: nil).modernize()
+        b.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         b.performedAction = {
@@ -752,6 +753,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private lazy var searchToggle: NSButton = {
         let b = LayerButton(title: "", image: NSImage(named: .revealFreestandingTemplate)!,
                          target: nil, action: nil)
+        b.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         b.setButtonType(.onOff)

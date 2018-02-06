@@ -10,6 +10,7 @@ import QuartzCore
 
 public class LayerButton: NSButton, CALayerDelegate {
     
+    // pressed, pulsed, deeplyPressed, inactive, active, disabled, drag, rollover
     /*
      public struct State: OptionSet {
      public let rawValue: Int

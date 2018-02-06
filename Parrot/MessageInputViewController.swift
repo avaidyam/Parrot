@@ -115,6 +115,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
                          target: nil, action: nil).modernize(wantsLayer: true)
         b.isBordered = false
         b.wantsLayer = true
+        b.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         b.performedAction = {
             self.photoMenu.popUp(positioning: self.photoMenu.item(at: 0),
                                  at: self.photoView.bounds.origin,

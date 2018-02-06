@@ -53,6 +53,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 self?.cancelOperation(nil)
             }
         }
+        b.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         b.bezelStyle = .roundRect // height = 18px
         return b
     }()

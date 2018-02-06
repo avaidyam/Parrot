@@ -40,6 +40,7 @@ public class SearchCell: NSView {
     
     private lazy var addButton: NSButton = {
         let b = LayerButton(title: "", image: #imageLiteral(resourceName: "Compose"), target: nil, action: nil).modernize()
+        b.font = NSFont.from(name: .compactRoundedMedium, size: 13.0)
         b.bezelStyle = .texturedRounded
         b.imagePosition = .imageOnly
         b.isHidden = true // initial state
