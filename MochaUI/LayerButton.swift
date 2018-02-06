@@ -139,6 +139,7 @@ public class LayerButton: NSButton, CALayerDelegate {
         }
     }
     
+    public override var allowsVibrancy: Bool { return true }
     public override var wantsUpdateLayer: Bool { return true }
     public override func updateLayer() {
         self.subviews.forEach { $0.removeFromSuperview() } // remove NSButtonCell's views

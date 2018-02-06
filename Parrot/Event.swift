@@ -178,7 +178,7 @@ public extension ParrotAppController {
             }, AutoSubscription(kind: NSUserNotification.didActivateNotification) {
                 let c = ServiceRegistry.services.first!.value
                 guard   let notification = $0.object as? NSUserNotification,
-                        var conv = c.conversations.conversations[notification.identifier ?? ""]
+                        let conv = c.conversations.conversations[notification.identifier ?? ""]
                 else { return }
                 
                 switch notification.activationType {

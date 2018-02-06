@@ -101,6 +101,8 @@ public class Switch: NSControl {
         self.layer?.addSublayer(self.knobContainer)
     }
     
+    public override var allowsVibrancy: Bool { return false }
+    public override var wantsUpdateLayer: Bool { return true }
     public override func updateLayer() {
         self.backgroundLayer.cornerRadius = ceil(self.bounds.height / 2)
         self.backgroundLayer.borderWidth = (self.on || self.pressed) ? ceil(self.bounds.height) : 3.0 * self.scaleFactor
@@ -115,14 +117,6 @@ public class Switch: NSControl {
         self.knobSmallStroke.cornerRadius = ceil(self.knobSmallStroke.bounds.height / 2)
         self.knobSmallShadow.shadowOffset = CGSize(width: 0, height: -3 * self.scaleFactor)
         self.knobSmallShadow.shadowRadius = 2.0 * self.scaleFactor
-    }
-    
-    public override var allowsVibrancy: Bool {
-        return false
-    }
-    
-    public override var wantsUpdateLayer: Bool {
-        return true
     }
     
     public override var intrinsicContentSize: NSSize {

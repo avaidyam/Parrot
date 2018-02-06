@@ -169,7 +169,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     }
     
     public func menu(for event: NSEvent) -> NSMenu? {
-        guard var conversation = self.representedObject as? Conversation else { return nil }
+        guard let conversation = self.representedObject as? Conversation else { return nil }
         let m = NSMenu(title: "Settings")
         m.addItem(title: conversation.muted ? "Unmute" : "Mute") {
             log.info("Mute conv: \(conversation.identifier)")

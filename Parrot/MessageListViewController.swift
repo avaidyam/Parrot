@@ -594,7 +594,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 		button.title = altT
 		
 		// Mute or unmute the conversation.
-		var cv = self.conversation! // don't cause didSet to fire!
+        let cv = self.conversation! // don't cause didSet to fire!
         cv.muted = (button.state == .on)
 	}
 	
