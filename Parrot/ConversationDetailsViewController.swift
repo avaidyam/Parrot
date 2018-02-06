@@ -75,6 +75,15 @@ public class ConversationDetailsViewController: NSViewController {
         return v
     }()
     
+    public override var representedObject: Any? {
+        didSet {
+            self.muteButton.state = self.conversation?.muted ?? false ? .on : .off
+            self.blockButton.state = self.conversation?.participants.first { !$0.me }?.blocked ?? false ? .on : .off
+            self.archiveButton.state = self.conversation?.archived ?? false ? .on : .off
+            // self.deleteButton.state = ... // can't be seeing this if the conv is deleted!
+        }
+    }
+    
     public override func loadView() {
         let stack: NSStackView = NSStackView(views: [
             self.muteButton,
@@ -88,26 +97,54 @@ public class ConversationDetailsViewController: NSViewController {
         stack.orientation = .vertical
         stack.alignment = .centerX
         stack.distribution = .fillEqually
-        
         self.view = stack
     }
     
     @objc private func buttonAction(_ sender: Any?) {
-        guard   let _ = self.conversation,
+        guard   let conversation = self.conversation,
                 let button = sender as? NSButton,
                 let tag = Tags(rawValue: button.tag)
         else { return }
         
         switch tag {
         case .mute:
-            print("MUTE TOGGLE")
+            log.info("Mute [conv: \(conversation.identifier)]")
+            conversation.muted = button.state == .on
         case .block:
-            print("BLOCK TOGGLE")
+            log.info("Block [conv: \(conversation.identifier)]")
+            conversation.participants.first { !$0.me }?.blocked = button.state == .on
         case .archive:
-            print("ARCHIVE TOGGLE")
+            log.info("Archive [conv: \(conversation.identifier)]")
+            conversation.archived = button.state == .on
+            //conversation.move(to: .archive)
         case .delete:
-            print("DELETE TOGGLE")
+            log.info("Delete [conv: \(conversation.identifier)]")
+            conversation.leave()
         }
+    }
+    
+    public static func menu(for conversation: Conversation) -> NSMenu? {
+        let person = conversation.participants.first { !$0.me }
+        let m = NSMenu(title: "Settings")
+        m.addItem(title: conversation.muted ? "Unmute" : "Mute") {
+            log.info("Mute [conv: \(conversation.identifier)]")
+            conversation.muted = !conversation.muted
+        }
+        m.addItem(title: person?.blocked ?? false ? "Unblock" : "Block") {
+            log.info("Block [conv: \(conversation.identifier)]")
+            person?.blocked = !(person?.blocked ?? false)
+        }
+        m.addItem(NSMenuItem.separator())
+        m.addItem(title: conversation.archived ? "Unarchive" : "Archive") {
+            log.info("Archive [conv: \(conversation.identifier)]")
+            conversation.archived = !conversation.archived
+            //conversation.move(to: .archive)
+        }
+        m.addItem(title: "Delete") {
+            log.info("Delete [conv: \(conversation.identifier)]")
+            conversation.leave()
+        }
+        return m
     }
     
     @IBAction func colorChanged(_ sender: AnyObject?) {

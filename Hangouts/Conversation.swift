@@ -285,7 +285,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
     
-    public func leave(cb: (() -> Void)? = nil) {
+    public func leave() {
         switch (self.conversation.type!) {
         case .Group:
             //participant_id: self?

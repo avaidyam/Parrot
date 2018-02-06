@@ -170,26 +170,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     
     public func menu(for event: NSEvent) -> NSMenu? {
         guard let conversation = self.representedObject as? Conversation else { return nil }
-        let m = NSMenu(title: "Settings")
-        m.addItem(title: conversation.muted ? "Unmute" : "Mute") {
-            log.info("Mute conv: \(conversation.identifier)")
-            conversation.muted = !conversation.muted
-        }
-        m.addItem(title: "Block") {
-            log.info("Block conv: \(conversation.identifier)")
-            //conversation.participants.first?.blocked = true
-        }
-        m.addItem(NSMenuItem.separator())
-        m.addItem(title: "Delete") {
-            log.info("Delete conv: \(conversation.identifier)")
-            //conversation.delete()
-        }
-        m.addItem(title: "Archive") {
-            log.info("Archive conv: \(conversation.identifier)")
-            //conversation.move(to: .archive)
-        }
-        return m
-        //m.popUp(positioning: nil, at: self.convert(event.locationInWindow, from: nil), in: self)
+        return ConversationDetailsViewController.menu(for: conversation)
     }
 	
 	// Return a complete dragging component for this ConversationView.

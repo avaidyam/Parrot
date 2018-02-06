@@ -33,16 +33,15 @@ public protocol Conversation: class, ServiceOriginating /*: Hashable, Equatable*
     
 	/// Create a Conversation from the identifier given on the Service given.
     //init?(withIdentifier: String, on: Service)
-		
-	// leave()
-	// archive()
-	// delete()
     
 	// watermark?
+    //conversation.move(to: .archive)
     
     func focus(mode: FocusMode)
     
     func send(message: Message) throws // MessageError
+    
+    func leave() // both group and one-on-one
 }
 
 public extension Conversation {

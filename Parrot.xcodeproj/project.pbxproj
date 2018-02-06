@@ -25,7 +25,7 @@
 		481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */; };
 		481D933E1DF5D7D100EB23A1 /* DispatchSourceTimer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933D1DF5D7D100EB23A1 /* DispatchSourceTimer+Extensions.swift */; };
 		481F0D7F201ACE540037141F /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481F0D7E201ACE540037141F /* Resources.swift */; };
-		48212BE91ECCEB7700B7765B /* ConversationSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */; };
+		48212BE91ECCEB7700B7765B /* ConversationDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48212BE81ECCEB7700B7765B /* ConversationDetailsViewController.swift */; };
 		482323D71E1776DC00318380 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D61E1776DC00318380 /* Event.swift */; };
 		482323D91E1CBBA100318380 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323D81E1CBBA100318380 /* Application.swift */; };
 		482323DB1E1CBBE000318380 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323DA1E1CBBE000318380 /* Drawing.swift */; };
@@ -421,7 +421,7 @@
 		481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayLink.swift; sourceTree = "<group>"; };
 		481D933D1DF5D7D100EB23A1 /* DispatchSourceTimer+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchSourceTimer+Extensions.swift"; sourceTree = "<group>"; };
 		481F0D7E201ACE540037141F /* Resources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
-		48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationSettingsViewController.swift; sourceTree = "<group>"; };
+		48212BE81ECCEB7700B7765B /* ConversationDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationDetailsViewController.swift; sourceTree = "<group>"; };
 		482323D61E1776DC00318380 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		482323D81E1CBBA100318380 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		482323DA1E1CBBE000318380 /* Drawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drawing.swift; sourceTree = "<group>"; };
@@ -738,7 +738,7 @@
 			children = (
 				4835ECAD1C1C620E00193EBC /* MessageListViewController.swift */,
 				489FB0881DF7CC4900AEBD1D /* MessageInputViewController.swift */,
-				48212BE81ECCEB7700B7765B /* ConversationSettingsViewController.swift */,
+				48212BE81ECCEB7700B7765B /* ConversationDetailsViewController.swift */,
 			);
 			name = "Message List";
 			sourceTree = "<group>";
@@ -1772,7 +1772,7 @@
 				485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */,
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
 				48675357201C535400284050 /* PersonIndicatorTooltipController.swift in Sources */,
-				48212BE91ECCEB7700B7765B /* ConversationSettingsViewController.swift in Sources */,
+				48212BE91ECCEB7700B7765B /* ConversationDetailsViewController.swift in Sources */,
 				4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
