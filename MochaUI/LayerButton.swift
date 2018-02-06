@@ -118,6 +118,8 @@ public class LayerButton: NSButton, CALayerDelegate {
     
     override open func layout() {
         super.layout()
+        self.subviews.forEach { $0.removeFromSuperview() } // remove NSButtonCell's views
+        
         let imageRect = (self.cell?.value(forKey: "_imageView") as? NSView)?.frame ?? .zero
         var titleRect = (self.cell?.value(forKey: "_titleTextField") as? NSView)?.frame ?? .zero
         titleRect.origin.y += 1 // CATextLayer baseline is +1.5px compared to NSTextLayer.
@@ -139,10 +141,9 @@ public class LayerButton: NSButton, CALayerDelegate {
         }
     }
     
-    public override var allowsVibrancy: Bool { return true }
+    public override var allowsVibrancy: Bool { return false }
     public override var wantsUpdateLayer: Bool { return true }
     public override func updateLayer() {
-        self.subviews.forEach { $0.removeFromSuperview() } // remove NSButtonCell's views
         self.containerLayer.contents = nil // somehow this gets set by NSButtonCell?
         let props = (self.isHighlighted) ? self.activeProperties : self.inactiveProperties
         
