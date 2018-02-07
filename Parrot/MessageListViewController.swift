@@ -788,7 +788,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public override func makeToolbarContainer() -> ToolbarContainer? {
         let h = ToolbarContainer()
         
-        let item = NSToolbarItem(itemIdentifier: .add)
+        // custom ID because we could potentially have multiple diff VC's on screen at a time!
+        let id = NSToolbarItem.Identifier(rawValue: "add.\(self.conversation!.identifier)")
+        let item = NSToolbarItem(itemIdentifier: id)
         item.view = self.addButton
         item.label = "Add"
         
@@ -796,7 +798,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         h.itemOrder = [.flexibleSpace] + _usersToItems().map { $0.itemIdentifier } + [.flexibleSpace]
         
         h.templateItems.insert(item)
-        h.itemOrder.append(.add)
+        h.itemOrder.append(id)
         //h.delegate = self
         return h
     }
