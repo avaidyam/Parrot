@@ -192,6 +192,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         window.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: self.title!))
     }
     
+    /*
+    public override func makeToolbarContainer() -> ToolbarContainer? {
+        let t = ToolbarContainer()
+        t.templateItems = [.windowTitle(viewController: self)]
+        t.itemOrder = [.windowTitle]
+        return t
+    }
+    */
+    
     public override func viewDidLoad() {
         if let service = ServiceRegistry.services.values.first {
             self.directory = service.directory

@@ -5,6 +5,31 @@ import Mocha
 /* TODO: Support isVisible (per toolbar, per item), and otherItemsProxy(nesting). */
 /* TODO: NSToolbars with the same UUID() can synchronize elements! */
 
+// The below is an attempt at making NSToolbar behave similarly to NSTouchBar.
+// That is, a window will ask its contentViewController to provide a set of toolbar
+// items; if none are given or it doesn't support this method, the window, its
+// window controller, or its window delegate will be consulted.
+//
+// TODO: Support nested "toolbar containers" (otherItemsProxy).
+// TODO: Support optional item/bar visibility (per toolbar and item)
+// TODO: Support allowed, required, default, and user item modes.
+// TODO: Support NSToolbarItem types/classes (like NS*TouchBarItem).
+
+/*
+ * things not needed in toolbaritemcontainer:
+     - popover items?
+     - principal item? (but centering!)
+     - color popover -> use the panel as popover
+     - sharing -> same?
+     - nsscrubber?
+     - visibility priority -> use stackview!
+ * fixedSpaceSmall, fixedSpaceLarge, flexibleSpace
+ * otherItemsProxy: nest touch bars up the responder chain.
+ * group bar items by using an instance of the NSStackView loses system support for spacing
+ * NSGroupTouchBarItem manages inter-item spacing
+ * supports user customization for the individual items
+*/
+
 public extension NSWindow {
     
     /// Simplifies the installation of a "modern" toolbar.
@@ -140,6 +165,8 @@ extension NSViewController: ToolbarContainerProvider {
     private static var containerCreatedProp = AssociatedProperty<NSViewController, Bool>(.strong)
 }
 
+// TODO: NS*ViewControllers should be delegates that forward items OR implement toolbarContainer.get
+
 extension NSSplitViewController { // TODO: Make this a ToolbarContainerDelegate
     open override func makeToolbarContainer() -> ToolbarContainer? {
         let t = ToolbarContainer()
@@ -159,6 +186,12 @@ extension NSSplitViewController { // TODO: Make this a ToolbarContainerDelegate
             }
         }
         return t
+    }
+}
+
+extension NSTabViewController {
+    open override func makeToolbarContainer() -> ToolbarContainer? {
+        return self.tabViewItems[self.selectedTabViewItemIndex].viewController?.toolbarContainer
     }
 }
 
@@ -196,6 +229,38 @@ public extension NSToolbarItem {
         return item
     }
     
+    public static func windowTitle(window: NSWindow) -> NSToolbarItem {
+        let i = NSToolbarItem(itemIdentifier: .windowTitle)
+        i.visibilityPriority = .high
+        i.centered = true
+        let t = NSTextField(labelWithString: window.title)
+        t.textColor = .secondaryLabelColor
+        i.view = t
+        
+        // Automatically update this item; it's bound to the window FOREVER!!!
+        window.bind(.title, to: t, withKeyPath: "stringValue", options: [
+            .nullPlaceholder: "Window",
+            .notApplicablePlaceholder: "Window"
+        ])
+        return i
+    }
+    
+    public static func windowTitle(viewController: NSViewController) -> NSToolbarItem {
+        let i = NSToolbarItem(itemIdentifier: .windowTitle)
+        i.visibilityPriority = .high
+        i.centered = true
+        let t = NSTextField(labelWithString: viewController.title ?? "")
+        t.textColor = .secondaryLabelColor
+        i.view = t
+        
+        // Automatically update this item; it's bound to the window FOREVER!!!
+        viewController.bind(.title, to: t, withKeyPath: "stringValue", options: [
+            .nullPlaceholder: "Window",
+            .notApplicablePlaceholder: "Window"
+        ])
+        return i
+    }
+    
     //
     //
     //
@@ -224,68 +289,5 @@ public extension NSToolbar {
 }
 
 public extension NSToolbarItem.Identifier {
-    public static let none = NSToolbarItem.Identifier(rawValue: "")
+    public static let windowTitle = NSToolbarItem.Identifier(rawValue: "NSToolbarItemWindowTitleIdentifier")
 }
-
-//
-//
-//
-
-// The below is an attempt at making NSToolbar behave similarly to NSTouchBar.
-// That is, a window will ask its contentViewController to provide a set of toolbar
-// items; if none are given or it doesn't support this method, the window, its
-// window controller, or its window delegate will be consulted.
-//
-// TODO: Support nested "toolbar containers" (otherItemsProxy).
-// TODO: Support optional item/bar visibility (per toolbar and item)
-// TODO: Support allowed, required, default, and user item modes.
-// TODO: Support NSToolbarItem types/classes (like NS*TouchBarItem).
-
-/*
-class CustomWindow: NSWindow, ToolbarContainerProvider {
-    lazy var toolbarContainer: ToolbarContainer = {
-        let h = ToolbarContainer()
-        
-        let i = NSToolbarItem(itemIdentifier: "NSToolbarItemWindowTitleIdentifier")
-        i.visibilityPriority = NSToolbarItemVisibilityPriorityHigh
-        let t = NSTextField(labelWithString: self.title)
-        t.textColor = NSColor.secondaryLabelColor
-        i.view = t
-        
-        h.templateItems.insert(i)
-        h.itemOrder = [NSToolbarFlexibleSpaceItemIdentifier, "NSToolbarItemWindowTitleIdentifier", NSToolbarFlexibleSpaceItemIdentifier]
-        return h
-    }()
-}
-
-public extension NSWindow {
-    public func coalescedToolbarContainer() -> ToolbarContainer? {
-        if let c = self.contentViewController as? ToolbarContainerProvider {
-            return c.toolbarContainer
-        }
-        return (self as? ToolbarContainerProvider)?.toolbarContainer
-    }
-}
-
-extension NSTabViewController: ToolbarContainerProvider {
-    public var toolbarContainer: ToolbarContainer {
-        let sub = self.tabViewItems[self.selectedTabViewItemIndex] as? ToolbarContainerProvider
-        return sub?.toolbarContainer ?? ToolbarContainer()
-    }
-}
-*/
-
-/*
- * things not needed in toolbaritemcontainer:
- - popover items?
- - principal item? (but centering!)
- - color popover -> use the panel as popover
- - sharing -> same?
- - nsscrubber?
- - visibility priority -> use stackview!
- * fixedSpaceSmall, fixedSpaceLarge, flexibleSpace
- * otherItemsProxy: nest touch bars up the responder chain.
- * group bar items by using an instance of the NSStackView loses system support for spacing
- * NSGroupTouchBarItem manages inter-item spacing
-     * supports user customization for the individual items
-*/

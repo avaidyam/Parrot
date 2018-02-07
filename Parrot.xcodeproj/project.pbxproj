@@ -771,6 +771,7 @@
 		4831BC991ECF733900C30413 /* Layout */ = {
 			isa = PBXGroup;
 			children = (
+				4869A9311ED7C3D700764594 /* ToolbarContainer.swift */,
 				483ED2B31EE9E80200D2BDCF /* NSCollectionViewListLayout.swift */,
 				489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */,
 			);
@@ -1110,7 +1111,6 @@
 				483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */,
 				48403CA01DF0B9930009897A /* Changeset.swift */,
 				48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */,
-				4869A9311ED7C3D700764594 /* ToolbarContainer.swift */,
 				48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */,
 				48585FF62025A61300556D7A /* NSWindow+Transforms.swift */,
 				48E39C631ED516AF00EF578D /* SystemBezel */,
