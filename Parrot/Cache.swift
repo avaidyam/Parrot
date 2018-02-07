@@ -58,7 +58,7 @@ public func fetchImage(user: Person, monogram: Bool = false) -> NSImage {
 	
 	var img: NSImage! = nil
 	if let d = fetchData(user.identifier, user.photoURL) {
-		img = NSImage(data: d)!
+		img = NSImage(data: d) ?? NSImage()
 	} else if let _ = user.fullName.rangeOfCharacter(from: .letters, options: []) {
         let bg = materialColors[abs(user.fullName.hashValue) % materialColors.count]
         img = NSImage(monogramOfSize: NSSize(width: 64.0, height: 64.0),

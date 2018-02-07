@@ -241,11 +241,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private var showingFocus: Bool = false
     private var lastWatermarkIdx = -1
 	private var _previews = [String: [LinkPreviewType]]()
-    internal var toolbarContainer = ToolbarItemContainer() {
+    /*public override var toolbarContainer: ToolbarContainer? {
         didSet {
-            self._setToolbar()
+            //self._setToolbar()
         }
-    }
+    }*/
     
     /// The currently active user's image or monogram.
     public var image: NSImage? {
@@ -305,8 +305,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
         window.titleVisibility = .hidden
         //window.titlebarAppearsTransparent = true
-        self.toolbarContainer = window.installToolbar()
-        window.toolbar?.showsBaselineSeparator = false
+        window.installToolbar(self)
     }
     
     public override func viewDidLoad() {
@@ -444,7 +443,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             self.settingsController.conversation = self.conversation
             self.syncAutosaveTitle()
             self.invalidateRestorableState()
-            self._setToolbar()
+            //self._setToolbar()
             
             // Register for Conversation "delegate" changes.
             let c = NotificationCenter.default
@@ -774,15 +773,31 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         return self._usersToIndicators.values.map { $0.toolbarItem }
     }
     private func _setToolbar() {
+        guard let h = self.toolbarContainer else { return }
+        
         let item = NSToolbarItem(itemIdentifier: .add)
         item.view = self.addButton
         item.label = "Add"
         
-        let h = self.toolbarContainer
         h.templateItems = Set(_usersToItems())
         h.itemOrder = [.flexibleSpace] + _usersToItems().map { $0.itemIdentifier } + [.flexibleSpace]
         
         h.templateItems.insert(item)
         h.itemOrder.append(.add)
+    }
+    public override func makeToolbarContainer() -> ToolbarContainer? {
+        let h = ToolbarContainer()
+        
+        let item = NSToolbarItem(itemIdentifier: .add)
+        item.view = self.addButton
+        item.label = "Add"
+        
+        h.templateItems = Set(_usersToItems())
+        h.itemOrder = [.flexibleSpace] + _usersToItems().map { $0.itemIdentifier } + [.flexibleSpace]
+        
+        h.templateItems.insert(item)
+        h.itemOrder.append(.add)
+        //h.delegate = self
+        return h
     }
 }

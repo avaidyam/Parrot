@@ -63,7 +63,7 @@
 		485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485B12EC1F1A904400432A36 /* LocationHelper.swift */; };
 		48675357201C535400284050 /* PersonIndicatorTooltipController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48675356201C535400284050 /* PersonIndicatorTooltipController.swift */; };
 		48675359201CDF6F00284050 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48675358201CDF6F00284050 /* Activity.swift */; };
-		4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */; };
+		4869A9321ED7C3D700764594 /* ToolbarContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9311ED7C3D700764594 /* ToolbarContainer.swift */; };
 		4869A9341ED9480C00764594 /* DynamicProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9331ED9480C00764594 /* DynamicProperty.swift */; };
 		4869A9381EDB858A00764594 /* DirectoryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9371EDB858A00764594 /* DirectoryListViewController.swift */; };
 		4869A93A1EDB859700764594 /* PersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9391EDB859700764594 /* PersonCell.swift */; };
@@ -471,7 +471,7 @@
 		485B12EC1F1A904400432A36 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
 		48675356201C535400284050 /* PersonIndicatorTooltipController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonIndicatorTooltipController.swift; sourceTree = "<group>"; };
 		48675358201CDF6F00284050 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
-		4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarItemContainer.swift; sourceTree = "<group>"; };
+		4869A9311ED7C3D700764594 /* ToolbarContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarContainer.swift; sourceTree = "<group>"; };
 		4869A9331ED9480C00764594 /* DynamicProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicProperty.swift; sourceTree = "<group>"; };
 		4869A9371EDB858A00764594 /* DirectoryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryListViewController.swift; sourceTree = "<group>"; };
 		4869A9391EDB859700764594 /* PersonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonCell.swift; sourceTree = "<group>"; };
@@ -1110,7 +1110,7 @@
 				483F5EF31DA0CD6400D9D406 /* NetworkReachability.swift */,
 				48403CA01DF0B9930009897A /* Changeset.swift */,
 				48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */,
-				4869A9311ED7C3D700764594 /* ToolbarItemContainer.swift */,
+				4869A9311ED7C3D700764594 /* ToolbarContainer.swift */,
 				48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */,
 				48585FF62025A61300556D7A /* NSWindow+Transforms.swift */,
 				48E39C631ED516AF00EF578D /* SystemBezel */,
@@ -1864,7 +1864,7 @@
 				4848A5831EFD1A0D008B2DE2 /* BlockTrampoline.swift in Sources */,
 				48585FCD2023BC6D00556D7A /* LargeTypeTitleController.swift in Sources */,
 				48557ED720156D8B009D302F /* NSToolTipManager+Appearance.swift in Sources */,
-				4869A9321ED7C3D700764594 /* ToolbarItemContainer.swift in Sources */,
+				4869A9321ED7C3D700764594 /* ToolbarContainer.swift in Sources */,
 				48AD39F61EE7FDF000C33E40 /* PreferencesViewController.swift in Sources */,
 				489C8D5D1DF40012007B3392 /* Interpolate+Interpolatable.swift in Sources */,
 				48D3CD0E1DE945C1003D6C02 /* NSDrawer+Extensions.swift in Sources */,

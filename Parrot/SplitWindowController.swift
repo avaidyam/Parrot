@@ -11,7 +11,7 @@ import MochaUI
 //
 // If no detail panes are left, optionally close the window (master pane can decide).
 // The master pane cannot be removed. (I guess?)
-// Also use ToolbarItemContainer responder chain searching to lay out the toolbar.
+// Also use ToolbarContainer responder chain searching to lay out the toolbar.
 //
 
 /*
@@ -22,7 +22,7 @@ import MochaUI
 */
 public class SplitWindowController: NSSplitViewController, WindowPresentable {
     
-    private var toolbarContainer = ToolbarItemContainer()
+    //private var toolbarContainer = ToolbarContainer()
     
     public func prepare(window: NSWindow) {
         window.styleMask = [window.styleMask, .miniaturizable, .unifiedTitleAndToolbar, .fullSizeContentView]
@@ -33,8 +33,7 @@ public class SplitWindowController: NSSplitViewController, WindowPresentable {
             vev.blendingMode = .withinWindow
         }
         window.titleVisibility = .hidden
-        self.toolbarContainer = window.installToolbar()
-        window.toolbar?.showsBaselineSeparator = false
+        window.installToolbar(self)
     }
     
     public override func viewWillAppear() {
@@ -51,8 +50,7 @@ public class SplitWindowController: NSSplitViewController, WindowPresentable {
     
     public override func addChildViewController(_ childViewController: NSViewController) {
         super.addChildViewController(childViewController)
-        if let vc = childViewController as? MessageListViewController {
-            vc.toolbarContainer = self.toolbarContainer
-        }
+        self.toolbarContainer = self.makeToolbarContainer() // FIXME
+        self.view.window?.toolbar?.container = self.toolbarContainer // FIXME
     }
 }

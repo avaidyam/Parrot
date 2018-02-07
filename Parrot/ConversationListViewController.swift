@@ -131,15 +131,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             vev.blendingMode = .withinWindow
         }
         window.titleVisibility = .hidden
-        _ = window.installToolbar()
-        window.toolbar?.showsBaselineSeparator = false
+        window.installToolbar(self)
         window.addTitlebarAccessoryViewController(LargeTypeTitleController(title: self.title))
-        
-        //let item = NSToolbarItem(itemIdentifier: .add)
-        //item.view = self.addButton
-        //item.label = "Add"
-        //container.templateItems = [item]
-        //container.itemOrder = [.flexibleSpace, .add]
     }
     
     public override func viewDidLoad() {

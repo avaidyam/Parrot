@@ -182,8 +182,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             vev.blendingMode = .withinWindow
         }
         window.titleVisibility = .hidden
-        _ = window.installToolbar()
-        window.toolbar?.showsBaselineSeparator = false
+        window.installToolbar(self)
         window.addTitlebarAccessoryViewController(LargeTypeTitleController(title: self.title))
         
         /// Re-synchronizes the conversation name and identifier with the window.
