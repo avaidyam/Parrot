@@ -151,7 +151,6 @@
 		48DE52F71C1CC28000647C63 /* ParrotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52F61C1CC28000647C63 /* ParrotViewController.swift */; };
 		48DE52FE1C1CC28000647C63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48DE52FC1C1CC28000647C63 /* InfoPlist.strings */; };
 		48DE53011C1CC28000647C63 /* ParrotToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52F01C1CC28000647C63 /* ParrotToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		48E39C601ED516AC00EF578D /* BezelContentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5D1ED516AC00EF578D /* BezelContentViews.swift */; };
 		48E39C611ED516AC00EF578D /* SystemBezel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5E1ED516AC00EF578D /* SystemBezel.swift */; };
 		48E39C621ED516AC00EF578D /* VolumeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */; };
 		48E39C651ED578AF00EF578D /* KeyboardBrightness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */; };
@@ -558,7 +557,6 @@
 		48DE52FD1C1CC28000647C63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		48DF84971D04E1F800F39444 /* Hangouts.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hangouts.proto.swift; sourceTree = "<group>"; };
 		48E0E81F1D584FCC00EE4464 /* NSDrawer+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDrawer+Extensions.swift"; sourceTree = "<group>"; };
-		48E39C5D1ED516AC00EF578D /* BezelContentViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BezelContentViews.swift; sourceTree = "<group>"; };
 		48E39C5E1ED516AC00EF578D /* SystemBezel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemBezel.swift; sourceTree = "<group>"; };
 		48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeIndicator.swift; sourceTree = "<group>"; };
 		48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardBrightness.swift; sourceTree = "<group>"; };
@@ -781,11 +779,13 @@
 		4831BC9A1ECF734A00C30413 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				48E39C5E1ED516AC00EF578D /* SystemBezel.swift */,
 				4831BCEE1ED282FA00C30413 /* Switch.swift */,
 				4831BCF31ED356B300C30413 /* DroppableView.swift */,
 				488201B51D4A962B00C545F0 /* ExtendedTextView.swift */,
 				4831BCF91ED4151800C30413 /* MessageProgressView.swift */,
 				486EDFE72028277A008FBE5F /* LayerButton.swift */,
+				48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1113,7 +1113,6 @@
 				48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */,
 				48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */,
 				48585FF62025A61300556D7A /* NSWindow+Transforms.swift */,
-				48E39C631ED516AF00EF578D /* SystemBezel */,
 				4831BC9A1ECF734A00C30413 /* Views */,
 				4831BCF01ED2830600C30413 /* ViewControllers */,
 				4831BC981ECF733100C30413 /* Interpolate */,
@@ -1201,16 +1200,6 @@
 				48DE52F31C1CC28000647C63 /* ParrotToday */,
 			);
 			name = Extensions;
-			sourceTree = "<group>";
-		};
-		48E39C631ED516AF00EF578D /* SystemBezel */ = {
-			isa = PBXGroup;
-			children = (
-				48E39C5E1ED516AC00EF578D /* SystemBezel.swift */,
-				48E39C5D1ED516AC00EF578D /* BezelContentViews.swift */,
-				48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */,
-			);
-			name = SystemBezel;
 			sourceTree = "<group>";
 		};
 		48F301BF201C4849006D3261 /* Bindings */ = {
@@ -1841,7 +1830,6 @@
 				48D3CD161DE945C1003D6C02 /* ExtendedTextView.swift in Sources */,
 				4831BCEF1ED282FA00C30413 /* Switch.swift in Sources */,
 				48EF2AB720181DC1007086A9 /* NSMonogramImageRep.swift in Sources */,
-				48E39C601ED516AC00EF578D /* BezelContentViews.swift in Sources */,
 				48E39C611ED516AC00EF578D /* SystemBezel.swift in Sources */,
 				48D3CD0D1DE945C1003D6C02 /* AppKit+Extensions.swift in Sources */,
 				4831BCF41ED356B300C30413 /* DroppableView.swift in Sources */,
