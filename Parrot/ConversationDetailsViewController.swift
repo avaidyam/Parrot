@@ -126,23 +126,23 @@ public class ConversationDetailsViewController: NSViewController {
     public static func menu(for conversation: Conversation) -> NSMenu? {
         let person = conversation.participants.first { !$0.me }
         let m = NSMenu(title: "Settings")
-        m.addItem(title: conversation.muted ? "Unmute" : "Mute") {
-            log.info("Mute [conv: \(conversation.identifier)]")
-            conversation.muted = !conversation.muted
+        m.addItem(title: conversation.muted ? "Unmute" : "Mute") { [weak conversation] in
+            log.info("Mute [conv: \(conversation?.identifier ?? "<dead>")]")
+            conversation?.muted = !(conversation?.muted ?? false)
         }
-        m.addItem(title: person?.blocked ?? false ? "Unblock" : "Block") {
-            log.info("Block [conv: \(conversation.identifier)]")
+        m.addItem(title: person?.blocked ?? false ? "Unblock" : "Block") { [weak conversation, person] in
+            log.info("Block [conv: \(conversation?.identifier ?? "<dead>")]")
             person?.blocked = !(person?.blocked ?? false)
         }
         m.addItem(NSMenuItem.separator())
-        m.addItem(title: conversation.archived ? "Unarchive" : "Archive") {
-            log.info("Archive [conv: \(conversation.identifier)]")
-            conversation.archived = !conversation.archived
+        m.addItem(title: conversation.archived ? "Unarchive" : "Archive") { [weak conversation] in
+            log.info("Archive [conv: \(conversation?.identifier ?? "<dead>")]")
+            conversation?.archived = !(conversation?.archived ?? false)
             //conversation.move(to: .archive)
         }
-        m.addItem(title: "Delete") {
-            log.info("Delete [conv: \(conversation.identifier)]")
-            conversation.leave()
+        m.addItem(title: "Delete") { [weak conversation] in
+            log.info("Delete [conv: \(conversation?.identifier ?? "<dead>")]")
+            conversation?.leave()
         }
         return m
     }

@@ -236,7 +236,10 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     //
     
     private func resizeModule() {
-        NSAnimationContext.animate(duration: 600.milliseconds) { // TODO: FIX THIS
+        NSAnimationContext.animate(duration: 200.milliseconds) { // TODO: FIX THIS
+            NSAnimationContext.current.allowsImplicitAnimation = true
+            NSAnimationContext.current.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            
             self.textView.invalidateIntrinsicContentSize()
             self.textView.superview?.needsLayout = true
             self.textView.superview?.layoutSubtreeIfNeeded()

@@ -118,13 +118,13 @@ public extension ParrotAppController {
         self.watching = [
                AutoSubscription(kind: Notification.Service.DidConnect) { _ in
                 let event = Event(identifier: "Parrot.ConnectionStatus", contents: "Parrot has connected.",
-                                  description: nil, image: NSImage(named: .caution), sound: nil, script: nil)
+                                  description: nil, image: NSImage(named: .connectionOutline), sound: nil, script: nil)
                 let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self, BezelAction.self]
                 actions.forEach { $0.perform(with: event) }
             }, AutoSubscription(kind: Notification.Service.DidDisconnect) { _ in
                 DispatchQueue.main.async { // FIXME why does wrapping it twice work??
                     let event = Event(identifier: "Parrot.ConnectionStatus", contents: "Parrot has disconnected.",
-                                      description: nil, image: NSImage(named: .caution), sound: nil, script: nil)
+                                      description: nil, image: NSImage(named: .connectionOutline), sound: nil, script: nil)
                     let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self, BezelAction.self]
                     actions.forEach { $0.perform(with: event) }
                 }

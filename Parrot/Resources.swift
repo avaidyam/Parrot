@@ -81,6 +81,7 @@ public extension NSFont.Name {
 
 // Images
 public extension NSImage.Name {
+    public static let cautionSign = NSImage.Name("CautionSign")
     public static let materialVolumeHigh = NSImage.Name("MaterialVolumeHigh")
     public static let materialVolumeMute = NSImage.Name("MaterialVolumeMute")
     public static let materialSync = NSImage.Name("MaterialSync")
@@ -88,6 +89,7 @@ public extension NSImage.Name {
     public static let dndRead = NSImage.Name("DNDRead")
     public static let dndUnread = NSImage.Name("DNDUnread")
     public static let connection = NSImage.Name("Connection")
+    public static let connectionOutline = NSImage.Name("ConnectionOutline")
     public static let compose = NSImage.Name("Compose")
     public static let communicationVideo = NSImage.Name("CommunicationVideo")
 }

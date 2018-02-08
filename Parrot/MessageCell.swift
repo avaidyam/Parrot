@@ -190,14 +190,6 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         self.textLabel.layer?.cornerRadius = 10.0
 	}
     
-    /// If we're right-clicked outside of the text view, just popUp the textView's menu.
-    /// Note: make sure we SELECT ALL and then DESELECT ALL after the popUp menu.
-    public func menu(for event: NSEvent) -> NSMenu? {
-        self.textLabel.selectAll(nil)
-        return self.textLabel.menu(for: event)
-        //self.textLabel?.setSelectedRange(NSRange())
-    }
-    
     /// Modify the textView menu to display the message's time.
     public func textView(_ view: NSTextView, menu: NSMenu, for event: NSEvent, at charIndex: Int) -> NSMenu? {
         menu.insertItem(NSMenuItem(title: "Sent at " + (self.textLabel.toolTip ?? ""), action: nil, keyEquivalent: ""), at: 0)

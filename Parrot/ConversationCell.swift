@@ -129,6 +129,8 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
             } else {
                 self.timeLabel.textColor = .tertiaryLabelColor
             }
+            
+            self.view.menu = ConversationDetailsViewController.menu(for: conversation)
 		}
 	}
 	
@@ -166,11 +168,6 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
                 //self.separator?.animator().isHidden = false
             }
         }
-    }
-    
-    public func menu(for event: NSEvent) -> NSMenu? {
-        guard let conversation = self.representedObject as? Conversation else { return nil }
-        return ConversationDetailsViewController.menu(for: conversation)
     }
 	
 	// Return a complete dragging component for this ConversationView.
