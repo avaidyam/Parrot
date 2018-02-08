@@ -81,6 +81,7 @@ public extension NSFont.Name {
 
 // Images
 public extension NSImage.Name {
+    public static let alarmClock = NSImage.Name("AlarmClock")
     public static let cautionSign = NSImage.Name("CautionSign")
     public static let materialVolumeHigh = NSImage.Name("MaterialVolumeHigh")
     public static let materialVolumeMute = NSImage.Name("MaterialVolumeMute")

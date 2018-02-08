@@ -1,12 +1,23 @@
 import MochaUI
 import ParrotServiceExtension
 
+/* TODO: Storing everything in UserDefaults is a bad idea... */
 public struct ConversationSettings {
     public let serviceIdentifier: Service.IdentifierType
     public let identifier: Conversation.IdentifierType
     
     private var keyName: String {
         return "settings/\(self.serviceIdentifier)/\(self.identifier)/"
+    }
+    
+    public var vibrate: Bool {
+        get { return Settings.get(forKey: self.keyName + #function, default: false) }
+        set { Settings.set(forKey: self.keyName + #function, value: newValue) }
+    }
+    
+    public var sound: NSSound? {
+        get { return Settings.archivedGet(forKey: self.keyName + #function, default: nil) }
+        set { Settings.archivedSet(forKey: self.keyName + #function, value: newValue) }
     }
     
     public var outgoingColor: NSColor? {
@@ -164,6 +175,11 @@ public extension ParrotAppController {
             }, AutoSubscription(kind: Notification.Conversation.DidReceiveEvent) { e in
                 let c = ServiceRegistry.services.first!.value
                 guard let event = e.userInfo?["event"] as? Message, let conv = e.object as? Conversation else { return }
+                let settings = ConversationSettings(serviceIdentifier: conv.serviceIdentifier, identifier: conv.identifier)
+                
+                // if we've set a sound or vibration, play it
+                settings.sound?.play()
+                if settings.vibrate { NSHapticFeedbackManager.vibrate(length: 1000, interval: 10) }
                 
                 var showNote = true
                 if let m = MessageListViewController.openConversations[conv.identifier] {

@@ -1,16 +1,6 @@
 import MochaUI
 import ParrotServiceExtension
 
-// TODO:
-//
-// notification: ?
-// sound: ?
-// vibrate: ?
-//
-// outcolor: com.avaidyam.Parrot.ConversationOutgoingColor
-// incolor: com.avaidyam.Parrot.ConversationIncomingColor
-// bgimage: Parrot.ConversationBackground
-
 fileprivate let _clearColor = NSColor(genericGamma22White: 0, alpha: 0)
 
 public class ConversationDetailsViewController: NSViewController {
@@ -122,6 +112,22 @@ public class ConversationDetailsViewController: NSViewController {
         return v
     }()
     
+    private lazy var soundSelect: NSButton = {
+        let v = NSButton(title: "Sound", image: NSImage(named: .alarmClock)!, target: self,
+                            action: #selector(self.buttonAction(_:))).modernize()
+        v.bezelStyle = .circular
+        v.imagePosition = .imageOnly
+        v.imageScaling = .scaleProportionallyDown
+        v.performedAction = { [weak self] in
+            runSelectionPanel(fileTypes: [kUTTypeAudio as String], prompt: "Select a notification sound for this conversation...") {
+                guard let url = $0.first, let sound = NSSound(contentsOf: url, byReference: false) else { return }
+                self?.settings?.sound = sound
+                Subscription.Event(name: .conversationAppearanceUpdated, object: self?.conversation).post()
+            }
+        }
+        return v
+    }()
+    
     private lazy var toolbarStack: NSStackView = {
         let a = NSTextField(labelWithString: "My Color: ")
         a.font = NSFont.from(name: .compactRoundedRegular, size: 11.0)
@@ -133,7 +139,8 @@ public class ConversationDetailsViewController: NSViewController {
         let stack: NSStackView = NSStackView(views: [
             a, self.ourColorWell,
             b, self.imageWell,
-            c, self.theirColorWell
+            c, self.theirColorWell,
+            self.soundSelect
         ]).modernize()
         
         stack.edgeInsets = NSEdgeInsets(top: 2.0, left: 2.0, bottom: 2.0, right: 2.0)

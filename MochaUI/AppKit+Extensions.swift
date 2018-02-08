@@ -338,7 +338,7 @@ public extension NSImage {
     }
 }
 
-public func runSelectionPanel(for window: NSWindow, fileTypes: [String]?,
+public func runSelectionPanel(for window: NSWindow? = nil, fileTypes: [String]?, prompt: String = "Select",
                               multiple: Bool = false, _ handler: @escaping ([URL]) -> () = {_ in}) {
 	let p = NSOpenPanel()
 	p.allowsMultipleSelection = multiple
@@ -349,11 +349,19 @@ public func runSelectionPanel(for window: NSWindow, fileTypes: [String]?,
 	p.canResolveUbiquitousConflicts = false
 	p.resolvesAliases = true
 	p.allowedFileTypes = fileTypes
-	p.prompt = "Select"
-	p.beginSheetModal(for: window) { r in
-		guard r.rawValue == NSFileHandlingPanelOKButton else { return }
-		handler(p.urls)
-	}
+    p.prompt = "Select"
+    p.message = prompt
+    if let window = window {
+        p.beginSheetModal(for: window) { r in
+            guard r.rawValue == NSFileHandlingPanelOKButton else { return }
+            handler(p.urls)
+        }
+    } else {
+        p.begin { r in
+            guard r.rawValue == NSFileHandlingPanelOKButton else { return }
+            handler(p.urls)
+        }
+    }
 }
 
 public extension NSCollectionView {
