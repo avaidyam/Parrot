@@ -6,8 +6,10 @@ import class Hangouts.IConversation // required for [IConversation.client, .getE
 /* TODO: Re-enable link previews later when they're not terrible... */
 /* TODO: Use the PlaceholderMessage for sending messages. */
 /* TODO: When selecting text and typing a completion character, wrap the text. */
+/* TODO: Stretch the background image. */
 
 public struct MessageBundle {
+    public let conversationId: String
     public let current: Message
     public let previous: Message?
     public let next: Message?
@@ -266,6 +268,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     /// The window occlusion/focus update Subscription.
     private var occlusionSub: Subscription? = nil
     
+    public var settings: ConversationSettings? {
+        guard let conv = self.conversation else { return nil }
+        return ConversationSettings(serviceIdentifier: conv.serviceIdentifier,
+                                    identifier: conv.identifier)
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
         self.colorsSub = nil
@@ -322,7 +330,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         
         // Monitor changes to the view background and colors.
         self.colorsSub = AutoSubscription(kind: .conversationAppearanceUpdated) { _ in
-            self.layer.contents = Settings.conversationBackground
+            if let img = self.settings?.backgroundImage {
+                self.collectionView.backgroundView = NSImageView(image: img)
+            } else {
+                self.collectionView.backgroundView = nil
+            }
         }
         self.colorsSub?.trigger()
         
@@ -384,7 +396,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let row = indexPath.item
         let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
         let next = (row + 1) < self.dataSource.count && (row + 1) < 0
-        item.representedObject = MessageBundle(current: self.dataSource[row],
+        item.representedObject = MessageBundle(conversationId: self.conversation?.identifier ?? "",
+                                               current: self.dataSource[row],
                                                previous: prev ? self.dataSource[row - 1] : nil,
                                                next: next ? self.dataSource[row + 1] : nil) as Any
         return item

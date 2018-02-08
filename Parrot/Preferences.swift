@@ -129,21 +129,6 @@ public extension UserDefaults {
         get { return self.get(default: []) }
         set { self.set(value: newValue) }
     }
-    
-    public var conversationOutgoingColor: NSColor? {
-        get { return self.archivedGet(default: nil) }
-        set { self.archivedSet(value: newValue) }
-    }
-    
-    public var conversationIncomingColor: NSColor? {
-        get { return self.archivedGet(default: nil) }
-        set { self.archivedSet(value: newValue) }
-    }
-    
-    public var conversationBackground: NSImage? {
-        get { return self.archivedGet(default: nil) }
-        set { self.archivedSet(value: newValue) }
-    }
 }
 
 public let Settings = UserDefaults.standard
@@ -157,16 +142,17 @@ public extension UserDefaults { // number, array, dictionary, data, url
         self.set(value, forKey: key)
     }
     
-    func archivedGet<T: Decodable>(forKey key: String = #function, default: @autoclosure () -> (T)) -> T {
+    func archivedGet<T: NSCoding>(forKey key: String = #function, default: @autoclosure () -> (T?)) -> T? {
         if let data = self.object(forKey: key) as? Data {
-            let value = try? PropertyListDecoder().decode(T.self, from: data)
+            let value = NSKeyedUnarchiver.unarchiveObject(with: data) as? T
             return value ?? `default`()
         }
         return `default`()
     }
     
-    func archivedSet<T: Encodable>(forKey key: String = #function, value: T) {
-        if let v = try? PropertyListEncoder().encode(value) {
+    func archivedSet<T: NSCoding>(forKey key: String = #function, value: T?) {
+        if value != nil {
+            let v = NSKeyedArchiver.archivedData(withRootObject: value!)
             self.set(v, forKey: key)
         } else {
             self.set(nil, forKey: key)

@@ -1,6 +1,30 @@
 import MochaUI
 import ParrotServiceExtension
 
+public struct ConversationSettings {
+    public let serviceIdentifier: Service.IdentifierType
+    public let identifier: Conversation.IdentifierType
+    
+    private var keyName: String {
+        return "settings/\(self.serviceIdentifier)/\(self.identifier)/"
+    }
+    
+    public var outgoingColor: NSColor? {
+        get { return Settings.archivedGet(forKey: self.keyName + #function, default: nil) }
+        set { Settings.archivedSet(forKey: self.keyName + #function, value: newValue) }
+    }
+    
+    public var incomingColor: NSColor? {
+        get { return Settings.archivedGet(forKey: self.keyName + #function, default: nil) }
+        set { Settings.archivedSet(forKey: self.keyName + #function, value: newValue) }
+    }
+    
+    public var backgroundImage: NSImage? {
+        get { return Settings.archivedGet(forKey: self.keyName + #function, default: nil) }
+        set { Settings.archivedSet(forKey: self.keyName + #function, value: newValue) }
+    }
+}
+
 public struct Event {
     public let identifier: String
     public let contents: String?

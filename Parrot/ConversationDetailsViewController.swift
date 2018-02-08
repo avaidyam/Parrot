@@ -1,7 +1,17 @@
 import MochaUI
 import ParrotServiceExtension
 
-/* TODO: Requires Observables & EventBus built on NotificationCenter...? */
+// TODO:
+//
+// notification: ?
+// sound: ?
+// vibrate: ?
+//
+// outcolor: com.avaidyam.Parrot.ConversationOutgoingColor
+// incolor: com.avaidyam.Parrot.ConversationIncomingColor
+// bgimage: Parrot.ConversationBackground
+
+fileprivate let _clearColor = NSColor(genericGamma22White: 0, alpha: 0)
 
 public class ConversationDetailsViewController: NSViewController {
     
@@ -17,7 +27,7 @@ public class ConversationDetailsViewController: NSViewController {
     
     private lazy var muteButton: NSButton = {
         let v = LayerButton(title: "Mute", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
-                         action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
+                         action: #selector(self.buttonAction(_:))).modernize()
         v.alternateTitle = "Unmute"
         v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
         v.bezelStyle = .texturedSquare
@@ -32,7 +42,7 @@ public class ConversationDetailsViewController: NSViewController {
     
     private lazy var blockButton: NSButton = {
         let v = LayerButton(title: "Block", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
-                         action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
+                         action: #selector(self.buttonAction(_:))).modernize()
         v.alternateTitle = "Unblock"
         v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
         v.bezelStyle = .texturedSquare
@@ -47,7 +57,7 @@ public class ConversationDetailsViewController: NSViewController {
     
     private lazy var archiveButton: NSButton = {
         let v = LayerButton(title: "Archive", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
-                         action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
+                         action: #selector(self.buttonAction(_:))).modernize()
         v.alternateTitle = "Unarchive"
         v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
         v.bezelStyle = .texturedSquare
@@ -62,7 +72,7 @@ public class ConversationDetailsViewController: NSViewController {
     
     private lazy var deleteButton: NSButton = {
         let v = LayerButton(title: "Delete", image: #imageLiteral(resourceName: "MaterialVolumeMute"), target: self,
-                         action: #selector(ConversationDetailsViewController.buttonAction(_:))).modernize()
+                         action: #selector(self.buttonAction(_:))).modernize()
         v.alternateTitle = "Undelete"
         v.alternateImage = #imageLiteral(resourceName: "MaterialVolumeMute")
         v.bezelStyle = .texturedSquare
@@ -75,12 +85,87 @@ public class ConversationDetailsViewController: NSViewController {
         return v
     }()
     
+    private lazy var theirColorWell: NSColorWell = {
+        let clz = NSClassFromString("NSPopoverColorWell") as! NSColorWell.Type
+        let v = clz.init(frame: .zero).modernize()
+        v.sizeAnchors == CGSize(width: 36, height: 22)
+        v.setValue(true, forKey: "emptyColorEnabled")
+        v.tag = 4
+        v.target = self
+        v.action = #selector(self.toolbarAction(_:))
+        return v
+    }()
+    
+    private lazy var ourColorWell: NSColorWell = {
+        let clz = NSClassFromString("NSPopoverColorWell") as! NSColorWell.Type
+        let v = clz.init(frame: .zero).modernize()
+        v.sizeAnchors == CGSize(width: 36, height: 22)
+        v.setValue(true, forKey: "emptyColorEnabled")
+        v.tag = 3
+        v.target = self
+        v.action = #selector(self.toolbarAction(_:))
+        return v
+    }()
+    
+    private lazy var imageWell: NSImageView = {
+        let v = NSImageView(frame: .zero).modernize()
+        v.sizeAnchors == CGSize(width: 24, height: 24)
+        v.animates = true
+        v.isEditable = true
+        v.allowsCutCopyPaste = true
+        v.imageAlignment = .alignCenter
+        v.imageScaling = .scaleProportionallyUpOrDown
+        v.imageFrameStyle = .grayBezel
+        v.focusRingType = .none
+        v.target = self
+        v.action = #selector(self.toolbarAction(_:))
+        return v
+    }()
+    
+    private lazy var toolbarStack: NSStackView = {
+        let a = NSTextField(labelWithString: "My Color: ")
+        a.font = NSFont.from(name: .compactRoundedRegular, size: 11.0)
+        let b = NSTextField(labelWithString: "Background: ")
+        b.font = NSFont.from(name: .compactRoundedRegular, size: 11.0)
+        let c = NSTextField(labelWithString: "Their Color: ")
+        c.font = NSFont.from(name: .compactRoundedRegular, size: 11.0)
+        
+        let stack: NSStackView = NSStackView(views: [
+            a, self.ourColorWell,
+            b, self.imageWell,
+            c, self.theirColorWell
+        ]).modernize()
+        
+        stack.edgeInsets = NSEdgeInsets(top: 2.0, left: 2.0, bottom: 2.0, right: 2.0)
+        stack.spacing = 4.0
+        stack.orientation = .horizontal
+        stack.alignment = .centerY
+        stack.distribution = .equalCentering
+        return stack
+    }()
+    
+    private var subscriptions: [String: Subscription] = [:]
+    
+    private var settings: ConversationSettings? = nil
+    
     public override var representedObject: Any? {
         didSet {
             self.muteButton.state = self.conversation?.muted ?? false ? .on : .off
             self.blockButton.state = self.conversation?.participants.first { !$0.me }?.blocked ?? false ? .on : .off
             self.archiveButton.state = self.conversation?.archived ?? false ? .on : .off
             // self.deleteButton.state = ... // can't be seeing this if the conv is deleted!
+            
+            // Synchronize with ConversationSettings
+            guard let conversation = self.conversation else { return }
+            self.settings = ConversationSettings(serviceIdentifier: conversation.serviceIdentifier,
+                                                 identifier: conversation.identifier)
+            let sub = AutoSubscription(from: conversation, kind: .conversationAppearanceUpdated) { _ in
+                self.ourColorWell.color = self.settings?.outgoingColor ?? _clearColor
+                self.theirColorWell.color = self.settings?.incomingColor ?? _clearColor
+                self.imageWell.image = self.settings?.backgroundImage
+            }
+            sub.trigger()
+            self.subscriptions["sub"] = sub // replace if needed, auto-unsub occurs.
         }
     }
     
@@ -89,7 +174,8 @@ public class ConversationDetailsViewController: NSViewController {
             self.muteButton,
             self.blockButton,
             self.archiveButton,
-            self.deleteButton
+            self.deleteButton,
+            self.toolbarStack
         ]).modernize()
         
         stack.edgeInsets = NSEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
@@ -123,6 +209,19 @@ public class ConversationDetailsViewController: NSViewController {
         }
     }
     
+    @objc private func toolbarAction(_ sender: Any?) {
+        if let well = sender as? NSColorWell, well.tag == 3 { // ours
+            self.settings?.outgoingColor = well.objectValue as? NSColor
+        } else if let well = sender as? NSColorWell, well.tag == 4 { // theirs
+            self.settings?.incomingColor = well.objectValue as? NSColor
+        } else if let well = sender as? NSImageView { // bg
+            self.settings?.backgroundImage = well.objectValue as? NSImage
+        } else { return }
+        
+        guard let conv = self.conversation else { return }
+        Subscription.Event(name: .conversationAppearanceUpdated, object: conv).post()
+    }
+    
     public static func menu(for conversation: Conversation) -> NSMenu? {
         let person = conversation.participants.first { !$0.me }
         let m = NSMenu(title: "Settings")
@@ -146,31 +245,4 @@ public class ConversationDetailsViewController: NSViewController {
         }
         return m
     }
-    
-    @IBAction func colorChanged(_ sender: AnyObject?) {
-        /*if let well = sender as? NSColorWell, well.identifier == "MyBubbleColor" {
-         
-         } else if let well = sender as? NSColorWell, well.identifier == "TheirBubbleColor" {
-         
-         } else if let img = sender as? NSImageView, img.identifier == "BackgroundImage" {
-         
-         }*/
-        
-        Subscription.Event(name: .conversationAppearanceUpdated, object: self).post()
-    }
-    
-    /*@IBAction public func colorWellSelected(_ sender: AnyObject?) {
-     guard let sender = sender as? NSColorWell else { return }
-     publish(Notification(name: Notification.Name("_ColorChanged")))
-     }*/
-    
-    // TODO:
-    //
-    // notification: ?
-    // sound: ?
-    // vibrate: ?
-    //
-    // outcolor: com.avaidyam.Parrot.ConversationOutgoingColor
-    // incolor: com.avaidyam.Parrot.ConversationIncomingColor
-    // bgimage: Parrot.ConversationBackground
 }

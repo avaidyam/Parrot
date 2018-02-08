@@ -1,19 +1,21 @@
 
 /// Allows ServiceExtension objects to be traced back to a Service by its identifier.
 public protocol ServiceOriginating {
-    var serviceIdentifier: String { get }
+    var serviceIdentifier: Service.IdentifierType { get }
 }
 
 /// Defines all possible capabilities that Parrot will understand that can be
 /// vended by a remote messaging Service. Note that at the absolute minimum,
 /// a Service must support [.text] to be compliant.
 public protocol Service: class {
+    
+    typealias IdentifierType = String
 	
 	/// The reverse domain name identifier of this specific Service.
 	/// Note that having a unique identifier is required, but more than one instance
 	/// of the Service may exist if the user has logged into multiple accounts
 	/// from the same Service extension point.
-	static var identifier: String { get }
+	static var identifier: IdentifierType { get }
 	
 	/// The user-friendly name of this Service. It will be used to display the
 	/// discovered Service to a user for accounts or in notifications.

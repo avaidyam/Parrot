@@ -131,11 +131,14 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         guard let b = self.representedObject as? MessageBundle else { return }
         let o = b.current
         let text = self.textLabel
+        let settings = ConversationSettings(serviceIdentifier: b.current.serviceIdentifier,
+                                            identifier: b.conversationId)
+        
         
         // Only clip the text if the text isn't purely Emoji.
         if !text.string.isEmoji {
             var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
-            let setting = (o.sender?.me ?? false) ? Settings.conversationOutgoingColor : Settings.conversationIncomingColor
+            let setting = (o.sender?.me ?? false) ? settings.outgoingColor : settings.incomingColor
             if  let c = setting, c.alphaComponent > 0.0 {
                 color = c
                 
@@ -146,7 +149,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             }
             text.layer?.backgroundColor = color.cgColor
         } else {
-            text.layer?.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
+            text.layer?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0).cgColor
         }
     }
     

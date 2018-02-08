@@ -11,6 +11,7 @@ public protocol TextInputHost {
     func send(video: URL)
     func send(file: URL)
     func sendLocation()
+    var settings: ConversationSettings? { get }
 }
 
 public class MessageInputViewController: NSViewController, NSTextViewExtendedDelegate {
@@ -21,6 +22,9 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     public var host: TextInputHost? = nil
     
     private var insertToken = false
+    
+    /// The background image and colors update Subscription.
+    private var subscriptions: [String: Subscription] = [:]
     
     private lazy var photoMenu: NSMenu = {
         let menu = NSMenu()
@@ -210,13 +214,17 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             
             self.setColors()
         }
+        
+        self.subscriptions["sub"] = AutoSubscription(kind: .conversationAppearanceUpdated) { _ in
+            self.setColors()
+        }
     }
     
     private func setColors() {
         let text = self.textView
         
         var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
-        if let c = Settings.conversationOutgoingColor, c.alphaComponent > 0.0 {
+        if let c = self.host?.settings?.outgoingColor, c.alphaComponent > 0.0 {
             color = c
             
             // This automatically adjusts labelColor to the right XOR mask.
@@ -224,6 +232,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         } else {
             text.appearance = self.view.effectiveAppearance//self.appearance
         }
+        text.appearance = self.view.effectiveAppearance
         text.layer?.backgroundColor = color.cgColor
     }
     
