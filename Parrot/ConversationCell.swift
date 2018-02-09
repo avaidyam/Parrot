@@ -17,11 +17,11 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     }()
     
     private lazy var badgeLabel: NSTextField = {
-        let v = NSTextField(labelWithString: "SMS").modernize(wantsLayer: true)
+        let v = NSTextField(labelWithString: " ").modernize(wantsLayer: true)
         v.cornerRadius = 4.0
         v.layer?.backgroundColor = .ns(.selectedMenuItemColor)
         v.textColor = .white
-        v.font = .systemFont(ofSize: 9.0)
+        v.font = .systemFont(ofSize: 9.0, weight: .medium)
         v.usesSingleLineMode = true
         v.lineBreakMode = .byClipping
         return v
@@ -104,14 +104,23 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
 			
 			let messageSender = conversation.messages.last?.sender?.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
-			if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
-                self.photoView.image = firstParticipant.image
-                self.badgeLabel.isHidden = !firstParticipant.locations.contains("OffNetworkPhone")
+            let firstParticipant = (conversation.participants.filter { !$0.me }.first)
+            
+            self.photoView.image = firstParticipant?.image ?? NSImage(monogramOfSize: NSSize(width: 64.0, height: 64.0),
+                                                                      string: "?", color: #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1), fontName: .compactRoundedMedium)
+            
+            // Set the badge if SMS or GROUP conversation:
+            if firstParticipant?.locations.contains("OffNetworkPhone") ?? false { // GVoice
+                self.badgeLabel.isHidden = false
+                self.badgeLabel.stringValue = "SMS"
+            } else if conversation.participants.count > 2 { // Group
+                self.badgeLabel.isHidden = false
+                self.badgeLabel.stringValue = "GROUP"
             } else {
-                self.photoView.image = NSImage(monogramOfSize: NSSize(width: 64.0, height: 64.0),
-                                               string: "?", color: #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1), fontName: .compactRoundedMedium)
                 self.badgeLabel.isHidden = true
+                self.badgeLabel.stringValue = ""
             }
+            
 			self.prefix = conversation.muted ? "◉ " : (messageSender != selfSender ? "↙ " : "↗ ")
 			let subtitle = (conversation.messages.last?.text ?? "")
 			let time = conversation.messages.last?.timestamp ?? .origin

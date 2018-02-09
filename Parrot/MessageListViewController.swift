@@ -492,15 +492,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                     */
 				}
                 
-                let group = self.updateInterpolation // lazy
                 UI {
                     self.collectionView.animator().performBatchUpdates({
-                        let t = (0..<self.dataSource.count).map {
-                            IndexPath(item: $0, section: 0)
-                        }
+                        let t = (0..<self.dataSource.count).map { IndexPath(item: $0, section: 0) }
                         self.collectionView.animator().insertItems(at: Set(t))
                     }, completionHandler: { b in
-                        group.animate(duration: 0.5)
+                        self.updateInterpolation.animate(duration: 0.5)
                         self.collectionView.animator().scrollToItems(at: [self.collectionView.indexPathForLastItem()],
                                                                      scrollPosition: [.bottom])
                     })
