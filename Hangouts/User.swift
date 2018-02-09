@@ -233,7 +233,15 @@ public class UserList: Directory {
     public func search(by: String, limit: Int) -> [Person] {
         let req = SearchEntitiesRequest(query: by, max_count: UInt64(limit))
         let vals = try? self.client.execute(req)
-        return vals?.entity.map { User(self.client, entity: $0, selfUser: (self.me as! User).id) } ?? []
+        return vals?.entity.map {
+            if let id = $0.id?.gaia_id, let u = self.users[User.ID(chatID: id, gaiaID: id)] {
+                return u
+            } else {
+                let u = User(self.client, entity: $0, selfUser: (self.me as! User).id)
+                self.users[u.id] = u
+                return u
+            }
+        } ?? []
     }
     
     /*
@@ -256,7 +264,15 @@ public class UserList: Directory {
         //
         guard let res = vals.0, let people = res.people else { return [] }
         return people.filter { $0.extendedData?.hangoutsExtendedData?.userInterest ?? false }
-            .flatMap { User(self.client, person: $0, selfUser: (self.me as! User).id) }
+            .flatMap {
+                if let id = $0.personId, let u = self.users[User.ID(chatID: id, gaiaID: id)] {
+                    return u
+                } else {
+                    let u = User(self.client, person: $0, selfUser: (self.me as! User).id)
+                    self.users[u.id] = u
+                    return u
+                }
+            }
     }
     
     /// Note: all notification objects are expected to be deltas.
