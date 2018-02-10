@@ -2,9 +2,11 @@ import Foundation
 import XPCTransport
 import class Mocha.Logger
 
-public enum AuthenticationInvocation: RespondingMethod {
-    public typealias Service = XPCConnection
+public enum AuthenticationInvocation: RemoteMethod {
+    //public typealias Service = XPCConnection
+    public typealias Request = Void
     public typealias Response = [[String: String]]
+    public typealias Error = Void
     
     public static func package(_ cookies: [HTTPCookie]) -> Response {
         return cookies.map {
@@ -30,21 +32,26 @@ public enum AuthenticationInvocation: RespondingMethod {
     }
 }
 
-public enum SendLogInvocation: RequestingMethod {
-    public typealias Service = XPCConnection
+public enum SendLogInvocation: RemoteMethod {
+    //public typealias Service = XPCConnection
     public typealias Request = Logger.LogUnit
+    public typealias Response = Void
+    public typealias Error = Void
 }
 
 public enum LogOutInvocation: RemoteMethod {
-    public typealias Service = XPCConnection
+    //public typealias Service = XPCConnection
+    public typealias Request = Void
+    public typealias Response = Void
+    public typealias Error = Void
 }
 
 /*
-public struct GenericMethod: RequestingRespondingThrowingMethod, Codable, Error {
-    public typealias Service = XPCConnection
-    public typealias Request = UntypedMethod
-    public typealias Response = UntypedMethod
-    public typealias Error = UntypedMethod
+public struct GenericMethod: RemoteMethod, Codable, Error {
+    //public typealias Service = XPCConnection
+    public typealias Request = Void
+    public typealias Response = Void
+    public typealias Error = Void
     
     var value: [String: String]
 }

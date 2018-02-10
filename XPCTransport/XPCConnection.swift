@@ -3,10 +3,9 @@ import XPC
 import os
 
 /* TODO: Add `slots: [String: Codable]` that syncs across the connection. */
-/* TODO: Change RemoteMethod.Service to an abstract type, not the actual service. */
 
 /// Note: trying to {en,de}code this results in gibberish unless using XPC{En,De}Coder.
-public final class XPCConnection: Hashable, Codable, RemoteService {
+public final class XPCConnection: RemoteConnection, Codable, Hashable  {
     private enum CodingKeys: CodingKey {}
     
     /// Describes any remote transport/wire/serialization errors that XPC may emit.
@@ -48,7 +47,9 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
         let requiresReply: Bool
         let handler: (xpc_object_t?) throws -> (xpc_object_t?, xpc_object_t?)
         
-        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> ()) {
+        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> ())
+            where RMI.Request == Void, RMI.Response == Void, RMI.Error == Void
+        {
             self.requiresReply = false
             self.handler = { _ in
                 try handler()
@@ -56,7 +57,9 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: RequestingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> ()) {
+        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> ())
+            where RMI.Request: Codable, RMI.Response == Void, RMI.Error == Void
+        {
             self.requiresReply = false
             self.handler = {
                 try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
@@ -64,7 +67,9 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: RespondingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response)) {
+        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response))
+            where RMI.Request == Void, RMI.Response: Codable, RMI.Error == Void
+        {
             self.requiresReply = true
             self.handler = { _ in
                 let t = try handler()
@@ -72,7 +77,9 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: ThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Error?)) {
+        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Error?))
+            where RMI.Request == Void, RMI.Response == Void, RMI.Error: CodableError
+        {
             self.requiresReply = true
             self.handler = { _ in
                 let t = try handler()
@@ -80,7 +87,9 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Error?)) {
+        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Error?))
+            where RMI.Request: Codable, RMI.Response == Void, RMI.Error: CodableError
+        {
             self.requiresReply = true
             self.handler = {
                 let t = try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
@@ -88,7 +97,9 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Error?)) {
+        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Error?))
+            where RMI.Request == Void, RMI.Response: Codable, RMI.Error: CodableError
+        {
             self.requiresReply = true
             self.handler = { _ in
                 let t = try handler()
@@ -97,7 +108,9 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: RequestingRespondingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response)) {
+        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response))
+            where RMI.Request: Codable, RMI.Response: Codable, RMI.Error == Void
+        {
             self.requiresReply = true
             self.handler = {
                 let t = try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
@@ -105,7 +118,9 @@ public final class XPCConnection: Hashable, Codable, RemoteService {
             }
         }
         
-        init<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Error?)) {
+        init<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Error?))
+            where RMI.Request: Codable, RMI.Response: Codable, RMI.Error: CodableError
+        {
             self.requiresReply = true
             self.handler = {
                 let t = try handler(try XPCDecoder().decode(RMI.Request.self, from: $0!))
@@ -305,7 +320,7 @@ public extension XPCConnection {
 public extension XPCConnection {
     
     /// Create a wire package (optionally with an embedded request).
-    private func _package<RMI: RemoteMethodBase>(_ rmi: RMI.Type) throws -> xpc_object_t {
+    private func _package<RMI: RemoteMethod>(_ rmi: RMI.Type) throws -> xpc_object_t {
         let message = xpc_dictionary_create(nil, nil, 0)
         RMI.qualifiedName.withCString {
             xpc_dictionary_set_string(message, "identity", $0)
@@ -314,7 +329,9 @@ public extension XPCConnection {
     }
     
     /// Variant of _package(_:) to support RemoteRequestables.
-    private func _package<RMI: RemoteMethodBase & RemoteRequestable>(_ rmi: RMI.Type, _ request: RMI.Request) throws -> xpc_object_t {
+    private func _package<RMI: RemoteMethod>(_ rmi: RMI.Type, _ request: RMI.Request) throws -> xpc_object_t
+        where RMI.Request: Codable
+    {
         let message = xpc_dictionary_create(nil, nil, 0)
         RMI.qualifiedName.withCString {
             xpc_dictionary_set_string(message, "identity", $0)
@@ -325,7 +342,9 @@ public extension XPCConnection {
     
     /// Retrieve the response from the wire package.
     /// Variant of _unpackage(_:_:) to support RemoteRespondables.
-    private func _unpackage<RMI: RemoteMethodBase & RemoteRespondable>(_ rmi: RMI.Type, _ event: xpc_object_t) throws -> RMI.Response {
+    private func _unpackage<RMI: RemoteMethod>(_ rmi: RMI.Type, _ event: xpc_object_t) throws -> RMI.Response
+        where RMI.Response: Codable
+    {
         guard let r = xpc_dictionary_get_value(event, "response") else {
             throw RemoteError.invalid
         }
@@ -334,7 +353,9 @@ public extension XPCConnection {
     
     /// Retrieve the error from the wire package.
     /// Variant of _unpackage(_:_:) to support RemoteThrowables.
-    private func _unpackage<RMI: RemoteMethodBase & RemoteThrowable>(_ rmi: RMI.Type, _ event: xpc_object_t) throws -> RMI.Error? {
+    private func _unpackage<RMI: RemoteMethod>(_ rmi: RMI.Type, _ event: xpc_object_t) throws -> RMI.Error?
+        where RMI.Error: CodableError
+    {
         guard let r = xpc_dictionary_get_value(event, "error") else { return nil }
         return try XPCDecoder().decode(RMI.Error.self, from: r)
     }
@@ -342,45 +363,61 @@ public extension XPCConnection {
 
 /// XPCConnection: RemoteService (Async)
 public extension XPCConnection {
-    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type) throws
+        where RMI.Request == Void, RMI.Response == Void, RMI.Error == Void
+    {
         self._send(try self._package(rmi))
     }
     
-    public func async<RMI: RequestingMethod>(_ rmi: RMI.Type, with request: RMI.Request) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type, with request: RMI.Request) throws
+        where RMI.Request: Codable, RMI.Response == Void, RMI.Error == Void
+    {
         self._send(try self._package(rmi, request))
     }
     
-    public func async<RMI: RespondingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Response) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Response) -> ()) throws
+        where RMI.Request == Void, RMI.Response: Codable, RMI.Error == Void
+    {
         self._send(try self._package(rmi)) {
             response(try self._unpackage(rmi, $0))
         }
     }
     
-    public func async<RMI: ThrowingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Error?) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Error?) -> ()) throws
+        where RMI.Request == Void, RMI.Response == Void, RMI.Error: CodableError
+    {
         self._send(try self._package(rmi)) {
             response(try self._unpackage(rmi, $0))
         }
     }
     
-    public func async<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Error?) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Error?) -> ()) throws
+        where RMI.Request: Codable, RMI.Response == Void, RMI.Error: CodableError
+    {
         self._send(try self._package(rmi, request)) {
             response(try self._unpackage(rmi, $0))
         }
     }
     
-    public func async<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Response?, RMI.Error?) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type, response: @escaping (RMI.Response?, RMI.Error?) -> ()) throws
+        where RMI.Request == Void, RMI.Response: Codable, RMI.Error: CodableError
+    {
         self._send(try self._package(rmi)) {
             response(try self._unpackage(rmi, $0), try self._unpackage(rmi, $0))
         }
     }
     
-    public func async<RMI: RequestingRespondingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Response) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Response) -> ()) throws
+        where RMI.Request: Codable, RMI.Response: Codable, RMI.Error == Void
+    {
         self._send(try self._package(rmi, request)) {
             response(try self._unpackage(rmi, $0))
         }
     }
     
-    public func async<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Response?, RMI.Error?) -> ()) throws where RMI.Service == XPCConnection {
+    public func async<RMI: RemoteMethod>(_ rmi: RMI.Type, with request: RMI.Request, response: @escaping (RMI.Response?, RMI.Error?) -> ()) throws
+        where RMI.Request: Codable, RMI.Response: Codable, RMI.Error: CodableError
+    {
         self._send(try self._package(rmi, request)) {
             response(try self._unpackage(rmi, $0), try self._unpackage(rmi, $0))
         }
@@ -389,35 +426,51 @@ public extension XPCConnection {
 
 /// XPCConnection: RemoteService (Recv)
 public extension XPCConnection {
-    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> ()) where RMI.Service == XPCConnection {
+    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> ())
+        where RMI.Request == Void, RMI.Response == Void, RMI.Error == Void
+    {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: RequestingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> ()) where RMI.Service == XPCConnection {
+    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> ())
+        where RMI.Request: Codable, RMI.Response == Void, RMI.Error == Void
+    {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: RespondingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response)) where RMI.Service == XPCConnection {
+    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response))
+        where RMI.Request == Void, RMI.Response: Codable, RMI.Error == Void
+    {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: ThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Error?)) where RMI.Service == XPCConnection {
+    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Error?))
+        where RMI.Request == Void, RMI.Response == Void, RMI.Error: CodableError
+    {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: RequestingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Error?)) where RMI.Service == XPCConnection {
+    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Error?))
+        where RMI.Request: Codable, RMI.Response == Void, RMI.Error: CodableError
+    {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: RespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Error?)) where RMI.Service == XPCConnection {
+    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping () throws -> (RMI.Response?, RMI.Error?))
+        where RMI.Request == Void, RMI.Response: Codable, RMI.Error: CodableError
+    {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: RequestingRespondingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response)) where RMI.Service == XPCConnection {
+    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response))
+        where RMI.Request: Codable, RMI.Response: Codable, RMI.Error == Void
+    {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
     
-    public func recv<RMI: RequestingRespondingThrowingMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Error?)) where RMI.Service == XPCConnection {
+    public func recv<RMI: RemoteMethod>(_ rmi: RMI.Type, handler: @escaping (RMI.Request) throws -> (RMI.Response?, RMI.Error?))
+        where RMI.Request: Codable, RMI.Response: Codable, RMI.Error: CodableError
+    {
         self.replyHandlers[rmi.qualifiedName] = _MessageHandler(rmi, handler: handler)
     }
 }
