@@ -1,6 +1,8 @@
 import AppKit
 import Mocha
 
+/* TODO: Remove `overlay` - it's not a monogram! */
+
 /// A monogram image rep that draws a single initial letter from the given string
 /// over a gradient background, optionally masking with an overlay image instead.
 public class NSMonogramImageRep: NSImageRep {

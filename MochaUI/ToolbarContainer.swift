@@ -196,6 +196,7 @@ extension NSTabViewController {
 }
 
 public extension NSToolbarItem {
+    private static var setItemIdentifierKey = SelectorKey<NSToolbarItem, String, Void, Void>("_setItemIdentifier:")
     
     /// Forces the item to become centered and permanently topmost on the toolbar.
     ///
@@ -225,7 +226,7 @@ public extension NSToolbarItem {
     public static func flexibleSpace(with id: NSToolbarItem.Identifier) -> NSToolbarItem {
         let clz = NSClassFromString("NSToolbarFlexibleSpaceItem") as! NSToolbarItem.Type
         let item = clz.init()
-        item.perform(Selector(("_setItemIdentifier:")), with: id.rawValue)
+        _ = self.setItemIdentifierKey[item, with: id.rawValue, with: nil]
         return item
     }
     

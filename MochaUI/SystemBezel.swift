@@ -22,12 +22,12 @@ public class SystemBezel: Hashable, Equatable {
     
     public static var activeColorMode: ColorMode {
         if NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast {
-            return NSAppearance.systemAppearanceIsDark ? .darkIncreasedContrast : .lightIncreasedContrast
+            return NSAppearance.systemAppearance.name == .vibrantDark ? .darkIncreasedContrast : .lightIncreasedContrast
         }
         if NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency {
-            return NSAppearance.systemAppearanceIsDark ? .darkReducedTransparency : .lightReducedTransparency
+            return NSAppearance.systemAppearance.name == .vibrantDark ? .darkReducedTransparency : .lightReducedTransparency
         }
-        return NSAppearance.systemAppearanceIsDark ? .dark : .light
+        return NSAppearance.systemAppearance.name == .vibrantDark ? .dark : .light
     }
     
     //
@@ -100,12 +100,7 @@ public class SystemBezel: Hashable, Equatable {
     /// The appearance of the bezel. If `nil`, it follows the system appearance.
     public var appearance: NSAppearance? = nil {
         didSet {
-            if self.appearance == nil {
-                self.window.appearance = NSAppearance(named: NSAppearance.systemAppearanceIsDark
-                                         ? .vibrantDark : .vibrantLight)
-            } else {
-                self.window.appearance = self.appearance
-            }
+            self.window.appearance = self.appearance ?? NSAppearance.systemAppearance
             self.effectView.appearance = self.window.appearance
         }
     }
@@ -130,7 +125,7 @@ public class SystemBezel: Hashable, Equatable {
         self.window.collectionBehavior = [.canJoinAllSpaces, .ignoresCycle, .stationary,
                                           .fullScreenAuxiliary, .fullScreenDisallowsTiling]
         self.window.setValue(true, forKey: "preventsActivation")
-        self.window.appearance = NSAppearance(named: NSAppearance.systemAppearanceIsDark ? .vibrantDark : .vibrantLight)
+        self.window.appearance = NSAppearance.systemAppearance
         
         self.window.contentView = self.effectView
         self.window.contentView?.superview?.wantsLayer = true // root

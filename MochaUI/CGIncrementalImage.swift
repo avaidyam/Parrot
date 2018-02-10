@@ -111,7 +111,7 @@ public class CGIncrementalImage: NSObject, URLSessionDataDelegate {
                 kCGImageSourceCreateThumbnailWithTransform: true,
                 kCGImageSourceCreateThumbnailFromImageIfAbsent: true,
                 kCGImageSourceThumbnailMaxPixelSize: self.thumbnailSize
-                ] as CFDictionary
+            ] as CFDictionary
             
             var image: NSImage? = nil
             if let img = CGImageSourceCreateImageAtIndex(source, 0, d) {

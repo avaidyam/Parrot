@@ -3,6 +3,7 @@ import Mocha
 
 // FIXME: The tooltip text appears blank either for the first tooltip or after an appearance change.
 @objc public class ToolTipManager: NSObject {
+    private static var displayTooltipKey = SelectorKey<NSObject, NSObject, Void, Void>("swizzle_displayToolTip:")
     
     /// This function must be invoked to enable the modern tooltip theme for macOS 10.10+.
     /// Note: must be invoked at app launch with +initialize.
@@ -25,6 +26,7 @@ import Mocha
     }
     
     private static var swizzle_displayToolTip: @convention(block) (NSObject, NSObject) -> () = { manager, tooltip in
+        //_ = ToolTipManager.displayTooltipKey[self, with: tooltip, with: nil]
         manager.perform(Selector(("swizzle_displayToolTip:")), with: tooltip)
         
         // Default ToolTip Window

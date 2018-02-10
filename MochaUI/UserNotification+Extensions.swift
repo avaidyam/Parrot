@@ -167,6 +167,8 @@ public extension NSUserNotification {
 
 private var _appProgress: Double?
 public extension NSApplication {
+    private static var displayProgressNotificationKey = SelectorKey<NSApplication, Double, Bool, Void>("_displayProgressNotification:isIndeterminate:")
+    private static var speakKey = SelectorKey<NSApplication, String, Void, Void>("speakString:")
 	
 	/// Displays a badge count for the app in the Dock with the provided count.
 	/// The acceptable range is [1, inf], and anything outside removes the badge.
@@ -182,10 +184,13 @@ public extension NSApplication {
 		set { _appProgress = (newValue != nil && (newValue! >= 0.0 && newValue! <= 1.0) ? newValue : nil);
 			
 			let progress = _appProgress != nil ? _appProgress! : -1.0
-			NSApp.perform(Selector(("_displayProgressNotification:isIndeterminate:")),
-			              with: progress, with: false)
+            _ = NSApplication.displayProgressNotificationKey[NSApp, with: progress, with: false]
 		}
 	}
+    
+    public func say(_ string: String) {
+        _ = NSApplication.speakKey[NSApp, with: string, with: nil]
+    }
 }
 
 extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
@@ -214,7 +219,7 @@ extension NSUserNotificationCenter: NSUserNotificationCenterDelegate {
 		
 		if let s = notification.get(option: .speakContents) as? Bool , s {
 			let text = (notification.title ?? "") + (notification.subtitle ?? "") + (notification.informativeText ?? "")
-			NSApp.perform(Selector(("speakString:")), with: text)
+			NSApp.say(text)
 		}
 	}
 	

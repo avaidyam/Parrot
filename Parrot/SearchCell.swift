@@ -30,7 +30,7 @@ public class SearchCell: NSView {
     
     private lazy var searchField: NSSearchField = {
         let s = NSSearchField().modernize(wantsLayer: true)
-        s.disableToolbarLook()
+        //s.disableToolbarLook()
         s.searchMenuTemplate = self.recentsMenu
         s.performedAction = { [weak self] in
             self?.searchHandler(s.stringValue)

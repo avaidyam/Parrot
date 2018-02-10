@@ -131,7 +131,7 @@ public struct SpeakAction: EventAction {
     private init() {}
     public static func perform(with event: Event) {
         let text = (event.contents ?? "") + (event.description ?? "")
-        NSApp.perform(Selector(("speakString:")), with: text)
+        NSApp.say(text)
     }
 }
 

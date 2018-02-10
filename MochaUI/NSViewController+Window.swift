@@ -63,28 +63,6 @@ public extension NSViewController {
 }
 
 public extension NSViewController {
-    @nonobjc
-    public func beginAppearanceTransition(_ appearing: Bool) {
-        self.perform(Selector(("beginAppearanceTransition:")), with: appearing)
-    }
-    
-    @nonobjc
-    public func endAppearanceTransition() {
-        self.perform(Selector(("endAppearanceTransition")))
-    }
-    
-    @nonobjc
-    public func willMove(toParent parent: NSViewController) {
-        self.perform(Selector(("willMoveToParentViewController:")), with: parent)
-    }
-    
-    @nonobjc
-    public func didMove(toParent parent: NSViewController) {
-        self.perform(Selector(("didMoveToParentViewController:")), with: parent)
-    }
-}
-
-public extension NSViewController {
     private static var presentationAnimatorProp = KeyValueProperty<NSViewController, NSViewControllerPresentationAnimator>("presentationAnimator")
     private static var rootAnimatorProp = AssociatedProperty<NSViewController, WindowTransitionAnimator>(.strong)
     

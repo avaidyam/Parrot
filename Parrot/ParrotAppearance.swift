@@ -16,7 +16,7 @@ public struct ParrotAppearance {
 	/// into a locally stored default that can be observed normally.
 	private static let registerDarkModeActiveListener: NSObjectProtocol = {
 		DistributedNotificationCenter.default().addObserver(forName: NSAppearance.systemAppearanceDidChangeNotification, object: nil, queue: nil) { _ in
-			Settings.systemInterfaceStyle = NSAppearance.systemAppearanceIsDark
+			Settings.systemInterfaceStyle = NSAppearance.systemAppearance.name == .vibrantDark
 		}
 	}()
 	

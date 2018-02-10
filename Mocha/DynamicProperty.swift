@@ -67,3 +67,48 @@ public extension DynamicProperty {
         }
     }
 }
+
+/* TODO: Multiple SelectorKey<...> to be generic-matched to the function prototype. */
+
+public protocol SelectorContainable {
+    var method: String { get }
+}
+
+public struct SelectorKey<T: NSObjectProtocol, A, B, X>: SelectorContainable {
+    public let method: String
+    public let retain: Bool
+    
+    public init(_ method: String, retain: Bool = false) {
+        self.method = method
+        self.retain = retain
+    }
+    
+    // let m = class_getMethodImplementation(type(of: self), #selector(sel))
+    // let c = unsafeBitCast(m, to: (@convention(c) (Any?, Selector!, Any?, Any?) -> Void).self)
+    // c(self, #selector(sel), arg1, arg2)
+    public subscript(_ object: T, with arg1: A?, with arg2: B?) -> X? {
+        get {
+            if X.self == Void.self {
+                _ = object.perform(Selector(self.method), with: arg1, with: arg2)
+                return nil
+            } else {
+                return object.perform(Selector(self.method), with: arg1, with: arg2)?.takeValue(self.retain) as? X
+            }
+        }
+    }
+}
+
+// Internal: to make it easy for code duplication.
+fileprivate extension Unmanaged {
+    func takeValue(_ retaining: Bool) -> Instance {
+        if retaining {
+            return self.takeRetainedValue()
+        } else {
+            return self.takeUnretainedValue()
+        }
+    }
+}
+
+let q = SelectorKey<NSObject, Void, Void, Void>("method")
+
+

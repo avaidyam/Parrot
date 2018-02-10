@@ -2,10 +2,11 @@ import AppKit
 import Mocha
 
 public extension NSDrawer {
+    private static var drawerWindowKey = SelectorKey<NSDrawer, Void, Void, NSWindow>("_drawerWindow")
 	
 	/// The NSDrawer's window; that is, not its parent window, but the drawer's frame.
 	public var drawerWindow: NSWindow? {
-		return self.perform(Selector(("_drawerWindow"))).takeUnretainedValue() as? NSWindow
+        return NSDrawer.drawerWindowKey[self, with: nil, with: nil]
     }
     
     public var resizableAxis: NSEvent.GestureAxis {

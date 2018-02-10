@@ -8,6 +8,7 @@ import ParrotServiceExtension
 // Does not support kUTTypeAudiovisualContent, kUTTypeMovie, kUTTypeAudio
 // Or any file/folder/archive/bundle/document yet.
 public final class ShareViewController: SLComposeServiceViewController {
+    private static var adjustAudiencePopUpFrameKey = SelectorKey<SLComposeServiceViewController, Void, Void, Void>("adjustAudiencePopUpFrame")
     
     // The internal Hangouts.Client.
     private var client: Client! = nil
@@ -53,7 +54,7 @@ public final class ShareViewController: SLComposeServiceViewController {
             
             button.selectItem(at: 0)
             DispatchQueue.main.async {
-                self.perform(Selector(("adjustAudiencePopUpFrame")))
+                _ = ShareViewController.adjustAudiencePopUpFrameKey[self, with: nil, with: nil]
             }
         }
     }

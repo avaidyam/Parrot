@@ -2,21 +2,35 @@
 @_exported import Mocha
 
 /* TODO: Localization support for NSDateFormatter stuff. */
-/* TODO: Add NSView._semanticContext: Int, NSView._viewController: NSViewController. */
 
 public typealias Block = @convention(block) () -> ()
 
-/*
-_semanticContext:
-- 0x1 = normal
-- 0x2 = unknown
-- 0x3 = menubar
-- 0x4 = titlebar
-- 0x5 = toolbar
-- 0x6 = tableview
-- 0x7 = menu
-*/
 public extension NSView {
+    
+    /// Determines the semantic context of the `NSView`, how it behaves or draws.
+    /// If set explicitly, the view's children also follow it; otherwise, it is
+    /// implicitly inherited from an ancestor that has already explicitly marked it.
+    public enum SemanticContext: Int {
+        case none = 0x0
+        case normal = 0x1
+        case statusbar = 0x3
+        case titlebar = 0x4
+        case toolbar = 0x5
+        case sourceList = 0x6
+        case menu = 0x7
+    }
+    
+    /// Corresponds to `NSView._semanticContext`.
+    @nonobjc public var semanticContext: SemanticContext? {
+        get { return SemanticContext(rawValue: NSView.semanticContextKey[self, default: 0x0]) }
+        set { NSView.semanticContextKey[self] = newValue?.rawValue ?? .none }
+    }
+    
+    /// Corresponds to `NSView._semanticContext`.
+    @nonobjc public var owningViewController: NSViewController? {
+        get { return NSView.viewControllerKey[self, default: nil] }
+        set { NSView.viewControllerKey[self] = newValue }
+    }
     
     /// Corresponds to `CALayer.backgroundColor`.
     @nonobjc public var fillColor: NSColor {
@@ -71,6 +85,8 @@ public extension NSView {
         NSView.allowsVibrancyKey[self] = newValue
     }
     
+    private static var semanticContextKey = KeyValueProperty<NSView, Int>("semanticContext")
+    private static var viewControllerKey = KeyValueProperty<NSView, NSViewController?>("viewController")
     private static var flippedKey = KeyValueProperty<NSView, Bool>("flipped")
     private static var opaqueKey = KeyValueProperty<NSView, Bool>("opaque")
     private static var backgroundColorKey = KeyValueProperty<NSView, NSColor>("backgroundColor")
