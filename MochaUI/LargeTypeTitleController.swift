@@ -30,11 +30,12 @@ public class LargeTypeTitleController: NSTitlebarAccessoryViewController {
     
     private func _init() {
         let v = NSView()
-        v.add(subviews: self.titleText)
         v.autoresizingMask = [.width]
         v.frame.size.height = 44.0//80.0
-        self.titleText.leftAnchor == v.leftAnchor + 22.0
-        self.titleText.topAnchor == v.topAnchor + 2.0
+        v.add(subviews: self.titleText) {
+            self.titleText.leftAnchor == v.leftAnchor + 22.0
+            self.titleText.topAnchor == v.topAnchor + 2.0
+        }
         
         self.view = v
         self.layoutAttribute = .bottom

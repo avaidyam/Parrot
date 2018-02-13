@@ -106,8 +106,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
         return self.conversation.conversation_id!.id!
     }
     
-    public var messages: [Message] {
-        return self.events.flatMap { $0 as? IChatMessageEvent }.map { $0 as Message }
+    public var eventStream: [ParrotServiceExtension.Event] {
+        return self.events
     }
     
     public var name: String {

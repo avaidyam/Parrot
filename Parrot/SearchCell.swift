@@ -101,8 +101,7 @@ public class SearchCell: NSView {
         self.wantsLayer = true
         self.translatesAutoresizingMaskIntoConstraints = false
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
-        self.add(subviews: self.searchField, self.addButton)
-        batch {
+        self.add(subviews: self.searchField, self.addButton) {
             self.addButton.widthAnchor == self.addButton.heightAnchor + 4.0
             self.verticalAnchors == self.searchField.verticalAnchors - 5.0
             self.verticalAnchors == self.addButton.verticalAnchors - 5.0
@@ -110,6 +109,8 @@ public class SearchCell: NSView {
             self.leftAnchor == self.searchField.leftAnchor - 5.0
             self.rightAnchor == self.addButton.rightAnchor + 5.0
         }
+        
+        // Conditional constraints:
         self.right_addAnchor = batch(active: false) {
             self.searchField.rightAnchor == self.addButton.leftAnchor - 5.0
         }.first!

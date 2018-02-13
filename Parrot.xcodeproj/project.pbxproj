@@ -90,6 +90,7 @@
 		486EDFE82028277A008FBE5F /* LayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDFE72028277A008FBE5F /* LayerButton.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
 		487385891F9E1A6D00CC5853 /* CookieTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487385871F9DFAAE00CC5853 /* CookieTransport.swift */; };
+		487447F22032668B00987045 /* EventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487447F12032668B00987045 /* EventCell.swift */; };
 		487D6020200BD88A0009E5F1 /* DriveAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487D601F200BD88A0009E5F1 /* DriveAPI.swift */; };
 		48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ParrotAppController.swift */; };
 		48834D9A1C1B3602009BC442 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48834D991C1B3602009BC442 /* Assets.xcassets */; };
@@ -493,6 +494,7 @@
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		486EDFE72028277A008FBE5F /* LayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerButton.swift; sourceTree = "<group>"; };
 		487385871F9DFAAE00CC5853 /* CookieTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieTransport.swift; sourceTree = "<group>"; };
+		487447F12032668B00987045 /* EventCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCell.swift; sourceTree = "<group>"; };
 		487D601F200BD88A0009E5F1 /* DriveAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAPI.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = ../Parrot/PreferencesViewController.swift; sourceTree = "<group>"; };
 		488201B51D4A962B00C545F0 /* ExtendedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedTextView.swift; sourceTree = "<group>"; };
@@ -691,6 +693,7 @@
 				4869A9391EDB859700764594 /* PersonCell.swift */,
 				4835ECA81C1C620000193EBC /* ConversationCell.swift */,
 				4835ECA61C1C620000193EBC /* MessageCell.swift */,
+				487447F12032668B00987045 /* EventCell.swift */,
 				48EC1BEF1F21201F000C40C1 /* PhotoCell.swift */,
 				48EC1BF11F217D7A000C40C1 /* LocationCell.swift */,
 				48076BFB1F429F3B0002225C /* Supplimentary */,
@@ -1744,6 +1747,7 @@
 				4869A9D61EE5C78200764594 /* PersonIndicatorViewController.swift in Sources */,
 				4807F4FB1EF1E58F00C32132 /* ReloadCell.swift in Sources */,
 				4835ECB01C1C620E00193EBC /* MessageListViewController.swift in Sources */,
+				487447F22032668B00987045 /* EventCell.swift in Sources */,
 				48EC1BF01F21201F000C40C1 /* PhotoCell.swift in Sources */,
 				48AD39FC1EE8005C00C33E40 /* TextPrefs.swift in Sources */,
 				48AD39FA1EE7FEB200C33E40 /* Preferences.swift in Sources */,

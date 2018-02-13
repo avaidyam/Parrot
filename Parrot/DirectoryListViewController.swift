@@ -64,8 +64,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         v.material = .sidebar
         v.state = .active
         v.isHidden = true // initial state
-        v.add(subviews: self.statusText, self.statusButton)
-        batch {
+        v.add(subviews: self.statusText, self.statusButton) {
             v.heightAnchor == (18.0 + 8.0)
             v.centerYAnchor == self.statusText.centerYAnchor
             v.centerYAnchor == self.statusButton.centerYAnchor
@@ -163,8 +162,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     public override func loadView() {
         self.title = "Directory"
         self.view = NSVisualEffectView()
-        self.view.add(subviews: self.scrollView, self.baseView, self.indicator)
-        batch {
+        self.view.add(subviews: self.scrollView, self.baseView, self.indicator) {
             self.view.sizeAnchors >= CGSize(width: 128, height: 128)
             self.view.centerAnchors == self.indicator.centerAnchors
             self.view.edgeAnchors == self.scrollView.edgeAnchors

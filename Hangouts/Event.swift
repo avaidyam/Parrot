@@ -30,7 +30,7 @@ private let log = Logger(subsystem: "Hangouts.Event")
 
 // An event which becomes part of the permanent record of a conversation.
 // Acts as a base class for the events defined below.
-public class IEvent: ServiceOriginating, Hashable, Equatable {
+public class IEvent: ParrotServiceExtension.Event, Hashable, Equatable {
     public typealias ID = String
     
     public let event: Event
@@ -79,6 +79,9 @@ public class IEvent: ServiceOriginating, Hashable, Equatable {
     public lazy var id: IEvent.ID = {
         return self.event.event_id! as IEvent.ID
     }()
+    public var identifier: String {
+        return self.id
+    }
 	
 	// Event: Hashable
 	public var hashValue: Int {
@@ -112,10 +115,6 @@ public class IChatMessageEvent: IEvent, Message {
             }
         }
         return .text(self.text)
-    }
-    
-    public var identifier: String {
-        return self.event.event_id ?? ""
     }
 	
 	// A textual representation of the message.
@@ -169,28 +168,33 @@ public class IChatMessageEvent: IEvent, Message {
 		return attachments
     }
 	
-	public var sender: Person? {
+	public var sender: Person {
 		let orig = User(self.client, userID: self.userID)
 		return self.client.directory.people[self.userID.gaiaID] ?? orig
 	}
 }
 
 // An event that renames a conversation.
-public class IRenameEvent : IEvent {
+public class IRenameEvent : IEvent, ParrotServiceExtension.ConversationRenamed {
 	
+    public var sender: Person {
+        let orig = User(self.client, userID: self.userID)
+        return self.client.directory.people[self.userID.gaiaID] ?? orig
+    }
+    
 	// The conversation's new name, or "" if the name was cleared.
-    public var newName: String {
+    public var newValue: String {
         return self.event.conversation_rename!.new_name!
     }
 	
 	// The conversation's old name, or "" if no previous name.
-    public var oldName: String {
+    public var oldValue: String {
         return self.event.conversation_rename!.old_name!
     }
 }
 
 // An event that adds or removes a conversation participant.
-public class IMembershipChangeEvent : IEvent {
+public class IMembershipChangeEvent : IEvent, ParrotServiceExtension.MembershipChanged {
 	
 	// The membership change type (join, leave).
     public var type: MembershipChangeType {
@@ -203,6 +207,21 @@ public class IMembershipChangeEvent : IEvent {
 		return self.event.membership_change!.participant_ids.map {
 			User.ID(chatID: $0.chat_id! , gaiaID: $0.gaia_id!)
 		}
+    }
+    
+    public var participants: [Person] {
+        return self.participantIDs.map {
+            self.client.userList.users[$0] ?? User(self.client, userID: $0)
+        }
+    }
+    
+    public var joined: Bool {
+        return self.type == .Join
+    }
+    
+    public var moderator: Person? {
+        let orig = User(self.client, userID: self.userID)
+        return self.client.directory.people[self.userID.gaiaID] ?? orig
     }
 }
 

@@ -100,8 +100,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public override func loadView() {
         self.view = NSVisualEffectView()
-        self.view.add(subviews: self.scrollView, self.indicator)
-        batch {
+        self.view.add(subviews: self.scrollView, self.indicator) {
             self.view.sizeAnchors >= CGSize(width: 128, height: 128)
             self.view.centerAnchors == self.indicator.centerAnchors
             self.view.edgeAnchors == self.scrollView.edgeAnchors

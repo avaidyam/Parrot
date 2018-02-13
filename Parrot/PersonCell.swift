@@ -42,23 +42,23 @@ public class PersonCell: NSCollectionViewItem {
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.wantsLayer = true
         self.view.set(allowsVibrancy: true)
-        self.view.add(subviews: self.photoButton, self.nameLabel, self.timeLabel, self.textLabel)
-        
-        self.photoButton.leftAnchor == self.view.leftAnchor + 4
-        self.photoButton.centerYAnchor == self.view.centerYAnchor
-        self.photoButton.widthAnchor == 40
-        self.photoButton.heightAnchor == 40
-        self.photoButton.rightAnchor == self.nameLabel.leftAnchor - 4
-        self.photoButton.rightAnchor == self.textLabel.leftAnchor - 4
-        self.nameLabel.topAnchor == self.view.topAnchor + 4
-        self.nameLabel.rightAnchor == self.timeLabel.leftAnchor - 4
-        self.nameLabel.bottomAnchor == self.textLabel.topAnchor - 4
-        self.nameLabel.centerYAnchor == self.timeLabel.centerYAnchor
-        self.timeLabel.topAnchor == self.view.topAnchor + 4
-        self.timeLabel.rightAnchor == self.view.rightAnchor - 4
-        self.timeLabel.bottomAnchor == self.textLabel.topAnchor - 4
-        self.textLabel.rightAnchor == self.view.rightAnchor - 4
-        self.textLabel.bottomAnchor == self.view.bottomAnchor - 4
+        self.view.add(subviews: self.photoButton, self.nameLabel, self.timeLabel, self.textLabel) {
+            self.photoButton.leftAnchor == self.view.leftAnchor + 4
+            self.photoButton.centerYAnchor == self.view.centerYAnchor
+            self.photoButton.widthAnchor == 40
+            self.photoButton.heightAnchor == 40
+            self.photoButton.rightAnchor == self.nameLabel.leftAnchor - 4
+            self.photoButton.rightAnchor == self.textLabel.leftAnchor - 4
+            self.nameLabel.topAnchor == self.view.topAnchor + 4
+            self.nameLabel.rightAnchor == self.timeLabel.leftAnchor - 4
+            self.nameLabel.bottomAnchor == self.textLabel.topAnchor - 4
+            self.nameLabel.centerYAnchor == self.timeLabel.centerYAnchor
+            self.timeLabel.topAnchor == self.view.topAnchor + 4
+            self.timeLabel.rightAnchor == self.view.rightAnchor - 4
+            self.timeLabel.bottomAnchor == self.textLabel.topAnchor - 4
+            self.textLabel.rightAnchor == self.view.rightAnchor - 4
+            self.textLabel.bottomAnchor == self.view.bottomAnchor - 4
+        }
         
         self.presenceSubscription = AutoSubscription(kind: Notification.Person.DidChangePresence, self.updateStatusText)
     }

@@ -8,11 +8,11 @@ import class Hangouts.IConversation // required for [IConversation.client, .getE
 /* TODO: When selecting text and typing a completion character, wrap the text. */
 /* TODO: Stretch the background image. */
 
-public struct MessageBundle {
+public struct EventBundle {
     public let conversationId: String
-    public let current: Message
-    public let previous: Message?
-    public let next: Message?
+    public let current: Event
+    public let previous: Event?
+    public let next: Event?
 }
 
 /// This is instantly shown to the user when they send a message. It will
@@ -20,7 +20,7 @@ public struct MessageBundle {
 public struct PlaceholderMessage: Message {
     public let serviceIdentifier: String = ""
     public let identifier: String = ""
-    public let sender: Person? = nil
+    public let sender: Person
     public let timestamp: Date = Date()
     
     public var content: Content
@@ -147,6 +147,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         //l.minimumInteritemSpacing = 0.0
         //l.minimumLineSpacing = 0.0
         c.collectionViewLayout = l
+        c.register(EventCell.self, forItemWithIdentifier: .eventCell)
         c.register(MessageCell.self, forItemWithIdentifier: .messageCell)
         c.register(PhotoCell.self, forItemWithIdentifier: .photoCell)
         c.register(LocationCell.self, forItemWithIdentifier: .locationCell)
@@ -258,7 +259,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     /// The primary EventStreamItem dataSource.
-    private var dataSource = SortedArray<Message>() { a, b in
+    private var dataSource = SortedArray<Event>() { a, b in
         return a.timestamp < b.timestamp
     }
     
@@ -286,8 +287,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public override func loadView() {
         self.view = NSVisualEffectView()
-        self.view.add(subviews: self.scrollView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone)
-        batch {
+        self.view.add(subviews: self.scrollView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone) {
             self.view.sizeAnchors >= CGSize(width: 96, height: 128)
             self.view.centerAnchors == self.indicator.centerAnchors
             self.view.edgeAnchors == self.scrollView.edgeAnchors
@@ -368,38 +368,47 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
-        let msg = self.dataSource[indexPath.item]
-        switch msg.content {
-        case .image(let url):
+        let event = self.dataSource[indexPath.item]
+        if let msg = event as? Message {
+            switch msg.content {
+            case .image(let url):
+                return NSSize(width: collectionView.bounds.width,
+                              height: PhotoCell.measure(url, collectionView.bounds.width))
+            case .location(_, _):
+                return NSSize(width: collectionView.bounds.width,
+                              height: LocationCell.measure(collectionView.bounds.width))
+            default:
+                return NSSize(width: collectionView.bounds.width,
+                              height: MessageCell.measure(msg.text ?? "", collectionView.bounds.width))
+            }
+        } else {
             return NSSize(width: collectionView.bounds.width,
-                          height: PhotoCell.measure(url, collectionView.bounds.width))
-        case .location(_, _):
-            return NSSize(width: collectionView.bounds.width,
-                          height: LocationCell.measure(collectionView.bounds.width))
-        default:
-            return NSSize(width: collectionView.bounds.width,
-                          height: MessageCell.measure(msg.text, collectionView.bounds.width))
+                          height: EventCell.measure(collectionView.bounds.width))
         }
     }
     
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let item: NSCollectionViewItem
-        switch self.dataSource[indexPath.item].content {
-        case .image(_):
-            item = collectionView.makeItem(withIdentifier: .photoCell, for: indexPath)
-        case .location(_, _):
-            item = collectionView.makeItem(withIdentifier: .locationCell, for: indexPath)
-        default:
-            item = collectionView.makeItem(withIdentifier: .messageCell, for: indexPath)
+        if let message = self.dataSource[indexPath.item] as? Message {
+            switch message.content {
+            case .image(_):
+                item = collectionView.makeItem(withIdentifier: .photoCell, for: indexPath)
+            case .location(_, _):
+                item = collectionView.makeItem(withIdentifier: .locationCell, for: indexPath)
+            default:
+                item = collectionView.makeItem(withIdentifier: .messageCell, for: indexPath)
+            }
+        } else { // not specialized
+            item = collectionView.makeItem(withIdentifier: .eventCell, for: indexPath)
         }
         
         let row = indexPath.item
         let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
         let next = (row + 1) < self.dataSource.count && (row + 1) < 0
-        item.representedObject = MessageBundle(conversationId: self.conversation?.identifier ?? "",
-                                               current: self.dataSource[row],
-                                               previous: prev ? self.dataSource[row - 1] : nil,
-                                               next: next ? self.dataSource[row + 1] : nil) as Any
+        item.representedObject = EventBundle(conversationId: self.conversation?.identifier ?? "",
+                                             current: self.dataSource[row],
+                                             previous: prev ? self.dataSource[row - 1] : nil,
+                                             next: next ? self.dataSource[row + 1] : nil) as Any
         return item
     }
     
@@ -422,14 +431,19 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
-        switch self.dataSource[indexPath.item].content {
-        case .image(let url):
-            let (data, _, _) = URLSession.shared.synchronousRequest(url)
-            return NSImage(data: data!)
-        case .text(let text):
-            return text as NSString
-        default:
-            return nil
+        let event = self.dataSource[indexPath.item]
+        if let message = event as? Message {
+            switch message.content {
+            case .image(let url):
+                let (data, _, _) = URLSession.shared.synchronousRequest(url)
+                return NSImage(data: data!)
+            case .text(let text):
+                return text as NSString
+            default:
+                return nil
+            }
+        } else {
+            return event.text != nil ? event.text! as NSString : nil
         }
     }
     
@@ -468,8 +482,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                           name: Notification.Conversation.DidChangeFocus, object: self.conversation!)
 			
 			(self.conversation as? IConversation)?.getEvents(event_id: nil, max_events: 50) { events in
-				for chat in (events.flatMap { $0 as? Message }) {
-					self.dataSource.insert(chat)
+                self.dataSource.insert(contentsOf: events as [Event])
+				//for chat in events {
+				//	self.dataSource.insert(chat)
                     
 					 // Disabled because it takes a WHILE to run.
                     /*
@@ -490,7 +505,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 						}
 					}
                     */
-				}
+				//}
                 
                 UI {
                     self.collectionView.animator().performBatchUpdates({
@@ -508,7 +523,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     @objc public func conversationDidReceiveEvent(_ notification: Notification) {
-        guard let event = notification.userInfo?["event"] as? Message else { return }
+        guard let event = notification.userInfo?["event"] as? Event else { return }
         
         self.dataSource.insert(event)
         UI {
@@ -643,7 +658,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         let first = self.dataSource[0]
         (self.conversation as? IConversation)?.getEvents(event_id: first.identifier, max_events: 50) { events in
             let count = self.dataSource.count
-            self.dataSource.insert(contentsOf: events.flatMap { $0 as? Message })
+            self.dataSource.insert(contentsOf: events as [Event])
             UI {
                 let idxs = (0..<(self.dataSource.count - count)).map {
                     IndexPath(item: $0, section: 0)
@@ -667,13 +682,13 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func send(message text: String) {
         NSSound(assetName: .sentMessage)?.play()
-        try! self.conversation!.send(message: PlaceholderMessage(content: .text(text)))
+        try! self.conversation!.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .text(text)))
     }
     
     public func send(image: URL) {
         NSSound(assetName: .sentMessage)?.play()
         do {
-            try self.conversation?.send(message: PlaceholderMessage(content: .image(image)))
+            try self.conversation?.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .image(image)))
         } catch {
             log.debug("sending an image was not supported; sending text after provider upload instead")
             // upload the image on a different provider
@@ -686,31 +701,31 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             guard let coord = loc?.coordinate else { return true }
             do {
                 NSSound(assetName: .sentMessage)?.play()
-                try self.conversation?.send(message: PlaceholderMessage(content: .location(coord.latitude, coord.longitude)))
+                try self.conversation?.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .location(coord.latitude, coord.longitude)))
             } catch {
                 log.debug("sending a location was not supported; sending maps link instead")
                 let text = "https://maps.google.com/maps?q=\(coord.latitude),\(coord.longitude)"
-                try! self.conversation?.send(message: PlaceholderMessage(content: .text(text)))
+                try! self.conversation?.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .text(text)))
             }
             return true
         }
     }
     
     public func send(video: URL) { // Screw Google Photos upload!
-        try! self.conversation?.send(message: PlaceholderMessage(content: .file(video)))
+        try! self.conversation?.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .file(video)))
         NSSound(assetName: .sentMessage)?.play()
         //try? FileManager.default.trashItem(at: video, resultingItemURL: nil) // get rid of the temp file
     }
     
     public func send(file: URL) {
-        try! self.conversation?.send(message: PlaceholderMessage(content: .file(file)))
+        try! self.conversation?.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .file(file)))
         NSSound(assetName: .sentMessage)?.play() // TODO: no guarantee we've sent anything yet...
     }
     
     // LEGACY
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
         NSSound(assetName: .sentMessage)?.play()
-        try! conversation.send(message: PlaceholderMessage(content: .text(text)))
+        try! conversation.send(message: PlaceholderMessage(sender: conversation.participants.first { $0.me }!, content: .text(text)))
     }
     
     public func dragging(phase: DroppableView.OperationPhase, for info: NSDraggingInfo) -> Bool {

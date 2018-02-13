@@ -48,17 +48,16 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             self.setColors()
         }
         
-        self.view.add(subviews: self.photoView, self.textLabel)
-        
-        // Install constraints.
-        self.photoView.leftAnchor == self.view.leftAnchor + 8.0
-        self.photoView.bottomAnchor == self.view.bottomAnchor - 4.0
-        self.photoView.heightAnchor == 24.0
-        self.photoView.widthAnchor == 24.0
-        self.textLabel.leftAnchor == self.photoView.rightAnchor + 8.0
-        self.textLabel.rightAnchor == self.view.rightAnchor - 8.0
-        self.textLabel.topAnchor == self.view.topAnchor + 4.0
-        self.textLabel.bottomAnchor == self.view.bottomAnchor - 4.0
+        self.view.add(subviews: self.photoView, self.textLabel) {
+            self.photoView.leftAnchor == self.view.leftAnchor + 8.0
+            self.photoView.bottomAnchor == self.view.bottomAnchor - 4.0
+            self.photoView.heightAnchor == 24.0
+            self.photoView.widthAnchor == 24.0
+            self.textLabel.leftAnchor == self.photoView.rightAnchor + 8.0
+            self.textLabel.rightAnchor == self.view.rightAnchor - 8.0
+            self.textLabel.topAnchor == self.view.topAnchor + 4.0
+            self.textLabel.bottomAnchor == self.view.bottomAnchor - 4.0
+        }
         
         // So, since the photoView can be hidden (height = 0), we should manually
         // declare the height minimum constraint here.
@@ -72,20 +71,21 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
 	/// Upon assignment of the represented object, configure the subview contents.
 	public override var representedObject: Any? {
         didSet {
-            guard let b = self.representedObject as? MessageBundle else { return }
-            let o = b.current
+            guard let b = self.representedObject as? EventBundle else { return }
+            guard let o = b.current as? Message else { return }
+            let prev = b.previous as? Message
 			
 			let user = o.sender
-            self.orientation = o.sender!.me ? .rightToLeft : .leftToRight // FIXME
+            self.orientation = o.sender.me ? .rightToLeft : .leftToRight // FIXME
 			//self.color = o.color
-			self.textLabel.string = o.text as String
+			self.textLabel.string = o.text ?? ""
 			self.textLabel.toolTip = "\((o.timestamp /*?? .origin*/).fullString())"
-			self.photoView.image = user!.image
+			self.photoView.image = user.image
 			//self.photoView?.toolTip = o.caption
             
             // Hide your own icon and hide the icon of a repeating message.
-            self.photoView.isHidden = /*(o.sender?.me ?? false) || */(b.previous?.sender?.identifier == o.sender?.identifier)
-            //self.textLabel.alignment = (o.sender?.me ?? false) ? .right : .left
+            self.photoView.isHidden = /*(o.sender.me ?? false) || */(prev?.sender.identifier == o.sender.identifier)
+            //self.textLabel.alignment = (o.sender.me ?? false) ? .right : .left
             
             // Enable automatic links and data detectors.
             self.textLabel.isEditable = true
@@ -128,8 +128,8 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
 	}
     
     private func setColors() {
-        guard let b = self.representedObject as? MessageBundle else { return }
-        let o = b.current
+        guard let b = self.representedObject as? EventBundle else { return }
+        guard let o = b.current as? Message else { return }
         let text = self.textLabel
         let settings = ConversationSettings(serviceIdentifier: b.current.serviceIdentifier,
                                             identifier: b.conversationId)
@@ -138,7 +138,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         // Only clip the text if the text isn't purely Emoji.
         if !text.string.isEmoji {
             var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
-            let setting = (o.sender?.me ?? false) ? settings.outgoingColor : settings.incomingColor
+            let setting = o.sender.me ? settings.outgoingColor : settings.incomingColor
             if  let c = setting, c.alphaComponent > 0.0 {
                 color = c
                 

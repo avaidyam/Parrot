@@ -36,7 +36,7 @@ public struct ConversationSettings {
     }
 }
 
-public struct Event {
+public struct EventDescriptor {
     public let identifier: String
     public let contents: String?
     public let description: String?
@@ -46,14 +46,14 @@ public struct Event {
 }
 
 public protocol EventAction {
-    static func perform(with: Event)
+    static func perform(with: EventDescriptor)
 }
 
 // input: identifier, contents, description, image
 // properties: actions
 public struct BannerAction: EventAction {
     private init() {}
-    public static func perform(with event: Event) {
+    public static func perform(with event: EventDescriptor) {
         let notification = NSUserNotification()
         notification.identifier = event.identifier
         notification.title = event.contents ?? ""
@@ -83,7 +83,7 @@ public struct BannerAction: EventAction {
 public struct BezelAction: EventAction {
     private init() {}
     
-    public static func perform(with event: Event) {
+    public static func perform(with event: EventDescriptor) {
         SystemBezel(image: event.image, text: event.contents)
             .show().hide(after: 2.seconds)
     }
@@ -93,7 +93,7 @@ public struct BezelAction: EventAction {
 // properties: filename
 public struct SoundAction: EventAction {
     private init() {}
-    public static func perform(with event: Event) {
+    public static func perform(with event: EventDescriptor) {
         guard let s = event.sound?.absoluteString else { return }
         NSSound(contentsOfFile: s, byReference: true)?.play()
     }
@@ -102,7 +102,7 @@ public struct SoundAction: EventAction {
 // input: none
 public struct VibrateAction: EventAction {
     private init() {}
-    public static func perform(with event: Event) {
+    public static func perform(with event: EventDescriptor) {
         NSHapticFeedbackManager.vibrate(length: 1000, interval: 10)
     }
 }
@@ -110,7 +110,7 @@ public struct VibrateAction: EventAction {
 // input: none
 public struct BounceDockAction: EventAction {
     private init() {}
-    public static func perform(with event: Event) {
+    public static func perform(with event: EventDescriptor) {
         let id = NSApp.requestUserAttention(.criticalRequest)
         DispatchQueue.main.asyncAfter(deadline: 2.seconds.later) {
             NSApp.cancelUserAttentionRequest(id)
@@ -121,7 +121,7 @@ public struct BounceDockAction: EventAction {
 // input: none
 public struct FlashLEDAction: EventAction {
     private init() {}
-    public static func perform(with event: Event) {
+    public static func perform(with event: EventDescriptor) {
         KeyboardBrightnessAnimation().start()
     }
 }
@@ -129,7 +129,7 @@ public struct FlashLEDAction: EventAction {
 // input: contents, description
 public struct SpeakAction: EventAction {
     private init() {}
-    public static func perform(with event: Event) {
+    public static func perform(with event: EventDescriptor) {
         let text = (event.contents ?? "") + (event.description ?? "")
         NSApp.say(text)
     }
@@ -139,7 +139,7 @@ public struct SpeakAction: EventAction {
 // properties: script path
 public struct ScriptAction: EventAction {
     private init() {}
-    public static func perform(with event: Event) {
+    public static func perform(with event: EventDescriptor) {
         guard let s = event.script else { return }
         _ = try? NSUserAppleScriptTask(url: s).execute(withAppleEvent: nil, completionHandler: nil)
     }
@@ -152,13 +152,13 @@ public extension ParrotAppController {
     public func registerEvents() {
         self.watching = [
                AutoSubscription(kind: Notification.Service.DidConnect) { _ in
-                let event = Event(identifier: "Parrot.ConnectionStatus", contents: "Parrot has connected.",
+                let event = EventDescriptor(identifier: "Parrot.ConnectionStatus", contents: "Parrot has connected.",
                                   description: nil, image: NSImage(named: .connectionOutline), sound: nil, script: nil)
                 let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self, BezelAction.self]
                 actions.forEach { $0.perform(with: event) }
             }, AutoSubscription(kind: Notification.Service.DidDisconnect) { _ in
                 DispatchQueue.main.async { // FIXME why does wrapping it twice work??
-                    let event = Event(identifier: "Parrot.ConnectionStatus", contents: "Parrot has disconnected.",
+                    let event = EventDescriptor(identifier: "Parrot.ConnectionStatus", contents: "Parrot has disconnected.",
                                       description: nil, image: NSImage(named: .connectionOutline), sound: nil, script: nil)
                     let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self, BezelAction.self]
                     actions.forEach { $0.perform(with: event) }
@@ -174,7 +174,7 @@ public extension ParrotAppController {
                 
             }, AutoSubscription(kind: Notification.Conversation.DidReceiveEvent) { e in
                 let c = ServiceRegistry.services.first!.value
-                guard let event = e.userInfo?["event"] as? Message, let conv = e.object as? Conversation else { return }
+                guard let event = e.userInfo?["event"] as? Event, let conv = e.object as? Conversation else { return }
                 let settings = ConversationSettings(serviceIdentifier: conv.serviceIdentifier, identifier: conv.identifier)
                 
                 // if we've set a sound or vibration, play it
@@ -186,15 +186,16 @@ public extension ParrotAppController {
                     showNote = !(m.view.window?.isKeyWindow ?? false)
                 }
                 
-                if let user = event.sender, !user.me && showNote {
-                    if event.text.contains(c.directory.me.firstName) || event.text.contains(c.directory.me.fullName) {
-                        let event2 = Event(identifier: conv.identifier, contents: user.firstName,
+                guard let user = (event as? Message)?.sender else { return }
+                if !user.me && showNote {
+                    if (event.text ?? "").contains(c.directory.me.firstName) || (event.text ?? "").contains(c.directory.me.fullName) {
+                        let event2 = EventDescriptor(identifier: conv.identifier, contents: user.firstName,
                                            description: "Mentioned you", image: user.image, sound: nil, script: nil)
                         let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
                         actions.forEach { $0.perform(with: event2) }
                         
                     } else { // not a mention
-                        let event2 = Event(identifier: conv.identifier, contents: user.firstName,
+                        let event2 = EventDescriptor(identifier: conv.identifier, contents: user.firstName,
                                            description: event.text, image: user.image, sound: nil, script: nil)
                         let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
                         actions.forEach { $0.perform(with: event2) }

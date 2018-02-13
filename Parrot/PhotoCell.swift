@@ -28,32 +28,33 @@ public class PhotoCell: NSCollectionViewItem {
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.wantsLayer = true
         self.view.set(allowsVibrancy: true)
-        self.view.add(subviews: self.personView, self.photoView)
-        
-        // Install constraints.
-        self.personView.leftAnchor == self.view.leftAnchor + 8.0
-        self.personView.bottomAnchor == self.view.bottomAnchor - 4.0
-        self.personView.heightAnchor == 24.0
-        self.personView.widthAnchor == 24.0
-        
-        self.photoView.leftAnchor == self.personView.rightAnchor + 8.0
-        self.photoView.rightAnchor == self.view.rightAnchor - 8.0
-        self.photoView.topAnchor == self.view.topAnchor + 4.0
-        self.photoView.bottomAnchor == self.view.bottomAnchor - 4.0
-        
-        // So, since the photoView can be hidden (height = 0), we should manually
-        // declare the height minimum constraint here.
-        self.photoView.heightAnchor >= 24.0 /* personView.height */
+        self.view.add(subviews: self.personView, self.photoView) {
+            self.personView.leftAnchor == self.view.leftAnchor + 8.0
+            self.personView.bottomAnchor == self.view.bottomAnchor - 4.0
+            self.personView.heightAnchor == 24.0
+            self.personView.widthAnchor == 24.0
+            
+            self.photoView.leftAnchor == self.personView.rightAnchor + 8.0
+            self.photoView.rightAnchor == self.view.rightAnchor - 8.0
+            self.photoView.topAnchor == self.view.topAnchor + 4.0
+            self.photoView.bottomAnchor == self.view.bottomAnchor - 4.0
+            
+            // So, since the photoView can be hidden (height = 0), we should manually
+            // declare the height minimum constraint here.
+            self.photoView.heightAnchor >= 24.0 /* personView.height */
+        }
     }
     
     public override var representedObject: Any? {
         didSet {
-            guard let b = self.representedObject as? MessageBundle else { return }
-            guard case .image(let url) = b.current.content else { return }
+            guard let b = self.representedObject as? EventBundle else { return }
+            guard let o = b.current as? Message else { return }
+            guard case .image(let url) = o.content else { return }
+            let prev = b.previous as? Message
             
             //self.orientation = b.current.sender!.me ? .rightToLeft : .leftToRight // FIXME
-            self.personView.image = b.current.sender!.image
-            self.personView.isHidden = /*(o.sender?.me ?? false) || */(b.previous?.sender?.identifier == b.current.sender?.identifier)
+            self.personView.image = o.sender.image
+            self.personView.isHidden = /*(o.sender.me ?? false) || */(prev?.sender.identifier == o.sender.identifier)
             
             // Set up incremental loading of the image from the url.
             self.incrementalImage = CGIncrementalImage(url: url) { image, _, _ in

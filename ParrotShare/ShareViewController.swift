@@ -137,7 +137,7 @@ public final class ShareViewController: SLComposeServiceViewController {
         
         // Send the message if we can now.
         do {
-            try conv.send(message: PlaceholderMessage(content: content))
+            try conv.send(message: PlaceholderMessage(sender: self.client.directory.me, content: content))
         } catch(let error) {
             self.extensionContext!.cancelRequest(withError: error)
         }
@@ -161,7 +161,7 @@ public final class ShareViewController: SLComposeServiceViewController {
 public struct PlaceholderMessage: Message {
     public let serviceIdentifier: String = ""
     public let identifier: String = ""
-    public let sender: Person? = nil
+    public let sender: Person
     public let timestamp: Date = Date()
     public var content: Content
 }

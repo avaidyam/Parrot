@@ -1,5 +1,7 @@
 import struct Foundation.Date
 
+/* TODO: Public/private conversations; conversation topic/purpose. */
+
 /// A Conversation is uniquely identified by its ID, and consists of
 /// the current user, along with either one or more persons as well.
 public protocol Conversation: class, ServiceOriginating /*: Hashable, Equatable*/ {
@@ -11,6 +13,8 @@ public protocol Conversation: class, ServiceOriginating /*: Hashable, Equatable*
 	
 	/// The user-facing Conversation name. This may only be displayed if the
 	/// conversation is a Group one, but this setting can be overridden.
+    /// If there is no explicit `name` set (as described above), an implicit
+    /// name is provided, composed of `participants`' `fullName`s.
 	var name: String { get set }
 	
 	/// The set of people involved in this Conversation.
@@ -21,7 +25,7 @@ public protocol Conversation: class, ServiceOriginating /*: Hashable, Equatable*
 	var focus: [Person.IdentifierType: FocusMode] { get }
 	
 	/// The set of all events in this Conversation.
-	var messages: [Message] { get }
+	var eventStream: [Event] { get }
 	
 	/// The number of messages that are unread for this Conversation.
 	var unreadCount: Int { get }
@@ -48,7 +52,7 @@ public extension Conversation {
     
     /// The timestamp used when sorting a list of recent conversations.
     public var sortTimestamp: Date {
-        return self.messages.last?.timestamp ?? Date()
+        return self.eventStream.last?.timestamp ?? Date()
     }
 }
 

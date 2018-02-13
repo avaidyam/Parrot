@@ -122,10 +122,11 @@ public extension NSView {
 	}
     
     /// Add multiple subviews at a time to an NSView.
-    public func add(subviews: NSView...) {
+    public func add(subviews: NSView..., constraints: () -> () = {}) {
         for s in subviews {
             self.addSubview(s)
         }
+        batch { constraints() }
     }
 }
 

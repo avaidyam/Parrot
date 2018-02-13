@@ -2,8 +2,7 @@ import struct Foundation.Date
 import struct Foundation.URL
 import class Foundation.NSAttributedString
 
-// Convenience...
-public typealias AttributedString = NSAttributedString
+/* TODO: message reactions, pinned/starred, edit. */
 
 ///
 public enum MessageError: Error {
@@ -44,7 +43,7 @@ public enum Content {
 	case text(String)
     
     /// Service supports rich text in conversations.
-    case richText(AttributedString)
+    case richText(NSAttributedString)
     
     /// Service supports sending photos in conversations.
 	case image(URL)
@@ -71,17 +70,53 @@ public enum Content {
     case location(Double, Double)
 }
 
-// TODO: generify to Event, with EventType -- part of eventStream.
-public protocol Message: ServiceOriginating {
+/// An event comprises the `Conversation`'s `eventStream`: it is not to be used
+/// directly, unless none of the below sub-protocols better fit.
+public protocol Event: ServiceOriginating {
     var identifier: String { get }
-    var sender: Person? { get } // if nil, global event
     var timestamp: Date { get }
+}
+
+/// A message was sent in the conversation by `sender` containing `content`.
+public protocol Message: Event {
+    var sender: Person { get }
     var content: Content { get }
 }
 
-public extension Message {
-    var text: String {
-        guard case .text(let str) = self.content else { return "" }
+/// A voicemail was left since no one picked up the call.
+public protocol Voicemail: Event {
+     // TODO
+}
+
+/// A voice call occurred between multiple participants.
+public protocol VoiceCall: Event {
+    // TODO
+}
+
+/// A video call occurred between multiple participants.
+public protocol VideoCall: Event {
+    // TODO
+}
+
+/// People (`participants`) have joined or left the conversation.
+/// This action may have been taken by `moderator`, if not nil.
+public protocol MembershipChanged: Event {
+    var participants: [Person] { get }
+    var joined: Bool { get } // left, if false
+    var moderator: Person? { get }
+}
+
+/// The conversation was renamed by `sender` from `oldValue` to `newValue`.
+public protocol ConversationRenamed: Event {
+    var sender: Person { get }
+    var oldValue: String { get }
+    var newValue: String { get }
+}
+
+public extension Event {
+    var text: String? {
+        guard let slef = self as? Message else { return nil }
+        guard case .text(let str) = slef.content else { return nil }
         return str
     }
 }

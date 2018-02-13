@@ -138,7 +138,7 @@ public class User: Person, Hashable, Equatable {
 // Collection of User instances.
 public class UserList: Directory {
     
-    fileprivate var users: [User.ID: User]
+    internal var users: [User.ID: User]
     private unowned let client: Client
     public var serviceIdentifier: String {
         return type(of: self.client).identifier

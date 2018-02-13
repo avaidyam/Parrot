@@ -154,8 +154,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     // Constraint setup here.
     public override func loadView() {
         self.view = NSView().modernize(wantsLayer: true)
-        self.view.add(subviews: self.photoView, self.textView)
-        batch {
+        self.view.add(subviews: self.photoView, self.textView) {
             self.photoView.leftAnchor == self.view.leftAnchor + 8.0
             self.photoView.bottomAnchor == self.view.bottomAnchor - 4.0
             self.photoView.heightAnchor == 24.0

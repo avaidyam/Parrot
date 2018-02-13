@@ -65,23 +65,23 @@ public class TodayConversationCell: NSTableCellView {
         self.translatesAutoresizingMaskIntoConstraints = false
         //self.canDrawSubviewsIntoLayer = true
         self.wantsLayer = true
-        self.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel)
-        
-        self.photoView.leftAnchor == self.leftAnchor + 8
-        self.photoView.centerYAnchor == self.centerYAnchor
-        self.photoView.widthAnchor == 48
-        self.photoView.heightAnchor == 48
-        self.photoView.rightAnchor == self.nameLabel.leftAnchor - 8
-        self.photoView.rightAnchor == self.textLabel.leftAnchor - 8
-        self.nameLabel.topAnchor == self.topAnchor + 8
-        self.nameLabel.rightAnchor == self.timeLabel.leftAnchor - 4
-        self.nameLabel.bottomAnchor == self.textLabel.topAnchor - 4
-        self.nameLabel.centerYAnchor == self.timeLabel.centerYAnchor
-        self.timeLabel.topAnchor == self.topAnchor + 8
-        self.timeLabel.rightAnchor == self.rightAnchor - 8
-        self.timeLabel.bottomAnchor == self.textLabel.topAnchor - 4
-        self.textLabel.rightAnchor == self.rightAnchor - 8
-        self.textLabel.bottomAnchor == self.bottomAnchor - 8
+        self.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel) {
+            self.photoView.leftAnchor == self.leftAnchor + 8
+            self.photoView.centerYAnchor == self.centerYAnchor
+            self.photoView.widthAnchor == 48
+            self.photoView.heightAnchor == 48
+            self.photoView.rightAnchor == self.nameLabel.leftAnchor - 8
+            self.photoView.rightAnchor == self.textLabel.leftAnchor - 8
+            self.nameLabel.topAnchor == self.topAnchor + 8
+            self.nameLabel.rightAnchor == self.timeLabel.leftAnchor - 4
+            self.nameLabel.bottomAnchor == self.textLabel.topAnchor - 4
+            self.nameLabel.centerYAnchor == self.timeLabel.centerYAnchor
+            self.timeLabel.topAnchor == self.topAnchor + 8
+            self.timeLabel.rightAnchor == self.rightAnchor - 8
+            self.timeLabel.bottomAnchor == self.textLabel.topAnchor - 4
+            self.textLabel.rightAnchor == self.rightAnchor - 8
+            self.textLabel.bottomAnchor == self.bottomAnchor - 8
+        }
     }
     
     // Upon assignment of the represented object, configure the subview contents.
@@ -90,7 +90,7 @@ public class TodayConversationCell: NSTableCellView {
             log.debug("OBJECTVALUE \(String(describing: self.objectValue))")
             guard let conversation = self.objectValue as? Conversation else { return }
             
-            let messageSender = conversation.messages.last?.sender?.identifier ?? ""
+            let messageSender = (conversation.eventStream.last as? Message)?.sender.identifier ?? ""
             let selfSender = conversation.participants.filter { $0.me }.first?.identifier
             if let firstParticipant = (conversation.participants.filter { !$0.me }.first) {
                 let photo = fetchImage(user: firstParticipant, monogram: true)
@@ -99,9 +99,9 @@ public class TodayConversationCell: NSTableCellView {
             // FIXME: Group conversation prefixing doesn't work yet.
             self.prefix = messageSender != selfSender ? "↙ " : "↗ "
             //let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
-            let _m = conversation.messages.last
+            let _m = conversation.eventStream.last
             let subtitle = (_m?.text ?? "")
-            let time = conversation.messages.last?.timestamp ?? .origin
+            let time = conversation.eventStream.last?.timestamp ?? .origin
             
             self.time = time
             self.nameLabel.stringValue = conversation.name

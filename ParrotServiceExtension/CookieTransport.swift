@@ -3,7 +3,6 @@ import XPCTransport
 import class Mocha.Logger
 
 public enum AuthenticationInvocation: RemoteMethod {
-    //public typealias Service = XPCConnection
     public typealias Request = Void
     public typealias Response = [[String: String]]
     public typealias Error = Void
@@ -33,26 +32,13 @@ public enum AuthenticationInvocation: RemoteMethod {
 }
 
 public enum SendLogInvocation: RemoteMethod {
-    //public typealias Service = XPCConnection
     public typealias Request = Logger.LogUnit
     public typealias Response = Void
     public typealias Error = Void
 }
 
 public enum LogOutInvocation: RemoteMethod {
-    //public typealias Service = XPCConnection
     public typealias Request = Void
     public typealias Response = Void
     public typealias Error = Void
 }
-
-/*
-public struct GenericMethod: RemoteMethod, Codable, Error {
-    //public typealias Service = XPCConnection
-    public typealias Request = Void
-    public typealias Response = Void
-    public typealias Error = Void
-    
-    var value: [String: String]
-}
-*/

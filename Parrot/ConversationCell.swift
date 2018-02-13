@@ -69,8 +69,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
         self.view = NSView()
         self.view.wantsLayer = true
         self.view.set(allowsVibrancy: true)
-        self.view.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel, self.dropZone, self.badgeLabel)
-        batch {
+        self.view.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel, self.dropZone, self.badgeLabel) {
             self.photoView.leftAnchor == self.view.leftAnchor + 8
             self.photoView.centerYAnchor == self.view.centerYAnchor
             self.photoView.widthAnchor == 48
@@ -102,11 +101,11 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
 		didSet {
             guard let conversation = self.representedObject as? Conversation else { return }
 			
-			let messageSender = conversation.messages.last?.sender?.identifier ?? ""
+			let messageSender = (conversation.eventStream.last as? Message)?.sender.identifier ?? ""
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
             
             // Get the first (last) participant to have sent a message in the conv:
-            let firstParticipant = conversation.messages.lazy.flatMap { $0.sender }.filter { !$0.me }.last
+            let firstParticipant = conversation.eventStream.lazy.flatMap { ($0 as? Message)?.sender }.filter { !$0.me }.last
                                     ?? (conversation.participants.filter { !$0.me }.first)
             
             self.photoView.image = firstParticipant?.image ?? NSImage(monogramOfSize: NSSize(width: 64.0, height: 64.0),
@@ -125,8 +124,8 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
             }
             
 			self.prefix = conversation.muted ? "◉ " : (messageSender != selfSender ? "↙ " : "↗ ")
-			let subtitle = (conversation.messages.last?.text ?? "")
-			let time = conversation.messages.last?.timestamp ?? .origin
+			let subtitle = (conversation.eventStream.last?.text ?? "")
+			let time = conversation.eventStream.last?.timestamp ?? .origin
 			
 			self.time = time
 			self.nameLabel.stringValue = conversation.name

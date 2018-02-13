@@ -133,6 +133,7 @@ public extension NSUserInterfaceItemIdentifier {
     public static let messageCell = NSUserInterfaceItemIdentifier("\(MessageCell.self)")
     public static let photoCell = NSUserInterfaceItemIdentifier("\(PhotoCell.self)")
     public static let locationCell = NSUserInterfaceItemIdentifier("\(LocationCell.self)")
+    public static let eventCell = NSUserInterfaceItemIdentifier("\(EventCell.self)")
 }
 
 // ToolbarItems

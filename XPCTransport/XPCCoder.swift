@@ -2,7 +2,7 @@ import Foundation
 import XPC
 import os
 
-/* TODO: Support SharedMemory and IOSurface. */
+/* TODO: Support MachSendRight, AuditToken, SharedMemory, and IOSurface. */
 
 //
 // MARK: Helpers

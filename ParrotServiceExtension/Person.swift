@@ -1,5 +1,7 @@
 import struct Foundation.Date
 
+/* TODO: Person.timeZone; on/off/away (to augment lastSeen). */
+
 /// Describe's a Person's reachability in the Service.
 public enum Reachability {
 	
