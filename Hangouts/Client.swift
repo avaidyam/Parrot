@@ -101,6 +101,10 @@ public final class Client: Service {
 	public static var name: String {
 		return "Hangouts"
 	}
+    
+    public static var capabilities: Capabilities {
+        return Capabilities(rawValue: 0) // placeholder!
+    }
 	
 	// Establish a connection to the chat server.
     public func connect() {
