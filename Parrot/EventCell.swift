@@ -1,7 +1,6 @@
 import MochaUI
 import protocol ParrotServiceExtension.Event
 import protocol ParrotServiceExtension.Voicemail
-import protocol ParrotServiceExtension.VoiceCall
 import protocol ParrotServiceExtension.VideoCall
 import protocol ParrotServiceExtension.MembershipChanged
 import protocol ParrotServiceExtension.ConversationRenamed
@@ -38,10 +37,9 @@ public class EventCell: NSCollectionViewItem {
             guard let b = self.representedObject as? EventBundle else { return }
             if b.current is Voicemail {
                 self.textLabel.stringValue = "Voicemail"
-            } else if b.current is VoiceCall {
-                self.textLabel.stringValue = "Voice Call"
-            } else if b.current is VideoCall {
-                self.textLabel.stringValue = "Video Call"
+            } else if let c = b.current as? VideoCall {
+                let people = c.participants.map { $0.fullName }.joined(separator: ", ")
+                self.textLabel.stringValue = "\(people) were in a \(c.video ? "video" : "voice") call (\(c.duration) sec); state=\(c.state)"
             } else if let c = b.current as? MembershipChanged {
                 let people = c.participants.map { $0.fullName }.joined(separator: ", ")
                 if let mod = c.moderator {

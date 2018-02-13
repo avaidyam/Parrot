@@ -1,5 +1,6 @@
 import struct Foundation.Date
 import struct Foundation.URL
+import typealias Foundation.TimeInterval
 import class Foundation.NSAttributedString
 
 /* TODO: message reactions, pinned/starred, edit. */
@@ -68,6 +69,15 @@ public enum Content {
     case location(Double, Double)
 }
 
+public enum VideoCallSubevent {
+    case start
+    case end
+    case join
+    case leave
+    case comingSoon
+    case ongoing
+}
+
 /// An event comprises the `Conversation`'s `eventStream`: it is not to be used
 /// directly, unless none of the below sub-protocols better fit.
 public protocol Event: ServiceOriginating {
@@ -86,14 +96,12 @@ public protocol Voicemail: Event {
      // TODO
 }
 
-/// A voice call occurred between multiple participants.
-public protocol VoiceCall: Event {
-    // TODO
-}
-
-/// A video call occurred between multiple participants.
+/// A voice or video call occurred between multiple participants.
 public protocol VideoCall: Event {
-    // TODO
+    var participants: [Person] { get }
+    var video: Bool { get }
+    var duration: TimeInterval { get }
+    var state: VideoCallSubevent { get }
 }
 
 /// People (`participants`) have joined or left the conversation.

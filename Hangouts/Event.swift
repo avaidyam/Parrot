@@ -1,4 +1,3 @@
-import Foundation
 import Mocha
 import ParrotServiceExtension
 
@@ -23,7 +22,7 @@ private let log = Logger(subsystem: "Hangouts.Event")
  BlockNotification
  SetNotificationSettingNotification
  RichPresenceEnabledStateNotification
- */
+*/
 
 
 
@@ -47,6 +46,8 @@ public class IEvent: ParrotServiceExtension.Event, Hashable, Equatable {
             return IRenameEvent(client, event: event)
         } else if event.membership_change != nil {
             return IMembershipChangeEvent(client, event: event)
+        } else if event.hangout_event != nil {
+            return IHangoutEvent(client, event: event)
         } else {
             return IEvent(client, event: event)
         }
@@ -226,12 +227,44 @@ public class IMembershipChangeEvent : IEvent, ParrotServiceExtension.MembershipC
 }
 
 // An event in a Hangouts voice/video call.
-public class IHangoutEvent : IEvent {
-	
-	// The Hangouts event (start, end, join, leave, etc).
-	public var type: HangoutEventType {
-		return self.event.hangout_event!.event_type!
-	}
+public class IHangoutEvent: IEvent, VideoCall {
+	/*
+     public var transferred_conversation_id: ConversationId? = nil
+     public var refresh_timeout_secs: UInt64? = nil
+     public var is_peridoic_refresh: Bool? = nil
+    */
+    
+    public var participantIDs: [User.ID] {
+        return self.event.hangout_event!.participant_id.map {
+            User.ID(chatID: $0.chat_id! , gaiaID: $0.gaia_id!)
+        }
+    }
+    
+    public var participants: [Person] {
+        return self.participantIDs.map {
+            self.client.userList.users[$0] ?? User(self.client, userID: $0)
+        }
+    }
+    
+    public var duration: TimeInterval {
+        return TimeInterval(self.event.hangout_event!.hangout_duration_secs ?? 0)
+    }
+    
+    public var video: Bool {
+        return self.event.hangout_event!.media_type! == .AudioVideo
+    }
+    
+    public var state: VideoCallSubevent {
+        switch self.event.hangout_event!.event_type! {
+        case .Start: return .start
+        case .End: return .end
+        case .Join: return .join
+        case .Leave: return .leave
+        case .ComingSoon: return .comingSoon
+        case .Ongoing: return .ongoing
+        default: return .comingSoon
+        }
+    }
 }
 
 //
