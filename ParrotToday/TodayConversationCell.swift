@@ -100,7 +100,7 @@ public class TodayConversationCell: NSTableCellView {
             self.prefix = messageSender != selfSender ? "↙ " : "↗ "
             //let prefix = conversation.users.count > 2 ? "Person: " : (messageSender != selfSender ? "" : "You: ")
             let _m = conversation.eventStream.last
-            let subtitle = (_m?.text ?? "")
+            let subtitle = ((_m as? Message)?.text ?? "")
             let time = conversation.eventStream.last?.timestamp ?? .origin
             
             self.time = time

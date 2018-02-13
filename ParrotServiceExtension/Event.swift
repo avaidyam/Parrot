@@ -11,33 +11,31 @@ public enum MessageError: Error {
     case unsupported
 }
 
+/// Describes a message content by its uniform type identifier (UTI).
+public struct ContentUTI: RawRepresentable {
+    public typealias RawValue = String
+    public let rawValue: ContentUTI.RawValue
+    public init?(rawValue: ContentUTI.RawValue) {
+        self.rawValue = rawValue
+    }
+    
+    public static let text = "public.plain-text"
+    public static let richText = "public.rtf"
+    public static let image = "public.image"
+    public static let audio = "public.audio"
+    public static let video = "public.movie"
+    public static let file = "public.file-url"
+    public static let snippet = "com.apple.webarchive"
+    //public static let sticker = "com.avaidyam.Parrot.MessageType.sticker"
+    //public static let reaction = "com.avaidyam.Parrot.MessageType.reaction"
+    public static let location = "public.vlocation"
+    //public.vcard
+    //public.to-do-item
+    //public.calendar-event
+}
+
 // TODO: Add a Service-level query for Content support that can be cached.
 public enum Content {
-    
-    
-    public struct Types: RawRepresentable {
-        public typealias RawValue = String
-        
-        public let rawValue: String
-        
-        public init?(rawValue: String) {
-            self.rawValue = rawValue
-        }
-        
-        public static let text = "public.plain-text"
-        public static let richText = "public.rtf"
-        public static let image = "public.image"
-        public static let audio = "public.audio"
-        public static let video = "public.movie"
-        public static let file = "public.file-url"
-        public static let snippet = "com.apple.webarchive"
-        //public static let sticker = "com.avaidyam.Parrot.MessageType.sticker"
-        //public static let reaction = "com.avaidyam.Parrot.MessageType.reaction"
-        public static let location = "public.vlocation"
-        //public.vcard
-        //public.to-do-item
-        //public.calendar-event
-    }
     
     /// Service supports plain text in conversations.
 	case text(String)
@@ -113,10 +111,9 @@ public protocol ConversationRenamed: Event {
     var newValue: String { get }
 }
 
-public extension Event {
+public extension Message {
     var text: String? {
-        guard let slef = self as? Message else { return nil }
-        guard case .text(let str) = slef.content else { return nil }
+        guard case .text(let str) = self.content else { return nil }
         return str
     }
 }

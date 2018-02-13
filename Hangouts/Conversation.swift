@@ -354,6 +354,12 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
     
+    public func syncEvents(count: Int, before: ParrotServiceExtension.Event?, handler: @escaping ([ParrotServiceExtension.Event]) -> ()) {
+        self.getEvents(event_id: before?.identifier, max_events: count) {
+            handler($0 as [ParrotServiceExtension.Event])
+        }
+    }
+    
     // Return list of Events ordered newest-first.
     // If event_id is specified, return events preceding this event.
     // This method will make an API request to load historical events if

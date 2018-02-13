@@ -186,17 +186,17 @@ public extension ParrotAppController {
                     showNote = !(m.view.window?.isKeyWindow ?? false)
                 }
                 
-                guard let user = (event as? Message)?.sender else { return }
-                if !user.me && showNote {
-                    if (event.text ?? "").contains(c.directory.me.firstName) || (event.text ?? "").contains(c.directory.me.fullName) {
-                        let event2 = EventDescriptor(identifier: conv.identifier, contents: user.firstName,
-                                           description: "Mentioned you", image: user.image, sound: nil, script: nil)
+                guard let msg = event as? Message else { return }
+                if !msg.sender.me && showNote {
+                    if (msg.text ?? "").contains(c.directory.me.firstName) || (msg.text ?? "").contains(c.directory.me.fullName) {
+                        let event2 = EventDescriptor(identifier: conv.identifier, contents: msg.sender.firstName,
+                                           description: "Mentioned you", image: msg.sender.image, sound: nil, script: nil)
                         let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
                         actions.forEach { $0.perform(with: event2) }
                         
                     } else { // not a mention
-                        let event2 = EventDescriptor(identifier: conv.identifier, contents: user.firstName,
-                                           description: event.text, image: user.image, sound: nil, script: nil)
+                        let event2 = EventDescriptor(identifier: conv.identifier, contents: msg.sender.firstName,
+                                           description: msg.text, image: msg.sender.image, sound: nil, script: nil)
                         let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
                         actions.forEach { $0.perform(with: event2) }
                     }

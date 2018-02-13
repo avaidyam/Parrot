@@ -1,7 +1,6 @@
 import MochaUI
 import AVFoundation
 import ParrotServiceExtension
-import class Hangouts.IConversation // required for [IConversation.client, .getEvents(...), .update(readTimestamp:)]
 
 /* TODO: Re-enable link previews later when they're not terrible... */
 /* TODO: Use the PlaceholderMessage for sending messages. */
@@ -252,7 +251,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     /// The currently active user's image or monogram.
     public var image: NSImage? {
-        if let me = (self.conversation as? IConversation)?.client.directory.me {
+        if let me = (self.conversation?.participants.first { $0.me }) {
             return me.image
         }
         return nil
@@ -443,7 +442,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 return nil
             }
         } else {
-            return event.text != nil ? event.text! as NSString : nil
+            return nil // todo
         }
     }
     
@@ -481,8 +480,8 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             c.addObserver(self, selector: #selector(self.conversationDidChangeFocus(_:)),
                           name: Notification.Conversation.DidChangeFocus, object: self.conversation!)
 			
-			(self.conversation as? IConversation)?.getEvents(event_id: nil, max_events: 50) { events in
-                self.dataSource.insert(contentsOf: events as [Event])
+			self.conversation?.syncEvents(count: 50, before: nil) { events in
+                self.dataSource.insert(contentsOf: events)
 				//for chat in events {
 				//	self.dataSource.insert(chat)
                     
@@ -634,7 +633,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
             if let window = self.view.window, window.isKeyWindow {
                 self.focusComponents.1 = true // set it here too just in case.
             }
-			(self.conversation as? IConversation)?.update(readTimestamp: nil)
+			//(self.conversation as? IConversation)?.update(readTimestamp: nil)
         }
     }
     
@@ -656,9 +655,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     private func scrollback() {
         guard self.updateToken == false else { return }
         let first = self.dataSource[0]
-        (self.conversation as? IConversation)?.getEvents(event_id: first.identifier, max_events: 50) { events in
+        self.conversation?.syncEvents(count: 50, before: first) { events in
             let count = self.dataSource.count
-            self.dataSource.insert(contentsOf: events as [Event])
+            self.dataSource.insert(contentsOf: events)
             UI {
                 let idxs = (0..<(self.dataSource.count - count)).map {
                     IndexPath(item: $0, section: 0)

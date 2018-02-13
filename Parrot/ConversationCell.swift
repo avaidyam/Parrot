@@ -124,7 +124,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
             }
             
 			self.prefix = conversation.muted ? "◉ " : (messageSender != selfSender ? "↙ " : "↗ ")
-			let subtitle = (conversation.eventStream.last?.text ?? "")
+			let subtitle = ((conversation.eventStream.last as? Message)?.text ?? "")
 			let time = conversation.eventStream.last?.timestamp ?? .origin
 			
 			self.time = time
