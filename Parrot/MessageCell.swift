@@ -21,8 +21,8 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         v.isEditable = false
         v.isSelectable = true
         v.drawsBackground = false
-        v.backgroundColor = NSColor.clear
-        v.textColor = NSColor.labelColor
+        v.backgroundColor = .clear
+        v.textColor = .labelColor
         v.textContainerInset = NSSize(width: 4, height: 4)
         
         //v.setContentCompressionResistancePriority(1000, for: .vertical)
@@ -88,14 +88,15 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             //self.textLabel.alignment = (o.sender.me ?? false) ? .right : .left
             
             // Enable automatic links and data detectors.
+            self.updateTextStyles()
             self.textLabel.isEditable = true
             self.textLabel.checkTextInDocument(nil)
             self.textLabel.isEditable = false
             
             let text = self.textLabel
             let appearance: NSAppearance = self.view.appearance ?? NSAppearance.current
-            text.textColor = NSColor.labelColor
-            //self.setColors()
+            text.textColor = .labelColor
+            self.setColors()
             
             // NSTextView doesn't automatically change its text color when the
             // backing view's appearance changes, so we need to set it each time.
@@ -123,7 +124,6 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
                 NSAttributedStringKey.foregroundColor: NSColor.labelColor,
                 NSAttributedStringKey.underlineStyle: 0,
             ]
-            self.updateTextStyles()
 		}
 	}
     
@@ -179,7 +179,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
     }
     
     public override func viewWillAppear() {
-        self.setColors()
+        //self.setColors()
     }
     
 	/// Allows the circle crop and masking to dynamically change.

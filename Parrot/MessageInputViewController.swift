@@ -231,7 +231,6 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         } else {
             text.appearance = self.view.effectiveAppearance//self.appearance
         }
-        text.appearance = self.view.effectiveAppearance
         text.layer?.backgroundColor = color.cgColor
     }
     

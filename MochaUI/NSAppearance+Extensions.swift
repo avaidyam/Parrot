@@ -30,3 +30,19 @@ public class NSAntiVisualEffectView: NSVisualEffectView {
         //
     }
 }
+
+public extension CALayer {
+    
+    /// Creates a `CALayer` that mirrors the given window ID (can either be within the same
+    /// app, or from another app entirely) into its contents. Note: this will only work if
+    /// the containing window hosts its layers in windowserver (`layerUsesCoreImageFilters=NO`).
+    public class func mirroring(windowID: CGWindowID, includesShadow: Bool = true, contentsGravity: String = kCAGravityResizeAspect) -> CALayer {
+        let clz = NSClassFromString("CAPluginLayer") as! CALayer.Type
+        let layer = clz.init()
+        layer.setValue("com.apple.WindowServer.CGSWindow", forKey: "pluginType")
+        layer.setValue(windowID, forKey: "pluginId")
+        layer.setValue(contentsGravity, forKey: "pluginGravity")
+        layer.setValue(includesShadow ? 0x0 : 0x4, forKey: "pluginFlags")
+        return layer
+    }
+}

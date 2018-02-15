@@ -1,12 +1,10 @@
 import AppKit
 import Mocha
 
-/* TODO: Works in another sample project, but fails within Parrot? */
-
 /*
 DispatchQueue.main.async {
     var perspective = CATransform3DIdentity
-    perspective.m34 = 1 / 70
+    perspective.m34 = 1 / 500
     perspective = CATransform3DRotate(perspective, .pi * 0.4, 1, 0, 0)
     window.transform = perspective
 }
@@ -15,7 +13,7 @@ public extension NSWindow {
     public var transform: CATransform3D {
         get { return CATransform3DIdentity }
         set {
-            let t = CATransform3DConcat(newValue, CATransform3DMakeScale(1, -1, 1))
+            let t = newValue//CATransform3DConcat(newValue, CATransform3DMakeScale(1, -1, 1))
             let f = self.frame
             let p = CGPoint(x: self.frame.minX, y: self.screen!.frame.height - self.frame.maxY)
             let w = Float(f.width), h = Float(f.height)
@@ -30,6 +28,7 @@ public extension NSWindow {
                                   global: CAMesh(CGSMeshPoint(x: w, y: h), f, p, t))
             
             let warps = [bl, br, tl, tr]
+            print("\n\nSETTING WARPS \(warps)\n\n")
             let ptr: UnsafeMutablePointer<CGSWarpPoint> = UnsafeMutablePointer(mutating: warps)
             _ = ptr.withMemoryRebound(to: CGSWarpPoint.self, capacity: 4) {
                 CGSSetWindowWarp(NSApp.value(forKey: "contextID") as! Int32,
