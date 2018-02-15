@@ -6,7 +6,6 @@ private let log = Logger(subsystem: "Hangouts.Event")
 /* TODO: Refactor ChatMessageSegment to match hangups and Protobuf docs. */
 /* TODO: Include Markdown, HTML, and URL formatting parsers. */
 
-
 /*
  ConversationNotification
  EventNotification
@@ -23,9 +22,6 @@ private let log = Logger(subsystem: "Hangouts.Event")
  SetNotificationSettingNotification
  RichPresenceEnabledStateNotification
 */
-
-
-
 
 // An event which becomes part of the permanent record of a conversation.
 // Acts as a base class for the events defined below.
@@ -59,17 +55,17 @@ public class IEvent: ParrotServiceExtension.Event, Hashable, Equatable {
     }
 	
 	// A timestamp of when the event occurred.
-    public lazy var timestamp: Date = {
+    public var timestamp: Date {
 		return Date(UTC: self.event.timestamp ?? 0)
-    }()
+    }
 	
 	// A User.ID indicating who created the event.
-    public lazy var userID: User.ID = {
+    public var userID: User.ID {
         return User.ID(
             chatID: self.event.sender_id!.chat_id!,
             gaiaID: self.event.sender_id!.gaia_id!
         )
-    }()
+    }
 	
 	// The ID of the conversation the event belongs to.
     public lazy var conversation_id: String = {
@@ -227,7 +223,7 @@ public class IMembershipChangeEvent : IEvent, ParrotServiceExtension.MembershipC
 }
 
 // An event in a Hangouts voice/video call.
-public class IHangoutEvent: IEvent, VideoCall {
+public class IHangoutEvent: IEvent, ParrotServiceExtension.VideoCall {
 	/*
      public var transferred_conversation_id: ConversationId? = nil
      public var refresh_timeout_secs: UInt64? = nil

@@ -85,7 +85,7 @@ public struct BezelAction: EventAction {
     
     public static func perform(with event: EventDescriptor) {
         SystemBezel(image: event.image, text: event.contents)
-            .show().hide(after: 2.seconds)
+            .show().hide(after: 5.seconds)
     }
 }
 

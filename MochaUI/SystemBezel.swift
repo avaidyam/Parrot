@@ -30,6 +30,8 @@ public class SystemBezel: Hashable, Equatable {
         return NSAppearance.systemAppearance.name == .vibrantDark ? .dark : .light
     }
     
+    public static var _space = CGSSpace(level: 1)
+    
     //
     //
     //
@@ -202,6 +204,7 @@ public class SystemBezel: Hashable, Equatable {
         
         self.window.alphaValue = 0.0
         self.window.orderFront(nil)
+        SystemBezel._space.windows.insert(self.window)
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.33
             self.window.animator().alphaValue = 1.0
@@ -216,6 +219,7 @@ public class SystemBezel: Hashable, Equatable {
             self.window.animator().alphaValue = 0.0
         }, completionHandler: {
             self.window.close()
+            SystemBezel._space.windows.remove(self.window)
             handler()
         })
     }
