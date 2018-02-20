@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>v0.7-alpha</string>
+	<string>0.9-alpha</string>
 	<key>CFBundleSignature</key>
 	<string>PRRT</string>
 	<key>CFBundleURLTypes</key>
@@ -70,7 +70,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>445</string>
+	<string>595</string>
 	<key>GithubRepository</key>
 	<string>avaidyam/Parrot</string>
 	<key>LSApplicationCategoryType</key>
@@ -83,7 +83,7 @@
 		<true/>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2015 - 2016 Aditya Vaidyam. All rights reserved.</string>
+	<string>Copyright © 2012 - 2018 Aditya Vaidyam. All rights reserved.</string>
 	<key>NSMainStoryboardFile</key>
 	<string>Main</string>
 	<key>NSPrincipalClass</key>

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4803639D1C1D08490008E9F5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4803639C1C1D08490008E9F5 /* main.swift */; };
 		4807F4FB1EF1E58F00C32132 /* ReloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4FA1EF1E58F00C32132 /* ReloadCell.swift */; };
+		480C1495203643E100611B40 /* SlimMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C1494203643E100611B40 /* SlimMessageCell.swift */; };
 		4812A7B01F51F76500B0B738 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4812A7AF1F51F76500B0B738 /* Analytics.swift */; };
 		4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300391D25B54300768D79 /* ServiceRegistry.swift */; };
 		4813004B1D26BD4900768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
@@ -408,6 +409,7 @@
 		4803639A1C1D08490008E9F5 /* parrot-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "parrot-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4803639C1C1D08490008E9F5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4807F4FA1EF1E58F00C32132 /* ReloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadCell.swift; sourceTree = "<group>"; };
+		480C1494203643E100611B40 /* SlimMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlimMessageCell.swift; sourceTree = "<group>"; };
 		4812A7AF1F51F76500B0B738 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		481300341D257FE300768D79 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		481300391D25B54300768D79 /* ServiceRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServiceRegistry.swift; path = ParrotServiceExtension/ServiceRegistry.swift; sourceTree = SOURCE_ROOT; };
@@ -693,6 +695,7 @@
 				4869A9391EDB859700764594 /* PersonCell.swift */,
 				4835ECA81C1C620000193EBC /* ConversationCell.swift */,
 				4835ECA61C1C620000193EBC /* MessageCell.swift */,
+				480C1494203643E100611B40 /* SlimMessageCell.swift */,
 				487447F12032668B00987045 /* EventCell.swift */,
 				48EC1BEF1F21201F000C40C1 /* PhotoCell.swift */,
 				48EC1BF11F217D7A000C40C1 /* LocationCell.swift */,
@@ -1588,15 +1591,15 @@
 			projectRoot = "";
 			targets = (
 				48834D911C1B3602009BC442 /* Parrot */,
-				48D3CCE11DE94433003D6C02 /* Mocha */,
-				48D3CCF41DE9446D003D6C02 /* MochaUI */,
-				486DBB2F1F947FB900ECA84B /* XPCTransport */,
-				481300431D26BD4900768D79 /* ParrotServiceExtension */,
-				48834E101C1B38B9009BC442 /* parrotd */,
 				480363991C1D08490008E9F5 /* parrot-cli */,
-				48834DEB1C1B372D009BC442 /* Hangouts */,
+				48834E101C1B38B9009BC442 /* parrotd */,
 				48DE52C71C1CC12900647C63 /* ParrotShare */,
 				48DE52EF1C1CC28000647C63 /* ParrotToday */,
+				48D3CCE11DE94433003D6C02 /* Mocha */,
+				48D3CCF41DE9446D003D6C02 /* MochaUI */,
+				48834DEB1C1B372D009BC442 /* Hangouts */,
+				486DBB2F1F947FB900ECA84B /* XPCTransport */,
+				481300431D26BD4900768D79 /* ParrotServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -1739,6 +1742,7 @@
 				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
 				4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */,
 				481F0D7F201ACE540037141F /* Resources.swift in Sources */,
+				480C1495203643E100611B40 /* SlimMessageCell.swift in Sources */,
 				48EC1BF21F217D7A000C40C1 /* LocationCell.swift in Sources */,
 				4869A93A1EDB859700764594 /* PersonCell.swift in Sources */,
 				4869A9431EDF456C00764594 /* Event.swift in Sources */,
@@ -2404,7 +2408,7 @@
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
