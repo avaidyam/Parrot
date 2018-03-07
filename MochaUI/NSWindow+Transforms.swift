@@ -13,22 +13,21 @@ public extension NSWindow {
     public var transform: CATransform3D {
         get { return CATransform3DIdentity }
         set {
-            let t = newValue//CATransform3DConcat(newValue, CATransform3DMakeScale(1, -1, 1))
+            let t = CATransform3DConcat(newValue, CATransform3DMakeScale(1, -1, 1))
             let f = self.frame
             let p = CGPoint(x: self.frame.minX, y: self.screen!.frame.height - self.frame.maxY)
             let w = Float(f.width), h = Float(f.height)
             
             let bl = CGSWarpPoint(local: CGSMeshPoint(x: 0, y: 0),
-                                  global: CAMesh(CGSMeshPoint(x: 0, y: 0), f, p, t))
-            let br = CGSWarpPoint(local: CGSMeshPoint(x: w, y: 0),
-                                  global: CAMesh(CGSMeshPoint(x: w, y: 0), f, p, t))
-            let tl = CGSWarpPoint(local: CGSMeshPoint(x: 0, y: h),
                                   global: CAMesh(CGSMeshPoint(x: 0, y: h), f, p, t))
-            let tr = CGSWarpPoint(local: CGSMeshPoint(x: w, y: h),
+            let br = CGSWarpPoint(local: CGSMeshPoint(x: w, y: 0),
                                   global: CAMesh(CGSMeshPoint(x: w, y: h), f, p, t))
+            let tl = CGSWarpPoint(local: CGSMeshPoint(x: 0, y: h),
+                                  global: CAMesh(CGSMeshPoint(x: 0, y: 0), f, p, t))
+            let tr = CGSWarpPoint(local: CGSMeshPoint(x: w, y: h),
+                                  global: CAMesh(CGSMeshPoint(x: w, y: 0), f, p, t))
             
             let warps = [bl, br, tl, tr]
-            print("\n\nSETTING WARPS \(warps)\n\n")
             let ptr: UnsafeMutablePointer<CGSWarpPoint> = UnsafeMutablePointer(mutating: warps)
             _ = ptr.withMemoryRebound(to: CGSWarpPoint.self, capacity: 4) {
                 CGSSetWindowWarp(NSApp.value(forKey: "contextID") as! Int32,
@@ -53,6 +52,8 @@ private func CAPointApplyCATransform3D(_ transform: CATransform3D, _ frame: CGRe
     objc_sync_enter(_layers.parent)
     defer { objc_sync_exit(_layers.parent) }
     
+    //_layers.parent.anchorPoint = .zero
+    //_layers.child.anchorPoint = .zero
     _layers.parent.frame = frame
     _layers.parent.sublayerTransform = transform
     return _layers.child.convert(point, to: _layers.parent)

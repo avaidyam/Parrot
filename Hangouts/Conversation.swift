@@ -147,6 +147,11 @@ public class IConversation: ParrotServiceExtension.Conversation {
         }
     }
     
+    public func __delete(_ event: IChatMessageEvent, _ handler: @escaping (DeleteConversationResponse?, Error?) -> ()) {
+        let req = DeleteConversationRequest(conversation_id: self.id, delete_type: .PerEvent, delete_event_id_array: [event.id])
+        self.client.execute(req, handler: handler)
+    }
+    
     // List of Events that are unread.
     // Events are sorted oldest to newest.
     // Note that some Hangouts clients don't update the read timestamp for

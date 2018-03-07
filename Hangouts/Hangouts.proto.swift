@@ -545,6 +545,7 @@ public struct FieldMask: ProtoEnum {
 public struct DeleteType: ProtoEnum {
     public static let Unknown: DeleteType = 0
     public static let UpperBound: DeleteType = 1
+    public static let PerEvent: DeleteType = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -2327,20 +2328,23 @@ public struct DeleteAction: ProtoMessage {
         case delete_action_timestamp = 1
         case delete_upper_bound_timestamp = 2
         case delete_type = 3
+        case delete_event_id_array = 4
     }
     
     public var delete_action_timestamp: UInt64? = nil
     public var delete_upper_bound_timestamp: UInt64? = nil
     public var delete_type: DeleteType? = nil
+    public var delete_event_id_array: [String] = []
     
-    public init(delete_action_timestamp: UInt64? = nil, delete_upper_bound_timestamp: UInt64? = nil, delete_type: DeleteType? = nil) {
+    public init(delete_action_timestamp: UInt64? = nil, delete_upper_bound_timestamp: UInt64? = nil, delete_type: DeleteType? = nil, delete_event_id_array: [String] = []) {
         self.delete_action_timestamp = delete_action_timestamp
         self.delete_upper_bound_timestamp = delete_upper_bound_timestamp
         self.delete_type = delete_type
+        self.delete_event_id_array = delete_event_id_array
     }
     
     public var hashValue: Int {
-        return combine(hashes: [self.delete_action_timestamp.hash(), self.delete_upper_bound_timestamp.hash(), self.delete_type.hash()])
+        return combine(hashes: [self.delete_action_timestamp.hash(), self.delete_upper_bound_timestamp.hash(), self.delete_type.hash(), self.delete_event_id_array.hash()])
     }
 }
 
@@ -3166,20 +3170,26 @@ public struct DeleteConversationRequest: ProtoMessage {
         case request_header = 1
         case conversation_id = 2
         case delete_upper_bound_timestamp = 3
+        case delete_type = 4
+        case delete_event_id_array = 5
     }
     
     public var request_header: RequestHeader? = nil
     public var conversation_id: ConversationId? = nil
     public var delete_upper_bound_timestamp: UInt64? = nil
+    public var delete_type: DeleteType? = nil
+    public var delete_event_id_array: [String] = []
     
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, delete_upper_bound_timestamp: UInt64? = nil) {
+    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, delete_upper_bound_timestamp: UInt64? = nil, delete_type: DeleteType? = nil, delete_event_id_array: [String] = []) {
         self.request_header = request_header
         self.conversation_id = conversation_id
         self.delete_upper_bound_timestamp = delete_upper_bound_timestamp
+        self.delete_type = delete_type
+        self.delete_event_id_array = delete_event_id_array
     }
     
     public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.delete_upper_bound_timestamp.hash()])
+        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.delete_upper_bound_timestamp.hash(), self.delete_type.hash(), self.delete_event_id_array.hash()])
     }
 }
 
