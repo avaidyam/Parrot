@@ -22,6 +22,19 @@ public extension ProtoEnum {
     }
 }
 
+// TODO: Unsure why, but in Swift 4.1+, RawRepresentable Codable synthesis yields CodingKeys?
+// This should force-fix that just for ProtoEnum.
+public extension ProtoEnum {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.init(try container.decode(Int.self))
+    }
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self.rawValue)
+    }
+}
+
 //
 // ProtoMessage
 //

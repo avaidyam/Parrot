@@ -294,6 +294,13 @@
 			remoteGlobalIDString = 486DBB2F1F947FB900ECA84B;
 			remoteInfo = XPCTransport;
 		};
+		48C35B3A2051377A0056C3FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48D3CCE11DE94433003D6C02;
+			remoteInfo = Mocha;
+		};
 		48D3CCE71DE94433003D6C02 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
@@ -1304,6 +1311,7 @@
 			);
 			dependencies = (
 				48AFC0DD200B071A003E878D /* PBXTargetDependency */,
+				48C35B3B2051377A0056C3FB /* PBXTargetDependency */,
 			);
 			name = ParrotServiceExtension;
 			productName = ParrotServiceExtension;
@@ -1987,6 +1995,11 @@
 			target = 486DBB2F1F947FB900ECA84B /* XPCTransport */;
 			targetProxy = 48AFC0DC200B071A003E878D /* PBXContainerItemProxy */;
 		};
+		48C35B3B2051377A0056C3FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48D3CCE11DE94433003D6C02 /* Mocha */;
+			targetProxy = 48C35B3A2051377A0056C3FB /* PBXContainerItemProxy */;
+		};
 		48D3CCE81DE94433003D6C02 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 48D3CCE11DE94433003D6C02 /* Mocha */;
@@ -2294,7 +2307,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};

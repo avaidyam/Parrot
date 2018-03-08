@@ -103,7 +103,6 @@ public class PBLiteDecoder {
             guard let outerValue = self.content[key.value()], !(outerValue is NSNull) else {
                 if "\(type)".starts(with: "Array<") {
                     return ([] as! T)
-                    //print("\n\n", "GOT ARRAY FOR \(key) => \(type)", "\n\n")
                 }
                 let desc = "Expected type \(T.self) but container stored nil."
                 throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
