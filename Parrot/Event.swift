@@ -1,5 +1,6 @@
 import MochaUI
 import ParrotServiceExtension
+import Carbon // FIXME: dear lord why
 
 /* TODO: Storing everything in UserDefaults is a bad idea... */
 public struct ConversationSettings {
@@ -141,7 +142,38 @@ public struct ScriptAction: EventAction {
     private init() {}
     public static func perform(with event: EventDescriptor) {
         guard let s = event.script else { return }
-        _ = try? NSUserAppleScriptTask(url: s).execute(withAppleEvent: nil, completionHandler: nil)
+        
+        // Branch to each possible script type:
+        if s.pathExtension.starts(with: "wflow") || s.pathExtension.starts(with: "workflow") { // Automator
+            let task = try? NSUserAutomatorTask(url: s)
+            //task?.variables = nil
+            task?.execute(withInput: "Event!" as NSString, completionHandler: {print($0 ?? $1 ?? "undefined")})
+        } else if s.pathExtension.starts(with: "scpt") { // AppleScript/JSX
+            let message = NSAppleEventDescriptor(string: "Event!")
+            let desc = ScriptAction.descriptor(for: "main", [message])
+            
+            _ = try? NSUserAppleScriptTask(url: s).execute(withAppleEvent: desc, completionHandler: {print($0 ?? $1 ?? "undefined")})
+        } else { // probably Unix
+            _ = try? NSUserUnixTask(url: s).execute(withArguments: ["Event!"], completionHandler: {print($0 ?? "undefined")})
+        }
+    }
+    
+    // Create a "function call" AEDesc to invoke the script with.
+    private static func descriptor(for functionName: String, _ parameters: [NSAppleEventDescriptor]) -> NSAppleEventDescriptor {
+        let event = NSAppleEventDescriptor(
+            eventClass: UInt32(kASAppleScriptSuite),
+            eventID: UInt32(kASSubroutineEvent),
+            targetDescriptor: .currentProcess(),
+            returnID: Int16(kAutoGenerateReturnID),
+            transactionID: Int32(kAnyTransactionID)
+        )
+        
+        let function = NSAppleEventDescriptor(string: functionName)
+        let params = NSAppleEventDescriptor.list()
+        parameters.forEach { params.insert($0, at: 1) }
+        event.setParam(function, forKeyword: AEKeyword(keyASSubroutineName))
+        event.setParam(params, forKeyword: AEKeyword(keyDirectObject))
+        return event
     }
 }
 
