@@ -56,7 +56,7 @@ public class PBLiteEncoder {
         let owner: PBLiteEncoder
         var codingPath: [CodingKey]
         var children: [Int: EncodingChildContainer] = [:]
-        var content: [Int: Encodable] = [:]
+        var content: [Int: Any] = [:]
         
         init(owner: PBLiteEncoder, codingPath: [CodingKey]) {
             self.owner = owner
@@ -82,15 +82,15 @@ public class PBLiteEncoder {
             }
             let c = EncoderContainer(owner: self.owner, codingPath: self.codingPath + [key])
             try value.encode(to: c)
-            self.content[key.value()] = (c.values() as! Encodable)
+            self.content[key.value()] = (c.values())
         }
         
         func encodeNil(forKey key: Key) throws { // FIXME!!!
             if let _ = self.content.index(forKey: key.value()), !self.owner.options.contains(.overwriteDuplicates) {
                 let desc = "Key \(key) already exists in the container."
-                throw EncodingError.invalidValue(Optional<Any>.none as Any, EncodingError.Context(codingPath: self.codingPath, debugDescription: desc))
+                throw EncodingError.invalidValue(NSNull(), EncodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
-            self.content[key.value()] = Optional<Any>.none as Encodable
+            self.content[key.value()] = nil
         }
         
         func values() -> Any {
@@ -137,8 +137,8 @@ public class PBLiteEncoder {
             let normal = content.filter { $0.key <= Int(Int16.max) }
             let extended = content.filter { $0.key > Int(Int16.max) }
             
-            var arrayed: [Any] = Array<Any>(repeating: Optional<Any>.none as Any,
-                                            count: normal.keys.max() ?? 0)
+            var arrayed: [Any] = Array<Any>(repeating: Optional<Encodable>.none,
+                                                          count: normal.keys.max() ?? 0)
             for (k, v) in normal {
                 arrayed[k - 1] = v
             }
@@ -148,7 +148,8 @@ public class PBLiteEncoder {
                 if arrayed.count == 0 {
                     arrayed.append([]) // padding?
                 }
-                arrayed.append(extended.mapKeyValues { ("\($0)", $1) })
+                let q = extended.mapKeyValues { k, v in ("\(k)", v) }
+                arrayed.append(q)
             }
             return arrayed
         }
@@ -163,7 +164,7 @@ public class PBLiteEncoder {
         let owner: PBLiteEncoder
         var codingPath: [CodingKey]
         var children: [EncodingChildContainer] = []
-        var content: [Encodable] = []
+        var content: [Any] = []
         var count: Int { // FIXME!!!
             return self.content.count
         }
@@ -184,15 +185,15 @@ public class PBLiteEncoder {
         func encode<T: Encodable>(_ value: T) throws {
             let c = EncoderContainer(owner: self.owner, codingPath: self.codingPath + [PBLiteKey(intValue: self.count)!])
             try value.encode(to: c)
-            self.content.append((c.values() as! Encodable))
+            self.content.append(c.values())
         }
         
         func encodeNil() throws {
-            self.content.append(Optional<Any>.none)
+            self.content.append(Optional<Encodable>.none as! Encodable)
         }
         
         func values() -> Any {
-            return (self.content as [Any]) + self.children.map { $0.values() }
+            return (self.content) + self.children.map { c in c.values() }
         }
         
         //
@@ -244,7 +245,7 @@ public class PBLiteEncoder {
         fileprivate var children: [EncodingChildContainer] {
             get { return [] } set { }
         }
-        var content: [Encodable] = [] // strange way to not deal with Optional.
+        var content: [Any] = [] // strange way to not deal with Optional.
         
         let owner: PBLiteEncoder
         init(owner: PBLiteEncoder) {
@@ -258,15 +259,15 @@ public class PBLiteEncoder {
         func encodeNil() throws {
             if self.content.count > 0 && !self.owner.options.contains(.overwriteDuplicates) {
                 let desc = "Value already exists in the container."
-                throw EncodingError.invalidValue(self.content[0] as Any, EncodingError.Context(codingPath: [], debugDescription: desc))
+                throw EncodingError.invalidValue(self.content[0], EncodingError.Context(codingPath: [], debugDescription: desc))
             }
-            self.content = [Optional<Any>.none]
+            self.content = [Optional<Encodable>.none as! Encodable]
         }
         
         func encode<T: Encodable>(value: T) throws {
             if self.content.count > 0 && !self.owner.options.contains(.overwriteDuplicates) {
                 let desc = "Value already exists in the container."
-                throw EncodingError.invalidValue(value as Any, EncodingError.Context(codingPath: [], debugDescription: desc))
+                throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [], debugDescription: desc))
             }
             self.content = [value]
         }
@@ -275,11 +276,11 @@ public class PBLiteEncoder {
         func encode<T: Encodable>(_ value: T) throws {
             if self.content.count > 0 && !self.owner.options.contains(.overwriteDuplicates) {
                 let desc = "Value already exists in the container."
-                throw EncodingError.invalidValue(value as Any, EncodingError.Context(codingPath: [], debugDescription: desc))
+                throw EncodingError.invalidValue(value as Encodable, EncodingError.Context(codingPath: [], debugDescription: desc))
             }
             let c = EncoderContainer(owner: self.owner, codingPath: [PBLiteKey(intValue: 0)!])
             try value.encode(to: c)
-            self.content = [c.values() as! Encodable]
+            self.content = [c.values()]
         }
         
         func values() -> Any {
@@ -287,7 +288,7 @@ public class PBLiteEncoder {
             if let inner = self.content.first {
                 return inner
             } else {
-                return Optional<Any>.none as Any
+                return Optional<Encodable>.none
             }
         }
     }
