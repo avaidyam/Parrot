@@ -81,7 +81,9 @@ public enum VideoCallSubevent {
 /// An event comprises the `Conversation`'s `eventStream`: it is not to be used
 /// directly, unless none of the below sub-protocols better fit.
 public protocol Event: ServiceOriginating {
-    var identifier: String { get }
+    typealias IdentifierType = String
+    
+    var identifier: IdentifierType { get }
     var timestamp: Date { get }
 }
 

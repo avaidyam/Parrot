@@ -50,6 +50,50 @@ public enum RemoteError: Error /*CodableError*/ {
  */
 }
 
+/// Basically a Codable 2-tuple.
+public struct Pair<Left: Codable, Right: Codable>: Codable {
+    public let left: Left
+    public let right: Right
+    
+    public init(_ left: Left, _ right: Right) {
+        self.left = left
+        self.right = right
+    }
+}
+extension Pair: Equatable where Left: Equatable, Right: Equatable {
+    public static func ==(lhs: Pair<Left, Right>, rhs: Pair<Left, Right>) -> Bool {
+        return lhs.left == rhs.left && lhs.right == rhs.right
+    }
+}
+extension Pair: Hashable where Left: Hashable, Right: Hashable {
+    public var hashValue: Int {
+        return 0x67 ^ left.hashValue ^ right.hashValue
+    }
+}
+
+/// Basically a Codable 3-tuple.
+public struct Triple<Left: Codable, Right: Codable, Third: Codable>: Codable {
+    public let left: Left
+    public let right: Right
+    public let third: Third
+    
+    public init(_ left: Left, _ right: Right, _ third: Third) {
+        self.left = left
+        self.right = right
+        self.third = third
+    }
+}
+extension Triple: Equatable where Left: Equatable, Right: Equatable, Third: Equatable {
+    public static func ==(lhs: Triple<Left, Right, Third>, rhs: Triple<Left, Right, Third>) -> Bool {
+        return lhs.left == rhs.left && lhs.right == rhs.right && lhs.third == rhs.third
+    }
+}
+extension Triple: Hashable where Left: Hashable, Right: Hashable, Third: Hashable {
+    public var hashValue: Int {
+        return 0x67 ^ left.hashValue ^ right.hashValue ^ third.hashValue
+    }
+}
+
 /// Will never be instantiated.
 public protocol RemoteService {
     
