@@ -27,11 +27,6 @@ public extension ProtoEnum {
 //
 
 public protocol _ProtoMessage: Codable {}
-extension _ProtoMessage where Self: Hashable {
-    public static func ==(lhs: Self, rhs: Self) -> Bool {
-        return lhs.hashValue == rhs.hashValue
-    }
-}
 public typealias ProtoMessage = _ProtoMessage & Hashable
 
 //
@@ -73,8 +68,6 @@ public enum ServiceError: Error {
 // Hashable Utils
 //
 
-typealias Hash = Int
-
 // Generate 64-bit random value in a range that is divisible by upper_bound:
 // from @martin-r: http://stackoverflow.com/questions/26549830/swift-random-number-for-64-bit-integers
 func random64(_ upper_bound: UInt64) -> UInt64 {
@@ -86,53 +79,21 @@ func random64(_ upper_bound: UInt64) -> UInt64 {
     return rnd % upper_bound
 }
 
-@inline(__always)
-func magic() -> UInt {
-    #if arch(x86_64) || arch(arm64)
-        return 0x9e3779b97f4a7c15
-    #elseif arch(i386) || arch(arm)
-        return 0x9e3779b9
-    #endif
-}
-
-@inline(__always)
-func combine(hashes: [Hash]) -> Hash {
-    return hashes.reduce(0, combine(hash:with:))
-}
-
-@inline(__always)
-func combine(hash initial: Hash, with other: Hash) -> Hash {
-    var lhs = UInt(bitPattern: initial)
-    let rhs = UInt(bitPattern: other)
-    lhs ^= rhs &+ magic() &+ (lhs << 6) &+ (lhs >> 2)
-    return Int(bitPattern: lhs)
-}
-
-extension Hashable {
-    @inline(__always)
-    func hash() -> Hash {
-        return self.hashValue
-    }
-}
-
-extension Optional where Wrapped: Hashable {
-    @inline(__always)
-    func hash() -> Hash {
+extension Optional: Hashable where Wrapped: Hashable {
+    public var hashValue: Int {
         return self?.hashValue ?? 0
     }
 }
 
-extension Array where Element: Hashable {
-    @inline(__always)
-    func hash() -> Hash {
+extension Array: Hashable where Element: Hashable {
+    public var hashValue: Int {
         return self.reduce(5381) { ($0 << 5) &+ $0 &+ $1.hashValue }
     }
 }
 
-extension Dictionary where Value: Hashable {
-    @inline(__always)
-    func hash() -> Hash {
-        return self.reduce(5381) { combine(hash: $0, with: combine(hash: $1.key.hashValue, with: $1.value.hashValue)) }
+extension Dictionary where Key: Hashable, Value: Hashable {
+    public var hashValue: Int {
+        return self.reduce(5381) { ($0 << 5) &+ $0 &+ $1.key.hashValue &+ $1.value.hashValue }
     }
 }
 

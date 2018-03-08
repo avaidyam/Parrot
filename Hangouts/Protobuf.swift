@@ -174,7 +174,7 @@ public struct ProtoDescriptor {
             public func typed(_ container: Bool = false) -> String {
                 switch self.label {
                 case .optional: return "\(self.type.type.0)?" + (container ? " = nil" : "")
-                case .required: return "\(self.type.type.0)" + (container ? "!" : "")
+                case .required: return "\(self.type.type.0)"
                 case .repeated: return "[\(self.type.type.0)]" + (container ? " = []" : "")
                 }
             }
@@ -210,10 +210,6 @@ public struct ProtoDescriptor {
                 output += "\t\tself.\(field.name) = \(field.name)\n"
             }
             output += "\t}\n"
-            output += "\n\tpublic var hashValue: Int {\n"
-            output += "\t\treturn combine(hashes: ["
-            output += self.fields.map { field in "self.\(field.name).hash()" }.joined(separator: ", ")
-            output += "])\n\t}\n"
             return output + "}"
         }
     }

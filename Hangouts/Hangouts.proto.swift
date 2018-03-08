@@ -655,10 +655,6 @@ public struct DoNotDisturbSetting: ProtoMessage {
         self.expiration_timestamp = expiration_timestamp
         self.version = version
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.do_not_disturb.hash(), self.expiration_timestamp.hash(), self.version.hash()])
-    }
 }
 
 public struct NotificationSettings: ProtoMessage {
@@ -671,10 +667,6 @@ public struct NotificationSettings: ProtoMessage {
     public init(dnd_settings: DoNotDisturbSetting? = nil) {
         self.dnd_settings = dnd_settings
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.dnd_settings.hash()])
-    }
 }
 
 public struct ConversationId: ProtoMessage {
@@ -686,10 +678,6 @@ public struct ConversationId: ProtoMessage {
     
     public init(id: String? = nil) {
         self.id = id
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.id.hash()])
     }
 }
 
@@ -705,10 +693,6 @@ public struct ParticipantId: ProtoMessage {
     public init(gaia_id: String? = nil, chat_id: String? = nil) {
         self.gaia_id = gaia_id
         self.chat_id = chat_id
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.gaia_id.hash(), self.chat_id.hash()])
     }
 }
 
@@ -728,10 +712,6 @@ public struct DeviceStatus: ProtoMessage {
         self.desktop = desktop
         self.tablet = tablet
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.mobile.hash(), self.desktop.hash(), self.tablet.hash()])
-    }
 }
 
 public struct LastSeen: ProtoMessage {
@@ -740,16 +720,12 @@ public struct LastSeen: ProtoMessage {
         case usec_since_last_seen = 2
     }
     
-    public var last_seen_timestamp: UInt64!
+    public var last_seen_timestamp: UInt64
     public var usec_since_last_seen: UInt64? = nil
     
-    public init(last_seen_timestamp: UInt64!, usec_since_last_seen: UInt64? = nil) {
+    public init(last_seen_timestamp: UInt64, usec_since_last_seen: UInt64? = nil) {
         self.last_seen_timestamp = last_seen_timestamp
         self.usec_since_last_seen = usec_since_last_seen
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.last_seen_timestamp.hash(), self.usec_since_last_seen.hash()])
     }
 }
 
@@ -778,10 +754,6 @@ public struct Location: ProtoMessage {
         self.accuracy_meters = accuracy_meters
         self.display_name = display_name
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.lat.hash(), self.lng.hash(), self.timestamp_msec.hash(), self.accuracy_meters.hash(), self.display_name.hash()])
-    }
 }
 
 public struct LocationSpec: ProtoMessage {
@@ -794,10 +766,6 @@ public struct LocationSpec: ProtoMessage {
     public init(place: Place? = nil) {
         self.place = place
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.place.hash()])
-    }
 }
 
 public struct InCall: ProtoMessage {
@@ -809,10 +777,6 @@ public struct InCall: ProtoMessage {
     
     public init(call_type: CallType? = nil) {
         self.call_type = call_type
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.call_type.hash()])
     }
 }
 
@@ -844,10 +808,6 @@ public struct Presence: ProtoMessage {
         self.mood_message = mood_message
         self.last_seen = last_seen
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.reachable.hash(), self.available.hash(), self.device_location.hash(), self.in_call.hash(), self.device_status.hash(), self.mood_message.hash(), self.last_seen.hash()])
-    }
 }
 
 public struct PresenceResult: ProtoMessage {
@@ -862,10 +822,6 @@ public struct PresenceResult: ProtoMessage {
     public init(user_id: ParticipantId? = nil, presence: Presence? = nil) {
         self.user_id = user_id
         self.presence = presence
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.user_id.hash(), self.presence.hash()])
     }
 }
 
@@ -885,10 +841,6 @@ public struct ClientIdentifier: ProtoMessage {
         self.client_id = client_id
         self.participant_log_id = participant_log_id
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.resource.hash(), self.client_id.hash(), self.participant_log_id.hash()])
-    }
 }
 
 public struct ClientPresenceState: ProtoMessage {
@@ -907,10 +859,6 @@ public struct ClientPresenceState: ProtoMessage {
         self.state = state
         self.expiration_timestamp = expiration_timestamp
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.identifier.hash(), self.state.hash(), self.expiration_timestamp.hash()])
-    }
 }
 
 public struct UserEventState: ProtoMessage {
@@ -928,10 +876,6 @@ public struct UserEventState: ProtoMessage {
         self.user_id = user_id
         self.client_generated_id = client_generated_id
         self.notification_level = notification_level
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.user_id.hash(), self.client_generated_id.hash(), self.notification_level.hash()])
     }
 }
 
@@ -954,10 +898,6 @@ public struct Formatting: ProtoMessage {
         self.strikethrough = strikethrough
         self.underline = underline
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.bold.hash(), self.italics.hash(), self.strikethrough.hash(), self.underline.hash()])
-    }
 }
 
 public struct LinkData: ProtoMessage {
@@ -970,10 +910,6 @@ public struct LinkData: ProtoMessage {
     public init(link_target: String? = nil) {
         self.link_target = link_target
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.link_target.hash()])
-    }
 }
 
 public struct Segment: ProtoMessage {
@@ -984,20 +920,16 @@ public struct Segment: ProtoMessage {
         case link_data = 4
     }
     
-    public var type: SegmentType!
+    public var type: SegmentType
     public var text: String? = nil
     public var formatting: Formatting? = nil
     public var link_data: LinkData? = nil
     
-    public init(type: SegmentType!, text: String? = nil, formatting: Formatting? = nil, link_data: LinkData? = nil) {
+    public init(type: SegmentType, text: String? = nil, formatting: Formatting? = nil, link_data: LinkData? = nil) {
         self.type = type
         self.text = text
         self.formatting = formatting
         self.link_data = link_data
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.text.hash(), self.formatting.hash(), self.link_data.hash()])
     }
 }
 
@@ -1019,10 +951,6 @@ public struct Thumbnail: ProtoMessage {
         self.image_url = image_url
         self.width_px = width_px
         self.height_px = height_px
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.url.hash(), self.image_url.hash(), self.width_px.hash(), self.height_px.hash()])
     }
 }
 
@@ -1060,10 +988,6 @@ public struct PlusPhoto: ProtoMessage {
         self.stream_id = stream_id
         self.download_url = download_url
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.thumbnail.hash(), self.owner_obfuscated_id.hash(), self.album_id.hash(), self.photo_id.hash(), self.url.hash(), self.original_content_url.hash(), self.media_type.hash(), self.stream_id.hash(), self.download_url.hash()])
-    }
 }
 
 public struct RepresentativeImage: ProtoMessage {
@@ -1082,10 +1006,6 @@ public struct RepresentativeImage: ProtoMessage {
         self.url = url
         self.image = image
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.url.hash(), self.image.hash()])
-    }
 }
 
 public struct PlaceDescription: ProtoMessage {
@@ -1097,10 +1017,6 @@ public struct PlaceDescription: ProtoMessage {
     
     public init(text: String? = nil) {
         self.text = text
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.text.hash()])
     }
 }
 
@@ -1117,10 +1033,6 @@ public struct Coordinates: ProtoMessage {
         self.lat = lat
         self.lng = lng
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.lat.hash(), self.lng.hash()])
-    }
 }
 
 public struct PlaceDisplayInfo: ProtoMessage {
@@ -1133,10 +1045,6 @@ public struct PlaceDisplayInfo: ProtoMessage {
     public init(description: PlaceDescription? = nil) {
         self.description = description
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.description.hash()])
-    }
 }
 
 public struct PlaceLocationInfo: ProtoMessage {
@@ -1148,10 +1056,6 @@ public struct PlaceLocationInfo: ProtoMessage {
     
     public init(latlng: Coordinates? = nil) {
         self.latlng = latlng
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.latlng.hash()])
     }
 }
 
@@ -1177,10 +1081,6 @@ public struct Place: ProtoMessage {
         self.location_info = location_info
         self.representative_image = representative_image
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.url.hash(), self.name.hash(), self.display_info.hash(), self.location_info.hash(), self.representative_image.hash()])
-    }
 }
 
 public struct VoicePhoto: ProtoMessage {
@@ -1192,10 +1092,6 @@ public struct VoicePhoto: ProtoMessage {
     
     public init(url: String? = nil) {
         self.url = url
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.url.hash()])
     }
 }
 
@@ -1224,10 +1120,6 @@ public struct EmbedItem: ProtoMessage {
         self.place_v2 = place_v2
         self.voice_photo = voice_photo
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.id.hash(), self.plus_photo.hash(), self.place.hash(), self.place_v2.hash(), self.voice_photo.hash()])
-    }
 }
 
 public struct Attachment: ProtoMessage {
@@ -1242,10 +1134,6 @@ public struct Attachment: ProtoMessage {
     public init(embed_item: EmbedItem? = nil, id: String? = nil) {
         self.embed_item = embed_item
         self.id = id
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.embed_item.hash(), self.id.hash()])
     }
 }
 
@@ -1262,10 +1150,6 @@ public struct MessageContent: ProtoMessage {
         self.segment = segment
         self.attachment = attachment
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.segment.hash(), self.attachment.hash()])
-    }
 }
 
 public struct EventAnnotation: ProtoMessage {
@@ -1281,10 +1165,6 @@ public struct EventAnnotation: ProtoMessage {
         self.type = type
         self.value = value
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.value.hash()])
-    }
 }
 
 public struct ChatMessage: ProtoMessage {
@@ -1299,10 +1179,6 @@ public struct ChatMessage: ProtoMessage {
     public init(annotation: [EventAnnotation] = [], message_content: MessageContent? = nil) {
         self.annotation = annotation
         self.message_content = message_content
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.annotation.hash(), self.message_content.hash()])
     }
 }
 
@@ -1325,10 +1201,6 @@ public struct Participant: ProtoMessage {
         self.full_name = full_name
         self.profile_photo_url = profile_photo_url
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.id.hash(), self.first_name.hash(), self.full_name.hash(), self.profile_photo_url.hash()])
-    }
 }
 
 public struct MembershipChange: ProtoMessage {
@@ -1347,10 +1219,6 @@ public struct MembershipChange: ProtoMessage {
         self.participant = participant
         self.participant_ids = participant_ids
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.participant.hash(), self.participant_ids.hash()])
-    }
 }
 
 public struct ConversationRename: ProtoMessage {
@@ -1365,10 +1233,6 @@ public struct ConversationRename: ProtoMessage {
     public init(new_name: String? = nil, old_name: String? = nil) {
         self.new_name = new_name
         self.old_name = old_name
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.new_name.hash(), self.old_name.hash()])
     }
 }
 
@@ -1400,10 +1264,6 @@ public struct HangoutEvent: ProtoMessage {
         self.is_peridoic_refresh = is_peridoic_refresh
         self.media_type = media_type
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.event_type.hash(), self.participant_id.hash(), self.hangout_duration_secs.hash(), self.transferred_conversation_id.hash(), self.refresh_timeout_secs.hash(), self.is_peridoic_refresh.hash(), self.media_type.hash()])
-    }
 }
 
 public struct OTRModification: ProtoMessage {
@@ -1425,10 +1285,6 @@ public struct OTRModification: ProtoMessage {
         self.old_otr_toggle = old_otr_toggle
         self.new_otr_toggle = new_otr_toggle
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.old_otr_status.hash(), self.new_otr_status.hash(), self.old_otr_toggle.hash(), self.new_otr_toggle.hash()])
-    }
 }
 
 public struct HashModifier: ProtoMessage {
@@ -1446,10 +1302,6 @@ public struct HashModifier: ProtoMessage {
         self.update_id = update_id
         self.hash_diff = hash_diff
         self.version = version
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.update_id.hash(), self.hash_diff.hash(), self.version.hash()])
     }
 }
 
@@ -1520,10 +1372,6 @@ public struct Event: ProtoMessage {
         self.hash_modifier = hash_modifier
         self.group_link_sharing_modification = group_link_sharing_modification
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.sender_id.hash(), self.timestamp.hash(), self.self_event_state.hash(), self.source_type.hash(), self.chat_message.hash(), self.membership_change.hash(), self.conversation_rename.hash(), self.hangout_event.hash(), self.event_id.hash(), self.expiration_timestamp.hash(), self.otr_modification.hash(), self.advances_sort_timestamp.hash(), self.event_otr.hash(), self.persisted.hash(), self.delivery_medium.hash(), self.event_type.hash(), self.event_version.hash(), self.hash_modifier.hash(), self.group_link_sharing_modification.hash()])
-    }
 }
 
 public struct UserReadState: ProtoMessage {
@@ -1539,10 +1387,6 @@ public struct UserReadState: ProtoMessage {
         self.participant_id = participant_id
         self.latest_read_timestamp = latest_read_timestamp
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.participant_id.hash(), self.latest_read_timestamp.hash()])
-    }
 }
 
 public struct DeliveryMedium: ProtoMessage {
@@ -1557,10 +1401,6 @@ public struct DeliveryMedium: ProtoMessage {
     public init(medium_type: DeliveryMediumType? = nil, self_phone: PhoneNumber? = nil) {
         self.medium_type = medium_type
         self.self_phone = self_phone
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.medium_type.hash(), self.self_phone.hash()])
     }
 }
 
@@ -1579,10 +1419,6 @@ public struct DeliveryMediumOption: ProtoMessage {
         self.delivery_medium = delivery_medium
         self.current_default = current_default
         self.primary = primary
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.delivery_medium.hash(), self.current_default.hash(), self.primary.hash()])
     }
 }
 
@@ -1626,10 +1462,6 @@ public struct UserConversationState: ProtoMessage {
         self.invite_affinity = invite_affinity
         self.delivery_medium_option = delivery_medium_option
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.client_generated_id.hash(), self.self_read_state.hash(), self.status.hash(), self.notification_level.hash(), self.view.hash(), self.inviter_id.hash(), self.invite_timestamp.hash(), self.sort_timestamp.hash(), self.active_timestamp.hash(), self.invite_affinity.hash(), self.delivery_medium_option.hash()])
-    }
 }
 
 public struct ConversationParticipantData: ProtoMessage {
@@ -1656,10 +1488,6 @@ public struct ConversationParticipantData: ProtoMessage {
         self.phone_number = phone_number
         self.participant_type = participant_type
         self.new_invitation_status = new_invitation_status
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.id.hash(), self.fallback_name.hash(), self.invitation_status.hash(), self.phone_number.hash(), self.participant_type.hash(), self.new_invitation_status.hash()])
     }
 }
 
@@ -1718,10 +1546,6 @@ public struct Conversation: ProtoMessage {
         self.is_group_link_sharing_enabled = is_group_link_sharing_enabled
         self.group_link_sharing_status = group_link_sharing_status
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.type.hash(), self.name.hash(), self.self_conversation_state.hash(), self.read_state.hash(), self.has_active_hangout.hash(), self.otr_status.hash(), self.otr_toggle.hash(), self.conversation_history_supported.hash(), self.current_participant.hash(), self.participant_data.hash(), self.fork_on_external_invite.hash(), self.network_type.hash(), self.force_history_state.hash(), self.is_group_link_sharing_enabled.hash(), self.group_link_sharing_status.hash()])
-    }
 }
 
 public struct EasterEgg: ProtoMessage {
@@ -1733,10 +1557,6 @@ public struct EasterEgg: ProtoMessage {
     
     public init(message: String? = nil) {
         self.message = message
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.message.hash()])
     }
 }
 
@@ -1753,10 +1573,6 @@ public struct BlockStateChange: ProtoMessage {
         self.participant_id = participant_id
         self.new_block_state = new_block_state
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.participant_id.hash(), self.new_block_state.hash()])
-    }
 }
 
 public struct InvitationState: ProtoMessage {
@@ -1771,10 +1587,6 @@ public struct InvitationState: ProtoMessage {
     public init(unread_invite_count: UInt64? = nil, latest_read_timestamp: UInt64? = nil) {
         self.unread_invite_count = unread_invite_count
         self.latest_read_timestamp = latest_read_timestamp
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.unread_invite_count.hash(), self.latest_read_timestamp.hash()])
     }
 }
 
@@ -1797,10 +1609,6 @@ public struct Photo: ProtoMessage {
         self.user_id = user_id
         self.is_custom_user_id = is_custom_user_id
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.photo_id.hash(), self.delete_albumless_source_photo.hash(), self.user_id.hash(), self.is_custom_user_id.hash()])
-    }
 }
 
 public struct ExistingMedia: ProtoMessage {
@@ -1812,10 +1620,6 @@ public struct ExistingMedia: ProtoMessage {
     
     public init(photo: Photo? = nil) {
         self.photo = photo
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.photo.hash()])
     }
 }
 
@@ -1840,10 +1644,6 @@ public struct EventRequestHeader: ProtoMessage {
         self.expected_otr = expected_otr
         self.delivery_medium = delivery_medium
         self.event_type = event_type
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.client_generated_id.hash(), self.expected_otr.hash(), self.delivery_medium.hash(), self.event_type.hash()])
     }
 }
 
@@ -1872,10 +1672,6 @@ public struct ClientVersion: ProtoMessage {
         self.device_os_version = device_os_version
         self.device_hardware = device_hardware
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.client_id.hash(), self.build_type.hash(), self.major_version.hash(), self.version_timestamp.hash(), self.device_os_version.hash(), self.device_hardware.hash()])
-    }
 }
 
 public struct RtcClient: ProtoMessage {
@@ -1893,10 +1689,6 @@ public struct RtcClient: ProtoMessage {
         self.device = device
         self.application = application
         self.platform = platform
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.device.hash(), self.application.hash(), self.platform.hash()])
     }
 }
 
@@ -1924,10 +1716,6 @@ public struct RequestHeader: ProtoMessage {
         self.include_updated_conversation = include_updated_conversation
         self.retry_attempt = retry_attempt
         self.rtc_client = rtc_client
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.client_version.hash(), self.client_identifier.hash(), self.language_code.hash(), self.include_updated_conversation.hash(), self.retry_attempt.hash(), self.rtc_client.hash()])
     }
 }
 
@@ -1959,10 +1747,6 @@ public struct ResponseHeader: ProtoMessage {
         self.backoff_duration_millis = backoff_duration_millis
         self.localized_user_visible_error_message = localized_user_visible_error_message
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.status.hash(), self.error_description.hash(), self.debug_url.hash(), self.request_trace_id.hash(), self.current_server_time.hash(), self.backoff_duration_millis.hash(), self.localized_user_visible_error_message.hash()])
-    }
 }
 
 public struct Entity: ProtoMessage {
@@ -1992,10 +1776,6 @@ public struct Entity: ProtoMessage {
         self.blocked = blocked
         self.entity_type = entity_type
         self.had_past_hangout_state = had_past_hangout_state
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.id.hash(), self.presence.hash(), self.invalid.hash(), self.properties.hash(), self.blocked.hash(), self.entity_type.hash(), self.had_past_hangout_state.hash()])
     }
 }
 
@@ -2048,10 +1828,6 @@ public struct EntityProperties: ProtoMessage {
         self.phones = phones
         self.canonical_email = canonical_email
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.display_name.hash(), self.first_name.hash(), self.photo_url.hash(), self.email.hash(), self.phone.hash(), self.location.hash(), self.organization.hash(), self.role.hash(), self.in_users_domain.hash(), self.gender.hash(), self.photo_url_status.hash(), self.phones.hash(), self.canonical_email.hash()])
-    }
 }
 
 public struct ConversationState: ProtoMessage {
@@ -2073,10 +1849,6 @@ public struct ConversationState: ProtoMessage {
         self.event = event
         self.event_continuation_token = event_continuation_token
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.conversation.hash(), self.event.hash(), self.event_continuation_token.hash()])
-    }
 }
 
 public struct EventContinuationToken: ProtoMessage {
@@ -2094,10 +1866,6 @@ public struct EventContinuationToken: ProtoMessage {
         self.event_id = event_id
         self.storage_continuation_token = storage_continuation_token
         self.event_timestamp = event_timestamp
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.event_id.hash(), self.storage_continuation_token.hash(), self.event_timestamp.hash()])
     }
 }
 
@@ -2126,10 +1894,6 @@ public struct EntityLookupSpec: ProtoMessage {
         self.chat_id = chat_id
         self.create_offnetwork_gaia = create_offnetwork_gaia
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.gaia_id.hash(), self.jid.hash(), self.email.hash(), self.phone.hash(), self.chat_id.hash(), self.create_offnetwork_gaia.hash()])
-    }
 }
 
 public struct ConfigurationBit: ProtoMessage {
@@ -2145,10 +1909,6 @@ public struct ConfigurationBit: ProtoMessage {
         self.configuration_bit_type = configuration_bit_type
         self.value = value
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.configuration_bit_type.hash(), self.value.hash()])
-    }
 }
 
 public struct RichPresenceState: ProtoMessage {
@@ -2160,10 +1920,6 @@ public struct RichPresenceState: ProtoMessage {
     
     public init(get_rich_presence_enabled_state: [RichPresenceEnabledState] = []) {
         self.get_rich_presence_enabled_state = get_rich_presence_enabled_state
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.get_rich_presence_enabled_state.hash()])
     }
 }
 
@@ -2180,10 +1936,6 @@ public struct RichPresenceEnabledState: ProtoMessage {
         self.type = type
         self.enabled = enabled
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.enabled.hash()])
-    }
 }
 
 public struct DesktopOffSetting: ProtoMessage {
@@ -2195,10 +1947,6 @@ public struct DesktopOffSetting: ProtoMessage {
     
     public init(desktop_off: Bool? = nil) {
         self.desktop_off = desktop_off
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.desktop_off.hash()])
     }
 }
 
@@ -2215,10 +1963,6 @@ public struct DesktopOffState: ProtoMessage {
         self.desktop_off = desktop_off
         self.version = version
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.desktop_off.hash(), self.version.hash()])
-    }
 }
 
 public struct DndSetting: ProtoMessage {
@@ -2233,10 +1977,6 @@ public struct DndSetting: ProtoMessage {
     public init(do_not_disturb: Bool? = nil, timeout_secs: UInt64? = nil) {
         self.do_not_disturb = do_not_disturb
         self.timeout_secs = timeout_secs
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.do_not_disturb.hash(), self.timeout_secs.hash()])
     }
 }
 
@@ -2253,10 +1993,6 @@ public struct PresenceStateSetting: ProtoMessage {
         self.timeout_secs = timeout_secs
         self.type = type
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.timeout_secs.hash(), self.type.hash()])
-    }
 }
 
 public struct MoodMessage: ProtoMessage {
@@ -2268,10 +2004,6 @@ public struct MoodMessage: ProtoMessage {
     
     public init(mood_content: MoodContent? = nil) {
         self.mood_content = mood_content
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.mood_content.hash()])
     }
 }
 
@@ -2285,10 +2017,6 @@ public struct MoodContent: ProtoMessage {
     public init(segment: [Segment] = []) {
         self.segment = segment
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.segment.hash()])
-    }
 }
 
 public struct MoodSetting: ProtoMessage {
@@ -2301,10 +2029,6 @@ public struct MoodSetting: ProtoMessage {
     public init(mood_message: MoodMessage? = nil) {
         self.mood_message = mood_message
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.mood_message.hash()])
-    }
 }
 
 public struct MoodState: ProtoMessage {
@@ -2316,10 +2040,6 @@ public struct MoodState: ProtoMessage {
     
     public init(mood_setting: MoodSetting? = nil) {
         self.mood_setting = mood_setting
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.mood_setting.hash()])
     }
 }
 
@@ -2342,10 +2062,6 @@ public struct DeleteAction: ProtoMessage {
         self.delete_type = delete_type
         self.delete_event_id_array = delete_event_id_array
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.delete_action_timestamp.hash(), self.delete_upper_bound_timestamp.hash(), self.delete_type.hash(), self.delete_event_id_array.hash()])
-    }
 }
 
 public struct InviteeID: ProtoMessage {
@@ -2367,10 +2083,6 @@ public struct InviteeID: ProtoMessage {
         self.chat_id = chat_id
         self.fallback_name = fallback_name
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.gaia_id.hash(), self.circle_id.hash(), self.chat_id.hash(), self.fallback_name.hash()])
-    }
 }
 
 public struct Country: ProtoMessage {
@@ -2385,10 +2097,6 @@ public struct Country: ProtoMessage {
     public init(region_code: String? = nil, country_code: UInt64? = nil) {
         self.region_code = region_code
         self.country_code = country_code
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.region_code.hash(), self.country_code.hash()])
     }
 }
 
@@ -2405,10 +2113,6 @@ public struct DesktopSoundSetting: ProtoMessage {
         self.desktop_sound_state = desktop_sound_state
         self.desktop_ring_sound_state = desktop_ring_sound_state
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.desktop_sound_state.hash(), self.desktop_ring_sound_state.hash()])
-    }
 }
 
 public struct PhoneData: ProtoMessage {
@@ -2424,10 +2128,6 @@ public struct PhoneData: ProtoMessage {
         self.phone = phone
         self.caller_id_settings_mask = caller_id_settings_mask
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.phone.hash(), self.caller_id_settings_mask.hash()])
-    }
 }
 
 public struct PhoneDescription: ProtoMessage {
@@ -2442,10 +2142,6 @@ public struct PhoneDescription: ProtoMessage {
     public init(phone_number: PhoneNumber? = nil, label: String? = nil) {
         self.phone_number = phone_number
         self.label = label
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.phone_number.hash(), self.label.hash()])
     }
 }
 
@@ -2474,10 +2170,6 @@ public struct Phone: ProtoMessage {
         self.discoverability_status = discoverability_status
         self.primary = primary
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.phone_number.hash(), self.google_voice.hash(), self.verification_status.hash(), self.discoverable.hash(), self.discoverability_status.hash(), self.primary.hash()])
-    }
 }
 
 public struct I18nData: ProtoMessage {
@@ -2505,10 +2197,6 @@ public struct I18nData: ProtoMessage {
         self.is_valid = is_valid
         self.validation_result = validation_result
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.national_number.hash(), self.international_number.hash(), self.country_code.hash(), self.region_code.hash(), self.is_valid.hash(), self.validation_result.hash()])
-    }
 }
 
 public struct PhoneNumber: ProtoMessage {
@@ -2523,10 +2211,6 @@ public struct PhoneNumber: ProtoMessage {
     public init(e164: String? = nil, i18n_data: I18nData? = nil) {
         self.e164 = e164
         self.i18n_data = i18n_data
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.e164.hash(), self.i18n_data.hash()])
     }
 }
 
@@ -2543,10 +2227,6 @@ public struct SuggestedContactGroupHash: ProtoMessage {
         self.max_results = max_results
         self.hash = hash
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.max_results.hash(), self.hash.hash()])
-    }
 }
 
 public struct SuggestedContact: ProtoMessage {
@@ -2561,10 +2241,6 @@ public struct SuggestedContact: ProtoMessage {
     public init(entity: Entity? = nil, invitation_status: InvitationStatus? = nil) {
         self.entity = entity
         self.invitation_status = invitation_status
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.entity.hash(), self.invitation_status.hash()])
     }
 }
 
@@ -2583,10 +2259,6 @@ public struct SuggestedContactGroup: ProtoMessage {
         self.hash_matched = hash_matched
         self.hash = hash
         self.contact = contact
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.hash_matched.hash(), self.hash.hash(), self.contact.hash()])
     }
 }
 
@@ -2648,10 +2320,6 @@ public struct StateUpdate: ProtoMessage {
         self.notification_setting_notification = notification_setting_notification
         self.rich_presence_enabled_state_notification = rich_presence_enabled_state_notification
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.state_update_header.hash(), self.conversation.hash(), self.conversation_notification.hash(), self.event_notification.hash(), self.focus_notification.hash(), self.typing_notification.hash(), self.notification_level_notification.hash(), self.reply_to_invite_notification.hash(), self.watermark_notification.hash(), self.view_modification.hash(), self.easter_egg_notification.hash(), self.self_presence_notification.hash(), self.delete_notification.hash(), self.presence_notification.hash(), self.block_notification.hash(), self.notification_setting_notification.hash(), self.rich_presence_enabled_state_notification.hash()])
-    }
 }
 
 public struct StateUpdateHeader: ProtoMessage {
@@ -2673,10 +2341,6 @@ public struct StateUpdateHeader: ProtoMessage {
         self.notification_settings = notification_settings
         self.current_server_time = current_server_time
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.active_client_state.hash(), self.request_trace_id.hash(), self.notification_settings.hash(), self.current_server_time.hash()])
-    }
 }
 
 public struct BatchUpdate: ProtoMessage {
@@ -2688,10 +2352,6 @@ public struct BatchUpdate: ProtoMessage {
     
     public init(state_update: [StateUpdate] = []) {
         self.state_update = state_update
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.state_update.hash()])
     }
 }
 
@@ -2705,10 +2365,6 @@ public struct ConversationNotification: ProtoMessage {
     public init(conversation: Conversation? = nil) {
         self.conversation = conversation
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation.hash()])
-    }
 }
 
 public struct EventNotification: ProtoMessage {
@@ -2720,10 +2376,6 @@ public struct EventNotification: ProtoMessage {
     
     public init(event: Event? = nil) {
         self.event = event
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.event.hash()])
     }
 }
 
@@ -2746,10 +2398,6 @@ public struct SetFocusNotification: ProtoMessage {
         self.timestamp = timestamp
         self.type = type
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.sender_id.hash(), self.timestamp.hash(), self.type.hash()])
-    }
 }
 
 public struct SetTypingNotification: ProtoMessage {
@@ -2770,10 +2418,6 @@ public struct SetTypingNotification: ProtoMessage {
         self.sender_id = sender_id
         self.timestamp = timestamp
         self.type = type
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.sender_id.hash(), self.timestamp.hash(), self.type.hash()])
     }
 }
 
@@ -2796,10 +2440,6 @@ public struct SetConversationNotificationLevelNotification: ProtoMessage {
         self.revert_timeout_secs = revert_timeout_secs
         self.timestamp = timestamp
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.level.hash(), self.revert_timeout_secs.hash(), self.timestamp.hash()])
-    }
 }
 
 public struct ReplyToInviteNotification: ProtoMessage {
@@ -2814,10 +2454,6 @@ public struct ReplyToInviteNotification: ProtoMessage {
     public init(conversation_id: ConversationId? = nil, type: ReplyToInviteType? = nil) {
         self.conversation_id = conversation_id
         self.type = type
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.type.hash()])
     }
 }
 
@@ -2837,10 +2473,6 @@ public struct WatermarkNotification: ProtoMessage {
         self.conversation_id = conversation_id
         self.latest_read_timestamp = latest_read_timestamp
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.sender_id.hash(), self.conversation_id.hash(), self.latest_read_timestamp.hash()])
-    }
 }
 
 public struct ConversationViewModification: ProtoMessage {
@@ -2859,10 +2491,6 @@ public struct ConversationViewModification: ProtoMessage {
         self.old_view = old_view
         self.new_view = new_view
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.old_view.hash(), self.new_view.hash()])
-    }
 }
 
 public struct GroupLinkSharingModification: ProtoMessage {
@@ -2874,10 +2502,6 @@ public struct GroupLinkSharingModification: ProtoMessage {
     
     public init(new_status: GroupLinkSharingStatus? = nil) {
         self.new_status = new_status
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.new_status.hash()])
     }
 }
 
@@ -2896,10 +2520,6 @@ public struct EasterEggNotification: ProtoMessage {
         self.sender_id = sender_id
         self.conversation_id = conversation_id
         self.easter_egg = easter_egg
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.sender_id.hash(), self.conversation_id.hash(), self.easter_egg.hash()])
     }
 }
 
@@ -2925,10 +2545,6 @@ public struct SelfPresenceNotification: ProtoMessage {
         self.desktop_off_state = desktop_off_state
         self.mood_state = mood_state
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.client_presence_state.hash(), self.do_not_disturb_setting.hash(), self.desktop_off_setting.hash(), self.desktop_off_state.hash(), self.mood_state.hash()])
-    }
 }
 
 public struct DeleteActionNotification: ProtoMessage {
@@ -2944,10 +2560,6 @@ public struct DeleteActionNotification: ProtoMessage {
         self.conversation_id = conversation_id
         self.delete_action = delete_action
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.delete_action.hash()])
-    }
 }
 
 public struct PresenceNotification: ProtoMessage {
@@ -2959,10 +2571,6 @@ public struct PresenceNotification: ProtoMessage {
     
     public init(presence: [PresenceResult] = []) {
         self.presence = presence
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.presence.hash()])
     }
 }
 
@@ -2976,10 +2584,6 @@ public struct BlockNotification: ProtoMessage {
     public init(block_state_change: [BlockStateChange] = []) {
         self.block_state_change = block_state_change
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.block_state_change.hash()])
-    }
 }
 
 public struct InvitationWatermarkNotification: ProtoMessage {
@@ -2991,10 +2595,6 @@ public struct InvitationWatermarkNotification: ProtoMessage {
     
     public init(state: InvitationState? = nil) {
         self.state = state
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.state.hash()])
     }
 }
 
@@ -3011,10 +2611,6 @@ public struct SetNotificationSettingNotification: ProtoMessage {
         self.configuration_bit = configuration_bit
         self.desktop_sound_setting = desktop_sound_setting
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.configuration_bit.hash(), self.desktop_sound_setting.hash()])
-    }
 }
 
 public struct RichPresenceEnabledStateNotification: ProtoMessage {
@@ -3026,10 +2622,6 @@ public struct RichPresenceEnabledStateNotification: ProtoMessage {
     
     public init(rich_presence_enabled_state: [RichPresenceEnabledState] = []) {
         self.rich_presence_enabled_state = rich_presence_enabled_state
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.rich_presence_enabled_state.hash()])
     }
 }
 
@@ -3049,10 +2641,6 @@ public struct ConversationSpec: ProtoMessage {
         self.participant_id = participant_id
         self.invitee_id = invitee_id
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.participant_id.hash(), self.invitee_id.hash()])
-    }
 }
 
 public struct OffnetworkAddress: ProtoMessage {
@@ -3067,10 +2655,6 @@ public struct OffnetworkAddress: ProtoMessage {
     public init(type: OffnetworkAddressType? = nil, email: String? = nil) {
         self.type = type
         self.email = email
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.type.hash(), self.email.hash()])
     }
 }
 
@@ -3090,10 +2674,6 @@ public struct AddUserRequest: ProtoMessage {
         self.invitee_id = invitee_id
         self.event_request_header = event_request_header
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.invitee_id.hash(), self.event_request_header.hash()])
-    }
 }
 
 public struct AddUserResponse: ProtoMessage {
@@ -3108,10 +2688,6 @@ public struct AddUserResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, created_event: Event? = nil) {
         self.response_header = response_header
         self.created_event = created_event
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.created_event.hash()])
     }
 }
 
@@ -3137,10 +2713,6 @@ public struct CreateConversationRequest: ProtoMessage {
         self.name = name
         self.invitee_id = invitee_id
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.type.hash(), self.client_generated_id.hash(), self.name.hash(), self.invitee_id.hash()])
-    }
 }
 
 public struct CreateConversationResponse: ProtoMessage {
@@ -3158,10 +2730,6 @@ public struct CreateConversationResponse: ProtoMessage {
         self.response_header = response_header
         self.conversation = conversation
         self.new_conversation_created = new_conversation_created
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.conversation.hash(), self.new_conversation_created.hash()])
     }
 }
 
@@ -3187,10 +2755,6 @@ public struct DeleteConversationRequest: ProtoMessage {
         self.delete_type = delete_type
         self.delete_event_id_array = delete_event_id_array
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.delete_upper_bound_timestamp.hash(), self.delete_type.hash(), self.delete_event_id_array.hash()])
-    }
 }
 
 public struct DeleteConversationResponse: ProtoMessage {
@@ -3205,10 +2769,6 @@ public struct DeleteConversationResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, delete_action: DeleteAction? = nil) {
         self.response_header = response_header
         self.delete_action = delete_action
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.delete_action.hash()])
     }
 }
 
@@ -3228,10 +2788,6 @@ public struct EasterEggRequest: ProtoMessage {
         self.conversation_id = conversation_id
         self.easter_egg = easter_egg
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.easter_egg.hash()])
-    }
 }
 
 public struct EasterEggResponse: ProtoMessage {
@@ -3246,10 +2802,6 @@ public struct EasterEggResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil) {
         self.response_header = response_header
         self.timestamp = timestamp
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.timestamp.hash()])
     }
 }
 
@@ -3281,10 +2833,6 @@ public struct GetConversationRequest: ProtoMessage {
         self.event_continuation_token = event_continuation_token
         self.include_presence = include_presence
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_spec.hash(), self.include_conversation_metadata.hash(), self.include_event.hash(), self.max_events_per_conversation.hash(), self.event_continuation_token.hash(), self.include_presence.hash()])
-    }
 }
 
 public struct GetConversationResponse: ProtoMessage {
@@ -3302,10 +2850,6 @@ public struct GetConversationResponse: ProtoMessage {
         self.response_header = response_header
         self.conversation_state = conversation_state
         self.presence = presence
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.conversation_state.hash(), self.presence.hash()])
     }
 }
 
@@ -3328,10 +2872,6 @@ public struct GetEntityByIdRequest: ProtoMessage {
         self.batch_lookup_spec = batch_lookup_spec
         self.field_mask = field_mask
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.lookup_spec.hash(), self.batch_lookup_spec.hash(), self.field_mask.hash()])
-    }
 }
 
 public struct GetEntityByIdResponse: ProtoMessage {
@@ -3350,10 +2890,6 @@ public struct GetEntityByIdResponse: ProtoMessage {
         self.entity = entity
         self.entity_result = entity_result
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.entity.hash(), self.entity_result.hash()])
-    }
 }
 
 public struct EntityResult: ProtoMessage {
@@ -3368,10 +2904,6 @@ public struct EntityResult: ProtoMessage {
     public init(lookup_spec: EntityLookupSpec? = nil, entity: [Entity] = []) {
         self.lookup_spec = lookup_spec
         self.entity = entity
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.lookup_spec.hash(), self.entity.hash()])
     }
 }
 
@@ -3388,10 +2920,6 @@ public struct GetGroupConversationUrlRequest: ProtoMessage {
         self.request_header = request_header
         self.conversation_id = conversation_id
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash()])
-    }
 }
 
 public struct GetGroupConversationUrlResponse: ProtoMessage {
@@ -3406,10 +2934,6 @@ public struct GetGroupConversationUrlResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, group_conversation_url: String? = nil) {
         self.response_header = response_header
         self.group_conversation_url = group_conversation_url
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.group_conversation_url.hash()])
     }
 }
 
@@ -3444,10 +2968,6 @@ public struct GetSuggestedEntitiesRequest: ProtoMessage {
         self.dismissed_contacts = dismissed_contacts
         self.pinned_favorites = pinned_favorites
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.max_count.hash(), self.favorites.hash(), self.contacts_you_hangout_with.hash(), self.other_contacts_on_hangouts.hash(), self.other_contacts.hash(), self.dismissed_contacts.hash(), self.pinned_favorites.hash()])
-    }
 }
 
 public struct GetSuggestedEntitiesResponse: ProtoMessage {
@@ -3481,10 +3001,6 @@ public struct GetSuggestedEntitiesResponse: ProtoMessage {
         self.dismissed_contacts = dismissed_contacts
         self.pinned_favorites = pinned_favorites
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.entity.hash(), self.favorites.hash(), self.contacts_you_hangout_with.hash(), self.other_contacts_on_hangouts.hash(), self.other_contacts.hash(), self.dismissed_contacts.hash(), self.pinned_favorites.hash()])
-    }
 }
 
 public struct GetSelfInfoRequest: ProtoMessage {
@@ -3496,10 +3012,6 @@ public struct GetSelfInfoRequest: ProtoMessage {
     
     public init(request_header: RequestHeader? = nil) {
         self.request_header = request_header
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash()])
     }
 }
 
@@ -3549,10 +3061,6 @@ public struct GetSelfInfoResponse: ProtoMessage {
         self.rich_presence_state = rich_presence_state
         self.default_country = default_country
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.self_entity.hash(), self.is_known_minor.hash(), self.client_presence.hash(), self.dnd_state.hash(), self.desktop_off_setting.hash(), self.phone_data.hash(), self.configuration_bit.hash(), self.desktop_off_state.hash(), self.google_plus_user.hash(), self.desktop_sound_setting.hash(), self.rich_presence_state.hash(), self.default_country.hash()])
-    }
 }
 
 public struct ModifyConversationViewRequest: ProtoMessage {
@@ -3574,10 +3082,6 @@ public struct ModifyConversationViewRequest: ProtoMessage {
         self.new_view = new_view
         self.last_event_timestamp = last_event_timestamp
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.new_view.hash(), self.last_event_timestamp.hash()])
-    }
 }
 
 public struct ModifyConversationViewResponse: ProtoMessage {
@@ -3589,10 +3093,6 @@ public struct ModifyConversationViewResponse: ProtoMessage {
     
     public init(response_header: ResponseHeader? = nil) {
         self.response_header = response_header
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash()])
     }
 }
 
@@ -3609,10 +3109,6 @@ public struct OpenGroupConversationFromUrlRequest: ProtoMessage {
         self.request_header = request_header
         self.url = url
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.url.hash()])
-    }
 }
 
 public struct OpenGroupConversationFromUrlResponse: ProtoMessage {
@@ -3627,10 +3123,6 @@ public struct OpenGroupConversationFromUrlResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, conversation_id: ConversationId? = nil) {
         self.response_header = response_header
         self.conversation_id = conversation_id
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.conversation_id.hash()])
     }
 }
 
@@ -3650,10 +3142,6 @@ public struct QueryPresenceRequest: ProtoMessage {
         self.participant_id = participant_id
         self.field_mask = field_mask
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.participant_id.hash(), self.field_mask.hash()])
-    }
 }
 
 public struct QueryPresenceResponse: ProtoMessage {
@@ -3668,10 +3156,6 @@ public struct QueryPresenceResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, presence_result: [PresenceResult] = []) {
         self.response_header = response_header
         self.presence_result = presence_result
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.presence_result.hash()])
     }
 }
 
@@ -3697,10 +3181,6 @@ public struct RemoveUserRequest: ProtoMessage {
         self.client_generated_id = client_generated_id
         self.event_request_header = event_request_header
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.participant_id.hash(), self.client_generated_id.hash(), self.event_request_header.hash()])
-    }
 }
 
 public struct RemoveUserResponse: ProtoMessage {
@@ -3724,10 +3204,6 @@ public struct RemoveUserResponse: ProtoMessage {
         self.event_id = event_id
         self.created_event = created_event
         self.updated_conversation = updated_conversation
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.timestamp.hash(), self.event_id.hash(), self.created_event.hash(), self.updated_conversation.hash()])
     }
 }
 
@@ -3753,10 +3229,6 @@ public struct RenameConversationRequest: ProtoMessage {
         self.client_generated_id = client_generated_id
         self.event_request_header = event_request_header
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.new_name.hash(), self.client_generated_id.hash(), self.event_request_header.hash()])
-    }
 }
 
 public struct RenameConversationResponse: ProtoMessage {
@@ -3781,10 +3253,6 @@ public struct RenameConversationResponse: ProtoMessage {
         self.created_event = created_event
         self.updated_conversation = updated_conversation
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.timestamp.hash(), self.event_id.hash(), self.created_event.hash(), self.updated_conversation.hash()])
-    }
 }
 
 public struct SearchEntitiesRequest: ProtoMessage {
@@ -3803,10 +3271,6 @@ public struct SearchEntitiesRequest: ProtoMessage {
         self.query = query
         self.max_count = max_count
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.query.hash(), self.max_count.hash()])
-    }
 }
 
 public struct SearchEntitiesResponse: ProtoMessage {
@@ -3821,10 +3285,6 @@ public struct SearchEntitiesResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, entity: [Entity] = []) {
         self.response_header = response_header
         self.entity = entity
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.entity.hash()])
     }
 }
 
@@ -3859,10 +3319,6 @@ public struct SendChatMessageRequest: ProtoMessage {
         self.other_invitee_id = other_invitee_id
         self.attach_location = attach_location
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.client_generated_id.hash(), self.annotation.hash(), self.message_content.hash(), self.existing_media.hash(), self.event_request_header.hash(), self.other_invitee_id.hash(), self.attach_location.hash()])
-    }
 }
 
 public struct SendChatMessageResponse: ProtoMessage {
@@ -3887,10 +3343,6 @@ public struct SendChatMessageResponse: ProtoMessage {
         self.created_event = created_event
         self.updated_conversation = updated_conversation
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.timestamp.hash(), self.event_id.hash(), self.created_event.hash(), self.updated_conversation.hash()])
-    }
 }
 
 public struct ModifyOTRStatusRequest: ProtoMessage {
@@ -3909,10 +3361,6 @@ public struct ModifyOTRStatusRequest: ProtoMessage {
         self.otr_status = otr_status
         self.event_request_header = event_request_header
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.otr_status.hash(), self.event_request_header.hash()])
-    }
 }
 
 public struct ModifyOTRStatusResponse: ProtoMessage {
@@ -3927,10 +3375,6 @@ public struct ModifyOTRStatusResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, created_event: Event? = nil) {
         self.response_header = response_header
         self.created_event = created_event
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.created_event.hash()])
     }
 }
 
@@ -3947,10 +3391,6 @@ public struct SendOffnetworkInvitationRequest: ProtoMessage {
         self.request_header = request_header
         self.invitee_address = invitee_address
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.invitee_address.hash()])
-    }
 }
 
 public struct SendOffnetworkInvitationResponse: ProtoMessage {
@@ -3962,10 +3402,6 @@ public struct SendOffnetworkInvitationResponse: ProtoMessage {
     
     public init(response_header: ResponseHeader? = nil) {
         self.response_header = response_header
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash()])
     }
 }
 
@@ -3988,10 +3424,6 @@ public struct SetActiveClientRequest: ProtoMessage {
         self.full_jid = full_jid
         self.timeout_secs = timeout_secs
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.is_active.hash(), self.full_jid.hash(), self.timeout_secs.hash()])
-    }
 }
 
 public struct SetActiveClientResponse: ProtoMessage {
@@ -4009,10 +3441,6 @@ public struct SetActiveClientResponse: ProtoMessage {
         self.response_header = response_header
         self.client_last_seen_timestamp_usec = client_last_seen_timestamp_usec
         self.last_seen_delta_usec = last_seen_delta_usec
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.client_last_seen_timestamp_usec.hash(), self.last_seen_delta_usec.hash()])
     }
 }
 
@@ -4035,10 +3463,6 @@ public struct SetConversationLevelRequest: ProtoMessage {
         self.level = level
         self.revert_timeout_secs = revert_timeout_secs
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.level.hash(), self.revert_timeout_secs.hash()])
-    }
 }
 
 public struct SetConversationLevelResponse: ProtoMessage {
@@ -4053,10 +3477,6 @@ public struct SetConversationLevelResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil) {
         self.response_header = response_header
         self.timestamp = timestamp
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.timestamp.hash()])
     }
 }
 
@@ -4076,10 +3496,6 @@ public struct SetConversationNotificationLevelRequest: ProtoMessage {
         self.conversation_id = conversation_id
         self.level = level
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.level.hash()])
-    }
 }
 
 public struct SetConversationNotificationLevelResponse: ProtoMessage {
@@ -4094,10 +3510,6 @@ public struct SetConversationNotificationLevelResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil) {
         self.response_header = response_header
         self.timestamp = timestamp
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.timestamp.hash()])
     }
 }
 
@@ -4120,10 +3532,6 @@ public struct SetFocusRequest: ProtoMessage {
         self.type = type
         self.timeout_secs = timeout_secs
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.type.hash(), self.timeout_secs.hash()])
-    }
 }
 
 public struct SetFocusResponse: ProtoMessage {
@@ -4138,10 +3546,6 @@ public struct SetFocusResponse: ProtoMessage {
     public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil) {
         self.response_header = response_header
         self.timestamp = timestamp
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.timestamp.hash()])
     }
 }
 
@@ -4161,10 +3565,6 @@ public struct SetGroupLinkSharingEnabledRequest: ProtoMessage {
         self.event_request_header = event_request_header
         self.group_link_sharing_status = group_link_sharing_status
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.event_request_header.hash(), self.group_link_sharing_status.hash()])
-    }
 }
 
 public struct SetGroupLinkSharingEnabledResponse: ProtoMessage {
@@ -4182,10 +3582,6 @@ public struct SetGroupLinkSharingEnabledResponse: ProtoMessage {
         self.response_header = response_header
         self.created_event = created_event
         self.updated_conversation = updated_conversation
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.created_event.hash(), self.updated_conversation.hash()])
     }
 }
 
@@ -4211,10 +3607,6 @@ public struct SetPresenceRequest: ProtoMessage {
         self.desktop_off_setting = desktop_off_setting
         self.mood_message = mood_message
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.presence_state_setting.hash(), self.dnd_setting.hash(), self.desktop_off_setting.hash(), self.mood_message.hash()])
-    }
 }
 
 public struct SetPresenceResponse: ProtoMessage {
@@ -4226,10 +3618,6 @@ public struct SetPresenceResponse: ProtoMessage {
     
     public init(response_header: ResponseHeader? = nil) {
         self.response_header = response_header
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash()])
     }
 }
 
@@ -4249,10 +3637,6 @@ public struct SetTypingRequest: ProtoMessage {
         self.conversation_id = conversation_id
         self.type = type
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.type.hash()])
-    }
 }
 
 public struct SetTypingResponse: ProtoMessage {
@@ -4268,10 +3652,6 @@ public struct SetTypingResponse: ProtoMessage {
         self.response_header = response_header
         self.timestamp = timestamp
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.timestamp.hash()])
-    }
 }
 
 public struct UnreadConversationState: ProtoMessage {
@@ -4286,10 +3666,6 @@ public struct UnreadConversationState: ProtoMessage {
     public init(conversation_id: ConversationId? = nil, timestamp: UInt64? = nil) {
         self.conversation_id = conversation_id
         self.timestamp = timestamp
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.conversation_id.hash(), self.timestamp.hash()])
     }
 }
 
@@ -4321,10 +3697,6 @@ public struct SyncAllNewEventsRequest: ProtoMessage {
         self.unread_state = unread_state
         self.max_response_size_bytes = max_response_size_bytes
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.last_sync_timestamp.hash(), self.max_total_events.hash(), self.sync_filter.hash(), self.no_missed_events_expected.hash(), self.unread_state.hash(), self.max_response_size_bytes.hash()])
-    }
 }
 
 public struct SyncAllNewEventsResponse: ProtoMessage {
@@ -4352,10 +3724,6 @@ public struct SyncAllNewEventsResponse: ProtoMessage {
         self.invitation_state = invitation_state
         self.clear_cache_and_resync = clear_cache_and_resync
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.sync_timestamp.hash(), self.conversation_state.hash(), self.conversation_ids_only.hash(), self.invitation_state.hash(), self.clear_cache_and_resync.hash()])
-    }
 }
 
 public struct SyncRecentConversationsRequest: ProtoMessage {
@@ -4379,10 +3747,6 @@ public struct SyncRecentConversationsRequest: ProtoMessage {
         self.max_conversations = max_conversations
         self.max_events_per_conversation = max_events_per_conversation
         self.sync_filter = sync_filter
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.end_timestamp.hash(), self.max_conversations.hash(), self.max_events_per_conversation.hash(), self.sync_filter.hash()])
     }
 }
 
@@ -4408,10 +3772,6 @@ public struct SyncRecentConversationsResponse: ProtoMessage {
         self.continuation_end_timestamp = continuation_end_timestamp
         self.invitation_state = invitation_state
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash(), self.sync_timestamp.hash(), self.conversation_state.hash(), self.continuation_end_timestamp.hash(), self.invitation_state.hash()])
-    }
 }
 
 public struct UpdateWatermarkRequest: ProtoMessage {
@@ -4430,10 +3790,6 @@ public struct UpdateWatermarkRequest: ProtoMessage {
         self.conversation_id = conversation_id
         self.last_read_timestamp = last_read_timestamp
     }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.request_header.hash(), self.conversation_id.hash(), self.last_read_timestamp.hash()])
-    }
 }
 
 public struct UpdateWatermarkResponse: ProtoMessage {
@@ -4445,10 +3801,6 @@ public struct UpdateWatermarkResponse: ProtoMessage {
     
     public init(response_header: ResponseHeader? = nil) {
         self.response_header = response_header
-    }
-    
-    public var hashValue: Int {
-        return combine(hashes: [self.response_header.hash()])
     }
 }
 
