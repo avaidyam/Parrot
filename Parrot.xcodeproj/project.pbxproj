@@ -90,7 +90,7 @@
 		486DBB4B1F9480AD00ECA84B /* RemoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486DBB4A1F9480AD00ECA84B /* RemoteService.swift */; };
 		486EDFE82028277A008FBE5F /* LayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDFE72028277A008FBE5F /* LayerButton.swift */; };
 		4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4835ECAE1C1C620E00193EBC /* Authenticator.swift */; };
-		487385891F9E1A6D00CC5853 /* CookieTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487385871F9DFAAE00CC5853 /* CookieTransport.swift */; };
+		487385891F9E1A6D00CC5853 /* XPCBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487385871F9DFAAE00CC5853 /* XPCBridge.swift */; };
 		487447F22032668B00987045 /* EventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487447F12032668B00987045 /* EventCell.swift */; };
 		487D6020200BD88A0009E5F1 /* DriveAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487D601F200BD88A0009E5F1 /* DriveAPI.swift */; };
 		48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834D951C1B3602009BC442 /* ParrotAppController.swift */; };
@@ -123,6 +123,7 @@
 		48AFC0DA200ACB8C003E878D /* PeopleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */; };
 		48AFC0DB200B069A003E878D /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
 		48BCEE0A201DA7E20087E889 /* CryptoSHA1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BCEE09201DA7E20087E889 /* CryptoSHA1.swift */; };
+		48C35B382051213D0056C3FB /* OSABridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C35B372051213D0056C3FB /* OSABridge.swift */; };
 		48D3CCE91DE94433003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		48D3CCEA1DE94433003D6C02 /* Mocha.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48D3CCEF1DE9444F003D6C02 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCEE1DE9444F003D6C02 /* Foundation.framework */; };
@@ -495,7 +496,7 @@
 		486DBB4A1F9480AD00ECA84B /* RemoteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteService.swift; sourceTree = "<group>"; };
 		486E7DED1DA8556300C1953B /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		486EDFE72028277A008FBE5F /* LayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerButton.swift; sourceTree = "<group>"; };
-		487385871F9DFAAE00CC5853 /* CookieTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieTransport.swift; sourceTree = "<group>"; };
+		487385871F9DFAAE00CC5853 /* XPCBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCBridge.swift; sourceTree = "<group>"; };
 		487447F12032668B00987045 /* EventCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCell.swift; sourceTree = "<group>"; };
 		487D601F200BD88A0009E5F1 /* DriveAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAPI.swift; sourceTree = "<group>"; };
 		48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = ../Parrot/PreferencesViewController.swift; sourceTree = "<group>"; };
@@ -539,6 +540,7 @@
 		48BA5B481C379CCF00ACA29B /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
 		48BCEE09201DA7E20087E889 /* CryptoSHA1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoSHA1.swift; sourceTree = "<group>"; };
 		48BFD0341D13694900DAE29E /* hangouts.proto */ = {isa = PBXFileReference; lastKnownFileType = text; path = hangouts.proto; sourceTree = "<group>"; };
+		48C35B372051213D0056C3FB /* OSABridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSABridge.swift; sourceTree = "<group>"; };
 		48D3CCDB1DE93248003D6C02 /* NSPopover+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPopover+Extensions.swift"; sourceTree = "<group>"; };
 		48D3CCE21DE94433003D6C02 /* Mocha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Mocha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48D3CCE51DE94433003D6C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -716,14 +718,14 @@
 		481300451D26BD4900768D79 /* ParrotServiceExtension */ = {
 			isa = PBXGroup;
 			children = (
+				48158E431D29C28A00ED369C /* Service.swift */,
+				4869A93D1EDF2E9E00764594 /* ConversationList.swift */,
+				482E21381C23F5F500A4C7B3 /* Conversation.swift */,
+				4869A93F1EDF2EDC00764594 /* Directory.swift */,
+				489018AB1D3C8FE400CFCA5F /* Person.swift */,
 				484E8C9F1D37FF2500E1D1D5 /* Event.swift */,
 				4869A9AD1EE1528100764594 /* Notification.swift */,
-				482E21381C23F5F500A4C7B3 /* Conversation.swift */,
-				4869A93D1EDF2E9E00764594 /* ConversationList.swift */,
-				489018AB1D3C8FE400CFCA5F /* Person.swift */,
-				4869A93F1EDF2EDC00764594 /* Directory.swift */,
-				48158E431D29C28A00ED369C /* Service.swift */,
-				487385871F9DFAAE00CC5853 /* CookieTransport.swift */,
+				48C35B39205125600056C3FB /* Bridge */,
 				481300501D26BD6700768D79 /* Supporting Files */,
 			);
 			path = ParrotServiceExtension;
@@ -1090,6 +1092,15 @@
 				4831BCC61ED09C6300C30413 /* Preferences */,
 			);
 			name = "App UI";
+			sourceTree = "<group>";
+		};
+		48C35B39205125600056C3FB /* Bridge */ = {
+			isa = PBXGroup;
+			children = (
+				487385871F9DFAAE00CC5853 /* XPCBridge.swift */,
+				48C35B372051213D0056C3FB /* OSABridge.swift */,
+			);
+			name = Bridge;
 			sourceTree = "<group>";
 		};
 		48D3CCE31DE94433003D6C02 /* Mocha */ = {
@@ -1716,9 +1727,10 @@
 				489018AC1D3C8FE400CFCA5F /* Person.swift in Sources */,
 				4869A9AE1EE1528100764594 /* Notification.swift in Sources */,
 				481300511D26BD7700768D79 /* Conversation.swift in Sources */,
+				48C35B382051213D0056C3FB /* OSABridge.swift in Sources */,
 				4869A93E1EDF2E9E00764594 /* ConversationList.swift in Sources */,
 				4869A9401EDF2EDC00764594 /* Directory.swift in Sources */,
-				487385891F9E1A6D00CC5853 /* CookieTransport.swift in Sources */,
+				487385891F9E1A6D00CC5853 /* XPCBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
