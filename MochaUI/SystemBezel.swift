@@ -22,15 +22,16 @@ public class SystemBezel: Hashable, Equatable {
     
     public static var activeColorMode: ColorMode {
         if NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast {
-            return NSAppearance.systemAppearance.name == .vibrantDark ? .darkIncreasedContrast : .lightIncreasedContrast
+            return NSAppearance.system.name == .vibrantDark ? .darkIncreasedContrast : .lightIncreasedContrast
         }
         if NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency {
-            return NSAppearance.systemAppearance.name == .vibrantDark ? .darkReducedTransparency : .lightReducedTransparency
+            return NSAppearance.system.name == .vibrantDark ? .darkReducedTransparency : .lightReducedTransparency
         }
-        return NSAppearance.systemAppearance.name == .vibrantDark ? .dark : .light
+        return NSAppearance.system.name == .vibrantDark ? .dark : .light
     }
     
-    public static var _space = CGSSpace(level: 1)
+    /// This is public to allow deinitialization upon app exit.
+    public static var _space: CGSSpace? = CGSSpace(level: 1)
     
     //
     //
@@ -102,7 +103,7 @@ public class SystemBezel: Hashable, Equatable {
     /// The appearance of the bezel. If `nil`, it follows the system appearance.
     public var appearance: NSAppearance? = nil {
         didSet {
-            self.window.appearance = self.appearance ?? NSAppearance.systemAppearance
+            self.window.appearance = self.appearance ?? NSAppearance.system
             self.effectView.appearance = self.window.appearance
         }
     }
@@ -127,7 +128,7 @@ public class SystemBezel: Hashable, Equatable {
         self.window.collectionBehavior = [.canJoinAllSpaces, .ignoresCycle, .stationary,
                                           .fullScreenAuxiliary, .fullScreenDisallowsTiling]
         self.window.setValue(true, forKey: "preventsActivation")
-        self.window.appearance = NSAppearance.systemAppearance
+        self.window.appearance = NSAppearance.system
         
         self.window.contentView = self.effectView
         self.window.contentView?.superview?.wantsLayer = true // root
@@ -204,7 +205,7 @@ public class SystemBezel: Hashable, Equatable {
         
         self.window.alphaValue = 0.0
         self.window.orderFront(nil)
-        SystemBezel._space.windows.insert(self.window)
+        SystemBezel._space!.windows.insert(self.window)
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.33
             self.window.animator().alphaValue = 1.0
@@ -219,7 +220,7 @@ public class SystemBezel: Hashable, Equatable {
             self.window.animator().alphaValue = 0.0
         }, completionHandler: {
             self.window.close()
-            SystemBezel._space.windows.remove(self.window)
+            SystemBezel._space!.windows.remove(self.window)
             handler()
         })
     }

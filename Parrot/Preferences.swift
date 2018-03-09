@@ -2,43 +2,65 @@ import MochaUI
 
 /* TODO: Use UserDefaults.register(...) and force keys to be optional. */
 
+internal var _systemCurrentlyDark: Bool = false
+internal var registerSystemAppearanceObservers: [Any] = {
+    func _systemDark() -> Bool {
+        return CFPreferencesCopyAppValue("AppleInterfaceStyle" as CFString, "NSGlobalDomain" as CFString) as? String == "Dark"
+    }
+    func _updateEffectivity() {
+        _systemCurrentlyDark = _systemDark()
+        // The effective style is changed to the new system style iff it was dynamic to begin with.
+        Settings.effectiveInterfaceStyle = (InterfaceStyle.current != .System ? InterfaceStyle.current : (_systemDark() ? .Dark : .Light)).rawValue
+    }
+    
+    return [
+        DistributedNotificationCenter.default().addObserver(forName: NSAppearance.systemAppearanceDidChangeNotification, object: nil, queue: nil) { _ in
+            _updateEffectivity()
+        },
+        Settings.observe(\.interfaceStyle, options: [.initial, .new]) { _, change in
+            _updateEffectivity()
+        },
+    ]
+}()
+
 public enum InterfaceStyle: Int {
+    /// System-defined vibrant theme.
+    case System
     /// Vibrant Light theme.
     case Light
     /// Vibrant Dark theme.
     case Dark
-    /// System-defined vibrant theme.
-    case System
     
-    /// Returns the currently indicated Parrot appearance based on user preference
-    /// and if applicable, the global dark interface style preference (trampolined).
+    public static var current: InterfaceStyle {
+        return InterfaceStyle(rawValue: Settings.interfaceStyle)!
+    }
+    
     public func appearance() -> NSAppearance {
-        let style = InterfaceStyle(rawValue: Settings.interfaceStyle) ?? .Dark
-        
-        switch style {
+        switch self {
+        case .System: return _systemCurrentlyDark ? .dark : .light
         case .Light: return .light
         case .Dark: return .dark
-            
-        case .System: //TODO: "NSAppearanceNameMediumLight"
-            let system = Settings.systemInterfaceStyle
-            return system ? .dark : .light
         }
     }
 }
 
 public enum VibrancyStyle: Int {
+    /// Windows will be vibrant when focused.
+    case Automatic
     /// Windows will always be vibrant.
     case Always
     /// Windows will never be vibrant (opaque).
     case Never
-    /// Windows will be vibrant when focused.
-    case Automatic
     
-    public func visualEffectState() -> NSVisualEffectView.State {
+    public static var current: VibrancyStyle {
+        return VibrancyStyle(rawValue: Settings.vibrancyStyle)!
+    }
+    
+    public func state() -> NSVisualEffectView.State {
         switch self {
+        case .Automatic: return .followsWindowActiveState
         case .Always: return .active
         case .Never: return .inactive
-        case .Automatic: return .followsWindowActiveState
         }
     }
 }
@@ -80,52 +102,61 @@ public struct Preferences {
 
 public extension UserDefaults {
     
-    public var prefersShoeboxAppStyle: Bool {
+    @objc public var prefersShoeboxAppStyle: Bool {
         get { return self.get(default: false) }
         set { self.set(value: newValue) }
     }
     
-    public var systemInterfaceStyle: Bool {
+    /*
+    @objc public var systemInterfaceStyle: Bool {
         get { return self.get(default: false) }
         set { self.set(value: newValue) }
     }
+    */
     
-    public var interfaceStyle: Int {
+    /// Always `.light` or `.dark` and dynamically updated based on `\.interfaceStyle`
+    /// and `\.systemInterfaceStyle` -- use this to track UI changes.
+    @objc public var effectiveInterfaceStyle: Int {
         get { return self.get(default: 0) }
         set { self.set(value: newValue) }
     }
     
-    public var vibrancyStyle: Int {
+    @objc public var interfaceStyle: Int {
         get { return self.get(default: 0) }
         set { self.set(value: newValue) }
     }
     
-    public var autoEmoji: Bool {
+    @objc public var vibrancyStyle: Int {
+        get { return self.get(default: 0) }
+        set { self.set(value: newValue) }
+    }
+    
+    @objc public var autoEmoji: Bool {
         get { return self.get(default: false) }
         set { self.set(value: newValue) }
     }
     
-    public var messageTextSize: Double {
+    @objc public var messageTextSize: Double {
         get { return self.get(default: 0.0) }
         set { self.set(value: newValue) }
     }
     
-    public var completions: [String: String] {
+    @objc public var completions: [String: String] {
         get { return self.get(default: [:]) }
         set { self.set(value: newValue) }
     }
     
-    public var emoticons: [String: String] {
+    @objc public var emoticons: [String: String] {
         get { return self.get(default: [:]) }
         set { self.set(value: newValue) }
     }
     
-    public var menubarIcon: Bool {
+    @objc public var menubarIcon: Bool {
         get { return self.get(default: false) }
         set { self.set(value: newValue) }
     }
     
-    public var openConversations: [String] {
+    @objc public var openConversations: [String] {
         get { return self.get(default: []) }
         set { self.set(value: newValue) }
     }

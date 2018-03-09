@@ -11,7 +11,6 @@
 		4807F4FB1EF1E58F00C32132 /* ReloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807F4FA1EF1E58F00C32132 /* ReloadCell.swift */; };
 		480C1495203643E100611B40 /* SlimMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C1494203643E100611B40 /* SlimMessageCell.swift */; };
 		4812A7B01F51F76500B0B738 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4812A7AF1F51F76500B0B738 /* Analytics.swift */; };
-		4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300391D25B54300768D79 /* ServiceRegistry.swift */; };
 		4813004B1D26BD4900768D79 /* ParrotServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; };
 		4813004C1D26BD4900768D79 /* ParrotServiceExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 481300441D26BD4900768D79 /* ParrotServiceExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		481300511D26BD7700768D79 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482E21381C23F5F500A4C7B3 /* Conversation.swift */; };
@@ -105,6 +104,7 @@
 		48834E3F1C1B4098009BC442 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E371C1B4098009BC442 /* Event.swift */; };
 		48834E421C1B4098009BC442 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48834E3A1C1B4098009BC442 /* User.swift */; };
 		4884927E1D0B46BB0003D522 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4884927C1D0B46BB0003D522 /* Main.storyboard */; };
+		488E754620528E2900F07F49 /* ServiceRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481300391D25B54300768D79 /* ServiceRegistry.swift */; };
 		488EC0D11F267CF90022F6EB /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488EC0D01F267CF90022F6EB /* Animation.swift */; };
 		488F1E7F200ED7DF008E0752 /* AVCaptureViewCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1E7E200ED7DF008E0752 /* AVCaptureViewCompanion.swift */; };
 		488F652A1EF97CD50085325F /* PhotoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F65291EF97CD50085325F /* PhotoAPI.swift */; };
@@ -166,7 +166,6 @@
 		48EC1BF21F217D7A000C40C1 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EC1BF11F217D7A000C40C1 /* LocationCell.swift */; };
 		48ED2BE01F0BD4B9001A547F /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */; };
 		48EF2AB720181DC1007086A9 /* NSMonogramImageRep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* NSMonogramImageRep.swift */; };
-		48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F077161D1DE8DC003964FD /* ParrotAppearance.swift */; };
 		48F301BE201C476B006D3261 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F301BD201C476B006D3261 /* Observable.swift */; };
 		48F7E8081F108FE20059E5CD /* PBLiteEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7E8071F108FE20059E5CD /* PBLiteEncoder.swift */; };
 		48F7E80A1F1099B70059E5CD /* ServiceEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */; };
@@ -579,7 +578,6 @@
 		48EC1BEF1F21201F000C40C1 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		48EC1BF11F217D7A000C40C1 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
 		48ED2BDF1F0BD4B9001A547F /* SwiftSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftSupport.swift; sourceTree = "<group>"; };
-		48F077161D1DE8DC003964FD /* ParrotAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParrotAppearance.swift; sourceTree = "<group>"; };
 		48F301BD201C476B006D3261 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		48F7E8071F108FE20059E5CD /* PBLiteEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBLiteEncoder.swift; sourceTree = "<group>"; };
 		48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEndpoint.swift; sourceTree = "<group>"; };
@@ -952,12 +950,10 @@
 			isa = PBXGroup;
 			children = (
 				4848A5841EFEBE35008B2DE2 /* SortedArray.swift */,
-				48F077161D1DE8DC003964FD /* ParrotAppearance.swift */,
 				4869A9A81EE1058100764594 /* WindowAnimators.swift */,
 				48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */,
 				48EB54F51D209DD100F77C2C /* Cache.swift */,
 				489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */,
-				481300391D25B54300768D79 /* ServiceRegistry.swift */,
 				4869A9B11EE17A3800764594 /* SplitWindowController.swift */,
 				485B12EC1F1A904400432A36 /* LocationHelper.swift */,
 				488F1E7E200ED7DF008E0752 /* AVCaptureViewCompanion.swift */,
@@ -1106,6 +1102,7 @@
 			children = (
 				487385871F9DFAAE00CC5853 /* XPCBridge.swift */,
 				48C35B372051213D0056C3FB /* OSABridge.swift */,
+				481300391D25B54300768D79 /* ServiceRegistry.swift */,
 			);
 			name = Bridge;
 			sourceTree = "<group>";
@@ -1730,6 +1727,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				488E754620528E2900F07F49 /* ServiceRegistry.swift in Sources */,
 				48158E441D29C28A00ED369C /* Service.swift in Sources */,
 				484E8CA01D37FF2500E1D1D5 /* Event.swift in Sources */,
 				489018AC1D3C8FE400CFCA5F /* Person.swift in Sources */,
@@ -1780,7 +1778,6 @@
 				4831BCC91ED09C9800C30413 /* GeneralPrefs.swift in Sources */,
 				4848A5851EFEBE35008B2DE2 /* SortedArray.swift in Sources */,
 				489FB0891DF7CC4900AEBD1D /* MessageInputViewController.swift in Sources */,
-				48F077171D1DE8DC003964FD /* ParrotAppearance.swift in Sources */,
 				48EA55CA1D26CDD000C3BC80 /* Cache.swift in Sources */,
 				4869A9381EDB858A00764594 /* DirectoryListViewController.swift in Sources */,
 				4869A9A91EE1058100764594 /* WindowAnimators.swift in Sources */,
@@ -1790,7 +1787,6 @@
 				48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */,
 				48675357201C535400284050 /* PersonIndicatorTooltipController.swift in Sources */,
 				48212BE91ECCEB7700B7765B /* ConversationDetailsViewController.swift in Sources */,
-				4813003A1D25B54300768D79 /* ServiceRegistry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2259,6 +2255,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -2307,7 +2304,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};

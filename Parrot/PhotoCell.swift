@@ -77,8 +77,9 @@ public class PhotoCell: NSCollectionViewItem {
     
     // Given a string, a font size, and a base width, return the measured height of the cell.
     public static func measure(_ url: URL, _ width: CGFloat) -> CGFloat {
+        var output: CGFloat = 0.0
         if let dims = PhotoCell.urlSizeMap[url] {
-            return dims.height * ((width - 46.0) / dims.width)
+            output = dims.height * ((width - 46.0) / dims.width)
         } else {
             
             // Download and cache the info here.
@@ -86,8 +87,12 @@ public class PhotoCell: NSCollectionViewItem {
             let dims = header?.size ?? .zero
             PhotoCell.urlSizeMap[url] = dims
             
-            return dims.height * ((width - 46.0) / dims.width)
+            output = dims.height * ((width - 46.0) / dims.width)
         }
+        
+        // PATCH: If you accidentally return `.nan` here, you'll basically kill the
+        // NSCollectionView which doesn't know how to handle it correctly (drop it).
+        return output == .nan ? 0.0 : output
     }
     
     /// Cache the URL to a size; not sure if we should expect the same url to return

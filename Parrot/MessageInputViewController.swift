@@ -174,50 +174,54 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         super.viewDidAppear()
         self.resizeModule()
         self.view.window?.makeFirstResponder(self.textView)
-        ParrotAppearance.registerListener(observer: self, invokeImmediately: true) { interface, style in
-            
-            // NSTextView doesn't automatically change its text color when the
-            // backing view's appearance changes, so we need to set it each time.
-            // In addition, make sure links aren't blue as usual.
-            let text = self.textView
-            text.appearance = NSAppearance.current == .dark ? .light : .dark
-            text.layer?.masksToBounds = true
-            text.layer?.cornerRadius = 10.0
-            text.layer?.backgroundColor = .ns(.secondaryLabelColor)//NSColor.darkOverlay(forAppearance: self.view.window!.effectiveAppearance).cgColor
-            
-            text.textColor = NSColor.labelColor
-            text.font = NSFont.systemFont(ofSize: 12.0)
-            text.typingAttributes = [
-                NSAttributedStringKey.foregroundColor: text.textColor!,
-                NSAttributedStringKey.font: text.font!
-            ]
-            text.linkTextAttributes = [
-                NSAttributedStringKey.foregroundColor: NSColor.labelColor,
-                NSAttributedStringKey.cursor: NSCursor.pointingHand,
-                NSAttributedStringKey.underlineStyle: 1,
-            ]
-            text.selectedTextAttributes = [
-                NSAttributedStringKey.backgroundColor: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
-                NSAttributedStringKey.foregroundColor: NSColor.labelColor,
-                NSAttributedStringKey.underlineStyle: 0,
-            ]
-            text.markedTextAttributes = [
-                NSAttributedStringKey.backgroundColor: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
-                NSAttributedStringKey.foregroundColor: NSColor.labelColor,
-                NSAttributedStringKey.underlineStyle: 0,
-            ]
-            /*text.placeholderTextAttributes = [
-             NSForegroundColorAttributeName: NSColor.tertiaryLabelColor(),
-             NSFontAttributeName: text.font!
-            ]*/
-            
-            self.setColors()
-        }
+        
+        self.visualSubscriptions = [
+            Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
+                
+                // NSTextView doesn't automatically change its text color when the
+                // backing view's appearance changes, so we need to set it each time.
+                // In addition, make sure links aren't blue as usual.
+                let text = self.textView
+                text.appearance = NSAppearance.current == .dark ? .light : .dark
+                text.layer?.masksToBounds = true
+                text.layer?.cornerRadius = 10.0
+                text.layer?.backgroundColor = .ns(.secondaryLabelColor)//NSColor.darkOverlay(forAppearance: self.view.window!.effectiveAppearance).cgColor
+                
+                text.textColor = NSColor.labelColor
+                text.font = NSFont.systemFont(ofSize: 12.0)
+                text.typingAttributes = [
+                    NSAttributedStringKey.foregroundColor: text.textColor!,
+                    NSAttributedStringKey.font: text.font!
+                ]
+                text.linkTextAttributes = [
+                    NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+                    NSAttributedStringKey.cursor: NSCursor.pointingHand,
+                    NSAttributedStringKey.underlineStyle: 1,
+                ]
+                text.selectedTextAttributes = [
+                    NSAttributedStringKey.backgroundColor: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
+                    NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+                    NSAttributedStringKey.underlineStyle: 0,
+                ]
+                text.markedTextAttributes = [
+                    NSAttributedStringKey.backgroundColor: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
+                    NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+                    NSAttributedStringKey.underlineStyle: 0,
+                ]
+                /*text.placeholderTextAttributes = [
+                 NSForegroundColorAttributeName: NSColor.tertiaryLabelColor(),
+                 NSFontAttributeName: text.font!
+                 ]*/
+                
+                self.setColors()
+            }
+        ]
         
         self.subscriptions["sub"] = AutoSubscription(kind: .conversationAppearanceUpdated) { _ in
             self.setColors()
         }
     }
+    private var visualSubscriptions: [NSKeyValueObservation] = []
     
     private func setColors() {
         let text = self.textView
@@ -235,7 +239,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     }
     
     public override func viewWillDisappear() {
-        ParrotAppearance.unregisterListener(observer: self)
+        self.visualSubscriptions = []
     }
     
     //

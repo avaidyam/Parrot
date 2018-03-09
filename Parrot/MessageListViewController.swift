@@ -304,7 +304,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func prepare(window: NSWindow) {
         window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
-        window.appearance = ParrotAppearance.interfaceStyle().appearance()
+        window.appearance = InterfaceStyle.current.appearance()
         if let vev = window.titlebar.view as? NSVisualEffectView {
             vev.material = .appearanceBased
             vev.state = .active
@@ -338,16 +338,20 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.colorsSub?.trigger()
         
         // Set up dark/light notifications.
-        ParrotAppearance.registerListener(observer: self, invokeImmediately: true) { interface, style in
-            self.view.window?.appearance = interface
-            (self.view as? NSVisualEffectView)?.state = style
-        }
+        self.visualSubscriptions = [
+            Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
+                self.view.window?.appearance = InterfaceStyle.current.appearance()
+            },
+            Settings.observe(\.vibrancyStyle, options: [.initial, .new]) { _, change in
+                (self.view as? NSVisualEffectView)?.state = VibrancyStyle.current.state()
+            },
+        ]
     }
+    private var visualSubscriptions: [NSKeyValueObservation] = []
     
     public override func viewWillDisappear() {
         self.colorsSub = nil
-        
-        ParrotAppearance.unregisterListener(observer: self)
+        self.visualSubscriptions = []
     }
     
     public override func viewWillLayout() {
@@ -509,11 +513,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 UI {
                     self.collectionView.animator().performBatchUpdates({
                         let t = (0..<self.dataSource.count).map { IndexPath(item: $0, section: 0) }
-                        self.collectionView.animator().insertItems(at: Set(t))
+                        self.collectionView.insertItems(at: Set(t))
                     }, completionHandler: { b in
                         self.updateInterpolation.animate(duration: 0.5)
-                        self.collectionView.animator().scrollToItems(at: [self.collectionView.indexPathForLastItem()],
-                                                                     scrollPosition: [.bottom])
+                        self.collectionView.scrollToItems(at: [self.collectionView.indexPathForLastItem()],
+                                                          scrollPosition: [.bottom])
                     })
                 }
 			}

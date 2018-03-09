@@ -223,13 +223,13 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = font.leading
         let attr = NSAttributedString(string: string, attributes: [
-            NSAttributedStringKey.font: font,
-            NSAttributedStringKey.paragraphStyle: paragraphStyle
+            .font: font, .paragraphStyle: paragraphStyle
         ])
         
         let framesetter = CTFramesetterCreateWithAttributedString(attr)
-        let constraints = NSSize(width: width, height: .greatestFiniteMagnitude)
-        let size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, 0), nil, constraints, nil)
+        let constraints = NSSize(width: width, height: 10_000)
+        let size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, attr.length),
+                                                                nil, constraints, nil)
         return size.height
     }
     

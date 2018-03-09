@@ -8,7 +8,7 @@ public extension NSAppearance {
 }
 
 public extension NSAppearance {
-    public static var systemAppearance: NSAppearance {
+    public static var system: NSAppearance {
         let d = CFPreferencesCopyAppValue("AppleInterfaceStyle" as CFString, "NSGlobalDomain" as CFString) as? String == "Dark"
         return NSAppearance(named: d ? .vibrantDark : .vibrantLight)!
     }

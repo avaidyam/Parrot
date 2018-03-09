@@ -81,11 +81,13 @@ public final class CGSSpace {
         }
     }
     
+    /// Initialized `CGSSpace`s *MUST* be de-initialized upon app exit!
     public init(level: Int = 0) {
         let flag = 0x1 // this value MUST be 1, otherwise, Finder decides to draw desktop icons
         self.identifier = CGSSpaceCreate(_CGSDefaultConnection(), flag, nil)
         CGSSpaceSetAbsoluteLevel(_CGSDefaultConnection(), self.identifier, level/*400=facetime?*/)
         CGSShowSpaces(_CGSDefaultConnection(), [self.identifier])
+        
     }
     
     deinit {

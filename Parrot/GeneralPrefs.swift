@@ -19,7 +19,7 @@ public extension Preferences.Controllers {
         }()
         
         private lazy var interfaceStyle: NSSegmentedControl = {
-            let v = NSSegmentedControl(labels: ["Light", "Dark", "System"],
+            let v = NSSegmentedControl(labels: ["System", "Light", "Dark"],
                                        trackingMode: .selectOne,
                                        target: nil, action: nil).modernize()
             v.setupForBindings()
@@ -29,7 +29,7 @@ public extension Preferences.Controllers {
         }()
         
         private lazy var vibrancyStyle: NSSegmentedControl = {
-            let v = NSSegmentedControl(labels: ["Always", "Never", "Auto"],
+            let v = NSSegmentedControl(labels: ["Auto", "Always", "Never"],
                                        trackingMode: .selectOne,
                                        target: nil, action: nil).modernize()
             v.setupForBindings()

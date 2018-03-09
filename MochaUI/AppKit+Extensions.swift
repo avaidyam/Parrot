@@ -516,7 +516,7 @@ public func benchmark<T>(_ only60FPS: Bool = true, _ title: String = #function, 
     let x = try handler()
     
     let ms = (CACurrentMediaTime() - t)
-    if (!only60FPS) || (only60FPS && ms > (1/60)) {
+    if (!only60FPS) || (only60FPS && ms > (1.0/60.0)) {
         print("Operation \(title) took \(ms * 1000)ms!")
     }
     return x

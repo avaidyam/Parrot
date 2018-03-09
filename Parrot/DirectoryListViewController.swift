@@ -173,7 +173,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func prepare(window: NSWindow) {
         window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
-        window.appearance = ParrotAppearance.interfaceStyle().appearance()
+        window.appearance = InterfaceStyle.current.appearance()
         if let vev = window.titlebar.view as? NSVisualEffectView {
             vev.material = .appearanceBased
             vev.state = .active
@@ -219,15 +219,20 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.scrollView.alphaValue = 0.0
         self.indicator.startAnimation()
         
-        ParrotAppearance.registerListener(observer: self, invokeImmediately: true) { interface, style in
-            self.view.window?.appearance = interface
-            (self.view as? NSVisualEffectView)?.state = style
-        }
+        self.visualSubscriptions = [
+            Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
+                self.view.window?.appearance = InterfaceStyle.current.appearance()
+            },
+            Settings.observe(\.vibrancyStyle, options: [.initial, .new]) { _, change in
+                (self.view as? NSVisualEffectView)?.state = VibrancyStyle.current.state()
+            },
+        ]
     }
+    private var visualSubscriptions: [NSKeyValueObservation] = []
     
     /// If we need to close, make sure we clean up after ourselves, instead of deinit.
     public override func viewWillDisappear() {
-        ParrotAppearance.unregisterListener(observer: self)
+        self.visualSubscriptions = []
     }
     
     public override func viewWillLayout() {

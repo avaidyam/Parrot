@@ -26,7 +26,7 @@ public class SplitWindowController: NSSplitViewController, WindowPresentable {
     
     public func prepare(window: NSWindow) {
         window.styleMask = [window.styleMask, .miniaturizable, .unifiedTitleAndToolbar, .fullSizeContentView]
-        window.appearance = ParrotAppearance.interfaceStyle().appearance()
+        window.appearance = InterfaceStyle.current.appearance()
         if let vev = window.titlebar.view as? NSVisualEffectView {
             vev.material = .appearanceBased
             vev.state = .active
