@@ -102,15 +102,11 @@ public class ParrotAppController: NSApplicationController {
         ToolTipManager.modernize()
         Logger.globalChannels = [self.serverChannel]
         Analytics.sessionTrackingIdentifier = "UA-63931980-2"
-        _ = registerSystemAppearanceObservers; 
+        InterfaceStyle.bootstrap()
         self.registerEvents()
         
-        // Register the default completions if none are in the user settings.
-        // Note: we're not using the registered defaults domain on purpose for this.
-        if Settings.completions.count == 0 {
-            let defaultC = ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]
-            Settings.completions = defaultC
-        }
+        // Register the default completions.
+        Settings.register(defaults: ["completions": ["(": ")", "[": "]", "{": "}", "\"": "\"", "`": "`", "*": "*", "_": "_", "-": "-", "~": "~"]])
         
         // Sign in first.
         let cookies = try! server.sync(AuthenticationInvocation.self)
