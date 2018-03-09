@@ -82,7 +82,8 @@ public final class CGSSpace {
     }
     
     public init(level: Int = 0) {
-        self.identifier = CGSSpaceCreate(_CGSDefaultConnection(), 0x0 /*0x1=facetime?*/, nil)
+        let flag = 0x1 // this value MUST be 1, otherwise, Finder decides to draw desktop icons
+        self.identifier = CGSSpaceCreate(_CGSDefaultConnection(), flag, nil)
         CGSSpaceSetAbsoluteLevel(_CGSDefaultConnection(), self.identifier, level/*400=facetime?*/)
         CGSShowSpaces(_CGSDefaultConnection(), [self.identifier])
     }
