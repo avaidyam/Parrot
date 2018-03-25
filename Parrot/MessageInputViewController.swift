@@ -85,19 +85,19 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             
             let popover = NSPopover()
             let av = AVCaptureView(frame: NSRect(x: 0, y: 0, width: width, height: height))
-            let avcp = AVCaptureViewCompanion(url: tmp) { [weak self, popover] in
+            av.prepare(recordingURL: tmp) { [weak self, popover] in
                 if let error = $0 {
                     log.debug("Something happened while saving your video.")
                 } else {
                     self?.host?.send(video: tmp)
                 }
+                popover.contentView = nil
                 popover.close()
                 popover.contentViewController = nil
             }
             
             /* TODO: There's a retain cycle somewhere here; when the convo window closes, the iSight LED still glows. */
             
-            av.companion = avcp
             popover.contentView = av
             popover.behavior = .applicationDefined
             popover.appearance = .dark
@@ -176,7 +176,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         self.view.window?.makeFirstResponder(self.textView)
         
         self.visualSubscriptions = [
-            Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
+            Settings.observe(\.interfaceStyle, options: [.initial, .new]) { _, change in
                 
                 // NSTextView doesn't automatically change its text color when the
                 // backing view's appearance changes, so we need to set it each time.
