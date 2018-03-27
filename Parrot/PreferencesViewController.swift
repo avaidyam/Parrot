@@ -11,11 +11,15 @@ public class PreferencesViewController: NSTabViewController {
     
     public override func loadView() {
         super.loadView()
-        self.tabStyle = .toolbar
         self.transitionOptions = [.allowUserInteraction, .crossfade]
     }
     
     public override func viewWillAppear() {
+        
+        // Reset the toolbar because if you migrate the VC to a new window, its toolbar
+        // stays with the old one; this causes the toolbar to be rebuilt.
+        self.tabStyle = .segmentedControlOnTop
+        self.tabStyle = .toolbar
         self.view.window?.center()
     }
     
