@@ -216,7 +216,8 @@ internal var registerSystemAppearanceObservers: [Any] = {
     }
     func _updateEffectivity() {
         // The effective style is changed to the new system style iff it was dynamic to begin with.
-        let _style: InterfaceStyle = InterfaceStyle.current != .system ? .current : (_systemDark() ? .dark : .light)
+        let _original = InterfaceStyle(rawValue: Settings.interfaceStyle)!
+        let _style: InterfaceStyle = _original != .system ? _original : (_systemDark() ? .dark : .light)
         Settings.effectiveInterfaceStyle = _style.rawValue
     }
     
