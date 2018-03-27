@@ -92,7 +92,7 @@ public class PhotoCell: NSCollectionViewItem {
         
         // PATCH: If you accidentally return `.nan` here, you'll basically kill the
         // NSCollectionView which doesn't know how to handle it correctly (drop it).
-        return output == .nan ? 0.0 : output
+        return output.isNaN ? 0.0 : output
     }
     
     /// Cache the URL to a size; not sure if we should expect the same url to return
