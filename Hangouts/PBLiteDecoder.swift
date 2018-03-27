@@ -164,7 +164,7 @@ public class PBLiteDecoder {
         //
         
         var allKeys: [Key] {
-            return Array(self.content.keys).flatMap { Key(intValue: $0) }
+            return Array(self.content.keys).compactMap { Key(intValue: $0) }
         }
         
         func contains(_ key: Key) -> Bool {

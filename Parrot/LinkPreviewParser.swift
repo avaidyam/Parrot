@@ -79,7 +79,7 @@ public struct LinkPreviewParser {
 	
 	private static func _extractTitle(from str: String) -> String {
 		let o = str.find(matching: TITLE_REGEX)
-		let q = CFXMLCreateStringByUnescapingEntities(nil, (o.first as CFString!), nil) as String
+		let q = CFXMLCreateStringByUnescapingEntities(nil, o.first! as CFString, nil) as String
 		return q.trimmingCharacters(in: .whitespacesAndNewlines)
 	}
 	
@@ -90,7 +90,7 @@ public struct LinkPreviewParser {
 			var vals = s.find(matching: CONT_REGEX)
 			keys = keys.flatMap { $0.components(separatedBy: " ") }
 			vals = vals.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-			vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0 as CFString!, nil) as String }
+			vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0 as CFString, nil) as String }
 			keys.forEach { tags[$0] = (vals.first ?? "") }
 		}
 		return tags

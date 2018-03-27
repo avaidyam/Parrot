@@ -1,5 +1,4 @@
 import Foundation
-import ParrotServiceExtension
 
 public enum ServiceRegistry {
 	

@@ -137,7 +137,7 @@ public class PBLiteEncoder {
             let normal = content.filter { $0.key <= Int(Int16.max) }
             let extended = content.filter { $0.key > Int(Int16.max) }
             
-            var arrayed: [Any] = Array<Any>(repeating: Optional<Encodable>.none,
+            var arrayed: [Any] = Array<Any>(repeating: Optional<Encodable>.none as Any,
                                                           count: normal.keys.max() ?? 0)
             for (k, v) in normal {
                 arrayed[k - 1] = v
@@ -288,7 +288,7 @@ public class PBLiteEncoder {
             if let inner = self.content.first {
                 return inner
             } else {
-                return Optional<Encodable>.none
+                return Optional<Encodable>.none as Any
             }
         }
     }

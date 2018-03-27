@@ -49,7 +49,7 @@ public struct AppProperties {
     }()
     
     public static var userLanguage: String = {
-        guard let locale = Locale.preferredLanguages.first, locale.characters.count > 0
+        guard let locale = Locale.preferredLanguages.first, locale.count > 0
         else { return "(unknown)" }
         return locale
     }()

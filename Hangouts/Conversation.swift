@@ -227,7 +227,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
     
     public func send(message: Message) throws {
         switch message.content {
-        case .text(let text) where text.characters.count > 0:
+        case .text(let text) where text.count > 0:
             let seg = Segment(type: .Text, text: text)
             let req = SendChatMessageRequest(message_content: MessageContent(segment: [seg]),
                                              event_request_header: self.eventHeader(.RegularChatMessage))

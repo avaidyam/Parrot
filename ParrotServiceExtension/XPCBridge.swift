@@ -30,7 +30,7 @@ public enum AuthenticationInvocation: RemoteMethod {
     }
     
     public static func unpackage(_ cookies: [[String: String]]) -> [HTTPCookie] {
-        return cookies.flatMap {
+        return cookies.compactMap {
             let d = $0.map { (HTTPCookiePropertyKey(rawValue: $0.key), $0.value) }
             return HTTPCookie(properties: Dictionary(uniqueKeysWithValues: d))
         }

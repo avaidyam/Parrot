@@ -144,7 +144,7 @@ public class ParrotAppController: NSApplicationController {
                 }
             } else {
                 Settings.openConversations
-                    .flatMap { c.conversations.conversations[$0] }
+                    .compactMap { c.conversations.conversations[$0] }
                     .forEach { MessageListViewController.show(conversation: $0,
                                      parent: self.conversationsController.parent) }
             }

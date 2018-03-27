@@ -2,7 +2,7 @@ import AppKit
 import Mocha
 
 public protocol BlockTrampolineSupporting: NSObjectProtocol {
-    weak var target: AnyObject? { get set }
+    /*weak*/ var target: AnyObject? { get set }
     var action: Selector? { get set }
 }
 extension NSControl: BlockTrampolineSupporting {}

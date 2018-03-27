@@ -110,7 +110,7 @@ public struct ProtoDescriptor {
             
             self.cases = content
                 .components(separatedBy: ";")
-                .flatMap { Case($0) }
+                .compactMap { Case($0) }
                 .sorted { $0.value < $1.value }
             self.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
         }
@@ -187,7 +187,7 @@ public struct ProtoDescriptor {
         public init?(_ description: String) {
             guard let title = description.substring(between: "message ", and: " {") else { return nil }
             guard let content = description.substring(between: "{", and: "}") else { return nil }
-            self.fields = content.components(separatedBy: ";").flatMap { Field($0) }
+            self.fields = content.components(separatedBy: ";").compactMap { Field($0) }
             self.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         
@@ -236,11 +236,11 @@ public struct ProtoDescriptor {
             
             self.enums = description
                 .findAllOccurrences(matching: File.ENUM_REGEX, all: true)
-                .flatMap { Enum($0) }
+                .compactMap { Enum($0) }
             
             self.messages = description
                 .findAllOccurrences(matching: File.MESSAGE_REGEX, all: true)
-                .flatMap { Message($0) }
+                .compactMap { Message($0) }
         }
         
         ///

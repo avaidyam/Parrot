@@ -287,7 +287,7 @@ protocol BatchedCollectionType: Collection {
 
 struct BatchedCollection<Base: Collection>: Collection {
     let base: Base
-    let size: Base.IndexDistance
+    let size: Int
     typealias Index = BatchedCollectionIndex<Base>
     private func nextBreak(after idx: Base.Index) -> Base.Index {
         return base.index(idx, offsetBy: size, limitedBy: base.endIndex)
@@ -312,7 +312,7 @@ struct BatchedCollection<Base: Collection>: Collection {
 }
 
 extension Collection {
-    func batched(by size: IndexDistance) -> BatchedCollection<Self> {
+    func batched(by size: Int) -> BatchedCollection<Self> {
         return BatchedCollection(base: self, size: size)
     }
 }

@@ -300,7 +300,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             
         case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags.contains(.shift):
             let text = self.textView.string
-            guard text.characters.count > 0 else { return true }
+            guard text.count > 0 else { return true }
             NSSpellChecker.shared.dismissCorrectionIndicator(for: textView)
             self.textView.string = ""
             self.resizeModule()
@@ -342,7 +342,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             textView.moveBackward(nil)
             
             // Display a text bubble showing visual replacement to the user.
-            let range = NSMakeRange(textView.attributedString().length - r.characters.count, r.characters.count)
+            let range = NSMakeRange(textView.attributedString().length - r.count, r.count)
             textView.showFindIndicator(for: range)
         } else if let found = emoticonDescriptors[userStr] {
             insertToken = true // prevent re-entrance

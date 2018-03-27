@@ -212,20 +212,12 @@ internal extension AnchorPair {
 
 internal extension EdgeInsets {
     init(constant: CGFloat) {
-        top = constant
-        left = constant
-        bottom = constant
-        right = constant
+        self.init(top: constant, left: constant, bottom: constant, right: constant)
     }
 }
 
 internal prefix func - (rhs: EdgeInsets) -> EdgeInsets {
-    return EdgeInsets(
-        top: -rhs.top,
-        left: -rhs.left,
-        bottom: -rhs.bottom,
-        right: -rhs.right
-    )
+    return EdgeInsets(top: -rhs.top, left: -rhs.left, bottom: -rhs.bottom, right: -rhs.right)
 }
 
 internal extension EdgeAnchors {

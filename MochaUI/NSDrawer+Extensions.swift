@@ -30,7 +30,7 @@ public extension NSDrawer {
 	/// This function must be invoked to enable the modern drawer theme for macOS 10.10+.
 	/// Note: must be invoked at app launch with +initialize.
 	public static func modernize() {
-		let frameViewClassForStyleMaskR: @convention(block) () -> (AnyClass!) = {
+		let frameViewClassForStyleMaskR: @convention(block) () -> (AnyClass?) = {
 			return NSClassFromString("NSThemeFrame")!
 		}
 		

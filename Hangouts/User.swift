@@ -43,7 +43,7 @@ public class User: Person, Hashable, Equatable {
                 locations: [String] = [], me: Bool = false) {
         self.client = client
         self.id = userID
-        self.nameComponents = (fullName ?? User.DEFAULT_NAME).characters.split{$0 == " "}.map(String.init)
+        self.nameComponents = (fullName ?? User.DEFAULT_NAME).split{$0 == " "}.map(String.init)
         self.photoURL = photoURL
         self.locations = locations
         self.me = me
@@ -105,23 +105,23 @@ public class User: Person, Hashable, Equatable {
         var fullName: String? = nil, photoURL: String? = nil, locations: [String] = []
         
         if let names = person.name { //CONTACT > PROFILE?
-            if let name = (names.filter { $0.metadata?.containerType == "CONTACT" }.flatMap { $0.displayName }).first {
+            if let name = (names.filter { $0.metadata?.containerType == "CONTACT" }.compactMap { $0.displayName }).first {
                 fullName = name
-            } else if let name = (names.filter { $0.metadata?.containerType == "PROFILE" }.flatMap { $0.displayName }).first {
+            } else if let name = (names.filter { $0.metadata?.containerType == "PROFILE" }.compactMap { $0.displayName }).first {
                 fullName = name
             }
         }
         if let photos = person.photo {
-            let values = photos.filter { !($0.isMonogram ?? false) }.flatMap { $0.url }
+            let values = photos.filter { !($0.isMonogram ?? false) }.compactMap { $0.url }
             if let photo = values.first {
                 photoURL = photo
             }
         }
         if let phones = person.phone {
-            locations += phones.flatMap { $0.value }
+            locations += phones.compactMap { $0.value }
         }
         if let emails = person.email {
-            locations += emails.flatMap { $0.value }
+            locations += emails.compactMap { $0.value }
         }
         if let type = person.extendedData?.hangoutsExtendedData?.userType, type != "GAIA" {
             locations.append(User.GVoiceLocation) // tag the contact
@@ -205,13 +205,13 @@ public class UserList: Directory {
         conversations.forEach { conv in conv.participant_data.forEach { required.insert($0) } }
         
         // Required step: get the base User objects prepared.
-        let specs = required.flatMap { EntityLookupSpec(gaia_id: $0.id!.gaia_id!) }
+        let specs = required.compactMap { EntityLookupSpec(gaia_id: $0.id!.gaia_id!) }
         let req = GetEntityByIdRequest(batch_lookup_spec: specs)
         let response = try? self.client.execute(req)
         
         let entities = response?.entity_result.flatMap { $0.entity } ?? []
         self.cache(presencesFor: entities.filter { $0.entity_type != .OffNetworkPhone }.map { $0.id! })
-        self.cache(namesFor: entities.flatMap {
+        self.cache(namesFor: entities.compactMap {
             $0.properties?.phones.first?.phone_number?.i18n_data?.international_number
         })
         return entities.filter { $0.id != nil }.map { entity in
@@ -264,7 +264,7 @@ public class UserList: Directory {
         //
         guard let res = vals.0, let people = res.people else { return [] }
         return people.filter { $0.extendedData?.hangoutsExtendedData?.userInterest ?? false }
-            .flatMap {
+            .compactMap {
                 if let id = $0.personId, let u = self.users[User.ID(chatID: id, gaiaID: id)] {
                     return u
                 } else {
@@ -360,7 +360,7 @@ public class UserList: Directory {
             for match in matches {
                 guard var ids = match.personId, ids.count >= 2 else { continue }
                 guard let primary = ids
-                    .flatMap({ self.users[User.ID(chatID: $0, gaiaID: $0)] })
+                    .compactMap({ self.users[User.ID(chatID: $0, gaiaID: $0)] })
                     .filter({ $0.locations.contains(User.GVoiceLocation) })
                     .first
                 else { continue }
@@ -375,25 +375,25 @@ public class UserList: Directory {
                     guard let u = other.extendedData?.hangoutsExtendedData?.userType, u == "GAIA" else { continue }
                     
                     if let names = other.name { //(PROFILE vs CONTACT?)
-                        let values = names.filter { $0.metadata?.containerType == "CONTACT" }.flatMap { $0.displayName }
+                        let values = names.filter { $0.metadata?.containerType == "CONTACT" }.compactMap { $0.displayName }
                         if let name = values.first {
                             primary.nameComponents = name.components(separatedBy: " ")
                         }
                     }
                     
                     if let photos = other.photo {
-                        let values = photos.filter { !($0.isMonogram ?? false) }.flatMap { $0.url }
+                        let values = photos.filter { !($0.isMonogram ?? false) }.compactMap { $0.url }
                         if let photo = values.first {
                             primary.photoURL = photo
                         }
                     }
                     
                     if let phones = other.phone {
-                        primary.locations += phones.flatMap { $0.value }
+                        primary.locations += phones.compactMap { $0.value }
                     }
                     
                     if let emails = other.email {
-                        primary.locations += emails.flatMap { $0.value }
+                        primary.locations += emails.compactMap { $0.value }
                     }
                 }
                 
@@ -438,7 +438,7 @@ fileprivate extension MoodContent {
     func toText() -> String {
         var lines = ""
         for segment in self.segment {
-            if segment.type == nil { continue }
+            //if segment.type == nil { continue }
             switch (segment.type) {
             case SegmentType.Text, SegmentType.Link:
                 lines += segment.text!

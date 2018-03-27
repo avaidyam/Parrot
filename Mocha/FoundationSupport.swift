@@ -40,7 +40,7 @@ public extension String {
 	public func findAllOccurrences(matching regex: String, all: Bool = false) -> [String] {
 		let nsregex = try! NSRegularExpression(pattern: regex, options: .caseInsensitive)
 		let results = nsregex.matches(in: self, options:[],
-		                              range:NSMakeRange(0, self.characters.count))
+		                              range:NSMakeRange(0, self.count))
 		
 		if all {
 			return results.map {
@@ -68,7 +68,7 @@ public extension String {
     }
 	
 	public func find(matching regex: NSRegularExpression) -> [String] {
-		return regex.matches(in: self, options:[], range:NSMakeRange(0, self.characters.count)).map {
+		return regex.matches(in: self, options:[], range: NSMakeRange(0, self.count)).map {
 			String(self[NSRangeToRange(s: self, r: $0.range)])
 		}
 	}

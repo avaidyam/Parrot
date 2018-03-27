@@ -292,7 +292,7 @@ public class XPCDecoder {
             xpc_dictionary_apply(self.content) { key, _ in
                 keys.append(String(cString: key)); return true
             }
-            return keys.flatMap { Key(stringValue: $0) }
+            return keys.compactMap { Key(stringValue: $0) }
         }
         
         func contains(_ key: Key) -> Bool {

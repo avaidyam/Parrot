@@ -36,7 +36,7 @@ public struct Edit<T: Equatable> {
  - note: This implementation was inspired by [Dave DeLong](https://twitter.com/davedelong)'s article, [Edit distance and edit steps](http://davedelong.tumblr.com/post/134367865668/edit-distance-and-edit-steps).
  - seealso: `Changeset.editDistance`.
  */
-public struct Changeset<T: Collection> where T.Iterator.Element: Equatable, T.IndexDistance == Int {
+public struct Changeset<T: Collection> where T.Iterator.Element: Equatable {
     
     /// The starting-point collection.
     public let origin: T

@@ -55,7 +55,7 @@ public extension Comparable {
     }
 }
 public extension Strideable where Self.Stride: SignedInteger {
-    public func clamped(from range: CountablePartialRangeFrom<Self>) -> Self {
+    public func clamped(from range: /*Countable*/PartialRangeFrom<Self>) -> Self {
         return max(self, range.lowerBound)
     }
 }

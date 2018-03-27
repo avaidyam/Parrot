@@ -48,7 +48,7 @@ public class NSMonogramImageRep: NSImageRep {
             var rect2 = rect
             rect2.origin.y = rect.midY - (font.capHeight / 2)
             
-            String(self.string.characters.first!).uppercased().draw(with: rect2, attributes: [
+            String(self.string.first!).uppercased().draw(with: rect2, attributes: [
                 .font: font,
                 .foregroundColor: NSColor.white,
                 .paragraphStyle: textStyle

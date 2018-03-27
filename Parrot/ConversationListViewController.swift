@@ -360,7 +360,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     private func updateSelectionIndexes() {
         let paths = Array(MessageListViewController.openConversations.keys)
-            .flatMap { id in self.dataSource.index { $0.identifier == id } }
+            .compactMap { id in self.dataSource.index { $0.identifier == id } }
             .map { IndexPath(item: $0, section: 0) }
         self.collectionView.selectionIndexPaths = Set(paths)
     }
