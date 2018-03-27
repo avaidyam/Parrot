@@ -127,13 +127,12 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
 		}
 	}
     
-    private func setColors() {
+    internal func setColors() {
         guard let b = self.representedObject as? EventBundle else { return }
         guard let o = b.current as? Message else { return }
         let text = self.textLabel
         let settings = ConversationSettings(serviceIdentifier: b.current.serviceIdentifier,
                                             identifier: b.conversationId)
-        
         
         // Only clip the text if the text isn't purely Emoji.
         if !text.string.isEmoji {
@@ -179,7 +178,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
     }
     
     public override func viewWillAppear() {
-        //self.setColors()
+        self.setColors() // just in case!
     }
     
 	/// Allows the circle crop and masking to dynamically change.

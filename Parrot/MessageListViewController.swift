@@ -341,6 +341,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         self.visualSubscriptions = [
             Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
                 self.view.window?.appearance = InterfaceStyle.current.appearance()
+                
+                // Reset cell colors too - this fixes a visual glitch.
+                self.collectionView.visibleItems().forEach {
+                    guard let cell = $0 as? MessageCell else { return }
+                    cell.setColors()
+                }
             },
             Settings.observe(\.vibrancyStyle, options: [.initial, .new]) { _, change in
                 (self.view as? NSVisualEffectView)?.state = VibrancyStyle.current.state()
