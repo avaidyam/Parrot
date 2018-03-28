@@ -1347,7 +1347,6 @@
 				48DE52D71C1CC12900647C63 /* Embed App Extensions */,
 				480363A61C1D08960008E9F5 /* CopyFiles */,
 				4819BF651D53B77F00CF609C /* CopyFiles */,
-				4859B82C1F853AB600BFF0CE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1698,19 +1697,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4859B82C1F853AB600BFF0CE /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script is required because without the XPCServices folder containing the services you wish to connect to, launchd does not consider them part of the app/ex's namespace. This means, a host app's XPCServices are \"invisible\" to its extension. Relative symbolic linking fixes that. :)\n\n# Link XPCServices into ParrotShare.appex\n#cd ${CONFIGURATION_BUILD_DIR}/Parrot.app/Contents/PlugIns/ParrotShare.appex/Contents/\n#rm -rf ./XPCServices\n#ln -s ../../../XPCServices/ .\n\n# Link XPCServices into ParrotToday.appex\n#cd ${CONFIGURATION_BUILD_DIR}/Parrot.app/Contents/PlugIns/ParrotToday.appex/Contents/\n#rm -rf ./XPCServices\n#ln -s ../../../XPCServices/ .";
-		};
 		487082052069F070003F9D34 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
