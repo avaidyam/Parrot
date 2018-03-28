@@ -226,6 +226,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
 	}
     
     public func send(message: Message) throws {
+        NotificationCenter.default.post(name: Notification.Conversation.WillSendEvent, object: self, userInfo: ["event": message])
+        
         switch message.content {
         case .text(let text) where text.count > 0:
             let seg = Segment(type: .Text, text: text)

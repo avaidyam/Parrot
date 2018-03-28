@@ -690,12 +690,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public func send(message text: String) {
-        NSSound(assetName: .sentMessage)?.play()
         try! self.conversation!.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .text(text)))
     }
     
     public func send(image: URL) {
-        NSSound(assetName: .sentMessage)?.play()
         do {
             try self.conversation?.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .image(image)))
         } catch {
@@ -709,7 +707,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         locate(reason: "Send location.") { loc, _ in
             guard let coord = loc?.coordinate else { return true }
             do {
-                NSSound(assetName: .sentMessage)?.play()
                 try self.conversation?.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .location(coord.latitude, coord.longitude)))
             } catch {
                 log.debug("sending a location was not supported; sending maps link instead")
@@ -722,18 +719,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public func send(video: URL) { // Screw Google Photos upload!
         try! self.conversation?.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .file(video)))
-        NSSound(assetName: .sentMessage)?.play()
         //try? FileManager.default.trashItem(at: video, resultingItemURL: nil) // get rid of the temp file
     }
     
     public func send(file: URL) {
         try! self.conversation?.send(message: PlaceholderMessage(sender: self.conversation!.participants.first { $0.me }!, content: .file(file)))
-        NSSound(assetName: .sentMessage)?.play() // TODO: no guarantee we've sent anything yet...
     }
     
     // LEGACY
     static func sendMessage(_ text: String, _ conversation: ParrotServiceExtension.Conversation) {
-        NSSound(assetName: .sentMessage)?.play()
         try! conversation.send(message: PlaceholderMessage(sender: conversation.participants.first { $0.me }!, content: .text(text)))
     }
     

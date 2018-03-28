@@ -2,7 +2,7 @@ import MochaUI
 import ParrotServiceExtension
 import Carbon // FIXME: dear lord why
 
-/* TODO: Storing everything in UserDefaults is a bad idea... */
+/* TODO: Storing everything in UserDefaults is a bad idea... use a Dictionary! */
 public struct ConversationSettings {
     public let serviceIdentifier: Service.IdentifierType
     public let identifier: Conversation.IdentifierType
@@ -42,7 +42,8 @@ public struct EventDescriptor {
     public let contents: String?
     public let description: String?
     public let image: NSImage?
-    public let sound: URL?
+    public let sound: NSSound?
+    public let vibrate: Bool?
     public let script: URL?
 }
 
@@ -95,8 +96,7 @@ public struct BezelAction: EventAction {
 public struct SoundAction: EventAction {
     private init() {}
     public static func perform(with event: EventDescriptor) {
-        guard let s = event.sound?.absoluteString else { return }
-        NSSound(contentsOfFile: s, byReference: true)?.play()
+        event.sound?.play()
     }
 }
 
@@ -104,6 +104,7 @@ public struct SoundAction: EventAction {
 public struct VibrateAction: EventAction {
     private init() {}
     public static func perform(with event: EventDescriptor) {
+        guard let x = event.vibrate, x else { return }
         NSHapticFeedbackManager.vibrate(length: 1000, interval: 10)
     }
 }
@@ -185,13 +186,13 @@ public extension ParrotAppController {
         self.watching = [
                AutoSubscription(kind: Notification.Service.DidConnect) { _ in
                 let event = EventDescriptor(identifier: "Parrot.ConnectionStatus", contents: "Parrot has connected.",
-                                  description: nil, image: NSImage(named: .connectionOutline), sound: nil, script: nil)
+                                  description: nil, image: NSImage(named: .connectionOutline), sound: nil, vibrate: nil, script: nil)
                 let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self, BezelAction.self]
                 actions.forEach { $0.perform(with: event) }
             }, AutoSubscription(kind: Notification.Service.DidDisconnect) { _ in
                 DispatchQueue.main.async { // FIXME why does wrapping it twice work??
                     let event = EventDescriptor(identifier: "Parrot.ConnectionStatus", contents: "Parrot has disconnected.",
-                                      description: nil, image: NSImage(named: .connectionOutline), sound: nil, script: nil)
+                                      description: nil, image: NSImage(named: .connectionOutline), sound: nil, vibrate: nil, script: nil)
                     let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self, BezelAction.self]
                     actions.forEach { $0.perform(with: event) }
                 }
@@ -204,34 +205,40 @@ public extension ParrotAppController {
                 
             }, AutoSubscription(kind: Notification.Conversation.DidReceiveWatermark) { _ in
                 
+            }, AutoSubscription(kind: Notification.Conversation.WillSendEvent) { _ in
+                
+                // TODO: This is currently hard-wired...
+                NSSound(assetName: .sentMessage)?.play()
+                
             }, AutoSubscription(kind: Notification.Conversation.DidReceiveEvent) { e in
                 let c = ServiceRegistry.services.first!.value
                 guard let event = e.userInfo?["event"] as? Event, let conv = e.object as? Conversation else { return }
-                let settings = ConversationSettings(serviceIdentifier: conv.serviceIdentifier, identifier: conv.identifier)
                 
-                // if we've set a sound or vibration, play it
-                settings.sound?.play()
-                if settings.vibrate { NSHapticFeedbackManager.vibrate(length: 1000, interval: 10) }
-                
+                // Handle specific `Message` and chat occlusion cases:
                 var showNote = true
                 if let m = MessageListViewController.openConversations[conv.identifier] {
                     showNote = !(m.view.window?.isKeyWindow ?? false)
                 }
                 
+                // FIXME: We don't handle events for non-`Message` types yet.
                 guard let msg = event as? Message else { return }
                 if !msg.sender.me && showNote {
+                    let settings = ConversationSettings(serviceIdentifier: conv.serviceIdentifier, identifier: conv.identifier)
+                    
+                    // The message text contained the user's full or first name: it's a specific mention.
+                    // FIXME: We don't support mention hot-words yet.
+                    var desc = msg.text
                     if (msg.text ?? "").contains(c.directory.me.firstName) || (msg.text ?? "").contains(c.directory.me.fullName) {
-                        let event2 = EventDescriptor(identifier: conv.identifier, contents: msg.sender.firstName,
-                                           description: "Mentioned you", image: msg.sender.image, sound: nil, script: nil)
-                        let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
-                        actions.forEach { $0.perform(with: event2) }
-                        
-                    } else { // not a mention
-                        let event2 = EventDescriptor(identifier: conv.identifier, contents: msg.sender.firstName,
-                                           description: msg.text, image: msg.sender.image, sound: nil, script: nil)
-                        let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self]
-                        actions.forEach { $0.perform(with: event2) }
+                        desc = "Mentioned you"
                     }
+                    
+                    // Perform the event via its descriptor.
+                    let event = EventDescriptor(identifier: conv.identifier, contents: msg.sender.firstName,
+                                                description: desc, image: msg.sender.image, sound: settings.sound,
+                                                vibrate: settings.vibrate, script: nil)
+                    
+                    let actions: [EventAction.Type] = [BannerAction.self, SoundAction.self, VibrateAction.self]
+                    actions.forEach { $0.perform(with: event) }
                 }
                 
             }, AutoSubscription(kind: NSUserNotification.didActivateNotification) {

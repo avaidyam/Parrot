@@ -5,13 +5,13 @@ import Foundation.NSNotification
 ///       notifications about an element mutation *AND* a single batched notification.
 
 public extension Notification {
-    public struct Service { private init() {}
+    public enum Service {
         public static let DidConnect = Notification.Name(rawValue: "Parrot.Service.DidConnect")
         public static let DidDisconnect = Notification.Name(rawValue: "Parrot.Service.DidDisconnect")
         public static let DidSynchronize = Notification.Name(rawValue: "Parrot.Service.DidSynchronize")
     }
     
-    public struct Conversation { private init() {}
+    public enum Conversation {
         public static let DidCreate = Notification.Name(rawValue: "Parrot.Conversation.DidCreate")
         public static let DidDelete = Notification.Name(rawValue: "Parrot.Conversation.DidDelete")
         public static let DidChangeArchive = Notification.Name(rawValue: "Parrot.Conversation.DidChangeArchive")
@@ -25,13 +25,14 @@ public extension Notification {
         public static let DidChangeFocus = Notification.Name(rawValue: "Parrot.Conversation.DidChangeFocus")
         public static let DidReceiveWatermark = Notification.Name(rawValue: "Parrot.Conversation.DidReceiveWatermark")
         
+        public static let WillSendEvent = Notification.Name(rawValue: "Parrot.Conversation.WillSendEvent")
         public static let DidReceiveEvent = Notification.Name(rawValue: "Parrot.Conversation.DidReceiveEvent")
         public static let DidUpdateEvents = Notification.Name(rawValue: "Parrot.Conversation.DidUpdateEvents")
         
         public static let DidUpdateList = Notification.Name(rawValue: "Parrot.Conversation.DidUpdateList")
     }
     
-    public struct Person { private init() {}
+    public enum Person {
         public static let DidUpdate = Notification.Name(rawValue: "Parrot.Person.DidUpdate")
         public static let DidChangePresence = Notification.Name(rawValue: "Parrot.Person.DidChangePresence")
     }

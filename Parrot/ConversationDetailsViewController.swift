@@ -99,7 +99,7 @@ public class ConversationDetailsViewController: NSViewController {
     
     private lazy var imageWell: NSImageView = {
         let v = NSImageView(frame: .zero).modernize()
-        v.sizeAnchors == CGSize(width: 24, height: 24)
+        v.sizeAnchors == CGSize(width: 36, height: 22)
         v.animates = true
         v.isEditable = true
         v.allowsCutCopyPaste = true
