@@ -46,3 +46,34 @@ public extension CALayer {
         return layer
     }
 }
+
+public extension NSVisualEffectView {
+    private static var cornerRadiusKey = AssociatedProperty<NSVisualEffectView, CGFloat>(.strong)
+    
+    /// Note: modifying the `cornerMaskRadius` modifies `maskImage`!
+    public var cornerMaskRadius: CGFloat {
+        get { return NSVisualEffectView.cornerRadiusKey[self, default: 0.0] }
+        set {
+            NSVisualEffectView.cornerRadiusKey[self] = newValue
+            guard newValue != 0.0 else {
+                self.maskImage = nil; return
+            }
+            
+            // Generates a corner mask image.
+            func mask(_ radius: CGFloat) -> NSImage {
+                let edge = 2.0 * radius + 1.0
+                let mask = NSImage(size: NSSize(width: edge, height: edge), flipped: false) {
+                    NSColor.black.set()
+                    NSBezierPath(roundedRect: $0, xRadius: radius, yRadius: radius).fill()
+                    return true
+                }
+                mask.capInsets = NSEdgeInsets(top: radius, left: radius, bottom: radius, right: radius)
+                mask.resizingMode = .stretch
+                return mask
+            }
+            
+            self.maskImage = mask(newValue)
+        }
+    }
+    
+}

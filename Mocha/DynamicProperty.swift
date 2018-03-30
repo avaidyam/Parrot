@@ -69,12 +69,13 @@ public extension DynamicProperty {
 }
 
 /* TODO: Multiple SelectorKey<...> to be generic-matched to the function prototype. */
-
+/*
 public protocol SelectorContainable {
     var method: String { get }
 }
+*/
 
-public struct SelectorKey<T: NSObjectProtocol, A, B, X>: SelectorContainable {
+public struct SelectorKey<T: NSObjectProtocol, A, B, X> {
     public let method: String
     public let retain: Bool
     
@@ -108,7 +109,3 @@ fileprivate extension Unmanaged {
         }
     }
 }
-
-let q = SelectorKey<NSObject, Void, Void, Void>("method")
-
-
