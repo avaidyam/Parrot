@@ -1,11 +1,7 @@
 import MochaUI
 
 public extension Preferences.Controllers {
-    public class General: NSViewController, PreferencePane {
-        public var image: NSImage? = NSImage(named: .advanced)
-        public override var title: String? {
-            set{} get { return "General" }
-        }
+    public class General: PreferencePaneViewController {
         
         private lazy var textSize: NSSlider = {
             let v = NSSlider(value: 12, minValue: 9, maxValue: 16,
@@ -67,6 +63,8 @@ public extension Preferences.Controllers {
             stack.distribution = .fill
             stack.widthAnchor == 400.0
             self.view = stack
+            self.title = "General"
+            self.image = NSImage(named: .advanced)
             
             self.bindings = [
                 Binding(between: (self.textSize, \.doubleValue),

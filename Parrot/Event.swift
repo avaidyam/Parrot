@@ -53,8 +53,7 @@ public protocol EventAction {
 
 // input: identifier, contents, description, image
 // properties: actions
-public struct BannerAction: EventAction {
-    private init() {}
+public enum BannerAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         let notification = NSUserNotification()
         notification.identifier = event.identifier
@@ -82,9 +81,7 @@ public struct BannerAction: EventAction {
 }
 
 // input: contents, image
-public struct BezelAction: EventAction {
-    private init() {}
-    
+public enum BezelAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         SystemBezel(image: event.image, text: event.contents)
             .show().hide(after: 5.seconds)
@@ -93,16 +90,14 @@ public struct BezelAction: EventAction {
 
 // input: none
 // properties: filename
-public struct SoundAction: EventAction {
-    private init() {}
+public enum SoundAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         event.sound?.play()
     }
 }
 
 // input: none
-public struct VibrateAction: EventAction {
-    private init() {}
+public enum VibrateAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         guard let x = event.vibrate, x else { return }
         NSHapticFeedbackManager.vibrate(length: 1000, interval: 10)
@@ -110,8 +105,7 @@ public struct VibrateAction: EventAction {
 }
 
 // input: none
-public struct BounceDockAction: EventAction {
-    private init() {}
+public enum BounceDockAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         let id = NSApp.requestUserAttention(.criticalRequest)
         DispatchQueue.main.asyncAfter(deadline: 2.seconds.later) {
@@ -121,16 +115,14 @@ public struct BounceDockAction: EventAction {
 }
 
 // input: none
-public struct FlashLEDAction: EventAction {
-    private init() {}
+public enum FlashLEDAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         KeyboardBrightnessAnimation().start()
     }
 }
 
 // input: contents, description
-public struct SpeakAction: EventAction {
-    private init() {}
+public enum SpeakAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         let text = (event.contents ?? "") + (event.description ?? "")
         NSApp.say(text)
@@ -139,8 +131,7 @@ public struct SpeakAction: EventAction {
 
 // input: none
 // properties: script path
-public struct ScriptAction: EventAction {
-    private init() {}
+public enum ScriptAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         guard let s = event.script else { return }
         
