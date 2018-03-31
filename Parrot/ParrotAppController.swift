@@ -56,6 +56,8 @@ public class ParrotAppController: NSApplicationController {
         let p = PreferencesViewController()
         p.add(pane: Preferences.Controllers.General())
         p.add(pane: Preferences.Controllers.Text())
+        p.add(pane: Preferences.Controllers.Shortcuts())
+        p.add(pane: Preferences.Controllers.Sounds())
         p.add(pane: Preferences.Controllers.Accounts())
         return p
     }()

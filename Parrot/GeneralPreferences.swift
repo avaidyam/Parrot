@@ -64,7 +64,7 @@ public extension Preferences.Controllers {
             stack.widthAnchor == 400.0
             self.view = stack
             self.title = "General"
-            self.image = NSImage(named: .advanced)
+            self.image = NSImage(named: .generalPref)
             
             self.bindings = [
                 Binding(between: (self.textSize, \.doubleValue),

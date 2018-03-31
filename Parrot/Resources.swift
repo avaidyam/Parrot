@@ -93,6 +93,8 @@ public extension NSImage.Name {
     public static let connectionOutline = NSImage.Name("ConnectionOutline")
     public static let compose = NSImage.Name("Compose")
     public static let communicationVideo = NSImage.Name("CommunicationVideo")
+    public static let generalPref = NSImage.Name("GeneralPref")
+    public static let inboxPref = NSImage.Name("InboxPref")
 }
 
 // Sounds

@@ -40,7 +40,7 @@
 		48267A4E2019893300D9D8A9 /* CGIncrementalImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267A4D2019893300D9D8A9 /* CGIncrementalImage.swift */; };
 		4826D3881F03B853000FE44F /* Transformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4826D3871F03B853000FE44F /* Transformer.swift */; };
 		4831BC971ECF72C900C30413 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4831BC961ECF72C900C30413 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		4831BCC91ED09C9800C30413 /* GeneralPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCC81ED09C9800C30413 /* GeneralPrefs.swift */; };
+		4831BCC91ED09C9800C30413 /* GeneralPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCC81ED09C9800C30413 /* GeneralPreferences.swift */; };
 		4831BCCB1ED0C21200C30413 /* NSViewController+Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCCA1ED0C21200C30413 /* NSViewController+Window.swift */; };
 		4831BCCE1ED1FAF000C30413 /* TodayConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCCC1ED1F9F100C30413 /* TodayConversationCell.swift */; };
 		4831BCEF1ED282FA00C30413 /* Switch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831BCEE1ED282FA00C30413 /* Switch.swift */; };
@@ -61,6 +61,8 @@
 		48585FCD2023BC6D00556D7A /* LargeTypeTitleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48585FCC2023BC6D00556D7A /* LargeTypeTitleController.swift */; };
 		48585FF72025A61300556D7A /* NSWindow+Transforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48585FF62025A61300556D7A /* NSWindow+Transforms.swift */; };
 		485B12ED1F1A904400432A36 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485B12EC1F1A904400432A36 /* LocationHelper.swift */; };
+		485C845C206E00CF001DAC86 /* ShortcutsPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485C845B206E00CF001DAC86 /* ShortcutsPreferences.swift */; };
+		485C845E206E00DE001DAC86 /* SoundsPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485C845D206E00DE001DAC86 /* SoundsPreferences.swift */; };
 		48675357201C535400284050 /* PersonIndicatorTooltipController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48675356201C535400284050 /* PersonIndicatorTooltipController.swift */; };
 		48675359201CDF6F00284050 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48675358201CDF6F00284050 /* Activity.swift */; };
 		4869A9321ED7C3D700764594 /* ToolbarContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869A9311ED7C3D700764594 /* ToolbarContainer.swift */; };
@@ -118,9 +120,9 @@
 		489FB08D1DF7E0CB00AEBD1D /* TypingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */; };
 		48AD01E11C1ECBE70031FDD7 /* LinkPreviewParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */; };
 		48AD39F61EE7FDF000C33E40 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48808EDC1C6463DD00236E96 /* PreferencesViewController.swift */; };
-		48AD39F81EE7FE2900C33E40 /* AccountsPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39F71EE7FE2900C33E40 /* AccountsPrefs.swift */; };
+		48AD39F81EE7FE2900C33E40 /* AccountsPrefences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39F71EE7FE2900C33E40 /* AccountsPrefences.swift */; };
 		48AD39FA1EE7FEB200C33E40 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39F91EE7FEB200C33E40 /* Preferences.swift */; };
-		48AD39FC1EE8005C00C33E40 /* TextPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39FB1EE8005C00C33E40 /* TextPrefs.swift */; };
+		48AD39FC1EE8005C00C33E40 /* TextPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39FB1EE8005C00C33E40 /* TextPreferences.swift */; };
 		48AFC0DA200ACB8C003E878D /* PeopleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */; };
 		48AFC0DB200B069A003E878D /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
 		48BCEE0A201DA7E20087E889 /* CryptoSHA1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BCEE09201DA7E20087E889 /* CryptoSHA1.swift */; };
@@ -443,7 +445,7 @@
 		4826D3871F03B853000FE44F /* Transformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformer.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		4831BC961ECF72C900C30413 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		4831BCC81ED09C9800C30413 /* GeneralPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPrefs.swift; sourceTree = "<group>"; };
+		4831BCC81ED09C9800C30413 /* GeneralPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPreferences.swift; sourceTree = "<group>"; };
 		4831BCCA1ED0C21200C30413 /* NSViewController+Window.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSViewController+Window.swift"; sourceTree = "<group>"; };
 		4831BCCC1ED1F9F100C30413 /* TodayConversationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayConversationCell.swift; sourceTree = "<group>"; };
 		4831BCEE1ED282FA00C30413 /* Switch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
@@ -479,6 +481,8 @@
 		4859B8201F8480DE00BFF0CE /* XPCTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCTransaction.swift; sourceTree = "<group>"; };
 		4859B8211F8480DE00BFF0CE /* XPCConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCConnection.swift; sourceTree = "<group>"; };
 		485B12EC1F1A904400432A36 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
+		485C845B206E00CF001DAC86 /* ShortcutsPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsPreferences.swift; sourceTree = "<group>"; };
+		485C845D206E00DE001DAC86 /* SoundsPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundsPreferences.swift; sourceTree = "<group>"; };
 		48675356201C535400284050 /* PersonIndicatorTooltipController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonIndicatorTooltipController.swift; sourceTree = "<group>"; };
 		48675358201CDF6F00284050 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		4869A9311ED7C3D700764594 /* ToolbarContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarContainer.swift; sourceTree = "<group>"; };
@@ -540,9 +544,9 @@
 		489FB08C1DF7E0CB00AEBD1D /* TypingHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypingHelper.swift; sourceTree = "<group>"; };
 		48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyValueStore.swift; path = Mocha/KeyValueStore.swift; sourceTree = SOURCE_ROOT; };
 		48AD01E01C1ECBE70031FDD7 /* LinkPreviewParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPreviewParser.swift; sourceTree = "<group>"; };
-		48AD39F71EE7FE2900C33E40 /* AccountsPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsPrefs.swift; sourceTree = "<group>"; };
+		48AD39F71EE7FE2900C33E40 /* AccountsPrefences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsPrefences.swift; sourceTree = "<group>"; };
 		48AD39F91EE7FEB200C33E40 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
-		48AD39FB1EE8005C00C33E40 /* TextPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPrefs.swift; sourceTree = "<group>"; };
+		48AD39FB1EE8005C00C33E40 /* TextPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPreferences.swift; sourceTree = "<group>"; };
 		48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleAPI.swift; sourceTree = "<group>"; };
 		48BA5B481C379CCF00ACA29B /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
 		48BCEE09201DA7E20087E889 /* CryptoSHA1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoSHA1.swift; sourceTree = "<group>"; };
@@ -809,9 +813,11 @@
 			isa = PBXGroup;
 			children = (
 				48AD39F91EE7FEB200C33E40 /* Preferences.swift */,
-				4831BCC81ED09C9800C30413 /* GeneralPrefs.swift */,
-				48AD39FB1EE8005C00C33E40 /* TextPrefs.swift */,
-				48AD39F71EE7FE2900C33E40 /* AccountsPrefs.swift */,
+				4831BCC81ED09C9800C30413 /* GeneralPreferences.swift */,
+				48AD39FB1EE8005C00C33E40 /* TextPreferences.swift */,
+				485C845B206E00CF001DAC86 /* ShortcutsPreferences.swift */,
+				485C845D206E00DE001DAC86 /* SoundsPreferences.swift */,
+				48AD39F71EE7FE2900C33E40 /* AccountsPrefences.swift */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -1776,8 +1782,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48AD39F81EE7FE2900C33E40 /* AccountsPrefs.swift in Sources */,
+				48AD39F81EE7FE2900C33E40 /* AccountsPrefences.swift in Sources */,
 				4835ECA91C1C620000193EBC /* MessageCell.swift in Sources */,
+				485C845C206E00CF001DAC86 /* ShortcutsPreferences.swift in Sources */,
 				4869A9B21EE17A3800764594 /* SplitWindowController.swift in Sources */,
 				481F0D7F201ACE540037141F /* Resources.swift in Sources */,
 				480C1495203643E100611B40 /* SlimMessageCell.swift in Sources */,
@@ -1791,11 +1798,12 @@
 				4835ECB01C1C620E00193EBC /* MessageListViewController.swift in Sources */,
 				487447F22032668B00987045 /* EventCell.swift in Sources */,
 				48EC1BF01F21201F000C40C1 /* PhotoCell.swift in Sources */,
-				48AD39FC1EE8005C00C33E40 /* TextPrefs.swift in Sources */,
+				48AD39FC1EE8005C00C33E40 /* TextPreferences.swift in Sources */,
 				48AD39FA1EE7FEB200C33E40 /* Preferences.swift in Sources */,
 				48834D961C1B3602009BC442 /* ParrotAppController.swift in Sources */,
 				489FB08D1DF7E0CB00AEBD1D /* TypingHelper.swift in Sources */,
-				4831BCC91ED09C9800C30413 /* GeneralPrefs.swift in Sources */,
+				4831BCC91ED09C9800C30413 /* GeneralPreferences.swift in Sources */,
+				485C845E206E00DE001DAC86 /* SoundsPreferences.swift in Sources */,
 				4848A5851EFEBE35008B2DE2 /* SortedArray.swift in Sources */,
 				489FB0891DF7CC4900AEBD1D /* MessageInputViewController.swift in Sources */,
 				48EA55CA1D26CDD000C3BC80 /* Cache.swift in Sources */,
