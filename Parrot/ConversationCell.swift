@@ -8,6 +8,14 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     private static var wallclock = Wallclock() // global
     private var timeObserver: Any? = nil
     
+    private lazy var effectView: NSVisualEffectView = {
+        let v = NSVisualEffectView().modernize(wantsLayer: true)
+        v.material = .selection
+        v.blendingMode = .behindWindow
+        v.state = .followsWindowActiveState
+        return v
+    }()
+    
     private lazy var photoView: NSImageView = {
         let v = NSImageView().modernize(wantsLayer: true)
         v.allowsCutCopyPaste = false
@@ -30,7 +38,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     private lazy var nameLabel: NSTextField = {
         let v = NSTextField(labelWithString: "").modernize()
         v.textColor = .labelColor
-        v.font = NSFont.systemFont(ofSize: 13.0, weight: NSFont.Weight.semibold)
+        v.font = .systemFont(ofSize: 13.0, weight: .semibold)
         v.lineBreakMode = .byTruncatingTail
         v.setContentCompressionResistancePriority(NSLayoutConstraint.Priority(rawValue: 1), for: .horizontal)
         return v
@@ -39,7 +47,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     private lazy var textLabel: NSTextField = {
         let v = NSTextField(labelWithString: "").modernize()
         v.textColor = .secondaryLabelColor
-        v.font = NSFont.systemFont(ofSize: 11.0)
+        v.font = .systemFont(ofSize: 11.0)
         v.usesSingleLineMode = false
         v.lineBreakMode = .byWordWrapping
         return v
@@ -47,8 +55,8 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     
     private lazy var timeLabel: NSTextField = {
         let v = NSTextField(labelWithString: "").modernize()
-        v.textColor = NSColor.tertiaryLabelColor
-        v.font = NSFont.systemFont(ofSize: 11.0, weight: .light)
+        v.textColor = .tertiaryLabelColor
+        v.font = .systemFont(ofSize: 11.0, weight: .light)
         v.alignment = .right
         
         v.setContentCompressionResistancePriority(NSLayoutConstraint.Priority(rawValue: 1000), for: .horizontal)
@@ -64,12 +72,16 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
         return v
     }()
     
+    private var visualSubscriptions: [Any] = []
+    
     // Constraint setup here.
     public override func loadView() {
         self.view = NSView()
         self.view.wantsLayer = true
         self.view.set(allowsVibrancy: true)
-        self.view.add(subviews: self.photoView, self.nameLabel, self.timeLabel, self.textLabel, self.dropZone, self.badgeLabel) {
+        self.view.add(subviews: self.effectView, self.photoView, self.nameLabel, self.timeLabel, self.textLabel, self.dropZone, self.badgeLabel) {
+            self.edgeAnchors == self.effectView.edgeAnchors
+            
             self.photoView.leftAnchor == self.view.leftAnchor + 8
             self.photoView.centerYAnchor == self.view.centerYAnchor
             self.photoView.widthAnchor == 48
@@ -94,6 +106,17 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
             self.photoView.bottomAnchor == self.badgeLabel.bottomAnchor
             self.photoView.edgeAnchors <= self.badgeLabel.edgeAnchors
         }
+        
+        // Set up dark/light notifications.
+        self.visualSubscriptions = [
+            Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, _ in
+                let appearance = InterfaceStyle.current.appearance()
+                self.effectView.appearance = appearance == .light ? .dark : .light
+            },
+            Settings.observe(\.vibrancyStyle, options: [.initial, .new]) { _, _ in
+                self.effectView.state = VibrancyStyle.current.state()
+            },
+        ]
     }
 	
 	// Upon assignment of the represented object, configure the subview contents.
@@ -142,6 +165,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
             }
             
             self.view.menu = ConversationDetailsViewController.menu(for: conversation)
+            self.visualSelect = self.highlightState != .none || self.isSelected
 		}
 	}
 	
@@ -152,32 +176,32 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
 		self.timeLabel.stringValue = self.prefix + self.time.relativeString()
 	}
     
+    private var visualSelect: Bool = false {
+        didSet {
+            let appearance = self.view.effectiveAppearance
+            if self.visualSelect {
+                //self.layer.backgroundColor = CGColor.ns(.selectedMenuItemColor).copy(alpha: 0.25)
+                self.view.appearance = appearance == .light ? .light : .dark
+                self.effectView.isEmphasized = false
+                self.effectView.isHidden = false
+            } else {
+                //self.layer.backgroundColor = .ns(.clear)
+                self.view.appearance = appearance == .light ? .dark : .light
+                self.effectView.isEmphasized = false
+                self.effectView.isHidden = true
+            }
+        }
+    }
+    
     public override var highlightState: NSCollectionViewItem.HighlightState {
         didSet {
-            if self.highlightState != .none {
-                self.layer.backgroundColor = .ns(.selectedMenuItemColor)
-            } else {
-                self.layer.backgroundColor = .ns(.clear)
-            }
+            self.visualSelect = self.highlightState != .none || self.isSelected
         }
     }
     
     public override var isSelected: Bool {
         didSet {
-            //let appearance = self.view.appearance ?? NSAppearance.current()
-            if self.isSelected {
-                self.layer.backgroundColor = .ns(.selectedMenuItemColor)
-                //self.appearance = .light
-                //self.layer.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0.1997270976).cgColor
-                //self.effect?.animator().isHidden = false
-                //self.separator?.animator().isHidden = true
-            } else {
-                self.layer.backgroundColor = .ns(.clear)
-                //self.appearance = .dark
-                //self.layer.backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0).cgColor
-                //self.effect?.animator().isHidden = true
-                //self.separator?.animator().isHidden = false
-            }
+            self.visualSelect = self.highlightState != .none || self.isSelected
         }
     }
 	
