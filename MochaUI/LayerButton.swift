@@ -7,6 +7,7 @@ import QuartzCore
 /* TODO: Track momentary, State.mixed, and NSImageScaling/Position. */
 /* TODO: Support non-Template images (basically remove the mask layer). */
 /* TODO: Support focus rings. */
+/* TODO: Add scale transformation on selection. */
 
 public class LayerButton: NSButton, CALayerDelegate {
     
@@ -161,10 +162,13 @@ public class LayerButton: NSButton, CALayerDelegate {
         self.layer?.borderColor = props.borderColor.cgColor
         self.layer?.backgroundColor = props.bezelColor.cgColor
         
+        self.shadow = props.shadow // does the equivalent of the below:
+        /*
         self.layer?.shadowOpacity = Float(props.shadow?.shadowColor?.alphaComponent ?? 0.0)
         self.layer?.shadowOffset = props.shadow?.shadowOffset ?? .zero
         self.layer?.shadowColor = props.shadow?.shadowColor?.withAlphaComponent(1.0).cgColor ?? .clear
         self.layer?.shadowRadius = props.shadow?.shadowBlurRadius ?? 0.0
+        */
         
         self.iconLayer.backgroundColor = props.iconColor.cgColor
         self.titleLayer.foregroundColor = props.textColor.cgColor

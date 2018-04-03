@@ -1,7 +1,5 @@
 import Foundation.NSDate
 
-/* TODO: Support separator + terminator on Any... type. */
-
 /// A Logger is responsible for persisting text information to disk or memory
 /// for logging purposes. It relies on its Severity and Channel to do so.
 public final class Logger {
