@@ -22,6 +22,7 @@
 		4819BF611D52D78800CF609C /* emoji_descriptors.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191E1D37D16C001F969E /* emoji_descriptors.plist */; };
 		4819BF621D52D78800CF609C /* emoji_emoticons.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4840191F1D37D16C001F969E /* emoji_emoticons.plist */; };
 		4819BF631D52D78800CF609C /* emoji_equivalences.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 484019201D37D16C001F969E /* emoji_equivalences.plist */; };
+		481C18A92074B4CB0075F57C /* RemoteBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481C18A82074B4CB0075F57C /* RemoteBridge.swift */; };
 		481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */; };
 		481D933E1DF5D7D100EB23A1 /* DispatchSourceTimer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D933D1DF5D7D100EB23A1 /* DispatchSourceTimer+Extensions.swift */; };
 		481F0D7F201ACE540037141F /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481F0D7E201ACE540037141F /* Resources.swift */; };
@@ -430,6 +431,7 @@
 		481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+Extensions.swift"; sourceTree = "<group>"; };
 		4816872B1C3A340E0070EEF6 /* URLSession+Delegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+Delegate.swift"; sourceTree = "<group>"; };
 		481891D21F8745E100AB918B /* XPCService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCService.swift; sourceTree = "<group>"; };
+		481C18A82074B4CB0075F57C /* RemoteBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBridge.swift; sourceTree = "<group>"; };
 		481D933B1DF5D2F200EB23A1 /* DisplayLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayLink.swift; sourceTree = "<group>"; };
 		481D933D1DF5D7D100EB23A1 /* DispatchSourceTimer+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchSourceTimer+Extensions.swift"; sourceTree = "<group>"; };
 		481F0D7E201ACE540037141F /* Resources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
@@ -1110,6 +1112,7 @@
 			children = (
 				487385871F9DFAAE00CC5853 /* XPCBridge.swift */,
 				48C35B372051213D0056C3FB /* OSABridge.swift */,
+				481C18A82074B4CB0075F57C /* RemoteBridge.swift */,
 				481300391D25B54300768D79 /* ServiceRegistry.swift */,
 			);
 			name = Bridge;
@@ -1760,6 +1763,7 @@
 				4869A9AE1EE1528100764594 /* Notification.swift in Sources */,
 				481300511D26BD7700768D79 /* Conversation.swift in Sources */,
 				48C35B382051213D0056C3FB /* OSABridge.swift in Sources */,
+				481C18A92074B4CB0075F57C /* RemoteBridge.swift in Sources */,
 				4869A93E1EDF2E9E00764594 /* ConversationList.swift in Sources */,
 				4869A9401EDF2EDC00764594 /* Directory.swift in Sources */,
 				487385891F9E1A6D00CC5853 /* XPCBridge.swift in Sources */,
