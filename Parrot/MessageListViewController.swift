@@ -340,6 +340,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         // Set up dark/light notifications.
         self.visualSubscriptions = [
             Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
+                self.view.window?.crossfade()
                 self.view.window?.appearance = InterfaceStyle.current.appearance()
                 
                 // Reset cell colors too - this fixes a visual glitch.

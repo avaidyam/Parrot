@@ -117,10 +117,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     // We should be able to now edit things.
-    public var selectable = false {
+    public var canSelect: Bool = false {
         didSet {
-            self.collectionView.selectionType = self.selectable ? .any : .none
-            //self.collectionView.allowsMultipleSelection = self.selectable
+            self.collectionView.selectionType = self.canSelect ? .any : .none
+            //self.collectionView.allowsMultipleSelection = self.canSelect
         }
     }
     
@@ -221,6 +221,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         
         self.visualSubscriptions = [
             Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
+                self.view.window?.crossfade()
                 self.view.window?.appearance = InterfaceStyle.current.appearance()
             },
             Settings.observe(\.vibrancyStyle, options: [.initial, .new]) { _, change in

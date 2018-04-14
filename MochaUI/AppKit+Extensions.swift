@@ -130,65 +130,23 @@ public extension NSView {
     }
 }
 
-@objc fileprivate protocol _NSWindowPrivate {
-    func _setTransformForAnimation(_: CGAffineTransform, anchorPoint: CGPoint)
-}
-
-public extension NSWindow {
-    public func scale(to scale: Double = 1.0, by anchorPoint: CGPoint = CGPoint(x: 0.5, y: 0.5)) {
-        let p = anchorPoint
-        assert((p.x >= 0.0 && p.x <= 1.0) && (p.y >= 0.0 && p.y <= 1.0),
-               "Anchor point coordinates must be between 0 and 1!")
-        let q = CGPoint(x: p.x * self.frame.size.width,
-                        y: p.y * self.frame.size.height)
-        
-        // Apply the transformation by transparently using CGSSetWindowTransformAtPlacement()
-        let a = CGAffineTransform(scaleX: CGFloat(1.0 / scale), y: CGFloat(1.0 / scale))
-        unsafeBitCast(self, to: _NSWindowPrivate.self)
-            ._setTransformForAnimation(a, anchorPoint: q)
+extension CGFloat {
+    public func defaulting(_ valueIfNaNOrInf: @autoclosure () -> CGFloat) -> CGFloat {
+        return (self.isNaN || self.isInfinite) ? valueIfNaNOrInf() : self
     }
 }
 
 public extension NSWindow {
-    
-    // Animate the change in appearance.
-    public func animateAppearance(_ appearance: NSAppearance) {
-        guard let view = self.contentView?.superview else {
-            self.appearance = appearance; return
-        }
-        view.superlay { v in
-            self.appearance = appearance
-            v.animator().alphaValue = 0.0
-            v.animator().removeFromSuperview()
-        }
+    public func crossfade() {
+        let root = self.value(forKey: "borderView") as! NSView
+        root.crossfade()
     }
 }
-
 public extension NSView {
-    
-    //
-    public func animateAppearance(_ appearance: NSAppearance) {
-        self.superlay { v in
-            self.appearance = appearance
-            v.animator().alphaValue = 0.0
-            v.animator().removeFromSuperview()
+    public func crossfade() {
+        visit(self) { // equivalent to `NSViewLayerContentsRedrawCrossfade`:
+            $0.layer?.add(CATransition(), forKey: "contents")
         }
-    }
-    
-    // Internal "super-overlay" view used to fade appearance animations.
-    fileprivate func superlay(_ handler: (NSView) -> () = {v in}) {
-        let v = NSView(frame: self.frame)
-        v.wantsLayer = true
-        //v.acceptsFirstMouse == false?
-        v.ignoreHitTest = true
-        v.layer?.contents = self.snapshot()
-        
-        if let s = self.superview {
-            s.addSubview(v, positioned: .above, relativeTo: self)
-        } else {
-            self.addSubview(v, positioned: .above, relativeTo: nil)
-        }
-        handler(v)
     }
 }
 
@@ -734,5 +692,30 @@ public extension NSPasteboard.PasteboardType {
 public extension NotificationCenter {
     public static var workspace: NotificationCenter {
         return NSWorkspace.shared.notificationCenter
+    }
+}
+
+//
+// Visitors
+//
+
+func visit(_ root: NSWindow, _ visitor: (NSWindow) -> ()) {
+    visitor(root)
+    for x in (root.childWindows ?? []) {
+        visit(x, visitor)
+    }
+}
+
+func visit(_ root: NSView, _ visitor: (NSView) -> ()) {
+    visitor(root)
+    for x in root.subviews {
+        visit(x, visitor)
+    }
+}
+
+func visit(_ root: CALayer, _ visitor: (CALayer) -> ()) {
+    visitor(root)
+    for x in (root.sublayers ?? []) {
+        visit(x, visitor)
     }
 }

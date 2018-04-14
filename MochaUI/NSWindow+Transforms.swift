@@ -1,6 +1,21 @@
 import AppKit
 import Mocha
 
+public extension NSWindow {
+    public func scale(to scale: Double = 1.0, by anchorPoint: CGPoint = CGPoint(x: 0.5, y: 0.5)) {
+        let p = anchorPoint
+        assert((p.x >= 0.0 && p.x <= 1.0) && (p.y >= 0.0 && p.y <= 1.0),
+               "Anchor point coordinates must be between 0 and 1!")
+        let q = CGPoint(x: p.x * self.frame.size.width,
+                        y: p.y * self.frame.size.height)
+        let val = CGFloat(1.0 / scale).defaulting(0.0)
+        
+        // Apply the transformation by transparently using CGSSetWindowTransformAtPlacement()
+        let a = CGAffineTransform(scaleX: val, y: val)
+        self._private._setTransformForAnimation(a, anchorPoint: q)
+    }
+}
+
 /*
 DispatchQueue.main.async {
     var perspective = CATransform3DIdentity
@@ -62,56 +77,3 @@ private func CAMesh(_ m: CGSMeshPoint, _ f: CGRect, _ o: CGPoint, _ t: CATransfo
     let n = CAPointApplyCATransform3D(t, f, CGPoint(x: Double(m.x), y: Double(m.y)))
     return CGSMeshPoint(x: Float(n.x + o.x), y: Float(n.y + o.y))
 }
-
-/// Small Spaces API wrapper.
-public final class CGSSpace {
-    private let identifier: CGSSpaceID
-    
-    public var windows: Set<NSWindow> = [] {
-        didSet {
-            let remove = oldValue.subtracting(self.windows)
-            let add = self.windows.subtracting(oldValue)
-            
-            CGSRemoveWindowsFromSpaces(_CGSDefaultConnection(),
-                                       remove.map { $0.windowNumber } as NSArray,
-                                       [self.identifier])
-            CGSAddWindowsToSpaces(_CGSDefaultConnection(),
-                                  add.map { $0.windowNumber } as NSArray,
-                                  [self.identifier])
-        }
-    }
-    
-    /// Initialized `CGSSpace`s *MUST* be de-initialized upon app exit!
-    public init(level: Int = 0) {
-        let flag = 0x1 // this value MUST be 1, otherwise, Finder decides to draw desktop icons
-        self.identifier = CGSSpaceCreate(_CGSDefaultConnection(), flag, nil)
-        CGSSpaceSetAbsoluteLevel(_CGSDefaultConnection(), self.identifier, level/*400=facetime?*/)
-        CGSShowSpaces(_CGSDefaultConnection(), [self.identifier])
-        
-    }
-    
-    deinit {
-        CGSHideSpaces(_CGSDefaultConnection(), [self.identifier])
-        CGSSpaceDestroy(_CGSDefaultConnection(), self.identifier)
-    }
-}
-
-// CGSSpace stuff:
-fileprivate typealias CGSConnectionID = UInt
-fileprivate typealias CGSSpaceID = UInt64
-@_silgen_name("_CGSDefaultConnection")
-fileprivate func _CGSDefaultConnection() -> CGSConnectionID
-@_silgen_name("CGSSpaceCreate")
-fileprivate func CGSSpaceCreate(_ cid: CGSConnectionID, _ unknown: Int, _ options: NSDictionary?) -> CGSSpaceID
-@_silgen_name("CGSSpaceDestroy")
-fileprivate func CGSSpaceDestroy(_ cid: CGSConnectionID, _ space: CGSSpaceID)
-@_silgen_name("CGSSpaceSetAbsoluteLevel")
-fileprivate func CGSSpaceSetAbsoluteLevel(_ cid: CGSConnectionID, _ space: CGSSpaceID, _ level: Int)
-@_silgen_name("CGSAddWindowsToSpaces")
-fileprivate func CGSAddWindowsToSpaces(_ cid: CGSConnectionID, _ windows: NSArray, _ spaces: NSArray)
-@_silgen_name("CGSRemoveWindowsFromSpaces")
-fileprivate func CGSRemoveWindowsFromSpaces(_ cid: CGSConnectionID, _ windows: NSArray, _ spaces: NSArray)
-@_silgen_name("CGSHideSpaces")
-fileprivate func CGSHideSpaces(_ cid: CGSConnectionID, _ spaces: NSArray)
-@_silgen_name("CGSShowSpaces")
-fileprivate func CGSShowSpaces(_ cid: CGSConnectionID, _ spaces: NSArray)

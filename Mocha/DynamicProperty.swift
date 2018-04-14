@@ -109,3 +109,14 @@ fileprivate extension Unmanaged {
         }
     }
 }
+
+// sub-protocols must also be @objc!
+@objc public protocol PrivateSPI: NSObjectProtocol {}
+public protocol PrivateSPIVendor: NSObjectProtocol {
+    associatedtype PrivateSPIType: PrivateSPI
+}
+public extension PrivateSPIVendor {
+    var _private: PrivateSPIType {
+        return unsafeBitCast(self, to: PrivateSPIType.self)
+    }
+}

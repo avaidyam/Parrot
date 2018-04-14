@@ -174,6 +174,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         
         self.visualSubscriptions = [
             Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
+                self.view.window?.crossfade()
                 self.view.window?.appearance = InterfaceStyle.current.appearance()
             },
             Settings.observe(\.vibrancyStyle, options: [.initial, .new]) { _, change in
@@ -233,7 +234,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                 let d = DirectoryListViewController()
                 d.view.frame.size.width = self.view.frame.width
                 d.view.frame.size.height = (self.view.frame.height / 3).clamped(to: 128.0...4000.0)
-                d.selectable = true
+                d.canSelect = true
                 d.displaysCloseOptions = true
                 
                 self.presentViewControllerAsSheet(d)

@@ -38,6 +38,9 @@
 		482323E51E1D3C0700318380 /* parrot-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4803639A1C1D08490008E9F5 /* parrot-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		482323E71E1D406200318380 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323E61E1D406200318380 /* Auth.swift */; };
 		482323E91E1D61E100318380 /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482323E81E1D61E100318380 /* AttributedString.swift */; };
+		48249F202081F48000E59A1B /* PreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48249F1F2081F48000E59A1B /* PreviewController.swift */; };
+		48249F222081FA7800E59A1B /* PrivateSPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48249F212081FA7800E59A1B /* PrivateSPI.swift */; };
+		48249F242081FF3B00E59A1B /* CGSSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48249F232081FF3B00E59A1B /* CGSSpace.swift */; };
 		48267A4E2019893300D9D8A9 /* CGIncrementalImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267A4D2019893300D9D8A9 /* CGIncrementalImage.swift */; };
 		4826D3881F03B853000FE44F /* Transformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4826D3871F03B853000FE44F /* Transformer.swift */; };
 		4831BC971ECF72C900C30413 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4831BC961ECF72C900C30413 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -113,6 +116,7 @@
 		488F1E7F200ED7DF008E0752 /* AVCaptureViewCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F1E7E200ED7DF008E0752 /* AVCaptureViewCompanion.swift */; };
 		488F652A1EF97CD50085325F /* PhotoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488F65291EF97CD50085325F /* PhotoAPI.swift */; };
 		489018AC1D3C8FE400CFCA5F /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489018AB1D3C8FE400CFCA5F /* Person.swift */; };
+		4891014920786D1600D98908 /* PressureGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4891014820786D1600D98908 /* PressureGestureRecognizer.swift */; };
 		489421681EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */; };
 		4894216A1EC11BCE0047FDBB /* DispatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489421691EC11BCE0047FDBB /* DispatchSupport.swift */; };
 		489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */; };
@@ -443,6 +447,9 @@
 		482323DF1E1CBD3A00318380 /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		482323E61E1D406200318380 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		482323E81E1D61E100318380 /* AttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
+		48249F1F2081F48000E59A1B /* PreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewController.swift; sourceTree = "<group>"; };
+		48249F212081FA7800E59A1B /* PrivateSPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateSPI.swift; sourceTree = "<group>"; };
+		48249F232081FF3B00E59A1B /* CGSSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSSpace.swift; sourceTree = "<group>"; };
 		48267A4D2019893300D9D8A9 /* CGIncrementalImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGIncrementalImage.swift; sourceTree = "<group>"; };
 		4826D3871F03B853000FE44F /* Transformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformer.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
@@ -538,6 +545,7 @@
 		488F1E7E200ED7DF008E0752 /* AVCaptureViewCompanion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureViewCompanion.swift; sourceTree = "<group>"; };
 		488F65291EF97CD50085325F /* PhotoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAPI.swift; sourceTree = "<group>"; };
 		489018AB1D3C8FE400CFCA5F /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		4891014820786D1600D98908 /* PressureGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressureGestureRecognizer.swift; sourceTree = "<group>"; };
 		489421671EC0DE3B0047FDBB /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
 		489421691EC11BCE0047FDBB /* DispatchSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchSupport.swift; sourceTree = "<group>"; };
 		489C8D5A1DF3FFF1007B3392 /* Interpolate+Interpolators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Interpolate+Interpolators.swift"; sourceTree = "<group>"; };
@@ -1133,6 +1141,7 @@
 		48D3CCF61DE9446D003D6C02 /* MochaUI */ = {
 			isa = PBXGroup;
 			children = (
+				48249F212081FA7800E59A1B /* PrivateSPI.swift */,
 				488239A21C455CED00C5E8EB /* AppKit+Extensions.swift */,
 				4848A5821EFD1A0D008B2DE2 /* BlockTrampoline.swift */,
 				488201BB1D4A970400C545F0 /* NSMonogramImageRep.swift */,
@@ -1145,6 +1154,9 @@
 				48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */,
 				48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */,
 				48585FF62025A61300556D7A /* NSWindow+Transforms.swift */,
+				48249F232081FF3B00E59A1B /* CGSSpace.swift */,
+				4891014820786D1600D98908 /* PressureGestureRecognizer.swift */,
+				48249F1F2081F48000E59A1B /* PreviewController.swift */,
 				4831BC9A1ECF734A00C30413 /* Views */,
 				4831BCF01ED2830600C30413 /* ViewControllers */,
 				4831BC981ECF733100C30413 /* Interpolate */,
@@ -1887,6 +1899,7 @@
 				4831BCEF1ED282FA00C30413 /* Switch.swift in Sources */,
 				48EF2AB720181DC1007086A9 /* NSMonogramImageRep.swift in Sources */,
 				48E39C611ED516AC00EF578D /* SystemBezel.swift in Sources */,
+				4891014920786D1600D98908 /* PressureGestureRecognizer.swift in Sources */,
 				48D3CD0D1DE945C1003D6C02 /* AppKit+Extensions.swift in Sources */,
 				4831BCF41ED356B300C30413 /* DroppableView.swift in Sources */,
 				48585FF72025A61300556D7A /* NSWindow+Transforms.swift in Sources */,
@@ -1902,10 +1915,13 @@
 				4869A93C1EDD250C00764594 /* ViewAttachmentCell.swift in Sources */,
 				48E39C651ED578AF00EF578D /* KeyboardBrightness.swift in Sources */,
 				481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */,
+				48249F202081F48000E59A1B /* PreviewController.swift in Sources */,
 				483ED2B41EE9E80200D2BDCF /* NSCollectionViewListLayout.swift in Sources */,
 				4831BCCB1ED0C21200C30413 /* NSViewController+Window.swift in Sources */,
 				48D3CD0F1DE945C1003D6C02 /* NSPopover+Extensions.swift in Sources */,
 				4848A5831EFD1A0D008B2DE2 /* BlockTrampoline.swift in Sources */,
+				48249F222081FA7800E59A1B /* PrivateSPI.swift in Sources */,
+				48249F242081FF3B00E59A1B /* CGSSpace.swift in Sources */,
 				48585FCD2023BC6D00556D7A /* LargeTypeTitleController.swift in Sources */,
 				48557ED720156D8B009D302F /* NSToolTipManager+Appearance.swift in Sources */,
 				4869A9321ED7C3D700764594 /* ToolbarContainer.swift in Sources */,
