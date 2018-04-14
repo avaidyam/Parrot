@@ -4,6 +4,7 @@ import Quartz
 
 /* TODO: NSPopover.title/addTitlebar(animated: ...)? */
 /* TODO: Use NSPressGestureRecognizer if no haptic support. */
+/* TODO: Maybe support tear-off popover-windows? */
 
 //let preview = PreviewController(for: self.view, with: .file(URL(fileURLWithPath: pathToFile), nil))
 //preview.delegate = self // not required

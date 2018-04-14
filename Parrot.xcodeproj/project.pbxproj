@@ -41,6 +41,9 @@
 		48249F202081F48000E59A1B /* PreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48249F1F2081F48000E59A1B /* PreviewController.swift */; };
 		48249F222081FA7800E59A1B /* PrivateSPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48249F212081FA7800E59A1B /* PrivateSPI.swift */; };
 		48249F242081FF3B00E59A1B /* CGSSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48249F232081FF3B00E59A1B /* CGSSpace.swift */; };
+		48249F4720822B1900E59A1B /* ShortcutRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48249F4420822B1700E59A1B /* ShortcutRecognizer.swift */; };
+		48249F4820822B1900E59A1B /* CGSKeyboardShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48249F4520822B1800E59A1B /* CGSKeyboardShortcut.swift */; };
+		48249F4920822B1900E59A1B /* KeyboardShortcutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48249F4620822B1800E59A1B /* KeyboardShortcutView.swift */; };
 		48267A4E2019893300D9D8A9 /* CGIncrementalImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267A4D2019893300D9D8A9 /* CGIncrementalImage.swift */; };
 		4826D3881F03B853000FE44F /* Transformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4826D3871F03B853000FE44F /* Transformer.swift */; };
 		4831BC971ECF72C900C30413 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4831BC961ECF72C900C30413 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -450,6 +453,9 @@
 		48249F1F2081F48000E59A1B /* PreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewController.swift; sourceTree = "<group>"; };
 		48249F212081FA7800E59A1B /* PrivateSPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateSPI.swift; sourceTree = "<group>"; };
 		48249F232081FF3B00E59A1B /* CGSSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSSpace.swift; sourceTree = "<group>"; };
+		48249F4420822B1700E59A1B /* ShortcutRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutRecognizer.swift; sourceTree = "<group>"; };
+		48249F4520822B1800E59A1B /* CGSKeyboardShortcut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGSKeyboardShortcut.swift; sourceTree = "<group>"; };
+		48249F4620822B1800E59A1B /* KeyboardShortcutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardShortcutView.swift; sourceTree = "<group>"; };
 		48267A4D2019893300D9D8A9 /* CGIncrementalImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGIncrementalImage.swift; sourceTree = "<group>"; };
 		4826D3871F03B853000FE44F /* Transformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformer.swift; sourceTree = "<group>"; };
 		482E21381C23F5F500A4C7B3 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
@@ -781,6 +787,16 @@
 				482323DF1E1CBD3A00318380 /* View.swift */,
 			);
 			name = Termbox;
+			sourceTree = "<group>";
+		};
+		48249F4A20822B2000E59A1B /* KeyboardShortcut */ = {
+			isa = PBXGroup;
+			children = (
+				48249F4520822B1800E59A1B /* CGSKeyboardShortcut.swift */,
+				48249F4420822B1700E59A1B /* ShortcutRecognizer.swift */,
+				48249F4620822B1800E59A1B /* KeyboardShortcutView.swift */,
+			);
+			name = KeyboardShortcut;
 			sourceTree = "<group>";
 		};
 		4831BC981ECF733100C30413 /* Interpolate */ = {
@@ -1157,6 +1173,7 @@
 				48249F232081FF3B00E59A1B /* CGSSpace.swift */,
 				4891014820786D1600D98908 /* PressureGestureRecognizer.swift */,
 				48249F1F2081F48000E59A1B /* PreviewController.swift */,
+				48249F4A20822B2000E59A1B /* KeyboardShortcut */,
 				4831BC9A1ECF734A00C30413 /* Views */,
 				4831BCF01ED2830600C30413 /* ViewControllers */,
 				4831BC981ECF733100C30413 /* Interpolate */,
@@ -1896,6 +1913,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D3CD161DE945C1003D6C02 /* ExtendedTextView.swift in Sources */,
+				48249F4920822B1900E59A1B /* KeyboardShortcutView.swift in Sources */,
 				4831BCEF1ED282FA00C30413 /* Switch.swift in Sources */,
 				48EF2AB720181DC1007086A9 /* NSMonogramImageRep.swift in Sources */,
 				48E39C611ED516AC00EF578D /* SystemBezel.swift in Sources */,
@@ -1915,12 +1933,14 @@
 				4869A93C1EDD250C00764594 /* ViewAttachmentCell.swift in Sources */,
 				48E39C651ED578AF00EF578D /* KeyboardBrightness.swift in Sources */,
 				481D933C1DF5D2F200EB23A1 /* DisplayLink.swift in Sources */,
+				48249F4820822B1900E59A1B /* CGSKeyboardShortcut.swift in Sources */,
 				48249F202081F48000E59A1B /* PreviewController.swift in Sources */,
 				483ED2B41EE9E80200D2BDCF /* NSCollectionViewListLayout.swift in Sources */,
 				4831BCCB1ED0C21200C30413 /* NSViewController+Window.swift in Sources */,
 				48D3CD0F1DE945C1003D6C02 /* NSPopover+Extensions.swift in Sources */,
 				4848A5831EFD1A0D008B2DE2 /* BlockTrampoline.swift in Sources */,
 				48249F222081FA7800E59A1B /* PrivateSPI.swift in Sources */,
+				48249F4720822B1900E59A1B /* ShortcutRecognizer.swift in Sources */,
 				48249F242081FF3B00E59A1B /* CGSSpace.swift in Sources */,
 				48585FCD2023BC6D00556D7A /* LargeTypeTitleController.swift in Sources */,
 				48557ED720156D8B009D302F /* NSToolTipManager+Appearance.swift in Sources */,
