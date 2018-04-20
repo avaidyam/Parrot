@@ -198,4 +198,16 @@ public class PreviewController: NSObject, NSPopoverDelegate, NSGestureRecognizer
         }
         return true
     }
+    
+    // TODO:
+    /*
+    public func gestureRecognizer(_ sender: NSGestureRecognizer, shouldAttemptToRecognizeWith event: NSEvent) -> Bool {
+        if sender is NSPressGestureRecognizer {
+            return !event.associatedEventsMask.contains(.pressure)
+        } else if sender is PressureGestureRecognizer {
+            return event.associatedEventsMask.contains(.pressure)
+        }
+        return false
+    }
+    */
 }

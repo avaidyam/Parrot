@@ -105,6 +105,7 @@ public class ParrotAppController: NSApplicationController {
         Logger.globalChannels = [self.serverChannel]
         Analytics.sessionTrackingIdentifier = "UA-63931980-2"
         InterfaceStyle.bootstrap()
+        NSGestureRecognizer.wantsIndirectTouches = true
         self.registerEvents()
         
         // Register the default completions.

@@ -160,6 +160,9 @@
 		48D3CD421DEAF238003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		48D3CD431DEAF23A003D6C02 /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
 		48D7EE181F14587C005C7E16 /* ProtobufRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */; };
+		48DDE7B62089D5B3001B8AA9 /* SystemEventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DDE7B52089D5B3001B8AA9 /* SystemEventListener.swift */; };
+		48DDE7B82089D5F0001B8AA9 /* IndirectTouchTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DDE7B72089D5F0001B8AA9 /* IndirectTouchTracker.swift */; };
+		48DDE7BA2089D61C001B8AA9 /* TouchSwipeRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DDE7B92089D61C001B8AA9 /* TouchSwipeRecognizer.swift */; };
 		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
 		48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48DE52F71C1CC28000647C63 /* ParrotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52F61C1CC28000647C63 /* ParrotViewController.swift */; };
@@ -577,6 +580,9 @@
 		48D3CD0A1DE9459E003D6C02 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		48D4C9FD1DBD5F2F001CF7AD /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
 		48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtobufRuntime.swift; sourceTree = "<group>"; };
+		48DDE7B52089D5B3001B8AA9 /* SystemEventListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemEventListener.swift; sourceTree = "<group>"; };
+		48DDE7B72089D5F0001B8AA9 /* IndirectTouchTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndirectTouchTracker.swift; sourceTree = "<group>"; };
+		48DDE7B92089D61C001B8AA9 /* TouchSwipeRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchSwipeRecognizer.swift; sourceTree = "<group>"; };
 		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52CD1C1CC12900647C63 /* ParrotShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotShare.entitlements; sourceTree = "<group>"; };
 		48DE52CE1C1CC12900647C63 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -1171,8 +1177,7 @@
 				48557ED620156D8B009D302F /* NSToolTipManager+Appearance.swift */,
 				48585FF62025A61300556D7A /* NSWindow+Transforms.swift */,
 				48249F232081FF3B00E59A1B /* CGSSpace.swift */,
-				4891014820786D1600D98908 /* PressureGestureRecognizer.swift */,
-				48249F1F2081F48000E59A1B /* PreviewController.swift */,
+				48DDE7BB208A709E001B8AA9 /* Gestures */,
 				48249F4A20822B2000E59A1B /* KeyboardShortcut */,
 				4831BC9A1ECF734A00C30413 /* Views */,
 				4831BCF01ED2830600C30413 /* ViewControllers */,
@@ -1197,6 +1202,18 @@
 				48D3CCF81DE9446D003D6C02 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		48DDE7BB208A709E001B8AA9 /* Gestures */ = {
+			isa = PBXGroup;
+			children = (
+				4891014820786D1600D98908 /* PressureGestureRecognizer.swift */,
+				48249F1F2081F48000E59A1B /* PreviewController.swift */,
+				48DDE7B52089D5B3001B8AA9 /* SystemEventListener.swift */,
+				48DDE7B72089D5F0001B8AA9 /* IndirectTouchTracker.swift */,
+				48DDE7B92089D61C001B8AA9 /* TouchSwipeRecognizer.swift */,
+			);
+			name = Gestures;
 			sourceTree = "<group>";
 		};
 		48DE52C91C1CC12900647C63 /* ParrotShare */ = {
@@ -1913,6 +1930,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D3CD161DE945C1003D6C02 /* ExtendedTextView.swift in Sources */,
+				48DDE7B62089D5B3001B8AA9 /* SystemEventListener.swift in Sources */,
 				48249F4920822B1900E59A1B /* KeyboardShortcutView.swift in Sources */,
 				4831BCEF1ED282FA00C30413 /* Switch.swift in Sources */,
 				48EF2AB720181DC1007086A9 /* NSMonogramImageRep.swift in Sources */,
@@ -1921,6 +1939,8 @@
 				48D3CD0D1DE945C1003D6C02 /* AppKit+Extensions.swift in Sources */,
 				4831BCF41ED356B300C30413 /* DroppableView.swift in Sources */,
 				48585FF72025A61300556D7A /* NSWindow+Transforms.swift in Sources */,
+				48DDE7BA2089D61C001B8AA9 /* TouchSwipeRecognizer.swift in Sources */,
+				48DDE7B82089D5F0001B8AA9 /* IndirectTouchTracker.swift in Sources */,
 				489C8D5B1DF3FFF1007B3392 /* Interpolate+Interpolators.swift in Sources */,
 				48E39C621ED516AC00EF578D /* VolumeIndicator.swift in Sources */,
 				48267A4E2019893300D9D8A9 /* CGIncrementalImage.swift in Sources */,
