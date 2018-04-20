@@ -44,31 +44,38 @@ public class LayerButton: NSButton, CALayerDelegate {
         public var borderColor: NSColor
         public var shadow: NSShadow?
         public var bezelColor: NSColor
+        public var rimOpacity: Float
         public var iconColor: NSColor
         public var textColor: NSColor
         public var duration: TimeInterval
         
         public init(cornerRadius: CGFloat = 0.0, borderWidth: CGFloat = 0.0, borderColor: NSColor = .clear,
-                    shadow: NSShadow? = nil, bezelColor: NSColor = .clear, iconColor: NSColor = .clear,
-                    textColor: NSColor = .clear, duration: TimeInterval = 0.0)
+                    shadow: NSShadow? = nil, bezelColor: NSColor = .clear, rimOpacity: Float = 0.0,
+                    iconColor: NSColor = .clear, textColor: NSColor = .clear, duration: TimeInterval = 0.0)
         {
             self.cornerRadius = cornerRadius
             self.borderWidth = borderWidth
             self.borderColor = borderColor
             self.shadow = shadow
             self.bezelColor = bezelColor
+            self.rimOpacity = rimOpacity
             self.iconColor = iconColor
             self.textColor = textColor
             self.duration = duration
         }
         
-        public static let inactive = Properties(cornerRadius: 4.0, bezelColor: .darkGray, iconColor: .white, textColor: .white, duration: 0.5)
-        public static let active = Properties(cornerRadius: 4.0, shadow: Properties.activeShadow, bezelColor: .white, iconColor: .darkGray, textColor: .darkGray, duration: 0.1)
+        public static let inactive = Properties(cornerRadius: 4.0, bezelColor: .darkGray,
+                                                rimOpacity: 0.25, iconColor: .white,
+                                                textColor: .white, duration: 0.5)
+        public static let active = Properties(cornerRadius: 4.0, bezelColor: .white,
+                                              rimOpacity: 0.25, iconColor: .darkGray,
+                                              textColor: .darkGray, duration: 0.1)
     }
     
     private var containerLayer = CALayer()
     private var titleLayer = CATextLayer()
     private var iconLayer = CALayer()
+    private var rimLayer = CALayer()
     
     public private(set) var isHovered = false {
         didSet { self.needsDisplay = true }
@@ -95,23 +102,22 @@ public class LayerButton: NSButton, CALayerDelegate {
         self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
         
-        self.layer?.delegate = self
-        self.containerLayer.delegate = self
-        self.titleLayer.delegate = self
-        self.iconLayer.delegate = self
-        
         self.layer?.masksToBounds = false
         self.containerLayer.masksToBounds = false
         self.titleLayer.masksToBounds = false
         self.iconLayer.masksToBounds = true
+        self.rimLayer.masksToBounds = false
         
         self.iconLayer.mask = CALayer()
         self.iconLayer.mask?.contentsGravity = kCAGravityResizeAspect
         self.titleLayer.alignmentMode = kCAAlignmentCenter
+        self.rimLayer.borderColor = .black
+        self.rimLayer.borderWidth = 0.5
         
         self.layer?.addSublayer(self.containerLayer)
         self.containerLayer.addSublayer(self.iconLayer)
         self.containerLayer.addSublayer(self.titleLayer)
+        self.layer?.addSublayer(self.rimLayer)
         
         let trackingArea = NSTrackingArea(rect: bounds, options: [.activeAlways, .inVisibleRect, .mouseEnteredAndExited], owner: self, userInfo: nil)
         self.addTrackingArea(trackingArea)
@@ -137,6 +143,7 @@ public class LayerButton: NSButton, CALayerDelegate {
         self.iconLayer.frame = imageRect
         self.iconLayer.mask?.frame = self.iconLayer.bounds
         self.titleLayer.frame = titleRect
+        self.rimLayer.frame = self.layer?.bounds.insetBy(dx: -0.5, dy: -0.5) ?? .zero
         if !initState {
             NSAnimationContext.endGrouping()
         }
@@ -162,13 +169,10 @@ public class LayerButton: NSButton, CALayerDelegate {
         self.layer?.borderColor = props.borderColor.cgColor
         self.layer?.backgroundColor = props.bezelColor.cgColor
         
-        self.shadow = props.shadow // does the equivalent of the below:
-        /*
-        self.layer?.shadowOpacity = Float(props.shadow?.shadowColor?.alphaComponent ?? 0.0)
-        self.layer?.shadowOffset = props.shadow?.shadowOffset ?? .zero
-        self.layer?.shadowColor = props.shadow?.shadowColor?.withAlphaComponent(1.0).cgColor ?? .clear
-        self.layer?.shadowRadius = props.shadow?.shadowBlurRadius ?? 0.0
-        */
+        self.rimLayer.opacity = props.rimOpacity
+        self.rimLayer.cornerRadius = props.cornerRadius
+        
+        self.shadow = props.shadow
         
         self.iconLayer.backgroundColor = props.iconColor.cgColor
         self.titleLayer.foregroundColor = props.textColor.cgColor
@@ -200,11 +204,6 @@ public class LayerButton: NSButton, CALayerDelegate {
         self.containerLayer.contentsScale = scale
         self.titleLayer.contentsScale = scale
         self.iconLayer.contentsScale = scale
-    }
-    
-    public override func layer(_ layer: CALayer, shouldInheritContentsScale newScale: CGFloat,
-                               from window: NSWindow) -> Bool {
-        return true
     }
 }
 
