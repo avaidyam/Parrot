@@ -37,6 +37,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
     }()
     
 	private var orientation: NSUserInterfaceLayoutDirection = .rightToLeft
+    private var mask = CAShapeLayer()
     
     // Constraint setup here.
     public override func loadView() {
@@ -92,6 +93,7 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
             self.textLabel.isEditable = true
             self.textLabel.checkTextInDocument(nil)
             self.textLabel.isEditable = false
+            self.textLabel.layer?.mask = self.mask
             
             let text = self.textLabel
             let appearance: NSAppearance = self.view.appearance ?? NSAppearance.current
@@ -134,22 +136,17 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
         let settings = ConversationSettings(serviceIdentifier: b.current.serviceIdentifier,
                                             identifier: b.conversationId)
         
-        // Only clip the text if the text isn't purely Emoji.
-        if !text.string.isEmoji {
-            var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)//NSColor.secondaryLabelColor
-            let setting = o.sender.me ? settings.outgoingColor : settings.incomingColor
-            if  let c = setting, c.alphaComponent > 0.0 {
-                color = c
-                
-                // This automatically adjusts labelColor to the right XOR mask.
-                text.appearance = color.isLight() ? .light : .dark
-            } else {
-                text.appearance = self.view.effectiveAppearance//self.appearance
-            }
-            text.layer?.backgroundColor = color.cgColor
+        var color = NSColor.darkOverlay(forAppearance: self.view.effectiveAppearance)
+        let setting = o.sender.me ? settings.outgoingColor : settings.incomingColor
+        if  let c = setting, c.alphaComponent > 0.0 {
+            color = c
+            
+            // This automatically adjusts labelColor to the right XOR mask.
+            text.appearance = color.isLight() ? .light : .dark
         } else {
-            text.layer?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0).cgColor
+            text.appearance = self.view.effectiveAppearance
         }
+        text.layer?.backgroundColor = color.cgColor
     }
     
     // Clear any text styles and re-compute them.
@@ -188,8 +185,23 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
 			layer.cornerRadius = layer.bounds.width / 2.0
 		}
         
-        self.textLabel.layer?.masksToBounds = true
-        self.textLabel.layer?.cornerRadius = 10.0
+        //self.textLabel.layer?.masksToBounds = true
+        //self.textLabel.layer?.cornerRadius = 10.0
+        
+        let radius = self.photoView.layer!.frame.width / 2.0
+        var corners = CornerRadii(topLeft: radius, topRight: radius, bottomLeft: radius, bottomRight: radius)
+        if let b = self.representedObject as? EventBundle, let curr = b.current as? Message {
+            if let prev = b.previous as? Message, prev.sender.identifier == curr.sender.identifier {
+                corners.bottomLeft = 4.0
+            }
+            if let next = b.next as? Message, next.sender.identifier == curr.sender.identifier {
+                corners.topLeft = 4.0
+            }
+        }
+        
+        self.mask.frame = self.textLabel.layer!.bounds
+        self.mask.path = NSBezierPath(roundedIn: self.textLabel.layer!.bounds,
+                                      cornerRadii: corners).cgPath
 	}
     
     /// Modify the textView menu to display the message's time.

@@ -642,7 +642,94 @@ public extension String {
     }
 }
 
+public struct NSRectCorner: OptionSet {
+    public typealias RawValue = Int
+    public let rawValue: Int
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public static let none: NSRectCorner = []
+    public static let topLeft = NSRectCorner(1 << 0)
+    public static let topRight = NSRectCorner(1 << 1)
+    public static let bottomLeft = NSRectCorner(1 << 2)
+    public static let bottomRight = NSRectCorner(1 << 3)
+    public static let all: NSRectCorner = [.topLeft, .topLeft, .bottomLeft, .bottomRight]
+}
+
+public struct CornerRadii: Equatable {
+    public var topLeft: CGFloat
+    public var topRight: CGFloat
+    public var bottomLeft: CGFloat
+    public var bottomRight: CGFloat
+    
+    public init(topLeft: CGFloat, topRight: CGFloat, bottomLeft: CGFloat, bottomRight: CGFloat) {
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomLeft = bottomLeft
+        self.bottomRight = bottomRight
+    }
+    
+    public static let zero = CornerRadii(topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0)
+}
+
 public extension NSBezierPath {
+    
+    /// Builds a "squircle" rounded rectangle with the specified `corners` masked
+    /// to the specified `radius`. See iOS 7+ home screen icons for an example.
+    public convenience init(roundedIn rect: CGRect, corners: NSRectCorner, radius: CGFloat) {
+        let set = CornerRadii(topLeft: corners.contains(.topLeft) ? radius : 0.0,
+                              topRight: corners.contains(.topRight) ? radius : 0.0,
+                              bottomLeft: corners.contains(.bottomLeft) ? radius : 0.0,
+                              bottomRight: corners.contains(.bottomRight) ? radius : 0.0)
+        self.init(roundedIn: rect, cornerRadii: set)
+    }
+    
+    /// Builds a "squircle" rounded rectangle with the specified `cornerRadii`.
+    public convenience init(roundedIn rect: CGRect, cornerRadii: CornerRadii) {
+        self.init()
+        let bottomRight = CGPoint(x: rect.maxX, y: rect.minY)
+        let topRight = CGPoint(x: rect.maxX, y: rect.maxY)
+        let topLeft = CGPoint(x: rect.minX, y: rect.maxY)
+        let bottomLeft = CGPoint(x: rect.minX, y: rect.minY)
+        
+        self.move(to: bottomRight)
+        
+        if cornerRadii.bottomRight > 0.0 {
+            self.line(to: CGPoint(x: rect.maxX - (cornerRadii.bottomRight * 2), y: rect.minY))
+            self.curve(to: CGPoint(x: rect.maxX, y: rect.minY + (cornerRadii.bottomRight * 2)),
+                       controlPoint1: bottomRight, controlPoint2: bottomRight)
+        } else {
+            self.line(to: bottomRight)
+        }
+        
+        if cornerRadii.topRight > 0.0 {
+            self.line(to: CGPoint(x: rect.maxX, y: rect.maxY - (cornerRadii.topRight * 2)))
+            self.curve(to: CGPoint(x: rect.maxX - (cornerRadii.topRight * 2), y: rect.maxY),
+                       controlPoint1: topRight, controlPoint2: topRight)
+        } else {
+            self.line(to: topRight)
+        }
+        
+        if cornerRadii.topLeft > 0.0 {
+            self.line(to: CGPoint(x: rect.minX + (cornerRadii.topLeft * 2), y: rect.maxY))
+            self.curve(to: CGPoint(x: rect.minX, y: rect.maxY - (cornerRadii.topLeft * 2)),
+                       controlPoint1: topLeft, controlPoint2: topLeft)
+        } else {
+            self.line(to: topLeft)
+        }
+        
+        if cornerRadii.bottomLeft > 0.0 {
+            self.line(to: CGPoint(x: rect.minX, y: rect.minY + (cornerRadii.bottomLeft * 2)))
+            self.curve(to: CGPoint(x: rect.minX + (cornerRadii.bottomLeft * 2), y: rect.minY),
+                       controlPoint1: bottomLeft, controlPoint2: bottomLeft)
+        } else {
+            self.line(to: bottomLeft)
+        }
+    }
     
     public var cgPath: CGPath {
         let path = CGMutablePath()

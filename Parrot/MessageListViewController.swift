@@ -414,7 +414,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         
         let row = indexPath.item
         let prev = (row - 1) > 0 && (row - 1) < self.dataSource.count
-        let next = (row + 1) < self.dataSource.count && (row + 1) < 0
+        let next = (row + 1) > 0 && (row + 1) < self.dataSource.count
         item.representedObject = EventBundle(conversationId: self.conversation?.identifier ?? "",
                                              current: self.dataSource[row],
                                              previous: prev ? self.dataSource[row - 1] : nil,

@@ -2,6 +2,7 @@ import AppKit
 import Mocha
 
 /// Dispatch indirect touch events to `NSGestureRecognizer`s.
+/// TODO: It's better to set `NSWindow.gestureMask` and do this in `sendEvent:`.
 public final class IndirectTouchTracker {
     private var listener: SystemEventListener? = nil
     

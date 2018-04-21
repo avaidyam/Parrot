@@ -64,12 +64,12 @@ public class LayerButton: NSButton, CALayerDelegate {
             self.duration = duration
         }
         
-        public static let inactive = Properties(cornerRadius: 4.0, bezelColor: .darkGray,
-                                                rimOpacity: 0.25, iconColor: .white,
-                                                textColor: .white, duration: 0.5)
-        public static let active = Properties(cornerRadius: 4.0, bezelColor: .white,
-                                              rimOpacity: 0.25, iconColor: .darkGray,
-                                              textColor: .darkGray, duration: 0.1)
+        public static let inactive = Properties(cornerRadius: 4.0, bezelColor: .white,
+                                                rimOpacity: 0.25, iconColor: .darkGray,
+                                                textColor: .darkGray, duration: 0.5)
+        public static let active = Properties(cornerRadius: 4.0, bezelColor: .darkGray,
+                                              rimOpacity: 0.25, iconColor: .white,
+                                              textColor: .white, duration: 0.1)
     }
     
     private var containerLayer = CALayer()

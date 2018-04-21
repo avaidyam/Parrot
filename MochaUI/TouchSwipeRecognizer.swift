@@ -7,6 +7,15 @@ import Mocha
 public class TouchSwipeRecognizer: NSGestureRecognizer {
     public var wantsIndirectTouches: Bool { return true }
     
+    /// Used as the inset from horizontal and vertical edges for detection of a swipe.
+    /// It is automatically clamped to [0.0, 1.0].
+    public var detectionInset = CGSize(width: 0.5, height: 0.5) {
+        didSet {
+            self.detectionInset = CGSize(width: min(max(self.detectionInset.width, 0.0), 1.0),
+                                         height: min(max(self.detectionInset.height, 0.0), 1.0))
+        }
+    }
+    
     /// The average current swipe position of the fingers on the trackpad.
     /// If observing a horizontal swipe, use the `x` value, and if observing
     /// a vertical swipe, use the `y` value. Negative values indicate closer
@@ -42,7 +51,7 @@ public class TouchSwipeRecognizer: NSGestureRecognizer {
     }
     
     public override func touchesBegan(with event: NSEvent) {
-        guard event.touches(matching: .any, in: nil).count != 0 else { return } /* already started */
+        guard event.touches(matching: .touching, in: nil).count != 0 else { return } /* already started */
         self.initialTouches = event.touches(matching: .any, in: nil)
         self._time = CACurrentMediaTime()
         self.state = .began
@@ -55,19 +64,19 @@ public class TouchSwipeRecognizer: NSGestureRecognizer {
         
         let i = self.avg(of: self.initialTouches)
         let o = self.avg(of: event.touches(matching: .any, in: nil))
-        self.value = CGPoint(x: o.x - i.x, y: o.y - i.y)
+        self.value = CGPoint(x: (o.x - i.x), y: (o.y - i.y))
         self._time = CACurrentMediaTime()
         self.state = .changed
     }
     
     public override func touchesEnded(with event: NSEvent) {
-        guard event.touches(matching: .any, in: nil).count == 0 else { return }
+        guard event.touches(matching: .touching, in: nil).count == 0 else { return }
         self._time = CACurrentMediaTime()
         self.state = .ended
     }
     
     public override func touchesCancelled(with event: NSEvent) {
-        guard event.touches(matching: .any, in: nil).count == 0 else { return }
+        guard event.touches(matching: .touching, in: nil).count == 0 else { return }
         self._time = CACurrentMediaTime()
         self.state = .cancelled
     }
@@ -78,6 +87,7 @@ public class TouchSwipeRecognizer: NSGestureRecognizer {
         let sum = touches
             .map { $0.normalizedPosition }
             .reduce(.zero) { CGPoint(x: $0.x + $1.x, y: $0.y + $1.y) }
-        return CGPoint(x: sum.x / total, y: sum.y / total)
+        return CGPoint(x: (sum.x / total) / (1.0 - self.detectionInset.width),
+                       y: (sum.y / total) / (1.0 - self.detectionInset.height))
     }
 }
