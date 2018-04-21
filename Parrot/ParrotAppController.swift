@@ -23,6 +23,26 @@ public class ParrotAppController: NSApplicationController {
         try? ParrotAppController.main?.server.async(SendLogInvocation.self, with: unit)
     }
     
+    /// Intended to be a UI logger that presents to the user.
+    public let alertChannel = Logger.Channel { unit in
+        var style = NSAlert.Style.informational
+        switch unit.severity {
+        case .fatal:
+            style = .critical
+        case .error:
+            style = .critical
+        case .warning:
+            style = .warning
+        case .debug:
+            style = .informational
+        case .info:
+            style = .informational
+        }
+        let a = NSAlert(style: style, message: unit.message,
+                        information: "Encountered in Parrot subsystem [\(unit.subsystem)].")
+        _ = a.beginModal()
+    }
+    
     /// A reachability manager to detect network changes for `ServiceRegistry`.
     private let reachability = NetworkReachabilityManager(host: .reachabilityURL)
     
