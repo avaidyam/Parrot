@@ -56,14 +56,14 @@ internal protocol ServiceRequest: ProtoMessage {
     static var location: String { get }
     
     /// The client-sent header describing the RPC request.
-    var request_header: RequestHeader? { get set }
+    var requestHeader: ClientRequestHeader? { get set }
 }
 
 /// Defines a protobuf message used as an RPC response.
 internal protocol ServiceResponse: ProtoMessage {
     
     /// The server-sent header describing the RPC response.
-    var response_header: ResponseHeader? { get set }
+    var responseHeader: ClientResponseHeader? { get set }
 }
 
 
@@ -71,7 +71,7 @@ internal protocol ServiceResponse: ProtoMessage {
 public enum ServiceError: Error {
     
     /// The server returned an error (status code and description).
-    case server(ResponseStatus, String)
+    case server(ClientResponseStatus, String)
     
     /// An unknown error occurred during RPC transmission.
     case unknown

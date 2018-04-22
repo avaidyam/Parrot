@@ -35,8 +35,8 @@ public class User: Person, Hashable, Equatable {
     public internal(set) var mood: String = ""
     
     // Initialize a User directly.
-    // Handles full_name or first_name being nil by creating an approximate
-    // first_name from the full_name, or setting both to DEFAULT_NAME.
+    // Handles fullName or firstName being nil by creating an approximate
+    // firstName from the fullName, or setting both to DEFAULT_NAME.
     //
     // Ignores firstName value.
     public init(_ client: Client, userID: User.ID, fullName: String? = nil, photoURL: String? = nil,
@@ -51,11 +51,11 @@ public class User: Person, Hashable, Equatable {
     
     // Parse and initialize a User from an Entity.
     // Note: If selfUser is nil, assume this is the self user.
-    internal convenience init(_ client: Client, entity: Entity, selfUser: User.ID?) {
+    internal convenience init(_ client: Client, entity: ClientEntity, selfUser: User.ID?) {
         
         // Parse User ID and self status.
-        let userID = User.ID(chatID: entity.id!.chat_id!,
-                             gaiaID: entity.id!.gaia_id!)
+        let userID = User.ID(chatID: entity.id!.chatId!,
+                             gaiaID: entity.id!.gaiaId!)
         let isSelf = (selfUser != nil ? (selfUser == userID) : true)
         
         // If the entity has no provided properties, bail here.
@@ -65,26 +65,26 @@ public class User: Person, Hashable, Equatable {
         }
         
         // Parse possible phone numbers. Just use I18N and reformat it if needed.
-        let phoneI18N: String? = props.phones.first?.phone_number?.i18n_data?.international_number
+        let phoneI18N: String? = props.phoneNumberArray.first?.phoneNumber?.i18NData?.internationalNumber
         
         // Parse the user photo.
-        let photo: String? = props.photo_url != nil ? "https:" + props.photo_url! : nil
+        let photo: String? = props.photoURL != nil ? "https:" + props.photoURL! : nil
         
         // Parse possible locations.
         var locations: [String] = []
-        locations += props.email
-        locations += props.phone
-        if let c = props.canonical_email {
+        locations += props.emailArray
+        locations += props.phoneArray
+        if let c = props.canonicalEmail {
             locations.append(c)
         }
         if let p = phoneI18N {
             locations.append(p)
         }
         
-        var visibleName = props.display_name // default
-        if let type = entity.entity_type, type == .OffNetworkPhone {
+        var visibleName = props.displayName // default
+        if let type = entity.entityType, type == .offNetworkPhone {
             locations.append(User.GVoiceLocation) // tag the contact
-            visibleName = props.display_name != nil ? props.display_name : phoneI18N
+            visibleName = props.displayName != nil ? props.displayName : phoneI18N
         }
         
         // Initialize the user.
@@ -199,20 +199,20 @@ public class UserList: Directory {
         return self.addPeople(from: conversations.map { $0.conversation })
     }
     
-    internal func addPeople(from conversations: [Conversation]) -> [Person] {
+    internal func addPeople(from conversations: [ClientConversation]) -> [Person] {
         // Prepare a set of all conversation participant data first to batch the query.
-        var required = Set<ConversationParticipantData>()
-        conversations.forEach { conv in conv.participant_data.forEach { required.insert($0) } }
+        var required = Set<ClientConversationParticipantData>()
+        conversations.forEach { conv in conv.participantDataArray.forEach { required.insert($0) } }
         
         // Required step: get the base User objects prepared.
-        let specs = required.compactMap { EntityLookupSpec(gaia_id: $0.id!.gaia_id!) }
-        let req = GetEntityByIdRequest(batch_lookup_spec: specs)
+        let specs = required.compactMap { ClientEntityLookupSpec(gaiaId: $0.id!.gaiaId!) }
+        let req = ClientGetEntityByIdRequest(batchLookupSpecArray: specs)
         let response = try? self.client.execute(req)
         
-        let entities = response?.entity_result.flatMap { $0.entity } ?? []
-        self.cache(presencesFor: entities.filter { $0.entity_type != .OffNetworkPhone }.map { $0.id! })
+        let entities = response?.entityResultArray.flatMap { $0.entityArray } ?? []
+        self.cache(presencesFor: entities.filter { $0.entityType != .offNetworkPhone }.map { $0.id! })
         self.cache(namesFor: entities.compactMap {
-            $0.properties?.phones.first?.phone_number?.i18n_data?.international_number
+            $0.properties?.phoneNumberArray.first?.phoneNumber?.i18NData?.internationalNumber
         })
         return entities.filter { $0.id != nil }.map { entity in
             let user = User(self.client, entity: entity, selfUser: (self.me as! User).id)
@@ -224,17 +224,17 @@ public class UserList: Directory {
     }
     
     internal static func getSelfInfo(_ client: Client) -> User {
-        let res = try! client.execute(GetSelfInfoRequest())
-        let selfUser = User(client, entity: res.self_entity!, selfUser: nil)
+        let res = try! client.execute(ClientGetSelfInfoRequest())
+        let selfUser = User(client, entity: res.selfEntity!, selfUser: nil)
         return selfUser
     }
     
     ///
     public func search(by: String, limit: Int) -> [Person] {
-        let req = SearchEntitiesRequest(query: by, max_count: UInt64(limit))
+        let req = ClientSearchEntitiesRequest(query: by, maxCount: Int32(limit))
         let vals = try? self.client.execute(req)
-        return vals?.entity.map {
-            if let id = $0.id?.gaia_id, let u = self.users[User.ID(chatID: id, gaiaID: id)] {
+        return vals?.entityArray.map {
+            if let id = $0.id?.gaiaId, let u = self.users[User.ID(chatID: id, gaiaID: id)] {
                 return u
             } else {
                 let u = User(self.client, entity: $0, selfUser: (self.me as! User).id)
@@ -278,41 +278,43 @@ public class UserList: Directory {
     /// Note: all notification objects are expected to be deltas.
     @objc internal func _updatedState(_ notification: Notification) {
         guard   let userInfo = notification.userInfo,
-            let update = userInfo[Client.didUpdateStateKey] as? StateUpdate
+            let update = userInfo[Client.didUpdateStateKey] as? ClientStateUpdate
             else { return }
         
         // Cache all un-cached people from conversation deltas.
-        if  let conversation = update.conversation {
+        if  let conversation = update.clientConversation {
             _ = self.addPeople(from: [conversation])
         }
         
-        if let note = update.self_presence_notification {
+        if let note = update.selfPresenceNotification {
             let user = (self.me as! User)
-            if let state = note.client_presence_state?.state {
-                user.lastSeen = state == .DesktopActive ? Date() : Date(timeIntervalSince1970: 0)
+            /*
+            if let state = note.richPresenceState?.statusMessage {
+                user.lastSeen = state == .desktopActive ? Date() : Date(timeIntervalSince1970: 0)
             }
-            if let mood = note.mood_state?.mood_setting?.mood_message?.mood_content {
+            if let mood = note.moodState?.moodSetting?.moodMessage?.moodContent {
                 user.mood = mood.toText()
             }
+            */
             user.reachability = .desktop
             
             NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
-        } else if let note = update.presence_notification {
-            for presence in note.presence {
-                guard   let id1 = presence.user_id?.chat_id, let id2 = presence.user_id?.gaia_id,
+        } else if let note = update.presenceNotification {
+            for presence in note.presenceArray {
+                guard   let id1 = presence.userId?.chatId, let id2 = presence.userId?.gaiaId,
                     let user = self.users[User.ID(chatID: id1, gaiaID: id2)],
                     let pres = presence.presence
                     else { continue }
                 
-                if let usec = pres.last_seen?.last_seen_timestamp {
+                if let usec = pres.lastSeen?.lastSeenTimestampUsec {
                     user.lastSeen = Date(UTC: usec)
                 }
                 //if ??? {
                     user.reachability = pres.toReachability()
                 //}
-                if let mood = pres.mood_message.first?.mood_content {
+                /*if let mood = pres.status.first?.moodContent {
                     user.mood = mood.toText()
-                }
+                }*/
                 
                 NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
             }
@@ -320,28 +322,28 @@ public class UserList: Directory {
     }
     
     // Optional: Once we have all the entities, get their presence data.
-    private func cache(presencesFor queries: [ParticipantId]) {
+    private func cache(presencesFor queries: [ClientParticipantId]) {
         log.debug("Note: batch queryPresence does not work yet!")
         for q in queries {
-            let req = QueryPresenceRequest(participant_id: [q],
-                                           field_mask: [.Reachable, .Available, .Mood, .Location, .InCall, .Device, .LastSeen])
+            let req = ClientQueryPresenceRequest(participantIdArray: [q],
+                                           fieldMaskArray: [.reachability, .availability, .mood, .location, .inCall, .deviceStatus, .lastSeen])
             self.client.execute(req) { req, err in
-                for pres2 in req!.presence_result {
-                    guard   let id1 = pres2.user_id?.chat_id, let id2 = pres2.user_id?.gaia_id,
+                for pres2 in req!.presenceResultArray {
+                    guard   let id1 = pres2.userId?.chatId, let id2 = pres2.userId?.gaiaId,
                         let user = self.users[User.ID(chatID: id1, gaiaID: id2)],
                         let pres = pres2.presence
                         else { continue }
                     
-                    if let usec = pres.last_seen?.last_seen_timestamp {
+                    if let usec = pres.lastSeen?.lastSeenTimestampUsec {
                         user.lastSeen = Date(UTC: usec)
                     }
                     //if ??? {
                         user.reachability = pres.toReachability()
                     //}
                     
-                    if let mood = pres.mood_message.first?.mood_content {
+                    /*if let mood = pres.moodMessage.first?.moodContent {
                         user.mood = mood.toText()
-                    }
+                    }*/
                     
                     NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
                 }
@@ -434,18 +436,18 @@ public extension User {
     }
 }
 
-fileprivate extension MoodContent {
+fileprivate extension ClientMessageContent {
     func toText() -> String {
         var lines = ""
-        for segment in self.segment {
+        for segment in self.segmentArray {
             //if segment.type == nil { continue }
             switch (segment.type) {
-            case SegmentType.Text, SegmentType.Link:
+            case SocialSegmentType_SegmentTypeEnum.text, SocialSegmentType_SegmentTypeEnum.link:
                 lines += segment.text!
-            case SegmentType.LineBreak:
+            case SocialSegmentType_SegmentTypeEnum.lineBreak:
                 lines += "\n"
             default:
-                log.info("Ignoring unknown chat message segment type: \(segment.type)")
+                log.info("Ignoring unknown chat message segment type: \(String(describing: segment.type))")
             }
         }
         return lines
@@ -454,13 +456,13 @@ fileprivate extension MoodContent {
 
 // TODO: doesn't account for available vs reachable
 // Note: available=true shows a green dot, reachable=true does not...?
-fileprivate extension Presence {
+fileprivate extension ClientPresence {
     func toReachability() -> Reachability {
         let available = self.available ?? false
         let reachable = self.reachable ?? false
-        let mobile = self.device_status?.mobile ?? false
-        let desktop = self.device_status?.desktop ?? false
-        let tablet = self.device_status?.tablet ?? false
+        let mobile = self.deviceStatus?.mobile ?? false
+        let desktop = self.deviceStatus?.desktop ?? false
+        let tablet = self.deviceStatus?.tablet ?? false
         
         if mobile {
             return .phone

@@ -54,20 +54,20 @@ public final class Channel : NSObject {
 					let decodedUtf16LengthInChars = bufUTF16.count / 2
 					
 					let lengths = decoded.findAllOccurrences(matching: "([0-9]+)\n", all: true)
-					if let length_str = lengths.first { //length_str.endIndex.advancedBy(n: -1)
-						let length_str_without_newline = length_str[..<length_str.index(length_str.endIndex, offsetBy: -1)]
-						if let length = Int(length_str_without_newline) {
-							if (decodedUtf16LengthInChars - length_str.utf16.count) < length {
+					if let lengthStr = lengths.first { //lengthStr.endIndex.advancedBy(n: -1)
+						let lengthStrWithoutNewline = lengthStr[..<lengthStr.index(lengthStr.endIndex, offsetBy: -1)]
+						if let length = Int(lengthStrWithoutNewline) {
+							if (decodedUtf16LengthInChars - lengthStr.utf16.count) < length {
 								break
 							}
 							
-                            let subData = bufUTF16.subdata(in: Range(NSMakeRange(length_str.utf16.count * 2, length * 2))!)
+                            let subData = bufUTF16.subdata(in: Range(NSMakeRange(lengthStr.utf16.count * 2, length * 2))!)
 							let submission = NSString(data: subData, encoding: String.Encoding.utf16BigEndian.rawValue)! as String
 							submissions.append(submission)
 							
 							let submissionAsUTF8 = submission.data(using: String.Encoding.utf8)!
 							
-							let removeRange = NSMakeRange(0, (length_str.utf16.count + submissionAsUTF8.count))
+							let removeRange = NSMakeRange(0, (lengthStr.utf16.count + submissionAsUTF8.count))
 							buf.replaceBytes(in: removeRange, withBytes: nil, length: 0)
 						} else {
 							break
@@ -80,8 +80,8 @@ public final class Channel : NSObject {
 			return submissions
 		}
 		
-		// Decode data_bytes into a string using UTF-8.
-		// If data_bytes cannot be decoded, pop the last byte until it can be or
+		// Decode data into a string using UTF-8.
+		// If data cannot be decoded, pop the last byte until it can be or
 		// return an empty string.
 		private func bestEffortDecode(data: NSMutableData) -> String? {
 			for i in 0 ..< data.length {
@@ -173,15 +173,15 @@ public final class Channel : NSObject {
 			params["SID"] = self.sidParam!
 		}
 		
-		var data_dict = [
+		var dataDict = [
 			"count": mapList?.count ?? 0,
 			"ofs": 0
         ] as [String: Any]
 		
 		if let mapList = mapList {
-			for (map_num, map_) in mapList.enumerated() {
-				for (map_key, map_val) in map_ {
-					data_dict["req\(map_num)_\(map_key)"] = map_val
+			for (mapNum, map_) in mapList.enumerated() {
+				for (mapKey, mapVal) in map_ {
+					dataDict["req\(mapNum)_\(mapKey)"] = mapVal
 				}
 			}
 		}
@@ -190,7 +190,7 @@ public final class Channel : NSObject {
 		var request = URLRequest(url: URL(string: url)!)
 		request.httpMethod = "POST"
 		/* TODO: Clearly, we shouldn't call encodeURL(), but what do we do? */
-		request.httpBody = data_dict.encodeURL().data(using: String.Encoding.utf8,
+		request.httpBody = dataDict.encodeURL().data(using: String.Encoding.utf8,
 			allowLossyConversion: false)!
 		for (k, v) in Channel.getAuthorizationHeaders(self.cachedSAPISID) {
 			request.setValue(v, forHTTPHeaderField: k)
@@ -297,7 +297,7 @@ public final class Channel : NSObject {
 			
 			if let json = try? chunk.decodeJSON(), let container = json as? [Any] {
 				for inner in container {
-					//let array_id = inner[0]
+					//let arrayId = inner[0]
 					if let _inner = inner as? [Any], let array = _inner[1] as? [Any] {
 						hangoutsCenter
 							.post(name: Channel.didReceiveMessageNotification, object: self,
@@ -310,19 +310,19 @@ public final class Channel : NSObject {
 	
 	// Send a Protocol Buffer or JSON formatted chat API request.
 	// endpoint is the chat API endpoint to use.
-	// request_pb: The request body as a Protocol Buffer message.
-    // response_pb: The response body as a Protocol Buffer message.
+	// requestPb: The request body as a Protocol Buffer message.
+    // responsePb: The response body as a Protocol Buffer message.
     // Valid formats are: 'json' (JSON), 'protojson' (pblite), and 'proto'
     // (binary Protocol Buffer). 'proto' requires manually setting an extra
     // header 'X-Goog-Encode-Response-If-Executable: base64'.
-	internal func base_request(
+	internal func baseRequest(
 		path: String,
-		content_type: String = "application/json+protobuf",
+		contentType: String = "application/json+protobuf",
 		data: Data,
-		use_json: Bool = true,
+		useJson: Bool = true,
 		cb: @escaping (Result) -> Void)
     {
-		let params = ["alt": use_json ? "json" : "protojson"]
+		let params = ["alt": useJson ? "json" : "protojson"]
 		let url = URL(string: (path + "?key=" + Channel.APIKey + "&" + params.encodeURL()))!
 		let request = NSMutableURLRequest(url: url)
 		request.httpMethod = "POST"
@@ -331,7 +331,7 @@ public final class Channel : NSObject {
 		for (k, v) in Channel.getAuthorizationHeaders(self.cachedSAPISID) {
 			request.setValue(v, forHTTPHeaderField: k)
 		}
-		request.setValue(content_type, forHTTPHeaderField: "Content-Type")
+		request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 		
 		self.session.request(request: request as URLRequest) {
 			guard let _ = $0.data else {
@@ -373,7 +373,7 @@ public final class Channel : NSObject {
 	// Return authorization headers for API request. It doesn't seem to matter
 	// what the url and time are as long as they are consistent.
     // SAPISID = Secure API Session Identifier ?
-	public static func getAuthorizationHeaders(_ sapisid_cookie: String, origin: String = "https://talkgadget.google.com",
+	public static func getAuthorizationHeaders(_ sapisidCookie: String, origin: String = "https://talkgadget.google.com",
                                                extras: [String: String] = [:]) -> [String: String]
     {
 		func sha1(_ source: String) -> String {
@@ -384,12 +384,12 @@ public final class Channel : NSObject {
 			return store.map { String(format: "%02hhx", $0) }.joined(separator: "")
 		}
 		
-		let time_msec = Int(Date().timeIntervalSince1970 * 1000)
-		let auth_string = "\(time_msec) \(sapisid_cookie) \(origin)"
-		let auth_hash = sha1(auth_string)
-		let sapisidhash = "SAPISIDHASH \(time_msec)_\(auth_hash)"
+		let timeMsec = Int(Date().timeIntervalSince1970 * 1000)
+		let authString = "\(timeMsec) \(sapisidCookie) \(origin)"
+		let authHash = sha1(authString)
+		let sapisidHash = "SAPISIDHASH \(timeMsec)_\(authHash)"
 		return [
-			"Authorization": sapisidhash,
+			"Authorization": sapisidHash,
 			"X-Origin": origin,
 			"X-Goog-AuthUser": "0",
         ].merging(extras) { a, _ in a }

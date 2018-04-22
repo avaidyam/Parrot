@@ -98,8 +98,8 @@ internal extension PhotoAPI {
 {"protocolVersion":"0.8","createSessionRequest":{"fields":[{"external":{"name":"file","filename":"\(filename)","put":{},"size":\(data.count)}},{"inlined":{"name":"use_upload_size_pref","content":"true","contentType":"text/plain"}},{"inlined":{"name":"album_mode","content":"temporary","contentType":"text/plain"}},{"inlined":{"name":"title","content":"\(filename)","contentType":"text/plain"}},{"inlined":{"name":"addtime","content":"\(msec)","contentType":"text/plain"}},{"inlined":{"name":"batchid","content":"\(msec)","contentType":"text/plain"}},{"inlined":{"name":"album_name","content":"\(now.fullString(false))","contentType":"text/plain"}},{"inlined":{"name":"album_abs_position","content":"0","contentType":"text/plain"}},{"inlined":{"name":"client","content":"hangouts","contentType":"text/plain"}}]}}
 """
         
-        on.base_request(path: GooglePhoto.UPLOAD_URL,
-            content_type: "application/x-www-form-urlencoded;charset=UTF-8",
+        on.baseRequest(path: GooglePhoto.UPLOAD_URL,
+            contentType: "application/x-www-form-urlencoded;charset=UTF-8",
             data: jst.data(using: .utf8)!) { response in
                 
             // Sift through JSON for a response with the upload URL.
@@ -111,7 +111,7 @@ internal extension PhotoAPI {
             let _d = _c["putInfo"] as! NSDictionary
             let upload = (_d["url"] as! NSString) as String
                 
-            on.base_request(path: upload, content_type: "application/octet-stream", data: data) { resp in
+            on.baseRequest(path: upload, contentType: "application/octet-stream", data: data) { resp in
                 
                 // Sift through JSON for a response with the photo ID.
                 let _data2: NSDictionary = try! JSONSerialization.jsonObject(with: resp.data!,

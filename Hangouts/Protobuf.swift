@@ -1,5 +1,4 @@
 import Foundation
-import Mocha
 
 /* TODO: Does not support: syntax, imports, packages, services, extensions, options, nested types, oneof, maps. */
 
@@ -92,11 +91,15 @@ public struct ProtoDescriptor {
             
             // TODO: REMOVE // use this sparingly...
             public func adjustedName(_ root: String) -> String {
-                let comps = self.name.components(separatedBy: "_")
-                return comps.dropFirst()
-                    .map { $0.capitalized }
-                    .reduce(comps.first!.capitalized, +)
-                    .replacingOccurrences(of: root, with: "", options: .caseInsensitive)
+                if self.name.index(of: "_") != nil {
+                    let comps = self.name.components(separatedBy: "_")
+                    return comps.dropFirst()
+                        .map { $0.capitalized }
+                        .reduce(comps.first!.capitalized, +)
+                        .replacingOccurrences(of: root, with: "", options: .caseInsensitive)
+                } else {
+                    return self.name.prefix(1).lowercased() + self.name.dropFirst()
+                }
             }
         }
         

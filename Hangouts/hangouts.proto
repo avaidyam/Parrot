@@ -14,1767 +14,3145 @@ major exception that "Client" prefixes have been removed.
 // proto2 is required because we need to be able to serialize default values:
 //syntax = "proto2";
 
-// Describes which Hangouts client is active.
-enum ActiveClientState {
-  // No client is active.
-  ACTIVE_CLIENT_STATE_NO_ACTIVE = 0;
-  // This is the active client.
-  ACTIVE_CLIENT_STATE_IS_ACTIVE = 1;
-  // Other client is active.
-  ACTIVE_CLIENT_STATE_OTHER_ACTIVE = 2;
+message CPBHEligibleCallerIdToken {
+	optional GCVPhoneNumber callerIdPhoneNumber = 1;
+	optional bytes signature = 2;
+	optional uint64 signatureTtlUsec = 3;
 }
 
-// The state of do-not-disturb mode. Not to be confused with DndSetting, which
-// is used to change the state of do-not-disturb mode.
-message DoNotDisturbSetting {
-  // Whether do-not-disturb mode is enabled.
-  optional bool do_not_disturb = 1;
-  // Timestamp when do-not-disturb mode expires.
-  optional uint64 expiration_timestamp = 2;
-  // Timestamp when this setting was applied. Not present when this message
-  // comes from a notification.
-  optional uint64 version = 3;
+message GCVContactPhoneNumber {
+	optional GCVPhoneNumber phoneNumber = 1;
+	optional string type = 3;
+	optional string formattedType = 4;
 }
 
-message NotificationSettings {
-  optional DoNotDisturbSetting dnd_settings = 1;
+message GCVPhoneNumber_I18nData {
+	optional string nationalNumber = 1;
+	optional string internationalNumber = 2;
+	optional int32 countryCode = 3;
+	optional string regionCode = 4;
+	optional bool isValid = 5;
 }
 
-enum FocusType {
-  FOCUS_TYPE_UNKNOWN = 0;
-  FOCUS_TYPE_FOCUSED = 1;
-  FOCUS_TYPE_UNFOCUSED = 2;
+message GCVPhoneNumber {
+	optional string e164 = 1;
+	optional GCVPhoneNumber_I18nData i18NData = 2;
 }
 
-enum FocusDevice {
-  FOCUS_DEVICE_UNSPECIFIED = 0;
-  FOCUS_DEVICE_DESKTOP = 20;
-  FOCUS_DEVICE_MOBILE = 300;
-}
 
-// Identifies a conversation.
-message ConversationId {
-  // Unique identifier for a conversation.
-  optional string id = 1;
-}
-
-// Identifies a user.
-message ParticipantId {
-  // Unique identifier for a user's Google account.
-  optional string gaia_id = 1;
-  // Seems to always be the same as gaia_id.
-  optional string chat_id = 2;
-}
-
-// Indicates whether Hangouts is active (running in the foreground) on
-// different types of devices.
-message DeviceStatus {
-  // True if a mobile phone is active.
-  optional bool mobile = 1;
-  // True if a desktop or laptop is active.
-  optional bool desktop = 2;
-  // True if a tablet is active.
-  optional bool tablet = 3;
-}
-
-message LastSeen {
-  required uint64 last_seen_timestamp = 1; //in microseconds
-  optional uint64 usec_since_last_seen = 2;
-}
-
-message Location {
-  optional uint64 type = 1;
-  optional double lat = 2;
-  optional double lng = 3;
-  optional uint64 timestamp_msec = 4;
-  optional uint64 accuracy_meters = 5;
-  optional string display_name = 6;
-}
-
-message LocationSpec {
-  optional Place place = 1;
-}
-
-enum CallType {
-  CALL_TYPE_NONE = 0;
-  CALL_TYPE_PSTN = 1;
-  CALL_TYPE_HANGOUT = 2;
-}
-
-message InCall {
-  optional CallType call_type = 1;
-}
-
-message Presence {
-  optional bool reachable = 1;
-  optional bool available = 2;
-  repeated Location device_location = 3;
-  optional InCall in_call = 5;
-  optional DeviceStatus device_status = 6;
-  repeated MoodMessage mood_message = 9;
-  optional LastSeen last_seen = 10;
-
-  //TODO
-  //optional RichStatus rich_status = 4;
-}
-
-message PresenceResult {
-  optional ParticipantId user_id = 1;
-  optional Presence presence = 2;
-}
-
-enum TypingType {
-  TYPING_TYPE_UNKNOWN = 0;
-  // Started typing.
-  TYPING_TYPE_STARTED = 1;
-  // Stopped typing with inputted text.
-  TYPING_TYPE_PAUSED = 2;
-  // Stopped typing with no inputted text.
-  TYPING_TYPE_STOPPED = 3;
-}
-
-message ClientIdentifier {
-  // (client_id in hangups).
-  optional string resource = 1;
-  // unknown (header_id in hangups).
-  optional string client_id = 2;
-  optional string participant_log_id = 4;
-}
-
-enum ClientPresenceStateType {
-  CLIENT_PRESENCE_STATE_TYPE_UNKNOWN = 0;
-  CLIENT_PRESENCE_STATE_TYPE_NONE = 1;
-  CLIENT_PRESENCE_STATE_TYPE_MOBILE = 10;
-  CLIENT_PRESENCE_STATE_TYPE_DESKTOP_IDLE = 30;
-  CLIENT_PRESENCE_STATE_TYPE_DESKTOP_ACTIVE = 40;
-
-  // TODO
-}
-
-message ClientPresenceState {
-  optional ClientIdentifier identifier = 1;
-  optional ClientPresenceStateType state = 2;
-  optional uint64 expiration_timestamp = 3;
-}
-
-enum NotificationLevel {
-  NOTIFICATION_LEVEL_UNKNOWN = 0;
-  // Notifications are disabled.
-  NOTIFICATION_LEVEL_QUIET = 10;
-  NOTIFICATION_LEVEL_DING = 20;
-  // Notifications are enabled.
-  NOTIFICATION_LEVEL_RING = 30;
-}
-
-message UserEventState {
-  optional ParticipantId user_id = 1;
-  optional string client_generated_id = 2;
-  optional NotificationLevel notification_level = 3;
-}
-
-enum SegmentType {
-  // Segment is text.
-  SEGMENT_TYPE_TEXT = 0;
-  // Segment is a line break.
-  SEGMENT_TYPE_LINE_BREAK = 1;
-  // Segment is hyperlinked text.
-  SEGMENT_TYPE_LINK = 2;
-}
-
-message Formatting {
-  optional bool bold = 1;
-  optional bool italics = 2;
-  optional bool strikethrough = 3;
-  optional bool underline = 4;
-}
-
-message LinkData {
-  optional string link_target = 1;
-}
-
-// A segment of a message. Message are broken into segments that may be of
-// different types and have different formatting.
-message Segment {
-  // Note: This field is required because Hangouts for Chrome misbehaves if it
-  // isn't serialized.
-  required SegmentType type = 1;
-  // The segment text. For line breaks, may either be empty or contain new line
-  // character.
-  optional string text = 2;
-  // Formatting for this segment.
-  optional Formatting formatting = 3;
-  // Link data for this segment, if it is a link.
-  optional LinkData link_data = 4;
-}
-
-// A type of embedded item.
-enum ItemType {
-  ITEM_TYPE_THING = 0;
-  // Google Plus photo.
-  ITEM_TYPE_PLUS_PHOTO = 249;
-  ITEM_TYPE_PLACE = 335;
-  // Google Map place.
-  ITEM_TYPE_PLACE_V2 = 340;
-  ITEM_TYPE_VOICE_PHOTO = 438;
-}
-
-// Metadata for displaying an image thumbnail.
-message Thumbnail {
-
-  // URL to navigate to when thumbnail is selected (a Google Plus album
-  // page).
-  optional string url = 1;
-  // URL of thumbnail image.
-  optional string image_url = 4;
-  // Image width in pixels.
-  optional uint64 width_px = 10;
-  // Image height in pixels.
-  optional uint64 height_px = 11;
-}
-
-// Media type.
-enum MediaType {
-  MEDIA_TYPE_UNKNOWN = 0;
-  MEDIA_TYPE_PHOTO = 1;
-  MEDIA_TYPE_VIDEO = 2;
-  MEDIA_TYPE_ANIMATED_PHOTO = 4;
-}
-
-// Google Plus photo that can be embedded in a chat message.
-message PlusPhoto {
-
-  // Thumbnail.
-  optional Thumbnail thumbnail = 1;
-  // Owner obfuscated ID.
-  optional string owner_obfuscated_id = 2;
-  // Album ID.
-  optional string album_id = 3;
-  // Photo ID.
-  optional string photo_id = 4;
-  // URL of full-sized image.
-  optional string url = 6;
-  // URL of image thumbnail.
-  optional string original_content_url = 10;
-  // The media type.
-  optional MediaType media_type = 13;
-  // List of stream ID parameters.
-  repeated string stream_id = 14;
-  // The download URL for a video
-  optional string download_url = 20;
-}
-
-// Representative image of a place.
-message RepresentativeImage {
-  // URL of image.
-  optional string url = 2;
-  // Image -> optional string url = 1;
-  //optional Image image = 40265033;
-  optional VoicePhoto image = 40265033;
-}
-
-message PlaceDescription {
-  optional string text = 35;
-}
-
-message Coordinates {
-  optional double lat = 36;
-  optional double lng = 37;
-}
-
-message PlaceDisplayInfo {
-  optional PlaceDescription description = 36003298;
-}
-
-message PlaceLocationInfo {
-  optional Coordinates latlng = 36736749;
-}
-
-// TODO: https://github.com/tdryer/hangups/commit/6ba86d3a6a8cf65eac86ef2b7dadf712b492030f#diff-abc0cb9e161ad0fd9be1c2dc6c6c3acf
-// Place that can be embedded in a chat message via Google Maps.
-message Place {
-
-  // Google Maps URL pointing to the map coordinates.
-  optional string url = 1;
-  // Name of map location.
-  optional string name = 3;
-  optional PlaceDisplayInfo display_info = 24;
-  optional PlaceLocationInfo location_info = 25;
-  // Representative image of the place (map with pin).
-  optional RepresentativeImage representative_image = 185;
-}
-
-// Similar to a PlusPhoto, but different...?
-message VoicePhoto {
-  // URL of image.
-  optional string url = 1;
-}
-
-// An item of some type embedded in a chat message.
-message EmbedItem {
-  // List of embedded item types in this message.
-  repeated ItemType type = 1;
-  // For photos this is not given, for maps, it's the URL of the map.
-  optional string id = 2;
-  // Embedded Google Plus photo.
-  optional PlusPhoto plus_photo = 27639957;
-  // Embedded Google Map of a place.
-  optional Place place = 35825640;
-  optional Place place_v2 = 39748951;
-  // Embedded Google Voice photo.
-  optional VoicePhoto voice_photo = 62101782;
-}
-
-// An attachment for a chat message.
 message Attachment {
-  optional EmbedItem embed_item = 1;
-  optional string id = 3;
-}
-
-// Chat message content.
-message MessageContent {
-  repeated Segment segment = 1;
-  repeated Attachment attachment = 2;
-}
-
-// Annotation that can be applied to a chat message event. The only known use
-// for this is "\me" actions supported by the Chrome client (type 4).
-message EventAnnotation {
-  // Annotation type.
-  optional int32 type = 1;
-  // Optional annotation string value.
-  optional string value = 2;
-}
-
-// A chat message in a conversation.
-message ChatMessage {
-  // Optional annotation to attach to message.
-  repeated EventAnnotation annotation = 2;
-  // The message's content.
-  optional MessageContent message_content = 3;
-
-  // TODO:
-  // always 0? = 1;
-}
-
-enum MembershipChangeType {
-  MEMBERSHIP_CHANGE_TYPE_JOIN = 1;
-  MEMBERSHIP_CHANGE_TYPE_LEAVE = 2;
-}
-
-message Participant {
-  optional ParticipantId id = 1;
-  optional string first_name = 2;
-  optional string full_name = 3;
-  optional string profile_photo_url = 4;
-}
-
-message MembershipChange {
-  optional MembershipChangeType type = 1;
-  repeated Participant participant = 2;
-  repeated ParticipantId participant_ids = 3;
-
-  // TODO:
-  // leave_reason (4, 2) = 4;
-}
-
-message ConversationRename {
-  optional string new_name = 1;
-  optional string old_name = 2;
-}
-
-enum HangoutEventType {
-  HANGOUT_EVENT_TYPE_UNKNOWN = 0;
-  HANGOUT_EVENT_TYPE_START = 1;
-  HANGOUT_EVENT_TYPE_END = 2;
-  HANGOUT_EVENT_TYPE_JOIN = 3;
-  HANGOUT_EVENT_TYPE_LEAVE = 4;
-  HANGOUT_EVENT_TYPE_COMING_SOON = 5;
-  HANGOUT_EVENT_TYPE_ONGOING = 6;
-}
-
-enum HangoutMediaType {
-  HANGOUT_MEDIA_TYPE_UNKNOWN = 0;
-  HANGOUT_MEDIA_TYPE_AUDIO_VIDEO = 1;
-  HANGOUT_MEDIA_TYPE_AUDIO_ONLY = 2;
-}
-
-message HangoutEvent {
-  optional HangoutEventType event_type = 1;
-  repeated ParticipantId participant_id = 2;
-  optional uint64 hangout_duration_secs = 3;
-  optional ConversationId transferred_conversation_id = 4;
-  optional uint64 refresh_timeout_secs = 5;
-  optional bool is_peridoic_refresh = 6;
-  optional HangoutMediaType media_type = 7;
-
-  // TODO:
-  // unknown 3 = 25;
-}
-
-message OTRModification {
-  optional OffTheRecordStatus old_otr_status = 1;
-  optional OffTheRecordStatus new_otr_status = 2;
-  optional OffTheRecordToggle old_otr_toggle = 3;
-  optional OffTheRecordToggle new_otr_toggle = 4;
-}
-
-// Whether the OTR toggle is available to the user.
-enum OffTheRecordToggle {
-  OFF_THE_RECORD_TOGGLE_UNKNOWN = 0;
-  OFF_THE_RECORD_TOGGLE_ENABLED = 1;
-  OFF_THE_RECORD_TOGGLE_DISABLED = 2;
-}
-
-enum OffTheRecordStatus {
-  OFF_THE_RECORD_STATUS_UNKNOWN = 0;
-  // Conversation is off-the-record (history disabled).
-  OFF_THE_RECORD_STATUS_OFF_THE_RECORD = 1;
-  // Conversation is on-the-record (history enabled).
-  OFF_THE_RECORD_STATUS_ON_THE_RECORD = 2;
-}
-
-enum SourceType {
-  SOURCE_TYPE_UNKNOWN = 0;
-  SOURCE_TYPE_MOBILE = 1;
-  SOURCE_TYPE_WEB = 2;
-}
-
-enum EventType {
-  EVENT_TYPE_UNKNOWN = 0;
-  EVENT_TYPE_REGULAR_CHAT_MESSAGE = 1;
-  EVENT_TYPE_SMS = 2;
-  EVENT_TYPE_VOICEMAIL = 3;
-  EVENT_TYPE_ADD_USER = 4;
-  EVENT_TYPE_REMOVE_USER = 5;
-  EVENT_TYPE_CONVERSATION_RENAME = 6;
-  EVENT_TYPE_HANGOUT = 7;
-  EVENT_TYPE_PHONE_CALL = 8;
-  EVENT_TYPE_OTR_MODIFICATION = 9;
-  EVENT_TYPE_PLAN_MUTATION = 10;
-  EVENT_TYPE_MMS = 11;
-  EVENT_TYPE_DEPRECATED_12 = 12;
-  EVENT_TYPE_OBSERVED_EVENT = 13;
-  EVENT_TYPE_GROUP_LINK_SHARING_MODIFICATION = 14;
-}
-
-message HashModifier {
-  optional string update_id = 1;
-  optional uint64 hash_diff = 2;
-  optional uint64 version = 4;
-}
-
-// Event that becomes part of a conversation's history.
-message Event {
-  // ID of the conversation this event belongs to.
-  optional ConversationId conversation_id = 1;
-  // ID of the user that sent this event.
-  optional ParticipantId sender_id = 2;
-  // Timestamp when the event occurred.
-  optional uint64 timestamp = 3;
-  optional UserEventState self_event_state = 4;
-  optional SourceType source_type = 6;
-  optional ChatMessage chat_message = 7;
-  optional MembershipChange membership_change = 9;
-  optional ConversationRename conversation_rename = 10;
-  optional HangoutEvent hangout_event = 11;
-  // Unique ID for the event.
-  optional string event_id = 12;
-  optional uint64 expiration_timestamp = 13;
-  optional OTRModification otr_modification = 14;
-  optional bool advances_sort_timestamp = 15;
-  optional OffTheRecordStatus event_otr = 16;
-  optional bool persisted = 17;
-  optional DeliveryMedium delivery_medium = 20;
-  // The event's type.
-  optional EventType event_type = 23;
-  // Event version timestamp.
-  optional uint64 event_version = 24;
-  optional HashModifier hash_modifier = 26;
-  optional GroupLinkSharingModification group_link_sharing_modification = 31;
-}
-
-enum ConversationType {
-  CONVERSATION_TYPE_UNKNOWN = 0;
-  // Conversation is one-to-one (only 2 participants).
-  CONVERSATION_TYPE_ONE_TO_ONE = 1;
-  // Conversation is group (any number of participants).
-  CONVERSATION_TYPE_GROUP = 2;
-}
-
-message UserReadState {
-  optional ParticipantId participant_id = 1;
-  // Timestamp of the user's last read message in the conversation.
-  optional uint64 latest_read_timestamp = 2;
-  // TODO: is latest_read_timestamp always 0?
-}
-
-enum ConversationStatus {
-  CONVERSATION_STATUS_UNKNOWN = 0;
-  // User is invited to conversation.
-  CONVERSATION_STATUS_INVITED = 1;
-  // User is participating in conversation.
-  CONVERSATION_STATUS_ACTIVE = 2;
-  // User has left conversation.
-  CONVERSATION_STATUS_LEFT = 3;
-}
-
-enum ConversationView {
-  CONVERSATION_VIEW_UNKNOWN = 0;
-  // Conversation is in inbox.
-  CONVERSATION_VIEW_INBOX = 1;
-  // Conversation has been archived.
-  CONVERSATION_VIEW_ARCHIVED = 2;
-}
-
-enum DeliveryMediumType {
-  DELIVERY_MEDIUM_TYPE_UNKNOWN = 0;
-  DELIVERY_MEDIUM_TYPE_BABEL = 1;
-  DELIVERY_MEDIUM_TYPE_GOOGLE_VOICE = 2;
-  DELIVERY_MEDIUM_TYPE_LOCAL_SMS = 3;
-}
-
-message DeliveryMedium {
-  optional DeliveryMediumType medium_type = 1;
-  // Phone number to use for sending Google Voice messages.
-  optional PhoneNumber self_phone = 2;
-}
-
-message DeliveryMediumOption {
-  optional DeliveryMedium delivery_medium = 1;
-  optional bool current_default = 2;
-  optional bool primary = 3;
-}
-
-enum InvitationAffinity {
-  INVITATION_AFFINITY_UNKNOWN = 0;
-  INVITATION_AFFINITY_HIGH = 1;
-  INVITATION_AFFINITY_LOW = 2;
-}
-
-message UserConversationState {
-   optional string client_generated_id = 2;
-   optional UserReadState self_read_state = 7;
-   optional ConversationStatus status = 8;
-   optional NotificationLevel notification_level = 9;
-   repeated ConversationView view = 10;
-   optional ParticipantId inviter_id = 11;
-   optional uint64 invite_timestamp = 12;
-   optional uint64 sort_timestamp = 13;
-   optional uint64 active_timestamp = 14;
-   optional InvitationAffinity invite_affinity = 15;
-   repeated DeliveryMediumOption delivery_medium_option = 17;
-}
-
-enum ParticipantType {
-  PARTICIPANT_TYPE_UNKNOWN = 0;
-  PARTICIPANT_TYPE_GAIA = 2;
-  PARTICIPANT_TYPE_OFF_NETWORK_PHONE = 3;
-}
-
-enum InvitationStatus {
-  INVITATION_STATUS_UNKNOWN = 0;
-  INVITATION_STATUS_PENDING = 1;
-  INVITATION_STATUS_ACCEPTED = 2;
-  INVITATION_STATUS_NEEDED = 3;
-}
-
-message ConversationParticipantData {
-  optional ParticipantId id = 1;
-  optional string fallback_name = 2;
-  optional InvitationStatus invitation_status = 3;
-  optional PhoneNumber phone_number = 4;
-  optional ParticipantType participant_type = 5;
-  optional InvitationStatus new_invitation_status = 6;
-}
-
-enum ForceHistory {
-  FORCE_HISTORY_UNKNOWN = 0;
-  FORCE_HISTORY_NO = 1;
-}
-
-enum NetworkType { //ER is this the same as DeliveryMediumType ?
-  NETWORK_TYPE_UNKNOWN = 0;
-  NETWORK_TYPE_BABEL = 1;
-  NETWORK_TYPE_PHONE = 2;
-}
-
-// A conversation between two or more users.
-message Conversation {
-  optional ConversationId conversation_id = 1;
-  optional ConversationType type = 2;
-  optional string name = 3;
-  optional UserConversationState self_conversation_state = 4;
-  // Read state (watermark position) for every conversation participant.
-  repeated UserReadState read_state = 8;
-  // True if the conversation has an active Hangout.
-  optional bool has_active_hangout = 9;
-  // The conversation's "off the record" status.
-  optional OffTheRecordStatus otr_status = 10;
-  // Whether the OTR toggle is available to the user for this conversation.
-  optional OffTheRecordToggle otr_toggle = 11;
-  optional bool conversation_history_supported = 12;
-  repeated ParticipantId current_participant = 13;
-  repeated ConversationParticipantData participant_data = 14;
-  optional bool fork_on_external_invite = 16;
-  repeated NetworkType network_type = 18;
-  optional ForceHistory force_history_state = 19;
-  optional bool is_group_link_sharing_enabled = 21;
-  optional GroupLinkSharingStatus group_link_sharing_status = 22;
-}
-
-message EasterEgg {
-  optional string message = 1;
-}
-
-enum BlockState {
-  BLOCK_STATE_UNKNOWN = 0;
-  BLOCK_STATE_BLOCK = 1;
-  BLOCK_STATE_UNBLOCK = 2;
-}
-
-message BlockStateChange {
-  optional ParticipantId participant_id = 1;
-  optional BlockState new_block_state = 2;
-}
-
-message InvitationState {
-  optional uint64 unread_invite_count = 1;
-  optional uint64 latest_read_timestamp = 2;
-}
-
-enum ReplyToInviteType {
-  REPLY_TO_INVITE_TYPE_UNKNOWN = 0;
-  REPLY_TO_INVITE_TYPE_ACCEPT = 1;
-  REPLY_TO_INVITE_TYPE_DECLINE = 2;
-}
-
-message Photo {
-  // Picasa photo ID.
-  optional string photo_id = 1;
-  optional bool delete_albumless_source_photo = 2;
-  // Optional Picasa user ID needed for photos from other accounts (eg. stickers).
-  optional string user_id = 3;
-  // Must be true if user_id is specified.
-  optional bool is_custom_user_id = 4;
-
-  // TODO: test delete_albumless_source_photo
-  // TODO: verify name/behaviour of 'is_custom_user_id' field
-}
-
-message ExistingMedia {
-  optional Photo photo = 1;
-}
-
-message EventRequestHeader {
-  optional ConversationId conversation_id = 1;
-  optional uint64 client_generated_id = 2;
-  optional OffTheRecordStatus expected_otr = 3;
-  optional DeliveryMedium delivery_medium = 4;
-  optional EventType event_type = 5;
-}
-
-// Identifies the client.
-enum ClientId {
-  CLIENT_ID_UNKNOWN = 0;
-  // Hangouts app for Android.
-  CLIENT_ID_ANDROID = 1;
-  // Hangouts app for iOS.
-  CLIENT_ID_IOS = 2;
-  // Hangouts Chrome extension.
-  CLIENT_ID_CHROME = 3;
-  // Hangouts web interface in Google Plus.
-  CLIENT_ID_WEB_GPLUS = 5;
-  // Hangouts web interface in Gmail.
-  CLIENT_ID_WEB_GMAIL = 6;
-  CLIENT_ID_BOT = 7;
-  CLIENT_ID_GLASS_SERVER = 9;
-  CLIENT_ID_PSTN_BOT = 10;
-  CLIENT_ID_TEE = 11;
-  // Hangouts Chrome app ("ultraviolet").
-  CLIENT_ID_ULTRAVIOLET = 13;
-  CLIENT_ID_ROOM_SERVER = 14;
-  CLIENT_ID_SPEAKEASY = 16;
-  CLIENT_ID_GOOGLE_VOICE = 17;
-  CLIENT_ID_PROBER = 18;
-  CLIENT_ID_ANDROID_PSTN_ONLY = 27;
-  // TODO work out what this is
-  CLIENT_ID_SOMETHING = 34;
-  CLIENT_ID_TEST_CLIENT = 35;
-  // Hangouts web app (https://hangouts.google.com).
-  CLIENT_ID_WEB_HANGOUTS = 44;
-}
-
-// Build type of the client.
-enum ClientBuildType {
-  CLIENT_BUILD_TYPE_UNKNOWN = 0;
-  // Web app.
-  CLIENT_BUILD_TYPE_PRODUCTION_WEB = 1;
-  CLIENT_BUILD_TYPE_DOGFOOD = 2;
-  // Native app.
-  CLIENT_BUILD_TYPE_PRODUCTION_APP = 3;
-}
-
-// The client and device version.
-message ClientVersion {
-  // Identifies the client.
-  optional ClientId client_id = 1;
-  // The client build type.
-  optional ClientBuildType build_type = 2;
-  // Client version.
-  optional string major_version = 3;
-  // Client version timestamp.
-  optional uint64 version_timestamp = 4;
-  // OS version string (for native apps).
-  optional string device_os_version = 5;
-  // Device hardware name (for native apps).
-  optional string device_hardware = 6;
-}
-
-enum Device {
-  DEVICE_UNKNOWN = 0;
-  DEVICE_ANDROID_PHONE = 2;
-  DEVICE_ANDROID_TABLET = 3;
-  DEVICE_IOS_PHONE = 4;
-  DEVICE_IOS_TABLET = 5;
-}
-
-enum Application {
-  APPLICATION_BABEL = 407;
-}
-
-enum Platform {
-  PLATFORM_UNKNOWN = 0;
-  PLATFORM_NATIVE = 2;
-}
-
-message RtcClient {
-  optional Device device = 1;
-  optional Application application = 2;
-  optional Platform platform = 3;
-}
-
-// Header for requests from the client to the server.
-message RequestHeader {
-  optional ClientVersion client_version = 1;
-  optional ClientIdentifier client_identifier = 2;
-  optional string language_code = 4;
-  optional bool include_updated_conversation = 5;
-  optional uint32 retry_attempt = 6;
-
-  // TODO: incomplete
-  //optional uint64 message_id = 3;
-  //optional ClientInstrumentationInfo client_instrumentation_info = 3;
-  optional RtcClient rtc_client = 7;
-}
-
-// Status of the response from the server to the client.
-enum ResponseStatus {
-  RESPONSE_STATUS_UNKNOWN = 0;
-  RESPONSE_STATUS_OK = 1;
-  RESPONSE_STATUS_BUSY = 2;
-  RESPONSE_STATUS_UNEXPECTED_ERROR = 3;
-  RESPONSE_STATUS_INVALID_REQUEST = 4;
-  RESPONSE_STATUS_ERROR_RETRY_LIMIT = 5;
-  RESPONSE_STATUS_ERROR_FORWARDED = 6;
-  RESPONSE_STATUS_ERROR_QUOTA_EXCEEDED = 7;
-  RESPONSE_STATUS_ERROR_INVALID_CONVERSATION = 8;
-  RESPONSE_STATUS_ERROR_VERSION_MISMATCH = 9;
-  RESPONSE_STATUS_ERROR_ACCESS_CHECK_FAILED = 10;
-  RESPONSE_STATUS_ERROR_NOT_FOUND = 11;
-}
-
-// Header for responses from the server to the client.
-message ResponseHeader {
-  optional ResponseStatus status = 1;
-  optional string error_description = 2;
-  optional string debug_url = 3;
-  optional string request_trace_id = 4;
-  optional uint64 current_server_time = 5;
-  optional uint64 backoff_duration_millis = 6;
-  optional string localized_user_visible_error_message = 8;
-}
-
-enum PastHangoutState {
-  PAST_HANGOUT_STATE_UNKNOWN = 0;
-  PAST_HANGOUT_STATE_HAD_PAST_HANGOUT = 1;
-  PAST_HANGOUT_STATE_NO_PAST_HANGOUT = 2;
-}
-
-// A user that can participate in conversations.
-message Entity {
-  // The user's ID.
-  optional ParticipantId id = 9;
-  // Optional user presence status.
-  optional Presence presence = 8;
-  optional bool invalid = 7;
-  //optional Availability availability = 5;
-  // Optional user properties.
-  optional EntityProperties properties = 10;
-  optional bool blocked = 11;
-  optional ParticipantType entity_type = 13;
-  optional PastHangoutState had_past_hangout_state = 16;
-
-  // TODO:
-  // unknown 1 = 15;
-  // unknown 2 = 17;
-}
-
-message EntityProperties {
-  optional ProfileType type = 1;
-  optional string display_name = 2;
-  optional string first_name = 3;
-  // Photo URL with protocol scheme omitted (eg.
-  // "//lh.googleusercontent.com/...").
-  optional string photo_url = 4;
-  repeated string email = 5;
-  repeated string phone = 6;
-  optional string location = 7;
-  optional string organization = 8;
-  optional string role = 9;
-  optional bool in_users_domain = 10;
-  optional Gender gender = 11;
-  optional PhotoUrlStatus photo_url_status = 12;
-  repeated PhoneDescription phones = 14;
-  optional string canonical_email = 15;
-}
-
-// Status of EntityProperties.photo_url.
-enum PhotoUrlStatus {
-  PHOTO_URL_STATUS_UNKNOWN = 0;
-  // URL is a placeholder.
-  PHOTO_URL_STATUS_PLACEHOLDER = 1;
-  // URL is a photo set by the user.
-  PHOTO_URL_STATUS_USER_PHOTO = 2;
-}
-
-enum Gender {
-  GENDER_UNKNOWN = 0;
-  GENDER_MALE = 1;
-  GENDER_FEMALE = 2;
-}
-
-enum ProfileType {
-  PROFILE_TYPE_NONE = 0;
-  PROFILE_TYPE_ES_USER = 1;
-  PROFILE_TYPE_PAGE = 2;
-}
-
-// State of a conversation and recent events.
-message ConversationState {
-  optional ConversationId conversation_id = 1;
-  optional Conversation conversation = 2;
-  repeated Event event = 3;
-  optional EventContinuationToken event_continuation_token = 5;
-}
-
-// Token that allows retrieving more events from a position in a conversation.
-// Specifying event_timestamp is sufficient.
-message EventContinuationToken {
-  optional string event_id = 1;
-  optional bytes storage_continuation_token = 2;
-  optional uint64 event_timestamp = 3;
-}
-
-// Specifies an entity to lookup by one of its properties.
-message EntityLookupSpec {
-  optional string gaia_id = 1;
-  optional string jid = 2;
-  optional string email = 3;
-  optional string phone = 4;
-  optional string chat_id = 5;
-  // Whether create a gaia_id for off-network contacts (eg. Google Voice contacts).
-  optional bool create_offnetwork_gaia = 6;
-}
-
-// A type of binary configuration option.
-enum ConfigurationBitType {
-
-  // TODO
-  // HANGOUT_P2P_NOTICE_ACKNOWLEDGED
-  // HANGOUT_P2P_ENABLED
-
-  CONFIGURATION_BIT_TYPE_UNKNOWN = 0;
-  CONFIGURATION_BIT_TYPE_QUASAR_MARKETING_PROMO_DISMISSED = 1;
-  CONFIGURATION_BIT_TYPE_GPLUS_SIGNUP_PROMO_DISMISSED = 2;
-  CONFIGURATION_BIT_TYPE_CHAT_WITH_CIRCLES_ACCEPTED = 3;
-  CONFIGURATION_BIT_TYPE_CHAT_WITH_CIRCLES_PROMO_DISMISSED = 4;
-  CONFIGURATION_BIT_TYPE_ALLOWED_FOR_DOMAIN = 5;
-  CONFIGURATION_BIT_TYPE_GMAIL_CHAT_ARCHIVE_ENABLED = 6;
-  CONFIGURATION_BIT_TYPE_GPLUS_UPGRADE_ALLOWED_FOR_DOMAIN = 7;
-  CONFIGURATION_BIT_TYPE_RICH_PRESENCE_ACTIVITY_PROMO_SHOWN = 8;
-  CONFIGURATION_BIT_TYPE_RICH_PRESENCE_DEVICE_PROMO_SHOWN = 9;
-  CONFIGURATION_BIT_TYPE_RICH_PRESENCE_IN_CALL_STATE_PROMO_SHOWN = 10;
-  CONFIGURATION_BIT_TYPE_RICH_PRESENCE_MOOD_PROMO_SHOWN = 11;
-  CONFIGURATION_BIT_TYPE_CAN_OPT_INTO_GV_SMS_INTEGRATION = 12;
-  CONFIGURATION_BIT_TYPE_GV_SMS_INTEGRATION_ENABLED = 13;
-  CONFIGURATION_BIT_TYPE_GV_SMS_INTEGRATION_PROMO_SHOWN = 14;
-  CONFIGURATION_BIT_TYPE_BUSINESS_FEATURES_ELIGIBLE = 15;
-  CONFIGURATION_BIT_TYPE_BUSINESS_FEATURES_PROMO_DISMISSED = 16;
-  CONFIGURATION_BIT_TYPE_BUSINESS_FEATURES_ENABLED = 17;
-  CONFIGURATION_BIT_TYPE_UNKNOWN_18 = 18;
-  CONFIGURATION_BIT_TYPE_RICH_PRESENCE_LAST_SEEN_MOBILE_PROMO_SHOWN = 19;
-  CONFIGURATION_BIT_TYPE_RICH_PRESENCE_LAST_SEEN_DESKTOP_PROMPT_SHOWN = 20;
-  CONFIGURATION_BIT_TYPE_UNKNOWN_21 = 21;
-  CONFIGURATION_BIT_TYPE_RICH_PRESENCE_LAST_SEEN_DESKTOP_PROMO_SHOWN = 22;
-  CONFIGURATION_BIT_TYPE_CONVERSATION_INVITE_SETTINGS_SET_TO_CUSTOM = 23;
-  CONFIGURATION_BIT_TYPE_REPORT_ABUSE_NOTICE_ACKNOWLEDGED = 24;
-  CONFIGURATION_BIT_TYPE_UNKNOWN_25 = 25;
-  CONFIGURATION_BIT_TYPE_UNKNOWN_26 = 26;
-  CONFIGURATION_BIT_TYPE_PHONE_VERIFICATION_MOBILE_PROMPT_SHOWN = 27;
-  CONFIGURATION_BIT_TYPE_CAN_USE_GV_CALLER_ID_FEATURE = 28;
-  CONFIGURATION_BIT_TYPE_PHOTO_SERVICE_REGISTERED = 29;
-  CONFIGURATION_BIT_TYPE_GV_CALLER_ID_WABEL_FIRST_TIME_DIALOG_SHOWN = 30;
-  CONFIGURATION_BIT_TYPE_HANGOUT_P2P_NOTICE_NEEDS_ACKNOWLEDGEMENT = 31;
-  CONFIGURATION_BIT_TYPE_UNKNOWN_32 = 32;
-  CONFIGURATION_BIT_TYPE_INVITE_NOTIFICATIONS_ENABLED = 33;
-  CONFIGURATION_BIT_TYPE_DESKTOP_AUTO_EMOJI_CONVERSION_ENABLED = 34;
-  CONFIGURATION_BIT_TYPE_WARM_WELCOME_SEEN = 35;
-  CONFIGURATION_BIT_TYPE_INVITE_HAPPY_STATE_PROMO_SEEN = 36;
-  CONFIGURATION_BIT_TYPE_DESKTOP_HOST_DENSITY_SETTINGS_ENABLED = 37;
-  CONFIGURATION_BIT_TYPE_DESKTOP_COMPACT_MODE_ENABLED = 38;
-}
-
-message ConfigurationBit {
-  optional ConfigurationBitType configuration_bit_type = 1;
-  optional bool value = 2;
-}
-
-enum RichPresenceType {
-  RICH_PRESENCE_TYPE_UNKNOWN = 0;
-  RICH_PRESENCE_TYPE_IN_CALL_STATE = 1;
-  RICH_PRESENCE_TYPE_DEVICE = 2;
-  RICH_PRESENCE_TYPE_MOOD = 3;
-  RICH_PRESENCE_TYPE_ACTIVITY = 4;
-  RICH_PRESENCE_TYPE_GLOBALLY_ENABLED = 5;
-  RICH_PRESENCE_TYPE_LAST_SEEN = 6;
-}
-
-message RichPresenceState {
-  repeated RichPresenceEnabledState get_rich_presence_enabled_state = 3;
-}
-
-message RichPresenceEnabledState {
-  optional RichPresenceType type = 1;
-  optional bool enabled = 2;
-}
-
-enum FieldMask {
-  FIELD_MASK_REACHABLE = 1;
-  FIELD_MASK_AVAILABLE = 2;
-  FIELD_MASK_MOOD = 3;
-  FIELD_MASK_LOCATION = 4;
-  FIELD_MASK_IN_CALL = 6;
-  FIELD_MASK_DEVICE = 7;
-  FIELD_MASK_LAST_SEEN = 10;
-
-  // TODO: 5,8,9?
-}
-
-message DesktopOffSetting {
-  // State of "desktop off" setting.
-  optional bool desktop_off = 1;
-}
-
-message DesktopOffState {
-  // Whether Hangouts desktop is signed off or on.
-  optional bool desktop_off = 1;
-  optional uint64 version = 2;
-}
-
-// Enable or disable do-not-disturb mode. Not to be confused with
-// DoNotDisturbSetting, which is used to indicate the state of do-not-disturb
-// mode.
-message DndSetting {
-  // Whether to enable or disable do-not-disturb mode.
-  optional bool do_not_disturb = 1;
-  // Do not disturb expiration in seconds.
-  optional uint64 timeout_secs = 2;
-}
-
-message PresenceStateSetting {
-  optional uint64 timeout_secs = 1;
-  optional ClientPresenceStateType type = 2;
-}
-
-message MoodMessage {
-  optional MoodContent mood_content = 1;
-}
-
-message MoodContent {
-  repeated Segment segment = 1;
-}
-
-// The user's mood message.
-message MoodSetting {
-  optional MoodMessage mood_message = 1;
-}
-
-message MoodState {
-  optional MoodSetting mood_setting = 4;
-}
-
-enum DeleteType {
-  DELETE_TYPE_UNKNOWN = 0;
-  DELETE_TYPE_UPPER_BOUND = 1;
-}
-
-message DeleteAction {
-  optional uint64 delete_action_timestamp = 1;
-  optional uint64 delete_upper_bound_timestamp = 2;
-  optional DeleteType delete_type = 3;
-}
-
-message InviteeID {
-  optional string gaia_id = 1;
-  optional string circle_id = 2;
-  optional string chat_id = 3;
-  optional string fallback_name = 4;
-}
-
-enum SyncFilter {
-  SYNC_FILTER_UNKNOWN = 0;
-  SYNC_FILTER_INBOX = 1;
-  SYNC_FILTER_ARCHIVED = 2;
-  SYNC_FILTER_ACTIVE = 3;
-  SYNC_FILTER_INVITED = 4;
-  SYNC_FILTER_INVITED_LOW_AFFINITY = 5;
-}
-
-// Describes a user's country.
-message Country {
-  // Abbreviated region code (eg. "CA").
-  optional string region_code = 1;
-  // Country's calling code (eg. "1").
-  optional uint64 country_code = 2;
-}
-
-enum SoundState {
-  SOUND_STATE_UNKNOWN = 0;
-  SOUND_STATE_ON = 1;
-  SOUND_STATE_OFF = 2;
-}
-
-// Sound settings in the desktop Hangouts client.
-message DesktopSoundSetting {
-  // Whether to play sound for incoming messages.
-  optional SoundState desktop_sound_state = 1;
-  // Whether to ring for incoming calls.
-  optional SoundState desktop_ring_sound_state = 2;
-}
-
-enum CallerIdSettingsMask {
-  CALLER_ID_SETTINGS_MASK_UNKNOWN = 0;
-  CALLER_ID_SETTINGS_MASK_PROVIDED = 1;
-}
-
-message PhoneData {
-  repeated Phone phone = 1;
-  optional CallerIdSettingsMask caller_id_settings_mask = 3;
-}
-
-// FIXME
-message PhoneDescription {
-  optional PhoneNumber phone_number = 1;
-  optional string label = 3;
-}
-
-enum PhoneVerificationStatus {
-  PHONE_VERIFICATION_STATUS_UNKNOWN = 0;
-  PHONE_VERIFICATION_STATUS_VERIFIED = 1;
-}
-
-enum PhoneDiscoverabilityStatus {
-  PHONE_DISCOVERABILITY_STATUS_UNKNOWN = 0;
-  PHONE_DISCOVERABILITY_STATUS_OPTED_IN_BUT_NOT_DISCOVERABLE = 2;
-}
-
-message Phone {
-  optional PhoneNumber phone_number = 1;
-  optional bool google_voice = 2;
-  optional PhoneVerificationStatus verification_status = 3;
-  optional bool discoverable = 4;
-  optional PhoneDiscoverabilityStatus discoverability_status = 5;
-  optional bool primary = 6;
-}
-
-enum PhoneValidationResult {
-  PHONE_VALIDATION_RESULT_IS_POSSIBLE = 0;
-}
-
-message I18nData {
-  optional string national_number = 1;
-  optional string international_number = 2;
-  optional uint64 country_code = 3;
-  optional string region_code = 4;
-  optional bool is_valid = 5;
-  optional PhoneValidationResult validation_result = 6;
-}
-
-message PhoneNumber {
-  // Phone number as string (eg. "+15551234567").
-  optional string e164 = 1;
-  optional I18nData i18n_data = 2;
-}
-
-message SuggestedContactGroupHash {
-  // Number of results to return from this group.
-  optional uint64 max_results = 1;
-  // An optional 4-byte hash. If this matches the server's hash, no results
-  // will be sent.
-  optional bytes hash = 2;
-}
-
-message SuggestedContact {
-  // The contact's entity.
-  optional Entity entity = 1;
-  // The contact's invitation status.
-  optional InvitationStatus invitation_status = 2;
-}
-
-message SuggestedContactGroup {
-  // True if the request's hash matched and no contacts will be included.
-  optional bool hash_matched = 1;
-  // A 4-byte hash which can be used in subsequent requests.
-  optional bytes hash = 2;
-  // List of contacts in this group.
-  repeated SuggestedContact contact = 3;
-}
-
-// ----------------------------------------------------------------------------
-// State Update and Notifications
-// ----------------------------------------------------------------------------
-
-// Pushed from the server to the client to notify it of state changes. Includes
-// exactly one type of notification, and optionally updates the attributes of a
-// conversation.
-message StateUpdate {
-
-  optional StateUpdateHeader state_update_header = 1;
-
-  // If set, includes conversation attributes that have been updated by the
-  // notification.
-  optional Conversation conversation = 13;
-
-  //TODO implement in pblite handler
-  //oneof state_update {
-
-  optional  ConversationNotification conversation_notification = 2;
-  optional  EventNotification event_notification = 3;
-  optional  SetFocusNotification focus_notification = 4;
-  optional  SetTypingNotification typing_notification = 5;
-  optional  SetConversationNotificationLevelNotification notification_level_notification = 6;
-  optional  ReplyToInviteNotification reply_to_invite_notification = 7;
-  optional  WatermarkNotification watermark_notification = 8;
-
-  // optional  //UnimplementedMessage unknown_1 = 9;
-  // optional  //UnimplementedMessage settings_notification = 10;
-    // TODO: rename to ViewModificationNotification?
-
-
-  optional  ConversationViewModification view_modification = 11;
-  optional  EasterEggNotification easter_egg_notification = 12;
-  optional  SelfPresenceNotification self_presence_notification = 14;
-  optional  DeleteActionNotification delete_notification = 15;
-  optional  PresenceNotification presence_notification = 16;
-  optional  BlockNotification block_notification = 17;
-
-  // optional  //UnimplementedMessage invitation_watermark_notification = 18;
-
-  optional  SetNotificationSettingNotification notification_setting_notification = 19;
-  optional  RichPresenceEnabledStateNotification rich_presence_enabled_state_notification = 20;
-
-  //optional  EventSeenNotification event_seen_notification = 30;
-  //}
-}
-
-// Header for StateUpdate messages.
-message StateUpdateHeader {
-  optional ActiveClientState active_client_state = 1;
-  optional string request_trace_id = 3;
-  optional NotificationSettings notification_settings = 4;
-  optional uint64 current_server_time = 5;
-
-  // TODO:
-  // optional UserSettings self_settings (dnd_state) = 2;
-  // optional ArchiveSettings archive_settings (is_babel_user) = 6
-  // unknown = 7
-  // optional ID of the client causing the update (3767219427742586121) ? = 8
-}
-
-// List of StateUpdate messages to allow pushing multiple notifications from
-// the server to the client simultaneously.
-message BatchUpdate {
-  repeated StateUpdate state_update = 1;
-}
-
-message ConversationNotification {
-  optional Conversation conversation = 1;
-}
-
-message EventNotification {
-  optional Event event = 1;
-}
-
-message SetFocusNotification {
-  optional ConversationId conversation_id = 1;
-  optional ParticipantId sender_id = 2;
-  optional uint64 timestamp = 3;
-  optional FocusType type = 4;
-  //optional FocusDevice device = 5;
-  //optional uint64 timeout_secs = 5;
-}
-
-message SetTypingNotification {
-  optional ConversationId conversation_id = 1;
-  optional ParticipantId sender_id = 2;
-  optional uint64 timestamp = 3;
-  optional TypingType type = 4;
-}
-
-message SetConversationNotificationLevelNotification {
-  optional ConversationId conversation_id = 1;
-  optional NotificationLevel level = 2;
-  optional uint32 revert_timeout_secs = 3;
-  optional uint64 timestamp = 4;
-}
-
-message ReplyToInviteNotification {
-  optional ConversationId conversation_id = 1;
-  optional ReplyToInviteType type = 2;
-
-  // TODO: untested
-}
-
-message WatermarkNotification {
-  optional ParticipantId sender_id = 1;
-  optional ConversationId conversation_id = 2;
-  optional uint64 latest_read_timestamp = 3;
-}
-
-message ConversationViewModification {
-  optional ConversationId conversation_id = 1;
-  optional ConversationView old_view = 2;
-  optional ConversationView new_view = 3;
-}
-
-message GroupLinkSharingModification {
-  optional GroupLinkSharingStatus new_status = 1;
-}
-
-message EasterEggNotification {
-  optional ParticipantId sender_id = 1;
-  optional ConversationId conversation_id = 2;
-  optional EasterEgg easter_egg = 3;
-}
-
-// Notifies the status of other clients and mood.
-message SelfPresenceNotification {
-  optional ClientPresenceState client_presence_state = 1;
-  optional DoNotDisturbSetting do_not_disturb_setting = 3;
-  optional DesktopOffSetting desktop_off_setting = 4;
-  optional DesktopOffState desktop_off_state = 5;
-  optional MoodState mood_state = 6;
-}
-
-message DeleteActionNotification {
-  optional ConversationId conversation_id = 1;
-  optional DeleteAction delete_action = 2;
-}
-
-message PresenceNotification {
-  repeated PresenceResult presence = 1;
-}
-
-message BlockNotification {
-  repeated BlockStateChange block_state_change = 1;
-}
-
-message InvitationWatermarkNotification {
-  optional InvitationState state = 1;
-}
-
-message SetNotificationSettingNotification {
-  repeated ConfigurationBit configuration_bit = 1;
-  optional DesktopSoundSetting desktop_sound_setting = 2;
-}
-
-message RichPresenceEnabledStateNotification {
-  repeated RichPresenceEnabledState rich_presence_enabled_state = 1;
-}
-
-message ConversationSpec {
-  optional ConversationId conversation_id = 1;
-  optional ParticipantId participant_id = 2;
-  optional InviteeID invitee_id = 3;
-}
-
-// message ConversationEventSeenNotification {
-  // repeated ConversationEventsSeen conversation_events = 1;
-// }
-
-// message ConversationEventsSeen {
-  // optional ConversationId conversation_id = 1;
-  // repeated EventSeen event_seen = 2;
-// }
-
-// message EventSeen {
-  // optional string event_id = 1;
-  // optional uint64 event_timestamp = 2;
-  // optional uint64 unknown_type = 3;
-// }
-
-enum OffnetworkAddressType {
-  OFFNETWORK_ADDRESS_TYPE_UNKNOWN = 0;
-  OFFNETWORK_ADDRESS_TYPE_EMAIL = 1;
-}
-
-message OffnetworkAddress {
-  optional OffnetworkAddressType type = 1;
-  optional string email = 3;
-}
-
-enum GroupLinkSharingStatus {
-  GROUP_LINK_SHARING_STATUS_UNKNOWN = 0;
-  GROUP_LINK_SHARING_STATUS_ON = 1;
-  GROUP_LINK_SHARING_STATUS_OFF = 2;
-  GROUP_LINK_SHARING_STATUS_NOT_AVAILABLE = 3;
-}
-
-// ----------------------------------------------------------------------------
-// Requests & Responses
-// ----------------------------------------------------------------------------
-
-message AddUserRequest {
-  optional RequestHeader request_header = 1;
-  repeated InviteeID invitee_id = 3;
-  optional EventRequestHeader event_request_header = 5;
-}
-
-message AddUserResponse {
-  optional ResponseHeader response_header = 1;
-  optional Event created_event = 5;
-}
-
-message CreateConversationRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationType type = 2;
-  optional uint64 client_generated_id = 3;
-  optional string name = 4;
-  repeated InviteeID invitee_id = 5;
-}
-
-message CreateConversationResponse {
-  optional ResponseHeader response_header = 1;
-  optional Conversation conversation = 2;
-  optional bool new_conversation_created = 7;
-}
-
-message DeleteConversationRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional uint64 delete_upper_bound_timestamp = 3;
-}
-
-message DeleteConversationResponse {
-  optional ResponseHeader response_header = 1;
-  optional DeleteAction delete_action = 2;
-}
-
-message EasterEggRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional EasterEgg easter_egg = 3;
-}
-
-message EasterEggResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 timestamp = 2;
-}
-
-message GetConversationRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationSpec conversation_spec = 2;
-  optional bool include_conversation_metadata = 3;
-  optional bool include_event = 4;
-  optional uint64 max_events_per_conversation = 6;
-  optional EventContinuationToken event_continuation_token = 7;
-  optional bool include_presence = 8;
-
-  // TODO:
-  // unknown = 5;
-}
-
-message GetConversationResponse {
-  optional ResponseHeader response_header = 1;
-  optional ConversationState conversation_state = 2;
-  //optional GetConversationError error = 3;
-  optional PresenceResult presence = 4;
-}
-
-message GetEntityByIdRequest {
-  optional RequestHeader request_header = 1;
-  optional EntityLookupSpec lookup_spec = 2;
-  repeated EntityLookupSpec batch_lookup_spec = 3;
-  repeated FieldMask field_mask = 4;
-}
-
-message GetEntityByIdResponse {
-  optional ResponseHeader response_header = 1;
-  // Resulting entities of PARTICIPANT_TYPE_GAIA only.
-  repeated Entity entity = 2;
-  // All resulting entities.
-  repeated EntityResult entity_result = 3;
-}
-
-message EntityResult {
-  optional EntityLookupSpec lookup_spec = 1;
-  repeated Entity entity = 2;
-}
-
-message GetGroupConversationUrlRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-}
-
-message GetGroupConversationUrlResponse {
-  optional ResponseHeader response_header = 1;
-  // URL for others to join the conversation.
-  optional string group_conversation_url = 2;
-}
-
-message GetSuggestedEntitiesRequest {
-  optional RequestHeader request_header = 1;
-  // Max number of non-grouped entities to return.
-  optional uint64 max_count = 4;
-  // Optional hash for "favorites" contact group.
-  optional SuggestedContactGroupHash favorites = 8;
-  // Optional hash for "contacts you hangout with" contact group.
-  optional SuggestedContactGroupHash contacts_you_hangout_with = 9;
-  // Optional hash for "other contacts on hangouts" contact group.
-  optional SuggestedContactGroupHash other_contacts_on_hangouts = 10;
-  // Optional hash for "other contacts" contact group.
-  optional SuggestedContactGroupHash other_contacts = 11;
-  // Optional hash for "dismissed contacts" contact group.
-  optional SuggestedContactGroupHash dismissed_contacts = 12;
-  // Optional hash for "pinned favorites" contact group.
-  optional SuggestedContactGroupHash pinned_favorites = 13;
-
-  // TODO: possible other fields:
-  // repeated EntityID given_entity_id = 2
-  // repeated EntityFilterType entity_type_filter = 3;
-  // optional bool include_availability = 5;
-  // repeated ParticipantId given_entity_id = 6
-  // unknown bool = 7;
-  // unknown bool = 14;
-  // unknown repeated int = 15;
-}
-
-message GetSuggestedEntitiesResponse {
-  optional ResponseHeader response_header = 1;
-  repeated Entity entity = 2;
-  optional SuggestedContactGroup favorites = 4;
-  optional SuggestedContactGroup contacts_you_hangout_with = 5;
-  optional SuggestedContactGroup other_contacts_on_hangouts = 6;
-  optional SuggestedContactGroup other_contacts = 7;
-  optional SuggestedContactGroup dismissed_contacts = 8;
-  optional SuggestedContactGroup pinned_favorites = 9;
-}
-
-message GetSelfInfoRequest {
-  optional RequestHeader request_header = 1;
-
-  // TODO
-  // repeated unknown = 2;
-  // repeated unknown = 3;
-  // optional bool unknown = 4;
-}
-
-message GetSelfInfoResponse {
-  optional ResponseHeader response_header = 1;
-  optional Entity self_entity = 2;
-  optional bool is_known_minor = 3;
-  repeated ClientPresenceState client_presence = 4;
-  optional DoNotDisturbSetting dnd_state = 5;
-  optional DesktopOffSetting desktop_off_setting = 6;
-  optional PhoneData phone_data = 7;
-  repeated ConfigurationBit configuration_bit = 8;
-  optional DesktopOffState desktop_off_state = 9;
-  optional bool google_plus_user = 10;
-  optional DesktopSoundSetting desktop_sound_setting = 11;
-  optional RichPresenceState rich_presence_state = 12;
-  optional Country default_country = 19;
-
-  // TODO:
-  // bool babel_user? = 13;
-  // bool desktop_availability_sharing_enabled? = 14;
-  // enum desktop_html5_notification_state? = 16;
-  // bool google_plus_mobile_user = 15;
-  // enum account_age_group? = 18;
-  // unknown = 22;
-}
-
-message ModifyConversationViewRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional ConversationView new_view = 3;
-  optional uint64 last_event_timestamp = 4;
-}
-
-message ModifyConversationViewResponse {
-  optional ResponseHeader response_header = 1;
-}
-
-message OpenGroupConversationFromUrlRequest {
-  optional RequestHeader request_header = 1;
-  // optional EventRequestHeader event_request_header = 2;
-  optional string url = 3;
-}
-
-message OpenGroupConversationFromUrlResponse {
-  optional ResponseHeader response_header = 1;
-  optional ConversationId conversation_id = 2;
-}
-
-message QueryPresenceRequest {
-  optional RequestHeader request_header = 1;
-  repeated ParticipantId participant_id = 2;
-  repeated FieldMask field_mask = 3;
-}
-
-message QueryPresenceResponse {
-  optional ResponseHeader response_header = 1;
-  repeated PresenceResult presence_result = 2;
-}
-
-message RemoveUserRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional ParticipantId participant_id = 3;
-  optional uint64 client_generated_id = 4;
-  optional EventRequestHeader event_request_header = 5;
-}
-
-message RemoveUserResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 timestamp = 2;
-  optional string event_id = 3;
-  optional Event created_event = 4;
-  optional Conversation updated_conversation = 5;
-}
-
-message RenameConversationRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional string new_name = 3;
-  optional uint64 client_generated_id = 4;
-  optional EventRequestHeader event_request_header = 5;
-}
-
-message RenameConversationResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 timestamp = 2;
-  optional string event_id = 3;
-  optional Event created_event = 4;
-  optional Conversation updated_conversation = 5;
-}
-
-message SearchEntitiesRequest {
-  optional RequestHeader request_header = 1;
-  optional string query = 3;
-  optional uint64 max_count = 4;
-}
-
-message SearchEntitiesResponse {
-  optional ResponseHeader response_header = 1;
-  repeated Entity entity = 2;
-}
-
-message SendChatMessageRequest {
-  optional RequestHeader request_header = 1;
-  optional uint64 client_generated_id = 3;
-  repeated EventAnnotation annotation = 5;
-  optional MessageContent message_content = 6;
-  optional ExistingMedia existing_media = 7;
-  optional EventRequestHeader event_request_header = 8;
-  optional InviteeID other_invitee_id = 9;
-  optional LocationSpec attach_location = 10;
-}
-
-message SendChatMessageResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 timestamp = 2;
-  optional string event_id = 3;
-  //repeated MediaUploadInfo media_upload_info = 4;
-  //optional EventHeader event_header = 5;
-  optional Event created_event = 6;
-  optional Conversation updated_conversation = 7;
-}
-
-message ModifyOTRStatusRequest {
-  optional RequestHeader request_header = 1;
-  optional OffTheRecordStatus otr_status = 3;
-  optional EventRequestHeader event_request_header = 5;
-}
-
-message ModifyOTRStatusResponse {
-  optional ResponseHeader response_header = 1;
-  optional Event created_event = 4;
-}
-
-message SendOffnetworkInvitationRequest {
-  optional RequestHeader request_header = 1;
-  optional OffnetworkAddress invitee_address = 2;
-}
-
-message SendOffnetworkInvitationResponse {
-  optional ResponseHeader response_header = 1;
-  //optional OffnetworkInvitationError error = 2;
-}
-
-message SetActiveClientRequest {
-  optional RequestHeader request_header = 1;
-  // Whether to set the client as active or inactive.
-  optional bool is_active = 2;
-  // 'email/resource'.
-  optional string full_jid = 3;
-  // Timeout in seconds for client to remain active.
-  optional uint64 timeout_secs = 4;
-
-  // TODO:
-  // unknown (true) = 5;
-}
-
-message SetActiveClientResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 client_last_seen_timestamp_usec = 3;
-  optional uint64 last_seen_delta_usec = 4;
-}
-
-message SetConversationLevelRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional NotificationLevel level = 3;
-  optional uint32 revert_timeout_secs = 4;
-}
-
-message SetConversationLevelResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 timestamp = 2;
-}
-
-message SetConversationNotificationLevelRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional NotificationLevel level = 3;
-}
-
-message SetConversationNotificationLevelResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 timestamp = 2;
-}
-
-message SetFocusRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional FocusType type = 3;
-  optional uint32 timeout_secs = 4;
-}
-
-message SetFocusResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 timestamp = 2;
-}
-
-message SetGroupLinkSharingEnabledRequest {
-  optional RequestHeader request_header = 1;
-  optional EventRequestHeader event_request_header = 2;
-  // New group link sharing status.
-  optional GroupLinkSharingStatus group_link_sharing_status = 4;
-
-}
-
-message SetGroupLinkSharingEnabledResponse {
-  optional ResponseHeader response_header = 1;
-  // Created event of type EVENT_TYPE_GROUP_LINK_SHARING_MODIFICATION.
-  optional Event created_event = 2;
-  // Updated conversation.
-  optional Conversation updated_conversation = 3;
-}
-
-
-// Allows setting one or more of the included presence-related settings.
-message SetPresenceRequest {
-  optional RequestHeader request_header = 1;
-  optional PresenceStateSetting presence_state_setting = 2;
-  optional DndSetting dnd_setting = 3;
-  optional DesktopOffSetting desktop_off_setting = 5;
-  repeated MoodMessage mood_message = 8;
-}
-
-message SetPresenceResponse {
-  optional ResponseHeader response_header = 1;
-}
-
-message SetTypingRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional TypingType type = 3;
-}
-
-message SetTypingResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 timestamp = 2;
-}
-
-message UnreadConversationState {
-  optional ConversationId conversation_id = 1;
-  optional uint64 timestamp = 2;
-}
-
-message SyncAllNewEventsRequest {
-  optional RequestHeader request_header = 1;
-  // Timestamp after which to return all new events.
-  optional uint64 last_sync_timestamp = 2;
-  //repeated LocalState local_state = 3;
-  optional uint64 max_total_events = 4;
-  repeated SyncFilter sync_filter = 5;
-  optional bool no_missed_events_expected = 6;
-  optional UnreadConversationState unread_state = 7;
-  optional uint64 max_response_size_bytes = 8;
-}
-
-message SyncAllNewEventsResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 sync_timestamp = 2;
-  repeated ConversationState conversation_state = 3;
-  optional bool conversation_ids_only = 4;
-  optional InvitationState invitation_state = 5;
-  optional bool clear_cache_and_resync = 6;
-}
-
-message SyncRecentConversationsRequest {
-  optional RequestHeader request_header = 1;
-  //last_event_timestamp = 2?
-  optional uint64 end_timestamp = 2;
-  optional uint64 max_conversations = 3;
-  optional uint64 max_events_per_conversation = 4;
-  repeated SyncFilter sync_filter = 5;
-}
-
-message SyncRecentConversationsResponse {
-  optional ResponseHeader response_header = 1;
-  optional uint64 sync_timestamp = 2;
-  repeated ConversationState conversation_state = 3;
-  optional uint64 continuation_end_timestamp = 4;
-  optional InvitationState invitation_state = 5;
-}
-
-message UpdateWatermarkRequest {
-  optional RequestHeader request_header = 1;
-  optional ConversationId conversation_id = 2;
-  optional uint64 last_read_timestamp = 3;
-}
-
-message UpdateWatermarkResponse {
-  optional ResponseHeader response_header = 1;
+	optional EMEmbedClientItem embedItem = 1;
+	optional string id_p = 3;
+}
+
+enum SocialSegmentType_SegmentTypeEnum {
+	AllUserMention = 5;
+	UserMention = 3;
+	Link = 2;
+	Hashtag = 4;
+	LineBreak = 1;
+	Text = 0;
+}
+
+enum EMItemType {
+	CommentV2 = 383;
+	ActionV2 = 415;
+	PlusMediaCollectionV2 = 440;
+	Hangout = 254;
+	DepartmentStore = 182;
+	EntryPointV2 = 443;
+	HangoutQuote = 451;
+	Enumeration = 222;
+	TvEpisode = 32;
+	ShoeStore = 201;
+	BookFormatType = 223;
+	Bakery = 108;
+	AccountingService = 103;
+	PostalAddressV2 = 342;
+	MagazineV2 = 386;
+	PresentationObject = 216;
+	Person = 5;
+	MovieRentalStore = 195;
+	SportsEvent = 63;
+	GovernmentOffice = 116;
+	Article = 11;
+	FormObject = 242;
+	DriveObjectV2 = 364;
+	CarouselFrame = 243;
+	AdministrativeArea = 268;
+	BuddhistTemple = 294;
+	ListenActionV2 = 417;
+	UpdateActionV2 = 425;
+	FoodEstablishment = 107;
+	BankOrCreditUnion = 105;
+	Unknown = 257;
+	Aquarium = 274;
+	PlayMusicTrack = 323;
+	BlogV2 = 402;
+	HobbyShop = 189;
+	PostalAddress = 238;
+	ItemAvailability = 224;
+	CreateActionV2 = 419;
+	MusicRecordingV2 = 375;
+	GoogleUserPhotoV2 = 448;
+	YoutubeChannelV2 = 412;
+	PlusMediaObjectV2 = 437;
+	FormObjectV2 = 361;
+	Restaurant = 114;
+	Optician = 145;
+	PlanActionV2 = 435;
+	WebPage = 35;
+	Cemetery = 279;
+	ConsumeActionV2 = 416;
+	ToyStore = 204;
+	RecommendedPeople = 326;
+	Beach = 275;
+	ArtGallery = 97;
+	JewelryStore = 191;
+	Recipe = 29;
+	SquareInvite = 331;
+	VideoObject = 22;
+	ElectronicsStore = 183;
+	PlusAudioV2 = 438;
+	Festival = 57;
+	Continent = 319;
+	ElementarySchool = 69;
+	SquareV2 = 355;
+	PlaceV2 = 340;
+	Hospital = 91;
+	Quantity = 229;
+	ThingV2 = 335;
+	ContactPage = 41;
+	Plumber = 132;
+	DaySpa = 120;
+	AudioObjectV2 = 368;
+	ItemPage = 42;
+	BowlingAlley = 166;
+	DiscoverActionV2 = 430;
+	EducationalOrganization = 67;
+	TvSeriesV2 = 394;
+	Checkin = 266;
+	WriteActionV2 = 433;
+	MobileApplicationV2 = 389;
+	DeprecatedTourObject = 253;
+	GatedResidenceCommunity = 211;
+	ComputerStore = 180;
+	ProductReview = 251;
+	Product = 7;
+	GeneralContractor = 127;
+	ProfilePage = 43;
+	PlusPhotoV2 = 344;
+	WpSidebar = 51;
+	StoryV2 = 380;
+	TrainStation = 307;
+	SaleEvent = 61;
+	Corporation = 66;
+	PlusSoftwareApplicationV2 = 414;
+	Park = 290;
+	ProductReviewV2 = 392;
+	VisualArtsEvent = 65;
+	PlusPhotoCollectionV2 = 407;
+	MusicPlaylist = 24;
+	ImageObjectV2 = 339;
+	BasicInteractionV2 = 365;
+	HighSchool = 70;
+	AudioObject = 19;
+	PublicSwimmingPool = 170;
+	VeterinaryCare = 148;
+	TvEpisodeV2 = 400;
+	PerformingArtsTheater = 292;
+	RadioStation = 160;
+	SpreadsheetObject = 218;
+	MotorcycleRepair = 86;
+	LodgingBusiness = 136;
+	ReactActionV2 = 422;
+	CafeOrCoffeeShop = 111;
+	HairSalon = 121;
+	AddActionV2 = 426;
+	WantActionV2 = 424;
+	Notary = 157;
+	DanceEvent = 55;
+	Language = 227;
+	EntertainmentBusiness = 94;
+	Organization = 4;
+	EmotishareV2 = 382;
+	Map = 17;
+	TaxiStand = 306;
+	EventTimeV2 = 406;
+	CollegeOrUniversity = 68;
+	PollOptionV2 = 409;
+	PollV2 = 408;
+	GoogleChart = 258;
+	GasStation = 84;
+	WpHeader = 50;
+	SoftwareApplicationV2 = 444;
+	MedicalClinic = 144;
+	GoogleUserPhotoAlbum = 449;
+	TattooParlor = 124;
+	MovingCompany = 131;
+	BookV2 = 377;
+	MusicAlbum = 25;
+	HealthAndBeautyBusiness = 118;
+	AutoBodyShop = 78;
+	WebPageElement = 45;
+	OfferV2 = 367;
+	MediaObjectV2 = 338;
+	Event = 2;
+	ReservationV2 = 398;
+	RiverBodyOfWater = 316;
+	Casino = 98;
+	ArticleV2 = 391;
+	MusicGroupV2 = 373;
+	OfferItemCondition = 225;
+	NailSalon = 123;
+	MedicalOrganization = 141;
+	Painting = 27;
+	ConvenienceStore = 181;
+	SquareInviteV2 = 356;
+	PlayObjectV2 = 387;
+	ChildCare = 87;
+	MusicVideoObject = 21;
+	MovieV2 = 370;
+	Crematorium = 280;
+	HangoutConsumer = 256;
+	MusicGroup = 260;
+	Canal = 311;
+	FindActionV2 = 427;
+	Duration = 231;
+	StadiumOrArena = 173;
+	State = 271;
+	MotorcycleDealer = 85;
+	LandmarksOrHistoricalBuildings = 322;
+	CommentActionV2 = 432;
+	FileObject = 265;
+	RatingV2 = 371;
+	InsuranceAgency = 106;
+	Distance = 230;
+	Church = 296;
+	CollectionPage = 38;
+	PlusPhotoAlbumV2 = 349;
+	ClothingStore = 179;
+	Landform = 309;
+	TravelAgency = 208;
+	ImageGallery = 39;
+	TvSeries = 34;
+	SiteNavigationElement = 46;
+	CatholicChurch = 295;
+	AdultEntertainment = 95;
+	AutoRental = 81;
+	AggregateRatingV2 = 369;
+	UserInteraction = 220;
+	LocalPlusPhotoAlbum = 332;
+	Mosque = 298;
+	ContactPoint = 237;
+	ParkingFacility = 291;
+	FileObjectV2 = 360;
+	MusicVenue = 289;
+	ReviewV2 = 388;
+	OceanBodyOfWater = 313;
+	TheaterEvent = 64;
+	MusicAlbumV2 = 372;
+	AutomatedTeller = 104;
+	PlusPhotosAddedToCollection = 261;
+	WholesaleStore = 205;
+	PresentationObjectV2 = 362;
+	VideoObjectV2 = 354;
+	Attorney = 151;
+	SportsClub = 172;
+	StickerV2 = 441;
+	PlusPhotosAddedToCollectionV2 = 405;
+	PerformingGroup = 259;
+	AutoRepair = 82;
+	NewsArticle = 13;
+	GeoCoordinatesV2 = 343;
+	Hostel = 138;
+	Rating = 234;
+	FurnitureStore = 185;
+	ProfessionalService = 149;
+	RealEstateAgent = 161;
+	ChalkboardV2 = 447;
+	RoofingContractor = 133;
+	ComedyEvent = 54;
+	LocalPlusPhotoAlbumV2 = 397;
+	AggregateRating = 235;
+	PoliceStation = 92;
+	BeautySalon = 119;
+	Blog = 14;
+	Review = 30;
+	BikeStore = 177;
+	Intangible = 3;
+	OutletStore = 198;
+	TelevisionStation = 206;
+	FoodEvent = 58;
+	HangoutV2 = 353;
+	PlusPageV2 = 385;
+	ExerciseGym = 167;
+	Courthouse = 284;
+	Movie = 23;
+	PlaceReviewV2 = 401;
+	FireStation = 90;
+	Energy = 232;
+	HoaPlusEventV2 = 410;
+	StructuredValue = 236;
+	Airport = 273;
+	Mountain = 320;
+	VideoGalleryV2 = 411;
+	BodyOfWater = 310;
+	MensClothingStore = 193;
+	ShoppingCenter = 164;
+	MusicPlaylistV2 = 374;
+	Square = 246;
+	MiddleSchool = 71;
+	ViewActionV2 = 442;
+	Thing = 0;
+	Residence = 209;
+	SportingGoodsStore = 202;
+	ApartmentComplex = 210;
+	Magazine = 328;
+	GovernmentBuilding = 282;
+	SearchResultsPage = 44;
+	HinduTemple = 297;
+	DrawingObject = 262;
+	OfficeEquipmentStore = 197;
+	PlusPage = 327;
+	Library = 135;
+	BusStation = 276;
+	Book = 15;
+	BedAndBreakfast = 137;
+	Date = 445;
+	SoftwareApplication = 302;
+	SeaBodyOfWater = 317;
+	Reservation = 267;
+	City = 269;
+	ScholarlyArticle = 219;
+	BookStore = 178;
+	HousePainter = 129;
+	CheckinV2 = 357;
+	AboutPage = 36;
+	PlusPhotoAlbum = 250;
+	TouristAttraction = 213;
+	PlusPost = 329;
+	MobilePhoneStore = 194;
+	WpFooter = 49;
+	UserPlusOnes = 215;
+	GovernmentOrganization = 74;
+	TravelEvent = 325;
+	DefenceEstablishment = 285;
+	PersonV2 = 350;
+	Volcano = 321;
+	FinancialService = 102;
+	Table = 47;
+	Locksmith = 130;
+	HomeGoodsStore = 190;
+	HomeAndConstructionBusiness = 125;
+	Offer = 228;
+	CommunicateActionV2 = 429;
+	Dentist = 142;
+	NutritionInformation = 241;
+	ItemList = 16;
+	MobileApplication = 303;
+	Comment = 264;
+	TradeActionV2 = 418;
+	PlayMusicAlbumV2 = 393;
+	WebApplication = 304;
+	School = 73;
+	BuyActionV2 = 421;
+	MusicRecording = 26;
+	AutoDealer = 79;
+	PlusPostV2 = 390;
+	SportsActivityLocation = 165;
+	EventV2 = 352;
+	Zoo = 308;
+	AutoWash = 83;
+	Preschool = 72;
+	OrganizationV2 = 351;
+	BarOrPub = 109;
+	DryCleaningOrLaundry = 88;
+	GeoCoordinates = 239;
+	AutoPartsStore = 80;
+	IceCreamShop = 113;
+	LocalBusinessV2 = 379;
+	Physician = 147;
+	EventVenue = 281;
+	DocumentObjectV2 = 358;
+	WpAdBlock = 48;
+	PlusEventV2 = 404;
+	TvSeason = 33;
+	TennisComplex = 174;
+	GoogleOfferV2 = 378;
+	CollexionV2 = 413;
+	PawnShop = 199;
+	RecyclingCenter = 162;
+	Motel = 140;
+	Museum = 288;
+	AutomotiveBusiness = 77;
+	Embassy = 286;
+	Campground = 278;
+	BusStop = 277;
+	ComedyClub = 99;
+	PlaceOfWorship = 293;
+	Emotishare = 334;
+	MusicStore = 196;
+	PlusReshareV2 = 446;
+	InteractActionV2 = 428;
+	Photograph = 28;
+	PetStore = 200;
+	Place = 6;
+	InternetCafe = 134;
+	BlogPosting = 12;
+	TouristInformationCenter = 207;
+	RVPark = 301;
+	CheckoutPage = 37;
+	WebPageV2 = 337;
+	InteractionV2 = 366;
+	HangoutBroadcast = 255;
+	BlogPostingV2 = 403;
+	HardwareStore = 188;
+	PostOffice = 117;
+	NightClub = 101;
+	Pharmacy = 146;
+	Playground = 300;
+	ExampleObject = 245;
+	SpreadsheetObjectV2 = 363;
+	DrawingObjectV2 = 359;
+	AnimalShelter = 76;
+	SelfStorage = 163;
+	PlayMusicAlbum = 324;
+	CheckInActionV2 = 431;
+	HangoutChatMessage = 450;
+	Florist = 184;
+	SkiResort = 171;
+	MovieTheater = 100;
+	BusinessEvent = 52;
+	EducationEvent = 56;
+	ReviewActionV2 = 423;
+	GardenStore = 186;
+	EmergencyService = 89;
+	SocialEvent = 62;
+	MediaObject = 18;
+	ChildrensEvent = 53;
+	PlaceReview = 263;
+	LakeBodyOfWater = 312;
+	Synagogue = 299;
+	EmploymentAgengy = 93;
+	ImageObject = 20;
+	PlusPhoto = 249;
+	JobPosting = 226;
+	ReserveActionV2 = 436;
+	Mass = 233;
+	LiteraryEvent = 59;
+	DocumentObject = 217;
+	AppInvite = 330;
+	GolfCourse = 168;
+	Pond = 314;
+	CreativeWorkV2 = 336;
+	LegislativeBuilding = 287;
+	AmusementPark = 96;
+	SubwayStation = 305;
+	CivicStructure = 272;
+	OrganizeActionV2 = 434;
+	Winery = 115;
+	FinancialQuote = 252;
+	PlayMusicTrackV2 = 399;
+	Brewery = 110;
+	Sculpture = 31;
+	FinancialQuoteV2 = 384;
+	Store = 175;
+	Country = 270;
+	HvacBusiness = 128;
+	SingleFamilyResidence = 212;
+	VideoGallery = 40;
+	AssessActionV2 = 420;
+	CityHall = 283;
+	GeoShape = 240;
+	LiquorStore = 192;
+	HealthClub = 122;
+	Waterfall = 318;
+	MusicEvent = 60;
+	TireShop = 203;
+	CreativeWork = 1;
+	NewsArticleV2 = 439;
+	LocalBusiness = 75;
+	Hotel = 139;
+	Reservoir = 315;
+	DeprecatedTourObjectV2 = 395;
+	FastFoodRestaurant = 112;
+	Electrician = 126;
+	GroceryStore = 187;
+	PlusEvent = 244;
+}
+
+message EMClientEmbedOptions {
+	repeated EMItemType includeTypeArray = 1;
+}
+
+message EMPlaceV2 {
+	optional string URL = 1;
+	optional string imageURL = 2;
+	optional string name = 3;
+	optional string description_p = 4;
+	optional string descriptionTruncated = 5;
+	optional EMThumbnail proxiedImage = 6;
+	optional string proxiedFaviconURL = 7;
+	repeated EMEmbedClientItem authorArray = 8;
+	optional EMEmbedClientItem about = 9;
+	repeated EMEmbedClientItem relatedImageArray = 11;
+	optional string sourceName = 12;
+	optional EMEmbedClientItem address = 24;
+	optional EMEmbedClientItem geo = 25;
+	optional string clusterId = 26;
+	optional string ownerObfuscatedId = 27;
+	optional string mapURL = 28;
+	optional string referenceId = 29;
+	optional string faviconURL = 75;
+	optional EMEmbedClientItem aggregateRating = 82;
+	optional string id_p = 106;
+	optional EMEmbedClientItem representativeImage = 185;
+	optional string telephone = 227;
+	optional string faxNumber = 228;
+	optional string externalId = 254;
+	optional bool isClaimedByOwner = 267;
+	optional string placeId = 280;
+	optional string ampURL = 282;
+	optional string destinationURL = 287;
+}
+
+message EMThumbnail {
+	optional string imageURL = 1;
+	optional int32 boxWidthPx = 2;
+	optional int32 boxHeightPx = 3;
+	optional bool exactWidth = 4;
+	optional bool exactHeight = 5;
+	optional bool recenterVertically = 6;
+	optional string uncroppedImageURL = 7;
+	optional int32 imageHeightPx = 8;
+}
+
+message EMPostalAddressV2 {
+	optional string URL = 1;
+	optional string imageURL = 2;
+	optional string name = 3;
+	optional string description_p = 4;
+	optional string descriptionTruncated = 5;
+	optional EMThumbnail proxiedImage = 6;
+	optional string proxiedFaviconURL = 7;
+	repeated EMEmbedClientItem authorArray = 8;
+	optional EMEmbedClientItem about = 9;
+	repeated EMEmbedClientItem relatedImageArray = 11;
+	optional string sourceName = 12;
+	optional string addressCountry = 30;
+	optional string addressLocality = 31;
+	optional string addressRegion = 32;
+	optional string postOfficeBoxNumber = 33;
+	optional string postalCode = 34;
+	optional string streetAddress = 35;
+	optional string faviconURL = 75;
+	optional EMEmbedClientItem representativeImage = 185;
+	optional string externalId = 254;
+	optional string ampURL = 282;
+	optional string destinationURL = 287;
+}
+
+message EMGeoCoordinatesV2 {
+	optional string URL = 1;
+	optional string imageURL = 2;
+	optional string name = 3;
+	optional string description_p = 4;
+	optional string descriptionTruncated = 5;
+	optional EMThumbnail proxiedImage = 6;
+	optional string proxiedFaviconURL = 7;
+	repeated EMEmbedClientItem authorArray = 8;
+	optional EMEmbedClientItem about = 9;
+	repeated EMEmbedClientItem relatedImageArray = 11;
+	optional string sourceName = 12;
+	optional double latitude = 36;
+	optional double longitude = 37;
+	optional string faviconURL = 75;
+	optional EMEmbedClientItem representativeImage = 185;
+	optional string externalId = 254;
+	optional string ampURL = 282;
+	optional string destinationURL = 287;
+}
+
+message EMThingV2 {
+	optional string URL = 1;
+	optional string imageURL = 2;
+	optional string name = 3;
+	optional string description_p = 4;
+	optional string descriptionTruncated = 5;
+	optional EMThumbnail proxiedImage = 6;
+	optional string proxiedFaviconURL = 7;
+	repeated EMEmbedClientItem authorArray = 8;
+	optional EMEmbedClientItem about = 9;
+	repeated EMEmbedClientItem relatedImageArray = 11;
+	optional string sourceName = 12;
+	optional string faviconURL = 75;
+	optional EMEmbedClientItem representativeImage = 185;
+	optional string externalId = 254;
+	optional string ampURL = 282;
+	optional string destinationURL = 287;
+}
+
+message EMPlusAudioV2 {
+	optional string URL = 1;
+	optional string imageURL = 2;
+	optional string name = 3;
+	optional string description_p = 4;
+	optional string descriptionTruncated = 5;
+	optional EMThumbnail proxiedImage = 6;
+	optional string proxiedFaviconURL = 7;
+	repeated EMEmbedClientItem authorArray = 8;
+	optional EMEmbedClientItem about = 9;
+	optional string text = 10;
+	repeated EMEmbedClientItem relatedImageArray = 11;
+	optional string sourceName = 12;
+	optional string canonicalFountainStream = 13;
+	repeated string unfilteredFountainStreamArray = 14;
+	repeated string premodFountainStreamArray = 15;
+	repeated string postmodFountainStreamArray = 16;
+	repeated string inboxFountainStreamArray = 17;
+	optional EMEmbedClientItem contentLocation = 18;
+	optional string width = 19;
+	optional string height = 20;
+	optional int32 widthPx = 21;
+	optional int32 heightPx = 22;
+	optional string contentURL = 23;
+	optional string ownerObfuscatedId = 27;
+	optional string albumId = 38;
+	optional string photoId = 39;
+	repeated EMEmbedClientItem associatedMediaArray = 42;
+	optional bool isFamilyFriendly = 65;
+	optional string embedURL = 66;
+	optional string playerType = 67;
+	optional string duration = 68;
+	optional string faviconURL = 75;
+	optional EMEmbedClientItem aggregateRating = 82;
+	repeated EMEmbedClientItem offersArray = 83;
+	optional EMEmbedClientItem audio = 96;
+	optional string dateCreated = 111;
+	optional string dateModified = 112;
+	optional EMEmbedClientItem representativeImage = 185;
+	optional string genre = 188;
+	optional string contentRating = 189;
+	optional string inLanguage = 190;
+	optional string datePublished = 191;
+	optional string clientEmbedURL = 215;
+	optional string contentProfileName = 249;
+	optional string contentProfileId = 252;
+	optional string externalId = 254;
+	optional string mediaKey = 258;
+	optional string ampURL = 282;
+	optional string destinationURL = 287;
+	optional string fileFormat = 289;
+}
+
+message EMPersonV2 {
+	optional string URL = 1;
+	optional string imageURL = 2;
+	optional string name = 3;
+	optional string description_p = 4;
+	optional string descriptionTruncated = 5;
+	optional EMThumbnail proxiedImage = 6;
+	optional string proxiedFaviconURL = 7;
+	repeated EMEmbedClientItem authorArray = 8;
+	optional EMEmbedClientItem about = 9;
+	repeated EMEmbedClientItem relatedImageArray = 11;
+	optional string sourceName = 12;
+	optional string ownerObfuscatedId = 27;
+	optional string gender = 48;
+	optional string email = 49;
+	optional string faviconURL = 75;
+	optional EMEmbedClientItem representativeImage = 185;
+	optional string externalId = 254;
+	optional string ampURL = 282;
+	optional string destinationURL = 287;
+}
+
+message EMImageObjectV2 {
+	optional string URL = 1;
+	optional string imageURL = 2;
+	optional string name = 3;
+	optional string description_p = 4;
+	optional string descriptionTruncated = 5;
+	optional EMThumbnail proxiedImage = 6;
+	optional string proxiedFaviconURL = 7;
+	repeated EMEmbedClientItem authorArray = 8;
+	optional EMEmbedClientItem about = 9;
+	optional string text = 10;
+	repeated EMEmbedClientItem relatedImageArray = 11;
+	optional string sourceName = 12;
+	optional string canonicalFountainStream = 13;
+	repeated string unfilteredFountainStreamArray = 14;
+	repeated string premodFountainStreamArray = 15;
+	repeated string postmodFountainStreamArray = 16;
+	repeated string inboxFountainStreamArray = 17;
+	optional EMEmbedClientItem contentLocation = 18;
+	optional string width = 19;
+	optional string height = 20;
+	optional int32 widthPx = 21;
+	optional int32 heightPx = 22;
+	optional string contentURL = 23;
+	repeated EMEmbedClientItem associatedMediaArray = 42;
+	optional bool isFamilyFriendly = 65;
+	optional string embedURL = 66;
+	optional string playerType = 67;
+	optional string duration = 68;
+	optional string faviconURL = 75;
+	optional EMEmbedClientItem aggregateRating = 82;
+	repeated EMEmbedClientItem offersArray = 83;
+	optional EMEmbedClientItem audio = 96;
+	optional string dateCreated = 111;
+	optional string dateModified = 112;
+	optional EMEmbedClientItem representativeImage = 185;
+	optional string genre = 188;
+	optional string contentRating = 189;
+	optional string inLanguage = 190;
+	optional string datePublished = 191;
+	optional string contentProfileName = 249;
+	optional string contentProfileId = 252;
+	optional string externalId = 254;
+	optional string ampURL = 282;
+	optional string destinationURL = 287;
+	optional string fileFormat = 289;
+}
+
+message EMWebPageV2 {
+	optional string URL = 1;
+	optional string imageURL = 2;
+	optional string name = 3;
+	optional string description_p = 4;
+	optional string descriptionTruncated = 5;
+	optional EMThumbnail proxiedImage = 6;
+	optional string proxiedFaviconURL = 7;
+	repeated EMEmbedClientItem authorArray = 8;
+	optional EMEmbedClientItem about = 9;
+	optional string text = 10;
+	repeated EMEmbedClientItem relatedImageArray = 11;
+	optional string sourceName = 12;
+	optional string canonicalFountainStream = 13;
+	repeated string unfilteredFountainStreamArray = 14;
+	repeated string premodFountainStreamArray = 15;
+	repeated string postmodFountainStreamArray = 16;
+	repeated string inboxFountainStreamArray = 17;
+	optional EMEmbedClientItem contentLocation = 18;
+	repeated EMEmbedClientItem associatedMediaArray = 42;
+	optional bool isFamilyFriendly = 65;
+	optional string faviconURL = 75;
+	optional EMEmbedClientItem aggregateRating = 82;
+	repeated EMEmbedClientItem offersArray = 83;
+	optional EMEmbedClientItem audio = 96;
+	optional string dateCreated = 111;
+	optional string dateModified = 112;
+	optional EMEmbedClientItem representativeImage = 185;
+	optional string genre = 188;
+	optional string contentRating = 189;
+	optional string inLanguage = 190;
+	optional string datePublished = 191;
+	optional string contentProfileName = 249;
+	optional string contentProfileId = 252;
+	optional string externalId = 254;
+	optional string ampURL = 282;
+	optional string destinationURL = 287;
+	optional string fileFormat = 289;
+}
+
+message EMPlusPhotoV2 {
+	optional string URL = 1;
+	optional string imageURL = 2;
+	optional string name = 3;
+	optional string description_p = 4;
+	optional string descriptionTruncated = 5;
+	optional EMThumbnail proxiedImage = 6;
+	optional string proxiedFaviconURL = 7;
+	repeated EMEmbedClientItem authorArray = 8;
+	optional EMEmbedClientItem about = 9;
+	optional string text = 10;
+	repeated EMEmbedClientItem relatedImageArray = 11;
+	optional string sourceName = 12;
+	optional string canonicalFountainStream = 13;
+	repeated string unfilteredFountainStreamArray = 14;
+	repeated string premodFountainStreamArray = 15;
+	repeated string postmodFountainStreamArray = 16;
+	repeated string inboxFountainStreamArray = 17;
+	optional EMEmbedClientItem contentLocation = 18;
+	optional string width = 19;
+	optional string height = 20;
+	optional int32 widthPx = 21;
+	optional int32 heightPx = 22;
+	optional string contentURL = 23;
+	optional string ownerObfuscatedId = 27;
+	optional string albumId = 38;
+	optional string photoId = 39;
+	optional string onepickMediaId = 40;
+	repeated EMEmbedClientItem associatedMediaArray = 42;
+	optional string relativeURL = 46;
+	repeated string streamIdArray = 47;
+	optional bool isFamilyFriendly = 65;
+	optional string embedURL = 66;
+	optional string playerType = 67;
+	optional string duration = 68;
+	optional string faviconURL = 75;
+	optional EMEmbedClientItem aggregateRating = 82;
+	repeated EMEmbedClientItem offersArray = 83;
+	optional EMEmbedClientItem audio = 96;
+	optional string dateCreated = 111;
+	optional string dateModified = 112;
+	optional EMEmbedClientItem representativeImage = 185;
+	optional string genre = 188;
+	optional string contentRating = 189;
+	optional string inLanguage = 190;
+	optional string datePublished = 191;
+	optional string imageQuality = 195;
+	optional string maxHeight = 196;
+	optional string maxWidth = 197;
+	optional string contentProfileName = 249;
+	optional string contentProfileId = 252;
+	optional string externalId = 254;
+	optional string mediaKey = 258;
+	optional string ampURL = 282;
+	optional string originalMediaPlayerURL = 283;
+	optional string originalMediaContainerURL = 284;
+	optional string originalLightboxPhotoId = 285;
+	optional string originalContentURL = 286;
+	optional string destinationURL = 287;
+	optional string fileFormat = 289;
+}
+
+message EMEmbedClientItem {
+	repeated EMItemType typeArray = 1;
+	optional string id_p = 2;
+	optional string canonicalId = 3;
+	optional string signature = 6;
+	optional string renderId = 8;
+
+	// Extensions:
+	optional EMPlusPhotoV2 plusPhotoV2 = 40655821;
+	optional EMPlaceV2 placeV2 = 35825640;
+	optional EMThingV2 thingV2 = 39748951;
+	optional EMPlusAudioV2 plusAudioV2 = 62101782;
+	optional EMPostalAddressV2 postalAddressV2 = 36003298;
+	optional EMGeoCoordinatesV2 geoCoordinatesV2 = 36736749;
+	optional EMImageObjectV2 imageObjectV2 = 40265033;
+}
+
+message SocialHashtagData {
+	optional string searchText = 1;
+}
+
+message SocialUserMentionData {
+	optional int64 userGaiaId = 1;
+	optional string userId = 2;
+	optional string email = 3;
+}
+
+message SocialLinkData {
+	optional string linkTarget = 1;
+	optional string displayURL = 2;
+	optional Attachment attachment = 3;
+	optional string title = 4;
+}
+
+message SocialFormatting {
+	optional bool bold = 1;
+	optional bool italics = 2;
+	optional bool strikethrough = 3;
+	optional bool underline = 4;
+}
+
+message SocialSegment {
+	optional SocialSegmentType_SegmentTypeEnum type = 1;
+	optional string text = 2;
+	optional SocialFormatting formatting = 3;
+	optional SocialLinkData linkData = 4;
+	optional SocialUserMentionData userMentionData = 5;
+	optional SocialHashtagData hashtagData = 6;
+}
+
+message SocialSegmentType {
+
+}
+
+message SocialSegments {
+	repeated SocialSegment segmentsArray = 1;
+}
+
+enum CPBClientNotificationLevel {
+	Off = 10;
+	Ding = 20;
+	ImportantOnly = 25;
+	AllEvents = 30;
+	UseGlobalDefault = 100;
+}
+
+enum CPBClientCallerIdSetting_ClientIneligibilityCause {
+	UnknownIneligibility = 0;
+	DisabledByPhoneStaleness = 1;
+}
+
+enum CPBClientExperimentValue_LogAction {
+	UnknownLogAction = 0;
+	DontLog = 1;
+	Log = 2;
+}
+
+enum CPBClientDeviceType {
+	Android = 1;
+	Ios = 2;
+	Glass = 3;
+	Pstn = 4;
+	Chrome = 5;
+}
+
+enum CPBClientConversation_ClientUserConversationState_InvitationAffinity {
+	UnknownAffinity = 0;
+	High = 1;
+	Low = 2;
+}
+
+enum CPBClientEasterEggSuggestionInfo_ClientGemHorizontalAlignment {
+	Unknown = 1;
+	Left = 2;
+	Center = 3;
+	Right = 4;
+}
+
+enum CPBClientCallerIdState {
+	UknownCallerIdState = 0;
+	CallerIdEnabled = 1;
+	CallerIdDisabled = 2;
+}
+
+enum CPBClientEntity_BabelUserState {
+	UnknownUserState = 0;
+	Babel = 1;
+	NonBabel = 2;
+}
+
+enum CPBClientSyncFilter {
+	UnknownSyncFilter = 0;
+	InboxSyncFilter = 1;
+	ArchiveSyncFilter = 2;
+	ActiveSyncFilter = 3;
+	InvitedSyncFilter = 4;
+	InvitedLowAffinitySyncFilter = 5;
+}
+
+enum CPBClientConversationView {
+	UnknownConversationView = 0;
+	InboxView = 1;
+	ArchivedView = 2;
+}
+
+enum CPBClientCallerIdSettingsMask {
+	UnknownCallerIdSettingsMask = 0;
+	CallerIdSettingsProvided = 1;
+	CallerIdSettingsNotProvided = 2;
+}
+
+enum CPBClientRichPresenceType {
+	RpUnknown = 0;
+	RpInCallState = 1;
+	RpDevice = 2;
+	RpMood = 3;
+	RpActivity = 4;
+	RpGloballyEnabled = 5;
+	RpLastSeen = 6;
+}
+
+enum CPBClientUrlRedirectResult_ClientRedirectError {
+	UnknownRedirectError = 0;
+}
+
+enum CPBClientBlockState {
+	UnknownBlockState = 0;
+	Block = 1;
+	Unblock = 2;
+}
+
+enum CPBClientSourceType {
+	UnknownSourceType = 0;
+	Mobile = 1;
+	Web = 2;
+}
+
+enum CPBClientGroupLinkSharingStatus {
+	UnknownLinkSharingStatus = 0;
+	LinkSharingOn = 1;
+	LinkSharingOff = 2;
+	NotAvailable = 3;
+}
+
+enum CPBActiveClientState {
+	NoActiveClient = 0;
+	IsActiveClient = 1;
+	OtherClientIsActive = 2;
+}
+
+enum CPBClientAnalyticsEvent_EventType {
+	Received = 1;
+	Forwarded = 2;
+	Deprecated3 = 3;
+	Delivered = 4;
+	Dropped = 5;
+	Discarded = 6;
+	InvalidationDelivered = 7;
+	InvalidationForwarded = 8;
+	InvalidationDiscarded = 9;
+	Checkpoint = 10;
+	Created = 11;
+	ResponseReceived = 12;
+	ResponseRendered = 13;
+}
+
+enum CPBClientConversationStatus {
+	UnknownConversationStatus = 0;
+	Invited = 1;
+	Active = 2;
+	Left = 3;
+}
+
+enum CPBClientRegistrationType {
+	Register = 1;
+	Unregister = 2;
+}
+
+enum CPBClientSuggestion_ClientSuggestionType {
+	UnknownType = 0;
+	WhereYouAt = 3;
+	Location = 4;
+	HappyThanksgiving = 5;
+	HappyHanukkah = 6;
+	HappyBirthday = 7;
+	HappyHolidays = 8;
+	MerryChristmas = 9;
+	HappyNewYear = 10;
+	LoveYou = 11;
+	Lgtm = 12;
+	Sgtm = 13;
+	LaughterExpression = 14;
+	ExcitementExpression = 15;
+	DisappointmentExpression = 16;
+	Gem = 17;
+	DateTime = 18;
+	WhereAmI = 19;
+	SmartReply = 20;
+}
+
+enum CPBClientDomainProperties_ClientDomainDefaultOtrSetting {
+	UnknownDomainOtrSetting = 0;
+	DefaultHistoryOff = 1;
+	DefaultHistoryOn = 2;
+}
+
+enum CPBClientGetConversationResponse_ClientGetConversationError {
+	InvalidContinuationToken = 1;
+}
+
+enum CPBClientQueryPresenceRequest_ClientFieldMask {
+	Reachability = 1;
+	Availability = 2;
+	StatusMessage = 3;
+	Location = 4;
+	Mood = 5;
+	InCall = 6;
+	DeviceStatus = 7;
+	Activity = 8;
+	CalendarPresence = 9;
+	LastSeen = 10;
+}
+
+enum CPBClientAdditionalEntityData {
+	UnknownAdditionalData = 0;
+	IsBabelUser = 1;
+	HasHadPastHangout = 2;
+}
+
+enum CPBClientAnalyticsEvent_ChatAction {
+	UnknownAction = 0;
+	CreateConversation = 100;
+	SendChatMessage = 101;
+	HangoutComingSoon = 701;
+	HangoutStarted = 702;
+	HangoutJoin = 703;
+	HangoutLeave = 704;
+	HangoutEnded = 705;
+	HangoutOngoing = 706;
+}
+
+enum CPBClientPresenceStateSetting_ClientPresenceState {
+	None = 1;
+	Mobile = 10;
+	MobileActive = 20;
+	DesktopIdle = 30;
+	DesktopActive = 40;
+}
+
+enum CPBLNodeDefs_NodeType {
+	Cs = 1;
+	Wcs = 2;
+	Mcs = 3;
+	Gmail = 4;
+	Fs = 5;
+	Ro = 6;
+	Ss = 7;
+	Gcm = 8;
+	Apns = 9;
+	Conserver = 10;
+	Apiary = 11;
+	Papyrus = 12;
+	WcsClient = 13;
+	XmppInterop = 14;
+	Gti = 15;
+	Glass = 16;
+	Bot = 17;
+	AndroidClient = 18;
+	IosClient = 19;
+	Rooms = 20;
+	Fanserver = 21;
+	Mesi = 22;
+	Broadcastbell = 23;
+	Megastore = 24;
+	Focus = 25;
+	Lcs = 26;
+	LcsClient = 27;
+	Tinkerbell = 28;
+	Guss = 29;
+	Lens = 30;
+	Viewfinder = 31;
+	Reflector = 32;
+	Diffractor = 33;
+	Platform = 34;
+	Calendar = 35;
+	Party = 36;
+	HangoutsPusher = 37;
+	Abuseiam = 38;
+	MesiSpanner = 39;
+	ChatExpunger = 40;
+	DrivePublisher = 41;
+	Ccs = 42;
+	Speakeasy = 43;
+	Transcriptionbell = 44;
+	Guns = 45;
+	Botguard = 46;
+	Prefstore = 47;
+	Pushkit = 48;
+	HangoutsUserPusher = 49;
+	Meetings = 50;
+	JidLookup = 51;
+}
+
+enum CPBClientStartPhoneNumberVerificationRequest_ClientPhoneNumberVerificationMethod {
+	UnknownVerificationMethod = 0;
+	SmsToApp = 1;
+	SmsToHuman = 2;
+}
+
+enum CPBLChatDefs_ActiveClientState {
+	Unknown = 0;
+	NoActiveClient = 1;
+	IsActiveClient = 2;
+	OtherClientIsActive = 3;
+}
+
+enum CPBClientConfigurationBitType {
+	QuasarMarketingPromoDismissed = 1;
+	GplusSignupPromoDismissed = 2;
+	ChatWithCirclesAccepted = 3;
+	ChatWithCirclesPromoDismissed = 4;
+	AllowedForDomain = 5;
+	GmailChatArchiveEnabled = 6;
+	GplusUpgradeAllowedForDomain = 7;
+	RichPresenceActivityPromoShown = 8;
+	RichPresenceDevicePromoShown = 9;
+	RichPresenceInCallStatePromoShown = 10;
+	RichPresenceMoodPromoShown = 11;
+	CanOptIntoGvSmsIntegration = 12;
+	GvSmsIntegrationEnabled = 13;
+	GvSmsIntegrationPromoShown = 14;
+	BusinessFeaturesEligible = 15;
+	BusinessFeaturesPromoDismissed = 16;
+	BusinessFeaturesEnabled = 17;
+	RichPresenceLastSeenMobilePromoShown = 19;
+	RichPresenceLastSeenDesktopPromptShown = 20;
+	RichPresenceLastSeenMobilePromptShown = 21;
+	RichPresenceLastSeenDesktopPromoShown = 22;
+	ConversationInviteSettingsSetToCustom = 23;
+	ReportAbuseNoticeAcknowledged = 24;
+	UnicornUseChildProduct = 25;
+	UnicornFullyDisabledByParent = 26;
+	PhoneVerificationMobilePromptShown = 27;
+	CanUseGvCallerIdFeature = 28;
+	PhotoServiceRegistered = 29;
+	GvCallerIdWabelFirstTimeDialogShown = 30;
+	HangoutP2PNoticeNeedsAcknowledgement = 31;
+	HangoutP2PEnabled = 32;
+	InviteNotificationsEnabled = 33;
+	DesktopAutoEmojiConversionEnabled = 34;
+	WarmWelcomeSeen = 35;
+	InviteHappyStatePromoSeen = 36;
+	DesktopHostDensitySettingsEnabled = 37;
+	DesktopCompactModeEnabled = 38;
+}
+
+enum CPBClientUserType {
+	UnknownUserType = 0;
+	Invalid = 1;
+	Gaia = 2;
+	OffNetworkPhone = 3;
+	MalformedPhoneNumber = 4;
+	UnknownPhoneNumber = 5;
+	AnonymousPhoneNumber = 6;
+}
+
+enum CPBClientInCall_ClientCallType {
+	None = 0;
+	Pstn = 100;
+	Hangout = 200;
+}
+
+enum CPBClientEntityProperties_ClientAffinity_ClientAffinityType {
+	AffinityTypeUnknown = 0;
+	EmailAutocomplete = 1;
+	ContactsPlusFrequentlyContacted = 2;
+	ChatAutocomplete = 3;
+	GplusAutocomplete = 4;
+	GlassAffinity = 5;
+	GplusStreamYouMayKnow = 6;
+	PeopleAutocompleteSocial = 7;
+	FieldAutocompleteSocial = 8;
+	ContactsPlusEmail = 9;
+}
+
+enum CPBClientResponseStatus {
+	Unknown = 0;
+	Ok = 1;
+	ErrorBusy = 2;
+	ErrorUnexpected = 3;
+	ErrorInvalidRequest = 4;
+	ErrorRetryLimit = 5;
+	ErrorForwarded = 6;
+	ErrorQuotaExceeded = 7;
+	ErrorInvalidConversation = 8;
+	ErrorVersionMismatch = 9;
+	ErrorAccessCheckFailed = 10;
+	ErrorNotFound = 11;
+}
+
+enum CPBClientInvitationStatus {
+	UnknownInvitationStatus = 0;
+	PendingInvitation = 1;
+	AcceptedInvitation = 2;
+	InvitationNeeded = 3;
+}
+
+enum CPBClientInviteSettings_NotificationLevel {
+	UnknownNotificationLevel = 0;
+	Disable = 1;
+	Invite = 2;
+	Ring = 3;
+}
+
+enum CPBLChatDefs_NotificationLevel {
+	Off = 10;
+	Ding = 20;
+	ImportantOnly = 25;
+	AllEvents = 30;
+	UseGlobalDefault = 100;
+}
+
+enum CPBClientClientVersion_ClientId {
+	UnknownClientId = 0;
+	Android = 1;
+	Ios = 2;
+	Quasar = 3;
+	WebSupermoles = 4;
+	WebSupermolesOz = 5;
+	WebSupermolesGmail = 6;
+	Bot = 7;
+	WebVideoCall = 8;
+	GlassServer = 9;
+	PstnBot = 10;
+	Tee = 11;
+	WebSupermolesBigtop = 12;
+	WebSupermolesChromeApp = 13;
+	RoomServer = 14;
+	WebStandaloneApp = 15;
+	Speakeasy = 16;
+	GoogleVoice = 17;
+	Prober = 18;
+	External = 19;
+	BbBot = 23;
+	Powwow = 24;
+	OzServer = 25;
+	HangoutsPusher = 26;
+	AndroidNova = 27;
+	RealtimeSupport = 28;
+	ChatExpunger = 29;
+	CaptionsBot = 30;
+	Mesi = 31;
+	RealtimeMediaJs = 32;
+	WabelMediacall = 33;
+	Expresslane = 34;
+	TestClient = 35;
+	WebSupermolesContacts = 36;
+	WebSupermolesCallmemaybe = 37;
+	Gmail = 38;
+	Castouts = 39;
+	IronmanWeb = 40;
+	IronmanAndroid = 41;
+	IronmanIos = 42;
+	AnonymousWebVideoCall = 43;
+	HangoutsStartPage = 44;
+	WebSupermolesShortlink = 45;
+	Hotlane = 46;
+	IosShare = 47;
+	Rigel = 48;
+	Porthole = 49;
+	BoqExpresslane = 50;
+}
+
+enum CPBClientInviteeError_ClientInviteeErrorDetail {
+	UnknownInviteeError = 0;
+	InviteeBlocked = 1;
+	NotAuthorized = 2;
+	ForceHistoryConflict = 3;
+	ForceHistoryStateChangeUseFork = 4;
+}
+
+enum CPBLTransportEvent_EventType {
+	Received = 1;
+	Forwarded = 2;
+	Branched = 3;
+	Delivered = 4;
+	Dropped = 5;
+	Discarded = 6;
+	InvalidationDelivered = 7;
+	InvalidationForwarded = 8;
+	InvalidationDiscarded = 9;
+	Checkpoint = 10;
+	Created = 11;
+	ResponseReceived = 12;
+	ResponseRendered = 13;
+	QueueStatus = 14;
+	RpcSent = 15;
+	DatabaseSizeKb = 16;
+	Latency = 17;
+	Database = 18;
+}
+
+enum CPBClientHangoutEventType {
+	StartHangout = 1;
+	EndHangout = 2;
+	JoinHangout = 3;
+	LeaveHangout = 4;
+	HangoutComingSoon = 5;
+	OngoingHangout = 6;
+}
+
+enum CPBLTransportEvent_EventDeliveryMechanism {
+	Unknown = 0;
+	ChatMessageFanOut = 1;
+	ChatMessageWarmSync = 2;
+	ChatMessageColdSync = 3;
+	ChatMessageUserScrollBack = 4;
+	ChatMessageConversationRequest = 5;
+}
+
+enum CPBLTransportEvent_MessageType {
+	Chat = 1;
+	Video = 2;
+	Control = 3;
+	HangoutStarted = 701;
+	HangoutJoin = 702;
+	HangoutLeave = 703;
+	HangoutEnded = 704;
+}
+
+enum CPBClientDeliveryMediumType {
+	UnknownMedium = 0;
+	BabelMedium = 1;
+	GoogleVoiceMedium = 2;
+	LocalSmsMedium = 3;
+}
+
+enum CPBClientFocusType {
+	Focus = 1;
+	Unfocus = 2;
+}
+
+enum CPBClientMembershipChangeType {
+	Join = 1;
+	Leave = 2;
+}
+
+enum CPBClientUpdateFavoritesError {
+	UnknownModifyFavoritesError = 0;
+	StaleVersion = 1;
+}
+
+enum CPBLXsDefs_ClientType {
+	UnknownClientId = 0;
+	Android = 1;
+	Ios = 2;
+	Quasar = 3;
+	WebSupermoles = 4;
+	WebSupermolesOz = 5;
+	WebSupermolesGmail = 6;
+	RoomServer = 7;
+	SessionServer = 8;
+	Bot = 9;
+	OzServer = 10;
+	GtiSms = 11;
+	WebVideoCall = 12;
+	GlassServer = 13;
+	PstnBot = 14;
+	Tee = 15;
+	WebSupermolesBigtop = 16;
+	WebSupermolesChromeApp = 17;
+	WebStandaloneApp = 18;
+	Speakeasy = 19;
+	GoogleVoice = 20;
+	Prober = 21;
+	External = 22;
+	BbBot = 23;
+	Powwow = 24;
+	HangoutsPusher = 26;
+	AndroidNova = 27;
+	RealtimeSupport = 28;
+	ChatExpunger = 29;
+	CaptionsBot = 30;
+	Mesi = 31;
+	RealtimeMediaJs = 32;
+	WabelMediacall = 33;
+	Expresslane = 34;
+	TestClient = 35;
+	WebSupermolesContacts = 36;
+	WebSupermolesCallmemaybe = 37;
+	Gmail = 38;
+	Castouts = 39;
+	IronmanWeb = 40;
+	IronmanAndroid = 41;
+	IronmanIos = 42;
+	AnonymousWebVideoCall = 43;
+	HangoutsStartPage = 44;
+	WebSupermolesShortlink = 45;
+	Hotlane = 46;
+	IosShare = 47;
+	Rigel = 48;
+	Porthole = 49;
+	BoqExpresslane = 50;
+}
+
+enum CPBClientInvitationAffinity {
+	UnknownAffinity = 0;
+	High = 1;
+	Low = 2;
+}
+
+enum CPBClientOffnetworkAddress_Type {
+	Phone = 0;
+	Email = 1;
+}
+
+enum CPBClientSetActiveClientResponse_ClientSetActiveClientError {
+	InvalidClient = 1;
+}
+
+enum CPBClientReplyToInviteType {
+	UnknownReplyToInviteType = 0;
+	Accept = 1;
+	Decline = 2;
+}
+
+enum CPBRealtimeNotificationSettings_Level {
+	Default = 0;
+	Disable = 10;
+	Invite = 20;
+	Deliver = 30;
+	Ping = 40;
+	Ring = 50;
+}
+
+enum CPBClientClientVersion_ClientBuildType {
+	UnknownClientBuildType = 0;
+	Developer = 1;
+	Dogfood = 2;
+	Production = 3;
+}
+
+enum CPBClientLeaveReason {
+	LeaveReasonUnknown = 0;
+	ForceHistoryPolicyChange = 1;
+	UserInitiated = 2;
+}
+
+enum CPBClientOffTheRecordToggle {
+	Enabled = 1;
+	Disabled = 2;
+}
+
+enum CPBClientOffTheRecordStatus {
+	OffTheRecord = 1;
+	OnTheRecord = 2;
+}
+
+enum CPBClientUpgradeType {
+	Suggest = 1;
+	Force = 2;
+	DeprecatedClient = 3;
+}
+
+enum CPBClientDeleteType {
+	UnknownDelete = 0;
+	UpperBoundDelete = 1;
+	PerEventDelete = 2;
+}
+
+enum CPBClientVerificationStatus {
+	UnknownVerificationStatus = 0;
+	Verified = 1;
+}
+
+enum CPBClientEventType {
+	UnknownEventType = 0;
+	RegularChatMessage = 1;
+	Sms = 2;
+	Voicemail = 3;
+	AddUser = 4;
+	RemoveUser = 5;
+	RenameConversation = 6;
+	HangoutEvent = 7;
+	PhoneCall = 8;
+	OtrModification = 9;
+	Deprecated10 = 10;
+	Mms = 11;
+	Deprecated12 = 12;
+	ObservedEvent = 13;
+	GroupLinkSharingModification = 14;
+}
+
+enum CPBClientConversationType {
+	UnknownConversationType = 0;
+	StickyOneToOne = 1;
+	Group = 2;
+}
+
+enum CPBClientDomainProperties_ClientChatRestricted {
+	UnknownChatRestricted = 0;
+	ChatNotRestricted = 1;
+	ChatRestrictedToDomain = 2;
+}
+
+enum CPBLXsDefs_ChatAction {
+	UnknownAction = 0;
+	CreateConversation = 100;
+	SendChatMessage = 101;
+	AddUser = 102;
+	RemoveUser = 103;
+	Rename = 104;
+	SyncRecent = 105;
+	SyncAllNewEvents = 106;
+	GetConversation = 107;
+	SetConversationNotificationLevel = 108;
+	ReplyToInvite = 109;
+	ModifyOtr = 110;
+	ModifyConversationView = 111;
+	SetHangoutNotificationStatus = 112;
+	SetFocus = 113;
+	SetTyping = 114;
+	UpdateWatermark = 115;
+	DeleteConversation = 116;
+	GetUnreadCount = 117;
+	RecordAnalyticEvents = 118;
+	GetUserBadgeCount = 119;
+	MarkEventObserved = 120;
+	OpenConversationFromURL = 121;
+	ModifyGroupLinkSharingStatus = 122;
+	QueryAvailability = 300;
+	GetSuggestedEntities = 301;
+	GetSelfInfo = 302;
+	SearchEntities = 303;
+	GetEntityById = 304;
+	SetConfigurationBit = 305;
+	RegisterDevice = 501;
+	SetActiveClient = 502;
+	SetAvailability = 503;
+	SetSettings = 504;
+	GetSettings = 505;
+	StartSmsToAppVerification = 506;
+	FinishSmsToAppVerification = 507;
+	HangoutComingSoon = 701;
+	HangoutStarted = 702;
+	HangoutJoin = 703;
+	HangoutLeave = 704;
+	HangoutEnded = 705;
+	HangoutOngoing = 706;
+	QueryPresence = 801;
+	SetPresence = 802;
+	SetRichPresenceEnabledState = 803;
+	SendOffnetworkInvitation = 901;
+	AcceptOffnetworkInvitation = 902;
+	StopOffnetworkInvitation = 903;
+	SetSmsEnablingState = 904;
+	GetSmsEnablingState = 905;
+	HangoutResolve = 1001;
+	HangoutQuery = 1002;
+	HangoutParticipantSearch = 1003;
+	MediaSessionLog = 1004;
+	ManifoldExecuteBabelArchiving = 1100;
+	ManifoldExecuteBabelCentBlacklist = 1101;
+}
+
+enum CPBClientDeclineSignal {
+	ReportAbuse = 1;
+	BlockInviter = 2;
+}
+
+enum CPBClientConversation_ClientNetworkType {
+	UnknownNetworkType = 0;
+	Babel = 1;
+	Phone = 2;
+}
+
+enum CPBClientGetSelfInfoResponse_AccountAgeGroup {
+	UnknownAgeGroup = 0;
+	Adult = 1;
+	Minor = 2;
+	Child = 3;
+}
+
+enum CPBClientEventObservedStatus {
+	UnknownObservedStatus = 0;
+	Observed = 1;
+	Unobserved = 2;
+}
+
+enum CPBClientExperimentValue_FlagType {
+	Boolean = 1;
+	Long = 2;
+	Double = 3;
+	String = 4;
+}
+
+enum CPBClientDeviceActivity_Type {
+	InVehicle = 0;
+	OnBicycle = 1;
+	OnFoot = 2;
+	Still = 3;
+	Unknown = 4;
+	Tilting = 5;
+	ExitingVehicle = 6;
+	Walking = 7;
+	Running = 8;
+}
+
+enum CPBLUmaEventData_HistogramType {
+	Histogram = 0;
+	Linear = 1;
+}
+
+enum CPBLClientState_EventState_ClientEventObservedStatus {
+	UnknownObservedStatus = 0;
+	Observed = 1;
+	Unobserved = 2;
+}
+
+enum CPBClientEntityProperties_ProfileType {
+	None = 0;
+	EsUser = 1;
+	Page = 2;
+}
+
+enum CPBClientTypingType {
+	Start = 1;
+	Pause = 2;
+	Clear = 3;
+}
+
+enum CPBClientForceHistoryState {
+	ForceHistoryUnknown = 0;
+	NoForce = 1;
+	ForceOn = 2;
+	ForceOff = 3;
+}
+
+enum CPBClientDiscoverabilityStatus {
+	UnknownDiscoverabilityStatus = 0;
+	OptedInAndDiscoverable = 1;
+	OptedInButNotDiscoverable = 2;
+	OptedOut = 3;
+}
+
+enum CPBClientGetSelfInfoRequest_ClientRequestedFieldMask {
+	SelfEntity = 1;
+	IsKnownMinor = 2;
+	ClientPresence = 3;
+	DndState = 4;
+	DesktopOffState = 5;
+	PhoneData = 6;
+	ConfigurationBit = 7;
+	GooglePlusUser = 8;
+	DesktopSoundSetting = 9;
+	RichClientPresenceMood = 10;
+	RichClientPresenceInCallState = 11;
+	RichPresenceEnabledState = 12;
+	BabelUser = 13;
+	DesktopAvailabilitySharingState = 14;
+	GooglePlusMobileUser = 15;
+	DesktopHtml5Notifications = 16;
+	ManagedPlusPages = 17;
+	RichClientPresenceStatusMessage = 18;
+	AccountAgeGroup = 19;
+	MobileExperiments = 20;
+	TalkSharedInvisible = 21;
+	CallerIdSettings = 22;
+}
+
+enum CPBClientUrlRedirectSpec_ClientRedirectType {
+	UnknownRedirectType = 0;
+	Fife = 1;
+}
+
+enum CPBClientHangoutMediaType {
+	AudioVideo = 1;
+	AudioOnly = 2;
+	PushToTalk = 3;
+}
+
+message CPBClientGroupLinkSharingModification {
+	optional CPBClientGroupLinkSharingStatus newStatus = 1;
+}
+
+message CPBClientSetGroupLinkSharingEnabledResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientEvent createdEvent = 2;
+	optional CPBClientConversation updatedConversation = 3;
+}
+
+message CPBClientSetGroupLinkSharingEnabledRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientEventRequestHeader eventRequestHeader = 2;
+	optional CPBClientGroupLinkSharingStatus groupLinkSharingStatus = 4;
+}
+
+message CPBClientStateUpdate {
+	optional CPBClientStateUpdateHeader stateUpdateHeader = 1;
+	optional CPBClientConversationNotification conversationNotification = 2;
+	optional CPBClientEventNotification eventNotification = 3;
+	optional CPBClientSetFocusNotification focusNotification = 4;
+	optional CPBClientSetTypingNotification typingNotification = 5;
+	optional CPBClientSetConversationNotificationLevelNotification notificationLevelNotification = 6;
+	optional CPBClientReplyToInviteNotification replyToInviteNotification = 7;
+	optional CPBClientWatermarkNotification watermarkNotification = 8;
+	optional bytes deprecated10 = 10;
+	optional CPBClientConversationViewModification viewModification = 11;
+	optional CPBClientEasterEggNotification easterEggNotification = 12;
+	optional CPBClientConversation clientConversation = 13;
+	optional CPBClientSelfPresenceNotification selfPresenceNotification = 14;
+	optional CPBClientDeleteActionNotification deleteNotification = 15;
+	optional CPBClientPresenceNotification presenceNotification = 16;
+	optional CPBClientBlockNotification blockNotification = 17;
+	optional CPBClientInvitationWatermarkNotification invitationWatermarkNotification = 18;
+	optional CPBClientConfigurationNotification configurationNotification = 19;
+	optional CPBClientRichPresenceEnabledStateNotification richPresenceEnabledStateNotification = 20;
+	optional CPBClientContactsNotification contactsNotification = 21;
+	optional CPBClientConversationDeliveryMediumModification deliveryMediumModification = 23;
+	optional CPBClientCallerIdConfigNotification callerIdConfigNotification = 28;
+	optional CPBClientMarkEventObservedNotification markEventObservedNotification = 30;
+	optional CPBClientGlobalNotificationLevelNotification globalNotificationLevelNotification = 31;
+}
+
+message CPBClientSetInviteSettingsResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional string consistencyToken = 2;
+}
+
+message CPBClientSetInviteSettingsRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientInviteSettings settingsToSet = 2;
+	optional string consistencyToken = 3;
+}
+
+message CPBClientGetInviteSettingsResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientInviteSettings settings = 2;
+}
+
+message CPBClientGetInviteSettingsRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional string consistencyToken = 2;
+}
+
+message CPBClientInviteSettings_CircleLevel {
+	optional int64 id_p = 1;
+	optional string name = 2;
+	optional CPBClientInviteSettings_NotificationLevel level = 3;
+}
+
+message CPBClientInviteSettings {
+	optional CPBClientInviteSettings_NotificationLevel publicLevel = 1;
+	optional CPBClientInviteSettings_NotificationLevel emailLevel = 2;
+	optional CPBClientInviteSettings_NotificationLevel phoneLevel = 3;
+	repeated CPBClientInviteSettings_CircleLevel circleLevelArray = 4;
+}
+
+message CPBClientOpenGroupConversationFromUrlResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional CPBClientEvent createdEvent = 3;
+}
+
+message CPBClientOpenGroupConversationFromUrlRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientEventRequestHeader eventRequestHeader = 2;
+	optional string conversationURL = 3;
+}
+
+message CPBClientGetGroupConversationUrlResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional string groupConversationURL = 2;
+}
+
+message CPBClientGetGroupConversationUrlRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+}
+
+message CPBClientMarkEventObservedNotification {
+	repeated CPBClientObservedConversationEvents observedConversationEventArray = 1;
+}
+
+message CPBClientMarkEventObservedResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientObservedConversationEvents observedConversationEventArray = 2;
+}
+
+message CPBClientObservedConversationEvents_ObservedEvent {
+	optional string eventId = 1;
+	optional uint64 lastObservedTimestamp = 2;
+	optional CPBClientEventObservedStatus observedStatus = 3;
+}
+
+message CPBClientObservedConversationEvents {
+	optional CPBClientConversationId conversationId = 1;
+	repeated CPBClientObservedConversationEvents_ObservedEvent observedEventArray = 2;
+}
+
+message CPBClientMarkEventObservedRequest_MarkConversationObserved {
+	optional CPBClientConversationId conversationId = 1;
+	repeated string eventIdArray = 2;
+}
+
+message CPBClientMarkEventObservedRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientMarkEventObservedRequest_MarkConversationObserved observedConversationEventArray = 2;
+}
+
+message CPBClientCallerIdConfigNotification {
+	repeated CPBClientCallerIdSetting callerIdSettingArray = 1;
+}
+
+message CPBClientSetCallerIdConfigResponse {
+	repeated CPBClientCallerIdSetting callerIdSettingArray = 1;
+	optional CPBClientResponseHeader responseHeader = 2;
+}
+
+message CPBClientSetCallerIdConfigRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientCallerIdConfig callerIdConfigArray = 2;
+}
+
+message CPBClientCallerIdConfig {
+	optional GCVPhoneNumber callerIdPhoneNumber = 1;
+	optional CPBClientCallerIdState callerIdState = 2;
+}
+
+message CPBClientContactsNotification {
+	repeated CPBClientParticipantId dismissedParticipantIdArray = 1;
+	repeated CPBClientParticipantId undismissedParticipantIdArray = 2;
+	repeated CPBClientFavoriteUpdate updatedFavoriteArray = 3;
+	optional CPBClientFavoritesNotification favoritesModified = 4;
+}
+
+message CPBClientFavoritesNotification {
+	optional bytes currentVersion = 1;
+}
+
+message CPBClientBlockNotification {
+	repeated CPBClientBlockStateChange blockStateChangeArray = 1;
+}
+
+message CPBClientBlockStateChange {
+	optional CPBClientParticipantId participantId = 1;
+	optional CPBClientBlockState newBlockState = 2;
+}
+
+message CPBClientEventNotification {
+	optional CPBClientEvent event = 1;
+}
+
+message CPBClientConversationNotification {
+	optional CPBClientConversation conversation = 1;
+}
+
+message CPBClientStateUpdateHeader {
+	optional CPBActiveClientState activeClientState = 1;
+	optional bytes deprecated2 = 2;
+	optional uint64 requestTraceId = 3;
+	optional uint64 currentServerTime = 5;
+	optional string clientGeneratedRequestId = 7;
+	optional string selfFanoutId = 8;
+}
+
+message CPBClientBatchUpdate {
+	repeated CPBClientStateUpdate stateUpdateArray = 1;
+}
+
+message CPBClientInviteToken {
+	optional string inviteTokenURL = 1;
+}
+
+message CPBClientSuggestions {
+	repeated CPBClientSuggestion suggestionArray = 2;
+}
+
+message CPBClientEasterEggSuggestionInfo {
+	optional int32 variationIndex = 1;
+	optional int32 animationDurationMsec = 2;
+	repeated string animatedAssetURLWithoutSuffixArray = 3;
+	optional CPBClientEasterEggSuggestionInfo_ClientGemHorizontalAlignment horizontalAlignment = 4;
+}
+
+message CPBClientSuggestion {
+	optional string suggestionId = 1;
+	optional uint64 expirationTimeUsec = 2;
+	optional CPBClientSuggestion_ClientSuggestionType type = 3;
+	optional Attachment attachment = 6;
+	optional CPBClientEasterEggSuggestionInfo easterEggSuggestionInfo = 7;
+	optional string matchedMessageSubstring = 8;
+	optional string smartReplyText = 9;
+}
+
+message CPBClientUrlRedirectWrapperResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientUrlRedirectResult redirectResultArray = 2;
+}
+
+message CPBClientUrlRedirectWrapperRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientUrlRedirectSpec URLRedirectSpecArray = 2;
+}
+
+message CPBClientUrlRedirectResult {
+	optional CPBClientUrlRedirectSpec redirectSpec = 1;
+	optional string redirectedURL = 2;
+	optional CPBClientUrlRedirectResult_ClientRedirectError redirectError = 3;
+}
+
+message CPBClientUrlRedirectSpec {
+	optional CPBClientUrlRedirectSpec_ClientRedirectType redirectType = 1;
+	optional string originalURL = 2;
+}
+
+message CPBClientConfigurationBitError {
+	optional CPBClientConfigurationBitType configurationBitType = 1;
+	optional string errorDescription = 2;
+}
+
+message CPBClientConfigurationNotification {
+	repeated CPBClientConfigurationBit configurationBitChangeArray = 1;
+	optional bool desktopAvailabilitySharingEnabled = 3;
+}
+
+message CPBClientConfigurationBit {
+	optional CPBClientConfigurationBitType configurationBitType = 1;
+	optional bool value = 2;
+}
+
+message CPBClientSetConfigurationBitResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientConfigurationBitError configurationBitErrorArray = 2;
+}
+
+message CPBClientSetConfigurationBitRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientConfigurationBit configurationBitArray = 2;
+	optional bool desktopAvailabilitySharingEnabled = 4;
+}
+
+message CPBClientFinishPhoneNumberVerificationResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+}
+
+message CPBClientFinishPhoneNumberVerificationRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional GCVPhoneNumber phoneNumber = 2;
+	optional string code = 3;
+	optional bool discoverable = 4;
+	repeated GCVPhoneNumber additionalDiscoverablePhoneNumberArray = 5;
+	optional CPBClientPhoneNumberVerificationContext phoneNumberVerificationContext = 6;
+}
+
+message CPBClientStartPhoneNumberVerificationResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientPhoneNumberVerificationContext phoneNumberVerificationContext = 2;
+	optional bool rateLimitExceeded = 3;
+	optional uint32 smsToHumanCodeLength = 4;
+}
+
+message CPBClientStartPhoneNumberVerificationRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional GCVPhoneNumber phoneNumber = 2;
+	optional CPBClientStartPhoneNumberVerificationRequest_ClientPhoneNumberVerificationMethod method = 3;
+}
+
+message CPBClientPhoneNumberVerificationContext {
+}
+
+message CPBClientSendOffnetworkInvitationResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+}
+
+message CPBClientSendOffnetworkInvitationRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientOffnetworkAddress inviteeAddress = 2;
+}
+
+message CPBClientOffnetworkAddress {
+	optional CPBClientOffnetworkAddress_Type type = 1;
+	optional string phone = 2;
+	optional string email = 3;
+}
+
+message CPBClientDeleteActionNotification {
+	optional CPBClientConversationId conversationId = 1;
+	optional CPBClientDeleteAction deleteAction = 2;
+}
+
+message CPBClientDeleteConversationResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientDeleteAction deleteAction = 2;
+}
+
+message CPBClientDeleteConversationRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional uint64 deleteUpperBoundTimestamp = 3;
+	optional CPBClientDeleteType deleteType = 4;
+	repeated string deleteEventIdArray = 5;
+}
+
+message CPBClientDeleteAction {
+	optional uint64 deleteActionTimestamp = 1;
+	optional uint64 deleteUpperBoundTimestamp = 2;
+	optional CPBClientDeleteType deleteType = 3;
+	repeated string deleteEventIdArray = 4;
+}
+
+message CPBClientInvitationWatermarkNotification {
+}
+
+message CPBClientUpdateInvitationWatermarkResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+}
+
+message CPBClientUpdateInvitationWatermarkRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional uint64 latestReadTimestamp = 2;
+}
+
+message CPBClientWatermarkNotification {
+	optional CPBClientParticipantId participantId = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional uint64 latestReadTimestamp = 3;
+}
+
+message CPBClientUpdateWatermarkResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+}
+
+message CPBClientUpdateWatermarkRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional uint64 latestReadTimestamp = 3;
+}
+
+message CPBClientGetEntityByIdResponse_ClientEntityLookupResult {
+	optional CPBClientEntityLookupSpec lookupSpec = 1;
+	repeated CPBClientEntity entityArray = 2;
+}
+
+message CPBClientGetEntityByIdResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientEntity entityArray = 2;
+	repeated CPBClientGetEntityByIdResponse_ClientEntityLookupResult entityResultArray = 3;
+}
+
+message CPBClientGetEntityByIdRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientEntityLookupSpec deprecated2 = 2;
+	repeated CPBClientEntityLookupSpec batchLookupSpecArray = 3;
+	repeated CPBClientAdditionalEntityData additionalEntityDataArray = 4;
+}
+
+message CPBClientEntityLookupSpec {
+	optional string gaiaId = 1;
+	optional string jid = 2;
+	optional string email = 3;
+	optional string phone = 4;
+	optional string chatId = 5;
+	optional bool createOffnetworkGaia = 6;
+}
+
+message CPBClientGetFavoritesResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientFavorite allFavoritesArray = 2;
+	optional bytes currentVersion = 3;
+}
+
+message CPBClientGetFavoritesRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+}
+
+message CPBClientUpdateFavoriteContactResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientUpdateFavoritesError error = 2;
+	repeated CPBClientFavorite allFavoritesArray = 3;
+	optional bytes currentVersion = 4;
+}
+
+message CPBClientUpdateFavoriteContactRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientFavoriteUpdate updateArray = 2;
+	optional bytes currentVersion = 3;
+}
+
+message CPBClientFavoriteUpdate {
+	optional CPBClientFavorite favorite = 1;
+	optional bool remove = 2;
+}
+
+message CPBClientFavorite {
+	optional CPBClientParticipantId participantId = 1;
+	optional int32 position = 2;
+	optional CPBClientConversationId conversationId = 3;
+}
+
+message CPBClientSearchEntitiesResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientEntity entityArray = 2;
+	optional bool incomplete = 3;
+}
+
+message CPBClientSearchEntitiesRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated bytes deprecated2Array = 2;
+	optional string query = 3;
+	optional int32 maxCount = 4;
+	optional bool deprecated5 = 5;
+	optional bool includePages = 6;
+	optional bool includeIsBabelUser = 7;
+	repeated CPBClientAdditionalEntityData additionalEntityDataArray = 8;
+	optional int32 maxConversationCount = 9;
+}
+
+message CPBClientGetSuggestedEntitiesResponse_ClientContactResults {
+	optional bool hashMatched = 1;
+	optional bytes hash_p = 2;
+	repeated CPBClientGetSuggestedEntitiesResponse_ClientContactResult contactArray = 3;
+}
+
+message CPBClientGetSuggestedEntitiesResponse_ClientContactResult {
+	optional CPBClientEntity entity = 1;
+	optional CPBClientInvitationStatus invitationStatus = 2;
+	optional CPBClientConversationId conversationId = 3;
+}
+
+message CPBClientGetSuggestedEntitiesResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientEntity entityArray = 2;
+	optional bool scoringFailed = 3;
+	optional CPBClientGetSuggestedEntitiesResponse_ClientContactResults favorites = 4;
+	optional CPBClientGetSuggestedEntitiesResponse_ClientContactResults contactsYouHangoutWith = 5;
+	optional CPBClientGetSuggestedEntitiesResponse_ClientContactResults otherContactsOnHangouts = 6;
+	optional CPBClientGetSuggestedEntitiesResponse_ClientContactResults otherContacts = 7;
+	optional CPBClientGetSuggestedEntitiesResponse_ClientContactResults dismissedContacts = 8;
+	optional CPBClientGetSuggestedEntitiesResponse_ClientContactResults pinnedFavorites = 9;
+}
+
+message CPBClientEntity {
+	optional bytes deprecated1 = 1;
+	optional bytes deprecated2 = 2;
+	optional bytes deprecated3 = 3;
+	optional bytes deprecated4 = 4;
+	optional bytes deprecated5 = 5;
+	optional bool invalid = 7;
+	optional CPBClientPresence presence = 8;
+	optional CPBClientParticipantId id_p = 9;
+	optional CPBClientEntityProperties properties = 10;
+	optional bool blocked = 11;
+	optional CPBClientDomainProperties domainProperties = 12;
+	optional CPBClientUserType entityType = 13;
+	optional bool isBabelUser = 14;
+	optional CPBClientEntity_BabelUserState babelUserState = 15;
+	optional CPBClientInvitationStatus invitationStatus = 17;
+	optional bool isAnonymousPhone = 18;
+}
+
+message CPBClientDomainProperties {
+	optional bool showChatWarning = 1;
+	optional bool phoneCallingEnabled = 2;
+	optional bool voiceCallingEnabled = 3;
+	optional bool videoCallingEnabled = 4;
+	optional string domainName = 5;
+	optional bool isPaidDasher = 6;
+	optional CPBClientForceHistoryState forceHistoryState = 7;
+	optional bytes deprecated8 = 8;
+	optional CPBClientDomainProperties_ClientChatRestricted chatRestricted = 9;
+	optional CPBClientDomainProperties_ClientDomainDefaultOtrSetting domainDefaultOtrSetting = 11;
+	optional bool isRugbyUser = 12;
+}
+
+message CPBClientEntityProperties_ClientAffinity {
+	optional CPBClientEntityProperties_ClientAffinity_ClientAffinityType affinityType = 1;
+	optional double value = 2;
+	optional string loggingId = 3;
+}
+
+message CPBClientEntityProperties {
+	optional CPBClientEntityProperties_ProfileType type = 1;
+	optional string displayName = 2;
+	optional string firstName = 3;
+	optional string photoURL = 4;
+	repeated string emailArray = 5;
+	repeated string phoneArray = 6;
+	optional string location = 7;
+	optional string organization = 8;
+	optional string role = 9;
+	optional bool inUsersDomain = 10;
+	repeated string circleIdArray = 13;
+	repeated GCVContactPhoneNumber phoneNumberArray = 14;
+	optional string canonicalEmail = 15;
+	repeated CPBClientEntityProperties_ClientAffinity affinityArray = 16;
+}
+
+message CPBClientGetSuggestedEntitiesRequest_ClientContactOptions {
+	optional int32 maxCount = 1;
+	optional bytes hash_p = 2;
+}
+
+message CPBClientGetSuggestedEntitiesRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated bytes deprecated2Array = 2;
+	repeated bytes deprecated3Array = 3;
+	optional int32 maxCount = 4;
+	optional bool deprecated5 = 5;
+	repeated CPBClientParticipantId givenIdArray = 6;
+	optional bool includeLegacy = 7;
+	optional CPBClientGetSuggestedEntitiesRequest_ClientContactOptions favoritesOptions = 8;
+	optional CPBClientGetSuggestedEntitiesRequest_ClientContactOptions contactsYouHangoutWithOptions = 9;
+	optional CPBClientGetSuggestedEntitiesRequest_ClientContactOptions otherContactsOnHangoutsOptions = 10;
+	optional CPBClientGetSuggestedEntitiesRequest_ClientContactOptions otherContactsOptions = 11;
+	optional CPBClientGetSuggestedEntitiesRequest_ClientContactOptions dismissedContactsOptions = 12;
+	optional CPBClientGetSuggestedEntitiesRequest_ClientContactOptions pinnedFavoritesOptions = 13;
+	optional bool includeIsBabelUser = 14;
+	repeated CPBClientAdditionalEntityData additionalEntityDataArray = 15;
+}
+
+message CPBClientPhone {
+	optional GCVPhoneNumber phoneNumber = 1;
+	optional bool googleVoice = 2;
+	optional CPBClientVerificationStatus verificationStatus = 3;
+	optional bool discoverable = 4;
+	optional CPBClientDiscoverabilityStatus discoverabilityStatus = 5;
+	optional bool primary = 6;
+}
+
+message CPBClientPhoneData {
+	repeated CPBClientPhone phoneArray = 1;
+	repeated CPBClientCallerIdSetting callerIdSettingArray = 2;
+	optional CPBClientCallerIdSettingsMask callerIdSettingsMask = 3;
+}
+
+message CPBClientExperimentValue_Value {
+	optional int64 longValue = 1;
+	optional double doubleValue = 2;
+	optional string stringValue = 3;
+	optional bool boolValue = 4;
+}
+
+message CPBClientExperimentValue {
+	optional string hexFlagId = 1;
+	optional CPBClientExperimentValue_FlagType flagType = 2;
+	optional CPBClientExperimentValue_Value value = 3;
+	optional CPBClientExperimentValue_LogAction logAction = 4;
+}
+
+message CPBClientCallerIdSetting {
+	optional GCVPhoneNumber callerIdPhoneNumber = 1;
+	optional CPBClientCallerIdSetting_ClientIneligibilityCause ineligibilityCause = 2;
+	optional CPBHEligibleCallerIdToken callerIdToken = 3;
+	optional bool defaultCallerId = 4;
+}
+
+message CPBClientGetSelfInfoResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientEntity selfEntity = 2;
+	optional bool isKnownMinor = 3;
+	optional CPBClientDndState dndState = 5;
+	optional CPBClientPhoneData phoneData = 7;
+	repeated CPBClientConfigurationBit configurationBitArray = 8;
+	optional bool googlePlusUser = 10;
+	optional CPBClientRichPresenceState richPresenceState = 12;
+	optional bool babelUser = 13;
+	optional bool desktopAvailabilitySharingEnabled = 14;
+	optional bool googlePlusMobileUser = 15;
+	repeated CPBClientParticipantId managedPlusPageArray = 17;
+	optional CPBClientGetSelfInfoResponse_AccountAgeGroup accountAgeGroup = 18;
+	repeated CPBClientExperimentValue mobileExperimentArray = 20;
+	optional CPBClientNotificationLevel defaultNotificationLevel = 24;
+}
+
+message CPBClientGetSelfInfoRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientGetSelfInfoRequest_ClientRequestedFieldMask requiredFieldsArray = 2;
+	repeated CPBClientGetSelfInfoRequest_ClientRequestedFieldMask optionalFieldsArray = 3;
+	optional bool upgradeToBabel = 4;
+}
+
+message CPBClientConversationDeliveryMediumModification {
+	optional CPBClientConversationId conversationId = 1;
+	optional CPBClientDeliveryMedium newDeliveryMedium = 2;
+}
+
+message CPBClientConversationViewModification {
+	optional CPBClientConversationId conversationId = 1;
+	optional CPBClientConversationView oldView = 2;
+	optional CPBClientConversationView newView = 3;
+}
+
+message CPBClientModifyConversationViewResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+}
+
+message CPBClientModifyConversationViewRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional CPBClientConversationView newView = 3;
+	optional uint64 lastEventTimestamp = 4;
+}
+
+message CPBClientReplyToInviteNotification {
+	optional CPBClientConversationId conversationId = 1;
+	optional CPBClientReplyToInviteType type = 2;
+}
+
+message CPBClientReplyToInviteResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientConversation updatedConversation = 2;
+}
+
+message CPBClientReplyToInviteRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional CPBClientReplyToInviteType type = 3;
+	optional uint64 clientGeneratedId = 4;
+	repeated CPBClientDeclineSignal declineSignalArray = 5;
+}
+
+message CPBClientDeclineAllInvitesResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+}
+
+message CPBClientDeclineAllInvitesRequest_ClientDeclineAllInvitesWatermarkSpec {
+	optional uint64 upToTimestamp = 1;
+	optional CPBClientInvitationAffinity affinity = 2;
+}
+
+message CPBClientDeclineAllInvitesRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientDeclineAllInvitesRequest_ClientDeclineAllInvitesWatermarkSpec declineAllWatermarkArray = 2;
+}
+
+message CPBClientSelfPresenceNotification {
+	optional CPBClientPresence presence = 2;
+	optional CPBClientDndState dndState = 3;
+	optional CPBClientRichPresenceState richPresenceState = 6;
+}
+
+message CPBClientInCallState {
+	optional CPBClientClientIdentifier clientIdentifier = 1;
+	optional CPBClientInCall_ClientCallType callType = 2;
+	optional uint64 expirationTimestamp = 3;
+}
+
+message CPBClientStatusMessageState {
+	repeated CPBClientMessageContent statusMessageArray = 1;
+	optional uint64 expirationTimestamp = 2;
+}
+
+message CPBClientRichPresenceState {
+	repeated CPBClientInCallState inCallArray = 2;
+	repeated CPBClientRichPresenceEnabledState richPresenceEnabledStateArray = 3;
+	optional CPBClientStatusMessageState statusMessage = 4;
+}
+
+message CPBClientDndState {
+	optional bool doNotDisturb = 1;
+	optional int64 expirationTimestamp = 2;
+	optional int64 version = 3;
+}
+
+message CPBClientInCallSetting {
+	optional CPBClientInCall_ClientCallType callType = 1;
+	optional uint64 timeoutSecs = 2;
+}
+
+message CPBClientStatusMessageSetting {
+	repeated CPBClientChatMessageSpec statusMessageArray = 1;
+}
+
+message CPBClientDndSetting {
+	optional bool doNotDisturb = 1;
+	optional uint64 timeoutSecs = 2;
+}
+
+message CPBClientRichPresenceEnabledStateNotification {
+	repeated CPBClientRichPresenceEnabledState richPresenceEnabledStateArray = 1;
+}
+
+message CPBClientGetRichPresenceEnabledStateResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientRichPresenceEnabledState richPresenceEnabledStateArray = 2;
+}
+
+message CPBClientGetRichPresenceEnabledStateRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientRichPresenceType requestedRichPresenceEnabledStateArray = 2;
+}
+
+message CPBClientSetRichPresenceEnabledStateResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientRichPresenceEnabledState updatedRichPresenceEnabledStateArray = 2;
+}
+
+message CPBClientSetRichPresenceEnabledStateRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientRichPresenceEnabledState richPresenceEnabledStateArray = 2;
+}
+
+message CPBClientRichPresenceEnabledState {
+	optional CPBClientRichPresenceType type = 1;
+	optional bool enabled = 2;
+}
+
+message CPBClientPresenceStateSetting {
+	optional uint64 timeoutSecs = 1;
+	optional CPBClientPresenceStateSetting_ClientPresenceState presenceState = 2;
+}
+
+message CPBClientSetPresenceResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+}
+
+message CPBClientSetPresenceRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientPresenceStateSetting presenceStateSetting = 2;
+	optional CPBClientDndSetting dndSetting = 3;
+	optional CPBClientInCallSetting inCallSetting = 7;
+	optional CPBClientStatusMessageSetting statusMessageSetting = 8;
+}
+
+message CPBClientDeviceStatus {
+	optional bool mobile = 1;
+	optional bool desktop = 2;
+	optional bool tablet = 3;
+}
+
+message CPBClientInCall {
+	optional CPBClientInCall_ClientCallType callType = 1;
+}
+
+message CPBClientStatusMessage {
+	repeated CPBClientMessageContent statusMessageArray = 1;
+}
+
+message CPBClientLastSeen {
+	optional uint64 lastSeenTimestampUsec = 1;
+}
+
+message CPBClientPresence {
+	optional bool reachable = 1;
+	optional bool available = 2;
+	optional CPBClientInCall inCall = 5;
+	optional CPBClientDeviceStatus deviceStatus = 6;
+	optional CPBClientDeviceActivity deviceActivity = 7;
+	optional CPBClientStatusMessage statusMessage = 9;
+	optional CPBClientLastSeen lastSeen = 10;
+}
+
+message CPBClientQueryPresenceResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientPresenceResult presenceResultArray = 2;
+}
+
+message CPBClientQueryPresenceRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientParticipantId participantIdArray = 2;
+	repeated CPBClientQueryPresenceRequest_ClientFieldMask fieldMaskArray = 3;
+}
+
+message CPBClientPresenceNotification {
+	repeated CPBClientPresenceResult presenceArray = 1;
+}
+
+message CPBClientPresenceResult {
+	optional CPBClientParticipantId userId = 1;
+	optional CPBClientPresence presence = 2;
+}
+
+message CPBClientDeviceActivity {
+	optional CPBClientDeviceActivity_Type type = 1;
+	optional int32 confidence = 2;
+}
+
+message CPBClientSetActiveClientResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientSetActiveClientResponse_ClientSetActiveClientError error = 2;
+	optional uint64 clientLastSeenTimestampUsec = 3;
+	optional uint64 lastSeenDeltaUsec = 4;
+}
+
+message CPBClientSetActiveClientRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional bool isActive = 2;
+	optional string fullJid = 3;
+	optional uint32 timeoutSecs = 4;
+	optional bool updateLastSeenTimestamp = 5;
+}
+
+message CPBClientRegisterDeviceResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientUpgradeType upgradeType = 2;
+	optional string upgradeExplanationURL = 3;
+	optional string fullJid = 5;
+	optional int32 iosBadgeCount = 6;
+	optional string clientResource = 7;
+	optional string learnMoreURL = 8;
+}
+
+message CPBClientRegisterDeviceRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientDeviceType deviceType = 2;
+	optional CPBClientRegistrationType registrationType = 3;
+	optional string locale = 4;
+	optional string stateUpdateVersion = 5;
+	optional string iosAppId = 7;
+	optional bytes iosToken = 8;
+	optional int64 androidId = 9;
+	optional string androidRegistrationId = 10;
+	repeated string iosCapabilityArray = 11;
+	repeated string androidCapabilityArray = 12;
+	optional string pstnNumber = 13;
+	repeated string pstnCapabilityArray = 14;
+	optional string name = 15;
+	optional string androidAppId = 16;
+	optional string androidDeveloperAccount = 17;
+	optional string iosDeviceId = 18;
+	repeated string glassCapabilityArray = 19;
+	optional string pstnAppId = 20;
+	optional string unregisterOnBehalfOfGaiaId = 21;
+	optional int32 iosScreenSizeDps = 22;
+	optional int32 androidScreenSizeDps = 23;
+	optional string iosMcsRegistrationId = 24;
+	optional string iosMcsAppId = 25;
+	optional string iosMcsDeveloperAccount = 26;
+	optional int32 pstnCarrierMcc = 27;
+	optional int32 pstnCarrierMnc = 28;
+	optional string iosPushOauthToken = 29;
+	optional bool deviceAvailabilitySharingEnabled = 30;
+	repeated string iosOauthTokensForParticipantsOnDeviceArray = 31;
+	optional bytes iosPushkitToken = 33;
+	optional string iosUploadedContactsPrivateKey = 34;
+	optional string androidInstanceId = 35;
+}
+
+message CPBClientGlobalNotificationLevelNotification {
+	optional CPBClientNotificationLevel level = 1;
+}
+
+message CPBClientSetConversationNotificationLevelNotification {
+	optional CPBClientConversationId conversationId = 1;
+	optional CPBClientNotificationLevel level = 2;
+	optional int32 revertTimeoutSecs = 3;
+	optional uint64 timestamp = 4;
+}
+
+message CPBClientSetConversationNotificationLevelResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 timestamp = 2;
+}
+
+message CPBClientSetConversationNotificationLevelRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional CPBClientNotificationLevel level = 3;
+	optional int32 revertTimeoutSecs = 4;
+}
+
+message CPBClientEvent_ClientUserEventState {
+	optional CPBClientParticipantId userId = 1;
+	optional uint64 clientGeneratedId = 2;
+	optional CPBClientNotificationLevel notificationLevel = 3;
+	optional CPBClientSuggestions suggestions = 4;
+}
+
+message CPBClientEvent {
+	optional CPBClientConversationId conversationId = 1;
+	optional CPBClientParticipantId senderId = 2;
+	optional uint64 timestamp = 3;
+	optional CPBClientEvent_ClientUserEventState selfEventState = 4;
+	optional CPBClientSourceType sourceType = 6;
+	optional CPBClientChatMessage chatMessage = 7;
+	optional CPBClientMembershipChange membershipChange = 9;
+	optional CPBClientConversationRename conversationRename = 10;
+	optional CPBClientHangoutEvent hangoutEvent = 11;
+	optional string eventId = 12;
+	optional int64 expirationTimestamp = 13;
+	optional CPBClientOtrModification otrModification = 14;
+	optional bool advancesSortTimestamp = 15;
+	optional CPBClientOffTheRecordStatus eventOtr = 16;
+	optional bool persisted = 17;
+	optional CPBClientDeliveryMedium deliveryMedium = 20;
+	optional CPBClientEventType eventType = 23;
+	optional uint64 eventVersion = 24;
+	optional int64 lastObservedTimestamp = 27;
+	optional CPBClientEventObservedStatus observedStatus = 28;
+	optional CPBClientObservedEvent observedEvent = 29;
+	optional CPBClientGroupLinkSharingModification groupLinkSharingModification = 31;
+}
+
+message CPBClientObservedEvent {
+	optional string observedEventId = 1;
+}
+
+message CPBClientOtrModification {
+	optional CPBClientOffTheRecordStatus oldOtrStatus = 1;
+	optional CPBClientOffTheRecordStatus newOtrStatus = 2;
+	optional CPBClientOffTheRecordToggle oldOtrToggle = 3;
+	optional CPBClientOffTheRecordToggle newOtrToggle = 4;
+}
+
+message CPBClientModifyOtrStatusResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 deprecated2 = 2;
+	optional string deprecated3 = 3;
+	optional CPBClientEvent createdEvent = 4;
+	optional CPBClientConversation updatedConversation = 5;
+	optional bool otrUnmodified = 6;
+}
+
+message CPBClientModifyOtrStatusRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional bytes deprecated2 = 2;
+	optional CPBClientOffTheRecordStatus otrStatus = 3;
+	optional uint64 deprecated4 = 4;
+	optional CPBClientEventRequestHeader eventRequestHeader = 5;
+}
+
+message CPBClientGetConversationResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientConversationState conversationState = 2;
+	optional CPBClientGetConversationResponse_ClientGetConversationError error = 3;
+	optional CPBClientPresenceResult deprecated4 = 4;
+	repeated CPBClientRichPresenceEnabledState richPresenceEnabledStateArray = 5;
+	repeated CPBClientEntity entityArray = 7;
+}
+
+message CPBClientGetConversationRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationSpec conversationSpec = 2;
+	optional bool includeConversationMetadata = 3;
+	optional bool includeEvents = 4;
+	optional int32 maxEventsPerConversation = 6;
+	optional CPBClientEventContinuationToken eventContinuationToken = 7;
+	optional bool deprecated8 = 8;
+	optional CPBClientEventContinuationToken forwardContinuationToken = 11;
+}
+
+message CPBClientConversationSpec {
+	optional CPBClientConversationId conversationId = 1;
+	repeated bytes deprecated2Array = 2;
+	repeated CPBClientInviteeId inviteeIdArray = 3;
+	optional CPBClientConversationType requestedType = 4;
+	optional string eventId = 5;
+}
+
+message CPBClientSyncAllNewEventsResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 syncTimestamp = 2;
+	repeated CPBClientConversationState conversationStateArray = 3;
+	optional bool conversationIdsOnly = 4;
+	optional bool clearCacheAndResync = 6;
+	repeated CPBClientEntity entityArray = 7;
+}
+
+message CPBClientSyncAllNewEventsRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional uint64 lastSyncTimestamp = 2;
+	repeated CPBClientLocalConversationState localStateArray = 3;
+	optional int32 deprecated4 = 4;
+	repeated bytes deprecated5Array = 5;
+	optional bool noMissedEventsExpected = 6;
+	repeated CPBClientUnreadConversationState unreadStateArray = 7;
+	optional int32 maxResponseSizeBytes = 8;
+}
+
+message CPBClientUnreadConversationState {
+	optional CPBClientConversationId conversationId = 1;
+	optional uint64 latestReadTimestamp = 2;
+}
+
+message CPBClientLocalConversationState {
+	optional CPBClientConversationId conversationId = 2;
+	repeated string recentEventIdArray = 4;
+}
+
+message CPBClientSyncRecentConversationsResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 syncTimestamp = 2;
+	repeated CPBClientConversationState conversationStateArray = 3;
+	optional uint64 continuationEndTimestamp = 4;
+	repeated CPBClientEntity entityArray = 6;
+}
+
+message CPBClientConversationState {
+	optional CPBClientConversationId conversationId = 1;
+	optional CPBClientConversation conversation = 2;
+	repeated CPBClientEvent eventArray = 3;
+	optional bool mustQuerySeparately = 4;
+	optional CPBClientEventContinuationToken eventContinuationToken = 5;
+	optional uint64 leaveTimestamp = 6;
+	repeated CPBClientDeleteAction deleteActionArray = 7;
+	optional CPBClientEventContinuationToken forwardContinuationToken = 8;
+}
+
+message CPBClientEventContinuationToken {
+	optional string deprecated1 = 1;
+	optional bytes storageContinuationToken = 2;
+	optional uint64 eventTimestamp = 3;
+}
+
+message CPBClientSyncRecentConversationsRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional int64 endTimestamp = 2;
+	optional int32 maxConversations = 3;
+	optional int32 maxEventsPerConversation = 4;
+	repeated CPBClientSyncFilter syncFilterArray = 5;
+	optional bool includeEmptyActiveConversations = 7;
+}
+
+message CPBClientSetTypingNotification {
+	optional CPBClientConversationId conversationId = 1;
+	optional CPBClientParticipantId senderId = 2;
+	optional uint64 timestamp = 3;
+	optional CPBClientTypingType type = 4;
+}
+
+message CPBClientSetTypingResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 timestamp = 2;
+}
+
+message CPBClientSetTypingRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional CPBClientTypingType type = 3;
+}
+
+message CPBClientRecordAnalyticsEventsResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+}
+
+message CPBClientRecordAnalyticsEventsRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	repeated CPBClientAnalyticsEvent analyticsEventArray = 2;
+	optional uint64 localTimestamp = 4;
+}
+
+message CPBClientAnalyticsEvent {
+	optional CPBClientAnalyticsEvent_EventType eventType = 1;
+	optional int64 rpcGlobalId = 2;
+	optional string eventDetail = 3;
+	optional bool notified = 4;
+	optional bool wasNewest = 5;
+	optional bool pastWatermark = 6;
+	optional bool userDnd = 7;
+	optional bool inFocusedConversation = 8;
+	optional CPBActiveClientState activeClientState = 9;
+	optional CPBClientNotificationLevel notificationLevel = 10;
+	optional uint64 deviceTimestampReceived = 11;
+	optional string eventId = 12;
+	optional uint64 clientGeneratedId = 13;
+	optional CPBClientAnalyticsEvent_ChatAction chatAction = 14;
+	optional int32 retryCount = 15;
+}
+
+message CPBClientEasterEggNotification {
+	optional CPBClientParticipantId senderId = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional CPBClientEasterEgg easterEgg = 3;
+}
+
+message CPBClientEasterEggResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 timestamp = 2;
+}
+
+message CPBClientEasterEggRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional CPBClientEasterEgg easterEgg = 3;
+}
+
+message CPBClientEasterEgg {
+	optional string message = 1;
+	optional string payload = 2;
+}
+
+message CPBClientSetFocusNotification {
+	optional CPBClientConversationId conversationId = 1;
+	optional CPBClientParticipantId senderId = 2;
+	optional uint64 timestamp = 3;
+	optional CPBClientFocusType type = 4;
+	optional uint32 timeoutSecs = 5;
+}
+
+message CPBClientSetFocusResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 timestamp = 2;
+}
+
+message CPBClientSetFocusRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationId conversationId = 2;
+	optional CPBClientFocusType type = 3;
+	optional uint32 timeoutSecs = 4;
+	optional bool queryFocus = 6;
+}
+
+message CPBClientHangoutEvent {
+	optional CPBClientHangoutEventType eventType = 1;
+	repeated CPBClientParticipantId participantIdArray = 2;
+	optional int64 hangoutDurationSecs = 3;
+	optional CPBClientConversationId transferredConversationId = 4;
+	optional int64 refreshTimeoutSecs = 5;
+	optional bool isPeriodicRefresh = 6;
+	optional CPBClientHangoutMediaType mediaType = 7;
+}
+
+message CPBClientConversationRename {
+	optional string newName = 1;
+	optional string oldName = 2;
+}
+
+message CPBClientRenameConversationResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 deprecated2 = 2;
+	optional string deprecated3 = 3;
+	optional CPBClientEvent createdEvent = 4;
+	optional CPBClientConversation updatedConversation = 5;
+}
+
+message CPBClientRenameConversationRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional bytes deprecated2 = 2;
+	optional string newName = 3;
+	optional uint64 deprecated4 = 4;
+	optional CPBClientEventRequestHeader eventRequestHeader = 5;
+}
+
+message CPBClientRemoveUserResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 deprecated2 = 2;
+	optional string deprecated3 = 3;
+	optional CPBClientEvent createdEvent = 4;
+	optional CPBClientConversation updatedConversation = 5;
+}
+
+message CPBClientRemoveUserRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional bytes deprecated2 = 2;
+	optional CPBClientParticipantId participantId = 3;
+	optional uint64 deprecated4 = 4;
+	optional CPBClientEventRequestHeader eventRequestHeader = 5;
+}
+
+message CPBClientMembershipChange {
+	optional CPBClientMembershipChangeType type = 1;
+	repeated bytes deprecated2Array = 2;
+	repeated CPBClientParticipantId participantIdArray = 3;
+	optional CPBClientLeaveReason leaveReason = 4;
+}
+
+message CPBClientAddUserResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	repeated CPBClientInviteeError inviteeErrorArray = 2;
+	optional uint64 deprecated3 = 3;
+	optional string deprecated4 = 4;
+	optional CPBClientEvent createdEvent = 5;
+	optional CPBClientConversation updatedConversation = 6;
+}
+
+message CPBClientAddUserRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional bytes deprecated2 = 2;
+	repeated CPBClientInviteeId inviteeIdArray = 3;
+	optional uint64 deprecated4 = 4;
+	optional CPBClientEventRequestHeader eventRequestHeader = 5;
+}
+
+message CPBClientChatMessage {
+	optional CPBClientMessageContent messageContent = 3;
+}
+
+message CPBClientSendChatMessageResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional uint64 deprecated2 = 2;
+	optional string deprecated3 = 3;
+	repeated CPBClientMediaUploadInfo mediaUploadInfoArray = 4;
+	optional bytes deprecated5 = 5;
+	optional CPBClientEvent createdEvent = 6;
+	optional CPBClientConversation updatedConversation = 7;
+}
+
+message CPBClientSendChatMessageRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional bytes deprecated2 = 2;
+	optional uint64 deprecated3 = 3;
+	optional CPBClientMessageContent messageContent = 6;
+	optional CPBClientExistingMedia existingMedia = 7;
+	optional CPBClientEventRequestHeader eventRequestHeader = 8;
+	optional CPBClientInviteeId otherInviteeId = 9;
+	optional CPBClientLocationSpec attachLocation = 10;
+	optional CPBClientExternalImageSpec externalImageSpec = 11;
+	repeated CPBClientChatMessageSpec chatMessageSpecArray = 12;
+}
+
+message CPBClientChatMessageSpec {
+	repeated SocialSegment segmentArray = 1;
+	optional CPBClientLocationSpec attachLocation = 3;
+	optional CPBClientExternalImageSpec externalImageSpec = 4;
+}
+
+message CPBClientExternalImageSpec {
+	optional string imageURL = 1;
+	optional int32 width = 2;
+	optional int32 height = 3;
+	optional string containingWebpageURL = 4;
+	optional string containingWebpageTitle = 5;
+	optional string description_p = 6;
+}
+
+message CPBClientLocationSpec {
+	optional EMPlaceV2 place = 1;
+	optional bytes deprecated2 = 2;
+}
+
+message CPBClientConversation_ClientUserConversationState_ClientDeliveryMediumOption {
+	optional CPBClientDeliveryMedium deliveryMedium = 1;
+	optional bool currentDefault = 2;
+	optional bool primary = 3;
+}
+
+message CPBClientConversation_ClientUserConversationState {
+	optional uint64 clientGeneratedId = 2;
+	optional CPBClientUserReadState selfReadState = 7;
+	optional CPBClientConversationStatus status = 8;
+	optional CPBClientNotificationLevel notificationLevel = 9;
+	repeated CPBClientConversationView viewArray = 10;
+	optional CPBClientParticipantId inviterId = 11;
+	optional uint64 inviteTimestamp = 12;
+	optional uint64 sortTimestamp = 13;
+	optional uint64 activeTimestamp = 14;
+	optional CPBClientConversation_ClientUserConversationState_InvitationAffinity inviteAffinity = 15;
+	optional bool hasNoPersistentEvents = 16;
+	repeated CPBClientConversation_ClientUserConversationState_ClientDeliveryMediumOption deliveryMediumOptionArray = 17;
+	optional bool isGuest = 21;
+}
+
+message CPBClientConversation {
+	optional CPBClientConversationId id_p = 1;
+	optional CPBClientConversationType type = 2;
+	optional string name = 3;
+	optional CPBClientConversation_ClientUserConversationState selfConversationState = 4;
+	repeated bytes deprecated5Array = 5;
+	repeated bytes deprecated6Array = 6;
+	repeated CPBClientUserReadState readStateArray = 8;
+	optional bool hasActiveHangout = 9;
+	optional CPBClientOffTheRecordStatus otrStatus = 10;
+	optional CPBClientOffTheRecordToggle otrToggle = 11;
+	optional bool deprecated12 = 12;
+	repeated CPBClientParticipantId currentParticipantArray = 13;
+	repeated CPBClientConversationParticipantData participantDataArray = 14;
+	optional bool isTemporary = 15;
+	optional bool forkOnExternalInvite = 16;
+	repeated CPBClientConversation_ClientNetworkType networkTypeArray = 18;
+	optional CPBClientForceHistoryState forceHistoryState = 19;
+	optional string conversationAvatarMediaKey = 20;
+	optional CPBClientGroupLinkSharingStatus groupLinkSharingStatus = 22;
+}
+
+message CPBClientUserReadState {
+	optional CPBClientParticipantId participantId = 1;
+	optional uint64 latestReadTimestamp = 2;
+}
+
+message CPBClientCreateConversationResponse {
+	optional CPBClientResponseHeader responseHeader = 1;
+	optional CPBClientConversation conversation = 2;
+	repeated CPBClientInviteeError inviteeErrorArray = 3;
+	optional uint64 deprecated4 = 4;
+	optional string deprecated5 = 5;
+	repeated bytes deprecated6Array = 6;
+	optional bool newConversationCreated = 7;
+}
+
+message CPBClientCreateConversationRequest {
+	optional CPBClientRequestHeader requestHeader = 1;
+	optional CPBClientConversationType type = 2;
+	optional uint64 clientGeneratedId = 3;
+	optional string name = 4;
+	repeated CPBClientInviteeId inviteeIdArray = 5;
+	optional CPBClientDeliveryMedium deliveryMedium = 11;
+	optional CPBClientInviteToken inviteToken = 12;
+	optional string conversationAvatarMediaKey = 14;
+}
+
+message CPBClientExistingMedia_Photo {
+	optional string photoId = 1;
+	optional bool deleteAlbumlessSourcePhoto = 2;
+	optional string ownerGaiaId = 3;
+	optional bool referenceOriginalPhoto = 4;
+}
+
+message CPBClientExistingMedia {
+	optional CPBClientExistingMedia_Photo photo = 1;
+}
+
+message CPBClientMediaUploadInfo {
+	optional Attachment attachment = 1;
+}
+
+message CPBClientMessageContent {
+	repeated SocialSegment segmentArray = 1;
+	repeated Attachment attachmentArray = 2;
+}
+
+message CPBClientDeliveryMedium {
+	optional CPBClientDeliveryMediumType mediumType = 1;
+	optional GCVPhoneNumber selfPhone = 2;
+}
+
+message CPBClientInviteeError {
+	optional CPBClientInviteeId inviteeId = 1;
+	optional string deprecated2 = 2;
+	optional string deprecated3 = 3;
+	optional bytes deprecated4 = 4;
+	optional string errorDescription = 5;
+	optional CPBClientInviteeError_ClientInviteeErrorDetail detail = 6;
+}
+
+message CPBClientConversationParticipantData {
+	optional CPBClientParticipantId id_p = 1;
+	optional string fallbackName = 2;
+	optional CPBClientInvitationStatus invitationStatus = 3;
+	optional GCVPhoneNumber phoneNumber = 4;
+	optional CPBClientUserType participantType = 5;
+	optional CPBClientInvitationStatus newInvitationStatus = 6;
+	optional bool isAnonymousPhone = 7;
+}
+
+message CPBClientConversationId {
+	optional string id_p = 1;
+}
+
+message CPBClientParticipantId {
+	optional string gaiaId = 1;
+	optional string chatId = 2;
+}
+
+message CPBClientInviteeId_ClientLookupMethod_ClientEmailLookup {
+	optional string email = 1;
+}
+
+message CPBClientInviteeId_ClientLookupMethod_ClientPhoneLookup {
+	optional GCVPhoneNumber phoneNumber = 1;
+}
+
+message CPBClientInviteeId_ClientLookupMethod {
+	optional CPBClientInviteeId_ClientLookupMethod_ClientPhoneLookup phoneLookup = 1;
+	optional CPBClientInviteeId_ClientLookupMethod_ClientEmailLookup emailLookup = 2;
+}
+
+message CPBClientInviteeId {
+	optional string gaiaId = 1;
+	optional string circleId = 2;
+	optional string chatId = 3;
+	optional string fallbackName = 4;
+	optional bytes deprecated5 = 5;
+	repeated CPBClientInviteeId_ClientLookupMethod lookupMethodArray = 6;
+	optional GCVPhoneNumber phone = 7;
+}
+
+message CPBClientResponseHeader {
+	optional CPBClientResponseStatus status = 1;
+	optional string errorDescription = 2;
+	optional string debugURL = 3;
+	optional uint64 requestTraceId = 4;
+	optional uint64 currentServerTime = 5;
+	optional uint64 backoffDurationMillis = 6;
+	optional string clientGeneratedRequestId = 7;
+	optional string localizedUserVisibleErrorMessage = 8;
+	optional string buildLabel = 10;
+	optional int32 changelistNumber = 11;
+}
+
+message CPBClientEventRequestHeader {
+	optional CPBClientConversationId conversationId = 1;
+	optional uint64 clientGeneratedId = 2;
+	optional CPBClientOffTheRecordStatus expectedOtr = 3;
+	optional CPBClientDeliveryMedium deliveryMedium = 4;
+	optional CPBClientEventType eventType = 5;
+}
+
+message CPBClientRequestHeader {
+	optional CPBClientClientVersion clientVersion = 1;
+	optional CPBClientClientIdentifier clientIdentifier = 2;
+	optional CPBClientClientInstrumentationInfo clientInstrumentationInfo = 3;
+	optional string languageCode = 4;
+	optional bool includeUpdatedConversation = 5;
+	optional uint32 retryAttempt = 6;
+	optional RtcClient rtcClient = 7;
+	optional string clientGeneratedRequestId = 8;
+}
+
+message CPBClientClientInstrumentationInfo {
+	optional int64 chatMessageSequenceNumber = 1;
+}
+
+message CPBClientClientIdentifier {
+	optional string resource = 1;
+	optional string clientId = 2;
+	optional string selfFanoutId = 3;
+	optional string participantLogId = 4;
+}
+
+message CPBClientClientVersion {
+	optional CPBClientClientVersion_ClientId clientId = 1;
+	optional CPBClientClientVersion_ClientBuildType buildType = 2;
+	optional string majorVersion = 3;
+	optional int64 version = 4;
+	optional string deviceOsVersion = 5;
+	optional string deviceHardware = 6;
 }

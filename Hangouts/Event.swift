@@ -28,28 +28,28 @@ private let log = Logger(subsystem: "Hangouts.Event")
 public class IEvent: ParrotServiceExtension.Event, Hashable, Equatable {
     public typealias ID = String
     
-    public let event: Event
+    public let event: ClientEvent
 	internal unowned let client: Client
     public var serviceIdentifier: String {
         return type(of: self.client).identifier
     }
     
     // Wrap ClientEvent in Event subclass.
-    internal class func wrap_event(_ client: Client, event: Event) -> IEvent {
-        if event.chat_message != nil {
+    internal class func wrapEvent(_ client: Client, event: ClientEvent) -> IEvent {
+        if event.chatMessage != nil {
             return IChatMessageEvent(client, event: event)
-        } else if event.conversation_rename != nil {
+        } else if event.conversationRename != nil {
             return IRenameEvent(client, event: event)
-        } else if event.membership_change != nil {
+        } else if event.membershipChange != nil {
             return IMembershipChangeEvent(client, event: event)
-        } else if event.hangout_event != nil {
+        } else if event.hangoutEvent != nil {
             return IHangoutEvent(client, event: event)
         } else {
             return IEvent(client, event: event)
         }
     }
 	
-    public init(_ client: Client, event: Event) {
+    public init(_ client: Client, event: ClientEvent) {
         self.client = client
         self.event = event
     }
@@ -62,19 +62,19 @@ public class IEvent: ParrotServiceExtension.Event, Hashable, Equatable {
 	// A User.ID indicating who created the event.
     public var userID: User.ID {
         return User.ID(
-            chatID: self.event.sender_id!.chat_id!,
-            gaiaID: self.event.sender_id!.gaia_id!
+            chatID: self.event.senderId!.chatId!,
+            gaiaID: self.event.senderId!.gaiaId!
         )
     }
 	
 	// The ID of the conversation the event belongs to.
-    public lazy var conversation_id: String = {
-        return (self.event.conversation_id!.id! as String)
+    public lazy var conversationId: String = {
+        return (self.event.conversationId!.id! as String)
     }()
 	
 	// The ID of the Event.
     public lazy var id: IEvent.ID = {
-        return self.event.event_id! as IEvent.ID
+        return self.event.eventId! as IEvent.ID
     }()
     public var identifier: String {
         return self.id
@@ -96,19 +96,19 @@ public class IChatMessageEvent: IEvent, Message {
     
     // CACHE IT!
     public var content: Content {
-        let raws = self.event.chat_message?.message_content?.attachment ?? []
+        let raws = self.event.chatMessage?.messageContent?.attachmentArray ?? []
         if let attachment = raws[safe: 0] {
-            if attachment.embed_item!.type.contains(.PlusPhoto) {
-                if let url = attachment.embed_item?.plus_photo?.url {
+            if attachment.embedItem!.typeArray.contains(.plusPhotoV2) {
+                if let url = attachment.embedItem?.plusPhotoV2?.URL {
                     return .image(URL(string: url)!)
                 }
-            } else if attachment.embed_item!.type.contains(.VoicePhoto) {
-                if let url = attachment.embed_item?.voice_photo?.url {
+            } else if attachment.embedItem!.typeArray.contains(.plusAudioV2) {
+                if let url = attachment.embedItem?.plusAudioV2?.URL {
                     return .image(URL(string: url)!)
                 }
-            } else if attachment.embed_item!.type.contains(.Place) {
-                let coords = attachment.embed_item?.place?.location_info?.latlng
-                return .location(coords?.lat ?? 0, coords?.lng ?? 0)
+            } else if attachment.embedItem!.typeArray.contains(.placeV2) {
+                let coords = attachment.embedItem?.placeV2?.geo?.geoCoordinatesV2
+                return .location(coords?.latitude ?? 0, coords?.longitude ?? 0)
             }
         }
         return .text(self.text)
@@ -119,11 +119,11 @@ public class IChatMessageEvent: IEvent, Message {
         var lines = [""]
         for segment in self.segments {
             switch (segment.type) {
-            case SegmentType.Text, SegmentType.Link:
+            case SocialSegmentType_SegmentTypeEnum.text, SocialSegmentType_SegmentTypeEnum.link:
                 let replacement = lines.last! + segment.text
                 lines.removeLast()
                 lines.append(replacement)
-            case SegmentType.LineBreak:
+            case SocialSegmentType_SegmentTypeEnum.lineBreak:
                 lines.append("")
             default:
                 log.info("Ignoring unknown chat message segment type: \(segment.type)")
@@ -136,7 +136,7 @@ public class IChatMessageEvent: IEvent, Message {
 	
 	// List of ChatMessageSegments in the message.
     public lazy var segments: [IChatMessageSegment] = {
-        if let list = self.event.chat_message!.message_content?.segment {
+        if let list = self.event.chatMessage!.messageContent?.segmentArray {
             return list.map { IChatMessageSegment(segment: $0) }
         }
 		return []
@@ -144,19 +144,19 @@ public class IChatMessageEvent: IEvent, Message {
 	
 	// Attachments in the message.
     public var attachments: [String] {
-		let raws = self.event.chat_message?.message_content?.attachment ?? [Attachment]()
+		let raws = self.event.chatMessage?.messageContent?.attachmentArray ?? [Attachment]()
 		var attachments = [String]()
 		
 		for attachment in raws {
-			if attachment.embed_item!.type.contains(.PlusPhoto) { // PLUS_PHOTO
-				if let data = attachment.embed_item?.plus_photo?.url {
+			if attachment.embedItem!.typeArray.contains(.plusPhotoV2) { // PLUS_PHOTO
+				if let data = attachment.embedItem?.plusPhotoV2?.URL {
                     attachments.append(data)
 				}
-			} else if attachment.embed_item!.type.contains(.VoicePhoto) { // VOICE_PHOTO
-                if let data = attachment.embed_item?.voice_photo?.url {
+			} else if attachment.embedItem!.typeArray.contains(.plusAudioV2) { // VOICE_PHOTO
+                if let data = attachment.embedItem?.plusAudioV2?.URL {
                     attachments.append(data)
                 }
-			} else if attachment.embed_item!.type == [.Place, .PlaceV2, .Thing] { // FIXME this is bad swift
+			} else if attachment.embedItem!.typeArray == [.place, .placeV2, .thing] { // FIXME this is bad swift
 				// Google Maps URL that's already in the text.
 			} else {
 				//log.info("Ignoring unknown chat message attachment: \(attachment)")
@@ -181,12 +181,12 @@ public class IRenameEvent : IEvent, ParrotServiceExtension.ConversationRenamed {
     
 	// The conversation's new name, or "" if the name was cleared.
     public var newValue: String {
-        return self.event.conversation_rename!.new_name!
+        return self.event.conversationRename!.newName!
     }
 	
 	// The conversation's old name, or "" if no previous name.
     public var oldValue: String {
-        return self.event.conversation_rename!.old_name!
+        return self.event.conversationRename!.oldName!
     }
 }
 
@@ -194,15 +194,15 @@ public class IRenameEvent : IEvent, ParrotServiceExtension.ConversationRenamed {
 public class IMembershipChangeEvent : IEvent, ParrotServiceExtension.MembershipChanged {
 	
 	// The membership change type (join, leave).
-    public var type: MembershipChangeType {
-        return self.event.membership_change!.type!
+    public var type: ClientMembershipChangeType {
+        return self.event.membershipChange!.type!
     }
 	
 	// Return the User.IDs involved in the membership change.
 	// Multiple users may be added to a conversation at the same time.
     public var participantIDs: [User.ID] {
-		return self.event.membership_change!.participant_ids.map {
-			User.ID(chatID: $0.chat_id! , gaiaID: $0.gaia_id!)
+		return self.event.membershipChange!.participantIdArray.map {
+			User.ID(chatID: $0.chatId! , gaiaID: $0.gaiaId!)
 		}
     }
     
@@ -213,7 +213,7 @@ public class IMembershipChangeEvent : IEvent, ParrotServiceExtension.MembershipC
     }
     
     public var joined: Bool {
-        return self.type == .Join
+        return self.type == .join
     }
     
     public var moderator: Person? {
@@ -225,14 +225,14 @@ public class IMembershipChangeEvent : IEvent, ParrotServiceExtension.MembershipC
 // An event in a Hangouts voice/video call.
 public class IHangoutEvent: IEvent, ParrotServiceExtension.VideoCall {
 	/*
-     public var transferred_conversation_id: ConversationId? = nil
-     public var refresh_timeout_secs: UInt64? = nil
-     public var is_peridoic_refresh: Bool? = nil
+     public var transferredConversationId: ConversationId? = nil
+     public var refreshTimeoutSecs: UInt64? = nil
+     public var isPeridoicRefresh: Bool? = nil
     */
     
     public var participantIDs: [User.ID] {
-        return self.event.hangout_event!.participant_id.map {
-            User.ID(chatID: $0.chat_id! , gaiaID: $0.gaia_id!)
+        return self.event.hangoutEvent!.participantIdArray.map {
+            User.ID(chatID: $0.chatId! , gaiaID: $0.gaiaId!)
         }
     }
     
@@ -243,21 +243,21 @@ public class IHangoutEvent: IEvent, ParrotServiceExtension.VideoCall {
     }
     
     public var duration: TimeInterval {
-        return TimeInterval(self.event.hangout_event!.hangout_duration_secs ?? 0)
+        return TimeInterval(self.event.hangoutEvent!.hangoutDurationSecs ?? 0)
     }
     
     public var video: Bool {
-        return self.event.hangout_event!.media_type! == .AudioVideo
+        return self.event.hangoutEvent!.mediaType! == .audioVideo
     }
     
     public var state: VideoCallSubevent {
-        switch self.event.hangout_event!.event_type! {
-        case .Start: return .start
-        case .End: return .end
-        case .Join: return .join
-        case .Leave: return .leave
-        case .ComingSoon: return .comingSoon
-        case .Ongoing: return .ongoing
+        switch self.event.hangoutEvent!.eventType! {
+        case .startHangout: return .start
+        case .endHangout: return .end
+        case .joinHangout: return .join
+        case .leaveHangout: return .leave
+        case .hangoutComingSoon: return .comingSoon
+        case .ongoingHangout: return .ongoing
         default: return .comingSoon
         }
     }
@@ -270,7 +270,7 @@ public class IHangoutEvent: IEvent, ParrotServiceExtension.VideoCall {
 public class IChatMessageSegment {
 	
 	// Primary: type and text (always applicable).
-	public let type: SegmentType
+	public let type: SocialSegmentType_SegmentTypeEnum
 	public let text: String
 	
 	// Secondary: text and link attributes (optional).
@@ -282,16 +282,16 @@ public class IChatMessageSegment {
 	
 	// A segment of a chat message.
 	// Create a new chat message segment.
-	public init(text: String, segmentType: SegmentType? = nil,
+	public init(text: String, segmentType: SocialSegmentType_SegmentTypeEnum? = nil,
 		bold: Bool = false, italic: Bool = false, strikethrough: Bool = false,
 		underline: Bool = false, linkTarget: String? = nil)
 	{
 		if let type = segmentType {
 			self.type = type
 		} else if linkTarget != nil {
-			self.type = SegmentType.Link
+			self.type = SocialSegmentType_SegmentTypeEnum.link
 		} else {
-			self.type = SegmentType.Text
+			self.type = SocialSegmentType_SegmentTypeEnum.text
 		}
 		
 		self.text = text
@@ -304,14 +304,14 @@ public class IChatMessageSegment {
 	
 	// Create a chat message segment from a parsed MessageSegment.
 	// The formatting options are optional.
-	public init(segment: Segment) {
+	public init(segment: SocialSegment) {
 		self.text = segment.text ?? ""
-		self.type = segment.type
+		self.type = segment.type!
 		self.bold = segment.formatting?.bold ?? false
 		self.italic = segment.formatting?.italics ?? false
 		self.strikethrough = segment.formatting?.strikethrough ?? false
 		self.underline = segment.formatting?.underline ?? false
-		self.linkTarget = segment.link_data?.link_target ?? nil
+		self.linkTarget = segment.linkData?.linkTarget ?? nil
 	}
 }
 
@@ -320,7 +320,7 @@ public class IChatMessageSegment {
 //
 
 // Definition of the public TypingStatusMessage.
-public typealias ITypingStatusMessage = (convID: String, userID: User.ID, timestamp: Date, status: TypingType)
+public typealias ITypingStatusMessage = (convID: String, userID: User.ID, timestamp: Date, status: ClientTypingType)
 
 // Definition of the public WatermarkNotification.
 public typealias IWatermarkNotification = (convID: String, userID: User.ID, readTimestamp: Date)
@@ -328,23 +328,23 @@ public typealias IWatermarkNotification = (convID: String, userID: User.ID, read
 // Return TypingStatusMessage from ClientSetTypingNotification.
 // The same status may be sent multiple times consecutively, and when a
 // message is sent the typing status will not change to stopped.
-internal func parseTypingStatusMessage(p: SetTypingNotification) -> ITypingStatusMessage {
+internal func parseTypingStatusMessage(p: ClientSetTypingNotification) -> ITypingStatusMessage {
 	return ITypingStatusMessage(
-		convID: p.conversation_id!.id! ,
-		userID: User.ID(chatID: p.sender_id!.chat_id!, gaiaID: p.sender_id!.gaia_id!),
+		convID: p.conversationId!.id!,
+		userID: User.ID(chatID: p.senderId!.chatId!, gaiaID: p.senderId!.gaiaId!),
 		timestamp: Date(UTC: p.timestamp ?? 0),
 		status: p.type!
 	)
 }
 
 // Return WatermarkNotification from ClientWatermarkNotification.
-internal func parseWatermarkNotification(client_watermark_notification: WatermarkNotification) -> IWatermarkNotification {
+internal func parseWatermarkNotification(clientWatermarkNotification: ClientWatermarkNotification) -> IWatermarkNotification {
 	return IWatermarkNotification(
-		convID: client_watermark_notification.conversation_id!.id!,
+		convID: clientWatermarkNotification.conversationId!.id!,
 		userID: User.ID(
-			chatID: client_watermark_notification.sender_id!.chat_id!,
-			gaiaID: client_watermark_notification.sender_id!.gaia_id!
+			chatID: clientWatermarkNotification.participantId!.chatId!,
+			gaiaID: clientWatermarkNotification.participantId!.gaiaId!
 		),
-		readTimestamp: Date(UTC: client_watermark_notification.latest_read_timestamp ?? 0)
+		readTimestamp: Date(UTC: clientWatermarkNotification.latestReadTimestamp ?? 0)
 	)
 }

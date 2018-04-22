@@ -1,167 +1,169 @@
-extension AddUserResponse: ServiceResponse {}
-extension AddUserRequest: ServiceRequest {
-    typealias Response = AddUserResponse
+extension ClientAddUserResponse: ServiceResponse {}
+extension ClientAddUserRequest: ServiceRequest {
+    typealias Response = ClientAddUserResponse
     static let location: String = "conversations/adduser"
 }
 
-extension CreateConversationResponse: ServiceResponse {}
-extension CreateConversationRequest: ServiceRequest {
-    typealias Response = CreateConversationResponse
+extension ClientCreateConversationResponse: ServiceResponse {}
+extension ClientCreateConversationRequest: ServiceRequest {
+    typealias Response = ClientCreateConversationResponse
     static let location: String = "conversations/createconversation"
 }
 
-extension DeleteConversationResponse: ServiceResponse {}
-extension DeleteConversationRequest: ServiceRequest {
-    typealias Response = DeleteConversationResponse
+extension ClientDeleteConversationResponse: ServiceResponse {}
+extension ClientDeleteConversationRequest: ServiceRequest {
+    typealias Response = ClientDeleteConversationResponse
     static let location: String = "conversations/deleteconversation"
 }
 
-extension EasterEggResponse: ServiceResponse {}
-extension EasterEggRequest: ServiceRequest {
-    typealias Response = EasterEggResponse
+extension ClientEasterEggResponse: ServiceResponse {}
+extension ClientEasterEggRequest: ServiceRequest {
+    typealias Response = ClientEasterEggResponse
     static let location: String = "conversations/easteregg"
 }
 
-extension GetConversationResponse: ServiceResponse {}
-extension GetConversationRequest: ServiceRequest {
-    typealias Response = GetConversationResponse
+extension ClientGetConversationResponse: ServiceResponse {}
+extension ClientGetConversationRequest: ServiceRequest {
+    typealias Response = ClientGetConversationResponse
     static let location: String = "conversations/getconversation"
 }
 
-extension GetEntityByIdResponse: ServiceResponse {}
-extension GetEntityByIdRequest: ServiceRequest {
-    typealias Response = GetEntityByIdResponse
+extension ClientGetEntityByIdResponse: ServiceResponse {}
+extension ClientGetEntityByIdRequest: ServiceRequest {
+    typealias Response = ClientGetEntityByIdResponse
     static let location: String = "contacts/getentitybyid"
 }
 
-extension GetSuggestedEntitiesResponse: ServiceResponse {}
-extension GetSuggestedEntitiesRequest: ServiceRequest {
-    typealias Response = GetSuggestedEntitiesResponse
+extension ClientGetSuggestedEntitiesResponse: ServiceResponse {}
+extension ClientGetSuggestedEntitiesRequest: ServiceRequest {
+    typealias Response = ClientGetSuggestedEntitiesResponse
     static let location: String = "contacts/getsuggestedentities"
 }
 
-extension QueryPresenceResponse: ServiceResponse {}
-extension QueryPresenceRequest: ServiceRequest {
-    typealias Response = QueryPresenceResponse
+extension ClientQueryPresenceResponse: ServiceResponse {}
+extension ClientQueryPresenceRequest: ServiceRequest {
+    typealias Response = ClientQueryPresenceResponse
     static let location: String = "presence/querypresence"
 }
 
-extension RemoveUserResponse: ServiceResponse {}
-extension RemoveUserRequest: ServiceRequest {
-    typealias Response = RemoveUserResponse
+extension ClientRemoveUserResponse: ServiceResponse {}
+extension ClientRemoveUserRequest: ServiceRequest {
+    typealias Response = ClientRemoveUserResponse
     static let location: String = "conversations/removeuser"
 }
 
-extension RenameConversationResponse: ServiceResponse {}
-extension RenameConversationRequest: ServiceRequest {
-    typealias Response = RenameConversationResponse
+extension ClientRenameConversationResponse: ServiceResponse {}
+extension ClientRenameConversationRequest: ServiceRequest {
+    typealias Response = ClientRenameConversationResponse
     static let location: String = "conversations/renameconversation"
 }
 
-extension SearchEntitiesResponse: ServiceResponse {}
-extension SearchEntitiesRequest: ServiceRequest {
-    typealias Response = SearchEntitiesResponse
+extension ClientSearchEntitiesResponse: ServiceResponse {}
+extension ClientSearchEntitiesRequest: ServiceRequest {
+    typealias Response = ClientSearchEntitiesResponse
     static let location: String = "contacts/searchentities"
 }
 
-extension SendChatMessageResponse: ServiceResponse {}
-extension SendChatMessageRequest: ServiceRequest {
-    typealias Response = SendChatMessageResponse
+extension ClientSendChatMessageResponse: ServiceResponse {}
+extension ClientSendChatMessageRequest: ServiceRequest {
+    typealias Response = ClientSendChatMessageResponse
     static let location: String = "conversations/sendchatmessage"
 }
 
-extension SetActiveClientResponse: ServiceResponse {}
-extension SetActiveClientRequest: ServiceRequest {
-    typealias Response = SetActiveClientResponse
+extension ClientSetActiveClientResponse: ServiceResponse {}
+extension ClientSetActiveClientRequest: ServiceRequest {
+    typealias Response = ClientSetActiveClientResponse
     static let location: String = "clients/setactiveclient"
 }
 
-extension SetConversationNotificationLevelResponse: ServiceResponse {}
-extension SetConversationNotificationLevelRequest: ServiceRequest {
-    typealias Response = SetConversationNotificationLevelResponse
+extension ClientSetConversationNotificationLevelResponse: ServiceResponse {}
+extension ClientSetConversationNotificationLevelRequest: ServiceRequest {
+    typealias Response = ClientSetConversationNotificationLevelResponse
     static let location: String = "conversations/setconversationnotificationlevel"
 }
 
-extension SetFocusResponse: ServiceResponse {}
-extension SetFocusRequest: ServiceRequest {
-    typealias Response = SetFocusResponse
+extension ClientSetFocusResponse: ServiceResponse {}
+extension ClientSetFocusRequest: ServiceRequest {
+    typealias Response = ClientSetFocusResponse
     static let location: String = "conversations/setfocus"
 }
 
-extension GetSelfInfoResponse: ServiceResponse {}
-extension GetSelfInfoRequest: ServiceRequest {
-    typealias Response = GetSelfInfoResponse
+extension ClientGetSelfInfoResponse: ServiceResponse {}
+extension ClientGetSelfInfoRequest: ServiceRequest {
+    typealias Response = ClientGetSelfInfoResponse
     static let location: String = "contacts/getselfinfo"
 }
 
-extension SetPresenceResponse: ServiceResponse {}
-extension SetPresenceRequest: ServiceRequest {
-    typealias Response = SetPresenceResponse
+extension ClientSetPresenceResponse: ServiceResponse {}
+extension ClientSetPresenceRequest: ServiceRequest {
+    typealias Response = ClientSetPresenceResponse
     static let location: String = "presence/setpresence"
 }
 
-extension SetTypingResponse: ServiceResponse {}
-extension SetTypingRequest: ServiceRequest {
-    typealias Response = SetTypingResponse
+extension ClientSetTypingResponse: ServiceResponse {}
+extension ClientSetTypingRequest: ServiceRequest {
+    typealias Response = ClientSetTypingResponse
     static let location: String = "conversations/settyping"
 }
 
-extension SyncAllNewEventsResponse: ServiceResponse {}
-extension SyncAllNewEventsRequest: ServiceRequest {
-    typealias Response = SyncAllNewEventsResponse
+extension ClientSyncAllNewEventsResponse: ServiceResponse {}
+extension ClientSyncAllNewEventsRequest: ServiceRequest {
+    typealias Response = ClientSyncAllNewEventsResponse
     static let location: String = "conversations/syncallnewevents"
 }
 
-extension SyncRecentConversationsResponse: ServiceResponse {}
-extension SyncRecentConversationsRequest: ServiceRequest {
-    typealias Response = SyncRecentConversationsResponse
+extension ClientSyncRecentConversationsResponse: ServiceResponse {}
+extension ClientSyncRecentConversationsRequest: ServiceRequest {
+    typealias Response = ClientSyncRecentConversationsResponse
     static let location: String = "conversations/syncrecentconversations"
 }
 
-extension UpdateWatermarkResponse: ServiceResponse {}
-extension UpdateWatermarkRequest: ServiceRequest {
-    typealias Response = UpdateWatermarkResponse
+extension ClientUpdateWatermarkResponse: ServiceResponse {}
+extension ClientUpdateWatermarkRequest: ServiceRequest {
+    typealias Response = ClientUpdateWatermarkResponse
     static let location: String = "conversations/updatewatermark"
 }
 
-extension GetGroupConversationUrlResponse: ServiceResponse {}
-extension GetGroupConversationUrlRequest: ServiceRequest {
-    typealias Response = GetGroupConversationUrlResponse
+extension ClientGetGroupConversationUrlResponse: ServiceResponse {}
+extension ClientGetGroupConversationUrlRequest: ServiceRequest {
+    typealias Response = ClientGetGroupConversationUrlResponse
     static let location: String = "conversations/getgroupconversationurl"
 }
 
-extension ModifyConversationViewResponse: ServiceResponse {}
-extension ModifyConversationViewRequest: ServiceRequest {
-    typealias Response = ModifyConversationViewResponse
+extension ClientModifyConversationViewResponse: ServiceResponse {}
+extension ClientModifyConversationViewRequest: ServiceRequest {
+    typealias Response = ClientModifyConversationViewResponse
     static let location: String = "conversations/modifyconversationview"
 }
 
-extension OpenGroupConversationFromUrlResponse: ServiceResponse {}
-extension OpenGroupConversationFromUrlRequest: ServiceRequest {
-    typealias Response = OpenGroupConversationFromUrlResponse
+extension ClientOpenGroupConversationFromUrlResponse: ServiceResponse {}
+extension ClientOpenGroupConversationFromUrlRequest: ServiceRequest {
+    typealias Response = ClientOpenGroupConversationFromUrlResponse
     static let location: String = "conversations/opengroupconversationfromurl"
 }
 
-extension SendOffnetworkInvitationResponse: ServiceResponse {}
-extension SendOffnetworkInvitationRequest: ServiceRequest {
-    typealias Response = SendOffnetworkInvitationResponse
+extension ClientSendOffnetworkInvitationResponse: ServiceResponse {}
+extension ClientSendOffnetworkInvitationRequest: ServiceRequest {
+    typealias Response = ClientSendOffnetworkInvitationResponse
     static let location: String = "devices/sendoffnetworkinvitation"
 }
 
-extension ModifyOTRStatusResponse: ServiceResponse {}
-extension ModifyOTRStatusRequest: ServiceRequest {
-    typealias Response = ModifyOTRStatusResponse
+extension ClientModifyOtrStatusResponse: ServiceResponse {}
+extension ClientModifyOtrStatusRequest: ServiceRequest {
+    typealias Response = ClientModifyOtrStatusResponse
     static let location: String = "conversations/modifyotrstatus"
 }
 
-extension SetConversationLevelResponse: ServiceResponse {}
-extension SetConversationLevelRequest: ServiceRequest {
-    typealias Response = SetConversationLevelResponse
+/*
+extension ClientSetConversationLevelResponse: ServiceResponse {}
+extension ClientSetConversationLevelRequest: ServiceRequest {
+    typealias Response = ClientSetConversationLevelResponse
     static let location: String = "conversations/setconversationlevel"
 }
+*/
 
-extension SetGroupLinkSharingEnabledResponse: ServiceResponse {}
-extension SetGroupLinkSharingEnabledRequest: ServiceRequest {
-    typealias Response = SetGroupLinkSharingEnabledResponse
+extension ClientSetGroupLinkSharingEnabledResponse: ServiceResponse {}
+extension ClientSetGroupLinkSharingEnabledRequest: ServiceRequest {
+    typealias Response = ClientSetGroupLinkSharingEnabledResponse
     static let location: String = "conversations/setgrouplinksharingenabled"
 }

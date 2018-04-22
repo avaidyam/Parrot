@@ -1,7 +1,193 @@
+public struct ClientNotificationLevel: ProtoEnum {
+    public static let off: ClientNotificationLevel = 10
+    public static let ding: ClientNotificationLevel = 20
+    public static let importantOnly: ClientNotificationLevel = 25
+    public static let allEvents: ClientNotificationLevel = 30
+    public static let useGlobalDefault: ClientNotificationLevel = 100
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientCallerIdSetting_ClientIneligibilityCause: ProtoEnum {
+    public static let unknownIneligibility: ClientCallerIdSetting_ClientIneligibilityCause = 0
+    public static let disabledByPhoneStaleness: ClientCallerIdSetting_ClientIneligibilityCause = 1
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientExperimentValue_LogAction: ProtoEnum {
+    public static let unknownLogAction: ClientExperimentValue_LogAction = 0
+    public static let dontLog: ClientExperimentValue_LogAction = 1
+    public static let log: ClientExperimentValue_LogAction = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientDeviceType: ProtoEnum {
+    public static let android: ClientDeviceType = 1
+    public static let ios: ClientDeviceType = 2
+    public static let glass: ClientDeviceType = 3
+    public static let pstn: ClientDeviceType = 4
+    public static let chrome: ClientDeviceType = 5
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientConversation_ClientUserConversationState_InvitationAffinity: ProtoEnum {
+    public static let unknownAffinity: ClientConversation_ClientUserConversationState_InvitationAffinity = 0
+    public static let high: ClientConversation_ClientUserConversationState_InvitationAffinity = 1
+    public static let low: ClientConversation_ClientUserConversationState_InvitationAffinity = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientEasterEggSuggestionInfo_ClientGemHorizontalAlignment: ProtoEnum {
+    public static let unknown: ClientEasterEggSuggestionInfo_ClientGemHorizontalAlignment = 1
+    public static let left: ClientEasterEggSuggestionInfo_ClientGemHorizontalAlignment = 2
+    public static let center: ClientEasterEggSuggestionInfo_ClientGemHorizontalAlignment = 3
+    public static let right: ClientEasterEggSuggestionInfo_ClientGemHorizontalAlignment = 4
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientCallerIdState: ProtoEnum {
+    public static let uknownCallerIdState: ClientCallerIdState = 0
+    public static let callerIdEnabled: ClientCallerIdState = 1
+    public static let callerIdDisabled: ClientCallerIdState = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientEntity_BabelUserState: ProtoEnum {
+    public static let unknownUserState: ClientEntity_BabelUserState = 0
+    public static let babel: ClientEntity_BabelUserState = 1
+    public static let nonBabel: ClientEntity_BabelUserState = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientSyncFilter: ProtoEnum {
+    public static let unknownSyncFilter: ClientSyncFilter = 0
+    public static let inboxSyncFilter: ClientSyncFilter = 1
+    public static let archiveSyncFilter: ClientSyncFilter = 2
+    public static let activeSyncFilter: ClientSyncFilter = 3
+    public static let invitedSyncFilter: ClientSyncFilter = 4
+    public static let invitedLowAffinitySyncFilter: ClientSyncFilter = 5
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientConversationView: ProtoEnum {
+    public static let unknownConversationView: ClientConversationView = 0
+    public static let inboxView: ClientConversationView = 1
+    public static let archivedView: ClientConversationView = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientCallerIdSettingsMask: ProtoEnum {
+    public static let unknownCallerIdSettingsMask: ClientCallerIdSettingsMask = 0
+    public static let callerIdSettingsProvided: ClientCallerIdSettingsMask = 1
+    public static let callerIdSettingsNotProvided: ClientCallerIdSettingsMask = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientRichPresenceType: ProtoEnum {
+    public static let rpUnknown: ClientRichPresenceType = 0
+    public static let rpInCallState: ClientRichPresenceType = 1
+    public static let rpDevice: ClientRichPresenceType = 2
+    public static let rpMood: ClientRichPresenceType = 3
+    public static let rpActivity: ClientRichPresenceType = 4
+    public static let rpGloballyEnabled: ClientRichPresenceType = 5
+    public static let rpLastSeen: ClientRichPresenceType = 6
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientUrlRedirectResult_ClientRedirectError: ProtoEnum {
+    public static let unknownRedirectError: ClientUrlRedirectResult_ClientRedirectError = 0
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientBlockState: ProtoEnum {
+    public static let unknownBlockState: ClientBlockState = 0
+    public static let block: ClientBlockState = 1
+    public static let unblock: ClientBlockState = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientSourceType: ProtoEnum {
+    public static let unknownSourceType: ClientSourceType = 0
+    public static let mobile: ClientSourceType = 1
+    public static let web: ClientSourceType = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientGroupLinkSharingStatus: ProtoEnum {
+    public static let unknownLinkSharingStatus: ClientGroupLinkSharingStatus = 0
+    public static let linkSharingOn: ClientGroupLinkSharingStatus = 1
+    public static let linkSharingOff: ClientGroupLinkSharingStatus = 2
+    public static let notAvailable: ClientGroupLinkSharingStatus = 3
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
 public struct ActiveClientState: ProtoEnum {
-    public static let NoActive: ActiveClientState = 0
-    public static let IsActive: ActiveClientState = 1
-    public static let OtherActive: ActiveClientState = 2
+    public static let noActiveClient: ActiveClientState = 0
+    public static let isActiveClient: ActiveClientState = 1
+    public static let otherClientIsActive: ActiveClientState = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -9,10 +195,20 @@ public struct ActiveClientState: ProtoEnum {
     }
 }
 
-public struct FocusType: ProtoEnum {
-    public static let Unknown: FocusType = 0
-    public static let Focused: FocusType = 1
-    public static let Unfocused: FocusType = 2
+public struct ClientAnalyticsEvent_EventType: ProtoEnum {
+    public static let received: ClientAnalyticsEvent_EventType = 1
+    public static let forwarded: ClientAnalyticsEvent_EventType = 2
+    public static let deprecated3: ClientAnalyticsEvent_EventType = 3
+    public static let delivered: ClientAnalyticsEvent_EventType = 4
+    public static let dropped: ClientAnalyticsEvent_EventType = 5
+    public static let discarded: ClientAnalyticsEvent_EventType = 6
+    public static let invalidationDelivered: ClientAnalyticsEvent_EventType = 7
+    public static let invalidationForwarded: ClientAnalyticsEvent_EventType = 8
+    public static let invalidationDiscarded: ClientAnalyticsEvent_EventType = 9
+    public static let checkpoint: ClientAnalyticsEvent_EventType = 10
+    public static let created: ClientAnalyticsEvent_EventType = 11
+    public static let responseReceived: ClientAnalyticsEvent_EventType = 12
+    public static let responseRendered: ClientAnalyticsEvent_EventType = 13
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -20,10 +216,11 @@ public struct FocusType: ProtoEnum {
     }
 }
 
-public struct FocusDevice: ProtoEnum {
-    public static let Unspecified: FocusDevice = 0
-    public static let Desktop: FocusDevice = 20
-    public static let Mobile: FocusDevice = 300
+public struct ClientConversationStatus: ProtoEnum {
+    public static let unknownConversationStatus: ClientConversationStatus = 0
+    public static let invited: ClientConversationStatus = 1
+    public static let active: ClientConversationStatus = 2
+    public static let left: ClientConversationStatus = 3
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -31,10 +228,9 @@ public struct FocusDevice: ProtoEnum {
     }
 }
 
-public struct CallType: ProtoEnum {
-    public static let None: CallType = 0
-    public static let Pstn: CallType = 1
-    public static let Hangout: CallType = 2
+public struct ClientRegistrationType: ProtoEnum {
+    public static let register: ClientRegistrationType = 1
+    public static let unregister: ClientRegistrationType = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -42,11 +238,26 @@ public struct CallType: ProtoEnum {
     }
 }
 
-public struct TypingType: ProtoEnum {
-    public static let Unknown: TypingType = 0
-    public static let Started: TypingType = 1
-    public static let Paused: TypingType = 2
-    public static let Stopped: TypingType = 3
+public struct ClientSuggestion_ClientSuggestionType: ProtoEnum {
+    public static let unknownType: ClientSuggestion_ClientSuggestionType = 0
+    public static let whereYouAt: ClientSuggestion_ClientSuggestionType = 3
+    public static let location: ClientSuggestion_ClientSuggestionType = 4
+    public static let happyThanksgiving: ClientSuggestion_ClientSuggestionType = 5
+    public static let happyHanukkah: ClientSuggestion_ClientSuggestionType = 6
+    public static let happyBirthday: ClientSuggestion_ClientSuggestionType = 7
+    public static let happyHolidays: ClientSuggestion_ClientSuggestionType = 8
+    public static let merryChristmas: ClientSuggestion_ClientSuggestionType = 9
+    public static let happyNewYear: ClientSuggestion_ClientSuggestionType = 10
+    public static let loveYou: ClientSuggestion_ClientSuggestionType = 11
+    public static let lgtm: ClientSuggestion_ClientSuggestionType = 12
+    public static let sgtm: ClientSuggestion_ClientSuggestionType = 13
+    public static let laughterExpression: ClientSuggestion_ClientSuggestionType = 14
+    public static let excitementExpression: ClientSuggestion_ClientSuggestionType = 15
+    public static let disappointmentExpression: ClientSuggestion_ClientSuggestionType = 16
+    public static let gem: ClientSuggestion_ClientSuggestionType = 17
+    public static let dateTime: ClientSuggestion_ClientSuggestionType = 18
+    public static let whereAmI: ClientSuggestion_ClientSuggestionType = 19
+    public static let smartReply: ClientSuggestion_ClientSuggestionType = 20
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -54,12 +265,10 @@ public struct TypingType: ProtoEnum {
     }
 }
 
-public struct ClientPresenceStateType: ProtoEnum {
-    public static let Unknown: ClientPresenceStateType = 0
-    public static let None: ClientPresenceStateType = 1
-    public static let Mobile: ClientPresenceStateType = 10
-    public static let DesktopIdle: ClientPresenceStateType = 30
-    public static let DesktopActive: ClientPresenceStateType = 40
+public struct ClientDomainProperties_ClientDomainDefaultOtrSetting: ProtoEnum {
+    public static let unknownDomainOtrSetting: ClientDomainProperties_ClientDomainDefaultOtrSetting = 0
+    public static let defaultHistoryOff: ClientDomainProperties_ClientDomainDefaultOtrSetting = 1
+    public static let defaultHistoryOn: ClientDomainProperties_ClientDomainDefaultOtrSetting = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -67,11 +276,8 @@ public struct ClientPresenceStateType: ProtoEnum {
     }
 }
 
-public struct NotificationLevel: ProtoEnum {
-    public static let Unknown: NotificationLevel = 0
-    public static let Quiet: NotificationLevel = 10
-    public static let Ding: NotificationLevel = 20
-    public static let Ring: NotificationLevel = 30
+public struct ClientGetConversationResponse_ClientGetConversationError: ProtoEnum {
+    public static let invalidContinuationToken: ClientGetConversationResponse_ClientGetConversationError = 1
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -79,10 +285,17 @@ public struct NotificationLevel: ProtoEnum {
     }
 }
 
-public struct SegmentType: ProtoEnum {
-    public static let Text: SegmentType = 0
-    public static let LineBreak: SegmentType = 1
-    public static let Link: SegmentType = 2
+public struct ClientQueryPresenceRequest_ClientFieldMask: ProtoEnum {
+    public static let reachability: ClientQueryPresenceRequest_ClientFieldMask = 1
+    public static let availability: ClientQueryPresenceRequest_ClientFieldMask = 2
+    public static let statusMessage: ClientQueryPresenceRequest_ClientFieldMask = 3
+    public static let location: ClientQueryPresenceRequest_ClientFieldMask = 4
+    public static let mood: ClientQueryPresenceRequest_ClientFieldMask = 5
+    public static let inCall: ClientQueryPresenceRequest_ClientFieldMask = 6
+    public static let deviceStatus: ClientQueryPresenceRequest_ClientFieldMask = 7
+    public static let activity: ClientQueryPresenceRequest_ClientFieldMask = 8
+    public static let calendarPresence: ClientQueryPresenceRequest_ClientFieldMask = 9
+    public static let lastSeen: ClientQueryPresenceRequest_ClientFieldMask = 10
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -90,12 +303,10 @@ public struct SegmentType: ProtoEnum {
     }
 }
 
-public struct ItemType: ProtoEnum {
-    public static let Thing: ItemType = 0
-    public static let PlusPhoto: ItemType = 249
-    public static let Place: ItemType = 335
-    public static let PlaceV2: ItemType = 340
-    public static let VoicePhoto: ItemType = 438
+public struct ClientAdditionalEntityData: ProtoEnum {
+    public static let unknownAdditionalData: ClientAdditionalEntityData = 0
+    public static let isBabelUser: ClientAdditionalEntityData = 1
+    public static let hasHadPastHangout: ClientAdditionalEntityData = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -103,11 +314,16 @@ public struct ItemType: ProtoEnum {
     }
 }
 
-public struct MediaType: ProtoEnum {
-    public static let Unknown: MediaType = 0
-    public static let Photo: MediaType = 1
-    public static let Video: MediaType = 2
-    public static let AnimatedPhoto: MediaType = 4
+public struct ClientAnalyticsEvent_ChatAction: ProtoEnum {
+    public static let unknownAction: ClientAnalyticsEvent_ChatAction = 0
+    public static let createConversation: ClientAnalyticsEvent_ChatAction = 100
+    public static let sendChatMessage: ClientAnalyticsEvent_ChatAction = 101
+    public static let hangoutComingSoon: ClientAnalyticsEvent_ChatAction = 701
+    public static let hangoutStarted: ClientAnalyticsEvent_ChatAction = 702
+    public static let hangoutJoin: ClientAnalyticsEvent_ChatAction = 703
+    public static let hangoutLeave: ClientAnalyticsEvent_ChatAction = 704
+    public static let hangoutEnded: ClientAnalyticsEvent_ChatAction = 705
+    public static let hangoutOngoing: ClientAnalyticsEvent_ChatAction = 706
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -115,9 +331,12 @@ public struct MediaType: ProtoEnum {
     }
 }
 
-public struct MembershipChangeType: ProtoEnum {
-    public static let Join: MembershipChangeType = 1
-    public static let Leave: MembershipChangeType = 2
+public struct ClientPresenceStateSetting_ClientPresenceState: ProtoEnum {
+    public static let none: ClientPresenceStateSetting_ClientPresenceState = 1
+    public static let mobile: ClientPresenceStateSetting_ClientPresenceState = 10
+    public static let mobileActive: ClientPresenceStateSetting_ClientPresenceState = 20
+    public static let desktopIdle: ClientPresenceStateSetting_ClientPresenceState = 30
+    public static let desktopActive: ClientPresenceStateSetting_ClientPresenceState = 40
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -125,14 +344,58 @@ public struct MembershipChangeType: ProtoEnum {
     }
 }
 
-public struct HangoutEventType: ProtoEnum {
-    public static let Unknown: HangoutEventType = 0
-    public static let Start: HangoutEventType = 1
-    public static let End: HangoutEventType = 2
-    public static let Join: HangoutEventType = 3
-    public static let Leave: HangoutEventType = 4
-    public static let ComingSoon: HangoutEventType = 5
-    public static let Ongoing: HangoutEventType = 6
+public struct LNodeDefs_NodeType: ProtoEnum {
+    public static let cs: LNodeDefs_NodeType = 1
+    public static let wcs: LNodeDefs_NodeType = 2
+    public static let mcs: LNodeDefs_NodeType = 3
+    public static let gmail: LNodeDefs_NodeType = 4
+    public static let fs: LNodeDefs_NodeType = 5
+    public static let ro: LNodeDefs_NodeType = 6
+    public static let ss: LNodeDefs_NodeType = 7
+    public static let gcm: LNodeDefs_NodeType = 8
+    public static let apns: LNodeDefs_NodeType = 9
+    public static let conserver: LNodeDefs_NodeType = 10
+    public static let apiary: LNodeDefs_NodeType = 11
+    public static let papyrus: LNodeDefs_NodeType = 12
+    public static let wcsClient: LNodeDefs_NodeType = 13
+    public static let xmppInterop: LNodeDefs_NodeType = 14
+    public static let gti: LNodeDefs_NodeType = 15
+    public static let glass: LNodeDefs_NodeType = 16
+    public static let bot: LNodeDefs_NodeType = 17
+    public static let androidClient: LNodeDefs_NodeType = 18
+    public static let iosClient: LNodeDefs_NodeType = 19
+    public static let rooms: LNodeDefs_NodeType = 20
+    public static let fanserver: LNodeDefs_NodeType = 21
+    public static let mesi: LNodeDefs_NodeType = 22
+    public static let broadcastbell: LNodeDefs_NodeType = 23
+    public static let megastore: LNodeDefs_NodeType = 24
+    public static let focus: LNodeDefs_NodeType = 25
+    public static let lcs: LNodeDefs_NodeType = 26
+    public static let lcsClient: LNodeDefs_NodeType = 27
+    public static let tinkerbell: LNodeDefs_NodeType = 28
+    public static let guss: LNodeDefs_NodeType = 29
+    public static let lens: LNodeDefs_NodeType = 30
+    public static let viewfinder: LNodeDefs_NodeType = 31
+    public static let reflector: LNodeDefs_NodeType = 32
+    public static let diffractor: LNodeDefs_NodeType = 33
+    public static let platform: LNodeDefs_NodeType = 34
+    public static let calendar: LNodeDefs_NodeType = 35
+    public static let party: LNodeDefs_NodeType = 36
+    public static let hangoutsPusher: LNodeDefs_NodeType = 37
+    public static let abuseiam: LNodeDefs_NodeType = 38
+    public static let mesiSpanner: LNodeDefs_NodeType = 39
+    public static let chatExpunger: LNodeDefs_NodeType = 40
+    public static let drivePublisher: LNodeDefs_NodeType = 41
+    public static let ccs: LNodeDefs_NodeType = 42
+    public static let speakeasy: LNodeDefs_NodeType = 43
+    public static let transcriptionbell: LNodeDefs_NodeType = 44
+    public static let guns: LNodeDefs_NodeType = 45
+    public static let botguard: LNodeDefs_NodeType = 46
+    public static let prefstore: LNodeDefs_NodeType = 47
+    public static let pushkit: LNodeDefs_NodeType = 48
+    public static let hangoutsUserPusher: LNodeDefs_NodeType = 49
+    public static let meetings: LNodeDefs_NodeType = 50
+    public static let jidLookup: LNodeDefs_NodeType = 51
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -140,10 +403,10 @@ public struct HangoutEventType: ProtoEnum {
     }
 }
 
-public struct HangoutMediaType: ProtoEnum {
-    public static let Unknown: HangoutMediaType = 0
-    public static let AudioVideo: HangoutMediaType = 1
-    public static let AudioOnly: HangoutMediaType = 2
+public struct ClientStartPhoneNumberVerificationRequest_ClientPhoneNumberVerificationMethod: ProtoEnum {
+    public static let unknownVerificationMethod: ClientStartPhoneNumberVerificationRequest_ClientPhoneNumberVerificationMethod = 0
+    public static let smsToApp: ClientStartPhoneNumberVerificationRequest_ClientPhoneNumberVerificationMethod = 1
+    public static let smsToHuman: ClientStartPhoneNumberVerificationRequest_ClientPhoneNumberVerificationMethod = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -151,10 +414,11 @@ public struct HangoutMediaType: ProtoEnum {
     }
 }
 
-public struct OffTheRecordToggle: ProtoEnum {
-    public static let Unknown: OffTheRecordToggle = 0
-    public static let Enabled: OffTheRecordToggle = 1
-    public static let Disabled: OffTheRecordToggle = 2
+public struct LChatDefs_ActiveClientState: ProtoEnum {
+    public static let unknown: LChatDefs_ActiveClientState = 0
+    public static let noActiveClient: LChatDefs_ActiveClientState = 1
+    public static let isActiveClient: LChatDefs_ActiveClientState = 2
+    public static let otherClientIsActive: LChatDefs_ActiveClientState = 3
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -162,10 +426,44 @@ public struct OffTheRecordToggle: ProtoEnum {
     }
 }
 
-public struct OffTheRecordStatus: ProtoEnum {
-    public static let Unknown: OffTheRecordStatus = 0
-    public static let OffTheRecord: OffTheRecordStatus = 1
-    public static let OnTheRecord: OffTheRecordStatus = 2
+public struct ClientConfigurationBitType: ProtoEnum {
+    public static let quasarMarketingPromoDismissed: ClientConfigurationBitType = 1
+    public static let gplusSignupPromoDismissed: ClientConfigurationBitType = 2
+    public static let chatWithCirclesAccepted: ClientConfigurationBitType = 3
+    public static let chatWithCirclesPromoDismissed: ClientConfigurationBitType = 4
+    public static let allowedForDomain: ClientConfigurationBitType = 5
+    public static let gmailChatArchiveEnabled: ClientConfigurationBitType = 6
+    public static let gplusUpgradeAllowedForDomain: ClientConfigurationBitType = 7
+    public static let richPresenceActivityPromoShown: ClientConfigurationBitType = 8
+    public static let richPresenceDevicePromoShown: ClientConfigurationBitType = 9
+    public static let richPresenceInCallStatePromoShown: ClientConfigurationBitType = 10
+    public static let richPresenceMoodPromoShown: ClientConfigurationBitType = 11
+    public static let canOptIntoGvSmsIntegration: ClientConfigurationBitType = 12
+    public static let gvSmsIntegrationEnabled: ClientConfigurationBitType = 13
+    public static let gvSmsIntegrationPromoShown: ClientConfigurationBitType = 14
+    public static let businessFeaturesEligible: ClientConfigurationBitType = 15
+    public static let businessFeaturesPromoDismissed: ClientConfigurationBitType = 16
+    public static let businessFeaturesEnabled: ClientConfigurationBitType = 17
+    public static let richPresenceLastSeenMobilePromoShown: ClientConfigurationBitType = 19
+    public static let richPresenceLastSeenDesktopPromptShown: ClientConfigurationBitType = 20
+    public static let richPresenceLastSeenMobilePromptShown: ClientConfigurationBitType = 21
+    public static let richPresenceLastSeenDesktopPromoShown: ClientConfigurationBitType = 22
+    public static let conversationInviteSettingsSetToCustom: ClientConfigurationBitType = 23
+    public static let reportAbuseNoticeAcknowledged: ClientConfigurationBitType = 24
+    public static let unicornUseChildProduct: ClientConfigurationBitType = 25
+    public static let unicornFullyDisabledByParent: ClientConfigurationBitType = 26
+    public static let phoneVerificationMobilePromptShown: ClientConfigurationBitType = 27
+    public static let canUseGvCallerIdFeature: ClientConfigurationBitType = 28
+    public static let photoServiceRegistered: ClientConfigurationBitType = 29
+    public static let gvCallerIdWabelFirstTimeDialogShown: ClientConfigurationBitType = 30
+    public static let hangoutP2PNoticeNeedsAcknowledgement: ClientConfigurationBitType = 31
+    public static let hangoutP2PEnabled: ClientConfigurationBitType = 32
+    public static let inviteNotificationsEnabled: ClientConfigurationBitType = 33
+    public static let desktopAutoEmojiConversionEnabled: ClientConfigurationBitType = 34
+    public static let warmWelcomeSeen: ClientConfigurationBitType = 35
+    public static let inviteHappyStatePromoSeen: ClientConfigurationBitType = 36
+    public static let desktopHostDensitySettingsEnabled: ClientConfigurationBitType = 37
+    public static let desktopCompactModeEnabled: ClientConfigurationBitType = 38
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -173,10 +471,14 @@ public struct OffTheRecordStatus: ProtoEnum {
     }
 }
 
-public struct SourceType: ProtoEnum {
-    public static let Unknown: SourceType = 0
-    public static let Mobile: SourceType = 1
-    public static let Web: SourceType = 2
+public struct ClientUserType: ProtoEnum {
+    public static let unknownUserType: ClientUserType = 0
+    public static let invalid: ClientUserType = 1
+    public static let gaia: ClientUserType = 2
+    public static let offNetworkPhone: ClientUserType = 3
+    public static let malformedPhoneNumber: ClientUserType = 4
+    public static let unknownPhoneNumber: ClientUserType = 5
+    public static let anonymousPhoneNumber: ClientUserType = 6
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -184,22 +486,10 @@ public struct SourceType: ProtoEnum {
     }
 }
 
-public struct EventType: ProtoEnum {
-    public static let Unknown: EventType = 0
-    public static let RegularChatMessage: EventType = 1
-    public static let Sms: EventType = 2
-    public static let Voicemail: EventType = 3
-    public static let AddUser: EventType = 4
-    public static let RemoveUser: EventType = 5
-    public static let ConversationRename: EventType = 6
-    public static let Hangout: EventType = 7
-    public static let PhoneCall: EventType = 8
-    public static let OtrModification: EventType = 9
-    public static let PlanMutation: EventType = 10
-    public static let Mms: EventType = 11
-    public static let Deprecated12: EventType = 12
-    public static let ObservedEvent: EventType = 13
-    public static let GroupLinkSharingModification: EventType = 14
+public struct ClientInCall_ClientCallType: ProtoEnum {
+    public static let none: ClientInCall_ClientCallType = 0
+    public static let pstn: ClientInCall_ClientCallType = 100
+    public static let hangout: ClientInCall_ClientCallType = 200
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -207,10 +497,17 @@ public struct EventType: ProtoEnum {
     }
 }
 
-public struct ConversationType: ProtoEnum {
-    public static let Unknown: ConversationType = 0
-    public static let OneToOne: ConversationType = 1
-    public static let Group: ConversationType = 2
+public struct ClientEntityProperties_ClientAffinity_ClientAffinityType: ProtoEnum {
+    public static let affinityTypeUnknown: ClientEntityProperties_ClientAffinity_ClientAffinityType = 0
+    public static let emailAutocomplete: ClientEntityProperties_ClientAffinity_ClientAffinityType = 1
+    public static let contactsPlusFrequentlyContacted: ClientEntityProperties_ClientAffinity_ClientAffinityType = 2
+    public static let chatAutocomplete: ClientEntityProperties_ClientAffinity_ClientAffinityType = 3
+    public static let gplusAutocomplete: ClientEntityProperties_ClientAffinity_ClientAffinityType = 4
+    public static let glassAffinity: ClientEntityProperties_ClientAffinity_ClientAffinityType = 5
+    public static let gplusStreamYouMayKnow: ClientEntityProperties_ClientAffinity_ClientAffinityType = 6
+    public static let peopleAutocompleteSocial: ClientEntityProperties_ClientAffinity_ClientAffinityType = 7
+    public static let fieldAutocompleteSocial: ClientEntityProperties_ClientAffinity_ClientAffinityType = 8
+    public static let contactsPlusEmail: ClientEntityProperties_ClientAffinity_ClientAffinityType = 9
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -218,11 +515,19 @@ public struct ConversationType: ProtoEnum {
     }
 }
 
-public struct ConversationStatus: ProtoEnum {
-    public static let Unknown: ConversationStatus = 0
-    public static let Invited: ConversationStatus = 1
-    public static let Active: ConversationStatus = 2
-    public static let Left: ConversationStatus = 3
+public struct ClientResponseStatus: ProtoEnum {
+    public static let unknown: ClientResponseStatus = 0
+    public static let ok: ClientResponseStatus = 1
+    public static let errorBusy: ClientResponseStatus = 2
+    public static let errorUnexpected: ClientResponseStatus = 3
+    public static let errorInvalidRequest: ClientResponseStatus = 4
+    public static let errorRetryLimit: ClientResponseStatus = 5
+    public static let errorForwarded: ClientResponseStatus = 6
+    public static let errorQuotaExceeded: ClientResponseStatus = 7
+    public static let errorInvalidConversation: ClientResponseStatus = 8
+    public static let errorVersionMismatch: ClientResponseStatus = 9
+    public static let errorAccessCheckFailed: ClientResponseStatus = 10
+    public static let errorNotFound: ClientResponseStatus = 11
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -230,10 +535,11 @@ public struct ConversationStatus: ProtoEnum {
     }
 }
 
-public struct ConversationView: ProtoEnum {
-    public static let Unknown: ConversationView = 0
-    public static let Inbox: ConversationView = 1
-    public static let Archived: ConversationView = 2
+public struct ClientInvitationStatus: ProtoEnum {
+    public static let unknownInvitationStatus: ClientInvitationStatus = 0
+    public static let pendingInvitation: ClientInvitationStatus = 1
+    public static let acceptedInvitation: ClientInvitationStatus = 2
+    public static let invitationNeeded: ClientInvitationStatus = 3
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -241,11 +547,11 @@ public struct ConversationView: ProtoEnum {
     }
 }
 
-public struct DeliveryMediumType: ProtoEnum {
-    public static let Unknown: DeliveryMediumType = 0
-    public static let Babel: DeliveryMediumType = 1
-    public static let GoogleVoice: DeliveryMediumType = 2
-    public static let LocalSms: DeliveryMediumType = 3
+public struct ClientInviteSettings_NotificationLevel: ProtoEnum {
+    public static let unknownNotificationLevel: ClientInviteSettings_NotificationLevel = 0
+    public static let disable: ClientInviteSettings_NotificationLevel = 1
+    public static let invite: ClientInviteSettings_NotificationLevel = 2
+    public static let ring: ClientInviteSettings_NotificationLevel = 3
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -253,10 +559,12 @@ public struct DeliveryMediumType: ProtoEnum {
     }
 }
 
-public struct InvitationAffinity: ProtoEnum {
-    public static let Unknown: InvitationAffinity = 0
-    public static let High: InvitationAffinity = 1
-    public static let Low: InvitationAffinity = 2
+public struct LChatDefs_NotificationLevel: ProtoEnum {
+    public static let off: LChatDefs_NotificationLevel = 10
+    public static let ding: LChatDefs_NotificationLevel = 20
+    public static let importantOnly: LChatDefs_NotificationLevel = 25
+    public static let allEvents: LChatDefs_NotificationLevel = 30
+    public static let useGlobalDefault: LChatDefs_NotificationLevel = 100
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -264,10 +572,55 @@ public struct InvitationAffinity: ProtoEnum {
     }
 }
 
-public struct ParticipantType: ProtoEnum {
-    public static let Unknown: ParticipantType = 0
-    public static let Gaia: ParticipantType = 2
-    public static let OffNetworkPhone: ParticipantType = 3
+public struct ClientClientVersion_ClientId: ProtoEnum {
+    public static let unknownClientId: ClientClientVersion_ClientId = 0
+    public static let android: ClientClientVersion_ClientId = 1
+    public static let ios: ClientClientVersion_ClientId = 2
+    public static let quasar: ClientClientVersion_ClientId = 3
+    public static let webSupermoles: ClientClientVersion_ClientId = 4
+    public static let webSupermolesOz: ClientClientVersion_ClientId = 5
+    public static let webSupermolesGmail: ClientClientVersion_ClientId = 6
+    public static let bot: ClientClientVersion_ClientId = 7
+    public static let webVideoCall: ClientClientVersion_ClientId = 8
+    public static let glassServer: ClientClientVersion_ClientId = 9
+    public static let pstnBot: ClientClientVersion_ClientId = 10
+    public static let tee: ClientClientVersion_ClientId = 11
+    public static let webSupermolesBigtop: ClientClientVersion_ClientId = 12
+    public static let webSupermolesChromeApp: ClientClientVersion_ClientId = 13
+    public static let roomServer: ClientClientVersion_ClientId = 14
+    public static let webStandaloneApp: ClientClientVersion_ClientId = 15
+    public static let speakeasy: ClientClientVersion_ClientId = 16
+    public static let googleVoice: ClientClientVersion_ClientId = 17
+    public static let prober: ClientClientVersion_ClientId = 18
+    public static let external: ClientClientVersion_ClientId = 19
+    public static let bbBot: ClientClientVersion_ClientId = 23
+    public static let powwow: ClientClientVersion_ClientId = 24
+    public static let ozServer: ClientClientVersion_ClientId = 25
+    public static let hangoutsPusher: ClientClientVersion_ClientId = 26
+    public static let androidNova: ClientClientVersion_ClientId = 27
+    public static let realtimeSupport: ClientClientVersion_ClientId = 28
+    public static let chatExpunger: ClientClientVersion_ClientId = 29
+    public static let captionsBot: ClientClientVersion_ClientId = 30
+    public static let mesi: ClientClientVersion_ClientId = 31
+    public static let realtimeMediaJs: ClientClientVersion_ClientId = 32
+    public static let wabelMediacall: ClientClientVersion_ClientId = 33
+    public static let expresslane: ClientClientVersion_ClientId = 34
+    public static let testClient: ClientClientVersion_ClientId = 35
+    public static let webSupermolesContacts: ClientClientVersion_ClientId = 36
+    public static let webSupermolesCallmemaybe: ClientClientVersion_ClientId = 37
+    public static let gmail: ClientClientVersion_ClientId = 38
+    public static let castouts: ClientClientVersion_ClientId = 39
+    public static let ironmanWeb: ClientClientVersion_ClientId = 40
+    public static let ironmanAndroid: ClientClientVersion_ClientId = 41
+    public static let ironmanIos: ClientClientVersion_ClientId = 42
+    public static let anonymousWebVideoCall: ClientClientVersion_ClientId = 43
+    public static let hangoutsStartPage: ClientClientVersion_ClientId = 44
+    public static let webSupermolesShortlink: ClientClientVersion_ClientId = 45
+    public static let hotlane: ClientClientVersion_ClientId = 46
+    public static let iosShare: ClientClientVersion_ClientId = 47
+    public static let rigel: ClientClientVersion_ClientId = 48
+    public static let porthole: ClientClientVersion_ClientId = 49
+    public static let boqExpresslane: ClientClientVersion_ClientId = 50
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -275,11 +628,12 @@ public struct ParticipantType: ProtoEnum {
     }
 }
 
-public struct InvitationStatus: ProtoEnum {
-    public static let Unknown: InvitationStatus = 0
-    public static let Pending: InvitationStatus = 1
-    public static let Accepted: InvitationStatus = 2
-    public static let Needed: InvitationStatus = 3
+public struct ClientInviteeError_ClientInviteeErrorDetail: ProtoEnum {
+    public static let unknownInviteeError: ClientInviteeError_ClientInviteeErrorDetail = 0
+    public static let inviteeBlocked: ClientInviteeError_ClientInviteeErrorDetail = 1
+    public static let notAuthorized: ClientInviteeError_ClientInviteeErrorDetail = 2
+    public static let forceHistoryConflict: ClientInviteeError_ClientInviteeErrorDetail = 3
+    public static let forceHistoryStateChangeUseFork: ClientInviteeError_ClientInviteeErrorDetail = 4
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -287,9 +641,25 @@ public struct InvitationStatus: ProtoEnum {
     }
 }
 
-public struct ForceHistory: ProtoEnum {
-    public static let Unknown: ForceHistory = 0
-    public static let No: ForceHistory = 1
+public struct LTransportEvent_EventType: ProtoEnum {
+    public static let received: LTransportEvent_EventType = 1
+    public static let forwarded: LTransportEvent_EventType = 2
+    public static let branched: LTransportEvent_EventType = 3
+    public static let delivered: LTransportEvent_EventType = 4
+    public static let dropped: LTransportEvent_EventType = 5
+    public static let discarded: LTransportEvent_EventType = 6
+    public static let invalidationDelivered: LTransportEvent_EventType = 7
+    public static let invalidationForwarded: LTransportEvent_EventType = 8
+    public static let invalidationDiscarded: LTransportEvent_EventType = 9
+    public static let checkpoint: LTransportEvent_EventType = 10
+    public static let created: LTransportEvent_EventType = 11
+    public static let responseReceived: LTransportEvent_EventType = 12
+    public static let responseRendered: LTransportEvent_EventType = 13
+    public static let queueStatus: LTransportEvent_EventType = 14
+    public static let rpcSent: LTransportEvent_EventType = 15
+    public static let databaseSizeKb: LTransportEvent_EventType = 16
+    public static let latency: LTransportEvent_EventType = 17
+    public static let database: LTransportEvent_EventType = 18
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -297,10 +667,13 @@ public struct ForceHistory: ProtoEnum {
     }
 }
 
-public struct NetworkType: ProtoEnum {
-    public static let Unknown: NetworkType = 0
-    public static let Babel: NetworkType = 1
-    public static let Phone: NetworkType = 2
+public struct ClientHangoutEventType: ProtoEnum {
+    public static let startHangout: ClientHangoutEventType = 1
+    public static let endHangout: ClientHangoutEventType = 2
+    public static let joinHangout: ClientHangoutEventType = 3
+    public static let leaveHangout: ClientHangoutEventType = 4
+    public static let hangoutComingSoon: ClientHangoutEventType = 5
+    public static let ongoingHangout: ClientHangoutEventType = 6
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -308,10 +681,13 @@ public struct NetworkType: ProtoEnum {
     }
 }
 
-public struct BlockState: ProtoEnum {
-    public static let Unknown: BlockState = 0
-    public static let Block: BlockState = 1
-    public static let Unblock: BlockState = 2
+public struct LTransportEvent_EventDeliveryMechanism: ProtoEnum {
+    public static let unknown: LTransportEvent_EventDeliveryMechanism = 0
+    public static let chatMessageFanOut: LTransportEvent_EventDeliveryMechanism = 1
+    public static let chatMessageWarmSync: LTransportEvent_EventDeliveryMechanism = 2
+    public static let chatMessageColdSync: LTransportEvent_EventDeliveryMechanism = 3
+    public static let chatMessageUserScrollBack: LTransportEvent_EventDeliveryMechanism = 4
+    public static let chatMessageConversationRequest: LTransportEvent_EventDeliveryMechanism = 5
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -319,10 +695,14 @@ public struct BlockState: ProtoEnum {
     }
 }
 
-public struct ReplyToInviteType: ProtoEnum {
-    public static let Unknown: ReplyToInviteType = 0
-    public static let Accept: ReplyToInviteType = 1
-    public static let Decline: ReplyToInviteType = 2
+public struct LTransportEvent_MessageType: ProtoEnum {
+    public static let chat: LTransportEvent_MessageType = 1
+    public static let video: LTransportEvent_MessageType = 2
+    public static let control: LTransportEvent_MessageType = 3
+    public static let hangoutStarted: LTransportEvent_MessageType = 701
+    public static let hangoutJoin: LTransportEvent_MessageType = 702
+    public static let hangoutLeave: LTransportEvent_MessageType = 703
+    public static let hangoutEnded: LTransportEvent_MessageType = 704
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -330,26 +710,11 @@ public struct ReplyToInviteType: ProtoEnum {
     }
 }
 
-public struct ClientId: ProtoEnum {
-    public static let Unknown: ClientId = 0
-    public static let Android: ClientId = 1
-    public static let Ios: ClientId = 2
-    public static let Chrome: ClientId = 3
-    public static let WebGplus: ClientId = 5
-    public static let WebGmail: ClientId = 6
-    public static let Bot: ClientId = 7
-    public static let GlassServer: ClientId = 9
-    public static let PstnBot: ClientId = 10
-    public static let Tee: ClientId = 11
-    public static let Ultraviolet: ClientId = 13
-    public static let RoomServer: ClientId = 14
-    public static let Speakeasy: ClientId = 16
-    public static let GoogleVoice: ClientId = 17
-    public static let Prober: ClientId = 18
-    public static let AndroidPstnOnly: ClientId = 27
-    public static let Something: ClientId = 34
-    public static let TestClient: ClientId = 35
-    public static let WebHangouts: ClientId = 44
+public struct ClientDeliveryMediumType: ProtoEnum {
+    public static let unknownMedium: ClientDeliveryMediumType = 0
+    public static let babelMedium: ClientDeliveryMediumType = 1
+    public static let googleVoiceMedium: ClientDeliveryMediumType = 2
+    public static let localSmsMedium: ClientDeliveryMediumType = 3
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -357,11 +722,9 @@ public struct ClientId: ProtoEnum {
     }
 }
 
-public struct ClientBuildType: ProtoEnum {
-    public static let Unknown: ClientBuildType = 0
-    public static let ProductionWeb: ClientBuildType = 1
-    public static let Dogfood: ClientBuildType = 2
-    public static let ProductionApp: ClientBuildType = 3
+public struct ClientFocusType: ProtoEnum {
+    public static let focus: ClientFocusType = 1
+    public static let unfocus: ClientFocusType = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -369,12 +732,9 @@ public struct ClientBuildType: ProtoEnum {
     }
 }
 
-public struct Device: ProtoEnum {
-    public static let Unknown: Device = 0
-    public static let AndroidPhone: Device = 2
-    public static let AndroidTablet: Device = 3
-    public static let IosPhone: Device = 4
-    public static let IosTablet: Device = 5
+public struct ClientMembershipChangeType: ProtoEnum {
+    public static let join: ClientMembershipChangeType = 1
+    public static let leave: ClientMembershipChangeType = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -382,8 +742,9 @@ public struct Device: ProtoEnum {
     }
 }
 
-public struct Application: ProtoEnum {
-    public static let Babel: Application = 407
+public struct ClientUpdateFavoritesError: ProtoEnum {
+    public static let unknownModifyFavoritesError: ClientUpdateFavoritesError = 0
+    public static let staleVersion: ClientUpdateFavoritesError = 1
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -391,9 +752,57 @@ public struct Application: ProtoEnum {
     }
 }
 
-public struct Platform: ProtoEnum {
-    public static let Unknown: Platform = 0
-    public static let Native: Platform = 2
+public struct LXsDefs_ClientType: ProtoEnum {
+    public static let unknownClientId: LXsDefs_ClientType = 0
+    public static let android: LXsDefs_ClientType = 1
+    public static let ios: LXsDefs_ClientType = 2
+    public static let quasar: LXsDefs_ClientType = 3
+    public static let webSupermoles: LXsDefs_ClientType = 4
+    public static let webSupermolesOz: LXsDefs_ClientType = 5
+    public static let webSupermolesGmail: LXsDefs_ClientType = 6
+    public static let roomServer: LXsDefs_ClientType = 7
+    public static let sessionServer: LXsDefs_ClientType = 8
+    public static let bot: LXsDefs_ClientType = 9
+    public static let ozServer: LXsDefs_ClientType = 10
+    public static let gtiSms: LXsDefs_ClientType = 11
+    public static let webVideoCall: LXsDefs_ClientType = 12
+    public static let glassServer: LXsDefs_ClientType = 13
+    public static let pstnBot: LXsDefs_ClientType = 14
+    public static let tee: LXsDefs_ClientType = 15
+    public static let webSupermolesBigtop: LXsDefs_ClientType = 16
+    public static let webSupermolesChromeApp: LXsDefs_ClientType = 17
+    public static let webStandaloneApp: LXsDefs_ClientType = 18
+    public static let speakeasy: LXsDefs_ClientType = 19
+    public static let googleVoice: LXsDefs_ClientType = 20
+    public static let prober: LXsDefs_ClientType = 21
+    public static let external: LXsDefs_ClientType = 22
+    public static let bbBot: LXsDefs_ClientType = 23
+    public static let powwow: LXsDefs_ClientType = 24
+    public static let hangoutsPusher: LXsDefs_ClientType = 26
+    public static let androidNova: LXsDefs_ClientType = 27
+    public static let realtimeSupport: LXsDefs_ClientType = 28
+    public static let chatExpunger: LXsDefs_ClientType = 29
+    public static let captionsBot: LXsDefs_ClientType = 30
+    public static let mesi: LXsDefs_ClientType = 31
+    public static let realtimeMediaJs: LXsDefs_ClientType = 32
+    public static let wabelMediacall: LXsDefs_ClientType = 33
+    public static let expresslane: LXsDefs_ClientType = 34
+    public static let testClient: LXsDefs_ClientType = 35
+    public static let webSupermolesContacts: LXsDefs_ClientType = 36
+    public static let webSupermolesCallmemaybe: LXsDefs_ClientType = 37
+    public static let gmail: LXsDefs_ClientType = 38
+    public static let castouts: LXsDefs_ClientType = 39
+    public static let ironmanWeb: LXsDefs_ClientType = 40
+    public static let ironmanAndroid: LXsDefs_ClientType = 41
+    public static let ironmanIos: LXsDefs_ClientType = 42
+    public static let anonymousWebVideoCall: LXsDefs_ClientType = 43
+    public static let hangoutsStartPage: LXsDefs_ClientType = 44
+    public static let webSupermolesShortlink: LXsDefs_ClientType = 45
+    public static let hotlane: LXsDefs_ClientType = 46
+    public static let iosShare: LXsDefs_ClientType = 47
+    public static let rigel: LXsDefs_ClientType = 48
+    public static let porthole: LXsDefs_ClientType = 49
+    public static let boqExpresslane: LXsDefs_ClientType = 50
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -401,19 +810,10 @@ public struct Platform: ProtoEnum {
     }
 }
 
-public struct ResponseStatus: ProtoEnum {
-    public static let Unknown: ResponseStatus = 0
-    public static let Ok: ResponseStatus = 1
-    public static let Busy: ResponseStatus = 2
-    public static let UnexpectedError: ResponseStatus = 3
-    public static let InvalidRequest: ResponseStatus = 4
-    public static let ErrorRetryLimit: ResponseStatus = 5
-    public static let ErrorForwarded: ResponseStatus = 6
-    public static let ErrorQuotaExceeded: ResponseStatus = 7
-    public static let ErrorInvalidConversation: ResponseStatus = 8
-    public static let ErrorVersionMismatch: ResponseStatus = 9
-    public static let ErrorAccessCheckFailed: ResponseStatus = 10
-    public static let ErrorNotFound: ResponseStatus = 11
+public struct ClientInvitationAffinity: ProtoEnum {
+    public static let unknownAffinity: ClientInvitationAffinity = 0
+    public static let high: ClientInvitationAffinity = 1
+    public static let low: ClientInvitationAffinity = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -421,10 +821,9 @@ public struct ResponseStatus: ProtoEnum {
     }
 }
 
-public struct PastHangoutState: ProtoEnum {
-    public static let Unknown: PastHangoutState = 0
-    public static let HadPastHangout: PastHangoutState = 1
-    public static let NoPastHangout: PastHangoutState = 2
+public struct ClientOffnetworkAddress_Type: ProtoEnum {
+    public static let phone: ClientOffnetworkAddress_Type = 0
+    public static let email: ClientOffnetworkAddress_Type = 1
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -432,10 +831,8 @@ public struct PastHangoutState: ProtoEnum {
     }
 }
 
-public struct PhotoUrlStatus: ProtoEnum {
-    public static let Unknown: PhotoUrlStatus = 0
-    public static let Placeholder: PhotoUrlStatus = 1
-    public static let UserPhoto: PhotoUrlStatus = 2
+public struct ClientSetActiveClientResponse_ClientSetActiveClientError: ProtoEnum {
+    public static let invalidClient: ClientSetActiveClientResponse_ClientSetActiveClientError = 1
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -443,10 +840,10 @@ public struct PhotoUrlStatus: ProtoEnum {
     }
 }
 
-public struct Gender: ProtoEnum {
-    public static let Unknown: Gender = 0
-    public static let Male: Gender = 1
-    public static let Female: Gender = 2
+public struct ClientReplyToInviteType: ProtoEnum {
+    public static let unknownReplyToInviteType: ClientReplyToInviteType = 0
+    public static let accept: ClientReplyToInviteType = 1
+    public static let decline: ClientReplyToInviteType = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -454,10 +851,13 @@ public struct Gender: ProtoEnum {
     }
 }
 
-public struct ProfileType: ProtoEnum {
-    public static let None: ProfileType = 0
-    public static let EsUser: ProfileType = 1
-    public static let Page: ProfileType = 2
+public struct RealtimeNotificationSettings_Level: ProtoEnum {
+    public static let `default`: RealtimeNotificationSettings_Level = 0
+    public static let disable: RealtimeNotificationSettings_Level = 10
+    public static let invite: RealtimeNotificationSettings_Level = 20
+    public static let deliver: RealtimeNotificationSettings_Level = 30
+    public static let ping: RealtimeNotificationSettings_Level = 40
+    public static let ring: RealtimeNotificationSettings_Level = 50
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -465,46 +865,11 @@ public struct ProfileType: ProtoEnum {
     }
 }
 
-public struct ConfigurationBitType: ProtoEnum {
-    public static let Unknown: ConfigurationBitType = 0
-    public static let QuasarMarketingPromoDismissed: ConfigurationBitType = 1
-    public static let GplusSignupPromoDismissed: ConfigurationBitType = 2
-    public static let ChatWithCirclesAccepted: ConfigurationBitType = 3
-    public static let ChatWithCirclesPromoDismissed: ConfigurationBitType = 4
-    public static let AllowedForDomain: ConfigurationBitType = 5
-    public static let GmailChatArchiveEnabled: ConfigurationBitType = 6
-    public static let GplusUpgradeAllowedForDomain: ConfigurationBitType = 7
-    public static let RichPresenceActivityPromoShown: ConfigurationBitType = 8
-    public static let RichPresenceDevicePromoShown: ConfigurationBitType = 9
-    public static let RichPresenceInCallStatePromoShown: ConfigurationBitType = 10
-    public static let RichPresenceMoodPromoShown: ConfigurationBitType = 11
-    public static let CanOptIntoGvSmsIntegration: ConfigurationBitType = 12
-    public static let GvSmsIntegrationEnabled: ConfigurationBitType = 13
-    public static let GvSmsIntegrationPromoShown: ConfigurationBitType = 14
-    public static let BusinessFeaturesEligible: ConfigurationBitType = 15
-    public static let BusinessFeaturesPromoDismissed: ConfigurationBitType = 16
-    public static let BusinessFeaturesEnabled: ConfigurationBitType = 17
-    public static let Unknown18: ConfigurationBitType = 18
-    public static let RichPresenceLastSeenMobilePromoShown: ConfigurationBitType = 19
-    public static let RichPresenceLastSeenDesktopPromptShown: ConfigurationBitType = 20
-    public static let Unknown21: ConfigurationBitType = 21
-    public static let RichPresenceLastSeenDesktopPromoShown: ConfigurationBitType = 22
-    public static let ConversationInviteSettingsSetToCustom: ConfigurationBitType = 23
-    public static let ReportAbuseNoticeAcknowledged: ConfigurationBitType = 24
-    public static let Unknown25: ConfigurationBitType = 25
-    public static let Unknown26: ConfigurationBitType = 26
-    public static let PhoneVerificationMobilePromptShown: ConfigurationBitType = 27
-    public static let CanUseGvCallerIdFeature: ConfigurationBitType = 28
-    public static let PhotoServiceRegistered: ConfigurationBitType = 29
-    public static let GvCallerIdWabelFirstTimeDialogShown: ConfigurationBitType = 30
-    public static let HangoutP2PNoticeNeedsAcknowledgement: ConfigurationBitType = 31
-    public static let Unknown32: ConfigurationBitType = 32
-    public static let InviteNotificationsEnabled: ConfigurationBitType = 33
-    public static let DesktopAutoEmojiConversionEnabled: ConfigurationBitType = 34
-    public static let WarmWelcomeSeen: ConfigurationBitType = 35
-    public static let InviteHappyStatePromoSeen: ConfigurationBitType = 36
-    public static let DesktopHostDensitySettingsEnabled: ConfigurationBitType = 37
-    public static let DesktopCompactModeEnabled: ConfigurationBitType = 38
+public struct ClientClientVersion_ClientBuildType: ProtoEnum {
+    public static let unknownClientBuildType: ClientClientVersion_ClientBuildType = 0
+    public static let developer: ClientClientVersion_ClientBuildType = 1
+    public static let dogfood: ClientClientVersion_ClientBuildType = 2
+    public static let production: ClientClientVersion_ClientBuildType = 3
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -512,14 +877,10 @@ public struct ConfigurationBitType: ProtoEnum {
     }
 }
 
-public struct RichPresenceType: ProtoEnum {
-    public static let Unknown: RichPresenceType = 0
-    public static let InCallState: RichPresenceType = 1
-    public static let Device: RichPresenceType = 2
-    public static let Mood: RichPresenceType = 3
-    public static let Activity: RichPresenceType = 4
-    public static let GloballyEnabled: RichPresenceType = 5
-    public static let LastSeen: RichPresenceType = 6
+public struct ClientLeaveReason: ProtoEnum {
+    public static let leaveReasonUnknown: ClientLeaveReason = 0
+    public static let forceHistoryPolicyChange: ClientLeaveReason = 1
+    public static let userInitiated: ClientLeaveReason = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -527,14 +888,9 @@ public struct RichPresenceType: ProtoEnum {
     }
 }
 
-public struct FieldMask: ProtoEnum {
-    public static let Reachable: FieldMask = 1
-    public static let Available: FieldMask = 2
-    public static let Mood: FieldMask = 3
-    public static let Location: FieldMask = 4
-    public static let InCall: FieldMask = 6
-    public static let Device: FieldMask = 7
-    public static let LastSeen: FieldMask = 10
+public struct ClientOffTheRecordToggle: ProtoEnum {
+    public static let enabled: ClientOffTheRecordToggle = 1
+    public static let disabled: ClientOffTheRecordToggle = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -542,10 +898,9 @@ public struct FieldMask: ProtoEnum {
     }
 }
 
-public struct DeleteType: ProtoEnum {
-    public static let Unknown: DeleteType = 0
-    public static let UpperBound: DeleteType = 1
-    public static let PerEvent: DeleteType = 2
+public struct ClientOffTheRecordStatus: ProtoEnum {
+    public static let offTheRecord: ClientOffTheRecordStatus = 1
+    public static let onTheRecord: ClientOffTheRecordStatus = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -553,13 +908,10 @@ public struct DeleteType: ProtoEnum {
     }
 }
 
-public struct SyncFilter: ProtoEnum {
-    public static let Unknown: SyncFilter = 0
-    public static let Inbox: SyncFilter = 1
-    public static let Archived: SyncFilter = 2
-    public static let Active: SyncFilter = 3
-    public static let Invited: SyncFilter = 4
-    public static let InvitedLowAffinity: SyncFilter = 5
+public struct ClientUpgradeType: ProtoEnum {
+    public static let suggest: ClientUpgradeType = 1
+    public static let force: ClientUpgradeType = 2
+    public static let deprecatedClient: ClientUpgradeType = 3
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -567,10 +919,10 @@ public struct SyncFilter: ProtoEnum {
     }
 }
 
-public struct SoundState: ProtoEnum {
-    public static let Unknown: SoundState = 0
-    public static let On: SoundState = 1
-    public static let Off: SoundState = 2
+public struct ClientDeleteType: ProtoEnum {
+    public static let unknownDelete: ClientDeleteType = 0
+    public static let upperBoundDelete: ClientDeleteType = 1
+    public static let perEventDelete: ClientDeleteType = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -578,9 +930,9 @@ public struct SoundState: ProtoEnum {
     }
 }
 
-public struct CallerIdSettingsMask: ProtoEnum {
-    public static let Unknown: CallerIdSettingsMask = 0
-    public static let Provided: CallerIdSettingsMask = 1
+public struct ClientVerificationStatus: ProtoEnum {
+    public static let unknownVerificationStatus: ClientVerificationStatus = 0
+    public static let verified: ClientVerificationStatus = 1
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -588,9 +940,22 @@ public struct CallerIdSettingsMask: ProtoEnum {
     }
 }
 
-public struct PhoneVerificationStatus: ProtoEnum {
-    public static let Unknown: PhoneVerificationStatus = 0
-    public static let Verified: PhoneVerificationStatus = 1
+public struct ClientEventType: ProtoEnum {
+    public static let unknownEventType: ClientEventType = 0
+    public static let regularChatMessage: ClientEventType = 1
+    public static let sms: ClientEventType = 2
+    public static let voicemail: ClientEventType = 3
+    public static let addUser: ClientEventType = 4
+    public static let removeUser: ClientEventType = 5
+    public static let renameConversation: ClientEventType = 6
+    public static let hangoutEvent: ClientEventType = 7
+    public static let phoneCall: ClientEventType = 8
+    public static let otrModification: ClientEventType = 9
+    public static let deprecated10: ClientEventType = 10
+    public static let mms: ClientEventType = 11
+    public static let deprecated12: ClientEventType = 12
+    public static let observedEvent: ClientEventType = 13
+    public static let groupLinkSharingModification: ClientEventType = 14
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -598,9 +963,10 @@ public struct PhoneVerificationStatus: ProtoEnum {
     }
 }
 
-public struct PhoneDiscoverabilityStatus: ProtoEnum {
-    public static let Unknown: PhoneDiscoverabilityStatus = 0
-    public static let OptedInButNotDiscoverable: PhoneDiscoverabilityStatus = 2
+public struct ClientConversationType: ProtoEnum {
+    public static let unknownConversationType: ClientConversationType = 0
+    public static let stickyOneToOne: ClientConversationType = 1
+    public static let group: ClientConversationType = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -608,8 +974,10 @@ public struct PhoneDiscoverabilityStatus: ProtoEnum {
     }
 }
 
-public struct PhoneValidationResult: ProtoEnum {
-    public static let IsPossible: PhoneValidationResult = 0
+public struct ClientDomainProperties_ClientChatRestricted: ProtoEnum {
+    public static let unknownChatRestricted: ClientDomainProperties_ClientChatRestricted = 0
+    public static let chatNotRestricted: ClientDomainProperties_ClientChatRestricted = 1
+    public static let chatRestrictedToDomain: ClientDomainProperties_ClientChatRestricted = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -617,9 +985,64 @@ public struct PhoneValidationResult: ProtoEnum {
     }
 }
 
-public struct OffnetworkAddressType: ProtoEnum {
-    public static let Unknown: OffnetworkAddressType = 0
-    public static let Email: OffnetworkAddressType = 1
+public struct LXsDefs_ChatAction: ProtoEnum {
+    public static let unknownAction: LXsDefs_ChatAction = 0
+    public static let createConversation: LXsDefs_ChatAction = 100
+    public static let sendChatMessage: LXsDefs_ChatAction = 101
+    public static let addUser: LXsDefs_ChatAction = 102
+    public static let removeUser: LXsDefs_ChatAction = 103
+    public static let rename: LXsDefs_ChatAction = 104
+    public static let syncRecent: LXsDefs_ChatAction = 105
+    public static let syncAllNewEvents: LXsDefs_ChatAction = 106
+    public static let getConversation: LXsDefs_ChatAction = 107
+    public static let setConversationNotificationLevel: LXsDefs_ChatAction = 108
+    public static let replyToInvite: LXsDefs_ChatAction = 109
+    public static let modifyOtr: LXsDefs_ChatAction = 110
+    public static let modifyConversationView: LXsDefs_ChatAction = 111
+    public static let setHangoutNotificationStatus: LXsDefs_ChatAction = 112
+    public static let setFocus: LXsDefs_ChatAction = 113
+    public static let setTyping: LXsDefs_ChatAction = 114
+    public static let updateWatermark: LXsDefs_ChatAction = 115
+    public static let deleteConversation: LXsDefs_ChatAction = 116
+    public static let getUnreadCount: LXsDefs_ChatAction = 117
+    public static let recordAnalyticEvents: LXsDefs_ChatAction = 118
+    public static let getUserBadgeCount: LXsDefs_ChatAction = 119
+    public static let markEventObserved: LXsDefs_ChatAction = 120
+    public static let openConversationFromURL: LXsDefs_ChatAction = 121
+    public static let modifyGroupLinkSharingStatus: LXsDefs_ChatAction = 122
+    public static let queryAvailability: LXsDefs_ChatAction = 300
+    public static let getSuggestedEntities: LXsDefs_ChatAction = 301
+    public static let getSelfInfo: LXsDefs_ChatAction = 302
+    public static let searchEntities: LXsDefs_ChatAction = 303
+    public static let getEntityById: LXsDefs_ChatAction = 304
+    public static let setConfigurationBit: LXsDefs_ChatAction = 305
+    public static let registerDevice: LXsDefs_ChatAction = 501
+    public static let setActiveClient: LXsDefs_ChatAction = 502
+    public static let setAvailability: LXsDefs_ChatAction = 503
+    public static let setSettings: LXsDefs_ChatAction = 504
+    public static let getSettings: LXsDefs_ChatAction = 505
+    public static let startSmsToAppVerification: LXsDefs_ChatAction = 506
+    public static let finishSmsToAppVerification: LXsDefs_ChatAction = 507
+    public static let hangoutComingSoon: LXsDefs_ChatAction = 701
+    public static let hangoutStarted: LXsDefs_ChatAction = 702
+    public static let hangoutJoin: LXsDefs_ChatAction = 703
+    public static let hangoutLeave: LXsDefs_ChatAction = 704
+    public static let hangoutEnded: LXsDefs_ChatAction = 705
+    public static let hangoutOngoing: LXsDefs_ChatAction = 706
+    public static let queryPresence: LXsDefs_ChatAction = 801
+    public static let setPresence: LXsDefs_ChatAction = 802
+    public static let setRichPresenceEnabledState: LXsDefs_ChatAction = 803
+    public static let sendOffnetworkInvitation: LXsDefs_ChatAction = 901
+    public static let acceptOffnetworkInvitation: LXsDefs_ChatAction = 902
+    public static let stopOffnetworkInvitation: LXsDefs_ChatAction = 903
+    public static let setSmsEnablingState: LXsDefs_ChatAction = 904
+    public static let getSmsEnablingState: LXsDefs_ChatAction = 905
+    public static let hangoutResolve: LXsDefs_ChatAction = 1001
+    public static let hangoutQuery: LXsDefs_ChatAction = 1002
+    public static let hangoutParticipantSearch: LXsDefs_ChatAction = 1003
+    public static let mediaSessionLog: LXsDefs_ChatAction = 1004
+    public static let manifoldExecuteBabelArchiving: LXsDefs_ChatAction = 1100
+    public static let manifoldExecuteBabelCentBlacklist: LXsDefs_ChatAction = 1101
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -627,11 +1050,9 @@ public struct OffnetworkAddressType: ProtoEnum {
     }
 }
 
-public struct GroupLinkSharingStatus: ProtoEnum {
-    public static let Unknown: GroupLinkSharingStatus = 0
-    public static let On: GroupLinkSharingStatus = 1
-    public static let Off: GroupLinkSharingStatus = 2
-    public static let NotAvailable: GroupLinkSharingStatus = 3
+public struct ClientDeclineSignal: ProtoEnum {
+    public static let reportAbuse: ClientDeclineSignal = 1
+    public static let blockInviter: ClientDeclineSignal = 2
     
     public let rawValue: Int
     public init(_ rawValue: Int) {
@@ -639,247 +1060,1866 @@ public struct GroupLinkSharingStatus: ProtoEnum {
     }
 }
 
-public struct DoNotDisturbSetting: ProtoMessage {
+public struct ClientConversation_ClientNetworkType: ProtoEnum {
+    public static let unknownNetworkType: ClientConversation_ClientNetworkType = 0
+    public static let babel: ClientConversation_ClientNetworkType = 1
+    public static let phone: ClientConversation_ClientNetworkType = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientGetSelfInfoResponse_AccountAgeGroup: ProtoEnum {
+    public static let unknownAgeGroup: ClientGetSelfInfoResponse_AccountAgeGroup = 0
+    public static let adult: ClientGetSelfInfoResponse_AccountAgeGroup = 1
+    public static let minor: ClientGetSelfInfoResponse_AccountAgeGroup = 2
+    public static let child: ClientGetSelfInfoResponse_AccountAgeGroup = 3
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientEventObservedStatus: ProtoEnum {
+    public static let unknownObservedStatus: ClientEventObservedStatus = 0
+    public static let observed: ClientEventObservedStatus = 1
+    public static let unobserved: ClientEventObservedStatus = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientExperimentValue_FlagType: ProtoEnum {
+    public static let boolean: ClientExperimentValue_FlagType = 1
+    public static let long: ClientExperimentValue_FlagType = 2
+    public static let double: ClientExperimentValue_FlagType = 3
+    public static let string: ClientExperimentValue_FlagType = 4
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientDeviceActivity_Type: ProtoEnum {
+    public static let inVehicle: ClientDeviceActivity_Type = 0
+    public static let onBicycle: ClientDeviceActivity_Type = 1
+    public static let onFoot: ClientDeviceActivity_Type = 2
+    public static let still: ClientDeviceActivity_Type = 3
+    public static let unknown: ClientDeviceActivity_Type = 4
+    public static let tilting: ClientDeviceActivity_Type = 5
+    public static let exitingVehicle: ClientDeviceActivity_Type = 6
+    public static let walking: ClientDeviceActivity_Type = 7
+    public static let running: ClientDeviceActivity_Type = 8
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct LUmaEventData_HistogramType: ProtoEnum {
+    public static let histogram: LUmaEventData_HistogramType = 0
+    public static let linear: LUmaEventData_HistogramType = 1
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct LClientState_EventState_ClientEventObservedStatus: ProtoEnum {
+    public static let unknownObservedStatus: LClientState_EventState_ClientEventObservedStatus = 0
+    public static let observed: LClientState_EventState_ClientEventObservedStatus = 1
+    public static let unobserved: LClientState_EventState_ClientEventObservedStatus = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientEntityProperties_ProfileType: ProtoEnum {
+    public static let none: ClientEntityProperties_ProfileType = 0
+    public static let esUser: ClientEntityProperties_ProfileType = 1
+    public static let page: ClientEntityProperties_ProfileType = 2
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientTypingType: ProtoEnum {
+    public static let start: ClientTypingType = 1
+    public static let pause: ClientTypingType = 2
+    public static let clear: ClientTypingType = 3
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientForceHistoryState: ProtoEnum {
+    public static let forceHistoryUnknown: ClientForceHistoryState = 0
+    public static let noForce: ClientForceHistoryState = 1
+    public static let forceOn: ClientForceHistoryState = 2
+    public static let forceOff: ClientForceHistoryState = 3
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientDiscoverabilityStatus: ProtoEnum {
+    public static let unknownDiscoverabilityStatus: ClientDiscoverabilityStatus = 0
+    public static let optedInAndDiscoverable: ClientDiscoverabilityStatus = 1
+    public static let optedInButNotDiscoverable: ClientDiscoverabilityStatus = 2
+    public static let optedOut: ClientDiscoverabilityStatus = 3
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientGetSelfInfoRequest_ClientRequestedFieldMask: ProtoEnum {
+    public static let selfEntity: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 1
+    public static let isKnownMinor: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 2
+    public static let clientPresence: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 3
+    public static let dndState: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 4
+    public static let desktopOffState: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 5
+    public static let phoneData: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 6
+    public static let configurationBit: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 7
+    public static let googlePlusUser: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 8
+    public static let desktopSoundSetting: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 9
+    public static let richClientPresenceMood: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 10
+    public static let richClientPresenceInCallState: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 11
+    public static let richPresenceEnabledState: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 12
+    public static let babelUser: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 13
+    public static let desktopAvailabilitySharingState: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 14
+    public static let googlePlusMobileUser: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 15
+    public static let desktopHtml5Notifications: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 16
+    public static let managedPlusPages: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 17
+    public static let richClientPresenceStatusMessage: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 18
+    public static let accountAgeGroup: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 19
+    public static let mobileExperiments: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 20
+    public static let talkSharedInvisible: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 21
+    public static let callerIdSettings: ClientGetSelfInfoRequest_ClientRequestedFieldMask = 22
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientUrlRedirectSpec_ClientRedirectType: ProtoEnum {
+    public static let unknownRedirectType: ClientUrlRedirectSpec_ClientRedirectType = 0
+    public static let fife: ClientUrlRedirectSpec_ClientRedirectType = 1
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct ClientHangoutMediaType: ProtoEnum {
+    public static let audioVideo: ClientHangoutMediaType = 1
+    public static let audioOnly: ClientHangoutMediaType = 2
+    public static let pushToTalk: ClientHangoutMediaType = 3
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct HEligibleCallerIdToken: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case do_not_disturb = 1
-        case expiration_timestamp = 2
-        case version = 3
+        case callerIdPhoneNumber = 1
+        case signature = 2
+        case signatureTtlUsec = 3
     }
     
-    public var do_not_disturb: Bool? = nil
-    public var expiration_timestamp: UInt64? = nil
-    public var version: UInt64? = nil
+    public var callerIdPhoneNumber: GCVPhoneNumber? = nil
+    public var signature: String? = nil
+    public var signatureTtlUsec: UInt64? = nil
     
-    public init(do_not_disturb: Bool? = nil, expiration_timestamp: UInt64? = nil, version: UInt64? = nil) {
-        self.do_not_disturb = do_not_disturb
-        self.expiration_timestamp = expiration_timestamp
-        self.version = version
-    }
-}
-
-public struct NotificationSettings: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case dnd_settings = 1
-    }
-    
-    public var dnd_settings: DoNotDisturbSetting? = nil
-    
-    public init(dnd_settings: DoNotDisturbSetting? = nil) {
-        self.dnd_settings = dnd_settings
+    public init(callerIdPhoneNumber: GCVPhoneNumber? = nil, signature: String? = nil, signatureTtlUsec: UInt64? = nil) {
+        self.callerIdPhoneNumber = callerIdPhoneNumber
+        self.signature = signature
+        self.signatureTtlUsec = signatureTtlUsec
     }
 }
 
-public struct ConversationId: ProtoMessage {
+public struct GCVContactPhoneNumber: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case id = 1
+        case phoneNumber = 1
+        case type = 3
+        case formattedType = 4
     }
     
-    public var id: String? = nil
+    public var phoneNumber: GCVPhoneNumber? = nil
+    public var type: String? = nil
+    public var formattedType: String? = nil
     
-    public init(id: String? = nil) {
-        self.id = id
-    }
-}
-
-public struct ParticipantId: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case gaia_id = 1
-        case chat_id = 2
-    }
-    
-    public var gaia_id: String? = nil
-    public var chat_id: String? = nil
-    
-    public init(gaia_id: String? = nil, chat_id: String? = nil) {
-        self.gaia_id = gaia_id
-        self.chat_id = chat_id
-    }
-}
-
-public struct DeviceStatus: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case mobile = 1
-        case desktop = 2
-        case tablet = 3
-    }
-    
-    public var mobile: Bool? = nil
-    public var desktop: Bool? = nil
-    public var tablet: Bool? = nil
-    
-    public init(mobile: Bool? = nil, desktop: Bool? = nil, tablet: Bool? = nil) {
-        self.mobile = mobile
-        self.desktop = desktop
-        self.tablet = tablet
-    }
-}
-
-public struct LastSeen: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case last_seen_timestamp = 1
-        case usec_since_last_seen = 2
-    }
-    
-    public var last_seen_timestamp: UInt64
-    public var usec_since_last_seen: UInt64? = nil
-    
-    public init(last_seen_timestamp: UInt64, usec_since_last_seen: UInt64? = nil) {
-        self.last_seen_timestamp = last_seen_timestamp
-        self.usec_since_last_seen = usec_since_last_seen
-    }
-}
-
-public struct Location: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case type = 1
-        case lat = 2
-        case lng = 3
-        case timestamp_msec = 4
-        case accuracy_meters = 5
-        case display_name = 6
-    }
-    
-    public var type: UInt64? = nil
-    public var lat: Double? = nil
-    public var lng: Double? = nil
-    public var timestamp_msec: UInt64? = nil
-    public var accuracy_meters: UInt64? = nil
-    public var display_name: String? = nil
-    
-    public init(type: UInt64? = nil, lat: Double? = nil, lng: Double? = nil, timestamp_msec: UInt64? = nil, accuracy_meters: UInt64? = nil, display_name: String? = nil) {
+    public init(phoneNumber: GCVPhoneNumber? = nil, type: String? = nil, formattedType: String? = nil) {
+        self.phoneNumber = phoneNumber
         self.type = type
-        self.lat = lat
-        self.lng = lng
-        self.timestamp_msec = timestamp_msec
-        self.accuracy_meters = accuracy_meters
-        self.display_name = display_name
+        self.formattedType = formattedType
     }
 }
 
-public struct LocationSpec: ProtoMessage {
+public struct GCVPhoneNumber_I18nData: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case place = 1
+        case nationalNumber = 1
+        case internationalNumber = 2
+        case countryCode = 3
+        case regionCode = 4
+        case isValid = 5
     }
     
-    public var place: Place? = nil
+    public var nationalNumber: String? = nil
+    public var internationalNumber: String? = nil
+    public var countryCode: Int32? = nil
+    public var regionCode: String? = nil
+    public var isValid: Bool? = nil
     
-    public init(place: Place? = nil) {
-        self.place = place
+    public init(nationalNumber: String? = nil, internationalNumber: String? = nil, countryCode: Int32? = nil, regionCode: String? = nil, isValid: Bool? = nil) {
+        self.nationalNumber = nationalNumber
+        self.internationalNumber = internationalNumber
+        self.countryCode = countryCode
+        self.regionCode = regionCode
+        self.isValid = isValid
     }
 }
 
-public struct InCall: ProtoMessage {
+public struct GCVPhoneNumber: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case call_type = 1
+        case e164 = 1
+        case i18NData = 2
     }
     
-    public var call_type: CallType? = nil
+    public var e164: String? = nil
+    public var i18NData: GCVPhoneNumber_I18nData? = nil
     
-    public init(call_type: CallType? = nil) {
-        self.call_type = call_type
+    public init(e164: String? = nil, i18NData: GCVPhoneNumber_I18nData? = nil) {
+        self.e164 = e164
+        self.i18NData = i18NData
     }
 }
 
-public struct Presence: ProtoMessage {
+public struct Attachment: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case reachable = 1
-        case available = 2
-        case device_location = 3
-        case in_call = 5
-        case device_status = 6
-        case mood_message = 9
-        case last_seen = 10
+        case embedItem = 1
+        case id_p = 3
     }
     
-    public var reachable: Bool? = nil
-    public var available: Bool? = nil
-    public var device_location: [Location] = []
-    public var in_call: InCall? = nil
-    public var device_status: DeviceStatus? = nil
-    public var mood_message: [MoodMessage] = []
-    public var last_seen: LastSeen? = nil
+    public var embedItem: EMEmbedClientItem? = nil
+    public var id_p: String? = nil
     
-    public init(reachable: Bool? = nil, available: Bool? = nil, device_location: [Location] = [], in_call: InCall? = nil, device_status: DeviceStatus? = nil, mood_message: [MoodMessage] = [], last_seen: LastSeen? = nil) {
-        self.reachable = reachable
-        self.available = available
-        self.device_location = device_location
-        self.in_call = in_call
-        self.device_status = device_status
-        self.mood_message = mood_message
-        self.last_seen = last_seen
+    public init(embedItem: EMEmbedClientItem? = nil, id_p: String? = nil) {
+        self.embedItem = embedItem
+        self.id_p = id_p
     }
 }
 
-public struct PresenceResult: ProtoMessage {
+public struct EMItemType: ProtoEnum {
+    public static let thing: EMItemType = 0
+    public static let creativeWork: EMItemType = 1
+    public static let event: EMItemType = 2
+    public static let intangible: EMItemType = 3
+    public static let organization: EMItemType = 4
+    public static let person: EMItemType = 5
+    public static let place: EMItemType = 6
+    public static let product: EMItemType = 7
+    public static let article: EMItemType = 11
+    public static let blogPosting: EMItemType = 12
+    public static let newsArticle: EMItemType = 13
+    public static let blog: EMItemType = 14
+    public static let book: EMItemType = 15
+    public static let itemList: EMItemType = 16
+    public static let map: EMItemType = 17
+    public static let mediaObject: EMItemType = 18
+    public static let audioObject: EMItemType = 19
+    public static let imageObject: EMItemType = 20
+    public static let musicVideoObject: EMItemType = 21
+    public static let videoObject: EMItemType = 22
+    public static let movie: EMItemType = 23
+    public static let musicPlaylist: EMItemType = 24
+    public static let musicAlbum: EMItemType = 25
+    public static let musicRecording: EMItemType = 26
+    public static let painting: EMItemType = 27
+    public static let photograph: EMItemType = 28
+    public static let recipe: EMItemType = 29
+    public static let review: EMItemType = 30
+    public static let sculpture: EMItemType = 31
+    public static let tvEpisode: EMItemType = 32
+    public static let tvSeason: EMItemType = 33
+    public static let tvSeries: EMItemType = 34
+    public static let webPage: EMItemType = 35
+    public static let aboutPage: EMItemType = 36
+    public static let checkoutPage: EMItemType = 37
+    public static let collectionPage: EMItemType = 38
+    public static let imageGallery: EMItemType = 39
+    public static let videoGallery: EMItemType = 40
+    public static let contactPage: EMItemType = 41
+    public static let itemPage: EMItemType = 42
+    public static let profilePage: EMItemType = 43
+    public static let searchResultsPage: EMItemType = 44
+    public static let webPageElement: EMItemType = 45
+    public static let siteNavigationElement: EMItemType = 46
+    public static let table: EMItemType = 47
+    public static let wpAdBlock: EMItemType = 48
+    public static let wpFooter: EMItemType = 49
+    public static let wpHeader: EMItemType = 50
+    public static let wpSidebar: EMItemType = 51
+    public static let businessEvent: EMItemType = 52
+    public static let childrensEvent: EMItemType = 53
+    public static let comedyEvent: EMItemType = 54
+    public static let danceEvent: EMItemType = 55
+    public static let educationEvent: EMItemType = 56
+    public static let festival: EMItemType = 57
+    public static let foodEvent: EMItemType = 58
+    public static let literaryEvent: EMItemType = 59
+    public static let musicEvent: EMItemType = 60
+    public static let saleEvent: EMItemType = 61
+    public static let socialEvent: EMItemType = 62
+    public static let sportsEvent: EMItemType = 63
+    public static let theaterEvent: EMItemType = 64
+    public static let visualArtsEvent: EMItemType = 65
+    public static let corporation: EMItemType = 66
+    public static let educationalOrganization: EMItemType = 67
+    public static let collegeOrUniversity: EMItemType = 68
+    public static let elementarySchool: EMItemType = 69
+    public static let highSchool: EMItemType = 70
+    public static let middleSchool: EMItemType = 71
+    public static let preschool: EMItemType = 72
+    public static let school: EMItemType = 73
+    public static let governmentOrganization: EMItemType = 74
+    public static let localBusiness: EMItemType = 75
+    public static let animalShelter: EMItemType = 76
+    public static let automotiveBusiness: EMItemType = 77
+    public static let autoBodyShop: EMItemType = 78
+    public static let autoDealer: EMItemType = 79
+    public static let autoPartsStore: EMItemType = 80
+    public static let autoRental: EMItemType = 81
+    public static let autoRepair: EMItemType = 82
+    public static let autoWash: EMItemType = 83
+    public static let gasStation: EMItemType = 84
+    public static let motorcycleDealer: EMItemType = 85
+    public static let motorcycleRepair: EMItemType = 86
+    public static let childCare: EMItemType = 87
+    public static let dryCleaningOrLaundry: EMItemType = 88
+    public static let emergencyService: EMItemType = 89
+    public static let fireStation: EMItemType = 90
+    public static let hospital: EMItemType = 91
+    public static let policeStation: EMItemType = 92
+    public static let employmentAgengy: EMItemType = 93
+    public static let entertainmentBusiness: EMItemType = 94
+    public static let adultEntertainment: EMItemType = 95
+    public static let amusementPark: EMItemType = 96
+    public static let artGallery: EMItemType = 97
+    public static let casino: EMItemType = 98
+    public static let comedyClub: EMItemType = 99
+    public static let movieTheater: EMItemType = 100
+    public static let nightClub: EMItemType = 101
+    public static let financialService: EMItemType = 102
+    public static let accountingService: EMItemType = 103
+    public static let automatedTeller: EMItemType = 104
+    public static let bankOrCreditUnion: EMItemType = 105
+    public static let insuranceAgency: EMItemType = 106
+    public static let foodEstablishment: EMItemType = 107
+    public static let bakery: EMItemType = 108
+    public static let barOrPub: EMItemType = 109
+    public static let brewery: EMItemType = 110
+    public static let cafeOrCoffeeShop: EMItemType = 111
+    public static let fastFoodRestaurant: EMItemType = 112
+    public static let iceCreamShop: EMItemType = 113
+    public static let restaurant: EMItemType = 114
+    public static let winery: EMItemType = 115
+    public static let governmentOffice: EMItemType = 116
+    public static let postOffice: EMItemType = 117
+    public static let healthAndBeautyBusiness: EMItemType = 118
+    public static let beautySalon: EMItemType = 119
+    public static let daySpa: EMItemType = 120
+    public static let hairSalon: EMItemType = 121
+    public static let healthClub: EMItemType = 122
+    public static let nailSalon: EMItemType = 123
+    public static let tattooParlor: EMItemType = 124
+    public static let homeAndConstructionBusiness: EMItemType = 125
+    public static let electrician: EMItemType = 126
+    public static let generalContractor: EMItemType = 127
+    public static let hvacBusiness: EMItemType = 128
+    public static let housePainter: EMItemType = 129
+    public static let locksmith: EMItemType = 130
+    public static let movingCompany: EMItemType = 131
+    public static let plumber: EMItemType = 132
+    public static let roofingContractor: EMItemType = 133
+    public static let internetCafe: EMItemType = 134
+    public static let library: EMItemType = 135
+    public static let lodgingBusiness: EMItemType = 136
+    public static let bedAndBreakfast: EMItemType = 137
+    public static let hostel: EMItemType = 138
+    public static let hotel: EMItemType = 139
+    public static let motel: EMItemType = 140
+    public static let medicalOrganization: EMItemType = 141
+    public static let dentist: EMItemType = 142
+    public static let medicalClinic: EMItemType = 144
+    public static let optician: EMItemType = 145
+    public static let pharmacy: EMItemType = 146
+    public static let physician: EMItemType = 147
+    public static let veterinaryCare: EMItemType = 148
+    public static let professionalService: EMItemType = 149
+    public static let attorney: EMItemType = 151
+    public static let notary: EMItemType = 157
+    public static let radioStation: EMItemType = 160
+    public static let realEstateAgent: EMItemType = 161
+    public static let recyclingCenter: EMItemType = 162
+    public static let selfStorage: EMItemType = 163
+    public static let shoppingCenter: EMItemType = 164
+    public static let sportsActivityLocation: EMItemType = 165
+    public static let bowlingAlley: EMItemType = 166
+    public static let exerciseGym: EMItemType = 167
+    public static let golfCourse: EMItemType = 168
+    public static let publicSwimmingPool: EMItemType = 170
+    public static let skiResort: EMItemType = 171
+    public static let sportsClub: EMItemType = 172
+    public static let stadiumOrArena: EMItemType = 173
+    public static let tennisComplex: EMItemType = 174
+    public static let store: EMItemType = 175
+    public static let bikeStore: EMItemType = 177
+    public static let bookStore: EMItemType = 178
+    public static let clothingStore: EMItemType = 179
+    public static let computerStore: EMItemType = 180
+    public static let convenienceStore: EMItemType = 181
+    public static let departmentStore: EMItemType = 182
+    public static let electronicsStore: EMItemType = 183
+    public static let florist: EMItemType = 184
+    public static let furnitureStore: EMItemType = 185
+    public static let gardenStore: EMItemType = 186
+    public static let groceryStore: EMItemType = 187
+    public static let hardwareStore: EMItemType = 188
+    public static let hobbyShop: EMItemType = 189
+    public static let homeGoodsStore: EMItemType = 190
+    public static let jewelryStore: EMItemType = 191
+    public static let liquorStore: EMItemType = 192
+    public static let mensClothingStore: EMItemType = 193
+    public static let mobilePhoneStore: EMItemType = 194
+    public static let movieRentalStore: EMItemType = 195
+    public static let musicStore: EMItemType = 196
+    public static let officeEquipmentStore: EMItemType = 197
+    public static let outletStore: EMItemType = 198
+    public static let pawnShop: EMItemType = 199
+    public static let petStore: EMItemType = 200
+    public static let shoeStore: EMItemType = 201
+    public static let sportingGoodsStore: EMItemType = 202
+    public static let tireShop: EMItemType = 203
+    public static let toyStore: EMItemType = 204
+    public static let wholesaleStore: EMItemType = 205
+    public static let televisionStation: EMItemType = 206
+    public static let touristInformationCenter: EMItemType = 207
+    public static let travelAgency: EMItemType = 208
+    public static let residence: EMItemType = 209
+    public static let apartmentComplex: EMItemType = 210
+    public static let gatedResidenceCommunity: EMItemType = 211
+    public static let singleFamilyResidence: EMItemType = 212
+    public static let touristAttraction: EMItemType = 213
+    public static let userPlusOnes: EMItemType = 215
+    public static let presentationObject: EMItemType = 216
+    public static let documentObject: EMItemType = 217
+    public static let spreadsheetObject: EMItemType = 218
+    public static let scholarlyArticle: EMItemType = 219
+    public static let userInteraction: EMItemType = 220
+    public static let enumeration: EMItemType = 222
+    public static let bookFormatType: EMItemType = 223
+    public static let itemAvailability: EMItemType = 224
+    public static let offerItemCondition: EMItemType = 225
+    public static let jobPosting: EMItemType = 226
+    public static let language: EMItemType = 227
+    public static let offer: EMItemType = 228
+    public static let quantity: EMItemType = 229
+    public static let distance: EMItemType = 230
+    public static let duration: EMItemType = 231
+    public static let energy: EMItemType = 232
+    public static let mass: EMItemType = 233
+    public static let rating: EMItemType = 234
+    public static let aggregateRating: EMItemType = 235
+    public static let structuredValue: EMItemType = 236
+    public static let contactPoint: EMItemType = 237
+    public static let postalAddress: EMItemType = 238
+    public static let geoCoordinates: EMItemType = 239
+    public static let geoShape: EMItemType = 240
+    public static let nutritionInformation: EMItemType = 241
+    public static let formObject: EMItemType = 242
+    public static let carouselFrame: EMItemType = 243
+    public static let plusEvent: EMItemType = 244
+    public static let exampleObject: EMItemType = 245
+    public static let square: EMItemType = 246
+    public static let plusPhoto: EMItemType = 249
+    public static let plusPhotoAlbum: EMItemType = 250
+    public static let productReview: EMItemType = 251
+    public static let financialQuote: EMItemType = 252
+    public static let deprecatedTourObject: EMItemType = 253
+    public static let hangout: EMItemType = 254
+    public static let hangoutBroadcast: EMItemType = 255
+    public static let hangoutConsumer: EMItemType = 256
+    public static let unknown: EMItemType = 257
+    public static let googleChart: EMItemType = 258
+    public static let performingGroup: EMItemType = 259
+    public static let musicGroup: EMItemType = 260
+    public static let plusPhotosAddedToCollection: EMItemType = 261
+    public static let drawingObject: EMItemType = 262
+    public static let placeReview: EMItemType = 263
+    public static let comment: EMItemType = 264
+    public static let fileObject: EMItemType = 265
+    public static let checkin: EMItemType = 266
+    public static let reservation: EMItemType = 267
+    public static let administrativeArea: EMItemType = 268
+    public static let city: EMItemType = 269
+    public static let country: EMItemType = 270
+    public static let state: EMItemType = 271
+    public static let civicStructure: EMItemType = 272
+    public static let airport: EMItemType = 273
+    public static let aquarium: EMItemType = 274
+    public static let beach: EMItemType = 275
+    public static let busStation: EMItemType = 276
+    public static let busStop: EMItemType = 277
+    public static let campground: EMItemType = 278
+    public static let cemetery: EMItemType = 279
+    public static let crematorium: EMItemType = 280
+    public static let eventVenue: EMItemType = 281
+    public static let governmentBuilding: EMItemType = 282
+    public static let cityHall: EMItemType = 283
+    public static let courthouse: EMItemType = 284
+    public static let defenceEstablishment: EMItemType = 285
+    public static let embassy: EMItemType = 286
+    public static let legislativeBuilding: EMItemType = 287
+    public static let museum: EMItemType = 288
+    public static let musicVenue: EMItemType = 289
+    public static let park: EMItemType = 290
+    public static let parkingFacility: EMItemType = 291
+    public static let performingArtsTheater: EMItemType = 292
+    public static let placeOfWorship: EMItemType = 293
+    public static let buddhistTemple: EMItemType = 294
+    public static let catholicChurch: EMItemType = 295
+    public static let church: EMItemType = 296
+    public static let hinduTemple: EMItemType = 297
+    public static let mosque: EMItemType = 298
+    public static let synagogue: EMItemType = 299
+    public static let playground: EMItemType = 300
+    public static let rVPark: EMItemType = 301
+    public static let softwareApplication: EMItemType = 302
+    public static let mobileApplication: EMItemType = 303
+    public static let webApplication: EMItemType = 304
+    public static let subwayStation: EMItemType = 305
+    public static let taxiStand: EMItemType = 306
+    public static let trainStation: EMItemType = 307
+    public static let zoo: EMItemType = 308
+    public static let landform: EMItemType = 309
+    public static let bodyOfWater: EMItemType = 310
+    public static let canal: EMItemType = 311
+    public static let lakeBodyOfWater: EMItemType = 312
+    public static let oceanBodyOfWater: EMItemType = 313
+    public static let pond: EMItemType = 314
+    public static let reservoir: EMItemType = 315
+    public static let riverBodyOfWater: EMItemType = 316
+    public static let seaBodyOfWater: EMItemType = 317
+    public static let waterfall: EMItemType = 318
+    public static let continent: EMItemType = 319
+    public static let mountain: EMItemType = 320
+    public static let volcano: EMItemType = 321
+    public static let landmarksOrHistoricalBuildings: EMItemType = 322
+    public static let playMusicTrack: EMItemType = 323
+    public static let playMusicAlbum: EMItemType = 324
+    public static let travelEvent: EMItemType = 325
+    public static let recommendedPeople: EMItemType = 326
+    public static let plusPage: EMItemType = 327
+    public static let magazine: EMItemType = 328
+    public static let plusPost: EMItemType = 329
+    public static let appInvite: EMItemType = 330
+    public static let squareInvite: EMItemType = 331
+    public static let localPlusPhotoAlbum: EMItemType = 332
+    public static let emotishare: EMItemType = 334
+    public static let thingV2: EMItemType = 335
+    public static let creativeWorkV2: EMItemType = 336
+    public static let webPageV2: EMItemType = 337
+    public static let mediaObjectV2: EMItemType = 338
+    public static let imageObjectV2: EMItemType = 339
+    public static let placeV2: EMItemType = 340
+    public static let postalAddressV2: EMItemType = 342
+    public static let geoCoordinatesV2: EMItemType = 343
+    public static let plusPhotoV2: EMItemType = 344
+    public static let plusPhotoAlbumV2: EMItemType = 349
+    public static let personV2: EMItemType = 350
+    public static let organizationV2: EMItemType = 351
+    public static let eventV2: EMItemType = 352
+    public static let hangoutV2: EMItemType = 353
+    public static let videoObjectV2: EMItemType = 354
+    public static let squareV2: EMItemType = 355
+    public static let squareInviteV2: EMItemType = 356
+    public static let checkinV2: EMItemType = 357
+    public static let documentObjectV2: EMItemType = 358
+    public static let drawingObjectV2: EMItemType = 359
+    public static let fileObjectV2: EMItemType = 360
+    public static let formObjectV2: EMItemType = 361
+    public static let presentationObjectV2: EMItemType = 362
+    public static let spreadsheetObjectV2: EMItemType = 363
+    public static let driveObjectV2: EMItemType = 364
+    public static let basicInteractionV2: EMItemType = 365
+    public static let interactionV2: EMItemType = 366
+    public static let offerV2: EMItemType = 367
+    public static let audioObjectV2: EMItemType = 368
+    public static let aggregateRatingV2: EMItemType = 369
+    public static let movieV2: EMItemType = 370
+    public static let ratingV2: EMItemType = 371
+    public static let musicAlbumV2: EMItemType = 372
+    public static let musicGroupV2: EMItemType = 373
+    public static let musicPlaylistV2: EMItemType = 374
+    public static let musicRecordingV2: EMItemType = 375
+    public static let bookV2: EMItemType = 377
+    public static let googleOfferV2: EMItemType = 378
+    public static let localBusinessV2: EMItemType = 379
+    public static let storyV2: EMItemType = 380
+    public static let emotishareV2: EMItemType = 382
+    public static let commentV2: EMItemType = 383
+    public static let financialQuoteV2: EMItemType = 384
+    public static let plusPageV2: EMItemType = 385
+    public static let magazineV2: EMItemType = 386
+    public static let playObjectV2: EMItemType = 387
+    public static let reviewV2: EMItemType = 388
+    public static let mobileApplicationV2: EMItemType = 389
+    public static let plusPostV2: EMItemType = 390
+    public static let articleV2: EMItemType = 391
+    public static let productReviewV2: EMItemType = 392
+    public static let playMusicAlbumV2: EMItemType = 393
+    public static let tvSeriesV2: EMItemType = 394
+    public static let deprecatedTourObjectV2: EMItemType = 395
+    public static let localPlusPhotoAlbumV2: EMItemType = 397
+    public static let reservationV2: EMItemType = 398
+    public static let playMusicTrackV2: EMItemType = 399
+    public static let tvEpisodeV2: EMItemType = 400
+    public static let placeReviewV2: EMItemType = 401
+    public static let blogV2: EMItemType = 402
+    public static let blogPostingV2: EMItemType = 403
+    public static let plusEventV2: EMItemType = 404
+    public static let plusPhotosAddedToCollectionV2: EMItemType = 405
+    public static let eventTimeV2: EMItemType = 406
+    public static let plusPhotoCollectionV2: EMItemType = 407
+    public static let pollV2: EMItemType = 408
+    public static let pollOptionV2: EMItemType = 409
+    public static let hoaPlusEventV2: EMItemType = 410
+    public static let videoGalleryV2: EMItemType = 411
+    public static let youtubeChannelV2: EMItemType = 412
+    public static let collexionV2: EMItemType = 413
+    public static let plusSoftwareApplicationV2: EMItemType = 414
+    public static let actionV2: EMItemType = 415
+    public static let consumeActionV2: EMItemType = 416
+    public static let listenActionV2: EMItemType = 417
+    public static let tradeActionV2: EMItemType = 418
+    public static let createActionV2: EMItemType = 419
+    public static let assessActionV2: EMItemType = 420
+    public static let buyActionV2: EMItemType = 421
+    public static let reactActionV2: EMItemType = 422
+    public static let reviewActionV2: EMItemType = 423
+    public static let wantActionV2: EMItemType = 424
+    public static let updateActionV2: EMItemType = 425
+    public static let addActionV2: EMItemType = 426
+    public static let findActionV2: EMItemType = 427
+    public static let interactActionV2: EMItemType = 428
+    public static let communicateActionV2: EMItemType = 429
+    public static let discoverActionV2: EMItemType = 430
+    public static let checkInActionV2: EMItemType = 431
+    public static let commentActionV2: EMItemType = 432
+    public static let writeActionV2: EMItemType = 433
+    public static let organizeActionV2: EMItemType = 434
+    public static let planActionV2: EMItemType = 435
+    public static let reserveActionV2: EMItemType = 436
+    public static let plusMediaObjectV2: EMItemType = 437
+    public static let plusAudioV2: EMItemType = 438
+    public static let newsArticleV2: EMItemType = 439
+    public static let plusMediaCollectionV2: EMItemType = 440
+    public static let stickerV2: EMItemType = 441
+    public static let viewActionV2: EMItemType = 442
+    public static let entryPointV2: EMItemType = 443
+    public static let softwareApplicationV2: EMItemType = 444
+    public static let date: EMItemType = 445
+    public static let plusReshareV2: EMItemType = 446
+    public static let chalkboardV2: EMItemType = 447
+    public static let googleUserPhotoV2: EMItemType = 448
+    public static let googleUserPhotoAlbum: EMItemType = 449
+    public static let hangoutChatMessage: EMItemType = 450
+    public static let hangoutQuote: EMItemType = 451
+    
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct EMClientEmbedOptions: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case user_id = 1
-        case presence = 2
+        case includeTypeArray = 1
     }
     
-    public var user_id: ParticipantId? = nil
-    public var presence: Presence? = nil
+    public var includeTypeArray: [EMItemType] = []
     
-    public init(user_id: ParticipantId? = nil, presence: Presence? = nil) {
-        self.user_id = user_id
-        self.presence = presence
+    public init(includeTypeArray: [EMItemType] = []) {
+        self.includeTypeArray = includeTypeArray
     }
 }
 
-public struct ClientIdentifier: ProtoMessage {
+public struct EMPlaceV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case resource = 1
-        case client_id = 2
-        case participant_log_id = 4
+        case URL = 1
+        case imageURL = 2
+        case name = 3
+        case description_p = 4
+        case descriptionTruncated = 5
+        case proxiedImage = 6
+        case proxiedFaviconURL = 7
+        case authorArray = 8
+        case about = 9
+        case relatedImageArray = 11
+        case sourceName = 12
+        case address = 24
+        case geo = 25
+        case clusterId = 26
+        case ownerObfuscatedId = 27
+        case mapURL = 28
+        case referenceId = 29
+        case faviconURL = 75
+        case aggregateRating = 82
+        case id_p = 106
+        case representativeImage = 185
+        case telephone = 227
+        case faxNumber = 228
+        case externalId = 254
+        case isClaimedByOwner = 267
+        case placeId = 280
+        case ampURL = 282
+        case destinationURL = 287
     }
     
-    public var resource: String? = nil
-    public var client_id: String? = nil
-    public var participant_log_id: String? = nil
+    public var URL: String? = nil
+    public var imageURL: String? = nil
+    public var name: String? = nil
+    public var description_p: String? = nil
+    public var descriptionTruncated: String? = nil
+    public var proxiedImage: EMThumbnail? = nil
+    public var proxiedFaviconURL: String? = nil
+    public var authorArray: [/*EMEmbedClientItem*/String] = []
+    public var about: /*EMEmbedClientItem*/String? = nil
+    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var sourceName: String? = nil
+    public var address: EMEmbedClientItem_EMPostalAddressV2_Holder? = nil
+    public var geo: EMEmbedClientItem_EMGeoCoordinatesV2_Holder? = nil
+    public var clusterId: String? = nil
+    public var ownerObfuscatedId: String? = nil
+    public var mapURL: String? = nil
+    public var referenceId: String? = nil
+    public var faviconURL: String? = nil
+    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
+    public var id_p: String? = nil
+    public var representativeImage: EMEmbedClientItem_EMImageObjectV2_Holder? = nil
+    public var telephone: String? = nil
+    public var faxNumber: String? = nil
+    public var externalId: String? = nil
+    public var isClaimedByOwner: Bool? = nil
+    public var placeId: String? = nil
+    public var ampURL: String? = nil
+    public var destinationURL: String? = nil
     
-    public init(resource: String? = nil, client_id: String? = nil, participant_log_id: String? = nil) {
-        self.resource = resource
-        self.client_id = client_id
-        self.participant_log_id = participant_log_id
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, address: EMEmbedClientItem_EMPostalAddressV2_Holder? = nil, geo: EMEmbedClientItem_EMGeoCoordinatesV2_Holder? = nil, clusterId: String? = nil, ownerObfuscatedId: String? = nil, mapURL: String? = nil, referenceId: String? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, id_p: String? = nil, representativeImage: EMEmbedClientItem_EMImageObjectV2_Holder? = nil, telephone: String? = nil, faxNumber: String? = nil, externalId: String? = nil, isClaimedByOwner: Bool? = nil, placeId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+        self.URL = URL
+        self.imageURL = imageURL
+        self.name = name
+        self.description_p = description_p
+        self.descriptionTruncated = descriptionTruncated
+        self.proxiedImage = proxiedImage
+        self.proxiedFaviconURL = proxiedFaviconURL
+        self.authorArray = authorArray
+        self.about = about
+        self.relatedImageArray = relatedImageArray
+        self.sourceName = sourceName
+        self.address = address
+        self.geo = geo
+        self.clusterId = clusterId
+        self.ownerObfuscatedId = ownerObfuscatedId
+        self.mapURL = mapURL
+        self.referenceId = referenceId
+        self.faviconURL = faviconURL
+        self.aggregateRating = aggregateRating
+        self.id_p = id_p
+        self.representativeImage = representativeImage
+        self.telephone = telephone
+        self.faxNumber = faxNumber
+        self.externalId = externalId
+        self.isClaimedByOwner = isClaimedByOwner
+        self.placeId = placeId
+        self.ampURL = ampURL
+        self.destinationURL = destinationURL
     }
 }
 
-public struct ClientPresenceState: ProtoMessage {
+public struct EMThumbnail: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case identifier = 1
-        case state = 2
-        case expiration_timestamp = 3
+        case imageURL = 1
+        case boxWidthPx = 2
+        case boxHeightPx = 3
+        case exactWidth = 4
+        case exactHeight = 5
+        case recenterVertically = 6
+        case uncroppedImageURL = 7
+        case imageHeightPx = 8
     }
     
-    public var identifier: ClientIdentifier? = nil
-    public var state: ClientPresenceStateType? = nil
-    public var expiration_timestamp: UInt64? = nil
+    public var imageURL: String? = nil
+    public var boxWidthPx: Int32? = nil
+    public var boxHeightPx: Int32? = nil
+    public var exactWidth: Bool? = nil
+    public var exactHeight: Bool? = nil
+    public var recenterVertically: Bool? = nil
+    public var uncroppedImageURL: String? = nil
+    public var imageHeightPx: Int32? = nil
     
-    public init(identifier: ClientIdentifier? = nil, state: ClientPresenceStateType? = nil, expiration_timestamp: UInt64? = nil) {
-        self.identifier = identifier
-        self.state = state
-        self.expiration_timestamp = expiration_timestamp
+    public init(imageURL: String? = nil, boxWidthPx: Int32? = nil, boxHeightPx: Int32? = nil, exactWidth: Bool? = nil, exactHeight: Bool? = nil, recenterVertically: Bool? = nil, uncroppedImageURL: String? = nil, imageHeightPx: Int32? = nil) {
+        self.imageURL = imageURL
+        self.boxWidthPx = boxWidthPx
+        self.boxHeightPx = boxHeightPx
+        self.exactWidth = exactWidth
+        self.exactHeight = exactHeight
+        self.recenterVertically = recenterVertically
+        self.uncroppedImageURL = uncroppedImageURL
+        self.imageHeightPx = imageHeightPx
     }
 }
 
-public struct UserEventState: ProtoMessage {
+public struct EMPostalAddressV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case user_id = 1
-        case client_generated_id = 2
-        case notification_level = 3
+        case URL = 1
+        case imageURL = 2
+        case name = 3
+        case description_p = 4
+        case descriptionTruncated = 5
+        case proxiedImage = 6
+        case proxiedFaviconURL = 7
+        case authorArray = 8
+        case about = 9
+        case relatedImageArray = 11
+        case sourceName = 12
+        case addressCountry = 30
+        case addressLocality = 31
+        case addressRegion = 32
+        case postOfficeBoxNumber = 33
+        case postalCode = 34
+        case streetAddress = 35
+        case faviconURL = 75
+        case representativeImage = 185
+        case externalId = 254
+        case ampURL = 282
+        case destinationURL = 287
     }
     
-    public var user_id: ParticipantId? = nil
-    public var client_generated_id: String? = nil
-    public var notification_level: NotificationLevel? = nil
+    public var URL: String? = nil
+    public var imageURL: String? = nil
+    public var name: String? = nil
+    public var description_p: String? = nil
+    public var descriptionTruncated: String? = nil
+    public var proxiedImage: EMThumbnail? = nil
+    public var proxiedFaviconURL: String? = nil
+    public var authorArray: [/*EMEmbedClientItem*/String] = []
+    public var about: /*EMEmbedClientItem*/String? = nil
+    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var sourceName: String? = nil
+    public var addressCountry: String? = nil
+    public var addressLocality: String? = nil
+    public var addressRegion: String? = nil
+    public var postOfficeBoxNumber: String? = nil
+    public var postalCode: String? = nil
+    public var streetAddress: String? = nil
+    public var faviconURL: String? = nil
+    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var externalId: String? = nil
+    public var ampURL: String? = nil
+    public var destinationURL: String? = nil
     
-    public init(user_id: ParticipantId? = nil, client_generated_id: String? = nil, notification_level: NotificationLevel? = nil) {
-        self.user_id = user_id
-        self.client_generated_id = client_generated_id
-        self.notification_level = notification_level
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, addressCountry: String? = nil, addressLocality: String? = nil, addressRegion: String? = nil, postOfficeBoxNumber: String? = nil, postalCode: String? = nil, streetAddress: String? = nil, faviconURL: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+        self.URL = URL
+        self.imageURL = imageURL
+        self.name = name
+        self.description_p = description_p
+        self.descriptionTruncated = descriptionTruncated
+        self.proxiedImage = proxiedImage
+        self.proxiedFaviconURL = proxiedFaviconURL
+        self.authorArray = authorArray
+        self.about = about
+        self.relatedImageArray = relatedImageArray
+        self.sourceName = sourceName
+        self.addressCountry = addressCountry
+        self.addressLocality = addressLocality
+        self.addressRegion = addressRegion
+        self.postOfficeBoxNumber = postOfficeBoxNumber
+        self.postalCode = postalCode
+        self.streetAddress = streetAddress
+        self.faviconURL = faviconURL
+        self.representativeImage = representativeImage
+        self.externalId = externalId
+        self.ampURL = ampURL
+        self.destinationURL = destinationURL
     }
 }
 
-public struct Formatting: ProtoMessage {
+public struct EMGeoCoordinatesV2: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case URL = 1
+        case imageURL = 2
+        case name = 3
+        case description_p = 4
+        case descriptionTruncated = 5
+        case proxiedImage = 6
+        case proxiedFaviconURL = 7
+        case authorArray = 8
+        case about = 9
+        case relatedImageArray = 11
+        case sourceName = 12
+        case latitude = 36
+        case longitude = 37
+        case faviconURL = 75
+        case representativeImage = 185
+        case externalId = 254
+        case ampURL = 282
+        case destinationURL = 287
+    }
+    
+    public var URL: String? = nil
+    public var imageURL: String? = nil
+    public var name: String? = nil
+    public var description_p: String? = nil
+    public var descriptionTruncated: String? = nil
+    public var proxiedImage: EMThumbnail? = nil
+    public var proxiedFaviconURL: String? = nil
+    public var authorArray: [/*EMEmbedClientItem*/String] = []
+    public var about: /*EMEmbedClientItem*/String? = nil
+    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var sourceName: String? = nil
+    public var latitude: Double? = nil
+    public var longitude: Double? = nil
+    public var faviconURL: String? = nil
+    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var externalId: String? = nil
+    public var ampURL: String? = nil
+    public var destinationURL: String? = nil
+    
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, latitude: Double? = nil, longitude: Double? = nil, faviconURL: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+        self.URL = URL
+        self.imageURL = imageURL
+        self.name = name
+        self.description_p = description_p
+        self.descriptionTruncated = descriptionTruncated
+        self.proxiedImage = proxiedImage
+        self.proxiedFaviconURL = proxiedFaviconURL
+        self.authorArray = authorArray
+        self.about = about
+        self.relatedImageArray = relatedImageArray
+        self.sourceName = sourceName
+        self.latitude = latitude
+        self.longitude = longitude
+        self.faviconURL = faviconURL
+        self.representativeImage = representativeImage
+        self.externalId = externalId
+        self.ampURL = ampURL
+        self.destinationURL = destinationURL
+    }
+}
+
+public struct EMThingV2: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case URL = 1
+        case imageURL = 2
+        case name = 3
+        case description_p = 4
+        case descriptionTruncated = 5
+        case proxiedImage = 6
+        case proxiedFaviconURL = 7
+        case authorArray = 8
+        case about = 9
+        case relatedImageArray = 11
+        case sourceName = 12
+        case faviconURL = 75
+        case representativeImage = 185
+        case externalId = 254
+        case ampURL = 282
+        case destinationURL = 287
+    }
+    
+    public var URL: String? = nil
+    public var imageURL: String? = nil
+    public var name: String? = nil
+    public var description_p: String? = nil
+    public var descriptionTruncated: String? = nil
+    public var proxiedImage: EMThumbnail? = nil
+    public var proxiedFaviconURL: String? = nil
+    public var authorArray: [/*EMEmbedClientItem*/String] = []
+    public var about: /*EMEmbedClientItem*/String? = nil
+    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var sourceName: String? = nil
+    public var faviconURL: String? = nil
+    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var externalId: String? = nil
+    public var ampURL: String? = nil
+    public var destinationURL: String? = nil
+    
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, faviconURL: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+        self.URL = URL
+        self.imageURL = imageURL
+        self.name = name
+        self.description_p = description_p
+        self.descriptionTruncated = descriptionTruncated
+        self.proxiedImage = proxiedImage
+        self.proxiedFaviconURL = proxiedFaviconURL
+        self.authorArray = authorArray
+        self.about = about
+        self.relatedImageArray = relatedImageArray
+        self.sourceName = sourceName
+        self.faviconURL = faviconURL
+        self.representativeImage = representativeImage
+        self.externalId = externalId
+        self.ampURL = ampURL
+        self.destinationURL = destinationURL
+    }
+}
+
+public struct EMPlusAudioV2: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case URL = 1
+        case imageURL = 2
+        case name = 3
+        case description_p = 4
+        case descriptionTruncated = 5
+        case proxiedImage = 6
+        case proxiedFaviconURL = 7
+        case authorArray = 8
+        case about = 9
+        case text = 10
+        case relatedImageArray = 11
+        case sourceName = 12
+        case canonicalFountainStream = 13
+        case unfilteredFountainStreamArray = 14
+        case premodFountainStreamArray = 15
+        case postmodFountainStreamArray = 16
+        case inboxFountainStreamArray = 17
+        case contentLocation = 18
+        case width = 19
+        case height = 20
+        case widthPx = 21
+        case heightPx = 22
+        case contentURL = 23
+        case ownerObfuscatedId = 27
+        case albumId = 38
+        case photoId = 39
+        case associatedMediaArray = 42
+        case isFamilyFriendly = 65
+        case embedURL = 66
+        case playerType = 67
+        case duration = 68
+        case faviconURL = 75
+        case aggregateRating = 82
+        case offersArray = 83
+        case audio = 96
+        case dateCreated = 111
+        case dateModified = 112
+        case representativeImage = 185
+        case genre = 188
+        case contentRating = 189
+        case inLanguage = 190
+        case datePublished = 191
+        case clientEmbedURL = 215
+        case contentProfileName = 249
+        case contentProfileId = 252
+        case externalId = 254
+        case mediaKey = 258
+        case ampURL = 282
+        case destinationURL = 287
+        case fileFormat = 289
+    }
+    
+    public var URL: String? = nil
+    public var imageURL: String? = nil
+    public var name: String? = nil
+    public var description_p: String? = nil
+    public var descriptionTruncated: String? = nil
+    public var proxiedImage: EMThumbnail? = nil
+    public var proxiedFaviconURL: String? = nil
+    public var authorArray: [/*EMEmbedClientItem*/String] = []
+    public var about: /*EMEmbedClientItem*/String? = nil
+    public var text: String? = nil
+    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var sourceName: String? = nil
+    public var canonicalFountainStream: String? = nil
+    public var unfilteredFountainStreamArray: [String] = []
+    public var premodFountainStreamArray: [String] = []
+    public var postmodFountainStreamArray: [String] = []
+    public var inboxFountainStreamArray: [String] = []
+    public var contentLocation: /*EMEmbedClientItem*/String? = nil
+    public var width: String? = nil
+    public var height: String? = nil
+    public var widthPx: Int32? = nil
+    public var heightPx: Int32? = nil
+    public var contentURL: String? = nil
+    public var ownerObfuscatedId: String? = nil
+    public var albumId: String? = nil
+    public var photoId: String? = nil
+    public var associatedMediaArray: [/*EMEmbedClientItem*/String] = []
+    public var isFamilyFriendly: Bool? = nil
+    public var embedURL: String? = nil
+    public var playerType: String? = nil
+    public var duration: String? = nil
+    public var faviconURL: String? = nil
+    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
+    public var offersArray: [/*EMEmbedClientItem*/String] = []
+    public var audio: /*EMEmbedClientItem*/String? = nil
+    public var dateCreated: String? = nil
+    public var dateModified: String? = nil
+    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var genre: String? = nil
+    public var contentRating: String? = nil
+    public var inLanguage: String? = nil
+    public var datePublished: String? = nil
+    public var clientEmbedURL: String? = nil
+    public var contentProfileName: String? = nil
+    public var contentProfileId: String? = nil
+    public var externalId: String? = nil
+    public var mediaKey: String? = nil
+    public var ampURL: String? = nil
+    public var destinationURL: String? = nil
+    public var fileFormat: String? = nil
+    
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, text: String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: /*EMEmbedClientItem*/String? = nil, width: String? = nil, height: String? = nil, widthPx: Int32? = nil, heightPx: Int32? = nil, contentURL: String? = nil, ownerObfuscatedId: String? = nil, albumId: String? = nil, photoId: String? = nil, associatedMediaArray: [/*EMEmbedClientItem*/String] = [], isFamilyFriendly: Bool? = nil, embedURL: String? = nil, playerType: String? = nil, duration: String? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, offersArray: [/*EMEmbedClientItem*/String] = [], audio: /*EMEmbedClientItem*/String? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, clientEmbedURL: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, mediaKey: String? = nil, ampURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
+        self.URL = URL
+        self.imageURL = imageURL
+        self.name = name
+        self.description_p = description_p
+        self.descriptionTruncated = descriptionTruncated
+        self.proxiedImage = proxiedImage
+        self.proxiedFaviconURL = proxiedFaviconURL
+        self.authorArray = authorArray
+        self.about = about
+        self.text = text
+        self.relatedImageArray = relatedImageArray
+        self.sourceName = sourceName
+        self.canonicalFountainStream = canonicalFountainStream
+        self.unfilteredFountainStreamArray = unfilteredFountainStreamArray
+        self.premodFountainStreamArray = premodFountainStreamArray
+        self.postmodFountainStreamArray = postmodFountainStreamArray
+        self.inboxFountainStreamArray = inboxFountainStreamArray
+        self.contentLocation = contentLocation
+        self.width = width
+        self.height = height
+        self.widthPx = widthPx
+        self.heightPx = heightPx
+        self.contentURL = contentURL
+        self.ownerObfuscatedId = ownerObfuscatedId
+        self.albumId = albumId
+        self.photoId = photoId
+        self.associatedMediaArray = associatedMediaArray
+        self.isFamilyFriendly = isFamilyFriendly
+        self.embedURL = embedURL
+        self.playerType = playerType
+        self.duration = duration
+        self.faviconURL = faviconURL
+        self.aggregateRating = aggregateRating
+        self.offersArray = offersArray
+        self.audio = audio
+        self.dateCreated = dateCreated
+        self.dateModified = dateModified
+        self.representativeImage = representativeImage
+        self.genre = genre
+        self.contentRating = contentRating
+        self.inLanguage = inLanguage
+        self.datePublished = datePublished
+        self.clientEmbedURL = clientEmbedURL
+        self.contentProfileName = contentProfileName
+        self.contentProfileId = contentProfileId
+        self.externalId = externalId
+        self.mediaKey = mediaKey
+        self.ampURL = ampURL
+        self.destinationURL = destinationURL
+        self.fileFormat = fileFormat
+    }
+}
+
+public struct EMPersonV2: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case URL = 1
+        case imageURL = 2
+        case name = 3
+        case description_p = 4
+        case descriptionTruncated = 5
+        case proxiedImage = 6
+        case proxiedFaviconURL = 7
+        case authorArray = 8
+        case about = 9
+        case relatedImageArray = 11
+        case sourceName = 12
+        case ownerObfuscatedId = 27
+        case gender = 48
+        case email = 49
+        case faviconURL = 75
+        case representativeImage = 185
+        case externalId = 254
+        case ampURL = 282
+        case destinationURL = 287
+    }
+    
+    public var URL: String? = nil
+    public var imageURL: String? = nil
+    public var name: String? = nil
+    public var description_p: String? = nil
+    public var descriptionTruncated: String? = nil
+    public var proxiedImage: EMThumbnail? = nil
+    public var proxiedFaviconURL: String? = nil
+    public var authorArray: [/*EMEmbedClientItem*/String] = []
+    public var about: /*EMEmbedClientItem*/String? = nil
+    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var sourceName: String? = nil
+    public var ownerObfuscatedId: String? = nil
+    public var gender: String? = nil
+    public var email: String? = nil
+    public var faviconURL: String? = nil
+    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var externalId: String? = nil
+    public var ampURL: String? = nil
+    public var destinationURL: String? = nil
+    
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, ownerObfuscatedId: String? = nil, gender: String? = nil, email: String? = nil, faviconURL: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+        self.URL = URL
+        self.imageURL = imageURL
+        self.name = name
+        self.description_p = description_p
+        self.descriptionTruncated = descriptionTruncated
+        self.proxiedImage = proxiedImage
+        self.proxiedFaviconURL = proxiedFaviconURL
+        self.authorArray = authorArray
+        self.about = about
+        self.relatedImageArray = relatedImageArray
+        self.sourceName = sourceName
+        self.ownerObfuscatedId = ownerObfuscatedId
+        self.gender = gender
+        self.email = email
+        self.faviconURL = faviconURL
+        self.representativeImage = representativeImage
+        self.externalId = externalId
+        self.ampURL = ampURL
+        self.destinationURL = destinationURL
+    }
+}
+
+public struct EMImageObjectV2: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case URL = 1
+        case imageURL = 2
+        case name = 3
+        case description_p = 4
+        case descriptionTruncated = 5
+        case proxiedImage = 6
+        case proxiedFaviconURL = 7
+        case authorArray = 8
+        case about = 9
+        case text = 10
+        case relatedImageArray = 11
+        case sourceName = 12
+        case canonicalFountainStream = 13
+        case unfilteredFountainStreamArray = 14
+        case premodFountainStreamArray = 15
+        case postmodFountainStreamArray = 16
+        case inboxFountainStreamArray = 17
+        case contentLocation = 18
+        case width = 19
+        case height = 20
+        case widthPx = 21
+        case heightPx = 22
+        case contentURL = 23
+        case associatedMediaArray = 42
+        case isFamilyFriendly = 65
+        case embedURL = 66
+        case playerType = 67
+        case duration = 68
+        case faviconURL = 75
+        case aggregateRating = 82
+        case offersArray = 83
+        case audio = 96
+        case dateCreated = 111
+        case dateModified = 112
+        case representativeImage = 185
+        case genre = 188
+        case contentRating = 189
+        case inLanguage = 190
+        case datePublished = 191
+        case contentProfileName = 249
+        case contentProfileId = 252
+        case externalId = 254
+        case ampURL = 282
+        case destinationURL = 287
+        case fileFormat = 289
+    }
+    
+    public var URL: String? = nil
+    public var imageURL: String? = nil
+    public var name: String? = nil
+    public var description_p: String? = nil
+    public var descriptionTruncated: String? = nil
+    public var proxiedImage: EMThumbnail? = nil
+    public var proxiedFaviconURL: String? = nil
+    public var authorArray: [/*EMEmbedClientItem*/String] = []
+    public var about: /*EMEmbedClientItem*/String? = nil
+    public var text: String? = nil
+    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var sourceName: String? = nil
+    public var canonicalFountainStream: String? = nil
+    public var unfilteredFountainStreamArray: [String] = []
+    public var premodFountainStreamArray: [String] = []
+    public var postmodFountainStreamArray: [String] = []
+    public var inboxFountainStreamArray: [String] = []
+    public var contentLocation: /*EMEmbedClientItem*/String? = nil
+    public var width: String? = nil
+    public var height: String? = nil
+    public var widthPx: Int32? = nil
+    public var heightPx: Int32? = nil
+    public var contentURL: String? = nil
+    public var associatedMediaArray: [/*EMEmbedClientItem*/String] = []
+    public var isFamilyFriendly: Bool? = nil
+    public var embedURL: String? = nil
+    public var playerType: String? = nil
+    public var duration: String? = nil
+    public var faviconURL: String? = nil
+    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
+    public var offersArray: [/*EMEmbedClientItem*/String] = []
+    public var audio: /*EMEmbedClientItem*/String? = nil
+    public var dateCreated: String? = nil
+    public var dateModified: String? = nil
+    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var genre: String? = nil
+    public var contentRating: String? = nil
+    public var inLanguage: String? = nil
+    public var datePublished: String? = nil
+    public var contentProfileName: String? = nil
+    public var contentProfileId: String? = nil
+    public var externalId: String? = nil
+    public var ampURL: String? = nil
+    public var destinationURL: String? = nil
+    public var fileFormat: String? = nil
+    
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, text: String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: /*EMEmbedClientItem*/String? = nil, width: String? = nil, height: String? = nil, widthPx: Int32? = nil, heightPx: Int32? = nil, contentURL: String? = nil, associatedMediaArray: [/*EMEmbedClientItem*/String] = [], isFamilyFriendly: Bool? = nil, embedURL: String? = nil, playerType: String? = nil, duration: String? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, offersArray: [/*EMEmbedClientItem*/String] = [], audio: /*EMEmbedClientItem*/String? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
+        self.URL = URL
+        self.imageURL = imageURL
+        self.name = name
+        self.description_p = description_p
+        self.descriptionTruncated = descriptionTruncated
+        self.proxiedImage = proxiedImage
+        self.proxiedFaviconURL = proxiedFaviconURL
+        self.authorArray = authorArray
+        self.about = about
+        self.text = text
+        self.relatedImageArray = relatedImageArray
+        self.sourceName = sourceName
+        self.canonicalFountainStream = canonicalFountainStream
+        self.unfilteredFountainStreamArray = unfilteredFountainStreamArray
+        self.premodFountainStreamArray = premodFountainStreamArray
+        self.postmodFountainStreamArray = postmodFountainStreamArray
+        self.inboxFountainStreamArray = inboxFountainStreamArray
+        self.contentLocation = contentLocation
+        self.width = width
+        self.height = height
+        self.widthPx = widthPx
+        self.heightPx = heightPx
+        self.contentURL = contentURL
+        self.associatedMediaArray = associatedMediaArray
+        self.isFamilyFriendly = isFamilyFriendly
+        self.embedURL = embedURL
+        self.playerType = playerType
+        self.duration = duration
+        self.faviconURL = faviconURL
+        self.aggregateRating = aggregateRating
+        self.offersArray = offersArray
+        self.audio = audio
+        self.dateCreated = dateCreated
+        self.dateModified = dateModified
+        self.representativeImage = representativeImage
+        self.genre = genre
+        self.contentRating = contentRating
+        self.inLanguage = inLanguage
+        self.datePublished = datePublished
+        self.contentProfileName = contentProfileName
+        self.contentProfileId = contentProfileId
+        self.externalId = externalId
+        self.ampURL = ampURL
+        self.destinationURL = destinationURL
+        self.fileFormat = fileFormat
+    }
+}
+
+public struct EMWebPageV2: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case URL = 1
+        case imageURL = 2
+        case name = 3
+        case description_p = 4
+        case descriptionTruncated = 5
+        case proxiedImage = 6
+        case proxiedFaviconURL = 7
+        case authorArray = 8
+        case about = 9
+        case text = 10
+        case relatedImageArray = 11
+        case sourceName = 12
+        case canonicalFountainStream = 13
+        case unfilteredFountainStreamArray = 14
+        case premodFountainStreamArray = 15
+        case postmodFountainStreamArray = 16
+        case inboxFountainStreamArray = 17
+        case contentLocation = 18
+        case associatedMediaArray = 42
+        case isFamilyFriendly = 65
+        case faviconURL = 75
+        case aggregateRating = 82
+        case offersArray = 83
+        case audio = 96
+        case dateCreated = 111
+        case dateModified = 112
+        case representativeImage = 185
+        case genre = 188
+        case contentRating = 189
+        case inLanguage = 190
+        case datePublished = 191
+        case contentProfileName = 249
+        case contentProfileId = 252
+        case externalId = 254
+        case ampURL = 282
+        case destinationURL = 287
+        case fileFormat = 289
+    }
+    
+    public var URL: String? = nil
+    public var imageURL: String? = nil
+    public var name: String? = nil
+    public var description_p: String? = nil
+    public var descriptionTruncated: String? = nil
+    public var proxiedImage: EMThumbnail? = nil
+    public var proxiedFaviconURL: String? = nil
+    public var authorArray: [/*EMEmbedClientItem*/String] = []
+    public var about: /*EMEmbedClientItem*/String? = nil
+    public var text: String? = nil
+    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var sourceName: String? = nil
+    public var canonicalFountainStream: String? = nil
+    public var unfilteredFountainStreamArray: [String] = []
+    public var premodFountainStreamArray: [String] = []
+    public var postmodFountainStreamArray: [String] = []
+    public var inboxFountainStreamArray: [String] = []
+    public var contentLocation: /*EMEmbedClientItem*/String? = nil
+    public var associatedMediaArray: [/*EMEmbedClientItem*/String] = []
+    public var isFamilyFriendly: Bool? = nil
+    public var faviconURL: String? = nil
+    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
+    public var offersArray: [/*EMEmbedClientItem*/String] = []
+    public var audio: /*EMEmbedClientItem*/String? = nil
+    public var dateCreated: String? = nil
+    public var dateModified: String? = nil
+    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var genre: String? = nil
+    public var contentRating: String? = nil
+    public var inLanguage: String? = nil
+    public var datePublished: String? = nil
+    public var contentProfileName: String? = nil
+    public var contentProfileId: String? = nil
+    public var externalId: String? = nil
+    public var ampURL: String? = nil
+    public var destinationURL: String? = nil
+    public var fileFormat: String? = nil
+    
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, text: String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: /*EMEmbedClientItem*/String? = nil, associatedMediaArray: [/*EMEmbedClientItem*/String] = [], isFamilyFriendly: Bool? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, offersArray: [/*EMEmbedClientItem*/String] = [], audio: /*EMEmbedClientItem*/String? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
+        self.URL = URL
+        self.imageURL = imageURL
+        self.name = name
+        self.description_p = description_p
+        self.descriptionTruncated = descriptionTruncated
+        self.proxiedImage = proxiedImage
+        self.proxiedFaviconURL = proxiedFaviconURL
+        self.authorArray = authorArray
+        self.about = about
+        self.text = text
+        self.relatedImageArray = relatedImageArray
+        self.sourceName = sourceName
+        self.canonicalFountainStream = canonicalFountainStream
+        self.unfilteredFountainStreamArray = unfilteredFountainStreamArray
+        self.premodFountainStreamArray = premodFountainStreamArray
+        self.postmodFountainStreamArray = postmodFountainStreamArray
+        self.inboxFountainStreamArray = inboxFountainStreamArray
+        self.contentLocation = contentLocation
+        self.associatedMediaArray = associatedMediaArray
+        self.isFamilyFriendly = isFamilyFriendly
+        self.faviconURL = faviconURL
+        self.aggregateRating = aggregateRating
+        self.offersArray = offersArray
+        self.audio = audio
+        self.dateCreated = dateCreated
+        self.dateModified = dateModified
+        self.representativeImage = representativeImage
+        self.genre = genre
+        self.contentRating = contentRating
+        self.inLanguage = inLanguage
+        self.datePublished = datePublished
+        self.contentProfileName = contentProfileName
+        self.contentProfileId = contentProfileId
+        self.externalId = externalId
+        self.ampURL = ampURL
+        self.destinationURL = destinationURL
+        self.fileFormat = fileFormat
+    }
+}
+
+public struct EMPlusPhotoV2: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case URL = 1
+        case imageURL = 2
+        case name = 3
+        case description_p = 4
+        case descriptionTruncated = 5
+        case proxiedImage = 6
+        case proxiedFaviconURL = 7
+        case authorArray = 8
+        case about = 9
+        case text = 10
+        case relatedImageArray = 11
+        case sourceName = 12
+        case canonicalFountainStream = 13
+        case unfilteredFountainStreamArray = 14
+        case premodFountainStreamArray = 15
+        case postmodFountainStreamArray = 16
+        case inboxFountainStreamArray = 17
+        case contentLocation = 18
+        case width = 19
+        case height = 20
+        case widthPx = 21
+        case heightPx = 22
+        case contentURL = 23
+        case ownerObfuscatedId = 27
+        case albumId = 38
+        case photoId = 39
+        case onepickMediaId = 40
+        case associatedMediaArray = 42
+        case relativeURL = 46
+        case streamIdArray = 47
+        case isFamilyFriendly = 65
+        case embedURL = 66
+        case playerType = 67
+        case duration = 68
+        case faviconURL = 75
+        case aggregateRating = 82
+        case offersArray = 83
+        case audio = 96
+        case dateCreated = 111
+        case dateModified = 112
+        case representativeImage = 185
+        case genre = 188
+        case contentRating = 189
+        case inLanguage = 190
+        case datePublished = 191
+        case imageQuality = 195
+        case maxHeight = 196
+        case maxWidth = 197
+        case contentProfileName = 249
+        case contentProfileId = 252
+        case externalId = 254
+        case mediaKey = 258
+        case ampURL = 282
+        case originalMediaPlayerURL = 283
+        case originalMediaContainerURL = 284
+        case originalLightboxPhotoId = 285
+        case originalContentURL = 286
+        case destinationURL = 287
+        case fileFormat = 289
+    }
+    
+    public var URL: String? = nil
+    public var imageURL: String? = nil
+    public var name: String? = nil
+    public var description_p: String? = nil
+    public var descriptionTruncated: String? = nil
+    public var proxiedImage: EMThumbnail? = nil
+    public var proxiedFaviconURL: String? = nil
+    public var authorArray: [/*EMEmbedClientItem*/String] = []
+    public var about: /*EMEmbedClientItem*/String? = nil
+    public var text: String? = nil
+    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var sourceName: String? = nil
+    public var canonicalFountainStream: String? = nil
+    public var unfilteredFountainStreamArray: [String] = []
+    public var premodFountainStreamArray: [String] = []
+    public var postmodFountainStreamArray: [String] = []
+    public var inboxFountainStreamArray: [String] = []
+    public var contentLocation: /*EMEmbedClientItem*/String? = nil
+    public var width: String? = nil
+    public var height: String? = nil
+    public var widthPx: Int32? = nil
+    public var heightPx: Int32? = nil
+    public var contentURL: String? = nil
+    public var ownerObfuscatedId: String? = nil
+    public var albumId: String? = nil
+    public var photoId: String? = nil
+    public var onepickMediaId: String? = nil
+    public var associatedMediaArray: [/*EMEmbedClientItem*/String] = []
+    public var relativeURL: String? = nil
+    public var streamIdArray: [String] = []
+    public var isFamilyFriendly: Bool? = nil
+    public var embedURL: String? = nil
+    public var playerType: String? = nil
+    public var duration: String? = nil
+    public var faviconURL: String? = nil
+    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
+    public var offersArray: [/*EMEmbedClientItem*/String] = []
+    public var audio: /*EMEmbedClientItem*/String? = nil
+    public var dateCreated: String? = nil
+    public var dateModified: String? = nil
+    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var genre: String? = nil
+    public var contentRating: String? = nil
+    public var inLanguage: String? = nil
+    public var datePublished: String? = nil
+    public var imageQuality: String? = nil
+    public var maxHeight: String? = nil
+    public var maxWidth: String? = nil
+    public var contentProfileName: String? = nil
+    public var contentProfileId: String? = nil
+    public var externalId: String? = nil
+    public var mediaKey: String? = nil
+    public var ampURL: String? = nil
+    public var originalMediaPlayerURL: String? = nil
+    public var originalMediaContainerURL: String? = nil
+    public var originalLightboxPhotoId: String? = nil
+    public var originalContentURL: String? = nil
+    public var destinationURL: String? = nil
+    public var fileFormat: String? = nil
+    
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, text: String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: /*EMEmbedClientItem*/String? = nil, width: String? = nil, height: String? = nil, widthPx: Int32? = nil, heightPx: Int32? = nil, contentURL: String? = nil, ownerObfuscatedId: String? = nil, albumId: String? = nil, photoId: String? = nil, onepickMediaId: String? = nil, associatedMediaArray: [/*EMEmbedClientItem*/String] = [], relativeURL: String? = nil, streamIdArray: [String] = [], isFamilyFriendly: Bool? = nil, embedURL: String? = nil, playerType: String? = nil, duration: String? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, offersArray: [/*EMEmbedClientItem*/String] = [], audio: /*EMEmbedClientItem*/String? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, imageQuality: String? = nil, maxHeight: String? = nil, maxWidth: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, mediaKey: String? = nil, ampURL: String? = nil, originalMediaPlayerURL: String? = nil, originalMediaContainerURL: String? = nil, originalLightboxPhotoId: String? = nil, originalContentURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
+        self.URL = URL
+        self.imageURL = imageURL
+        self.name = name
+        self.description_p = description_p
+        self.descriptionTruncated = descriptionTruncated
+        self.proxiedImage = proxiedImage
+        self.proxiedFaviconURL = proxiedFaviconURL
+        self.authorArray = authorArray
+        self.about = about
+        self.text = text
+        self.relatedImageArray = relatedImageArray
+        self.sourceName = sourceName
+        self.canonicalFountainStream = canonicalFountainStream
+        self.unfilteredFountainStreamArray = unfilteredFountainStreamArray
+        self.premodFountainStreamArray = premodFountainStreamArray
+        self.postmodFountainStreamArray = postmodFountainStreamArray
+        self.inboxFountainStreamArray = inboxFountainStreamArray
+        self.contentLocation = contentLocation
+        self.width = width
+        self.height = height
+        self.widthPx = widthPx
+        self.heightPx = heightPx
+        self.contentURL = contentURL
+        self.ownerObfuscatedId = ownerObfuscatedId
+        self.albumId = albumId
+        self.photoId = photoId
+        self.onepickMediaId = onepickMediaId
+        self.associatedMediaArray = associatedMediaArray
+        self.relativeURL = relativeURL
+        self.streamIdArray = streamIdArray
+        self.isFamilyFriendly = isFamilyFriendly
+        self.embedURL = embedURL
+        self.playerType = playerType
+        self.duration = duration
+        self.faviconURL = faviconURL
+        self.aggregateRating = aggregateRating
+        self.offersArray = offersArray
+        self.audio = audio
+        self.dateCreated = dateCreated
+        self.dateModified = dateModified
+        self.representativeImage = representativeImage
+        self.genre = genre
+        self.contentRating = contentRating
+        self.inLanguage = inLanguage
+        self.datePublished = datePublished
+        self.imageQuality = imageQuality
+        self.maxHeight = maxHeight
+        self.maxWidth = maxWidth
+        self.contentProfileName = contentProfileName
+        self.contentProfileId = contentProfileId
+        self.externalId = externalId
+        self.mediaKey = mediaKey
+        self.ampURL = ampURL
+        self.originalMediaPlayerURL = originalMediaPlayerURL
+        self.originalMediaContainerURL = originalMediaContainerURL
+        self.originalLightboxPhotoId = originalLightboxPhotoId
+        self.originalContentURL = originalContentURL
+        self.destinationURL = destinationURL
+        self.fileFormat = fileFormat
+    }
+}
+
+public struct EMEmbedClientItem: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case typeArray = 1
+        case id_p = 2
+        case canonicalId = 3
+        case signature = 6
+        case renderId = 8
+        
+        // Extensions:
+        case plusPhotoV2 = 40655821
+        case placeV2 = 35825640
+        case thingV2 = 39748951
+        case plusAudioV2 = 62101782
+        case postalAddressV2 = 36003298
+        case geoCoordinatesV2 = 36736749
+        case imageObjectV2 = 40265033
+    }
+    
+    public var typeArray: [EMItemType] = []
+    public var id_p: String? = nil
+    public var canonicalId: String? = nil
+    public var signature: String? = nil
+    public var renderId: String? = nil
+    
+    // Extensions:
+    public var plusPhotoV2: EMPlusPhotoV2? = nil
+    public var placeV2: EMPlaceV2? = nil
+    public var thingV2: EMThingV2? = nil
+    public var plusAudioV2: EMPlusAudioV2? = nil
+    public var postalAddressV2: EMPostalAddressV2? = nil
+    public var geoCoordinatesV2: EMGeoCoordinatesV2? = nil
+    public var imageObjectV2: EMImageObjectV2? = nil
+    
+    public init(typeArray: [EMItemType] = [], id_p: String? = nil, canonicalId: String? = nil, signature: String? = nil, renderId: String? = nil, plusPhotoV2: EMPlusPhotoV2? = nil, placeV2: EMPlaceV2? = nil, thingV2: EMThingV2? = nil, plusAudioV2: EMPlusAudioV2? = nil, postalAddressV2: EMPostalAddressV2? = nil, geoCoordinatesV2: EMGeoCoordinatesV2? = nil, imageObjectV2: EMImageObjectV2? = nil) {
+        self.typeArray = typeArray
+        self.id_p = id_p
+        self.canonicalId = canonicalId
+        self.signature = signature
+        self.renderId = renderId
+        
+        // Extensions:
+        self.plusPhotoV2 = plusPhotoV2
+        self.placeV2 = placeV2
+        self.thingV2 = thingV2
+        self.plusAudioV2 = plusAudioV2
+        self.postalAddressV2 = postalAddressV2
+        self.geoCoordinatesV2 = geoCoordinatesV2
+        self.imageObjectV2 = imageObjectV2
+    }
+}
+
+/* Swift recursive types holder. */
+public struct EMEmbedClientItem_EMImageObjectV2_Holder: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case typeArray = 1
+        case id_p = 2
+        case imageObjectV2 = 40265033
+    }
+    
+    public var typeArray: [EMItemType] = []
+    public var id_p: String? = nil
+    public var imageObjectV2: EMImageObjectV2? = nil
+    
+    public init(typeArray: [EMItemType] = [], id_p: String? = nil, imageObjectV2: EMImageObjectV2? = nil) {
+        self.typeArray = typeArray
+        self.id_p = id_p
+        self.imageObjectV2 = imageObjectV2
+    }
+}
+
+/* Swift recursive types holder. */
+public struct EMEmbedClientItem_EMGeoCoordinatesV2_Holder: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case geoCoordinatesV2 = 36736749
+    }
+    
+    public var geoCoordinatesV2: EMGeoCoordinatesV2? = nil
+    
+    public init(geoCoordinatesV2: EMGeoCoordinatesV2? = nil) {
+        self.geoCoordinatesV2 = geoCoordinatesV2
+    }
+}
+
+/* Swift recursive types holder. */
+public struct EMEmbedClientItem_EMPostalAddressV2_Holder: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case postalAddressV2 = 36003298
+    }
+    
+    public var postalAddressV2: EMPostalAddressV2? = nil
+    
+    public init(postalAddressV2: EMPostalAddressV2? = nil) {
+        self.postalAddressV2 = postalAddressV2
+    }
+}
+
+public struct SocialHashtagData: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case searchText = 1
+    }
+    
+    public var searchText: String? = nil
+    
+    public init(searchText: String? = nil) {
+        self.searchText = searchText
+    }
+}
+
+public struct SocialUserMentionData: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case userGaiaId = 1
+        case userId = 2
+        case email = 3
+    }
+    
+    public var userGaiaId: Int64? = nil
+    public var userId: String? = nil
+    public var email: String? = nil
+    
+    public init(userGaiaId: Int64? = nil, userId: String? = nil, email: String? = nil) {
+        self.userGaiaId = userGaiaId
+        self.userId = userId
+        self.email = email
+    }
+}
+
+public struct SocialLinkData: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case linkTarget = 1
+        case displayURL = 2
+        case attachment = 3
+        case title = 4
+    }
+    
+    public var linkTarget: String? = nil
+    public var displayURL: String? = nil
+    public var attachment: Attachment? = nil
+    public var title: String? = nil
+    
+    public init(linkTarget: String? = nil, displayURL: String? = nil, attachment: Attachment? = nil, title: String? = nil) {
+        self.linkTarget = linkTarget
+        self.displayURL = displayURL
+        self.attachment = attachment
+        self.title = title
+    }
+}
+
+public struct SocialFormatting: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case bold = 1
         case italics = 2
@@ -900,3125 +2940,4381 @@ public struct Formatting: ProtoMessage {
     }
 }
 
-public struct LinkData: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case link_target = 1
-    }
+public struct SocialSegmentType_SegmentTypeEnum: ProtoEnum {
+    public static let text: SocialSegmentType_SegmentTypeEnum = 0
+    public static let lineBreak: SocialSegmentType_SegmentTypeEnum = 1
+    public static let link: SocialSegmentType_SegmentTypeEnum = 2
+    public static let userMention: SocialSegmentType_SegmentTypeEnum = 3
+    public static let hashtag: SocialSegmentType_SegmentTypeEnum = 4
+    public static let allUserMention: SocialSegmentType_SegmentTypeEnum = 5
     
-    public var link_target: String? = nil
-    
-    public init(link_target: String? = nil) {
-        self.link_target = link_target
+    public let rawValue: Int
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
     }
 }
 
-public struct Segment: ProtoMessage {
+public struct SocialSegment: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case type = 1
         case text = 2
         case formatting = 3
-        case link_data = 4
+        case linkData = 4
+        case userMentionData = 5
+        case hashtagData = 6
     }
     
-    public var type: SegmentType
+    public var type: SocialSegmentType_SegmentTypeEnum? = nil
     public var text: String? = nil
-    public var formatting: Formatting? = nil
-    public var link_data: LinkData? = nil
+    public var formatting: SocialFormatting? = nil
+    public var linkData: SocialLinkData? = nil
+    public var userMentionData: SocialUserMentionData? = nil
+    public var hashtagData: SocialHashtagData? = nil
     
-    public init(type: SegmentType, text: String? = nil, formatting: Formatting? = nil, link_data: LinkData? = nil) {
+    public init(type: SocialSegmentType_SegmentTypeEnum? = nil, text: String? = nil, formatting: SocialFormatting? = nil, linkData: SocialLinkData? = nil, userMentionData: SocialUserMentionData? = nil, hashtagData: SocialHashtagData? = nil) {
         self.type = type
         self.text = text
         self.formatting = formatting
-        self.link_data = link_data
+        self.linkData = linkData
+        self.userMentionData = userMentionData
+        self.hashtagData = hashtagData
     }
 }
 
-public struct Thumbnail: ProtoMessage {
+public struct SocialSegmentType: ProtoMessage {
+    /*
     public enum CodingKeys: Int, CodingKey {
-        case url = 1
-        case image_url = 4
-        case width_px = 10
-        case height_px = 11
     }
+    */
     
-    public var url: String? = nil
-    public var image_url: String? = nil
-    public var width_px: UInt64? = nil
-    public var height_px: UInt64? = nil
-    
-    public init(url: String? = nil, image_url: String? = nil, width_px: UInt64? = nil, height_px: UInt64? = nil) {
-        self.url = url
-        self.image_url = image_url
-        self.width_px = width_px
-        self.height_px = height_px
+    public init() {
     }
 }
 
-public struct PlusPhoto: ProtoMessage {
+public struct SocialSegments: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case thumbnail = 1
-        case owner_obfuscated_id = 2
-        case album_id = 3
-        case photo_id = 4
-        case url = 6
-        case original_content_url = 10
-        case media_type = 13
-        case stream_id = 14
-        case download_url = 20
+        case segmentsArray = 1
     }
     
-    public var thumbnail: Thumbnail? = nil
-    public var owner_obfuscated_id: String? = nil
-    public var album_id: String? = nil
-    public var photo_id: String? = nil
-    public var url: String? = nil
-    public var original_content_url: String? = nil
-    public var media_type: MediaType? = nil
-    public var stream_id: [String] = []
-    public var download_url: String? = nil
+    public var segmentsArray: [SocialSegment] = []
     
-    public init(thumbnail: Thumbnail? = nil, owner_obfuscated_id: String? = nil, album_id: String? = nil, photo_id: String? = nil, url: String? = nil, original_content_url: String? = nil, media_type: MediaType? = nil, stream_id: [String] = [], download_url: String? = nil) {
-        self.thumbnail = thumbnail
-        self.owner_obfuscated_id = owner_obfuscated_id
-        self.album_id = album_id
-        self.photo_id = photo_id
-        self.url = url
-        self.original_content_url = original_content_url
-        self.media_type = media_type
-        self.stream_id = stream_id
-        self.download_url = download_url
+    public init(segmentsArray: [SocialSegment] = []) {
+        self.segmentsArray = segmentsArray
     }
 }
 
-public struct RepresentativeImage: ProtoMessage {
+public struct ClientGroupLinkSharingModification: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case type = 1
-        case url = 2
-        case image = 40265033
+        case newStatus = 1
     }
     
-    public var type: [ItemType] = []
-    public var url: String? = nil
-    public var image: VoicePhoto? = nil
+    public var newStatus: ClientGroupLinkSharingStatus? = nil
     
-    public init(type: [ItemType] = [], url: String? = nil, image: VoicePhoto? = nil) {
-        self.type = type
-        self.url = url
-        self.image = image
+    public init(newStatus: ClientGroupLinkSharingStatus? = nil) {
+        self.newStatus = newStatus
     }
 }
 
-public struct PlaceDescription: ProtoMessage {
+public struct ClientSetGroupLinkSharingEnabledResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case text = 35
+        case responseHeader = 1
+        case createdEvent = 2
+        case updatedConversation = 3
     }
     
-    public var text: String? = nil
+    public var responseHeader: ClientResponseHeader? = nil
+    public var createdEvent: ClientEvent? = nil
+    public var updatedConversation: ClientConversation? = nil
     
-    public init(text: String? = nil) {
-        self.text = text
+    public init(responseHeader: ClientResponseHeader? = nil, createdEvent: ClientEvent? = nil, updatedConversation: ClientConversation? = nil) {
+        self.responseHeader = responseHeader
+        self.createdEvent = createdEvent
+        self.updatedConversation = updatedConversation
     }
 }
 
-public struct Coordinates: ProtoMessage {
+public struct ClientSetGroupLinkSharingEnabledRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case lat = 36
-        case lng = 37
+        case requestHeader = 1
+        case eventRequestHeader = 2
+        case groupLinkSharingStatus = 4
     }
     
-    public var lat: Double? = nil
-    public var lng: Double? = nil
+    public var requestHeader: ClientRequestHeader? = nil
+    public var eventRequestHeader: ClientEventRequestHeader? = nil
+    public var groupLinkSharingStatus: ClientGroupLinkSharingStatus? = nil
     
-    public init(lat: Double? = nil, lng: Double? = nil) {
-        self.lat = lat
-        self.lng = lng
+    public init(requestHeader: ClientRequestHeader? = nil, eventRequestHeader: ClientEventRequestHeader? = nil, groupLinkSharingStatus: ClientGroupLinkSharingStatus? = nil) {
+        self.requestHeader = requestHeader
+        self.eventRequestHeader = eventRequestHeader
+        self.groupLinkSharingStatus = groupLinkSharingStatus
     }
 }
 
-public struct PlaceDisplayInfo: ProtoMessage {
+public struct ClientStateUpdate: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case description = 36003298
+        case stateUpdateHeader = 1
+        case conversationNotification = 2
+        case eventNotification = 3
+        case focusNotification = 4
+        case typingNotification = 5
+        case notificationLevelNotification = 6
+        case replyToInviteNotification = 7
+        case watermarkNotification = 8
+        case deprecated10 = 10
+        case viewModification = 11
+        case easterEggNotification = 12
+        case clientConversation = 13
+        case selfPresenceNotification = 14
+        case deleteNotification = 15
+        case presenceNotification = 16
+        case blockNotification = 17
+        case invitationWatermarkNotification = 18
+        case configurationNotification = 19
+        case richPresenceEnabledStateNotification = 20
+        case contactsNotification = 21
+        case deliveryMediumModification = 23
+        case callerIdConfigNotification = 28
+        case markEventObservedNotification = 30
+        case globalNotificationLevelNotification = 31
     }
     
-    public var description: PlaceDescription? = nil
+    public var stateUpdateHeader: ClientStateUpdateHeader? = nil
+    public var conversationNotification: ClientConversationNotification? = nil
+    public var eventNotification: ClientEventNotification? = nil
+    public var focusNotification: ClientSetFocusNotification? = nil
+    public var typingNotification: ClientSetTypingNotification? = nil
+    public var notificationLevelNotification: ClientSetConversationNotificationLevelNotification? = nil
+    public var replyToInviteNotification: ClientReplyToInviteNotification? = nil
+    public var watermarkNotification: ClientWatermarkNotification? = nil
+    public var deprecated10: String? = nil
+    public var viewModification: ClientConversationViewModification? = nil
+    public var easterEggNotification: ClientEasterEggNotification? = nil
+    public var clientConversation: ClientConversation? = nil
+    public var selfPresenceNotification: ClientSelfPresenceNotification? = nil
+    public var deleteNotification: ClientDeleteActionNotification? = nil
+    public var presenceNotification: ClientPresenceNotification? = nil
+    public var blockNotification: ClientBlockNotification? = nil
+    public var invitationWatermarkNotification: ClientInvitationWatermarkNotification? = nil
+    public var configurationNotification: ClientConfigurationNotification? = nil
+    public var richPresenceEnabledStateNotification: ClientRichPresenceEnabledStateNotification? = nil
+    public var contactsNotification: ClientContactsNotification? = nil
+    public var deliveryMediumModification: ClientConversationDeliveryMediumModification? = nil
+    public var callerIdConfigNotification: ClientCallerIdConfigNotification? = nil
+    public var markEventObservedNotification: ClientMarkEventObservedNotification? = nil
+    public var globalNotificationLevelNotification: ClientGlobalNotificationLevelNotification? = nil
     
-    public init(description: PlaceDescription? = nil) {
-        self.description = description
+    public init(stateUpdateHeader: ClientStateUpdateHeader? = nil, conversationNotification: ClientConversationNotification? = nil, eventNotification: ClientEventNotification? = nil, focusNotification: ClientSetFocusNotification? = nil, typingNotification: ClientSetTypingNotification? = nil, notificationLevelNotification: ClientSetConversationNotificationLevelNotification? = nil, replyToInviteNotification: ClientReplyToInviteNotification? = nil, watermarkNotification: ClientWatermarkNotification? = nil, deprecated10: String? = nil, viewModification: ClientConversationViewModification? = nil, easterEggNotification: ClientEasterEggNotification? = nil, clientConversation: ClientConversation? = nil, selfPresenceNotification: ClientSelfPresenceNotification? = nil, deleteNotification: ClientDeleteActionNotification? = nil, presenceNotification: ClientPresenceNotification? = nil, blockNotification: ClientBlockNotification? = nil, invitationWatermarkNotification: ClientInvitationWatermarkNotification? = nil, configurationNotification: ClientConfigurationNotification? = nil, richPresenceEnabledStateNotification: ClientRichPresenceEnabledStateNotification? = nil, contactsNotification: ClientContactsNotification? = nil, deliveryMediumModification: ClientConversationDeliveryMediumModification? = nil, callerIdConfigNotification: ClientCallerIdConfigNotification? = nil, markEventObservedNotification: ClientMarkEventObservedNotification? = nil, globalNotificationLevelNotification: ClientGlobalNotificationLevelNotification? = nil) {
+        self.stateUpdateHeader = stateUpdateHeader
+        self.conversationNotification = conversationNotification
+        self.eventNotification = eventNotification
+        self.focusNotification = focusNotification
+        self.typingNotification = typingNotification
+        self.notificationLevelNotification = notificationLevelNotification
+        self.replyToInviteNotification = replyToInviteNotification
+        self.watermarkNotification = watermarkNotification
+        self.deprecated10 = deprecated10
+        self.viewModification = viewModification
+        self.easterEggNotification = easterEggNotification
+        self.clientConversation = clientConversation
+        self.selfPresenceNotification = selfPresenceNotification
+        self.deleteNotification = deleteNotification
+        self.presenceNotification = presenceNotification
+        self.blockNotification = blockNotification
+        self.invitationWatermarkNotification = invitationWatermarkNotification
+        self.configurationNotification = configurationNotification
+        self.richPresenceEnabledStateNotification = richPresenceEnabledStateNotification
+        self.contactsNotification = contactsNotification
+        self.deliveryMediumModification = deliveryMediumModification
+        self.callerIdConfigNotification = callerIdConfigNotification
+        self.markEventObservedNotification = markEventObservedNotification
+        self.globalNotificationLevelNotification = globalNotificationLevelNotification
     }
 }
 
-public struct PlaceLocationInfo: ProtoMessage {
+public struct ClientSetInviteSettingsResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case latlng = 36736749
+        case responseHeader = 1
+        case consistencyToken = 2
     }
     
-    public var latlng: Coordinates? = nil
+    public var responseHeader: ClientResponseHeader? = nil
+    public var consistencyToken: String? = nil
     
-    public init(latlng: Coordinates? = nil) {
-        self.latlng = latlng
+    public init(responseHeader: ClientResponseHeader? = nil, consistencyToken: String? = nil) {
+        self.responseHeader = responseHeader
+        self.consistencyToken = consistencyToken
     }
 }
 
-public struct Place: ProtoMessage {
+public struct ClientSetInviteSettingsRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case url = 1
-        case name = 3
-        case display_info = 24
-        case location_info = 25
-        case representative_image = 185
+        case requestHeader = 1
+        case settingsToSet = 2
+        case consistencyToken = 3
     }
     
-    public var url: String? = nil
+    public var requestHeader: ClientRequestHeader? = nil
+    public var settingsToSet: ClientInviteSettings? = nil
+    public var consistencyToken: String? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, settingsToSet: ClientInviteSettings? = nil, consistencyToken: String? = nil) {
+        self.requestHeader = requestHeader
+        self.settingsToSet = settingsToSet
+        self.consistencyToken = consistencyToken
+    }
+}
+
+public struct ClientGetInviteSettingsResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case settings = 2
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var settings: ClientInviteSettings? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, settings: ClientInviteSettings? = nil) {
+        self.responseHeader = responseHeader
+        self.settings = settings
+    }
+}
+
+public struct ClientGetInviteSettingsRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case consistencyToken = 2
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var consistencyToken: String? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, consistencyToken: String? = nil) {
+        self.requestHeader = requestHeader
+        self.consistencyToken = consistencyToken
+    }
+}
+
+public struct ClientInviteSettings_CircleLevel: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case id = 1
+        case name = 2
+        case level = 3
+    }
+    
+    public var id: Int64? = nil
     public var name: String? = nil
-    public var display_info: PlaceDisplayInfo? = nil
-    public var location_info: PlaceLocationInfo? = nil
-    public var representative_image: RepresentativeImage? = nil
+    public var level: ClientInviteSettings_NotificationLevel? = nil
     
-    public init(url: String? = nil, name: String? = nil, display_info: PlaceDisplayInfo? = nil, location_info: PlaceLocationInfo? = nil, representative_image: RepresentativeImage? = nil) {
-        self.url = url
+    public init(id: Int64? = nil, name: String? = nil, level: ClientInviteSettings_NotificationLevel? = nil) {
+        self.id = id
         self.name = name
-        self.display_info = display_info
-        self.location_info = location_info
-        self.representative_image = representative_image
+        self.level = level
     }
 }
 
-public struct VoicePhoto: ProtoMessage {
+public struct ClientInviteSettings: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case url = 1
+        case publicLevel = 1
+        case emailLevel = 2
+        case phoneLevel = 3
+        case circleLevelArray = 4
     }
     
-    public var url: String? = nil
+    public var publicLevel: ClientInviteSettings_NotificationLevel? = nil
+    public var emailLevel: ClientInviteSettings_NotificationLevel? = nil
+    public var phoneLevel: ClientInviteSettings_NotificationLevel? = nil
+    public var circleLevelArray: [ClientInviteSettings_CircleLevel] = []
     
-    public init(url: String? = nil) {
-        self.url = url
+    public init(publicLevel: ClientInviteSettings_NotificationLevel? = nil, emailLevel: ClientInviteSettings_NotificationLevel? = nil, phoneLevel: ClientInviteSettings_NotificationLevel? = nil, circleLevelArray: [ClientInviteSettings_CircleLevel] = []) {
+        self.publicLevel = publicLevel
+        self.emailLevel = emailLevel
+        self.phoneLevel = phoneLevel
+        self.circleLevelArray = circleLevelArray
     }
 }
 
-public struct EmbedItem: ProtoMessage {
+public struct ClientOpenGroupConversationFromUrlResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case type = 1
-        case id = 2
-        case plus_photo = 27639957
-        case place = 35825640
-        case place_v2 = 39748951
-        case voice_photo = 62101782
+        case responseHeader = 1
+        case conversationId = 2
+        case createdEvent = 3
     }
     
-    public var type: [ItemType] = []
-    public var id: String? = nil
-    public var plus_photo: PlusPhoto? = nil
-    public var place: Place? = nil
-    public var place_v2: Place? = nil
-    public var voice_photo: VoicePhoto? = nil
+    public var responseHeader: ClientResponseHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var createdEvent: ClientEvent? = nil
     
-    public init(type: [ItemType] = [], id: String? = nil, plus_photo: PlusPhoto? = nil, place: Place? = nil, place_v2: Place? = nil, voice_photo: VoicePhoto? = nil) {
+    public init(responseHeader: ClientResponseHeader? = nil, conversationId: ClientConversationId? = nil, createdEvent: ClientEvent? = nil) {
+        self.responseHeader = responseHeader
+        self.conversationId = conversationId
+        self.createdEvent = createdEvent
+    }
+}
+
+public struct ClientOpenGroupConversationFromUrlRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case eventRequestHeader = 2
+        case conversationURL = 3
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var eventRequestHeader: ClientEventRequestHeader? = nil
+    public var conversationURL: String? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, eventRequestHeader: ClientEventRequestHeader? = nil, conversationURL: String? = nil) {
+        self.requestHeader = requestHeader
+        self.eventRequestHeader = eventRequestHeader
+        self.conversationURL = conversationURL
+    }
+}
+
+public struct ClientGetGroupConversationUrlResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case groupConversationURL = 2
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var groupConversationURL: String? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, groupConversationURL: String? = nil) {
+        self.responseHeader = responseHeader
+        self.groupConversationURL = groupConversationURL
+    }
+}
+
+public struct ClientGetGroupConversationUrlRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case conversationId = 2
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, conversationId: ClientConversationId? = nil) {
+        self.requestHeader = requestHeader
+        self.conversationId = conversationId
+    }
+}
+
+public struct ClientMarkEventObservedNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case observedConversationEventArray = 1
+    }
+    
+    public var observedConversationEventArray: [ClientObservedConversationEvents] = []
+    
+    public init(observedConversationEventArray: [ClientObservedConversationEvents] = []) {
+        self.observedConversationEventArray = observedConversationEventArray
+    }
+}
+
+public struct ClientMarkEventObservedResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case observedConversationEventArray = 2
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var observedConversationEventArray: [ClientObservedConversationEvents] = []
+    
+    public init(responseHeader: ClientResponseHeader? = nil, observedConversationEventArray: [ClientObservedConversationEvents] = []) {
+        self.responseHeader = responseHeader
+        self.observedConversationEventArray = observedConversationEventArray
+    }
+}
+
+public struct ClientObservedConversationEvents_ObservedEvent: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case eventId = 1
+        case lastObservedTimestamp = 2
+        case observedStatus = 3
+    }
+    
+    public var eventId: String? = nil
+    public var lastObservedTimestamp: UInt64? = nil
+    public var observedStatus: ClientEventObservedStatus? = nil
+    
+    public init(eventId: String? = nil, lastObservedTimestamp: UInt64? = nil, observedStatus: ClientEventObservedStatus? = nil) {
+        self.eventId = eventId
+        self.lastObservedTimestamp = lastObservedTimestamp
+        self.observedStatus = observedStatus
+    }
+}
+
+public struct ClientObservedConversationEvents: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case observedEventArray = 2
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var observedEventArray: [ClientObservedConversationEvents_ObservedEvent] = []
+    
+    public init(conversationId: ClientConversationId? = nil, observedEventArray: [ClientObservedConversationEvents_ObservedEvent] = []) {
+        self.conversationId = conversationId
+        self.observedEventArray = observedEventArray
+    }
+}
+
+public struct ClientMarkEventObservedRequest_MarkConversationObserved: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case eventIdArray = 2
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var eventIdArray: [String] = []
+    
+    public init(conversationId: ClientConversationId? = nil, eventIdArray: [String] = []) {
+        self.conversationId = conversationId
+        self.eventIdArray = eventIdArray
+    }
+}
+
+public struct ClientMarkEventObservedRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case observedConversationEventArray = 2
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var observedConversationEventArray: [ClientMarkEventObservedRequest_MarkConversationObserved] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, observedConversationEventArray: [ClientMarkEventObservedRequest_MarkConversationObserved] = []) {
+        self.requestHeader = requestHeader
+        self.observedConversationEventArray = observedConversationEventArray
+    }
+}
+
+public struct ClientCallerIdConfigNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case callerIdSettingArray = 1
+    }
+    
+    public var callerIdSettingArray: [ClientCallerIdSetting] = []
+    
+    public init(callerIdSettingArray: [ClientCallerIdSetting] = []) {
+        self.callerIdSettingArray = callerIdSettingArray
+    }
+}
+
+public struct ClientSetCallerIdConfigResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case callerIdSettingArray = 1
+        case responseHeader = 2
+    }
+    
+    public var callerIdSettingArray: [ClientCallerIdSetting] = []
+    public var responseHeader: ClientResponseHeader? = nil
+    
+    public init(callerIdSettingArray: [ClientCallerIdSetting] = [], responseHeader: ClientResponseHeader? = nil) {
+        self.callerIdSettingArray = callerIdSettingArray
+        self.responseHeader = responseHeader
+    }
+}
+
+public struct ClientSetCallerIdConfigRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case callerIdConfigArray = 2
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var callerIdConfigArray: [ClientCallerIdConfig] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, callerIdConfigArray: [ClientCallerIdConfig] = []) {
+        self.requestHeader = requestHeader
+        self.callerIdConfigArray = callerIdConfigArray
+    }
+}
+
+public struct ClientCallerIdConfig: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case callerIdPhoneNumber = 1
+        case callerIdState = 2
+    }
+    
+    public var callerIdPhoneNumber: GCVPhoneNumber? = nil
+    public var callerIdState: ClientCallerIdState? = nil
+    
+    public init(callerIdPhoneNumber: GCVPhoneNumber? = nil, callerIdState: ClientCallerIdState? = nil) {
+        self.callerIdPhoneNumber = callerIdPhoneNumber
+        self.callerIdState = callerIdState
+    }
+}
+
+public struct ClientContactsNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case dismissedParticipantIdArray = 1
+        case undismissedParticipantIdArray = 2
+        case updatedFavoriteArray = 3
+        case favoritesModified = 4
+    }
+    
+    public var dismissedParticipantIdArray: [ClientParticipantId] = []
+    public var undismissedParticipantIdArray: [ClientParticipantId] = []
+    public var updatedFavoriteArray: [ClientFavoriteUpdate] = []
+    public var favoritesModified: ClientFavoritesNotification? = nil
+    
+    public init(dismissedParticipantIdArray: [ClientParticipantId] = [], undismissedParticipantIdArray: [ClientParticipantId] = [], updatedFavoriteArray: [ClientFavoriteUpdate] = [], favoritesModified: ClientFavoritesNotification? = nil) {
+        self.dismissedParticipantIdArray = dismissedParticipantIdArray
+        self.undismissedParticipantIdArray = undismissedParticipantIdArray
+        self.updatedFavoriteArray = updatedFavoriteArray
+        self.favoritesModified = favoritesModified
+    }
+}
+
+public struct ClientFavoritesNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case currentVersion = 1
+    }
+    
+    public var currentVersion: String? = nil
+    
+    public init(currentVersion: String? = nil) {
+        self.currentVersion = currentVersion
+    }
+}
+
+public struct ClientBlockNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case blockStateChangeArray = 1
+    }
+    
+    public var blockStateChangeArray: [ClientBlockStateChange] = []
+    
+    public init(blockStateChangeArray: [ClientBlockStateChange] = []) {
+        self.blockStateChangeArray = blockStateChangeArray
+    }
+}
+
+public struct ClientBlockStateChange: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case participantId = 1
+        case newBlockState = 2
+    }
+    
+    public var participantId: ClientParticipantId? = nil
+    public var newBlockState: ClientBlockState? = nil
+    
+    public init(participantId: ClientParticipantId? = nil, newBlockState: ClientBlockState? = nil) {
+        self.participantId = participantId
+        self.newBlockState = newBlockState
+    }
+}
+
+public struct ClientEventNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case event = 1
+    }
+    
+    public var event: ClientEvent? = nil
+    
+    public init(event: ClientEvent? = nil) {
+        self.event = event
+    }
+}
+
+public struct ClientConversationNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversation = 1
+    }
+    
+    public var conversation: ClientConversation? = nil
+    
+    public init(conversation: ClientConversation? = nil) {
+        self.conversation = conversation
+    }
+}
+
+public struct ClientStateUpdateHeader: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case activeClientState = 1
+        case deprecated2 = 2
+        case requestTraceId = 3
+        case currentServerTime = 5
+        case clientGeneratedRequestId = 7
+        case selfFanoutId = 8
+    }
+    
+    public var activeClientState: ActiveClientState? = nil
+    public var deprecated2: String? = nil
+    public var requestTraceId: UInt64? = nil
+    public var currentServerTime: UInt64? = nil
+    public var clientGeneratedRequestId: String? = nil
+    public var selfFanoutId: String? = nil
+    
+    public init(activeClientState: ActiveClientState? = nil, deprecated2: String? = nil, requestTraceId: UInt64? = nil, currentServerTime: UInt64? = nil, clientGeneratedRequestId: String? = nil, selfFanoutId: String? = nil) {
+        self.activeClientState = activeClientState
+        self.deprecated2 = deprecated2
+        self.requestTraceId = requestTraceId
+        self.currentServerTime = currentServerTime
+        self.clientGeneratedRequestId = clientGeneratedRequestId
+        self.selfFanoutId = selfFanoutId
+    }
+}
+
+public struct ClientBatchUpdate: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case stateUpdateArray = 1
+    }
+    
+    public var stateUpdateArray: [ClientStateUpdate] = []
+    
+    public init(stateUpdateArray: [ClientStateUpdate] = []) {
+        self.stateUpdateArray = stateUpdateArray
+    }
+}
+
+public struct ClientInviteToken: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case inviteTokenURL = 1
+    }
+    
+    public var inviteTokenURL: String? = nil
+    
+    public init(inviteTokenURL: String? = nil) {
+        self.inviteTokenURL = inviteTokenURL
+    }
+}
+
+public struct ClientSuggestions: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case suggestionArray = 2
+    }
+    
+    public var suggestionArray: [ClientSuggestion] = []
+    
+    public init(suggestionArray: [ClientSuggestion] = []) {
+        self.suggestionArray = suggestionArray
+    }
+}
+
+public struct ClientEasterEggSuggestionInfo: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case variationIndex = 1
+        case animationDurationMsec = 2
+        case animatedAssetURLWithoutSuffixArray = 3
+        case horizontalAlignment = 4
+    }
+    
+    public var variationIndex: Int32? = nil
+    public var animationDurationMsec: Int32? = nil
+    public var animatedAssetURLWithoutSuffixArray: [String] = []
+    public var horizontalAlignment: ClientEasterEggSuggestionInfo_ClientGemHorizontalAlignment? = nil
+    
+    public init(variationIndex: Int32? = nil, animationDurationMsec: Int32? = nil, animatedAssetURLWithoutSuffixArray: [String] = [], horizontalAlignment: ClientEasterEggSuggestionInfo_ClientGemHorizontalAlignment? = nil) {
+        self.variationIndex = variationIndex
+        self.animationDurationMsec = animationDurationMsec
+        self.animatedAssetURLWithoutSuffixArray = animatedAssetURLWithoutSuffixArray
+        self.horizontalAlignment = horizontalAlignment
+    }
+}
+
+public struct ClientSuggestion: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case suggestionId = 1
+        case expirationTimeUsec = 2
+        case type = 3
+        case attachment = 6
+        case easterEggSuggestionInfo = 7
+        case matchedMessageSubstring = 8
+        case smartReplyText = 9
+    }
+    
+    public var suggestionId: String? = nil
+    public var expirationTimeUsec: UInt64? = nil
+    public var type: ClientSuggestion_ClientSuggestionType? = nil
+    public var attachment: Attachment? = nil
+    public var easterEggSuggestionInfo: ClientEasterEggSuggestionInfo? = nil
+    public var matchedMessageSubstring: String? = nil
+    public var smartReplyText: String? = nil
+    
+    public init(suggestionId: String? = nil, expirationTimeUsec: UInt64? = nil, type: ClientSuggestion_ClientSuggestionType? = nil, attachment: Attachment? = nil, easterEggSuggestionInfo: ClientEasterEggSuggestionInfo? = nil, matchedMessageSubstring: String? = nil, smartReplyText: String? = nil) {
+        self.suggestionId = suggestionId
+        self.expirationTimeUsec = expirationTimeUsec
         self.type = type
-        self.id = id
-        self.plus_photo = plus_photo
-        self.place = place
-        self.place_v2 = place_v2
-        self.voice_photo = voice_photo
-    }
-}
-
-public struct Attachment: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case embed_item = 1
-        case id = 3
-    }
-    
-    public var embed_item: EmbedItem? = nil
-    public var id: String? = nil
-    
-    public init(embed_item: EmbedItem? = nil, id: String? = nil) {
-        self.embed_item = embed_item
-        self.id = id
-    }
-}
-
-public struct MessageContent: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case segment = 1
-        case attachment = 2
-    }
-    
-    public var segment: [Segment] = []
-    public var attachment: [Attachment] = []
-    
-    public init(segment: [Segment] = [], attachment: [Attachment] = []) {
-        self.segment = segment
         self.attachment = attachment
+        self.easterEggSuggestionInfo = easterEggSuggestionInfo
+        self.matchedMessageSubstring = matchedMessageSubstring
+        self.smartReplyText = smartReplyText
     }
 }
 
-public struct EventAnnotation: ProtoMessage {
+public struct ClientUrlRedirectWrapperResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case type = 1
+        case responseHeader = 1
+        case redirectResultArray = 2
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var redirectResultArray: [ClientUrlRedirectResult] = []
+    
+    public init(responseHeader: ClientResponseHeader? = nil, redirectResultArray: [ClientUrlRedirectResult] = []) {
+        self.responseHeader = responseHeader
+        self.redirectResultArray = redirectResultArray
+    }
+}
+
+public struct ClientUrlRedirectWrapperRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case URLRedirectSpecArray = 2
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var URLRedirectSpecArray: [ClientUrlRedirectSpec] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, URLRedirectSpecArray: [ClientUrlRedirectSpec] = []) {
+        self.requestHeader = requestHeader
+        self.URLRedirectSpecArray = URLRedirectSpecArray
+    }
+}
+
+public struct ClientUrlRedirectResult: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case redirectSpec = 1
+        case redirectedURL = 2
+        case redirectError = 3
+    }
+    
+    public var redirectSpec: ClientUrlRedirectSpec? = nil
+    public var redirectedURL: String? = nil
+    public var redirectError: ClientUrlRedirectResult_ClientRedirectError? = nil
+    
+    public init(redirectSpec: ClientUrlRedirectSpec? = nil, redirectedURL: String? = nil, redirectError: ClientUrlRedirectResult_ClientRedirectError? = nil) {
+        self.redirectSpec = redirectSpec
+        self.redirectedURL = redirectedURL
+        self.redirectError = redirectError
+    }
+}
+
+public struct ClientUrlRedirectSpec: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case redirectType = 1
+        case originalURL = 2
+    }
+    
+    public var redirectType: ClientUrlRedirectSpec_ClientRedirectType? = nil
+    public var originalURL: String? = nil
+    
+    public init(redirectType: ClientUrlRedirectSpec_ClientRedirectType? = nil, originalURL: String? = nil) {
+        self.redirectType = redirectType
+        self.originalURL = originalURL
+    }
+}
+
+public struct ClientConfigurationBitError: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case configurationBitType = 1
+        case errorDescription = 2
+    }
+    
+    public var configurationBitType: ClientConfigurationBitType? = nil
+    public var errorDescription: String? = nil
+    
+    public init(configurationBitType: ClientConfigurationBitType? = nil, errorDescription: String? = nil) {
+        self.configurationBitType = configurationBitType
+        self.errorDescription = errorDescription
+    }
+}
+
+public struct ClientConfigurationNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case configurationBitChangeArray = 1
+        case desktopAvailabilitySharingEnabled = 3
+    }
+    
+    public var configurationBitChangeArray: [ClientConfigurationBit] = []
+    public var desktopAvailabilitySharingEnabled: Bool? = nil
+    
+    public init(configurationBitChangeArray: [ClientConfigurationBit] = [], desktopAvailabilitySharingEnabled: Bool? = nil) {
+        self.configurationBitChangeArray = configurationBitChangeArray
+        self.desktopAvailabilitySharingEnabled = desktopAvailabilitySharingEnabled
+    }
+}
+
+public struct ClientConfigurationBit: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case configurationBitType = 1
         case value = 2
     }
     
-    public var type: Int32? = nil
-    public var value: String? = nil
+    public var configurationBitType: ClientConfigurationBitType? = nil
+    public var value: Bool? = nil
     
-    public init(type: Int32? = nil, value: String? = nil) {
-        self.type = type
+    public init(configurationBitType: ClientConfigurationBitType? = nil, value: Bool? = nil) {
+        self.configurationBitType = configurationBitType
         self.value = value
     }
 }
 
-public struct ChatMessage: ProtoMessage {
+public struct ClientSetConfigurationBitResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case annotation = 2
-        case message_content = 3
+        case responseHeader = 1
+        case configurationBitErrorArray = 2
     }
     
-    public var annotation: [EventAnnotation] = []
-    public var message_content: MessageContent? = nil
+    public var responseHeader: ClientResponseHeader? = nil
+    public var configurationBitErrorArray: [ClientConfigurationBitError] = []
     
-    public init(annotation: [EventAnnotation] = [], message_content: MessageContent? = nil) {
-        self.annotation = annotation
-        self.message_content = message_content
+    public init(responseHeader: ClientResponseHeader? = nil, configurationBitErrorArray: [ClientConfigurationBitError] = []) {
+        self.responseHeader = responseHeader
+        self.configurationBitErrorArray = configurationBitErrorArray
     }
 }
 
-public struct Participant: ProtoMessage {
+public struct ClientSetConfigurationBitRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case id = 1
-        case first_name = 2
-        case full_name = 3
-        case profile_photo_url = 4
+        case requestHeader = 1
+        case configurationBitArray = 2
+        case desktopAvailabilitySharingEnabled = 4
     }
     
-    public var id: ParticipantId? = nil
-    public var first_name: String? = nil
-    public var full_name: String? = nil
-    public var profile_photo_url: String? = nil
+    public var requestHeader: ClientRequestHeader? = nil
+    public var configurationBitArray: [ClientConfigurationBit] = []
+    public var desktopAvailabilitySharingEnabled: Bool? = nil
     
-    public init(id: ParticipantId? = nil, first_name: String? = nil, full_name: String? = nil, profile_photo_url: String? = nil) {
-        self.id = id
-        self.first_name = first_name
-        self.full_name = full_name
-        self.profile_photo_url = profile_photo_url
+    public init(requestHeader: ClientRequestHeader? = nil, configurationBitArray: [ClientConfigurationBit] = [], desktopAvailabilitySharingEnabled: Bool? = nil) {
+        self.requestHeader = requestHeader
+        self.configurationBitArray = configurationBitArray
+        self.desktopAvailabilitySharingEnabled = desktopAvailabilitySharingEnabled
     }
 }
 
-public struct MembershipChange: ProtoMessage {
+public struct ClientFinishPhoneNumberVerificationResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil) {
+        self.responseHeader = responseHeader
+    }
+}
+
+public struct ClientFinishPhoneNumberVerificationRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case phoneNumber = 2
+        case code = 3
+        case discoverable = 4
+        case additionalDiscoverablePhoneNumberArray = 5
+        case phoneNumberVerificationContext = 6
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var phoneNumber: GCVPhoneNumber? = nil
+    public var code: String? = nil
+    public var discoverable: Bool? = nil
+    public var additionalDiscoverablePhoneNumberArray: [GCVPhoneNumber] = []
+    public var phoneNumberVerificationContext: ClientPhoneNumberVerificationContext? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, phoneNumber: GCVPhoneNumber? = nil, code: String? = nil, discoverable: Bool? = nil, additionalDiscoverablePhoneNumberArray: [GCVPhoneNumber] = [], phoneNumberVerificationContext: ClientPhoneNumberVerificationContext? = nil) {
+        self.requestHeader = requestHeader
+        self.phoneNumber = phoneNumber
+        self.code = code
+        self.discoverable = discoverable
+        self.additionalDiscoverablePhoneNumberArray = additionalDiscoverablePhoneNumberArray
+        self.phoneNumberVerificationContext = phoneNumberVerificationContext
+    }
+}
+
+public struct ClientStartPhoneNumberVerificationResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case phoneNumberVerificationContext = 2
+        case rateLimitExceeded = 3
+        case smsToHumanCodeLength = 4
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var phoneNumberVerificationContext: ClientPhoneNumberVerificationContext? = nil
+    public var rateLimitExceeded: Bool? = nil
+    public var smsToHumanCodeLength: UInt32? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, phoneNumberVerificationContext: ClientPhoneNumberVerificationContext? = nil, rateLimitExceeded: Bool? = nil, smsToHumanCodeLength: UInt32? = nil) {
+        self.responseHeader = responseHeader
+        self.phoneNumberVerificationContext = phoneNumberVerificationContext
+        self.rateLimitExceeded = rateLimitExceeded
+        self.smsToHumanCodeLength = smsToHumanCodeLength
+    }
+}
+
+public struct ClientStartPhoneNumberVerificationRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case phoneNumber = 2
+        case method = 3
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var phoneNumber: GCVPhoneNumber? = nil
+    public var method: ClientStartPhoneNumberVerificationRequest_ClientPhoneNumberVerificationMethod? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, phoneNumber: GCVPhoneNumber? = nil, method: ClientStartPhoneNumberVerificationRequest_ClientPhoneNumberVerificationMethod? = nil) {
+        self.requestHeader = requestHeader
+        self.phoneNumber = phoneNumber
+        self.method = method
+    }
+}
+
+public struct ClientPhoneNumberVerificationContext: ProtoMessage {
+    /*
+    public enum CodingKeys: Int, CodingKey {
+    }
+    */
+    
+    public init() {
+    }
+}
+
+public struct ClientSendOffnetworkInvitationResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil) {
+        self.responseHeader = responseHeader
+    }
+}
+
+public struct ClientSendOffnetworkInvitationRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case inviteeAddress = 2
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var inviteeAddress: ClientOffnetworkAddress? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, inviteeAddress: ClientOffnetworkAddress? = nil) {
+        self.requestHeader = requestHeader
+        self.inviteeAddress = inviteeAddress
+    }
+}
+
+public struct ClientOffnetworkAddress: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case type = 1
-        case participant = 2
-        case participant_ids = 3
+        case phone = 2
+        case email = 3
     }
     
-    public var type: MembershipChangeType? = nil
-    public var participant: [Participant] = []
-    public var participant_ids: [ParticipantId] = []
+    public var type: ClientOffnetworkAddress_Type? = nil
+    public var phone: String? = nil
+    public var email: String? = nil
     
-    public init(type: MembershipChangeType? = nil, participant: [Participant] = [], participant_ids: [ParticipantId] = []) {
+    public init(type: ClientOffnetworkAddress_Type? = nil, phone: String? = nil, email: String? = nil) {
         self.type = type
-        self.participant = participant
-        self.participant_ids = participant_ids
+        self.phone = phone
+        self.email = email
     }
 }
 
-public struct ConversationRename: ProtoMessage {
+public struct ClientDeleteActionNotification: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case new_name = 1
-        case old_name = 2
+        case conversationId = 1
+        case deleteAction = 2
     }
     
-    public var new_name: String? = nil
-    public var old_name: String? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var deleteAction: ClientDeleteAction? = nil
     
-    public init(new_name: String? = nil, old_name: String? = nil) {
-        self.new_name = new_name
-        self.old_name = old_name
+    public init(conversationId: ClientConversationId? = nil, deleteAction: ClientDeleteAction? = nil) {
+        self.conversationId = conversationId
+        self.deleteAction = deleteAction
     }
 }
 
-public struct HangoutEvent: ProtoMessage {
+public struct ClientDeleteConversationResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case event_type = 1
-        case participant_id = 2
-        case hangout_duration_secs = 3
-        case transferred_conversation_id = 4
-        case refresh_timeout_secs = 5
-        case is_peridoic_refresh = 6
-        case media_type = 7
+        case responseHeader = 1
+        case deleteAction = 2
     }
     
-    public var event_type: HangoutEventType? = nil
-    public var participant_id: [ParticipantId] = []
-    public var hangout_duration_secs: UInt64? = nil
-    public var transferred_conversation_id: ConversationId? = nil
-    public var refresh_timeout_secs: UInt64? = nil
-    public var is_peridoic_refresh: Bool? = nil
-    public var media_type: HangoutMediaType? = nil
+    public var responseHeader: ClientResponseHeader? = nil
+    public var deleteAction: ClientDeleteAction? = nil
     
-    public init(event_type: HangoutEventType? = nil, participant_id: [ParticipantId] = [], hangout_duration_secs: UInt64? = nil, transferred_conversation_id: ConversationId? = nil, refresh_timeout_secs: UInt64? = nil, is_peridoic_refresh: Bool? = nil, media_type: HangoutMediaType? = nil) {
-        self.event_type = event_type
-        self.participant_id = participant_id
-        self.hangout_duration_secs = hangout_duration_secs
-        self.transferred_conversation_id = transferred_conversation_id
-        self.refresh_timeout_secs = refresh_timeout_secs
-        self.is_peridoic_refresh = is_peridoic_refresh
-        self.media_type = media_type
+    public init(responseHeader: ClientResponseHeader? = nil, deleteAction: ClientDeleteAction? = nil) {
+        self.responseHeader = responseHeader
+        self.deleteAction = deleteAction
     }
 }
 
-public struct OTRModification: ProtoMessage {
+public struct ClientDeleteConversationRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case old_otr_status = 1
-        case new_otr_status = 2
-        case old_otr_toggle = 3
-        case new_otr_toggle = 4
+        case requestHeader = 1
+        case conversationId = 2
+        case deleteUpperBoundTimestamp = 3
+        case deleteType = 4
+        case deleteEventIdArray = 5
     }
     
-    public var old_otr_status: OffTheRecordStatus? = nil
-    public var new_otr_status: OffTheRecordStatus? = nil
-    public var old_otr_toggle: OffTheRecordToggle? = nil
-    public var new_otr_toggle: OffTheRecordToggle? = nil
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var deleteUpperBoundTimestamp: UInt64? = nil
+    public var deleteType: ClientDeleteType? = nil
+    public var deleteEventIdArray: [String] = []
     
-    public init(old_otr_status: OffTheRecordStatus? = nil, new_otr_status: OffTheRecordStatus? = nil, old_otr_toggle: OffTheRecordToggle? = nil, new_otr_toggle: OffTheRecordToggle? = nil) {
-        self.old_otr_status = old_otr_status
-        self.new_otr_status = new_otr_status
-        self.old_otr_toggle = old_otr_toggle
-        self.new_otr_toggle = new_otr_toggle
+    public init(requestHeader: ClientRequestHeader? = nil, conversationId: ClientConversationId? = nil, deleteUpperBoundTimestamp: UInt64? = nil, deleteType: ClientDeleteType? = nil, deleteEventIdArray: [String] = []) {
+        self.requestHeader = requestHeader
+        self.conversationId = conversationId
+        self.deleteUpperBoundTimestamp = deleteUpperBoundTimestamp
+        self.deleteType = deleteType
+        self.deleteEventIdArray = deleteEventIdArray
     }
 }
 
-public struct HashModifier: ProtoMessage {
+public struct ClientDeleteAction: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case update_id = 1
-        case hash_diff = 2
-        case version = 4
+        case deleteActionTimestamp = 1
+        case deleteUpperBoundTimestamp = 2
+        case deleteType = 3
+        case deleteEventIdArray = 4
     }
     
-    public var update_id: String? = nil
-    public var hash_diff: UInt64? = nil
-    public var version: UInt64? = nil
+    public var deleteActionTimestamp: UInt64? = nil
+    public var deleteUpperBoundTimestamp: UInt64? = nil
+    public var deleteType: ClientDeleteType? = nil
+    public var deleteEventIdArray: [String] = []
     
-    public init(update_id: String? = nil, hash_diff: UInt64? = nil, version: UInt64? = nil) {
-        self.update_id = update_id
-        self.hash_diff = hash_diff
-        self.version = version
+    public init(deleteActionTimestamp: UInt64? = nil, deleteUpperBoundTimestamp: UInt64? = nil, deleteType: ClientDeleteType? = nil, deleteEventIdArray: [String] = []) {
+        self.deleteActionTimestamp = deleteActionTimestamp
+        self.deleteUpperBoundTimestamp = deleteUpperBoundTimestamp
+        self.deleteType = deleteType
+        self.deleteEventIdArray = deleteEventIdArray
     }
 }
 
-public struct Event: ProtoMessage {
+public struct ClientInvitationWatermarkNotification: ProtoMessage {
+    /*
     public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case sender_id = 2
-        case timestamp = 3
-        case self_event_state = 4
-        case source_type = 6
-        case chat_message = 7
-        case membership_change = 9
-        case conversation_rename = 10
-        case hangout_event = 11
-        case event_id = 12
-        case expiration_timestamp = 13
-        case otr_modification = 14
-        case advances_sort_timestamp = 15
-        case event_otr = 16
-        case persisted = 17
-        case delivery_medium = 20
-        case event_type = 23
-        case event_version = 24
-        case hash_modifier = 26
-        case group_link_sharing_modification = 31
     }
+    */
     
-    public var conversation_id: ConversationId? = nil
-    public var sender_id: ParticipantId? = nil
-    public var timestamp: UInt64? = nil
-    public var self_event_state: UserEventState? = nil
-    public var source_type: SourceType? = nil
-    public var chat_message: ChatMessage? = nil
-    public var membership_change: MembershipChange? = nil
-    public var conversation_rename: ConversationRename? = nil
-    public var hangout_event: HangoutEvent? = nil
-    public var event_id: String? = nil
-    public var expiration_timestamp: UInt64? = nil
-    public var otr_modification: OTRModification? = nil
-    public var advances_sort_timestamp: Bool? = nil
-    public var event_otr: OffTheRecordStatus? = nil
-    public var persisted: Bool? = nil
-    public var delivery_medium: DeliveryMedium? = nil
-    public var event_type: EventType? = nil
-    public var event_version: UInt64? = nil
-    public var hash_modifier: HashModifier? = nil
-    public var group_link_sharing_modification: GroupLinkSharingModification? = nil
-    
-    public init(conversation_id: ConversationId? = nil, sender_id: ParticipantId? = nil, timestamp: UInt64? = nil, self_event_state: UserEventState? = nil, source_type: SourceType? = nil, chat_message: ChatMessage? = nil, membership_change: MembershipChange? = nil, conversation_rename: ConversationRename? = nil, hangout_event: HangoutEvent? = nil, event_id: String? = nil, expiration_timestamp: UInt64? = nil, otr_modification: OTRModification? = nil, advances_sort_timestamp: Bool? = nil, event_otr: OffTheRecordStatus? = nil, persisted: Bool? = nil, delivery_medium: DeliveryMedium? = nil, event_type: EventType? = nil, event_version: UInt64? = nil, hash_modifier: HashModifier? = nil, group_link_sharing_modification: GroupLinkSharingModification? = nil) {
-        self.conversation_id = conversation_id
-        self.sender_id = sender_id
-        self.timestamp = timestamp
-        self.self_event_state = self_event_state
-        self.source_type = source_type
-        self.chat_message = chat_message
-        self.membership_change = membership_change
-        self.conversation_rename = conversation_rename
-        self.hangout_event = hangout_event
-        self.event_id = event_id
-        self.expiration_timestamp = expiration_timestamp
-        self.otr_modification = otr_modification
-        self.advances_sort_timestamp = advances_sort_timestamp
-        self.event_otr = event_otr
-        self.persisted = persisted
-        self.delivery_medium = delivery_medium
-        self.event_type = event_type
-        self.event_version = event_version
-        self.hash_modifier = hash_modifier
-        self.group_link_sharing_modification = group_link_sharing_modification
+    public init() {
     }
 }
 
-public struct UserReadState: ProtoMessage {
+public struct ClientUpdateInvitationWatermarkResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case participant_id = 1
-        case latest_read_timestamp = 2
+        case responseHeader = 1
     }
     
-    public var participant_id: ParticipantId? = nil
-    public var latest_read_timestamp: UInt64? = nil
+    public var responseHeader: ClientResponseHeader? = nil
     
-    public init(participant_id: ParticipantId? = nil, latest_read_timestamp: UInt64? = nil) {
-        self.participant_id = participant_id
-        self.latest_read_timestamp = latest_read_timestamp
+    public init(responseHeader: ClientResponseHeader? = nil) {
+        self.responseHeader = responseHeader
     }
 }
 
-public struct DeliveryMedium: ProtoMessage {
+public struct ClientUpdateInvitationWatermarkRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case medium_type = 1
-        case self_phone = 2
+        case requestHeader = 1
+        case latestReadTimestamp = 2
     }
     
-    public var medium_type: DeliveryMediumType? = nil
-    public var self_phone: PhoneNumber? = nil
+    public var requestHeader: ClientRequestHeader? = nil
+    public var latestReadTimestamp: UInt64? = nil
     
-    public init(medium_type: DeliveryMediumType? = nil, self_phone: PhoneNumber? = nil) {
-        self.medium_type = medium_type
-        self.self_phone = self_phone
+    public init(requestHeader: ClientRequestHeader? = nil, latestReadTimestamp: UInt64? = nil) {
+        self.requestHeader = requestHeader
+        self.latestReadTimestamp = latestReadTimestamp
     }
 }
 
-public struct DeliveryMediumOption: ProtoMessage {
+public struct ClientWatermarkNotification: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case delivery_medium = 1
-        case current_default = 2
-        case primary = 3
+        case participantId = 1
+        case conversationId = 2
+        case latestReadTimestamp = 3
     }
     
-    public var delivery_medium: DeliveryMedium? = nil
-    public var current_default: Bool? = nil
+    public var participantId: ClientParticipantId? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var latestReadTimestamp: UInt64? = nil
+    
+    public init(participantId: ClientParticipantId? = nil, conversationId: ClientConversationId? = nil, latestReadTimestamp: UInt64? = nil) {
+        self.participantId = participantId
+        self.conversationId = conversationId
+        self.latestReadTimestamp = latestReadTimestamp
+    }
+}
+
+public struct ClientUpdateWatermarkResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil) {
+        self.responseHeader = responseHeader
+    }
+}
+
+public struct ClientUpdateWatermarkRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case conversationId = 2
+        case latestReadTimestamp = 3
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var latestReadTimestamp: UInt64? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, conversationId: ClientConversationId? = nil, latestReadTimestamp: UInt64? = nil) {
+        self.requestHeader = requestHeader
+        self.conversationId = conversationId
+        self.latestReadTimestamp = latestReadTimestamp
+    }
+}
+
+public struct ClientGetEntityByIdResponse_ClientEntityLookupResult: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case lookupSpec = 1
+        case entityArray = 2
+    }
+    
+    public var lookupSpec: ClientEntityLookupSpec? = nil
+    public var entityArray: [ClientEntity] = []
+    
+    public init(lookupSpec: ClientEntityLookupSpec? = nil, entityArray: [ClientEntity] = []) {
+        self.lookupSpec = lookupSpec
+        self.entityArray = entityArray
+    }
+}
+
+public struct ClientGetEntityByIdResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case entityArray = 2
+        case entityResultArray = 3
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var entityArray: [ClientEntity] = []
+    public var entityResultArray: [ClientGetEntityByIdResponse_ClientEntityLookupResult] = []
+    
+    public init(responseHeader: ClientResponseHeader? = nil, entityArray: [ClientEntity] = [], entityResultArray: [ClientGetEntityByIdResponse_ClientEntityLookupResult] = []) {
+        self.responseHeader = responseHeader
+        self.entityArray = entityArray
+        self.entityResultArray = entityResultArray
+    }
+}
+
+public struct ClientGetEntityByIdRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case deprecated2 = 2
+        case batchLookupSpecArray = 3
+        case additionalEntityDataArray = 4
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var deprecated2: ClientEntityLookupSpec? = nil
+    public var batchLookupSpecArray: [ClientEntityLookupSpec] = []
+    public var additionalEntityDataArray: [ClientAdditionalEntityData] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, deprecated2: ClientEntityLookupSpec? = nil, batchLookupSpecArray: [ClientEntityLookupSpec] = [], additionalEntityDataArray: [ClientAdditionalEntityData] = []) {
+        self.requestHeader = requestHeader
+        self.deprecated2 = deprecated2
+        self.batchLookupSpecArray = batchLookupSpecArray
+        self.additionalEntityDataArray = additionalEntityDataArray
+    }
+}
+
+public struct ClientEntityLookupSpec: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case gaiaId = 1
+        case jid = 2
+        case email = 3
+        case phone = 4
+        case chatId = 5
+        case createOffnetworkGaia = 6
+    }
+    
+    public var gaiaId: String? = nil
+    public var jid: String? = nil
+    public var email: String? = nil
+    public var phone: String? = nil
+    public var chatId: String? = nil
+    public var createOffnetworkGaia: Bool? = nil
+    
+    public init(gaiaId: String? = nil, jid: String? = nil, email: String? = nil, phone: String? = nil, chatId: String? = nil, createOffnetworkGaia: Bool? = nil) {
+        self.gaiaId = gaiaId
+        self.jid = jid
+        self.email = email
+        self.phone = phone
+        self.chatId = chatId
+        self.createOffnetworkGaia = createOffnetworkGaia
+    }
+}
+
+public struct ClientGetFavoritesResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case allFavoritesArray = 2
+        case currentVersion = 3
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var allFavoritesArray: [ClientFavorite] = []
+    public var currentVersion: String? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, allFavoritesArray: [ClientFavorite] = [], currentVersion: String? = nil) {
+        self.responseHeader = responseHeader
+        self.allFavoritesArray = allFavoritesArray
+        self.currentVersion = currentVersion
+    }
+}
+
+public struct ClientGetFavoritesRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil) {
+        self.requestHeader = requestHeader
+    }
+}
+
+public struct ClientUpdateFavoriteContactResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case error = 2
+        case allFavoritesArray = 3
+        case currentVersion = 4
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var error: ClientUpdateFavoritesError? = nil
+    public var allFavoritesArray: [ClientFavorite] = []
+    public var currentVersion: String? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, error: ClientUpdateFavoritesError? = nil, allFavoritesArray: [ClientFavorite] = [], currentVersion: String? = nil) {
+        self.responseHeader = responseHeader
+        self.error = error
+        self.allFavoritesArray = allFavoritesArray
+        self.currentVersion = currentVersion
+    }
+}
+
+public struct ClientUpdateFavoriteContactRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case updateArray = 2
+        case currentVersion = 3
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var updateArray: [ClientFavoriteUpdate] = []
+    public var currentVersion: String? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, updateArray: [ClientFavoriteUpdate] = [], currentVersion: String? = nil) {
+        self.requestHeader = requestHeader
+        self.updateArray = updateArray
+        self.currentVersion = currentVersion
+    }
+}
+
+public struct ClientFavoriteUpdate: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case favorite = 1
+        case remove = 2
+    }
+    
+    public var favorite: ClientFavorite? = nil
+    public var remove: Bool? = nil
+    
+    public init(favorite: ClientFavorite? = nil, remove: Bool? = nil) {
+        self.favorite = favorite
+        self.remove = remove
+    }
+}
+
+public struct ClientFavorite: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case participantId = 1
+        case position = 2
+        case conversationId = 3
+    }
+    
+    public var participantId: ClientParticipantId? = nil
+    public var position: Int32? = nil
+    public var conversationId: ClientConversationId? = nil
+    
+    public init(participantId: ClientParticipantId? = nil, position: Int32? = nil, conversationId: ClientConversationId? = nil) {
+        self.participantId = participantId
+        self.position = position
+        self.conversationId = conversationId
+    }
+}
+
+public struct ClientSearchEntitiesResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case entityArray = 2
+        case incomplete = 3
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var entityArray: [ClientEntity] = []
+    public var incomplete: Bool? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, entityArray: [ClientEntity] = [], incomplete: Bool? = nil) {
+        self.responseHeader = responseHeader
+        self.entityArray = entityArray
+        self.incomplete = incomplete
+    }
+}
+
+public struct ClientSearchEntitiesRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case deprecated2Array = 2
+        case query = 3
+        case maxCount = 4
+        case deprecated5 = 5
+        case includePages = 6
+        case includeIsBabelUser = 7
+        case additionalEntityDataArray = 8
+        case maxConversationCount = 9
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var deprecated2Array: [String] = []
+    public var query: String? = nil
+    public var maxCount: Int32? = nil
+    public var deprecated5: Bool? = nil
+    public var includePages: Bool? = nil
+    public var includeIsBabelUser: Bool? = nil
+    public var additionalEntityDataArray: [ClientAdditionalEntityData] = []
+    public var maxConversationCount: Int32? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, deprecated2Array: [String] = [], query: String? = nil, maxCount: Int32? = nil, deprecated5: Bool? = nil, includePages: Bool? = nil, includeIsBabelUser: Bool? = nil, additionalEntityDataArray: [ClientAdditionalEntityData] = [], maxConversationCount: Int32? = nil) {
+        self.requestHeader = requestHeader
+        self.deprecated2Array = deprecated2Array
+        self.query = query
+        self.maxCount = maxCount
+        self.deprecated5 = deprecated5
+        self.includePages = includePages
+        self.includeIsBabelUser = includeIsBabelUser
+        self.additionalEntityDataArray = additionalEntityDataArray
+        self.maxConversationCount = maxConversationCount
+    }
+}
+
+public struct ClientGetSuggestedEntitiesResponse_ClientContactResults: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case hashMatched = 1
+        case hash = 2
+        case contactArray = 3
+    }
+    
+    public var hashMatched: Bool? = nil
+    public var hash: String? = nil
+    public var contactArray: [ClientGetSuggestedEntitiesResponse_ClientContactResult] = []
+    
+    public init(hashMatched: Bool? = nil, hash: String? = nil, contactArray: [ClientGetSuggestedEntitiesResponse_ClientContactResult] = []) {
+        self.hashMatched = hashMatched
+        self.hash = hash
+        self.contactArray = contactArray
+    }
+}
+
+public struct ClientGetSuggestedEntitiesResponse_ClientContactResult: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case entity = 1
+        case invitationStatus = 2
+        case conversationId = 3
+    }
+    
+    public var entity: ClientEntity? = nil
+    public var invitationStatus: ClientInvitationStatus? = nil
+    public var conversationId: ClientConversationId? = nil
+    
+    public init(entity: ClientEntity? = nil, invitationStatus: ClientInvitationStatus? = nil, conversationId: ClientConversationId? = nil) {
+        self.entity = entity
+        self.invitationStatus = invitationStatus
+        self.conversationId = conversationId
+    }
+}
+
+public struct ClientGetSuggestedEntitiesResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case entityArray = 2
+        case scoringFailed = 3
+        case favorites = 4
+        case contactsYouHangoutWith = 5
+        case otherContactsOnHangouts = 6
+        case otherContacts = 7
+        case dismissedContacts = 8
+        case pinnedFavorites = 9
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var entityArray: [ClientEntity] = []
+    public var scoringFailed: Bool? = nil
+    public var favorites: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil
+    public var contactsYouHangoutWith: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil
+    public var otherContactsOnHangouts: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil
+    public var otherContacts: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil
+    public var dismissedContacts: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil
+    public var pinnedFavorites: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, entityArray: [ClientEntity] = [], scoringFailed: Bool? = nil, favorites: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil, contactsYouHangoutWith: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil, otherContactsOnHangouts: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil, otherContacts: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil, dismissedContacts: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil, pinnedFavorites: ClientGetSuggestedEntitiesResponse_ClientContactResults? = nil) {
+        self.responseHeader = responseHeader
+        self.entityArray = entityArray
+        self.scoringFailed = scoringFailed
+        self.favorites = favorites
+        self.contactsYouHangoutWith = contactsYouHangoutWith
+        self.otherContactsOnHangouts = otherContactsOnHangouts
+        self.otherContacts = otherContacts
+        self.dismissedContacts = dismissedContacts
+        self.pinnedFavorites = pinnedFavorites
+    }
+}
+
+public struct ClientEntity: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case deprecated1 = 1
+        case deprecated2 = 2
+        case deprecated3 = 3
+        case deprecated4 = 4
+        case deprecated5 = 5
+        case invalid = 7
+        case presence = 8
+        case id = 9
+        case properties = 10
+        case blocked = 11
+        case domainProperties = 12
+        case entityType = 13
+        case isBabelUser = 14
+        case babelUserState = 15
+        case invitationStatus = 17
+        case isAnonymousPhone = 18
+    }
+    
+    public var deprecated1: String? = nil
+    public var deprecated2: String? = nil
+    public var deprecated3: String? = nil
+    public var deprecated4: String? = nil
+    public var deprecated5: String? = nil
+    public var invalid: Bool? = nil
+    public var presence: ClientPresence? = nil
+    public var id: ClientParticipantId? = nil
+    public var properties: ClientEntityProperties? = nil
+    public var blocked: Bool? = nil
+    public var domainProperties: ClientDomainProperties? = nil
+    public var entityType: ClientUserType? = nil
+    public var isBabelUser: Bool? = nil
+    public var babelUserState: ClientEntity_BabelUserState? = nil
+    public var invitationStatus: ClientInvitationStatus? = nil
+    public var isAnonymousPhone: Bool? = nil
+    
+    public init(deprecated1: String? = nil, deprecated2: String? = nil, deprecated3: String? = nil, deprecated4: String? = nil, deprecated5: String? = nil, invalid: Bool? = nil, presence: ClientPresence? = nil, id: ClientParticipantId? = nil, properties: ClientEntityProperties? = nil, blocked: Bool? = nil, domainProperties: ClientDomainProperties? = nil, entityType: ClientUserType? = nil, isBabelUser: Bool? = nil, babelUserState: ClientEntity_BabelUserState? = nil, invitationStatus: ClientInvitationStatus? = nil, isAnonymousPhone: Bool? = nil) {
+        self.deprecated1 = deprecated1
+        self.deprecated2 = deprecated2
+        self.deprecated3 = deprecated3
+        self.deprecated4 = deprecated4
+        self.deprecated5 = deprecated5
+        self.invalid = invalid
+        self.presence = presence
+        self.id = id
+        self.properties = properties
+        self.blocked = blocked
+        self.domainProperties = domainProperties
+        self.entityType = entityType
+        self.isBabelUser = isBabelUser
+        self.babelUserState = babelUserState
+        self.invitationStatus = invitationStatus
+        self.isAnonymousPhone = isAnonymousPhone
+    }
+}
+
+public struct ClientDomainProperties: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case showChatWarning = 1
+        case phoneCallingEnabled = 2
+        case voiceCallingEnabled = 3
+        case videoCallingEnabled = 4
+        case domainName = 5
+        case isPaidDasher = 6
+        case forceHistoryState = 7
+        case deprecated8 = 8
+        case chatRestricted = 9
+        case domainDefaultOtrSetting = 11
+        case isRugbyUser = 12
+    }
+    
+    public var showChatWarning: Bool? = nil
+    public var phoneCallingEnabled: Bool? = nil
+    public var voiceCallingEnabled: Bool? = nil
+    public var videoCallingEnabled: Bool? = nil
+    public var domainName: String? = nil
+    public var isPaidDasher: Bool? = nil
+    public var forceHistoryState: ClientForceHistoryState? = nil
+    public var deprecated8: String? = nil
+    public var chatRestricted: ClientDomainProperties_ClientChatRestricted? = nil
+    public var domainDefaultOtrSetting: ClientDomainProperties_ClientDomainDefaultOtrSetting? = nil
+    public var isRugbyUser: Bool? = nil
+    
+    public init(showChatWarning: Bool? = nil, phoneCallingEnabled: Bool? = nil, voiceCallingEnabled: Bool? = nil, videoCallingEnabled: Bool? = nil, domainName: String? = nil, isPaidDasher: Bool? = nil, forceHistoryState: ClientForceHistoryState? = nil, deprecated8: String? = nil, chatRestricted: ClientDomainProperties_ClientChatRestricted? = nil, domainDefaultOtrSetting: ClientDomainProperties_ClientDomainDefaultOtrSetting? = nil, isRugbyUser: Bool? = nil) {
+        self.showChatWarning = showChatWarning
+        self.phoneCallingEnabled = phoneCallingEnabled
+        self.voiceCallingEnabled = voiceCallingEnabled
+        self.videoCallingEnabled = videoCallingEnabled
+        self.domainName = domainName
+        self.isPaidDasher = isPaidDasher
+        self.forceHistoryState = forceHistoryState
+        self.deprecated8 = deprecated8
+        self.chatRestricted = chatRestricted
+        self.domainDefaultOtrSetting = domainDefaultOtrSetting
+        self.isRugbyUser = isRugbyUser
+    }
+}
+
+public struct ClientEntityProperties_ClientAffinity: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case affinityType = 1
+        case value = 2
+        case loggingId = 3
+    }
+    
+    public var affinityType: ClientEntityProperties_ClientAffinity_ClientAffinityType? = nil
+    public var value: Double? = nil
+    public var loggingId: String? = nil
+    
+    public init(affinityType: ClientEntityProperties_ClientAffinity_ClientAffinityType? = nil, value: Double? = nil, loggingId: String? = nil) {
+        self.affinityType = affinityType
+        self.value = value
+        self.loggingId = loggingId
+    }
+}
+
+public struct ClientEntityProperties: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case type = 1
+        case displayName = 2
+        case firstName = 3
+        case photoURL = 4
+        case emailArray = 5
+        case phoneArray = 6
+        case location = 7
+        case organization = 8
+        case role = 9
+        case inUsersDomain = 10
+        case circleIdArray = 13
+        case phoneNumberArray = 14
+        case canonicalEmail = 15
+        case affinityArray = 16
+    }
+    
+    public var type: ClientEntityProperties_ProfileType? = nil
+    public var displayName: String? = nil
+    public var firstName: String? = nil
+    public var photoURL: String? = nil
+    public var emailArray: [String] = []
+    public var phoneArray: [String] = []
+    public var location: String? = nil
+    public var organization: String? = nil
+    public var role: String? = nil
+    public var inUsersDomain: Bool? = nil
+    public var circleIdArray: [String] = []
+    public var phoneNumberArray: [GCVContactPhoneNumber] = []
+    public var canonicalEmail: String? = nil
+    public var affinityArray: [ClientEntityProperties_ClientAffinity] = []
+    
+    public init(type: ClientEntityProperties_ProfileType? = nil, displayName: String? = nil, firstName: String? = nil, photoURL: String? = nil, emailArray: [String] = [], phoneArray: [String] = [], location: String? = nil, organization: String? = nil, role: String? = nil, inUsersDomain: Bool? = nil, circleIdArray: [String] = [], phoneNumberArray: [GCVContactPhoneNumber] = [], canonicalEmail: String? = nil, affinityArray: [ClientEntityProperties_ClientAffinity] = []) {
+        self.type = type
+        self.displayName = displayName
+        self.firstName = firstName
+        self.photoURL = photoURL
+        self.emailArray = emailArray
+        self.phoneArray = phoneArray
+        self.location = location
+        self.organization = organization
+        self.role = role
+        self.inUsersDomain = inUsersDomain
+        self.circleIdArray = circleIdArray
+        self.phoneNumberArray = phoneNumberArray
+        self.canonicalEmail = canonicalEmail
+        self.affinityArray = affinityArray
+    }
+}
+
+public struct ClientGetSuggestedEntitiesRequest_ClientContactOptions: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case maxCount = 1
+        case hash = 2
+    }
+    
+    public var maxCount: Int32? = nil
+    public var hash: String? = nil
+    
+    public init(maxCount: Int32? = nil, hash: String? = nil) {
+        self.maxCount = maxCount
+        self.hash = hash
+    }
+}
+
+public struct ClientGetSuggestedEntitiesRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case deprecated2Array = 2
+        case deprecated3Array = 3
+        case maxCount = 4
+        case deprecated5 = 5
+        case givenIdArray = 6
+        case includeLegacy = 7
+        case favoritesOptions = 8
+        case contactsYouHangoutWithOptions = 9
+        case otherContactsOnHangoutsOptions = 10
+        case otherContactsOptions = 11
+        case dismissedContactsOptions = 12
+        case pinnedFavoritesOptions = 13
+        case includeIsBabelUser = 14
+        case additionalEntityDataArray = 15
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var deprecated2Array: [String] = []
+    public var deprecated3Array: [String] = []
+    public var maxCount: Int32? = nil
+    public var deprecated5: Bool? = nil
+    public var givenIdArray: [ClientParticipantId] = []
+    public var includeLegacy: Bool? = nil
+    public var favoritesOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil
+    public var contactsYouHangoutWithOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil
+    public var otherContactsOnHangoutsOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil
+    public var otherContactsOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil
+    public var dismissedContactsOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil
+    public var pinnedFavoritesOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil
+    public var includeIsBabelUser: Bool? = nil
+    public var additionalEntityDataArray: [ClientAdditionalEntityData] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, deprecated2Array: [String] = [], deprecated3Array: [String] = [], maxCount: Int32? = nil, deprecated5: Bool? = nil, givenIdArray: [ClientParticipantId] = [], includeLegacy: Bool? = nil, favoritesOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil, contactsYouHangoutWithOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil, otherContactsOnHangoutsOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil, otherContactsOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil, dismissedContactsOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil, pinnedFavoritesOptions: ClientGetSuggestedEntitiesRequest_ClientContactOptions? = nil, includeIsBabelUser: Bool? = nil, additionalEntityDataArray: [ClientAdditionalEntityData] = []) {
+        self.requestHeader = requestHeader
+        self.deprecated2Array = deprecated2Array
+        self.deprecated3Array = deprecated3Array
+        self.maxCount = maxCount
+        self.deprecated5 = deprecated5
+        self.givenIdArray = givenIdArray
+        self.includeLegacy = includeLegacy
+        self.favoritesOptions = favoritesOptions
+        self.contactsYouHangoutWithOptions = contactsYouHangoutWithOptions
+        self.otherContactsOnHangoutsOptions = otherContactsOnHangoutsOptions
+        self.otherContactsOptions = otherContactsOptions
+        self.dismissedContactsOptions = dismissedContactsOptions
+        self.pinnedFavoritesOptions = pinnedFavoritesOptions
+        self.includeIsBabelUser = includeIsBabelUser
+        self.additionalEntityDataArray = additionalEntityDataArray
+    }
+}
+
+public struct ClientPhone: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case phoneNumber = 1
+        case googleVoice = 2
+        case verificationStatus = 3
+        case discoverable = 4
+        case discoverabilityStatus = 5
+        case primary = 6
+    }
+    
+    public var phoneNumber: GCVPhoneNumber? = nil
+    public var googleVoice: Bool? = nil
+    public var verificationStatus: ClientVerificationStatus? = nil
+    public var discoverable: Bool? = nil
+    public var discoverabilityStatus: ClientDiscoverabilityStatus? = nil
     public var primary: Bool? = nil
     
-    public init(delivery_medium: DeliveryMedium? = nil, current_default: Bool? = nil, primary: Bool? = nil) {
-        self.delivery_medium = delivery_medium
-        self.current_default = current_default
+    public init(phoneNumber: GCVPhoneNumber? = nil, googleVoice: Bool? = nil, verificationStatus: ClientVerificationStatus? = nil, discoverable: Bool? = nil, discoverabilityStatus: ClientDiscoverabilityStatus? = nil, primary: Bool? = nil) {
+        self.phoneNumber = phoneNumber
+        self.googleVoice = googleVoice
+        self.verificationStatus = verificationStatus
+        self.discoverable = discoverable
+        self.discoverabilityStatus = discoverabilityStatus
         self.primary = primary
     }
 }
 
-public struct UserConversationState: ProtoMessage {
+public struct ClientPhoneData: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case client_generated_id = 2
-        case self_read_state = 7
-        case status = 8
-        case notification_level = 9
-        case view = 10
-        case inviter_id = 11
-        case invite_timestamp = 12
-        case sort_timestamp = 13
-        case active_timestamp = 14
-        case invite_affinity = 15
-        case delivery_medium_option = 17
+        case phoneArray = 1
+        case callerIdSettingArray = 2
+        case callerIdSettingsMask = 3
     }
     
-    public var client_generated_id: String? = nil
-    public var self_read_state: UserReadState? = nil
-    public var status: ConversationStatus? = nil
-    public var notification_level: NotificationLevel? = nil
-    public var view: [ConversationView] = []
-    public var inviter_id: ParticipantId? = nil
-    public var invite_timestamp: UInt64? = nil
-    public var sort_timestamp: UInt64? = nil
-    public var active_timestamp: UInt64? = nil
-    public var invite_affinity: InvitationAffinity? = nil
-    public var delivery_medium_option: [DeliveryMediumOption] = []
+    public var phoneArray: [ClientPhone] = []
+    public var callerIdSettingArray: [ClientCallerIdSetting] = []
+    public var callerIdSettingsMask: ClientCallerIdSettingsMask? = nil
     
-    public init(client_generated_id: String? = nil, self_read_state: UserReadState? = nil, status: ConversationStatus? = nil, notification_level: NotificationLevel? = nil, view: [ConversationView] = [], inviter_id: ParticipantId? = nil, invite_timestamp: UInt64? = nil, sort_timestamp: UInt64? = nil, active_timestamp: UInt64? = nil, invite_affinity: InvitationAffinity? = nil, delivery_medium_option: [DeliveryMediumOption] = []) {
-        self.client_generated_id = client_generated_id
-        self.self_read_state = self_read_state
-        self.status = status
-        self.notification_level = notification_level
-        self.view = view
-        self.inviter_id = inviter_id
-        self.invite_timestamp = invite_timestamp
-        self.sort_timestamp = sort_timestamp
-        self.active_timestamp = active_timestamp
-        self.invite_affinity = invite_affinity
-        self.delivery_medium_option = delivery_medium_option
+    public init(phoneArray: [ClientPhone] = [], callerIdSettingArray: [ClientCallerIdSetting] = [], callerIdSettingsMask: ClientCallerIdSettingsMask? = nil) {
+        self.phoneArray = phoneArray
+        self.callerIdSettingArray = callerIdSettingArray
+        self.callerIdSettingsMask = callerIdSettingsMask
     }
 }
 
-public struct ConversationParticipantData: ProtoMessage {
+public struct ClientExperimentValue_Value: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case id = 1
-        case fallback_name = 2
-        case invitation_status = 3
-        case phone_number = 4
-        case participant_type = 5
-        case new_invitation_status = 6
+        case longValue = 1
+        case doubleValue = 2
+        case stringValue = 3
+        case boolValue = 4
     }
     
-    public var id: ParticipantId? = nil
-    public var fallback_name: String? = nil
-    public var invitation_status: InvitationStatus? = nil
-    public var phone_number: PhoneNumber? = nil
-    public var participant_type: ParticipantType? = nil
-    public var new_invitation_status: InvitationStatus? = nil
+    public var longValue: Int64? = nil
+    public var doubleValue: Double? = nil
+    public var stringValue: String? = nil
+    public var boolValue: Bool? = nil
     
-    public init(id: ParticipantId? = nil, fallback_name: String? = nil, invitation_status: InvitationStatus? = nil, phone_number: PhoneNumber? = nil, participant_type: ParticipantType? = nil, new_invitation_status: InvitationStatus? = nil) {
-        self.id = id
-        self.fallback_name = fallback_name
-        self.invitation_status = invitation_status
-        self.phone_number = phone_number
-        self.participant_type = participant_type
-        self.new_invitation_status = new_invitation_status
+    public init(longValue: Int64? = nil, doubleValue: Double? = nil, stringValue: String? = nil, boolValue: Bool? = nil) {
+        self.longValue = longValue
+        self.doubleValue = doubleValue
+        self.stringValue = stringValue
+        self.boolValue = boolValue
     }
 }
 
-public struct Conversation: ProtoMessage {
+public struct ClientExperimentValue: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case type = 2
-        case name = 3
-        case self_conversation_state = 4
-        case read_state = 8
-        case has_active_hangout = 9
-        case otr_status = 10
-        case otr_toggle = 11
-        case conversation_history_supported = 12
-        case current_participant = 13
-        case participant_data = 14
-        case fork_on_external_invite = 16
-        case network_type = 18
-        case force_history_state = 19
-        case is_group_link_sharing_enabled = 21
-        case group_link_sharing_status = 22
+        case hexFlagId = 1
+        case flagType = 2
+        case value = 3
+        case logAction = 4
     }
     
-    public var conversation_id: ConversationId? = nil
-    public var type: ConversationType? = nil
-    public var name: String? = nil
-    public var self_conversation_state: UserConversationState? = nil
-    public var read_state: [UserReadState] = []
-    public var has_active_hangout: Bool? = nil
-    public var otr_status: OffTheRecordStatus? = nil
-    public var otr_toggle: OffTheRecordToggle? = nil
-    public var conversation_history_supported: Bool? = nil
-    public var current_participant: [ParticipantId] = []
-    public var participant_data: [ConversationParticipantData] = []
-    public var fork_on_external_invite: Bool? = nil
-    public var network_type: [NetworkType] = []
-    public var force_history_state: ForceHistory? = nil
-    public var is_group_link_sharing_enabled: Bool? = nil
-    public var group_link_sharing_status: GroupLinkSharingStatus? = nil
+    public var hexFlagId: String? = nil
+    public var flagType: ClientExperimentValue_FlagType? = nil
+    public var value: ClientExperimentValue_Value? = nil
+    public var logAction: ClientExperimentValue_LogAction? = nil
     
-    public init(conversation_id: ConversationId? = nil, type: ConversationType? = nil, name: String? = nil, self_conversation_state: UserConversationState? = nil, read_state: [UserReadState] = [], has_active_hangout: Bool? = nil, otr_status: OffTheRecordStatus? = nil, otr_toggle: OffTheRecordToggle? = nil, conversation_history_supported: Bool? = nil, current_participant: [ParticipantId] = [], participant_data: [ConversationParticipantData] = [], fork_on_external_invite: Bool? = nil, network_type: [NetworkType] = [], force_history_state: ForceHistory? = nil, is_group_link_sharing_enabled: Bool? = nil, group_link_sharing_status: GroupLinkSharingStatus? = nil) {
-        self.conversation_id = conversation_id
-        self.type = type
-        self.name = name
-        self.self_conversation_state = self_conversation_state
-        self.read_state = read_state
-        self.has_active_hangout = has_active_hangout
-        self.otr_status = otr_status
-        self.otr_toggle = otr_toggle
-        self.conversation_history_supported = conversation_history_supported
-        self.current_participant = current_participant
-        self.participant_data = participant_data
-        self.fork_on_external_invite = fork_on_external_invite
-        self.network_type = network_type
-        self.force_history_state = force_history_state
-        self.is_group_link_sharing_enabled = is_group_link_sharing_enabled
-        self.group_link_sharing_status = group_link_sharing_status
-    }
-}
-
-public struct EasterEgg: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case message = 1
-    }
-    
-    public var message: String? = nil
-    
-    public init(message: String? = nil) {
-        self.message = message
-    }
-}
-
-public struct BlockStateChange: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case participant_id = 1
-        case new_block_state = 2
-    }
-    
-    public var participant_id: ParticipantId? = nil
-    public var new_block_state: BlockState? = nil
-    
-    public init(participant_id: ParticipantId? = nil, new_block_state: BlockState? = nil) {
-        self.participant_id = participant_id
-        self.new_block_state = new_block_state
-    }
-}
-
-public struct InvitationState: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case unread_invite_count = 1
-        case latest_read_timestamp = 2
-    }
-    
-    public var unread_invite_count: UInt64? = nil
-    public var latest_read_timestamp: UInt64? = nil
-    
-    public init(unread_invite_count: UInt64? = nil, latest_read_timestamp: UInt64? = nil) {
-        self.unread_invite_count = unread_invite_count
-        self.latest_read_timestamp = latest_read_timestamp
-    }
-}
-
-public struct Photo: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case photo_id = 1
-        case delete_albumless_source_photo = 2
-        case user_id = 3
-        case is_custom_user_id = 4
-    }
-    
-    public var photo_id: String? = nil
-    public var delete_albumless_source_photo: Bool? = nil
-    public var user_id: String? = nil
-    public var is_custom_user_id: Bool? = nil
-    
-    public init(photo_id: String? = nil, delete_albumless_source_photo: Bool? = nil, user_id: String? = nil, is_custom_user_id: Bool? = nil) {
-        self.photo_id = photo_id
-        self.delete_albumless_source_photo = delete_albumless_source_photo
-        self.user_id = user_id
-        self.is_custom_user_id = is_custom_user_id
-    }
-}
-
-public struct ExistingMedia: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case photo = 1
-    }
-    
-    public var photo: Photo? = nil
-    
-    public init(photo: Photo? = nil) {
-        self.photo = photo
-    }
-}
-
-public struct EventRequestHeader: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case client_generated_id = 2
-        case expected_otr = 3
-        case delivery_medium = 4
-        case event_type = 5
-    }
-    
-    public var conversation_id: ConversationId? = nil
-    public var client_generated_id: UInt64? = nil
-    public var expected_otr: OffTheRecordStatus? = nil
-    public var delivery_medium: DeliveryMedium? = nil
-    public var event_type: EventType? = nil
-    
-    public init(conversation_id: ConversationId? = nil, client_generated_id: UInt64? = nil, expected_otr: OffTheRecordStatus? = nil, delivery_medium: DeliveryMedium? = nil, event_type: EventType? = nil) {
-        self.conversation_id = conversation_id
-        self.client_generated_id = client_generated_id
-        self.expected_otr = expected_otr
-        self.delivery_medium = delivery_medium
-        self.event_type = event_type
-    }
-}
-
-public struct ClientVersion: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case client_id = 1
-        case build_type = 2
-        case major_version = 3
-        case version_timestamp = 4
-        case device_os_version = 5
-        case device_hardware = 6
-    }
-    
-    public var client_id: ClientId? = nil
-    public var build_type: ClientBuildType? = nil
-    public var major_version: String? = nil
-    public var version_timestamp: UInt64? = nil
-    public var device_os_version: String? = nil
-    public var device_hardware: String? = nil
-    
-    public init(client_id: ClientId? = nil, build_type: ClientBuildType? = nil, major_version: String? = nil, version_timestamp: UInt64? = nil, device_os_version: String? = nil, device_hardware: String? = nil) {
-        self.client_id = client_id
-        self.build_type = build_type
-        self.major_version = major_version
-        self.version_timestamp = version_timestamp
-        self.device_os_version = device_os_version
-        self.device_hardware = device_hardware
-    }
-}
-
-public struct RtcClient: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case device = 1
-        case application = 2
-        case platform = 3
-    }
-    
-    public var device: Device? = nil
-    public var application: Application? = nil
-    public var platform: Platform? = nil
-    
-    public init(device: Device? = nil, application: Application? = nil, platform: Platform? = nil) {
-        self.device = device
-        self.application = application
-        self.platform = platform
-    }
-}
-
-public struct RequestHeader: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case client_version = 1
-        case client_identifier = 2
-        case language_code = 4
-        case include_updated_conversation = 5
-        case retry_attempt = 6
-        case rtc_client = 7
-    }
-    
-    public var client_version: ClientVersion? = nil
-    public var client_identifier: ClientIdentifier? = nil
-    public var language_code: String? = nil
-    public var include_updated_conversation: Bool? = nil
-    public var retry_attempt: UInt32? = nil
-    public var rtc_client: RtcClient? = nil
-    
-    public init(client_version: ClientVersion? = nil, client_identifier: ClientIdentifier? = nil, language_code: String? = nil, include_updated_conversation: Bool? = nil, retry_attempt: UInt32? = nil, rtc_client: RtcClient? = nil) {
-        self.client_version = client_version
-        self.client_identifier = client_identifier
-        self.language_code = language_code
-        self.include_updated_conversation = include_updated_conversation
-        self.retry_attempt = retry_attempt
-        self.rtc_client = rtc_client
-    }
-}
-
-public struct ResponseHeader: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case status = 1
-        case error_description = 2
-        case debug_url = 3
-        case request_trace_id = 4
-        case current_server_time = 5
-        case backoff_duration_millis = 6
-        case localized_user_visible_error_message = 8
-    }
-    
-    public var status: ResponseStatus? = nil
-    public var error_description: String? = nil
-    public var debug_url: String? = nil
-    public var request_trace_id: String? = nil
-    public var current_server_time: UInt64? = nil
-    public var backoff_duration_millis: UInt64? = nil
-    public var localized_user_visible_error_message: String? = nil
-    
-    public init(status: ResponseStatus? = nil, error_description: String? = nil, debug_url: String? = nil, request_trace_id: String? = nil, current_server_time: UInt64? = nil, backoff_duration_millis: UInt64? = nil, localized_user_visible_error_message: String? = nil) {
-        self.status = status
-        self.error_description = error_description
-        self.debug_url = debug_url
-        self.request_trace_id = request_trace_id
-        self.current_server_time = current_server_time
-        self.backoff_duration_millis = backoff_duration_millis
-        self.localized_user_visible_error_message = localized_user_visible_error_message
-    }
-}
-
-public struct Entity: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case id = 9
-        case presence = 8
-        case invalid = 7
-        case properties = 10
-        case blocked = 11
-        case entity_type = 13
-        case had_past_hangout_state = 16
-    }
-    
-    public var id: ParticipantId? = nil
-    public var presence: Presence? = nil
-    public var invalid: Bool? = nil
-    public var properties: EntityProperties? = nil
-    public var blocked: Bool? = nil
-    public var entity_type: ParticipantType? = nil
-    public var had_past_hangout_state: PastHangoutState? = nil
-    
-    public init(id: ParticipantId? = nil, presence: Presence? = nil, invalid: Bool? = nil, properties: EntityProperties? = nil, blocked: Bool? = nil, entity_type: ParticipantType? = nil, had_past_hangout_state: PastHangoutState? = nil) {
-        self.id = id
-        self.presence = presence
-        self.invalid = invalid
-        self.properties = properties
-        self.blocked = blocked
-        self.entity_type = entity_type
-        self.had_past_hangout_state = had_past_hangout_state
-    }
-}
-
-public struct EntityProperties: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case type = 1
-        case display_name = 2
-        case first_name = 3
-        case photo_url = 4
-        case email = 5
-        case phone = 6
-        case location = 7
-        case organization = 8
-        case role = 9
-        case in_users_domain = 10
-        case gender = 11
-        case photo_url_status = 12
-        case phones = 14
-        case canonical_email = 15
-    }
-    
-    public var type: ProfileType? = nil
-    public var display_name: String? = nil
-    public var first_name: String? = nil
-    public var photo_url: String? = nil
-    public var email: [String] = []
-    public var phone: [String] = []
-    public var location: String? = nil
-    public var organization: String? = nil
-    public var role: String? = nil
-    public var in_users_domain: Bool? = nil
-    public var gender: Gender? = nil
-    public var photo_url_status: PhotoUrlStatus? = nil
-    public var phones: [PhoneDescription] = []
-    public var canonical_email: String? = nil
-    
-    public init(type: ProfileType? = nil, display_name: String? = nil, first_name: String? = nil, photo_url: String? = nil, email: [String] = [], phone: [String] = [], location: String? = nil, organization: String? = nil, role: String? = nil, in_users_domain: Bool? = nil, gender: Gender? = nil, photo_url_status: PhotoUrlStatus? = nil, phones: [PhoneDescription] = [], canonical_email: String? = nil) {
-        self.type = type
-        self.display_name = display_name
-        self.first_name = first_name
-        self.photo_url = photo_url
-        self.email = email
-        self.phone = phone
-        self.location = location
-        self.organization = organization
-        self.role = role
-        self.in_users_domain = in_users_domain
-        self.gender = gender
-        self.photo_url_status = photo_url_status
-        self.phones = phones
-        self.canonical_email = canonical_email
-    }
-}
-
-public struct ConversationState: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case conversation = 2
-        case event = 3
-        case event_continuation_token = 5
-    }
-    
-    public var conversation_id: ConversationId? = nil
-    public var conversation: Conversation? = nil
-    public var event: [Event] = []
-    public var event_continuation_token: EventContinuationToken? = nil
-    
-    public init(conversation_id: ConversationId? = nil, conversation: Conversation? = nil, event: [Event] = [], event_continuation_token: EventContinuationToken? = nil) {
-        self.conversation_id = conversation_id
-        self.conversation = conversation
-        self.event = event
-        self.event_continuation_token = event_continuation_token
-    }
-}
-
-public struct EventContinuationToken: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case event_id = 1
-        case storage_continuation_token = 2
-        case event_timestamp = 3
-    }
-    
-    public var event_id: String? = nil
-    public var storage_continuation_token: String? = nil
-    public var event_timestamp: UInt64? = nil
-    
-    public init(event_id: String? = nil, storage_continuation_token: String? = nil, event_timestamp: UInt64? = nil) {
-        self.event_id = event_id
-        self.storage_continuation_token = storage_continuation_token
-        self.event_timestamp = event_timestamp
-    }
-}
-
-public struct EntityLookupSpec: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case gaia_id = 1
-        case jid = 2
-        case email = 3
-        case phone = 4
-        case chat_id = 5
-        case create_offnetwork_gaia = 6
-    }
-    
-    public var gaia_id: String? = nil
-    public var jid: String? = nil
-    public var email: String? = nil
-    public var phone: String? = nil
-    public var chat_id: String? = nil
-    public var create_offnetwork_gaia: Bool? = nil
-    
-    public init(gaia_id: String? = nil, jid: String? = nil, email: String? = nil, phone: String? = nil, chat_id: String? = nil, create_offnetwork_gaia: Bool? = nil) {
-        self.gaia_id = gaia_id
-        self.jid = jid
-        self.email = email
-        self.phone = phone
-        self.chat_id = chat_id
-        self.create_offnetwork_gaia = create_offnetwork_gaia
-    }
-}
-
-public struct ConfigurationBit: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case configuration_bit_type = 1
-        case value = 2
-    }
-    
-    public var configuration_bit_type: ConfigurationBitType? = nil
-    public var value: Bool? = nil
-    
-    public init(configuration_bit_type: ConfigurationBitType? = nil, value: Bool? = nil) {
-        self.configuration_bit_type = configuration_bit_type
+    public init(hexFlagId: String? = nil, flagType: ClientExperimentValue_FlagType? = nil, value: ClientExperimentValue_Value? = nil, logAction: ClientExperimentValue_LogAction? = nil) {
+        self.hexFlagId = hexFlagId
+        self.flagType = flagType
         self.value = value
+        self.logAction = logAction
     }
 }
 
-public struct RichPresenceState: ProtoMessage {
+public struct ClientCallerIdSetting: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case get_rich_presence_enabled_state = 3
+        case callerIdPhoneNumber = 1
+        case ineligibilityCause = 2
+        case callerIdToken = 3
+        case defaultCallerId = 4
     }
     
-    public var get_rich_presence_enabled_state: [RichPresenceEnabledState] = []
+    public var callerIdPhoneNumber: GCVPhoneNumber? = nil
+    public var ineligibilityCause: ClientCallerIdSetting_ClientIneligibilityCause? = nil
+    public var callerIdToken: HEligibleCallerIdToken? = nil
+    public var defaultCallerId: Bool? = nil
     
-    public init(get_rich_presence_enabled_state: [RichPresenceEnabledState] = []) {
-        self.get_rich_presence_enabled_state = get_rich_presence_enabled_state
+    public init(callerIdPhoneNumber: GCVPhoneNumber? = nil, ineligibilityCause: ClientCallerIdSetting_ClientIneligibilityCause? = nil, callerIdToken: HEligibleCallerIdToken? = nil, defaultCallerId: Bool? = nil) {
+        self.callerIdPhoneNumber = callerIdPhoneNumber
+        self.ineligibilityCause = ineligibilityCause
+        self.callerIdToken = callerIdToken
+        self.defaultCallerId = defaultCallerId
     }
 }
 
-public struct RichPresenceEnabledState: ProtoMessage {
+public struct ClientGetSelfInfoResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case selfEntity = 2
+        case isKnownMinor = 3
+        case dndState = 5
+        case phoneData = 7
+        case configurationBitArray = 8
+        case googlePlusUser = 10
+        case richPresenceState = 12
+        case babelUser = 13
+        case desktopAvailabilitySharingEnabled = 14
+        case googlePlusMobileUser = 15
+        case managedPlusPageArray = 17
+        case accountAgeGroup = 18
+        case mobileExperimentArray = 20
+        case defaultNotificationLevel = 24
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var selfEntity: ClientEntity? = nil
+    public var isKnownMinor: Bool? = nil
+    public var dndState: ClientDndState? = nil
+    public var phoneData: ClientPhoneData? = nil
+    public var configurationBitArray: [ClientConfigurationBit] = []
+    public var googlePlusUser: Bool? = nil
+    public var richPresenceState: ClientRichPresenceState? = nil
+    public var babelUser: Bool? = nil
+    public var desktopAvailabilitySharingEnabled: Bool? = nil
+    public var googlePlusMobileUser: Bool? = nil
+    public var managedPlusPageArray: [ClientParticipantId] = []
+    public var accountAgeGroup: ClientGetSelfInfoResponse_AccountAgeGroup? = nil
+    public var mobileExperimentArray: [ClientExperimentValue] = []
+    public var defaultNotificationLevel: ClientNotificationLevel? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, selfEntity: ClientEntity? = nil, isKnownMinor: Bool? = nil, dndState: ClientDndState? = nil, phoneData: ClientPhoneData? = nil, configurationBitArray: [ClientConfigurationBit] = [], googlePlusUser: Bool? = nil, richPresenceState: ClientRichPresenceState? = nil, babelUser: Bool? = nil, desktopAvailabilitySharingEnabled: Bool? = nil, googlePlusMobileUser: Bool? = nil, managedPlusPageArray: [ClientParticipantId] = [], accountAgeGroup: ClientGetSelfInfoResponse_AccountAgeGroup? = nil, mobileExperimentArray: [ClientExperimentValue] = [], defaultNotificationLevel: ClientNotificationLevel? = nil) {
+        self.responseHeader = responseHeader
+        self.selfEntity = selfEntity
+        self.isKnownMinor = isKnownMinor
+        self.dndState = dndState
+        self.phoneData = phoneData
+        self.configurationBitArray = configurationBitArray
+        self.googlePlusUser = googlePlusUser
+        self.richPresenceState = richPresenceState
+        self.babelUser = babelUser
+        self.desktopAvailabilitySharingEnabled = desktopAvailabilitySharingEnabled
+        self.googlePlusMobileUser = googlePlusMobileUser
+        self.managedPlusPageArray = managedPlusPageArray
+        self.accountAgeGroup = accountAgeGroup
+        self.mobileExperimentArray = mobileExperimentArray
+        self.defaultNotificationLevel = defaultNotificationLevel
+    }
+}
+
+public struct ClientGetSelfInfoRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case requiredFieldsArray = 2
+        case optionalFieldsArray = 3
+        case upgradeToBabel = 4
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var requiredFieldsArray: [ClientGetSelfInfoRequest_ClientRequestedFieldMask] = []
+    public var optionalFieldsArray: [ClientGetSelfInfoRequest_ClientRequestedFieldMask] = []
+    public var upgradeToBabel: Bool? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, requiredFieldsArray: [ClientGetSelfInfoRequest_ClientRequestedFieldMask] = [], optionalFieldsArray: [ClientGetSelfInfoRequest_ClientRequestedFieldMask] = [], upgradeToBabel: Bool? = nil) {
+        self.requestHeader = requestHeader
+        self.requiredFieldsArray = requiredFieldsArray
+        self.optionalFieldsArray = optionalFieldsArray
+        self.upgradeToBabel = upgradeToBabel
+    }
+}
+
+public struct ClientConversationDeliveryMediumModification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case newDeliveryMedium = 2
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var newDeliveryMedium: ClientDeliveryMedium? = nil
+    
+    public init(conversationId: ClientConversationId? = nil, newDeliveryMedium: ClientDeliveryMedium? = nil) {
+        self.conversationId = conversationId
+        self.newDeliveryMedium = newDeliveryMedium
+    }
+}
+
+public struct ClientConversationViewModification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case oldView = 2
+        case newView = 3
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var oldView: ClientConversationView? = nil
+    public var newView: ClientConversationView? = nil
+    
+    public init(conversationId: ClientConversationId? = nil, oldView: ClientConversationView? = nil, newView: ClientConversationView? = nil) {
+        self.conversationId = conversationId
+        self.oldView = oldView
+        self.newView = newView
+    }
+}
+
+public struct ClientModifyConversationViewResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil) {
+        self.responseHeader = responseHeader
+    }
+}
+
+public struct ClientModifyConversationViewRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case conversationId = 2
+        case newView = 3
+        case lastEventTimestamp = 4
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var newView: ClientConversationView? = nil
+    public var lastEventTimestamp: UInt64? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, conversationId: ClientConversationId? = nil, newView: ClientConversationView? = nil, lastEventTimestamp: UInt64? = nil) {
+        self.requestHeader = requestHeader
+        self.conversationId = conversationId
+        self.newView = newView
+        self.lastEventTimestamp = lastEventTimestamp
+    }
+}
+
+public struct ClientReplyToInviteNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case type = 2
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var type: ClientReplyToInviteType? = nil
+    
+    public init(conversationId: ClientConversationId? = nil, type: ClientReplyToInviteType? = nil) {
+        self.conversationId = conversationId
+        self.type = type
+    }
+}
+
+public struct ClientReplyToInviteResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case updatedConversation = 2
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var updatedConversation: ClientConversation? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, updatedConversation: ClientConversation? = nil) {
+        self.responseHeader = responseHeader
+        self.updatedConversation = updatedConversation
+    }
+}
+
+public struct ClientReplyToInviteRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case conversationId = 2
+        case type = 3
+        case clientGeneratedId = 4
+        case declineSignalArray = 5
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var type: ClientReplyToInviteType? = nil
+    public var clientGeneratedId: UInt64? = nil
+    public var declineSignalArray: [ClientDeclineSignal] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, conversationId: ClientConversationId? = nil, type: ClientReplyToInviteType? = nil, clientGeneratedId: UInt64? = nil, declineSignalArray: [ClientDeclineSignal] = []) {
+        self.requestHeader = requestHeader
+        self.conversationId = conversationId
+        self.type = type
+        self.clientGeneratedId = clientGeneratedId
+        self.declineSignalArray = declineSignalArray
+    }
+}
+
+public struct ClientDeclineAllInvitesResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil) {
+        self.responseHeader = responseHeader
+    }
+}
+
+public struct ClientDeclineAllInvitesRequest_ClientDeclineAllInvitesWatermarkSpec: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case upToTimestamp = 1
+        case affinity = 2
+    }
+    
+    public var upToTimestamp: UInt64? = nil
+    public var affinity: ClientInvitationAffinity? = nil
+    
+    public init(upToTimestamp: UInt64? = nil, affinity: ClientInvitationAffinity? = nil) {
+        self.upToTimestamp = upToTimestamp
+        self.affinity = affinity
+    }
+}
+
+public struct ClientDeclineAllInvitesRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case declineAllWatermarkArray = 2
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var declineAllWatermarkArray: [ClientDeclineAllInvitesRequest_ClientDeclineAllInvitesWatermarkSpec] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, declineAllWatermarkArray: [ClientDeclineAllInvitesRequest_ClientDeclineAllInvitesWatermarkSpec] = []) {
+        self.requestHeader = requestHeader
+        self.declineAllWatermarkArray = declineAllWatermarkArray
+    }
+}
+
+public struct ClientSelfPresenceNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case presence = 2
+        case dndState = 3
+        case richPresenceState = 6
+    }
+    
+    public var presence: ClientPresence? = nil
+    public var dndState: ClientDndState? = nil
+    public var richPresenceState: ClientRichPresenceState? = nil
+    
+    public init(presence: ClientPresence? = nil, dndState: ClientDndState? = nil, richPresenceState: ClientRichPresenceState? = nil) {
+        self.presence = presence
+        self.dndState = dndState
+        self.richPresenceState = richPresenceState
+    }
+}
+
+public struct ClientInCallState: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case clientIdentifier = 1
+        case callType = 2
+        case expirationTimestamp = 3
+    }
+    
+    public var clientIdentifier: ClientClientIdentifier? = nil
+    public var callType: ClientInCall_ClientCallType? = nil
+    public var expirationTimestamp: UInt64? = nil
+    
+    public init(clientIdentifier: ClientClientIdentifier? = nil, callType: ClientInCall_ClientCallType? = nil, expirationTimestamp: UInt64? = nil) {
+        self.clientIdentifier = clientIdentifier
+        self.callType = callType
+        self.expirationTimestamp = expirationTimestamp
+    }
+}
+
+public struct ClientStatusMessageState: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case statusMessageArray = 1
+        case expirationTimestamp = 2
+    }
+    
+    public var statusMessageArray: [ClientMessageContent] = []
+    public var expirationTimestamp: UInt64? = nil
+    
+    public init(statusMessageArray: [ClientMessageContent] = [], expirationTimestamp: UInt64? = nil) {
+        self.statusMessageArray = statusMessageArray
+        self.expirationTimestamp = expirationTimestamp
+    }
+}
+
+public struct ClientRichPresenceState: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case inCallArray = 2
+        case richPresenceEnabledStateArray = 3
+        case statusMessage = 4
+    }
+    
+    public var inCallArray: [ClientInCallState] = []
+    public var richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []
+    public var statusMessage: ClientStatusMessageState? = nil
+    
+    public init(inCallArray: [ClientInCallState] = [], richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = [], statusMessage: ClientStatusMessageState? = nil) {
+        self.inCallArray = inCallArray
+        self.richPresenceEnabledStateArray = richPresenceEnabledStateArray
+        self.statusMessage = statusMessage
+    }
+}
+
+public struct ClientDndState: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case doNotDisturb = 1
+        case expirationTimestamp = 2
+        case version = 3
+    }
+    
+    public var doNotDisturb: Bool? = nil
+    public var expirationTimestamp: Int64? = nil
+    public var version: Int64? = nil
+    
+    public init(doNotDisturb: Bool? = nil, expirationTimestamp: Int64? = nil, version: Int64? = nil) {
+        self.doNotDisturb = doNotDisturb
+        self.expirationTimestamp = expirationTimestamp
+        self.version = version
+    }
+}
+
+public struct ClientInCallSetting: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case callType = 1
+        case timeoutSecs = 2
+    }
+    
+    public var callType: ClientInCall_ClientCallType? = nil
+    public var timeoutSecs: UInt64? = nil
+    
+    public init(callType: ClientInCall_ClientCallType? = nil, timeoutSecs: UInt64? = nil) {
+        self.callType = callType
+        self.timeoutSecs = timeoutSecs
+    }
+}
+
+public struct ClientStatusMessageSetting: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case statusMessageArray = 1
+    }
+    
+    public var statusMessageArray: [ClientChatMessageSpec] = []
+    
+    public init(statusMessageArray: [ClientChatMessageSpec] = []) {
+        self.statusMessageArray = statusMessageArray
+    }
+}
+
+public struct ClientDndSetting: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case doNotDisturb = 1
+        case timeoutSecs = 2
+    }
+    
+    public var doNotDisturb: Bool? = nil
+    public var timeoutSecs: UInt64? = nil
+    
+    public init(doNotDisturb: Bool? = nil, timeoutSecs: UInt64? = nil) {
+        self.doNotDisturb = doNotDisturb
+        self.timeoutSecs = timeoutSecs
+    }
+}
+
+public struct ClientRichPresenceEnabledStateNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case richPresenceEnabledStateArray = 1
+    }
+    
+    public var richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []
+    
+    public init(richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []) {
+        self.richPresenceEnabledStateArray = richPresenceEnabledStateArray
+    }
+}
+
+public struct ClientGetRichPresenceEnabledStateResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case richPresenceEnabledStateArray = 2
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []
+    
+    public init(responseHeader: ClientResponseHeader? = nil, richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []) {
+        self.responseHeader = responseHeader
+        self.richPresenceEnabledStateArray = richPresenceEnabledStateArray
+    }
+}
+
+public struct ClientGetRichPresenceEnabledStateRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case requestedRichPresenceEnabledStateArray = 2
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var requestedRichPresenceEnabledStateArray: [ClientRichPresenceType] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, requestedRichPresenceEnabledStateArray: [ClientRichPresenceType] = []) {
+        self.requestHeader = requestHeader
+        self.requestedRichPresenceEnabledStateArray = requestedRichPresenceEnabledStateArray
+    }
+}
+
+public struct ClientSetRichPresenceEnabledStateResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case updatedRichPresenceEnabledStateArray = 2
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var updatedRichPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []
+    
+    public init(responseHeader: ClientResponseHeader? = nil, updatedRichPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []) {
+        self.responseHeader = responseHeader
+        self.updatedRichPresenceEnabledStateArray = updatedRichPresenceEnabledStateArray
+    }
+}
+
+public struct ClientSetRichPresenceEnabledStateRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case richPresenceEnabledStateArray = 2
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []) {
+        self.requestHeader = requestHeader
+        self.richPresenceEnabledStateArray = richPresenceEnabledStateArray
+    }
+}
+
+public struct ClientRichPresenceEnabledState: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case type = 1
         case enabled = 2
     }
     
-    public var type: RichPresenceType? = nil
+    public var type: ClientRichPresenceType? = nil
     public var enabled: Bool? = nil
     
-    public init(type: RichPresenceType? = nil, enabled: Bool? = nil) {
+    public init(type: ClientRichPresenceType? = nil, enabled: Bool? = nil) {
         self.type = type
         self.enabled = enabled
     }
 }
 
-public struct DesktopOffSetting: ProtoMessage {
+public struct ClientPresenceStateSetting: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case desktop_off = 1
+        case timeoutSecs = 1
+        case presenceState = 2
     }
     
-    public var desktop_off: Bool? = nil
+    public var timeoutSecs: UInt64? = nil
+    public var presenceState: ClientPresenceStateSetting_ClientPresenceState? = nil
     
-    public init(desktop_off: Bool? = nil) {
-        self.desktop_off = desktop_off
+    public init(timeoutSecs: UInt64? = nil, presenceState: ClientPresenceStateSetting_ClientPresenceState? = nil) {
+        self.timeoutSecs = timeoutSecs
+        self.presenceState = presenceState
     }
 }
 
-public struct DesktopOffState: ProtoMessage {
+public struct ClientSetPresenceResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case desktop_off = 1
-        case version = 2
+        case responseHeader = 1
     }
     
-    public var desktop_off: Bool? = nil
-    public var version: UInt64? = nil
+    public var responseHeader: ClientResponseHeader? = nil
     
-    public init(desktop_off: Bool? = nil, version: UInt64? = nil) {
-        self.desktop_off = desktop_off
-        self.version = version
+    public init(responseHeader: ClientResponseHeader? = nil) {
+        self.responseHeader = responseHeader
     }
 }
 
-public struct DndSetting: ProtoMessage {
+public struct ClientSetPresenceRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case do_not_disturb = 1
-        case timeout_secs = 2
+        case requestHeader = 1
+        case presenceStateSetting = 2
+        case dndSetting = 3
+        case inCallSetting = 7
+        case statusMessageSetting = 8
     }
     
-    public var do_not_disturb: Bool? = nil
-    public var timeout_secs: UInt64? = nil
+    public var requestHeader: ClientRequestHeader? = nil
+    public var presenceStateSetting: ClientPresenceStateSetting? = nil
+    public var dndSetting: ClientDndSetting? = nil
+    public var inCallSetting: ClientInCallSetting? = nil
+    public var statusMessageSetting: ClientStatusMessageSetting? = nil
     
-    public init(do_not_disturb: Bool? = nil, timeout_secs: UInt64? = nil) {
-        self.do_not_disturb = do_not_disturb
-        self.timeout_secs = timeout_secs
+    public init(requestHeader: ClientRequestHeader? = nil, presenceStateSetting: ClientPresenceStateSetting? = nil, dndSetting: ClientDndSetting? = nil, inCallSetting: ClientInCallSetting? = nil, statusMessageSetting: ClientStatusMessageSetting? = nil) {
+        self.requestHeader = requestHeader
+        self.presenceStateSetting = presenceStateSetting
+        self.dndSetting = dndSetting
+        self.inCallSetting = inCallSetting
+        self.statusMessageSetting = statusMessageSetting
     }
 }
 
-public struct PresenceStateSetting: ProtoMessage {
+public struct ClientDeviceStatus: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case timeout_secs = 1
-        case type = 2
+        case mobile = 1
+        case desktop = 2
+        case tablet = 3
     }
     
-    public var timeout_secs: UInt64? = nil
-    public var type: ClientPresenceStateType? = nil
+    public var mobile: Bool? = nil
+    public var desktop: Bool? = nil
+    public var tablet: Bool? = nil
     
-    public init(timeout_secs: UInt64? = nil, type: ClientPresenceStateType? = nil) {
-        self.timeout_secs = timeout_secs
+    public init(mobile: Bool? = nil, desktop: Bool? = nil, tablet: Bool? = nil) {
+        self.mobile = mobile
+        self.desktop = desktop
+        self.tablet = tablet
+    }
+}
+
+public struct ClientInCall: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case callType = 1
+    }
+    
+    public var callType: ClientInCall_ClientCallType? = nil
+    
+    public init(callType: ClientInCall_ClientCallType? = nil) {
+        self.callType = callType
+    }
+}
+
+public struct ClientStatusMessage: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case statusMessageArray = 1
+    }
+    
+    public var statusMessageArray: [ClientMessageContent] = []
+    
+    public init(statusMessageArray: [ClientMessageContent] = []) {
+        self.statusMessageArray = statusMessageArray
+    }
+}
+
+public struct ClientLastSeen: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case lastSeenTimestampUsec = 1
+    }
+    
+    public var lastSeenTimestampUsec: UInt64? = nil
+    
+    public init(lastSeenTimestampUsec: UInt64? = nil) {
+        self.lastSeenTimestampUsec = lastSeenTimestampUsec
+    }
+}
+
+public struct ClientPresence: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case reachable = 1
+        case available = 2
+        case inCall = 5
+        case deviceStatus = 6
+        case deviceActivity = 7
+        case statusMessage = 9
+        case lastSeen = 10
+    }
+    
+    public var reachable: Bool? = nil
+    public var available: Bool? = nil
+    public var inCall: ClientInCall? = nil
+    public var deviceStatus: ClientDeviceStatus? = nil
+    public var deviceActivity: ClientDeviceActivity? = nil
+    public var statusMessage: ClientStatusMessage? = nil
+    public var lastSeen: ClientLastSeen? = nil
+    
+    public init(reachable: Bool? = nil, available: Bool? = nil, inCall: ClientInCall? = nil, deviceStatus: ClientDeviceStatus? = nil, deviceActivity: ClientDeviceActivity? = nil, statusMessage: ClientStatusMessage? = nil, lastSeen: ClientLastSeen? = nil) {
+        self.reachable = reachable
+        self.available = available
+        self.inCall = inCall
+        self.deviceStatus = deviceStatus
+        self.deviceActivity = deviceActivity
+        self.statusMessage = statusMessage
+        self.lastSeen = lastSeen
+    }
+}
+
+public struct ClientQueryPresenceResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case presenceResultArray = 2
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var presenceResultArray: [ClientPresenceResult] = []
+    
+    public init(responseHeader: ClientResponseHeader? = nil, presenceResultArray: [ClientPresenceResult] = []) {
+        self.responseHeader = responseHeader
+        self.presenceResultArray = presenceResultArray
+    }
+}
+
+public struct ClientQueryPresenceRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case participantIdArray = 2
+        case fieldMaskArray = 3
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var participantIdArray: [ClientParticipantId] = []
+    public var fieldMaskArray: [ClientQueryPresenceRequest_ClientFieldMask] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, participantIdArray: [ClientParticipantId] = [], fieldMaskArray: [ClientQueryPresenceRequest_ClientFieldMask] = []) {
+        self.requestHeader = requestHeader
+        self.participantIdArray = participantIdArray
+        self.fieldMaskArray = fieldMaskArray
+    }
+}
+
+public struct ClientPresenceNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case presenceArray = 1
+    }
+    
+    public var presenceArray: [ClientPresenceResult] = []
+    
+    public init(presenceArray: [ClientPresenceResult] = []) {
+        self.presenceArray = presenceArray
+    }
+}
+
+public struct ClientPresenceResult: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case userId = 1
+        case presence = 2
+    }
+    
+    public var userId: ClientParticipantId? = nil
+    public var presence: ClientPresence? = nil
+    
+    public init(userId: ClientParticipantId? = nil, presence: ClientPresence? = nil) {
+        self.userId = userId
+        self.presence = presence
+    }
+}
+
+public struct ClientDeviceActivity: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case type = 1
+        case confidence = 2
+    }
+    
+    public var type: ClientDeviceActivity_Type? = nil
+    public var confidence: Int32? = nil
+    
+    public init(type: ClientDeviceActivity_Type? = nil, confidence: Int32? = nil) {
+        self.type = type
+        self.confidence = confidence
+    }
+}
+
+public struct ClientSetActiveClientResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case error = 2
+        case clientLastSeenTimestampUsec = 3
+        case lastSeenDeltaUsec = 4
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var error: ClientSetActiveClientResponse_ClientSetActiveClientError? = nil
+    public var clientLastSeenTimestampUsec: UInt64? = nil
+    public var lastSeenDeltaUsec: UInt64? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, error: ClientSetActiveClientResponse_ClientSetActiveClientError? = nil, clientLastSeenTimestampUsec: UInt64? = nil, lastSeenDeltaUsec: UInt64? = nil) {
+        self.responseHeader = responseHeader
+        self.error = error
+        self.clientLastSeenTimestampUsec = clientLastSeenTimestampUsec
+        self.lastSeenDeltaUsec = lastSeenDeltaUsec
+    }
+}
+
+public struct ClientSetActiveClientRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case isActive = 2
+        case fullJid = 3
+        case timeoutSecs = 4
+        case updateLastSeenTimestamp = 5
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var isActive: Bool? = nil
+    public var fullJid: String? = nil
+    public var timeoutSecs: UInt32? = nil
+    public var updateLastSeenTimestamp: Bool? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, isActive: Bool? = nil, fullJid: String? = nil, timeoutSecs: UInt32? = nil, updateLastSeenTimestamp: Bool? = nil) {
+        self.requestHeader = requestHeader
+        self.isActive = isActive
+        self.fullJid = fullJid
+        self.timeoutSecs = timeoutSecs
+        self.updateLastSeenTimestamp = updateLastSeenTimestamp
+    }
+}
+
+public struct ClientRegisterDeviceResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case upgradeType = 2
+        case upgradeExplanationURL = 3
+        case fullJid = 5
+        case iosBadgeCount = 6
+        case clientResource = 7
+        case learnMoreURL = 8
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var upgradeType: ClientUpgradeType? = nil
+    public var upgradeExplanationURL: String? = nil
+    public var fullJid: String? = nil
+    public var iosBadgeCount: Int32? = nil
+    public var clientResource: String? = nil
+    public var learnMoreURL: String? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, upgradeType: ClientUpgradeType? = nil, upgradeExplanationURL: String? = nil, fullJid: String? = nil, iosBadgeCount: Int32? = nil, clientResource: String? = nil, learnMoreURL: String? = nil) {
+        self.responseHeader = responseHeader
+        self.upgradeType = upgradeType
+        self.upgradeExplanationURL = upgradeExplanationURL
+        self.fullJid = fullJid
+        self.iosBadgeCount = iosBadgeCount
+        self.clientResource = clientResource
+        self.learnMoreURL = learnMoreURL
+    }
+}
+
+public struct ClientRegisterDeviceRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case deviceType = 2
+        case registrationType = 3
+        case locale = 4
+        case stateUpdateVersion = 5
+        case iosAppId = 7
+        case iosToken = 8
+        case androidId = 9
+        case androidRegistrationId = 10
+        case iosCapabilityArray = 11
+        case androidCapabilityArray = 12
+        case pstnNumber = 13
+        case pstnCapabilityArray = 14
+        case name = 15
+        case androidAppId = 16
+        case androidDeveloperAccount = 17
+        case iosDeviceId = 18
+        case glassCapabilityArray = 19
+        case pstnAppId = 20
+        case unregisterOnBehalfOfGaiaId = 21
+        case iosScreenSizeDps = 22
+        case androidScreenSizeDps = 23
+        case iosMcsRegistrationId = 24
+        case iosMcsAppId = 25
+        case iosMcsDeveloperAccount = 26
+        case pstnCarrierMcc = 27
+        case pstnCarrierMnc = 28
+        case iosPushOauthToken = 29
+        case deviceAvailabilitySharingEnabled = 30
+        case iosOauthTokensForParticipantsOnDeviceArray = 31
+        case iosPushkitToken = 33
+        case iosUploadedContactsPrivateKey = 34
+        case androidInstanceId = 35
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var deviceType: ClientDeviceType? = nil
+    public var registrationType: ClientRegistrationType? = nil
+    public var locale: String? = nil
+    public var stateUpdateVersion: String? = nil
+    public var iosAppId: String? = nil
+    public var iosToken: String? = nil
+    public var androidId: Int64? = nil
+    public var androidRegistrationId: String? = nil
+    public var iosCapabilityArray: [String] = []
+    public var androidCapabilityArray: [String] = []
+    public var pstnNumber: String? = nil
+    public var pstnCapabilityArray: [String] = []
+    public var name: String? = nil
+    public var androidAppId: String? = nil
+    public var androidDeveloperAccount: String? = nil
+    public var iosDeviceId: String? = nil
+    public var glassCapabilityArray: [String] = []
+    public var pstnAppId: String? = nil
+    public var unregisterOnBehalfOfGaiaId: String? = nil
+    public var iosScreenSizeDps: Int32? = nil
+    public var androidScreenSizeDps: Int32? = nil
+    public var iosMcsRegistrationId: String? = nil
+    public var iosMcsAppId: String? = nil
+    public var iosMcsDeveloperAccount: String? = nil
+    public var pstnCarrierMcc: Int32? = nil
+    public var pstnCarrierMnc: Int32? = nil
+    public var iosPushOauthToken: String? = nil
+    public var deviceAvailabilitySharingEnabled: Bool? = nil
+    public var iosOauthTokensForParticipantsOnDeviceArray: [String] = []
+    public var iosPushkitToken: String? = nil
+    public var iosUploadedContactsPrivateKey: String? = nil
+    public var androidInstanceId: String? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, deviceType: ClientDeviceType? = nil, registrationType: ClientRegistrationType? = nil, locale: String? = nil, stateUpdateVersion: String? = nil, iosAppId: String? = nil, iosToken: String? = nil, androidId: Int64? = nil, androidRegistrationId: String? = nil, iosCapabilityArray: [String] = [], androidCapabilityArray: [String] = [], pstnNumber: String? = nil, pstnCapabilityArray: [String] = [], name: String? = nil, androidAppId: String? = nil, androidDeveloperAccount: String? = nil, iosDeviceId: String? = nil, glassCapabilityArray: [String] = [], pstnAppId: String? = nil, unregisterOnBehalfOfGaiaId: String? = nil, iosScreenSizeDps: Int32? = nil, androidScreenSizeDps: Int32? = nil, iosMcsRegistrationId: String? = nil, iosMcsAppId: String? = nil, iosMcsDeveloperAccount: String? = nil, pstnCarrierMcc: Int32? = nil, pstnCarrierMnc: Int32? = nil, iosPushOauthToken: String? = nil, deviceAvailabilitySharingEnabled: Bool? = nil, iosOauthTokensForParticipantsOnDeviceArray: [String] = [], iosPushkitToken: String? = nil, iosUploadedContactsPrivateKey: String? = nil, androidInstanceId: String? = nil) {
+        self.requestHeader = requestHeader
+        self.deviceType = deviceType
+        self.registrationType = registrationType
+        self.locale = locale
+        self.stateUpdateVersion = stateUpdateVersion
+        self.iosAppId = iosAppId
+        self.iosToken = iosToken
+        self.androidId = androidId
+        self.androidRegistrationId = androidRegistrationId
+        self.iosCapabilityArray = iosCapabilityArray
+        self.androidCapabilityArray = androidCapabilityArray
+        self.pstnNumber = pstnNumber
+        self.pstnCapabilityArray = pstnCapabilityArray
+        self.name = name
+        self.androidAppId = androidAppId
+        self.androidDeveloperAccount = androidDeveloperAccount
+        self.iosDeviceId = iosDeviceId
+        self.glassCapabilityArray = glassCapabilityArray
+        self.pstnAppId = pstnAppId
+        self.unregisterOnBehalfOfGaiaId = unregisterOnBehalfOfGaiaId
+        self.iosScreenSizeDps = iosScreenSizeDps
+        self.androidScreenSizeDps = androidScreenSizeDps
+        self.iosMcsRegistrationId = iosMcsRegistrationId
+        self.iosMcsAppId = iosMcsAppId
+        self.iosMcsDeveloperAccount = iosMcsDeveloperAccount
+        self.pstnCarrierMcc = pstnCarrierMcc
+        self.pstnCarrierMnc = pstnCarrierMnc
+        self.iosPushOauthToken = iosPushOauthToken
+        self.deviceAvailabilitySharingEnabled = deviceAvailabilitySharingEnabled
+        self.iosOauthTokensForParticipantsOnDeviceArray = iosOauthTokensForParticipantsOnDeviceArray
+        self.iosPushkitToken = iosPushkitToken
+        self.iosUploadedContactsPrivateKey = iosUploadedContactsPrivateKey
+        self.androidInstanceId = androidInstanceId
+    }
+}
+
+public struct ClientGlobalNotificationLevelNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case level = 1
+    }
+    
+    public var level: ClientNotificationLevel? = nil
+    
+    public init(level: ClientNotificationLevel? = nil) {
+        self.level = level
+    }
+}
+
+public struct ClientSetConversationNotificationLevelNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case level = 2
+        case revertTimeoutSecs = 3
+        case timestamp = 4
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var level: ClientNotificationLevel? = nil
+    public var revertTimeoutSecs: Int32? = nil
+    public var timestamp: UInt64? = nil
+    
+    public init(conversationId: ClientConversationId? = nil, level: ClientNotificationLevel? = nil, revertTimeoutSecs: Int32? = nil, timestamp: UInt64? = nil) {
+        self.conversationId = conversationId
+        self.level = level
+        self.revertTimeoutSecs = revertTimeoutSecs
+        self.timestamp = timestamp
+    }
+}
+
+public struct ClientSetConversationNotificationLevelResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case timestamp = 2
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var timestamp: UInt64? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, timestamp: UInt64? = nil) {
+        self.responseHeader = responseHeader
+        self.timestamp = timestamp
+    }
+}
+
+public struct ClientSetConversationNotificationLevelRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case conversationId = 2
+        case level = 3
+        case revertTimeoutSecs = 4
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var level: ClientNotificationLevel? = nil
+    public var revertTimeoutSecs: Int32? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, conversationId: ClientConversationId? = nil, level: ClientNotificationLevel? = nil, revertTimeoutSecs: Int32? = nil) {
+        self.requestHeader = requestHeader
+        self.conversationId = conversationId
+        self.level = level
+        self.revertTimeoutSecs = revertTimeoutSecs
+    }
+}
+
+public struct ClientEvent_ClientUserEventState: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case userId = 1
+        case clientGeneratedId = 2
+        case notificationLevel = 3
+        case suggestions = 4
+    }
+    
+    public var userId: ClientParticipantId? = nil
+    public var clientGeneratedId: UInt64? = nil
+    public var notificationLevel: ClientNotificationLevel? = nil
+    public var suggestions: ClientSuggestions? = nil
+    
+    public init(userId: ClientParticipantId? = nil, clientGeneratedId: UInt64? = nil, notificationLevel: ClientNotificationLevel? = nil, suggestions: ClientSuggestions? = nil) {
+        self.userId = userId
+        self.clientGeneratedId = clientGeneratedId
+        self.notificationLevel = notificationLevel
+        self.suggestions = suggestions
+    }
+}
+
+public struct ClientEvent: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case senderId = 2
+        case timestamp = 3
+        case selfEventState = 4
+        case sourceType = 6
+        case chatMessage = 7
+        case membershipChange = 9
+        case conversationRename = 10
+        case hangoutEvent = 11
+        case eventId = 12
+        case expirationTimestamp = 13
+        case otrModification = 14
+        case advancesSortTimestamp = 15
+        case eventOtr = 16
+        case persisted = 17
+        case deliveryMedium = 20
+        case eventType = 23
+        case eventVersion = 24
+        case lastObservedTimestamp = 27
+        case observedStatus = 28
+        case observedEvent = 29
+        case groupLinkSharingModification = 31
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var senderId: ClientParticipantId? = nil
+    public var timestamp: UInt64? = nil
+    public var selfEventState: ClientEvent_ClientUserEventState? = nil
+    public var sourceType: ClientSourceType? = nil
+    public var chatMessage: ClientChatMessage? = nil
+    public var membershipChange: ClientMembershipChange? = nil
+    public var conversationRename: ClientConversationRename? = nil
+    public var hangoutEvent: ClientHangoutEvent? = nil
+    public var eventId: String? = nil
+    public var expirationTimestamp: Int64? = nil
+    public var otrModification: ClientOtrModification? = nil
+    public var advancesSortTimestamp: Bool? = nil
+    public var eventOtr: ClientOffTheRecordStatus? = nil
+    public var persisted: Bool? = nil
+    public var deliveryMedium: ClientDeliveryMedium? = nil
+    public var eventType: ClientEventType? = nil
+    public var eventVersion: UInt64? = nil
+    public var lastObservedTimestamp: Int64? = nil
+    public var observedStatus: ClientEventObservedStatus? = nil
+    public var observedEvent: ClientObservedEvent? = nil
+    public var groupLinkSharingModification: ClientGroupLinkSharingModification? = nil
+    
+    public init(conversationId: ClientConversationId? = nil, senderId: ClientParticipantId? = nil, timestamp: UInt64? = nil, selfEventState: ClientEvent_ClientUserEventState? = nil, sourceType: ClientSourceType? = nil, chatMessage: ClientChatMessage? = nil, membershipChange: ClientMembershipChange? = nil, conversationRename: ClientConversationRename? = nil, hangoutEvent: ClientHangoutEvent? = nil, eventId: String? = nil, expirationTimestamp: Int64? = nil, otrModification: ClientOtrModification? = nil, advancesSortTimestamp: Bool? = nil, eventOtr: ClientOffTheRecordStatus? = nil, persisted: Bool? = nil, deliveryMedium: ClientDeliveryMedium? = nil, eventType: ClientEventType? = nil, eventVersion: UInt64? = nil, lastObservedTimestamp: Int64? = nil, observedStatus: ClientEventObservedStatus? = nil, observedEvent: ClientObservedEvent? = nil, groupLinkSharingModification: ClientGroupLinkSharingModification? = nil) {
+        self.conversationId = conversationId
+        self.senderId = senderId
+        self.timestamp = timestamp
+        self.selfEventState = selfEventState
+        self.sourceType = sourceType
+        self.chatMessage = chatMessage
+        self.membershipChange = membershipChange
+        self.conversationRename = conversationRename
+        self.hangoutEvent = hangoutEvent
+        self.eventId = eventId
+        self.expirationTimestamp = expirationTimestamp
+        self.otrModification = otrModification
+        self.advancesSortTimestamp = advancesSortTimestamp
+        self.eventOtr = eventOtr
+        self.persisted = persisted
+        self.deliveryMedium = deliveryMedium
+        self.eventType = eventType
+        self.eventVersion = eventVersion
+        self.lastObservedTimestamp = lastObservedTimestamp
+        self.observedStatus = observedStatus
+        self.observedEvent = observedEvent
+        self.groupLinkSharingModification = groupLinkSharingModification
+    }
+}
+
+public struct ClientObservedEvent: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case observedEventId = 1
+    }
+    
+    public var observedEventId: String? = nil
+    
+    public init(observedEventId: String? = nil) {
+        self.observedEventId = observedEventId
+    }
+}
+
+public struct ClientOtrModification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case oldOtrStatus = 1
+        case newOtrStatus = 2
+        case oldOtrToggle = 3
+        case newOtrToggle = 4
+    }
+    
+    public var oldOtrStatus: ClientOffTheRecordStatus? = nil
+    public var newOtrStatus: ClientOffTheRecordStatus? = nil
+    public var oldOtrToggle: ClientOffTheRecordToggle? = nil
+    public var newOtrToggle: ClientOffTheRecordToggle? = nil
+    
+    public init(oldOtrStatus: ClientOffTheRecordStatus? = nil, newOtrStatus: ClientOffTheRecordStatus? = nil, oldOtrToggle: ClientOffTheRecordToggle? = nil, newOtrToggle: ClientOffTheRecordToggle? = nil) {
+        self.oldOtrStatus = oldOtrStatus
+        self.newOtrStatus = newOtrStatus
+        self.oldOtrToggle = oldOtrToggle
+        self.newOtrToggle = newOtrToggle
+    }
+}
+
+public struct ClientModifyOtrStatusResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case deprecated2 = 2
+        case deprecated3 = 3
+        case createdEvent = 4
+        case updatedConversation = 5
+        case otrUnmodified = 6
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var deprecated2: UInt64? = nil
+    public var deprecated3: String? = nil
+    public var createdEvent: ClientEvent? = nil
+    public var updatedConversation: ClientConversation? = nil
+    public var otrUnmodified: Bool? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, deprecated2: UInt64? = nil, deprecated3: String? = nil, createdEvent: ClientEvent? = nil, updatedConversation: ClientConversation? = nil, otrUnmodified: Bool? = nil) {
+        self.responseHeader = responseHeader
+        self.deprecated2 = deprecated2
+        self.deprecated3 = deprecated3
+        self.createdEvent = createdEvent
+        self.updatedConversation = updatedConversation
+        self.otrUnmodified = otrUnmodified
+    }
+}
+
+public struct ClientModifyOtrStatusRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case deprecated2 = 2
+        case otrStatus = 3
+        case deprecated4 = 4
+        case eventRequestHeader = 5
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var deprecated2: String? = nil
+    public var otrStatus: ClientOffTheRecordStatus? = nil
+    public var deprecated4: UInt64? = nil
+    public var eventRequestHeader: ClientEventRequestHeader? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, deprecated2: String? = nil, otrStatus: ClientOffTheRecordStatus? = nil, deprecated4: UInt64? = nil, eventRequestHeader: ClientEventRequestHeader? = nil) {
+        self.requestHeader = requestHeader
+        self.deprecated2 = deprecated2
+        self.otrStatus = otrStatus
+        self.deprecated4 = deprecated4
+        self.eventRequestHeader = eventRequestHeader
+    }
+}
+
+public struct ClientGetConversationResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case conversationState = 2
+        case error = 3
+        case deprecated4 = 4
+        case richPresenceEnabledStateArray = 5
+        case entityArray = 7
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var conversationState: ClientConversationState? = nil
+    public var error: ClientGetConversationResponse_ClientGetConversationError? = nil
+    public var deprecated4: ClientPresenceResult? = nil
+    public var richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = []
+    public var entityArray: [ClientEntity] = []
+    
+    public init(responseHeader: ClientResponseHeader? = nil, conversationState: ClientConversationState? = nil, error: ClientGetConversationResponse_ClientGetConversationError? = nil, deprecated4: ClientPresenceResult? = nil, richPresenceEnabledStateArray: [ClientRichPresenceEnabledState] = [], entityArray: [ClientEntity] = []) {
+        self.responseHeader = responseHeader
+        self.conversationState = conversationState
+        self.error = error
+        self.deprecated4 = deprecated4
+        self.richPresenceEnabledStateArray = richPresenceEnabledStateArray
+        self.entityArray = entityArray
+    }
+}
+
+public struct ClientGetConversationRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case conversationSpec = 2
+        case includeConversationMetadata = 3
+        case includeEvents = 4
+        case maxEventsPerConversation = 6
+        case eventContinuationToken = 7
+        case deprecated8 = 8
+        case forwardContinuationToken = 11
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationSpec: ClientConversationSpec? = nil
+    public var includeConversationMetadata: Bool? = nil
+    public var includeEvents: Bool? = nil
+    public var maxEventsPerConversation: Int32? = nil
+    public var eventContinuationToken: ClientEventContinuationToken? = nil
+    public var deprecated8: Bool? = nil
+    public var forwardContinuationToken: ClientEventContinuationToken? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, conversationSpec: ClientConversationSpec? = nil, includeConversationMetadata: Bool? = nil, includeEvents: Bool? = nil, maxEventsPerConversation: Int32? = nil, eventContinuationToken: ClientEventContinuationToken? = nil, deprecated8: Bool? = nil, forwardContinuationToken: ClientEventContinuationToken? = nil) {
+        self.requestHeader = requestHeader
+        self.conversationSpec = conversationSpec
+        self.includeConversationMetadata = includeConversationMetadata
+        self.includeEvents = includeEvents
+        self.maxEventsPerConversation = maxEventsPerConversation
+        self.eventContinuationToken = eventContinuationToken
+        self.deprecated8 = deprecated8
+        self.forwardContinuationToken = forwardContinuationToken
+    }
+}
+
+public struct ClientConversationSpec: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case deprecated2Array = 2
+        case inviteeIdArray = 3
+        case requestedType = 4
+        case eventId = 5
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var deprecated2Array: [String] = []
+    public var inviteeIdArray: [ClientInviteeId] = []
+    public var requestedType: ClientConversationType? = nil
+    public var eventId: String? = nil
+    
+    public init(conversationId: ClientConversationId? = nil, deprecated2Array: [String] = [], inviteeIdArray: [ClientInviteeId] = [], requestedType: ClientConversationType? = nil, eventId: String? = nil) {
+        self.conversationId = conversationId
+        self.deprecated2Array = deprecated2Array
+        self.inviteeIdArray = inviteeIdArray
+        self.requestedType = requestedType
+        self.eventId = eventId
+    }
+}
+
+public struct ClientSyncAllNewEventsResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case syncTimestamp = 2
+        case conversationStateArray = 3
+        case conversationIdsOnly = 4
+        case clearCacheAndResync = 6
+        case entityArray = 7
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var syncTimestamp: UInt64? = nil
+    public var conversationStateArray: [ClientConversationState] = []
+    public var conversationIdsOnly: Bool? = nil
+    public var clearCacheAndResync: Bool? = nil
+    public var entityArray: [ClientEntity] = []
+    
+    public init(responseHeader: ClientResponseHeader? = nil, syncTimestamp: UInt64? = nil, conversationStateArray: [ClientConversationState] = [], conversationIdsOnly: Bool? = nil, clearCacheAndResync: Bool? = nil, entityArray: [ClientEntity] = []) {
+        self.responseHeader = responseHeader
+        self.syncTimestamp = syncTimestamp
+        self.conversationStateArray = conversationStateArray
+        self.conversationIdsOnly = conversationIdsOnly
+        self.clearCacheAndResync = clearCacheAndResync
+        self.entityArray = entityArray
+    }
+}
+
+public struct ClientSyncAllNewEventsRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case lastSyncTimestamp = 2
+        case localStateArray = 3
+        case deprecated4 = 4
+        case deprecated5Array = 5
+        case noMissedEventsExpected = 6
+        case unreadStateArray = 7
+        case maxResponseSizeBytes = 8
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var lastSyncTimestamp: UInt64? = nil
+    public var localStateArray: [ClientLocalConversationState] = []
+    public var deprecated4: Int32? = nil
+    public var deprecated5Array: [String] = []
+    public var noMissedEventsExpected: Bool? = nil
+    public var unreadStateArray: [ClientUnreadConversationState] = []
+    public var maxResponseSizeBytes: Int32? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, lastSyncTimestamp: UInt64? = nil, localStateArray: [ClientLocalConversationState] = [], deprecated4: Int32? = nil, deprecated5Array: [String] = [], noMissedEventsExpected: Bool? = nil, unreadStateArray: [ClientUnreadConversationState] = [], maxResponseSizeBytes: Int32? = nil) {
+        self.requestHeader = requestHeader
+        self.lastSyncTimestamp = lastSyncTimestamp
+        self.localStateArray = localStateArray
+        self.deprecated4 = deprecated4
+        self.deprecated5Array = deprecated5Array
+        self.noMissedEventsExpected = noMissedEventsExpected
+        self.unreadStateArray = unreadStateArray
+        self.maxResponseSizeBytes = maxResponseSizeBytes
+    }
+}
+
+public struct ClientUnreadConversationState: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case latestReadTimestamp = 2
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var latestReadTimestamp: UInt64? = nil
+    
+    public init(conversationId: ClientConversationId? = nil, latestReadTimestamp: UInt64? = nil) {
+        self.conversationId = conversationId
+        self.latestReadTimestamp = latestReadTimestamp
+    }
+}
+
+public struct ClientLocalConversationState: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 2
+        case recentEventIdArray = 4
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var recentEventIdArray: [String] = []
+    
+    public init(conversationId: ClientConversationId? = nil, recentEventIdArray: [String] = []) {
+        self.conversationId = conversationId
+        self.recentEventIdArray = recentEventIdArray
+    }
+}
+
+public struct ClientSyncRecentConversationsResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case syncTimestamp = 2
+        case conversationStateArray = 3
+        case continuationEndTimestamp = 4
+        case entityArray = 6
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var syncTimestamp: UInt64? = nil
+    public var conversationStateArray: [ClientConversationState] = []
+    public var continuationEndTimestamp: UInt64? = nil
+    public var entityArray: [ClientEntity] = []
+    
+    public init(responseHeader: ClientResponseHeader? = nil, syncTimestamp: UInt64? = nil, conversationStateArray: [ClientConversationState] = [], continuationEndTimestamp: UInt64? = nil, entityArray: [ClientEntity] = []) {
+        self.responseHeader = responseHeader
+        self.syncTimestamp = syncTimestamp
+        self.conversationStateArray = conversationStateArray
+        self.continuationEndTimestamp = continuationEndTimestamp
+        self.entityArray = entityArray
+    }
+}
+
+public struct ClientConversationState: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case conversation = 2
+        case eventArray = 3
+        case mustQuerySeparately = 4
+        case eventContinuationToken = 5
+        case leaveTimestamp = 6
+        case deleteActionArray = 7
+        case forwardContinuationToken = 8
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var conversation: ClientConversation? = nil
+    public var eventArray: [ClientEvent] = []
+    public var mustQuerySeparately: Bool? = nil
+    public var eventContinuationToken: ClientEventContinuationToken? = nil
+    public var leaveTimestamp: UInt64? = nil
+    public var deleteActionArray: [ClientDeleteAction] = []
+    public var forwardContinuationToken: ClientEventContinuationToken? = nil
+    
+    public init(conversationId: ClientConversationId? = nil, conversation: ClientConversation? = nil, eventArray: [ClientEvent] = [], mustQuerySeparately: Bool? = nil, eventContinuationToken: ClientEventContinuationToken? = nil, leaveTimestamp: UInt64? = nil, deleteActionArray: [ClientDeleteAction] = [], forwardContinuationToken: ClientEventContinuationToken? = nil) {
+        self.conversationId = conversationId
+        self.conversation = conversation
+        self.eventArray = eventArray
+        self.mustQuerySeparately = mustQuerySeparately
+        self.eventContinuationToken = eventContinuationToken
+        self.leaveTimestamp = leaveTimestamp
+        self.deleteActionArray = deleteActionArray
+        self.forwardContinuationToken = forwardContinuationToken
+    }
+}
+
+public struct ClientEventContinuationToken: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case deprecated1 = 1
+        case storageContinuationToken = 2
+        case eventTimestamp = 3
+    }
+    
+    public var deprecated1: String? = nil
+    public var storageContinuationToken: String? = nil
+    public var eventTimestamp: UInt64? = nil
+    
+    public init(deprecated1: String? = nil, storageContinuationToken: String? = nil, eventTimestamp: UInt64? = nil) {
+        self.deprecated1 = deprecated1
+        self.storageContinuationToken = storageContinuationToken
+        self.eventTimestamp = eventTimestamp
+    }
+}
+
+public struct ClientSyncRecentConversationsRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case endTimestamp = 2
+        case maxConversations = 3
+        case maxEventsPerConversation = 4
+        case syncFilterArray = 5
+        case includeEmptyActiveConversations = 7
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var endTimestamp: Int64? = nil
+    public var maxConversations: Int32? = nil
+    public var maxEventsPerConversation: Int32? = nil
+    public var syncFilterArray: [ClientSyncFilter] = []
+    public var includeEmptyActiveConversations: Bool? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, endTimestamp: Int64? = nil, maxConversations: Int32? = nil, maxEventsPerConversation: Int32? = nil, syncFilterArray: [ClientSyncFilter] = [], includeEmptyActiveConversations: Bool? = nil) {
+        self.requestHeader = requestHeader
+        self.endTimestamp = endTimestamp
+        self.maxConversations = maxConversations
+        self.maxEventsPerConversation = maxEventsPerConversation
+        self.syncFilterArray = syncFilterArray
+        self.includeEmptyActiveConversations = includeEmptyActiveConversations
+    }
+}
+
+public struct ClientSetTypingNotification: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case conversationId = 1
+        case senderId = 2
+        case timestamp = 3
+        case type = 4
+    }
+    
+    public var conversationId: ClientConversationId? = nil
+    public var senderId: ClientParticipantId? = nil
+    public var timestamp: UInt64? = nil
+    public var type: ClientTypingType? = nil
+    
+    public init(conversationId: ClientConversationId? = nil, senderId: ClientParticipantId? = nil, timestamp: UInt64? = nil, type: ClientTypingType? = nil) {
+        self.conversationId = conversationId
+        self.senderId = senderId
+        self.timestamp = timestamp
         self.type = type
     }
 }
 
-public struct MoodMessage: ProtoMessage {
+public struct ClientSetTypingResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case mood_content = 1
+        case responseHeader = 1
+        case timestamp = 2
     }
     
-    public var mood_content: MoodContent? = nil
+    public var responseHeader: ClientResponseHeader? = nil
+    public var timestamp: UInt64? = nil
     
-    public init(mood_content: MoodContent? = nil) {
-        self.mood_content = mood_content
+    public init(responseHeader: ClientResponseHeader? = nil, timestamp: UInt64? = nil) {
+        self.responseHeader = responseHeader
+        self.timestamp = timestamp
     }
 }
 
-public struct MoodContent: ProtoMessage {
+public struct ClientSetTypingRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case segment = 1
+        case requestHeader = 1
+        case conversationId = 2
+        case type = 3
     }
     
-    public var segment: [Segment] = []
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var type: ClientTypingType? = nil
     
-    public init(segment: [Segment] = []) {
-        self.segment = segment
+    public init(requestHeader: ClientRequestHeader? = nil, conversationId: ClientConversationId? = nil, type: ClientTypingType? = nil) {
+        self.requestHeader = requestHeader
+        self.conversationId = conversationId
+        self.type = type
     }
 }
 
-public struct MoodSetting: ProtoMessage {
+public struct ClientRecordAnalyticsEventsResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case mood_message = 1
+        case responseHeader = 1
     }
     
-    public var mood_message: MoodMessage? = nil
+    public var responseHeader: ClientResponseHeader? = nil
     
-    public init(mood_message: MoodMessage? = nil) {
-        self.mood_message = mood_message
+    public init(responseHeader: ClientResponseHeader? = nil) {
+        self.responseHeader = responseHeader
     }
 }
 
-public struct MoodState: ProtoMessage {
+public struct ClientRecordAnalyticsEventsRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case mood_setting = 4
+        case requestHeader = 1
+        case analyticsEventArray = 2
+        case localTimestamp = 4
     }
     
-    public var mood_setting: MoodSetting? = nil
+    public var requestHeader: ClientRequestHeader? = nil
+    public var analyticsEventArray: [ClientAnalyticsEvent] = []
+    public var localTimestamp: UInt64? = nil
     
-    public init(mood_setting: MoodSetting? = nil) {
-        self.mood_setting = mood_setting
+    public init(requestHeader: ClientRequestHeader? = nil, analyticsEventArray: [ClientAnalyticsEvent] = [], localTimestamp: UInt64? = nil) {
+        self.requestHeader = requestHeader
+        self.analyticsEventArray = analyticsEventArray
+        self.localTimestamp = localTimestamp
     }
 }
 
-public struct DeleteAction: ProtoMessage {
+public struct ClientAnalyticsEvent: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case delete_action_timestamp = 1
-        case delete_upper_bound_timestamp = 2
-        case delete_type = 3
-        case delete_event_id_array = 4
+        case eventType = 1
+        case rpcGlobalId = 2
+        case eventDetail = 3
+        case notified = 4
+        case wasNewest = 5
+        case pastWatermark = 6
+        case userDnd = 7
+        case inFocusedConversation = 8
+        case activeClientState = 9
+        case notificationLevel = 10
+        case deviceTimestampReceived = 11
+        case eventId = 12
+        case clientGeneratedId = 13
+        case chatAction = 14
+        case retryCount = 15
     }
     
-    public var delete_action_timestamp: UInt64? = nil
-    public var delete_upper_bound_timestamp: UInt64? = nil
-    public var delete_type: DeleteType? = nil
-    public var delete_event_id_array: [String] = []
+    public var eventType: ClientAnalyticsEvent_EventType? = nil
+    public var rpcGlobalId: Int64? = nil
+    public var eventDetail: String? = nil
+    public var notified: Bool? = nil
+    public var wasNewest: Bool? = nil
+    public var pastWatermark: Bool? = nil
+    public var userDnd: Bool? = nil
+    public var inFocusedConversation: Bool? = nil
+    public var activeClientState: ActiveClientState? = nil
+    public var notificationLevel: ClientNotificationLevel? = nil
+    public var deviceTimestampReceived: UInt64? = nil
+    public var eventId: String? = nil
+    public var clientGeneratedId: UInt64? = nil
+    public var chatAction: ClientAnalyticsEvent_ChatAction? = nil
+    public var retryCount: Int32? = nil
     
-    public init(delete_action_timestamp: UInt64? = nil, delete_upper_bound_timestamp: UInt64? = nil, delete_type: DeleteType? = nil, delete_event_id_array: [String] = []) {
-        self.delete_action_timestamp = delete_action_timestamp
-        self.delete_upper_bound_timestamp = delete_upper_bound_timestamp
-        self.delete_type = delete_type
-        self.delete_event_id_array = delete_event_id_array
+    public init(eventType: ClientAnalyticsEvent_EventType? = nil, rpcGlobalId: Int64? = nil, eventDetail: String? = nil, notified: Bool? = nil, wasNewest: Bool? = nil, pastWatermark: Bool? = nil, userDnd: Bool? = nil, inFocusedConversation: Bool? = nil, activeClientState: ActiveClientState? = nil, notificationLevel: ClientNotificationLevel? = nil, deviceTimestampReceived: UInt64? = nil, eventId: String? = nil, clientGeneratedId: UInt64? = nil, chatAction: ClientAnalyticsEvent_ChatAction? = nil, retryCount: Int32? = nil) {
+        self.eventType = eventType
+        self.rpcGlobalId = rpcGlobalId
+        self.eventDetail = eventDetail
+        self.notified = notified
+        self.wasNewest = wasNewest
+        self.pastWatermark = pastWatermark
+        self.userDnd = userDnd
+        self.inFocusedConversation = inFocusedConversation
+        self.activeClientState = activeClientState
+        self.notificationLevel = notificationLevel
+        self.deviceTimestampReceived = deviceTimestampReceived
+        self.eventId = eventId
+        self.clientGeneratedId = clientGeneratedId
+        self.chatAction = chatAction
+        self.retryCount = retryCount
     }
 }
 
-public struct InviteeID: ProtoMessage {
+public struct ClientEasterEggNotification: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case gaia_id = 1
-        case circle_id = 2
-        case chat_id = 3
-        case fallback_name = 4
+        case senderId = 1
+        case conversationId = 2
+        case easterEgg = 3
     }
     
-    public var gaia_id: String? = nil
-    public var circle_id: String? = nil
-    public var chat_id: String? = nil
-    public var fallback_name: String? = nil
+    public var senderId: ClientParticipantId? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var easterEgg: ClientEasterEgg? = nil
     
-    public init(gaia_id: String? = nil, circle_id: String? = nil, chat_id: String? = nil, fallback_name: String? = nil) {
-        self.gaia_id = gaia_id
-        self.circle_id = circle_id
-        self.chat_id = chat_id
-        self.fallback_name = fallback_name
+    public init(senderId: ClientParticipantId? = nil, conversationId: ClientConversationId? = nil, easterEgg: ClientEasterEgg? = nil) {
+        self.senderId = senderId
+        self.conversationId = conversationId
+        self.easterEgg = easterEgg
     }
 }
 
-public struct Country: ProtoMessage {
+public struct ClientEasterEggResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case region_code = 1
-        case country_code = 2
+        case responseHeader = 1
+        case timestamp = 2
     }
     
-    public var region_code: String? = nil
-    public var country_code: UInt64? = nil
+    public var responseHeader: ClientResponseHeader? = nil
+    public var timestamp: UInt64? = nil
     
-    public init(region_code: String? = nil, country_code: UInt64? = nil) {
-        self.region_code = region_code
-        self.country_code = country_code
+    public init(responseHeader: ClientResponseHeader? = nil, timestamp: UInt64? = nil) {
+        self.responseHeader = responseHeader
+        self.timestamp = timestamp
     }
 }
 
-public struct DesktopSoundSetting: ProtoMessage {
+public struct ClientEasterEggRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case desktop_sound_state = 1
-        case desktop_ring_sound_state = 2
+        case requestHeader = 1
+        case conversationId = 2
+        case easterEgg = 3
     }
     
-    public var desktop_sound_state: SoundState? = nil
-    public var desktop_ring_sound_state: SoundState? = nil
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var easterEgg: ClientEasterEgg? = nil
     
-    public init(desktop_sound_state: SoundState? = nil, desktop_ring_sound_state: SoundState? = nil) {
-        self.desktop_sound_state = desktop_sound_state
-        self.desktop_ring_sound_state = desktop_ring_sound_state
+    public init(requestHeader: ClientRequestHeader? = nil, conversationId: ClientConversationId? = nil, easterEgg: ClientEasterEgg? = nil) {
+        self.requestHeader = requestHeader
+        self.conversationId = conversationId
+        self.easterEgg = easterEgg
     }
 }
 
-public struct PhoneData: ProtoMessage {
+public struct ClientEasterEgg: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case phone = 1
-        case caller_id_settings_mask = 3
+        case message = 1
+        case payload = 2
     }
     
-    public var phone: [Phone] = []
-    public var caller_id_settings_mask: CallerIdSettingsMask? = nil
+    public var message: String? = nil
+    public var payload: String? = nil
     
-    public init(phone: [Phone] = [], caller_id_settings_mask: CallerIdSettingsMask? = nil) {
-        self.phone = phone
-        self.caller_id_settings_mask = caller_id_settings_mask
+    public init(message: String? = nil, payload: String? = nil) {
+        self.message = message
+        self.payload = payload
     }
 }
 
-public struct PhoneDescription: ProtoMessage {
+public struct ClientSetFocusNotification: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case phone_number = 1
-        case label = 3
+        case conversationId = 1
+        case senderId = 2
+        case timestamp = 3
+        case type = 4
+        case timeoutSecs = 5
     }
     
-    public var phone_number: PhoneNumber? = nil
-    public var label: String? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var senderId: ClientParticipantId? = nil
+    public var timestamp: UInt64? = nil
+    public var type: ClientFocusType? = nil
+    public var timeoutSecs: UInt32? = nil
     
-    public init(phone_number: PhoneNumber? = nil, label: String? = nil) {
-        self.phone_number = phone_number
-        self.label = label
+    public init(conversationId: ClientConversationId? = nil, senderId: ClientParticipantId? = nil, timestamp: UInt64? = nil, type: ClientFocusType? = nil, timeoutSecs: UInt32? = nil) {
+        self.conversationId = conversationId
+        self.senderId = senderId
+        self.timestamp = timestamp
+        self.type = type
+        self.timeoutSecs = timeoutSecs
     }
 }
 
-public struct Phone: ProtoMessage {
+public struct ClientSetFocusResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case phone_number = 1
-        case google_voice = 2
-        case verification_status = 3
-        case discoverable = 4
-        case discoverability_status = 5
-        case primary = 6
+        case responseHeader = 1
+        case timestamp = 2
     }
     
-    public var phone_number: PhoneNumber? = nil
-    public var google_voice: Bool? = nil
-    public var verification_status: PhoneVerificationStatus? = nil
-    public var discoverable: Bool? = nil
-    public var discoverability_status: PhoneDiscoverabilityStatus? = nil
+    public var responseHeader: ClientResponseHeader? = nil
+    public var timestamp: UInt64? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, timestamp: UInt64? = nil) {
+        self.responseHeader = responseHeader
+        self.timestamp = timestamp
+    }
+}
+
+public struct ClientSetFocusRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case conversationId = 2
+        case type = 3
+        case timeoutSecs = 4
+        case queryFocus = 6
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var conversationId: ClientConversationId? = nil
+    public var type: ClientFocusType? = nil
+    public var timeoutSecs: UInt32? = nil
+    public var queryFocus: Bool? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, conversationId: ClientConversationId? = nil, type: ClientFocusType? = nil, timeoutSecs: UInt32? = nil, queryFocus: Bool? = nil) {
+        self.requestHeader = requestHeader
+        self.conversationId = conversationId
+        self.type = type
+        self.timeoutSecs = timeoutSecs
+        self.queryFocus = queryFocus
+    }
+}
+
+public struct ClientHangoutEvent: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case eventType = 1
+        case participantIdArray = 2
+        case hangoutDurationSecs = 3
+        case transferredConversationId = 4
+        case refreshTimeoutSecs = 5
+        case isPeriodicRefresh = 6
+        case mediaType = 7
+    }
+    
+    public var eventType: ClientHangoutEventType? = nil
+    public var participantIdArray: [ClientParticipantId] = []
+    public var hangoutDurationSecs: Int64? = nil
+    public var transferredConversationId: ClientConversationId? = nil
+    public var refreshTimeoutSecs: Int64? = nil
+    public var isPeriodicRefresh: Bool? = nil
+    public var mediaType: ClientHangoutMediaType? = nil
+    
+    public init(eventType: ClientHangoutEventType? = nil, participantIdArray: [ClientParticipantId] = [], hangoutDurationSecs: Int64? = nil, transferredConversationId: ClientConversationId? = nil, refreshTimeoutSecs: Int64? = nil, isPeriodicRefresh: Bool? = nil, mediaType: ClientHangoutMediaType? = nil) {
+        self.eventType = eventType
+        self.participantIdArray = participantIdArray
+        self.hangoutDurationSecs = hangoutDurationSecs
+        self.transferredConversationId = transferredConversationId
+        self.refreshTimeoutSecs = refreshTimeoutSecs
+        self.isPeriodicRefresh = isPeriodicRefresh
+        self.mediaType = mediaType
+    }
+}
+
+public struct ClientConversationRename: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case newName = 1
+        case oldName = 2
+    }
+    
+    public var newName: String? = nil
+    public var oldName: String? = nil
+    
+    public init(newName: String? = nil, oldName: String? = nil) {
+        self.newName = newName
+        self.oldName = oldName
+    }
+}
+
+public struct ClientRenameConversationResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case deprecated2 = 2
+        case deprecated3 = 3
+        case createdEvent = 4
+        case updatedConversation = 5
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var deprecated2: UInt64? = nil
+    public var deprecated3: String? = nil
+    public var createdEvent: ClientEvent? = nil
+    public var updatedConversation: ClientConversation? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, deprecated2: UInt64? = nil, deprecated3: String? = nil, createdEvent: ClientEvent? = nil, updatedConversation: ClientConversation? = nil) {
+        self.responseHeader = responseHeader
+        self.deprecated2 = deprecated2
+        self.deprecated3 = deprecated3
+        self.createdEvent = createdEvent
+        self.updatedConversation = updatedConversation
+    }
+}
+
+public struct ClientRenameConversationRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case deprecated2 = 2
+        case newName = 3
+        case deprecated4 = 4
+        case eventRequestHeader = 5
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var deprecated2: String? = nil
+    public var newName: String? = nil
+    public var deprecated4: UInt64? = nil
+    public var eventRequestHeader: ClientEventRequestHeader? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, deprecated2: String? = nil, newName: String? = nil, deprecated4: UInt64? = nil, eventRequestHeader: ClientEventRequestHeader? = nil) {
+        self.requestHeader = requestHeader
+        self.deprecated2 = deprecated2
+        self.newName = newName
+        self.deprecated4 = deprecated4
+        self.eventRequestHeader = eventRequestHeader
+    }
+}
+
+public struct ClientRemoveUserResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case deprecated2 = 2
+        case deprecated3 = 3
+        case createdEvent = 4
+        case updatedConversation = 5
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var deprecated2: UInt64? = nil
+    public var deprecated3: String? = nil
+    public var createdEvent: ClientEvent? = nil
+    public var updatedConversation: ClientConversation? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, deprecated2: UInt64? = nil, deprecated3: String? = nil, createdEvent: ClientEvent? = nil, updatedConversation: ClientConversation? = nil) {
+        self.responseHeader = responseHeader
+        self.deprecated2 = deprecated2
+        self.deprecated3 = deprecated3
+        self.createdEvent = createdEvent
+        self.updatedConversation = updatedConversation
+    }
+}
+
+public struct ClientRemoveUserRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case deprecated2 = 2
+        case participantId = 3
+        case deprecated4 = 4
+        case eventRequestHeader = 5
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var deprecated2: String? = nil
+    public var participantId: ClientParticipantId? = nil
+    public var deprecated4: UInt64? = nil
+    public var eventRequestHeader: ClientEventRequestHeader? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, deprecated2: String? = nil, participantId: ClientParticipantId? = nil, deprecated4: UInt64? = nil, eventRequestHeader: ClientEventRequestHeader? = nil) {
+        self.requestHeader = requestHeader
+        self.deprecated2 = deprecated2
+        self.participantId = participantId
+        self.deprecated4 = deprecated4
+        self.eventRequestHeader = eventRequestHeader
+    }
+}
+
+public struct ClientMembershipChange: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case type = 1
+        case deprecated2Array = 2
+        case participantIdArray = 3
+        case leaveReason = 4
+    }
+    
+    public var type: ClientMembershipChangeType? = nil
+    public var deprecated2Array: [String] = []
+    public var participantIdArray: [ClientParticipantId] = []
+    public var leaveReason: ClientLeaveReason? = nil
+    
+    public init(type: ClientMembershipChangeType? = nil, deprecated2Array: [String] = [], participantIdArray: [ClientParticipantId] = [], leaveReason: ClientLeaveReason? = nil) {
+        self.type = type
+        self.deprecated2Array = deprecated2Array
+        self.participantIdArray = participantIdArray
+        self.leaveReason = leaveReason
+    }
+}
+
+public struct ClientAddUserResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case inviteeErrorArray = 2
+        case deprecated3 = 3
+        case deprecated4 = 4
+        case createdEvent = 5
+        case updatedConversation = 6
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var inviteeErrorArray: [ClientInviteeError] = []
+    public var deprecated3: UInt64? = nil
+    public var deprecated4: String? = nil
+    public var createdEvent: ClientEvent? = nil
+    public var updatedConversation: ClientConversation? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, inviteeErrorArray: [ClientInviteeError] = [], deprecated3: UInt64? = nil, deprecated4: String? = nil, createdEvent: ClientEvent? = nil, updatedConversation: ClientConversation? = nil) {
+        self.responseHeader = responseHeader
+        self.inviteeErrorArray = inviteeErrorArray
+        self.deprecated3 = deprecated3
+        self.deprecated4 = deprecated4
+        self.createdEvent = createdEvent
+        self.updatedConversation = updatedConversation
+    }
+}
+
+public struct ClientAddUserRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case deprecated2 = 2
+        case inviteeIdArray = 3
+        case deprecated4 = 4
+        case eventRequestHeader = 5
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var deprecated2: String? = nil
+    public var inviteeIdArray: [ClientInviteeId] = []
+    public var deprecated4: UInt64? = nil
+    public var eventRequestHeader: ClientEventRequestHeader? = nil
+    
+    public init(requestHeader: ClientRequestHeader? = nil, deprecated2: String? = nil, inviteeIdArray: [ClientInviteeId] = [], deprecated4: UInt64? = nil, eventRequestHeader: ClientEventRequestHeader? = nil) {
+        self.requestHeader = requestHeader
+        self.deprecated2 = deprecated2
+        self.inviteeIdArray = inviteeIdArray
+        self.deprecated4 = deprecated4
+        self.eventRequestHeader = eventRequestHeader
+    }
+}
+
+public struct ClientChatMessage: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case messageContent = 3
+    }
+    
+    public var messageContent: ClientMessageContent? = nil
+    
+    public init(messageContent: ClientMessageContent? = nil) {
+        self.messageContent = messageContent
+    }
+}
+
+public struct ClientSendChatMessageResponse: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case responseHeader = 1
+        case deprecated2 = 2
+        case deprecated3 = 3
+        case mediaUploadInfoArray = 4
+        case deprecated5 = 5
+        case createdEvent = 6
+        case updatedConversation = 7
+    }
+    
+    public var responseHeader: ClientResponseHeader? = nil
+    public var deprecated2: UInt64? = nil
+    public var deprecated3: String? = nil
+    public var mediaUploadInfoArray: [ClientMediaUploadInfo] = []
+    public var deprecated5: String? = nil
+    public var createdEvent: ClientEvent? = nil
+    public var updatedConversation: ClientConversation? = nil
+    
+    public init(responseHeader: ClientResponseHeader? = nil, deprecated2: UInt64? = nil, deprecated3: String? = nil, mediaUploadInfoArray: [ClientMediaUploadInfo] = [], deprecated5: String? = nil, createdEvent: ClientEvent? = nil, updatedConversation: ClientConversation? = nil) {
+        self.responseHeader = responseHeader
+        self.deprecated2 = deprecated2
+        self.deprecated3 = deprecated3
+        self.mediaUploadInfoArray = mediaUploadInfoArray
+        self.deprecated5 = deprecated5
+        self.createdEvent = createdEvent
+        self.updatedConversation = updatedConversation
+    }
+}
+
+public struct ClientSendChatMessageRequest: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case requestHeader = 1
+        case deprecated2 = 2
+        case deprecated3 = 3
+        case messageContent = 6
+        case existingMedia = 7
+        case eventRequestHeader = 8
+        case otherInviteeId = 9
+        case attachLocation = 10
+        case externalImageSpec = 11
+        case chatMessageSpecArray = 12
+    }
+    
+    public var requestHeader: ClientRequestHeader? = nil
+    public var deprecated2: String? = nil
+    public var deprecated3: UInt64? = nil
+    public var messageContent: ClientMessageContent? = nil
+    public var existingMedia: ClientExistingMedia? = nil
+    public var eventRequestHeader: ClientEventRequestHeader? = nil
+    public var otherInviteeId: ClientInviteeId? = nil
+    public var attachLocation: ClientLocationSpec? = nil
+    public var externalImageSpec: ClientExternalImageSpec? = nil
+    public var chatMessageSpecArray: [ClientChatMessageSpec] = []
+    
+    public init(requestHeader: ClientRequestHeader? = nil, deprecated2: String? = nil, deprecated3: UInt64? = nil, messageContent: ClientMessageContent? = nil, existingMedia: ClientExistingMedia? = nil, eventRequestHeader: ClientEventRequestHeader? = nil, otherInviteeId: ClientInviteeId? = nil, attachLocation: ClientLocationSpec? = nil, externalImageSpec: ClientExternalImageSpec? = nil, chatMessageSpecArray: [ClientChatMessageSpec] = []) {
+        self.requestHeader = requestHeader
+        self.deprecated2 = deprecated2
+        self.deprecated3 = deprecated3
+        self.messageContent = messageContent
+        self.existingMedia = existingMedia
+        self.eventRequestHeader = eventRequestHeader
+        self.otherInviteeId = otherInviteeId
+        self.attachLocation = attachLocation
+        self.externalImageSpec = externalImageSpec
+        self.chatMessageSpecArray = chatMessageSpecArray
+    }
+}
+
+public struct ClientChatMessageSpec: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case segmentArray = 1
+        case attachLocation = 3
+        case externalImageSpec = 4
+    }
+    
+    public var segmentArray: [SocialSegment] = []
+    public var attachLocation: ClientLocationSpec? = nil
+    public var externalImageSpec: ClientExternalImageSpec? = nil
+    
+    public init(segmentArray: [SocialSegment] = [], attachLocation: ClientLocationSpec? = nil, externalImageSpec: ClientExternalImageSpec? = nil) {
+        self.segmentArray = segmentArray
+        self.attachLocation = attachLocation
+        self.externalImageSpec = externalImageSpec
+    }
+}
+
+public struct ClientExternalImageSpec: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case imageURL = 1
+        case width = 2
+        case height = 3
+        case containingWebpageURL = 4
+        case containingWebpageTitle = 5
+        case description = 6
+    }
+    
+    public var imageURL: String? = nil
+    public var width: Int32? = nil
+    public var height: Int32? = nil
+    public var containingWebpageURL: String? = nil
+    public var containingWebpageTitle: String? = nil
+    public var description: String? = nil
+    
+    public init(imageURL: String? = nil, width: Int32? = nil, height: Int32? = nil, containingWebpageURL: String? = nil, containingWebpageTitle: String? = nil, description: String? = nil) {
+        self.imageURL = imageURL
+        self.width = width
+        self.height = height
+        self.containingWebpageURL = containingWebpageURL
+        self.containingWebpageTitle = containingWebpageTitle
+        self.description = description
+    }
+}
+
+public struct ClientLocationSpec: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case place = 1
+        case deprecated2 = 2
+    }
+    
+    public var place: EMPlaceV2? = nil
+    public var deprecated2: String? = nil
+    
+    public init(place: EMPlaceV2? = nil, deprecated2: String? = nil) {
+        self.place = place
+        self.deprecated2 = deprecated2
+    }
+}
+
+public struct ClientConversation_ClientUserConversationState_ClientDeliveryMediumOption: ProtoMessage {
+    public enum CodingKeys: Int, CodingKey {
+        case deliveryMedium = 1
+        case currentDefault = 2
+        case primary = 3
+    }
+    
+    public var deliveryMedium: ClientDeliveryMedium? = nil
+    public var currentDefault: Bool? = nil
     public var primary: Bool? = nil
     
-    public init(phone_number: PhoneNumber? = nil, google_voice: Bool? = nil, verification_status: PhoneVerificationStatus? = nil, discoverable: Bool? = nil, discoverability_status: PhoneDiscoverabilityStatus? = nil, primary: Bool? = nil) {
-        self.phone_number = phone_number
-        self.google_voice = google_voice
-        self.verification_status = verification_status
-        self.discoverable = discoverable
-        self.discoverability_status = discoverability_status
+    public init(deliveryMedium: ClientDeliveryMedium? = nil, currentDefault: Bool? = nil, primary: Bool? = nil) {
+        self.deliveryMedium = deliveryMedium
+        self.currentDefault = currentDefault
         self.primary = primary
     }
 }
 
-public struct I18nData: ProtoMessage {
+public struct ClientConversation_ClientUserConversationState: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case national_number = 1
-        case international_number = 2
-        case country_code = 3
-        case region_code = 4
-        case is_valid = 5
-        case validation_result = 6
+        case clientGeneratedId = 2
+        case selfReadState = 7
+        case status = 8
+        case notificationLevel = 9
+        case viewArray = 10
+        case inviterId = 11
+        case inviteTimestamp = 12
+        case sortTimestamp = 13
+        case activeTimestamp = 14
+        case inviteAffinity = 15
+        case hasNoPersistentEvents = 16
+        case deliveryMediumOptionArray = 17
+        case isGuest = 21
     }
     
-    public var national_number: String? = nil
-    public var international_number: String? = nil
-    public var country_code: UInt64? = nil
-    public var region_code: String? = nil
-    public var is_valid: Bool? = nil
-    public var validation_result: PhoneValidationResult? = nil
+    public var clientGeneratedId: UInt64? = nil
+    public var selfReadState: ClientUserReadState? = nil
+    public var status: ClientConversationStatus? = nil
+    public var notificationLevel: ClientNotificationLevel? = nil
+    public var viewArray: [ClientConversationView] = []
+    public var inviterId: ClientParticipantId? = nil
+    public var inviteTimestamp: UInt64? = nil
+    public var sortTimestamp: UInt64? = nil
+    public var activeTimestamp: UInt64? = nil
+    public var inviteAffinity: ClientConversation_ClientUserConversationState_InvitationAffinity? = nil
+    public var hasNoPersistentEvents: Bool? = nil
+    public var deliveryMediumOptionArray: [ClientConversation_ClientUserConversationState_ClientDeliveryMediumOption] = []
+    public var isGuest: Bool? = nil
     
-    public init(national_number: String? = nil, international_number: String? = nil, country_code: UInt64? = nil, region_code: String? = nil, is_valid: Bool? = nil, validation_result: PhoneValidationResult? = nil) {
-        self.national_number = national_number
-        self.international_number = international_number
-        self.country_code = country_code
-        self.region_code = region_code
-        self.is_valid = is_valid
-        self.validation_result = validation_result
+    public init(clientGeneratedId: UInt64? = nil, selfReadState: ClientUserReadState? = nil, status: ClientConversationStatus? = nil, notificationLevel: ClientNotificationLevel? = nil, viewArray: [ClientConversationView] = [], inviterId: ClientParticipantId? = nil, inviteTimestamp: UInt64? = nil, sortTimestamp: UInt64? = nil, activeTimestamp: UInt64? = nil, inviteAffinity: ClientConversation_ClientUserConversationState_InvitationAffinity? = nil, hasNoPersistentEvents: Bool? = nil, deliveryMediumOptionArray: [ClientConversation_ClientUserConversationState_ClientDeliveryMediumOption] = [], isGuest: Bool? = nil) {
+        self.clientGeneratedId = clientGeneratedId
+        self.selfReadState = selfReadState
+        self.status = status
+        self.notificationLevel = notificationLevel
+        self.viewArray = viewArray
+        self.inviterId = inviterId
+        self.inviteTimestamp = inviteTimestamp
+        self.sortTimestamp = sortTimestamp
+        self.activeTimestamp = activeTimestamp
+        self.inviteAffinity = inviteAffinity
+        self.hasNoPersistentEvents = hasNoPersistentEvents
+        self.deliveryMediumOptionArray = deliveryMediumOptionArray
+        self.isGuest = isGuest
     }
 }
 
-public struct PhoneNumber: ProtoMessage {
+public struct ClientConversation: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case e164 = 1
-        case i18n_data = 2
-    }
-    
-    public var e164: String? = nil
-    public var i18n_data: I18nData? = nil
-    
-    public init(e164: String? = nil, i18n_data: I18nData? = nil) {
-        self.e164 = e164
-        self.i18n_data = i18n_data
-    }
-}
-
-public struct SuggestedContactGroupHash: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case max_results = 1
-        case hash = 2
-    }
-    
-    public var max_results: UInt64? = nil
-    public var hash: String? = nil
-    
-    public init(max_results: UInt64? = nil, hash: String? = nil) {
-        self.max_results = max_results
-        self.hash = hash
-    }
-}
-
-public struct SuggestedContact: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case entity = 1
-        case invitation_status = 2
-    }
-    
-    public var entity: Entity? = nil
-    public var invitation_status: InvitationStatus? = nil
-    
-    public init(entity: Entity? = nil, invitation_status: InvitationStatus? = nil) {
-        self.entity = entity
-        self.invitation_status = invitation_status
-    }
-}
-
-public struct SuggestedContactGroup: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case hash_matched = 1
-        case hash = 2
-        case contact = 3
-    }
-    
-    public var hash_matched: Bool? = nil
-    public var hash: String? = nil
-    public var contact: [SuggestedContact] = []
-    
-    public init(hash_matched: Bool? = nil, hash: String? = nil, contact: [SuggestedContact] = []) {
-        self.hash_matched = hash_matched
-        self.hash = hash
-        self.contact = contact
-    }
-}
-
-public struct StateUpdate: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case state_update_header = 1
-        case conversation = 13
-        case conversation_notification = 2
-        case event_notification = 3
-        case focus_notification = 4
-        case typing_notification = 5
-        case notification_level_notification = 6
-        case reply_to_invite_notification = 7
-        case watermark_notification = 8
-        case view_modification = 11
-        case easter_egg_notification = 12
-        case self_presence_notification = 14
-        case delete_notification = 15
-        case presence_notification = 16
-        case block_notification = 17
-        case notification_setting_notification = 19
-        case rich_presence_enabled_state_notification = 20
-    }
-    
-    public var state_update_header: StateUpdateHeader? = nil
-    public var conversation: Conversation? = nil
-    public var conversation_notification: ConversationNotification? = nil
-    public var event_notification: EventNotification? = nil
-    public var focus_notification: SetFocusNotification? = nil
-    public var typing_notification: SetTypingNotification? = nil
-    public var notification_level_notification: SetConversationNotificationLevelNotification? = nil
-    public var reply_to_invite_notification: ReplyToInviteNotification? = nil
-    public var watermark_notification: WatermarkNotification? = nil
-    public var view_modification: ConversationViewModification? = nil
-    public var easter_egg_notification: EasterEggNotification? = nil
-    public var self_presence_notification: SelfPresenceNotification? = nil
-    public var delete_notification: DeleteActionNotification? = nil
-    public var presence_notification: PresenceNotification? = nil
-    public var block_notification: BlockNotification? = nil
-    public var notification_setting_notification: SetNotificationSettingNotification? = nil
-    public var rich_presence_enabled_state_notification: RichPresenceEnabledStateNotification? = nil
-    
-    public init(state_update_header: StateUpdateHeader? = nil, conversation: Conversation? = nil, conversation_notification: ConversationNotification? = nil, event_notification: EventNotification? = nil, focus_notification: SetFocusNotification? = nil, typing_notification: SetTypingNotification? = nil, notification_level_notification: SetConversationNotificationLevelNotification? = nil, reply_to_invite_notification: ReplyToInviteNotification? = nil, watermark_notification: WatermarkNotification? = nil, view_modification: ConversationViewModification? = nil, easter_egg_notification: EasterEggNotification? = nil, self_presence_notification: SelfPresenceNotification? = nil, delete_notification: DeleteActionNotification? = nil, presence_notification: PresenceNotification? = nil, block_notification: BlockNotification? = nil, notification_setting_notification: SetNotificationSettingNotification? = nil, rich_presence_enabled_state_notification: RichPresenceEnabledStateNotification? = nil) {
-        self.state_update_header = state_update_header
-        self.conversation = conversation
-        self.conversation_notification = conversation_notification
-        self.event_notification = event_notification
-        self.focus_notification = focus_notification
-        self.typing_notification = typing_notification
-        self.notification_level_notification = notification_level_notification
-        self.reply_to_invite_notification = reply_to_invite_notification
-        self.watermark_notification = watermark_notification
-        self.view_modification = view_modification
-        self.easter_egg_notification = easter_egg_notification
-        self.self_presence_notification = self_presence_notification
-        self.delete_notification = delete_notification
-        self.presence_notification = presence_notification
-        self.block_notification = block_notification
-        self.notification_setting_notification = notification_setting_notification
-        self.rich_presence_enabled_state_notification = rich_presence_enabled_state_notification
-    }
-}
-
-public struct StateUpdateHeader: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case active_client_state = 1
-        case request_trace_id = 3
-        case notification_settings = 4
-        case current_server_time = 5
-    }
-    
-    public var active_client_state: ActiveClientState? = nil
-    public var request_trace_id: String? = nil
-    public var notification_settings: NotificationSettings? = nil
-    public var current_server_time: UInt64? = nil
-    
-    public init(active_client_state: ActiveClientState? = nil, request_trace_id: String? = nil, notification_settings: NotificationSettings? = nil, current_server_time: UInt64? = nil) {
-        self.active_client_state = active_client_state
-        self.request_trace_id = request_trace_id
-        self.notification_settings = notification_settings
-        self.current_server_time = current_server_time
-    }
-}
-
-public struct BatchUpdate: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case state_update = 1
-    }
-    
-    public var state_update: [StateUpdate] = []
-    
-    public init(state_update: [StateUpdate] = []) {
-        self.state_update = state_update
-    }
-}
-
-public struct ConversationNotification: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case conversation = 1
-    }
-    
-    public var conversation: Conversation? = nil
-    
-    public init(conversation: Conversation? = nil) {
-        self.conversation = conversation
-    }
-}
-
-public struct EventNotification: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case event = 1
-    }
-    
-    public var event: Event? = nil
-    
-    public init(event: Event? = nil) {
-        self.event = event
-    }
-}
-
-public struct SetFocusNotification: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case sender_id = 2
-        case timestamp = 3
-        case type = 4
-    }
-    
-    public var conversation_id: ConversationId? = nil
-    public var sender_id: ParticipantId? = nil
-    public var timestamp: UInt64? = nil
-    public var type: FocusType? = nil
-    
-    public init(conversation_id: ConversationId? = nil, sender_id: ParticipantId? = nil, timestamp: UInt64? = nil, type: FocusType? = nil) {
-        self.conversation_id = conversation_id
-        self.sender_id = sender_id
-        self.timestamp = timestamp
-        self.type = type
-    }
-}
-
-public struct SetTypingNotification: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case sender_id = 2
-        case timestamp = 3
-        case type = 4
-    }
-    
-    public var conversation_id: ConversationId? = nil
-    public var sender_id: ParticipantId? = nil
-    public var timestamp: UInt64? = nil
-    public var type: TypingType? = nil
-    
-    public init(conversation_id: ConversationId? = nil, sender_id: ParticipantId? = nil, timestamp: UInt64? = nil, type: TypingType? = nil) {
-        self.conversation_id = conversation_id
-        self.sender_id = sender_id
-        self.timestamp = timestamp
-        self.type = type
-    }
-}
-
-public struct SetConversationNotificationLevelNotification: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case level = 2
-        case revert_timeout_secs = 3
-        case timestamp = 4
-    }
-    
-    public var conversation_id: ConversationId? = nil
-    public var level: NotificationLevel? = nil
-    public var revert_timeout_secs: UInt32? = nil
-    public var timestamp: UInt64? = nil
-    
-    public init(conversation_id: ConversationId? = nil, level: NotificationLevel? = nil, revert_timeout_secs: UInt32? = nil, timestamp: UInt64? = nil) {
-        self.conversation_id = conversation_id
-        self.level = level
-        self.revert_timeout_secs = revert_timeout_secs
-        self.timestamp = timestamp
-    }
-}
-
-public struct ReplyToInviteNotification: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
+        case id = 1
         case type = 2
+        case name = 3
+        case selfConversationState = 4
+        case deprecated5Array = 5
+        case deprecated6Array = 6
+        case readStateArray = 8
+        case hasActiveHangout = 9
+        case otrStatus = 10
+        case otrToggle = 11
+        case deprecated12 = 12
+        case currentParticipantArray = 13
+        case participantDataArray = 14
+        case isTemporary = 15
+        case forkOnExternalInvite = 16
+        case networkTypeArray = 18
+        case forceHistoryState = 19
+        case conversationAvatarMediaKey = 20
+        case groupLinkSharingStatus = 22
     }
     
-    public var conversation_id: ConversationId? = nil
-    public var type: ReplyToInviteType? = nil
+    public var id: ClientConversationId? = nil
+    public var type: ClientConversationType? = nil
+    public var name: String? = nil
+    public var selfConversationState: ClientConversation_ClientUserConversationState? = nil
+    public var deprecated5Array: [String] = []
+    public var deprecated6Array: [String] = []
+    public var readStateArray: [ClientUserReadState] = []
+    public var hasActiveHangout: Bool? = nil
+    public var otrStatus: ClientOffTheRecordStatus? = nil
+    public var otrToggle: ClientOffTheRecordToggle? = nil
+    public var deprecated12: Bool? = nil
+    public var currentParticipantArray: [ClientParticipantId] = []
+    public var participantDataArray: [ClientConversationParticipantData] = []
+    public var isTemporary: Bool? = nil
+    public var forkOnExternalInvite: Bool? = nil
+    public var networkTypeArray: [ClientConversation_ClientNetworkType] = []
+    public var forceHistoryState: ClientForceHistoryState? = nil
+    public var conversationAvatarMediaKey: String? = nil
+    public var groupLinkSharingStatus: ClientGroupLinkSharingStatus? = nil
     
-    public init(conversation_id: ConversationId? = nil, type: ReplyToInviteType? = nil) {
-        self.conversation_id = conversation_id
+    public init(id: ClientConversationId? = nil, type: ClientConversationType? = nil, name: String? = nil, selfConversationState: ClientConversation_ClientUserConversationState? = nil, deprecated5Array: [String] = [], deprecated6Array: [String] = [], readStateArray: [ClientUserReadState] = [], hasActiveHangout: Bool? = nil, otrStatus: ClientOffTheRecordStatus? = nil, otrToggle: ClientOffTheRecordToggle? = nil, deprecated12: Bool? = nil, currentParticipantArray: [ClientParticipantId] = [], participantDataArray: [ClientConversationParticipantData] = [], isTemporary: Bool? = nil, forkOnExternalInvite: Bool? = nil, networkTypeArray: [ClientConversation_ClientNetworkType] = [], forceHistoryState: ClientForceHistoryState? = nil, conversationAvatarMediaKey: String? = nil, groupLinkSharingStatus: ClientGroupLinkSharingStatus? = nil) {
+        self.id = id
         self.type = type
+        self.name = name
+        self.selfConversationState = selfConversationState
+        self.deprecated5Array = deprecated5Array
+        self.deprecated6Array = deprecated6Array
+        self.readStateArray = readStateArray
+        self.hasActiveHangout = hasActiveHangout
+        self.otrStatus = otrStatus
+        self.otrToggle = otrToggle
+        self.deprecated12 = deprecated12
+        self.currentParticipantArray = currentParticipantArray
+        self.participantDataArray = participantDataArray
+        self.isTemporary = isTemporary
+        self.forkOnExternalInvite = forkOnExternalInvite
+        self.networkTypeArray = networkTypeArray
+        self.forceHistoryState = forceHistoryState
+        self.conversationAvatarMediaKey = conversationAvatarMediaKey
+        self.groupLinkSharingStatus = groupLinkSharingStatus
     }
 }
 
-public struct WatermarkNotification: ProtoMessage {
+public struct ClientUserReadState: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case sender_id = 1
-        case conversation_id = 2
-        case latest_read_timestamp = 3
+        case participantId = 1
+        case latestReadTimestamp = 2
     }
     
-    public var sender_id: ParticipantId? = nil
-    public var conversation_id: ConversationId? = nil
-    public var latest_read_timestamp: UInt64? = nil
+    public var participantId: ClientParticipantId? = nil
+    public var latestReadTimestamp: UInt64? = nil
     
-    public init(sender_id: ParticipantId? = nil, conversation_id: ConversationId? = nil, latest_read_timestamp: UInt64? = nil) {
-        self.sender_id = sender_id
-        self.conversation_id = conversation_id
-        self.latest_read_timestamp = latest_read_timestamp
+    public init(participantId: ClientParticipantId? = nil, latestReadTimestamp: UInt64? = nil) {
+        self.participantId = participantId
+        self.latestReadTimestamp = latestReadTimestamp
     }
 }
 
-public struct ConversationViewModification: ProtoMessage {
+public struct ClientCreateConversationResponse: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case old_view = 2
-        case new_view = 3
+        case responseHeader = 1
+        case conversation = 2
+        case inviteeErrorArray = 3
+        case deprecated4 = 4
+        case deprecated5 = 5
+        case deprecated6Array = 6
+        case newConversationCreated = 7
     }
     
-    public var conversation_id: ConversationId? = nil
-    public var old_view: ConversationView? = nil
-    public var new_view: ConversationView? = nil
+    public var responseHeader: ClientResponseHeader? = nil
+    public var conversation: ClientConversation? = nil
+    public var inviteeErrorArray: [ClientInviteeError] = []
+    public var deprecated4: UInt64? = nil
+    public var deprecated5: String? = nil
+    public var deprecated6Array: [String] = []
+    public var newConversationCreated: Bool? = nil
     
-    public init(conversation_id: ConversationId? = nil, old_view: ConversationView? = nil, new_view: ConversationView? = nil) {
-        self.conversation_id = conversation_id
-        self.old_view = old_view
-        self.new_view = new_view
+    public init(responseHeader: ClientResponseHeader? = nil, conversation: ClientConversation? = nil, inviteeErrorArray: [ClientInviteeError] = [], deprecated4: UInt64? = nil, deprecated5: String? = nil, deprecated6Array: [String] = [], newConversationCreated: Bool? = nil) {
+        self.responseHeader = responseHeader
+        self.conversation = conversation
+        self.inviteeErrorArray = inviteeErrorArray
+        self.deprecated4 = deprecated4
+        self.deprecated5 = deprecated5
+        self.deprecated6Array = deprecated6Array
+        self.newConversationCreated = newConversationCreated
     }
 }
 
-public struct GroupLinkSharingModification: ProtoMessage {
+public struct ClientCreateConversationRequest: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case new_status = 1
+        case requestHeader = 1
+        case type = 2
+        case clientGeneratedId = 3
+        case name = 4
+        case inviteeIdArray = 5
+        case deliveryMedium = 11
+        case inviteToken = 12
+        case conversationAvatarMediaKey = 14
     }
     
-    public var new_status: GroupLinkSharingStatus? = nil
+    public var requestHeader: ClientRequestHeader? = nil
+    public var type: ClientConversationType? = nil
+    public var clientGeneratedId: UInt64? = nil
+    public var name: String? = nil
+    public var inviteeIdArray: [ClientInviteeId] = []
+    public var deliveryMedium: ClientDeliveryMedium? = nil
+    public var inviteToken: ClientInviteToken? = nil
+    public var conversationAvatarMediaKey: String? = nil
     
-    public init(new_status: GroupLinkSharingStatus? = nil) {
-        self.new_status = new_status
+    public init(requestHeader: ClientRequestHeader? = nil, type: ClientConversationType? = nil, clientGeneratedId: UInt64? = nil, name: String? = nil, inviteeIdArray: [ClientInviteeId] = [], deliveryMedium: ClientDeliveryMedium? = nil, inviteToken: ClientInviteToken? = nil, conversationAvatarMediaKey: String? = nil) {
+        self.requestHeader = requestHeader
+        self.type = type
+        self.clientGeneratedId = clientGeneratedId
+        self.name = name
+        self.inviteeIdArray = inviteeIdArray
+        self.deliveryMedium = deliveryMedium
+        self.inviteToken = inviteToken
+        self.conversationAvatarMediaKey = conversationAvatarMediaKey
     }
 }
 
-public struct EasterEggNotification: ProtoMessage {
+public struct ClientExistingMedia_Photo: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case sender_id = 1
-        case conversation_id = 2
-        case easter_egg = 3
+        case photoId = 1
+        case deleteAlbumlessSourcePhoto = 2
+        case ownerGaiaId = 3
+        case referenceOriginalPhoto = 4
     }
     
-    public var sender_id: ParticipantId? = nil
-    public var conversation_id: ConversationId? = nil
-    public var easter_egg: EasterEgg? = nil
+    public var photoId: String? = nil
+    public var deleteAlbumlessSourcePhoto: Bool? = nil
+    public var ownerGaiaId: String? = nil
+    public var referenceOriginalPhoto: Bool? = nil
     
-    public init(sender_id: ParticipantId? = nil, conversation_id: ConversationId? = nil, easter_egg: EasterEgg? = nil) {
-        self.sender_id = sender_id
-        self.conversation_id = conversation_id
-        self.easter_egg = easter_egg
+    public init(photoId: String? = nil, deleteAlbumlessSourcePhoto: Bool? = nil, ownerGaiaId: String? = nil, referenceOriginalPhoto: Bool? = nil) {
+        self.photoId = photoId
+        self.deleteAlbumlessSourcePhoto = deleteAlbumlessSourcePhoto
+        self.ownerGaiaId = ownerGaiaId
+        self.referenceOriginalPhoto = referenceOriginalPhoto
     }
 }
 
-public struct SelfPresenceNotification: ProtoMessage {
+public struct ClientExistingMedia: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case client_presence_state = 1
-        case do_not_disturb_setting = 3
-        case desktop_off_setting = 4
-        case desktop_off_state = 5
-        case mood_state = 6
+        case photo = 1
     }
     
-    public var client_presence_state: ClientPresenceState? = nil
-    public var do_not_disturb_setting: DoNotDisturbSetting? = nil
-    public var desktop_off_setting: DesktopOffSetting? = nil
-    public var desktop_off_state: DesktopOffState? = nil
-    public var mood_state: MoodState? = nil
+    public var photo: ClientExistingMedia_Photo? = nil
     
-    public init(client_presence_state: ClientPresenceState? = nil, do_not_disturb_setting: DoNotDisturbSetting? = nil, desktop_off_setting: DesktopOffSetting? = nil, desktop_off_state: DesktopOffState? = nil, mood_state: MoodState? = nil) {
-        self.client_presence_state = client_presence_state
-        self.do_not_disturb_setting = do_not_disturb_setting
-        self.desktop_off_setting = desktop_off_setting
-        self.desktop_off_state = desktop_off_state
-        self.mood_state = mood_state
+    public init(photo: ClientExistingMedia_Photo? = nil) {
+        self.photo = photo
     }
 }
 
-public struct DeleteActionNotification: ProtoMessage {
+public struct ClientMediaUploadInfo: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case delete_action = 2
+        case attachment = 1
     }
     
-    public var conversation_id: ConversationId? = nil
-    public var delete_action: DeleteAction? = nil
+    public var attachment: Attachment? = nil
     
-    public init(conversation_id: ConversationId? = nil, delete_action: DeleteAction? = nil) {
-        self.conversation_id = conversation_id
-        self.delete_action = delete_action
+    public init(attachment: Attachment? = nil) {
+        self.attachment = attachment
     }
 }
 
-public struct PresenceNotification: ProtoMessage {
+public struct ClientMessageContent: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case presence = 1
+        case segmentArray = 1
+        case attachmentArray = 2
     }
     
-    public var presence: [PresenceResult] = []
+    public var segmentArray: [SocialSegment] = []
+    public var attachmentArray: [Attachment] = []
     
-    public init(presence: [PresenceResult] = []) {
-        self.presence = presence
+    public init(segmentArray: [SocialSegment] = [], attachmentArray: [Attachment] = []) {
+        self.segmentArray = segmentArray
+        self.attachmentArray = attachmentArray
     }
 }
 
-public struct BlockNotification: ProtoMessage {
+public struct ClientDeliveryMedium: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case block_state_change = 1
+        case mediumType = 1
+        case selfPhone = 2
     }
     
-    public var block_state_change: [BlockStateChange] = []
+    public var mediumType: ClientDeliveryMediumType? = nil
+    public var selfPhone: GCVPhoneNumber? = nil
     
-    public init(block_state_change: [BlockStateChange] = []) {
-        self.block_state_change = block_state_change
+    public init(mediumType: ClientDeliveryMediumType? = nil, selfPhone: GCVPhoneNumber? = nil) {
+        self.mediumType = mediumType
+        self.selfPhone = selfPhone
     }
 }
 
-public struct InvitationWatermarkNotification: ProtoMessage {
+public struct ClientInviteeError: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case state = 1
+        case inviteeId = 1
+        case deprecated2 = 2
+        case deprecated3 = 3
+        case deprecated4 = 4
+        case errorDescription = 5
+        case detail = 6
     }
     
-    public var state: InvitationState? = nil
+    public var inviteeId: ClientInviteeId? = nil
+    public var deprecated2: String? = nil
+    public var deprecated3: String? = nil
+    public var deprecated4: String? = nil
+    public var errorDescription: String? = nil
+    public var detail: ClientInviteeError_ClientInviteeErrorDetail? = nil
     
-    public init(state: InvitationState? = nil) {
-        self.state = state
+    public init(inviteeId: ClientInviteeId? = nil, deprecated2: String? = nil, deprecated3: String? = nil, deprecated4: String? = nil, errorDescription: String? = nil, detail: ClientInviteeError_ClientInviteeErrorDetail? = nil) {
+        self.inviteeId = inviteeId
+        self.deprecated2 = deprecated2
+        self.deprecated3 = deprecated3
+        self.deprecated4 = deprecated4
+        self.errorDescription = errorDescription
+        self.detail = detail
     }
 }
 
-public struct SetNotificationSettingNotification: ProtoMessage {
+public struct ClientConversationParticipantData: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case configuration_bit = 1
-        case desktop_sound_setting = 2
+        case id = 1
+        case fallbackName = 2
+        case invitationStatus = 3
+        case phoneNumber = 4
+        case participantType = 5
+        case newInvitationStatus = 6
+        case isAnonymousPhone = 7
     }
     
-    public var configuration_bit: [ConfigurationBit] = []
-    public var desktop_sound_setting: DesktopSoundSetting? = nil
+    public var id: ClientParticipantId? = nil
+    public var fallbackName: String? = nil
+    public var invitationStatus: ClientInvitationStatus? = nil
+    public var phoneNumber: GCVPhoneNumber? = nil
+    public var participantType: ClientUserType? = nil
+    public var newInvitationStatus: ClientInvitationStatus? = nil
+    public var isAnonymousPhone: Bool? = nil
     
-    public init(configuration_bit: [ConfigurationBit] = [], desktop_sound_setting: DesktopSoundSetting? = nil) {
-        self.configuration_bit = configuration_bit
-        self.desktop_sound_setting = desktop_sound_setting
+    public init(id: ClientParticipantId? = nil, fallbackName: String? = nil, invitationStatus: ClientInvitationStatus? = nil, phoneNumber: GCVPhoneNumber? = nil, participantType: ClientUserType? = nil, newInvitationStatus: ClientInvitationStatus? = nil, isAnonymousPhone: Bool? = nil) {
+        self.id = id
+        self.fallbackName = fallbackName
+        self.invitationStatus = invitationStatus
+        self.phoneNumber = phoneNumber
+        self.participantType = participantType
+        self.newInvitationStatus = newInvitationStatus
+        self.isAnonymousPhone = isAnonymousPhone
     }
 }
 
-public struct RichPresenceEnabledStateNotification: ProtoMessage {
+public struct ClientConversationId: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case rich_presence_enabled_state = 1
+        case id = 1
     }
     
-    public var rich_presence_enabled_state: [RichPresenceEnabledState] = []
+    public var id: String? = nil
     
-    public init(rich_presence_enabled_state: [RichPresenceEnabledState] = []) {
-        self.rich_presence_enabled_state = rich_presence_enabled_state
+    public init(id: String? = nil) {
+        self.id = id
     }
 }
 
-public struct ConversationSpec: ProtoMessage {
+public struct ClientParticipantId: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case participant_id = 2
-        case invitee_id = 3
+        case gaiaId = 1
+        case chatId = 2
     }
     
-    public var conversation_id: ConversationId? = nil
-    public var participant_id: ParticipantId? = nil
-    public var invitee_id: InviteeID? = nil
+    public var gaiaId: String? = nil
+    public var chatId: String? = nil
     
-    public init(conversation_id: ConversationId? = nil, participant_id: ParticipantId? = nil, invitee_id: InviteeID? = nil) {
-        self.conversation_id = conversation_id
-        self.participant_id = participant_id
-        self.invitee_id = invitee_id
+    public init(gaiaId: String? = nil, chatId: String? = nil) {
+        self.gaiaId = gaiaId
+        self.chatId = chatId
     }
 }
 
-public struct OffnetworkAddress: ProtoMessage {
+public struct ClientInviteeId_ClientLookupMethod_ClientEmailLookup: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case type = 1
-        case email = 3
+        case email = 1
     }
     
-    public var type: OffnetworkAddressType? = nil
     public var email: String? = nil
     
-    public init(type: OffnetworkAddressType? = nil, email: String? = nil) {
-        self.type = type
+    public init(email: String? = nil) {
         self.email = email
     }
 }
 
-public struct AddUserRequest: ProtoMessage {
+public struct ClientInviteeId_ClientLookupMethod_ClientPhoneLookup: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case invitee_id = 3
-        case event_request_header = 5
+        case phoneNumber = 1
     }
     
-    public var request_header: RequestHeader? = nil
-    public var invitee_id: [InviteeID] = []
-    public var event_request_header: EventRequestHeader? = nil
+    public var phoneNumber: GCVPhoneNumber? = nil
     
-    public init(request_header: RequestHeader? = nil, invitee_id: [InviteeID] = [], event_request_header: EventRequestHeader? = nil) {
-        self.request_header = request_header
-        self.invitee_id = invitee_id
-        self.event_request_header = event_request_header
+    public init(phoneNumber: GCVPhoneNumber? = nil) {
+        self.phoneNumber = phoneNumber
     }
 }
 
-public struct AddUserResponse: ProtoMessage {
+public struct ClientInviteeId_ClientLookupMethod: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case created_event = 5
+        case phoneLookup = 1
+        case emailLookup = 2
     }
     
-    public var response_header: ResponseHeader? = nil
-    public var created_event: Event? = nil
+    public var phoneLookup: ClientInviteeId_ClientLookupMethod_ClientPhoneLookup? = nil
+    public var emailLookup: ClientInviteeId_ClientLookupMethod_ClientEmailLookup? = nil
     
-    public init(response_header: ResponseHeader? = nil, created_event: Event? = nil) {
-        self.response_header = response_header
-        self.created_event = created_event
+    public init(phoneLookup: ClientInviteeId_ClientLookupMethod_ClientPhoneLookup? = nil, emailLookup: ClientInviteeId_ClientLookupMethod_ClientEmailLookup? = nil) {
+        self.phoneLookup = phoneLookup
+        self.emailLookup = emailLookup
     }
 }
 
-public struct CreateConversationRequest: ProtoMessage {
+public struct ClientInviteeId: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case type = 2
-        case client_generated_id = 3
-        case name = 4
-        case invitee_id = 5
+        case gaiaId = 1
+        case circleId = 2
+        case chatId = 3
+        case fallbackName = 4
+        case deprecated5 = 5
+        case lookupMethodArray = 6
+        case phone = 7
     }
     
-    public var request_header: RequestHeader? = nil
-    public var type: ConversationType? = nil
-    public var client_generated_id: UInt64? = nil
-    public var name: String? = nil
-    public var invitee_id: [InviteeID] = []
+    public var gaiaId: String? = nil
+    public var circleId: String? = nil
+    public var chatId: String? = nil
+    public var fallbackName: String? = nil
+    public var deprecated5: String? = nil
+    public var lookupMethodArray: [ClientInviteeId_ClientLookupMethod] = []
+    public var phone: GCVPhoneNumber? = nil
     
-    public init(request_header: RequestHeader? = nil, type: ConversationType? = nil, client_generated_id: UInt64? = nil, name: String? = nil, invitee_id: [InviteeID] = []) {
-        self.request_header = request_header
-        self.type = type
-        self.client_generated_id = client_generated_id
-        self.name = name
-        self.invitee_id = invitee_id
+    public init(gaiaId: String? = nil, circleId: String? = nil, chatId: String? = nil, fallbackName: String? = nil, deprecated5: String? = nil, lookupMethodArray: [ClientInviteeId_ClientLookupMethod] = [], phone: GCVPhoneNumber? = nil) {
+        self.gaiaId = gaiaId
+        self.circleId = circleId
+        self.chatId = chatId
+        self.fallbackName = fallbackName
+        self.deprecated5 = deprecated5
+        self.lookupMethodArray = lookupMethodArray
+        self.phone = phone
     }
 }
 
-public struct CreateConversationResponse: ProtoMessage {
+public struct ClientResponseHeader: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case conversation = 2
-        case new_conversation_created = 7
+        case status = 1
+        case errorDescription = 2
+        case debugURL = 3
+        case requestTraceId = 4
+        case currentServerTime = 5
+        case backoffDurationMillis = 6
+        case clientGeneratedRequestId = 7
+        case localizedUserVisibleErrorMessage = 8
+        case buildLabel = 10
+        case changelistNumber = 11
     }
     
-    public var response_header: ResponseHeader? = nil
-    public var conversation: Conversation? = nil
-    public var new_conversation_created: Bool? = nil
+    public var status: ClientResponseStatus? = nil
+    public var errorDescription: String? = nil
+    public var debugURL: String? = nil
+    public var requestTraceId: UInt64? = nil
+    public var currentServerTime: UInt64? = nil
+    public var backoffDurationMillis: UInt64? = nil
+    public var clientGeneratedRequestId: String? = nil
+    public var localizedUserVisibleErrorMessage: String? = nil
+    public var buildLabel: String? = nil
+    public var changelistNumber: Int32? = nil
     
-    public init(response_header: ResponseHeader? = nil, conversation: Conversation? = nil, new_conversation_created: Bool? = nil) {
-        self.response_header = response_header
-        self.conversation = conversation
-        self.new_conversation_created = new_conversation_created
+    public init(status: ClientResponseStatus? = nil, errorDescription: String? = nil, debugURL: String? = nil, requestTraceId: UInt64? = nil, currentServerTime: UInt64? = nil, backoffDurationMillis: UInt64? = nil, clientGeneratedRequestId: String? = nil, localizedUserVisibleErrorMessage: String? = nil, buildLabel: String? = nil, changelistNumber: Int32? = nil) {
+        self.status = status
+        self.errorDescription = errorDescription
+        self.debugURL = debugURL
+        self.requestTraceId = requestTraceId
+        self.currentServerTime = currentServerTime
+        self.backoffDurationMillis = backoffDurationMillis
+        self.clientGeneratedRequestId = clientGeneratedRequestId
+        self.localizedUserVisibleErrorMessage = localizedUserVisibleErrorMessage
+        self.buildLabel = buildLabel
+        self.changelistNumber = changelistNumber
     }
 }
 
-public struct DeleteConversationRequest: ProtoMessage {
+public struct ClientEventRequestHeader: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case delete_upper_bound_timestamp = 3
-        case delete_type = 4
-        case delete_event_id_array = 5
+        case conversationId = 1
+        case clientGeneratedId = 2
+        case expectedOtr = 3
+        case deliveryMedium = 4
+        case eventType = 5
     }
     
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var delete_upper_bound_timestamp: UInt64? = nil
-    public var delete_type: DeleteType? = nil
-    public var delete_event_id_array: [String] = []
+    public var conversationId: ClientConversationId? = nil
+    public var clientGeneratedId: UInt64? = nil
+    public var expectedOtr: ClientOffTheRecordStatus? = nil
+    public var deliveryMedium: ClientDeliveryMedium? = nil
+    public var eventType: ClientEventType? = nil
     
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, delete_upper_bound_timestamp: UInt64? = nil, delete_type: DeleteType? = nil, delete_event_id_array: [String] = []) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.delete_upper_bound_timestamp = delete_upper_bound_timestamp
-        self.delete_type = delete_type
-        self.delete_event_id_array = delete_event_id_array
+    public init(conversationId: ClientConversationId? = nil, clientGeneratedId: UInt64? = nil, expectedOtr: ClientOffTheRecordStatus? = nil, deliveryMedium: ClientDeliveryMedium? = nil, eventType: ClientEventType? = nil) {
+        self.conversationId = conversationId
+        self.clientGeneratedId = clientGeneratedId
+        self.expectedOtr = expectedOtr
+        self.deliveryMedium = deliveryMedium
+        self.eventType = eventType
     }
 }
 
-public struct DeleteConversationResponse: ProtoMessage {
+public struct ClientRequestHeader: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case delete_action = 2
+        case clientVersion = 1
+        case clientIdentifier = 2
+        case clientInstrumentationInfo = 3
+        case languageCode = 4
+        case includeUpdatedConversation = 5
+        case retryAttempt = 6
+        case rtcClient = 7
+        case clientGeneratedRequestId = 8
     }
     
-    public var response_header: ResponseHeader? = nil
-    public var delete_action: DeleteAction? = nil
+    public var clientVersion: ClientClientVersion? = nil
+    public var clientIdentifier: ClientClientIdentifier? = nil
+    public var clientInstrumentationInfo: ClientClientInstrumentationInfo? = nil
+    public var languageCode: String? = nil
+    public var includeUpdatedConversation: Bool? = nil
+    public var retryAttempt: UInt32? = nil
+    public var rtcClient: String? = nil
+    public var clientGeneratedRequestId: String? = nil
     
-    public init(response_header: ResponseHeader? = nil, delete_action: DeleteAction? = nil) {
-        self.response_header = response_header
-        self.delete_action = delete_action
+    public init(clientVersion: ClientClientVersion? = nil, clientIdentifier: ClientClientIdentifier? = nil, clientInstrumentationInfo: ClientClientInstrumentationInfo? = nil, languageCode: String? = nil, includeUpdatedConversation: Bool? = nil, retryAttempt: UInt32? = nil, rtcClient: String? = nil, clientGeneratedRequestId: String? = nil) {
+        self.clientVersion = clientVersion
+        self.clientIdentifier = clientIdentifier
+        self.clientInstrumentationInfo = clientInstrumentationInfo
+        self.languageCode = languageCode
+        self.includeUpdatedConversation = includeUpdatedConversation
+        self.retryAttempt = retryAttempt
+        self.rtcClient = rtcClient
+        self.clientGeneratedRequestId = clientGeneratedRequestId
     }
 }
 
-public struct EasterEggRequest: ProtoMessage {
+public struct ClientClientInstrumentationInfo: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case easter_egg = 3
+        case chatMessageSequenceNumber = 1
     }
     
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var easter_egg: EasterEgg? = nil
+    public var chatMessageSequenceNumber: Int64? = nil
     
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, easter_egg: EasterEgg? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.easter_egg = easter_egg
+    public init(chatMessageSequenceNumber: Int64? = nil) {
+        self.chatMessageSequenceNumber = chatMessageSequenceNumber
     }
 }
 
-public struct EasterEggResponse: ProtoMessage {
+public struct ClientClientIdentifier: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case timestamp = 2
+        case resource = 1
+        case clientId = 2
+        case selfFanoutId = 3
+        case participantLogId = 4
     }
     
-    public var response_header: ResponseHeader? = nil
-    public var timestamp: UInt64? = nil
+    public var resource: String? = nil
+    public var clientId: String? = nil
+    public var selfFanoutId: String? = nil
+    public var participantLogId: String? = nil
     
-    public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil) {
-        self.response_header = response_header
-        self.timestamp = timestamp
+    public init(resource: String? = nil, clientId: String? = nil, selfFanoutId: String? = nil, participantLogId: String? = nil) {
+        self.resource = resource
+        self.clientId = clientId
+        self.selfFanoutId = selfFanoutId
+        self.participantLogId = participantLogId
     }
 }
 
-public struct GetConversationRequest: ProtoMessage {
+public struct ClientClientVersion: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_spec = 2
-        case include_conversation_metadata = 3
-        case include_event = 4
-        case max_events_per_conversation = 6
-        case event_continuation_token = 7
-        case include_presence = 8
+        case clientId = 1
+        case buildType = 2
+        case majorVersion = 3
+        case version = 4
+        case deviceOsVersion = 5
+        case deviceHardware = 6
     }
     
-    public var request_header: RequestHeader? = nil
-    public var conversation_spec: ConversationSpec? = nil
-    public var include_conversation_metadata: Bool? = nil
-    public var include_event: Bool? = nil
-    public var max_events_per_conversation: UInt64? = nil
-    public var event_continuation_token: EventContinuationToken? = nil
-    public var include_presence: Bool? = nil
+    public var clientId: ClientClientVersion_ClientId? = nil
+    public var buildType: ClientClientVersion_ClientBuildType? = nil
+    public var majorVersion: String? = nil
+    public var version: Int64? = nil
+    public var deviceOsVersion: String? = nil
+    public var deviceHardware: String? = nil
     
-    public init(request_header: RequestHeader? = nil, conversation_spec: ConversationSpec? = nil, include_conversation_metadata: Bool? = nil, include_event: Bool? = nil, max_events_per_conversation: UInt64? = nil, event_continuation_token: EventContinuationToken? = nil, include_presence: Bool? = nil) {
-        self.request_header = request_header
-        self.conversation_spec = conversation_spec
-        self.include_conversation_metadata = include_conversation_metadata
-        self.include_event = include_event
-        self.max_events_per_conversation = max_events_per_conversation
-        self.event_continuation_token = event_continuation_token
-        self.include_presence = include_presence
+    public init(clientId: ClientClientVersion_ClientId? = nil, buildType: ClientClientVersion_ClientBuildType? = nil, majorVersion: String? = nil, version: Int64? = nil, deviceOsVersion: String? = nil, deviceHardware: String? = nil) {
+        self.clientId = clientId
+        self.buildType = buildType
+        self.majorVersion = majorVersion
+        self.version = version
+        self.deviceOsVersion = deviceOsVersion
+        self.deviceHardware = deviceHardware
     }
 }
-
-public struct GetConversationResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case conversation_state = 2
-        case presence = 4
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var conversation_state: ConversationState? = nil
-    public var presence: PresenceResult? = nil
-    
-    public init(response_header: ResponseHeader? = nil, conversation_state: ConversationState? = nil, presence: PresenceResult? = nil) {
-        self.response_header = response_header
-        self.conversation_state = conversation_state
-        self.presence = presence
-    }
-}
-
-public struct GetEntityByIdRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case lookup_spec = 2
-        case batch_lookup_spec = 3
-        case field_mask = 4
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var lookup_spec: EntityLookupSpec? = nil
-    public var batch_lookup_spec: [EntityLookupSpec] = []
-    public var field_mask: [FieldMask] = []
-    
-    public init(request_header: RequestHeader? = nil, lookup_spec: EntityLookupSpec? = nil, batch_lookup_spec: [EntityLookupSpec] = [], field_mask: [FieldMask] = []) {
-        self.request_header = request_header
-        self.lookup_spec = lookup_spec
-        self.batch_lookup_spec = batch_lookup_spec
-        self.field_mask = field_mask
-    }
-}
-
-public struct GetEntityByIdResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case entity = 2
-        case entity_result = 3
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var entity: [Entity] = []
-    public var entity_result: [EntityResult] = []
-    
-    public init(response_header: ResponseHeader? = nil, entity: [Entity] = [], entity_result: [EntityResult] = []) {
-        self.response_header = response_header
-        self.entity = entity
-        self.entity_result = entity_result
-    }
-}
-
-public struct EntityResult: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case lookup_spec = 1
-        case entity = 2
-    }
-    
-    public var lookup_spec: EntityLookupSpec? = nil
-    public var entity: [Entity] = []
-    
-    public init(lookup_spec: EntityLookupSpec? = nil, entity: [Entity] = []) {
-        self.lookup_spec = lookup_spec
-        self.entity = entity
-    }
-}
-
-public struct GetGroupConversationUrlRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-    }
-}
-
-public struct GetGroupConversationUrlResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case group_conversation_url = 2
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var group_conversation_url: String? = nil
-    
-    public init(response_header: ResponseHeader? = nil, group_conversation_url: String? = nil) {
-        self.response_header = response_header
-        self.group_conversation_url = group_conversation_url
-    }
-}
-
-public struct GetSuggestedEntitiesRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case max_count = 4
-        case favorites = 8
-        case contacts_you_hangout_with = 9
-        case other_contacts_on_hangouts = 10
-        case other_contacts = 11
-        case dismissed_contacts = 12
-        case pinned_favorites = 13
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var max_count: UInt64? = nil
-    public var favorites: SuggestedContactGroupHash? = nil
-    public var contacts_you_hangout_with: SuggestedContactGroupHash? = nil
-    public var other_contacts_on_hangouts: SuggestedContactGroupHash? = nil
-    public var other_contacts: SuggestedContactGroupHash? = nil
-    public var dismissed_contacts: SuggestedContactGroupHash? = nil
-    public var pinned_favorites: SuggestedContactGroupHash? = nil
-    
-    public init(request_header: RequestHeader? = nil, max_count: UInt64? = nil, favorites: SuggestedContactGroupHash? = nil, contacts_you_hangout_with: SuggestedContactGroupHash? = nil, other_contacts_on_hangouts: SuggestedContactGroupHash? = nil, other_contacts: SuggestedContactGroupHash? = nil, dismissed_contacts: SuggestedContactGroupHash? = nil, pinned_favorites: SuggestedContactGroupHash? = nil) {
-        self.request_header = request_header
-        self.max_count = max_count
-        self.favorites = favorites
-        self.contacts_you_hangout_with = contacts_you_hangout_with
-        self.other_contacts_on_hangouts = other_contacts_on_hangouts
-        self.other_contacts = other_contacts
-        self.dismissed_contacts = dismissed_contacts
-        self.pinned_favorites = pinned_favorites
-    }
-}
-
-public struct GetSuggestedEntitiesResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case entity = 2
-        case favorites = 4
-        case contacts_you_hangout_with = 5
-        case other_contacts_on_hangouts = 6
-        case other_contacts = 7
-        case dismissed_contacts = 8
-        case pinned_favorites = 9
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var entity: [Entity] = []
-    public var favorites: SuggestedContactGroup? = nil
-    public var contacts_you_hangout_with: SuggestedContactGroup? = nil
-    public var other_contacts_on_hangouts: SuggestedContactGroup? = nil
-    public var other_contacts: SuggestedContactGroup? = nil
-    public var dismissed_contacts: SuggestedContactGroup? = nil
-    public var pinned_favorites: SuggestedContactGroup? = nil
-    
-    public init(response_header: ResponseHeader? = nil, entity: [Entity] = [], favorites: SuggestedContactGroup? = nil, contacts_you_hangout_with: SuggestedContactGroup? = nil, other_contacts_on_hangouts: SuggestedContactGroup? = nil, other_contacts: SuggestedContactGroup? = nil, dismissed_contacts: SuggestedContactGroup? = nil, pinned_favorites: SuggestedContactGroup? = nil) {
-        self.response_header = response_header
-        self.entity = entity
-        self.favorites = favorites
-        self.contacts_you_hangout_with = contacts_you_hangout_with
-        self.other_contacts_on_hangouts = other_contacts_on_hangouts
-        self.other_contacts = other_contacts
-        self.dismissed_contacts = dismissed_contacts
-        self.pinned_favorites = pinned_favorites
-    }
-}
-
-public struct GetSelfInfoRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-    }
-    
-    public var request_header: RequestHeader? = nil
-    
-    public init(request_header: RequestHeader? = nil) {
-        self.request_header = request_header
-    }
-}
-
-public struct GetSelfInfoResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case self_entity = 2
-        case is_known_minor = 3
-        case client_presence = 4
-        case dnd_state = 5
-        case desktop_off_setting = 6
-        case phone_data = 7
-        case configuration_bit = 8
-        case desktop_off_state = 9
-        case google_plus_user = 10
-        case desktop_sound_setting = 11
-        case rich_presence_state = 12
-        case default_country = 19
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var self_entity: Entity? = nil
-    public var is_known_minor: Bool? = nil
-    public var client_presence: [ClientPresenceState] = []
-    public var dnd_state: DoNotDisturbSetting? = nil
-    public var desktop_off_setting: DesktopOffSetting? = nil
-    public var phone_data: PhoneData? = nil
-    public var configuration_bit: [ConfigurationBit] = []
-    public var desktop_off_state: DesktopOffState? = nil
-    public var google_plus_user: Bool? = nil
-    public var desktop_sound_setting: DesktopSoundSetting? = nil
-    public var rich_presence_state: RichPresenceState? = nil
-    public var default_country: Country? = nil
-    
-    public init(response_header: ResponseHeader? = nil, self_entity: Entity? = nil, is_known_minor: Bool? = nil, client_presence: [ClientPresenceState] = [], dnd_state: DoNotDisturbSetting? = nil, desktop_off_setting: DesktopOffSetting? = nil, phone_data: PhoneData? = nil, configuration_bit: [ConfigurationBit] = [], desktop_off_state: DesktopOffState? = nil, google_plus_user: Bool? = nil, desktop_sound_setting: DesktopSoundSetting? = nil, rich_presence_state: RichPresenceState? = nil, default_country: Country? = nil) {
-        self.response_header = response_header
-        self.self_entity = self_entity
-        self.is_known_minor = is_known_minor
-        self.client_presence = client_presence
-        self.dnd_state = dnd_state
-        self.desktop_off_setting = desktop_off_setting
-        self.phone_data = phone_data
-        self.configuration_bit = configuration_bit
-        self.desktop_off_state = desktop_off_state
-        self.google_plus_user = google_plus_user
-        self.desktop_sound_setting = desktop_sound_setting
-        self.rich_presence_state = rich_presence_state
-        self.default_country = default_country
-    }
-}
-
-public struct ModifyConversationViewRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case new_view = 3
-        case last_event_timestamp = 4
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var new_view: ConversationView? = nil
-    public var last_event_timestamp: UInt64? = nil
-    
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, new_view: ConversationView? = nil, last_event_timestamp: UInt64? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.new_view = new_view
-        self.last_event_timestamp = last_event_timestamp
-    }
-}
-
-public struct ModifyConversationViewResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    
-    public init(response_header: ResponseHeader? = nil) {
-        self.response_header = response_header
-    }
-}
-
-public struct OpenGroupConversationFromUrlRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case url = 3
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var url: String? = nil
-    
-    public init(request_header: RequestHeader? = nil, url: String? = nil) {
-        self.request_header = request_header
-        self.url = url
-    }
-}
-
-public struct OpenGroupConversationFromUrlResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case conversation_id = 2
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    
-    public init(response_header: ResponseHeader? = nil, conversation_id: ConversationId? = nil) {
-        self.response_header = response_header
-        self.conversation_id = conversation_id
-    }
-}
-
-public struct QueryPresenceRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case participant_id = 2
-        case field_mask = 3
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var participant_id: [ParticipantId] = []
-    public var field_mask: [FieldMask] = []
-    
-    public init(request_header: RequestHeader? = nil, participant_id: [ParticipantId] = [], field_mask: [FieldMask] = []) {
-        self.request_header = request_header
-        self.participant_id = participant_id
-        self.field_mask = field_mask
-    }
-}
-
-public struct QueryPresenceResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case presence_result = 2
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var presence_result: [PresenceResult] = []
-    
-    public init(response_header: ResponseHeader? = nil, presence_result: [PresenceResult] = []) {
-        self.response_header = response_header
-        self.presence_result = presence_result
-    }
-}
-
-public struct RemoveUserRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case participant_id = 3
-        case client_generated_id = 4
-        case event_request_header = 5
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var participant_id: ParticipantId? = nil
-    public var client_generated_id: UInt64? = nil
-    public var event_request_header: EventRequestHeader? = nil
-    
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, participant_id: ParticipantId? = nil, client_generated_id: UInt64? = nil, event_request_header: EventRequestHeader? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.participant_id = participant_id
-        self.client_generated_id = client_generated_id
-        self.event_request_header = event_request_header
-    }
-}
-
-public struct RemoveUserResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case timestamp = 2
-        case event_id = 3
-        case created_event = 4
-        case updated_conversation = 5
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var timestamp: UInt64? = nil
-    public var event_id: String? = nil
-    public var created_event: Event? = nil
-    public var updated_conversation: Conversation? = nil
-    
-    public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil, event_id: String? = nil, created_event: Event? = nil, updated_conversation: Conversation? = nil) {
-        self.response_header = response_header
-        self.timestamp = timestamp
-        self.event_id = event_id
-        self.created_event = created_event
-        self.updated_conversation = updated_conversation
-    }
-}
-
-public struct RenameConversationRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case new_name = 3
-        case client_generated_id = 4
-        case event_request_header = 5
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var new_name: String? = nil
-    public var client_generated_id: UInt64? = nil
-    public var event_request_header: EventRequestHeader? = nil
-    
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, new_name: String? = nil, client_generated_id: UInt64? = nil, event_request_header: EventRequestHeader? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.new_name = new_name
-        self.client_generated_id = client_generated_id
-        self.event_request_header = event_request_header
-    }
-}
-
-public struct RenameConversationResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case timestamp = 2
-        case event_id = 3
-        case created_event = 4
-        case updated_conversation = 5
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var timestamp: UInt64? = nil
-    public var event_id: String? = nil
-    public var created_event: Event? = nil
-    public var updated_conversation: Conversation? = nil
-    
-    public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil, event_id: String? = nil, created_event: Event? = nil, updated_conversation: Conversation? = nil) {
-        self.response_header = response_header
-        self.timestamp = timestamp
-        self.event_id = event_id
-        self.created_event = created_event
-        self.updated_conversation = updated_conversation
-    }
-}
-
-public struct SearchEntitiesRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case query = 3
-        case max_count = 4
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var query: String? = nil
-    public var max_count: UInt64? = nil
-    
-    public init(request_header: RequestHeader? = nil, query: String? = nil, max_count: UInt64? = nil) {
-        self.request_header = request_header
-        self.query = query
-        self.max_count = max_count
-    }
-}
-
-public struct SearchEntitiesResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case entity = 2
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var entity: [Entity] = []
-    
-    public init(response_header: ResponseHeader? = nil, entity: [Entity] = []) {
-        self.response_header = response_header
-        self.entity = entity
-    }
-}
-
-public struct SendChatMessageRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case client_generated_id = 3
-        case annotation = 5
-        case message_content = 6
-        case existing_media = 7
-        case event_request_header = 8
-        case other_invitee_id = 9
-        case attach_location = 10
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var client_generated_id: UInt64? = nil
-    public var annotation: [EventAnnotation] = []
-    public var message_content: MessageContent? = nil
-    public var existing_media: ExistingMedia? = nil
-    public var event_request_header: EventRequestHeader? = nil
-    public var other_invitee_id: InviteeID? = nil
-    public var attach_location: LocationSpec? = nil
-    
-    public init(request_header: RequestHeader? = nil, client_generated_id: UInt64? = nil, annotation: [EventAnnotation] = [], message_content: MessageContent? = nil, existing_media: ExistingMedia? = nil, event_request_header: EventRequestHeader? = nil, other_invitee_id: InviteeID? = nil, attach_location: LocationSpec? = nil) {
-        self.request_header = request_header
-        self.client_generated_id = client_generated_id
-        self.annotation = annotation
-        self.message_content = message_content
-        self.existing_media = existing_media
-        self.event_request_header = event_request_header
-        self.other_invitee_id = other_invitee_id
-        self.attach_location = attach_location
-    }
-}
-
-public struct SendChatMessageResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case timestamp = 2
-        case event_id = 3
-        case created_event = 6
-        case updated_conversation = 7
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var timestamp: UInt64? = nil
-    public var event_id: String? = nil
-    public var created_event: Event? = nil
-    public var updated_conversation: Conversation? = nil
-    
-    public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil, event_id: String? = nil, created_event: Event? = nil, updated_conversation: Conversation? = nil) {
-        self.response_header = response_header
-        self.timestamp = timestamp
-        self.event_id = event_id
-        self.created_event = created_event
-        self.updated_conversation = updated_conversation
-    }
-}
-
-public struct ModifyOTRStatusRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case otr_status = 3
-        case event_request_header = 5
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var otr_status: OffTheRecordStatus? = nil
-    public var event_request_header: EventRequestHeader? = nil
-    
-    public init(request_header: RequestHeader? = nil, otr_status: OffTheRecordStatus? = nil, event_request_header: EventRequestHeader? = nil) {
-        self.request_header = request_header
-        self.otr_status = otr_status
-        self.event_request_header = event_request_header
-    }
-}
-
-public struct ModifyOTRStatusResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case created_event = 4
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var created_event: Event? = nil
-    
-    public init(response_header: ResponseHeader? = nil, created_event: Event? = nil) {
-        self.response_header = response_header
-        self.created_event = created_event
-    }
-}
-
-public struct SendOffnetworkInvitationRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case invitee_address = 2
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var invitee_address: OffnetworkAddress? = nil
-    
-    public init(request_header: RequestHeader? = nil, invitee_address: OffnetworkAddress? = nil) {
-        self.request_header = request_header
-        self.invitee_address = invitee_address
-    }
-}
-
-public struct SendOffnetworkInvitationResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    
-    public init(response_header: ResponseHeader? = nil) {
-        self.response_header = response_header
-    }
-}
-
-public struct SetActiveClientRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case is_active = 2
-        case full_jid = 3
-        case timeout_secs = 4
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var is_active: Bool? = nil
-    public var full_jid: String? = nil
-    public var timeout_secs: UInt64? = nil
-    
-    public init(request_header: RequestHeader? = nil, is_active: Bool? = nil, full_jid: String? = nil, timeout_secs: UInt64? = nil) {
-        self.request_header = request_header
-        self.is_active = is_active
-        self.full_jid = full_jid
-        self.timeout_secs = timeout_secs
-    }
-}
-
-public struct SetActiveClientResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case client_last_seen_timestamp_usec = 3
-        case last_seen_delta_usec = 4
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var client_last_seen_timestamp_usec: UInt64? = nil
-    public var last_seen_delta_usec: UInt64? = nil
-    
-    public init(response_header: ResponseHeader? = nil, client_last_seen_timestamp_usec: UInt64? = nil, last_seen_delta_usec: UInt64? = nil) {
-        self.response_header = response_header
-        self.client_last_seen_timestamp_usec = client_last_seen_timestamp_usec
-        self.last_seen_delta_usec = last_seen_delta_usec
-    }
-}
-
-public struct SetConversationLevelRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case level = 3
-        case revert_timeout_secs = 4
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var level: NotificationLevel? = nil
-    public var revert_timeout_secs: UInt32? = nil
-    
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, level: NotificationLevel? = nil, revert_timeout_secs: UInt32? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.level = level
-        self.revert_timeout_secs = revert_timeout_secs
-    }
-}
-
-public struct SetConversationLevelResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case timestamp = 2
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var timestamp: UInt64? = nil
-    
-    public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil) {
-        self.response_header = response_header
-        self.timestamp = timestamp
-    }
-}
-
-public struct SetConversationNotificationLevelRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case level = 3
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var level: NotificationLevel? = nil
-    
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, level: NotificationLevel? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.level = level
-    }
-}
-
-public struct SetConversationNotificationLevelResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case timestamp = 2
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var timestamp: UInt64? = nil
-    
-    public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil) {
-        self.response_header = response_header
-        self.timestamp = timestamp
-    }
-}
-
-public struct SetFocusRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case type = 3
-        case timeout_secs = 4
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var type: FocusType? = nil
-    public var timeout_secs: UInt32? = nil
-    
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, type: FocusType? = nil, timeout_secs: UInt32? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.type = type
-        self.timeout_secs = timeout_secs
-    }
-}
-
-public struct SetFocusResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case timestamp = 2
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var timestamp: UInt64? = nil
-    
-    public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil) {
-        self.response_header = response_header
-        self.timestamp = timestamp
-    }
-}
-
-public struct SetGroupLinkSharingEnabledRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case event_request_header = 2
-        case group_link_sharing_status = 4
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var event_request_header: EventRequestHeader? = nil
-    public var group_link_sharing_status: GroupLinkSharingStatus? = nil
-    
-    public init(request_header: RequestHeader? = nil, event_request_header: EventRequestHeader? = nil, group_link_sharing_status: GroupLinkSharingStatus? = nil) {
-        self.request_header = request_header
-        self.event_request_header = event_request_header
-        self.group_link_sharing_status = group_link_sharing_status
-    }
-}
-
-public struct SetGroupLinkSharingEnabledResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case created_event = 2
-        case updated_conversation = 3
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var created_event: Event? = nil
-    public var updated_conversation: Conversation? = nil
-    
-    public init(response_header: ResponseHeader? = nil, created_event: Event? = nil, updated_conversation: Conversation? = nil) {
-        self.response_header = response_header
-        self.created_event = created_event
-        self.updated_conversation = updated_conversation
-    }
-}
-
-public struct SetPresenceRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case presence_state_setting = 2
-        case dnd_setting = 3
-        case desktop_off_setting = 5
-        case mood_message = 8
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var presence_state_setting: PresenceStateSetting? = nil
-    public var dnd_setting: DndSetting? = nil
-    public var desktop_off_setting: DesktopOffSetting? = nil
-    public var mood_message: [MoodMessage] = []
-    
-    public init(request_header: RequestHeader? = nil, presence_state_setting: PresenceStateSetting? = nil, dnd_setting: DndSetting? = nil, desktop_off_setting: DesktopOffSetting? = nil, mood_message: [MoodMessage] = []) {
-        self.request_header = request_header
-        self.presence_state_setting = presence_state_setting
-        self.dnd_setting = dnd_setting
-        self.desktop_off_setting = desktop_off_setting
-        self.mood_message = mood_message
-    }
-}
-
-public struct SetPresenceResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    
-    public init(response_header: ResponseHeader? = nil) {
-        self.response_header = response_header
-    }
-}
-
-public struct SetTypingRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case type = 3
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var type: TypingType? = nil
-    
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, type: TypingType? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.type = type
-    }
-}
-
-public struct SetTypingResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case timestamp = 2
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var timestamp: UInt64? = nil
-    
-    public init(response_header: ResponseHeader? = nil, timestamp: UInt64? = nil) {
-        self.response_header = response_header
-        self.timestamp = timestamp
-    }
-}
-
-public struct UnreadConversationState: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case conversation_id = 1
-        case timestamp = 2
-    }
-    
-    public var conversation_id: ConversationId? = nil
-    public var timestamp: UInt64? = nil
-    
-    public init(conversation_id: ConversationId? = nil, timestamp: UInt64? = nil) {
-        self.conversation_id = conversation_id
-        self.timestamp = timestamp
-    }
-}
-
-public struct SyncAllNewEventsRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case last_sync_timestamp = 2
-        case max_total_events = 4
-        case sync_filter = 5
-        case no_missed_events_expected = 6
-        case unread_state = 7
-        case max_response_size_bytes = 8
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var last_sync_timestamp: UInt64? = nil
-    public var max_total_events: UInt64? = nil
-    public var sync_filter: [SyncFilter] = []
-    public var no_missed_events_expected: Bool? = nil
-    public var unread_state: UnreadConversationState? = nil
-    public var max_response_size_bytes: UInt64? = nil
-    
-    public init(request_header: RequestHeader? = nil, last_sync_timestamp: UInt64? = nil, max_total_events: UInt64? = nil, sync_filter: [SyncFilter] = [], no_missed_events_expected: Bool? = nil, unread_state: UnreadConversationState? = nil, max_response_size_bytes: UInt64? = nil) {
-        self.request_header = request_header
-        self.last_sync_timestamp = last_sync_timestamp
-        self.max_total_events = max_total_events
-        self.sync_filter = sync_filter
-        self.no_missed_events_expected = no_missed_events_expected
-        self.unread_state = unread_state
-        self.max_response_size_bytes = max_response_size_bytes
-    }
-}
-
-public struct SyncAllNewEventsResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case sync_timestamp = 2
-        case conversation_state = 3
-        case conversation_ids_only = 4
-        case invitation_state = 5
-        case clear_cache_and_resync = 6
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var sync_timestamp: UInt64? = nil
-    public var conversation_state: [ConversationState] = []
-    public var conversation_ids_only: Bool? = nil
-    public var invitation_state: InvitationState? = nil
-    public var clear_cache_and_resync: Bool? = nil
-    
-    public init(response_header: ResponseHeader? = nil, sync_timestamp: UInt64? = nil, conversation_state: [ConversationState] = [], conversation_ids_only: Bool? = nil, invitation_state: InvitationState? = nil, clear_cache_and_resync: Bool? = nil) {
-        self.response_header = response_header
-        self.sync_timestamp = sync_timestamp
-        self.conversation_state = conversation_state
-        self.conversation_ids_only = conversation_ids_only
-        self.invitation_state = invitation_state
-        self.clear_cache_and_resync = clear_cache_and_resync
-    }
-}
-
-public struct SyncRecentConversationsRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case end_timestamp = 2
-        case max_conversations = 3
-        case max_events_per_conversation = 4
-        case sync_filter = 5
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var end_timestamp: UInt64? = nil
-    public var max_conversations: UInt64? = nil
-    public var max_events_per_conversation: UInt64? = nil
-    public var sync_filter: [SyncFilter] = []
-    
-    public init(request_header: RequestHeader? = nil, end_timestamp: UInt64? = nil, max_conversations: UInt64? = nil, max_events_per_conversation: UInt64? = nil, sync_filter: [SyncFilter] = []) {
-        self.request_header = request_header
-        self.end_timestamp = end_timestamp
-        self.max_conversations = max_conversations
-        self.max_events_per_conversation = max_events_per_conversation
-        self.sync_filter = sync_filter
-    }
-}
-
-public struct SyncRecentConversationsResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-        case sync_timestamp = 2
-        case conversation_state = 3
-        case continuation_end_timestamp = 4
-        case invitation_state = 5
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    public var sync_timestamp: UInt64? = nil
-    public var conversation_state: [ConversationState] = []
-    public var continuation_end_timestamp: UInt64? = nil
-    public var invitation_state: InvitationState? = nil
-    
-    public init(response_header: ResponseHeader? = nil, sync_timestamp: UInt64? = nil, conversation_state: [ConversationState] = [], continuation_end_timestamp: UInt64? = nil, invitation_state: InvitationState? = nil) {
-        self.response_header = response_header
-        self.sync_timestamp = sync_timestamp
-        self.conversation_state = conversation_state
-        self.continuation_end_timestamp = continuation_end_timestamp
-        self.invitation_state = invitation_state
-    }
-}
-
-public struct UpdateWatermarkRequest: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case request_header = 1
-        case conversation_id = 2
-        case last_read_timestamp = 3
-    }
-    
-    public var request_header: RequestHeader? = nil
-    public var conversation_id: ConversationId? = nil
-    public var last_read_timestamp: UInt64? = nil
-    
-    public init(request_header: RequestHeader? = nil, conversation_id: ConversationId? = nil, last_read_timestamp: UInt64? = nil) {
-        self.request_header = request_header
-        self.conversation_id = conversation_id
-        self.last_read_timestamp = last_read_timestamp
-    }
-}
-
-public struct UpdateWatermarkResponse: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case response_header = 1
-    }
-    
-    public var response_header: ResponseHeader? = nil
-    
-    public init(response_header: ResponseHeader? = nil) {
-        self.response_header = response_header
-    }
-}
-
-let _protoEnums: [String: _ProtoEnum.Type] = [
-    "ActiveClientState": ActiveClientState.self,
-    "FocusType": FocusType.self,
-    "FocusDevice": FocusDevice.self,
-    "CallType": CallType.self,
-    "TypingType": TypingType.self,
-    "ClientPresenceStateType": ClientPresenceStateType.self,
-    "NotificationLevel": NotificationLevel.self,
-    "SegmentType": SegmentType.self,
-    "ItemType": ItemType.self,
-    "MediaType": MediaType.self,
-    "MembershipChangeType": MembershipChangeType.self,
-    "HangoutEventType": HangoutEventType.self,
-    "HangoutMediaType": HangoutMediaType.self,
-    "OffTheRecordToggle": OffTheRecordToggle.self,
-    "OffTheRecordStatus": OffTheRecordStatus.self,
-    "SourceType": SourceType.self,
-    "EventType": EventType.self,
-    "ConversationType": ConversationType.self,
-    "ConversationStatus": ConversationStatus.self,
-    "ConversationView": ConversationView.self,
-    "DeliveryMediumType": DeliveryMediumType.self,
-    "InvitationAffinity": InvitationAffinity.self,
-    "ParticipantType": ParticipantType.self,
-    "InvitationStatus": InvitationStatus.self,
-    "ForceHistory": ForceHistory.self,
-    "NetworkType": NetworkType.self,
-    "BlockState": BlockState.self,
-    "ReplyToInviteType": ReplyToInviteType.self,
-    "ClientId": ClientId.self,
-    "ClientBuildType": ClientBuildType.self,
-    "Device": Device.self,
-    "Application": Application.self,
-    "Platform": Platform.self,
-    "ResponseStatus": ResponseStatus.self,
-    "PastHangoutState": PastHangoutState.self,
-    "PhotoUrlStatus": PhotoUrlStatus.self,
-    "Gender": Gender.self,
-    "ProfileType": ProfileType.self,
-    "ConfigurationBitType": ConfigurationBitType.self,
-    "RichPresenceType": RichPresenceType.self,
-    "FieldMask": FieldMask.self,
-    "DeleteType": DeleteType.self,
-    "SyncFilter": SyncFilter.self,
-    "SoundState": SoundState.self,
-    "CallerIdSettingsMask": CallerIdSettingsMask.self,
-    "PhoneVerificationStatus": PhoneVerificationStatus.self,
-    "PhoneDiscoverabilityStatus": PhoneDiscoverabilityStatus.self,
-    "PhoneValidationResult": PhoneValidationResult.self,
-    "OffnetworkAddressType": OffnetworkAddressType.self,
-    "GroupLinkSharingStatus": GroupLinkSharingStatus.self,
-]
-
-let _protoMessages: [String: _ProtoMessage.Type] = [
-    "DoNotDisturbSetting": DoNotDisturbSetting.self,
-    "NotificationSettings": NotificationSettings.self,
-    "ConversationId": ConversationId.self,
-    "ParticipantId": ParticipantId.self,
-    "DeviceStatus": DeviceStatus.self,
-    "LastSeen": LastSeen.self,
-    "Location": Location.self,
-    "LocationSpec": LocationSpec.self,
-    "InCall": InCall.self,
-    "Presence": Presence.self,
-    "PresenceResult": PresenceResult.self,
-    "ClientIdentifier": ClientIdentifier.self,
-    "ClientPresenceState": ClientPresenceState.self,
-    "UserEventState": UserEventState.self,
-    "Formatting": Formatting.self,
-    "LinkData": LinkData.self,
-    "Segment": Segment.self,
-    "Thumbnail": Thumbnail.self,
-    "PlusPhoto": PlusPhoto.self,
-    "RepresentativeImage": RepresentativeImage.self,
-    "PlaceDescription": PlaceDescription.self,
-    "Coordinates": Coordinates.self,
-    "PlaceDisplayInfo": PlaceDisplayInfo.self,
-    "PlaceLocationInfo": PlaceLocationInfo.self,
-    "Place": Place.self,
-    "VoicePhoto": VoicePhoto.self,
-    "EmbedItem": EmbedItem.self,
-    "Attachment": Attachment.self,
-    "MessageContent": MessageContent.self,
-    "EventAnnotation": EventAnnotation.self,
-    "ChatMessage": ChatMessage.self,
-    "Participant": Participant.self,
-    "MembershipChange": MembershipChange.self,
-    "ConversationRename": ConversationRename.self,
-    "HangoutEvent": HangoutEvent.self,
-    "OTRModification": OTRModification.self,
-    "HashModifier": HashModifier.self,
-    "Event": Event.self,
-    "UserReadState": UserReadState.self,
-    "DeliveryMedium": DeliveryMedium.self,
-    "DeliveryMediumOption": DeliveryMediumOption.self,
-    "UserConversationState": UserConversationState.self,
-    "ConversationParticipantData": ConversationParticipantData.self,
-    "Conversation": Conversation.self,
-    "EasterEgg": EasterEgg.self,
-    "BlockStateChange": BlockStateChange.self,
-    "InvitationState": InvitationState.self,
-    "Photo": Photo.self,
-    "ExistingMedia": ExistingMedia.self,
-    "EventRequestHeader": EventRequestHeader.self,
-    "ClientVersion": ClientVersion.self,
-    "RtcClient": RtcClient.self,
-    "RequestHeader": RequestHeader.self,
-    "ResponseHeader": ResponseHeader.self,
-    "Entity": Entity.self,
-    "EntityProperties": EntityProperties.self,
-    "ConversationState": ConversationState.self,
-    "EventContinuationToken": EventContinuationToken.self,
-    "EntityLookupSpec": EntityLookupSpec.self,
-    "ConfigurationBit": ConfigurationBit.self,
-    "RichPresenceState": RichPresenceState.self,
-    "RichPresenceEnabledState": RichPresenceEnabledState.self,
-    "DesktopOffSetting": DesktopOffSetting.self,
-    "DesktopOffState": DesktopOffState.self,
-    "DndSetting": DndSetting.self,
-    "PresenceStateSetting": PresenceStateSetting.self,
-    "MoodMessage": MoodMessage.self,
-    "MoodContent": MoodContent.self,
-    "MoodSetting": MoodSetting.self,
-    "MoodState": MoodState.self,
-    "DeleteAction": DeleteAction.self,
-    "InviteeID": InviteeID.self,
-    "Country": Country.self,
-    "DesktopSoundSetting": DesktopSoundSetting.self,
-    "PhoneData": PhoneData.self,
-    "PhoneDescription": PhoneDescription.self,
-    "Phone": Phone.self,
-    "I18nData": I18nData.self,
-    "PhoneNumber": PhoneNumber.self,
-    "SuggestedContactGroupHash": SuggestedContactGroupHash.self,
-    "SuggestedContact": SuggestedContact.self,
-    "SuggestedContactGroup": SuggestedContactGroup.self,
-    "StateUpdate": StateUpdate.self,
-    "StateUpdateHeader": StateUpdateHeader.self,
-    "BatchUpdate": BatchUpdate.self,
-    "ConversationNotification": ConversationNotification.self,
-    "EventNotification": EventNotification.self,
-    "SetFocusNotification": SetFocusNotification.self,
-    "SetTypingNotification": SetTypingNotification.self,
-    "SetConversationNotificationLevelNotification": SetConversationNotificationLevelNotification.self,
-    "ReplyToInviteNotification": ReplyToInviteNotification.self,
-    "WatermarkNotification": WatermarkNotification.self,
-    "ConversationViewModification": ConversationViewModification.self,
-    "GroupLinkSharingModification": GroupLinkSharingModification.self,
-    "EasterEggNotification": EasterEggNotification.self,
-    "SelfPresenceNotification": SelfPresenceNotification.self,
-    "DeleteActionNotification": DeleteActionNotification.self,
-    "PresenceNotification": PresenceNotification.self,
-    "BlockNotification": BlockNotification.self,
-    "InvitationWatermarkNotification": InvitationWatermarkNotification.self,
-    "SetNotificationSettingNotification": SetNotificationSettingNotification.self,
-    "RichPresenceEnabledStateNotification": RichPresenceEnabledStateNotification.self,
-    "ConversationSpec": ConversationSpec.self,
-    "OffnetworkAddress": OffnetworkAddress.self,
-    "AddUserRequest": AddUserRequest.self,
-    "AddUserResponse": AddUserResponse.self,
-    "CreateConversationRequest": CreateConversationRequest.self,
-    "CreateConversationResponse": CreateConversationResponse.self,
-    "DeleteConversationRequest": DeleteConversationRequest.self,
-    "DeleteConversationResponse": DeleteConversationResponse.self,
-    "EasterEggRequest": EasterEggRequest.self,
-    "EasterEggResponse": EasterEggResponse.self,
-    "GetConversationRequest": GetConversationRequest.self,
-    "GetConversationResponse": GetConversationResponse.self,
-    "GetEntityByIdRequest": GetEntityByIdRequest.self,
-    "GetEntityByIdResponse": GetEntityByIdResponse.self,
-    "EntityResult": EntityResult.self,
-    "GetGroupConversationUrlRequest": GetGroupConversationUrlRequest.self,
-    "GetGroupConversationUrlResponse": GetGroupConversationUrlResponse.self,
-    "GetSuggestedEntitiesRequest": GetSuggestedEntitiesRequest.self,
-    "GetSuggestedEntitiesResponse": GetSuggestedEntitiesResponse.self,
-    "GetSelfInfoRequest": GetSelfInfoRequest.self,
-    "GetSelfInfoResponse": GetSelfInfoResponse.self,
-    "ModifyConversationViewRequest": ModifyConversationViewRequest.self,
-    "ModifyConversationViewResponse": ModifyConversationViewResponse.self,
-    "OpenGroupConversationFromUrlRequest": OpenGroupConversationFromUrlRequest.self,
-    "OpenGroupConversationFromUrlResponse": OpenGroupConversationFromUrlResponse.self,
-    "QueryPresenceRequest": QueryPresenceRequest.self,
-    "QueryPresenceResponse": QueryPresenceResponse.self,
-    "RemoveUserRequest": RemoveUserRequest.self,
-    "RemoveUserResponse": RemoveUserResponse.self,
-    "RenameConversationRequest": RenameConversationRequest.self,
-    "RenameConversationResponse": RenameConversationResponse.self,
-    "SearchEntitiesRequest": SearchEntitiesRequest.self,
-    "SearchEntitiesResponse": SearchEntitiesResponse.self,
-    "SendChatMessageRequest": SendChatMessageRequest.self,
-    "SendChatMessageResponse": SendChatMessageResponse.self,
-    "ModifyOTRStatusRequest": ModifyOTRStatusRequest.self,
-    "ModifyOTRStatusResponse": ModifyOTRStatusResponse.self,
-    "SendOffnetworkInvitationRequest": SendOffnetworkInvitationRequest.self,
-    "SendOffnetworkInvitationResponse": SendOffnetworkInvitationResponse.self,
-    "SetActiveClientRequest": SetActiveClientRequest.self,
-    "SetActiveClientResponse": SetActiveClientResponse.self,
-    "SetConversationLevelRequest": SetConversationLevelRequest.self,
-    "SetConversationLevelResponse": SetConversationLevelResponse.self,
-    "SetConversationNotificationLevelRequest": SetConversationNotificationLevelRequest.self,
-    "SetConversationNotificationLevelResponse": SetConversationNotificationLevelResponse.self,
-    "SetFocusRequest": SetFocusRequest.self,
-    "SetFocusResponse": SetFocusResponse.self,
-    "SetGroupLinkSharingEnabledRequest": SetGroupLinkSharingEnabledRequest.self,
-    "SetGroupLinkSharingEnabledResponse": SetGroupLinkSharingEnabledResponse.self,
-    "SetPresenceRequest": SetPresenceRequest.self,
-    "SetPresenceResponse": SetPresenceResponse.self,
-    "SetTypingRequest": SetTypingRequest.self,
-    "SetTypingResponse": SetTypingResponse.self,
-    "UnreadConversationState": UnreadConversationState.self,
-    "SyncAllNewEventsRequest": SyncAllNewEventsRequest.self,
-    "SyncAllNewEventsResponse": SyncAllNewEventsResponse.self,
-    "SyncRecentConversationsRequest": SyncRecentConversationsRequest.self,
-    "SyncRecentConversationsResponse": SyncRecentConversationsResponse.self,
-    "UpdateWatermarkRequest": UpdateWatermarkRequest.self,
-    "UpdateWatermarkResponse": UpdateWatermarkResponse.self,
-]
-
