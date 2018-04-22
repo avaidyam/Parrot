@@ -30,28 +30,6 @@ public extension String {
 			}
 		}
 	}
-	
-	public mutating func replaceAllOccurrences(matching regex: String, with: String) {
-		while let range = self.range(of: regex, options: .regularExpression) {
-			self = self.replacingCharacters(in: range, with: with)
-		}
-	}
-	
-	public func findAllOccurrences(matching regex: String, all: Bool = false) -> [String] {
-		let nsregex = try! NSRegularExpression(pattern: regex, options: .caseInsensitive)
-		let results = nsregex.matches(in: self, options:[],
-		                              range:NSMakeRange(0, self.count))
-		
-		if all {
-			return results.map {
-				String(self[NSRangeToRange(s: self, r: $0.range)])
-			}
-		} else {
-			return results.map {
-                String(self[NSRangeToRange(s: self, r: $0.range(at: 1))])
-			}
-		}
-	}
     
     public func captureGroups(from regex: String) -> [[String]] {
         let _s = (self as NSString)

@@ -1,5 +1,7 @@
-import Mocha
+import Foundation
+import HangoutsCore
 import ParrotServiceExtension
+import class Mocha.Logger
 
 private let log = Logger(subsystem: "Hangouts.Event")
 

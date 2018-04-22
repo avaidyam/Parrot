@@ -1,4 +1,7 @@
 import Foundation
+import HangoutsCore
+import ParrotServiceExtension
+import class Mocha.Logger
 
 internal enum PeopleAPI {
     private static let baseURL = "https://people-pa.clients6.google.com/v2/people"

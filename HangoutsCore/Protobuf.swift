@@ -274,3 +274,47 @@ public struct ProtoDescriptor {
         }
     }
 }
+
+// Converts an NSRange to a Range for String indices.
+// FIXME: Weird Range/Index mess happened here.
+internal func NSRangeToRange(s: String, r: NSRange) -> Range<String.Index> {
+    let a  = (s as NSString).substring(to: r.location)
+    let b  = (s as NSString).substring(with: r)
+    let n1 = a.distance(from: a.startIndex, to: a.endIndex)
+    let n2 = b.distance(from: b.startIndex, to: b.endIndex)
+    let i1 = s.index(s.startIndex, offsetBy: n1)
+    let i2 = s.index(i1, offsetBy: n2)
+    return Range<String.Index>(uncheckedBounds: (lower: i1, upper: i2))
+}
+
+public extension String {
+    public func substring(between start: String, and to: String) -> String? {
+        return (range(of: start)?.upperBound).flatMap { startIdx in
+            (range(of: to, range: startIdx..<endIndex)?.lowerBound).map { endIdx in
+                String(self[startIdx..<endIdx])
+            }
+        }
+    }
+    
+    public mutating func replaceAllOccurrences(matching regex: String, with: String) {
+        while let range = self.range(of: regex, options: .regularExpression) {
+            self = self.replacingCharacters(in: range, with: with)
+        }
+    }
+    
+    public func findAllOccurrences(matching regex: String, all: Bool = false) -> [String] {
+        let nsregex = try! NSRegularExpression(pattern: regex, options: .caseInsensitive)
+        let results = nsregex.matches(in: self, options:[],
+                                      range:NSMakeRange(0, self.count))
+        
+        if all {
+            return results.map {
+                String(self[NSRangeToRange(s: self, r: $0.range)])
+            }
+        } else {
+            return results.map {
+                String(self[NSRangeToRange(s: self, r: $0.range(at: 1))])
+            }
+        }
+    }
+}

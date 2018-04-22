@@ -43,10 +43,10 @@ public final class SHA1 {
         // break chunk into sixteen 32-bit words M[j], 0 ≤ j ≤ 15, big-endian
         // Extend the sixteen 32-bit words into eighty 32-bit words:
         let M = UnsafeMutablePointer<UInt32>.allocate(capacity: 80)
-        M.initialize(to: 0, count: 80)
+        M.initialize(repeating: 0, count: 80)
         defer {
             M.deinitialize(count: 80)
-            M.deallocate(capacity: 80)
+            M.deallocate()
         }
         
         for x in 0..<80 {
@@ -207,8 +207,8 @@ func arrayOfBytes<T: FixedWidthInteger>(value: T, length totalBytes: Int = Memor
         bytes[totalBytes - 1 - j] = (bytesPointer + j).pointee
     }
     
-    valuePointer.deinitialize()
-    valuePointer.deallocate(capacity: 1)
+    valuePointer.deinitialize(count: 1)
+    valuePointer.deallocate()
     
     return bytes
 }

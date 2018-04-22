@@ -47,7 +47,7 @@ public typealias ProtoMessage = _ProtoMessage & Hashable
 //
 
 /// Defines a protobuf message used as an RPC request.
-internal protocol ServiceRequest: ProtoMessage {
+public protocol ServiceRequest: ProtoMessage {
     
     /// Links the protobuf message used as the response to this request.
     associatedtype Response: ServiceResponse
@@ -60,7 +60,7 @@ internal protocol ServiceRequest: ProtoMessage {
 }
 
 /// Defines a protobuf message used as an RPC response.
-internal protocol ServiceResponse: ProtoMessage {
+public protocol ServiceResponse: ProtoMessage {
     
     /// The server-sent header describing the RPC response.
     var responseHeader: ClientResponseHeader? { get set }
@@ -83,7 +83,7 @@ public enum ServiceError: Error {
 
 // Generate 64-bit random value in a range that is divisible by upper_bound:
 // from @martin-r: http://stackoverflow.com/questions/26549830/swift-random-number-for-64-bit-integers
-func random64(_ upper_bound: UInt64) -> UInt64 {
+public func random64(_ upper_bound: UInt64) -> UInt64 {
     let range = UInt64.max - UInt64.max % upper_bound
     var rnd: UInt64 = 0
     repeat {
@@ -117,11 +117,11 @@ extension Dictionary where Key: Hashable, Value: Hashable {
 // Convert a microsecond timestamp to an Date instance.
 // Convert UTC datetime to microsecond timestamp used by Hangouts.
 private let MicrosecondsPerSecond: Double = 1000000.0
-extension Date {
-    init(UTC: UInt64?) {
+public extension Date {
+    public init(UTC: UInt64?) {
         self = Date(timeIntervalSince1970: (Double(UTC ?? 0) / MicrosecondsPerSecond))
     }
-    func toUTC() -> UInt64 {
+    public func toUTC() -> UInt64 {
         return UInt64(self.timeIntervalSince1970 * MicrosecondsPerSecond)
     }
 }

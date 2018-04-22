@@ -132,7 +132,6 @@
 		48AD39FA1EE7FEB200C33E40 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39F91EE7FEB200C33E40 /* Preferences.swift */; };
 		48AD39FC1EE8005C00C33E40 /* TextPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD39FB1EE8005C00C33E40 /* TextPreferences.swift */; };
 		48AFC0DA200ACB8C003E878D /* PeopleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AFC0D9200ACB8C003E878D /* PeopleAPI.swift */; };
-		48AFC0DB200B069A003E878D /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
 		48BCEE0A201DA7E20087E889 /* CryptoSHA1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BCEE09201DA7E20087E889 /* CryptoSHA1.swift */; };
 		48C35B382051213D0056C3FB /* OSABridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C35B372051213D0056C3FB /* OSABridge.swift */; };
 		48D3CCE91DE94433003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
@@ -159,10 +158,16 @@
 		48D3CD221DE94C9C003D6C02 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD01DE1C1EC8A90031FDD7 /* KeyValueStore.swift */; };
 		48D3CD421DEAF238003D6C02 /* Mocha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D3CCE21DE94433003D6C02 /* Mocha.framework */; };
 		48D3CD431DEAF23A003D6C02 /* Hangouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48834DEC1C1B372D009BC442 /* Hangouts.framework */; };
-		48D7EE181F14587C005C7E16 /* ProtobufRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */; };
 		48DDE7B62089D5B3001B8AA9 /* SystemEventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DDE7B52089D5B3001B8AA9 /* SystemEventListener.swift */; };
 		48DDE7B82089D5F0001B8AA9 /* IndirectTouchTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DDE7B72089D5F0001B8AA9 /* IndirectTouchTracker.swift */; };
 		48DDE7BA2089D61C001B8AA9 /* TouchSwipeRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DDE7B92089D61C001B8AA9 /* TouchSwipeRecognizer.swift */; };
+		48DDE7FE208C5C61001B8AA9 /* HangoutsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48DDE7F7208C5C61001B8AA9 /* HangoutsCore.framework */; };
+		48DDE7FF208C5C61001B8AA9 /* HangoutsCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48DDE7F7208C5C61001B8AA9 /* HangoutsCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		48DDE806208C5D3C001B8AA9 /* Hangouts.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF84971D04E1F800F39444 /* Hangouts.proto.swift */; };
+		48DDE807208C5D3C001B8AA9 /* Protobuf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3391D04DFF90074984D /* Protobuf.swift */; };
+		48DDE808208C5D3C001B8AA9 /* ProtobufRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */; };
+		48DDE809208C5D3C001B8AA9 /* ServiceEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */; };
+		48DDE80A208C5D4F001B8AA9 /* HangoutsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48DDE7F7208C5C61001B8AA9 /* HangoutsCore.framework */; };
 		48DE52CF1C1CC12900647C63 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52CE1C1CC12900647C63 /* ShareViewController.swift */; };
 		48DE52D31C1CC12900647C63 /* ParrotShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DE52C81C1CC12900647C63 /* ParrotShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48DE52F71C1CC28000647C63 /* ParrotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE52F61C1CC28000647C63 /* ParrotViewController.swift */; };
@@ -171,7 +176,6 @@
 		48E39C611ED516AC00EF578D /* SystemBezel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5E1ED516AC00EF578D /* SystemBezel.swift */; };
 		48E39C621ED516AC00EF578D /* VolumeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C5F1ED516AC00EF578D /* VolumeIndicator.swift */; };
 		48E39C651ED578AF00EF578D /* KeyboardBrightness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39C641ED578AF00EF578D /* KeyboardBrightness.swift */; };
-		48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E9C3391D04DFF90074984D /* Protobuf.swift */; };
 		48EA55C71D26CAA700C3BC80 /* URLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4816872B1C3A340E0070EEF6 /* URLSession+Delegate.swift */; };
 		48EA55C81D26CAAA00C3BC80 /* URLSession+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481687271C39F6DC0070EEF6 /* URLSession+Extensions.swift */; };
 		48EA55CA1D26CDD000C3BC80 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EB54F51D209DD100F77C2C /* Cache.swift */; };
@@ -182,7 +186,6 @@
 		48EF2AB720181DC1007086A9 /* NSMonogramImageRep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488201BB1D4A970400C545F0 /* NSMonogramImageRep.swift */; };
 		48F301BE201C476B006D3261 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F301BD201C476B006D3261 /* Observable.swift */; };
 		48F7E8081F108FE20059E5CD /* PBLiteEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7E8071F108FE20059E5CD /* PBLiteEncoder.swift */; };
-		48F7E80A1F1099B70059E5CD /* ServiceEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */; };
 		48FB444D1DBF5288004BE55A /* termbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FB444B1DBF5288004BE55A /* termbox.c */; };
 		48FB444E1DBF5288004BE55A /* utf8.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FB444C1DBF5288004BE55A /* utf8.c */; };
 /* End PBXBuildFile section */
@@ -328,6 +331,20 @@
 			remoteGlobalIDString = 48D3CCF41DE9446D003D6C02;
 			remoteInfo = MochaUI;
 		};
+		48DDE7FC208C5C61001B8AA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48DDE7F6208C5C61001B8AA9;
+			remoteInfo = HangoutsCore;
+		};
+		48DDE804208C5D16001B8AA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48DDE7F6208C5C61001B8AA9;
+			remoteInfo = HangoutsCore;
+		};
 		48DE52D11C1CC12900647C63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 48834D8A1C1B3602009BC442 /* Project object */;
@@ -383,6 +400,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				48DDE7FF208C5C61001B8AA9 /* HangoutsCore.framework in Embed Frameworks */,
 				4813004C1D26BD4900768D79 /* ParrotServiceExtension.framework in Embed Frameworks */,
 				48834E021C1B372E009BC442 /* Hangouts.framework in Embed Frameworks */,
 				48D3CCEA1DE94433003D6C02 /* Mocha.framework in Embed Frameworks */,
@@ -583,6 +601,8 @@
 		48DDE7B52089D5B3001B8AA9 /* SystemEventListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemEventListener.swift; sourceTree = "<group>"; };
 		48DDE7B72089D5F0001B8AA9 /* IndirectTouchTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndirectTouchTracker.swift; sourceTree = "<group>"; };
 		48DDE7B92089D61C001B8AA9 /* TouchSwipeRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchSwipeRecognizer.swift; sourceTree = "<group>"; };
+		48DDE7F7208C5C61001B8AA9 /* HangoutsCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HangoutsCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		48DDE7FA208C5C61001B8AA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DE52C81C1CC12900647C63 /* ParrotShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParrotShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DE52CD1C1CC12900647C63 /* ParrotShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ParrotShare.entitlements; sourceTree = "<group>"; };
 		48DE52CE1C1CC12900647C63 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -647,6 +667,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48DDE7FE208C5C61001B8AA9 /* HangoutsCore.framework in Frameworks */,
 				4813004B1D26BD4900768D79 /* ParrotServiceExtension.framework in Frameworks */,
 				48834E011C1B372E009BC442 /* Hangouts.framework in Frameworks */,
 				48D3CCE91DE94433003D6C02 /* Mocha.framework in Frameworks */,
@@ -659,6 +680,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48DDE80A208C5D4F001B8AA9 /* HangoutsCore.framework in Frameworks */,
 				48D3CD031DE94490003D6C02 /* Mocha.framework in Frameworks */,
 				481300541D26BD9D00768D79 /* ParrotServiceExtension.framework in Frameworks */,
 			);
@@ -691,6 +713,13 @@
 				48D3CD091DE9459B003D6C02 /* Foundation.framework in Frameworks */,
 				48D3CD0B1DE9459E003D6C02 /* AppKit.framework in Frameworks */,
 				48D3CD0C1DE945A3003D6C02 /* Mocha.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48DDE7F3208C5C61001B8AA9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -960,10 +989,6 @@
 		487A0E101C1E0F6C007A4696 /* PBLite */ = {
 			isa = PBXGroup;
 			children = (
-				48DF84971D04E1F800F39444 /* Hangouts.proto.swift */,
-				48E9C3391D04DFF90074984D /* Protobuf.swift */,
-				48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */,
-				48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */,
 				48F7E8071F108FE20059E5CD /* PBLiteEncoder.swift */,
 				486C99FC1F103A36007D7BAA /* PBLiteDecoder.swift */,
 			);
@@ -1015,6 +1040,7 @@
 				48834E121C1B38B9009BC442 /* parrotd */,
 				4803639B1C1D08490008E9F5 /* parrot-cli */,
 				48834DED1C1B372E009BC442 /* Hangouts */,
+				48DDE7F8208C5C61001B8AA9 /* HangoutsCore */,
 				48DE53051C1CC29500647C63 /* Extensions */,
 				48DE52DD1C1CC1D300647C63 /* Frameworks */,
 				48834D931C1B3602009BC442 /* Products */,
@@ -1034,6 +1060,7 @@
 				48D3CCE21DE94433003D6C02 /* Mocha.framework */,
 				48D3CCF51DE9446D003D6C02 /* MochaUI.framework */,
 				486DBB301F947FB900ECA84B /* XPCTransport.framework */,
+				48DDE7F7208C5C61001B8AA9 /* HangoutsCore.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1079,7 +1106,6 @@
 		48834E0A1C1B3739009BC442 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				48BFD0341D13694900DAE29E /* hangouts.proto */,
 				48834DF01C1B372E009BC442 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -1216,6 +1242,27 @@
 			name = Gestures;
 			sourceTree = "<group>";
 		};
+		48DDE7F8208C5C61001B8AA9 /* HangoutsCore */ = {
+			isa = PBXGroup;
+			children = (
+				48DF84971D04E1F800F39444 /* Hangouts.proto.swift */,
+				48E9C3391D04DFF90074984D /* Protobuf.swift */,
+				48D7EE171F14587C005C7E16 /* ProtobufRuntime.swift */,
+				48F7E8091F1099B70059E5CD /* ServiceEndpoint.swift */,
+				48DDE803208C5C7F001B8AA9 /* Supporting Files */,
+			);
+			path = HangoutsCore;
+			sourceTree = "<group>";
+		};
+		48DDE803208C5C7F001B8AA9 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				48BFD0341D13694900DAE29E /* hangouts.proto */,
+				48DDE7FA208C5C61001B8AA9 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		48DE52C91C1CC12900647C63 /* ParrotShare */ = {
 			isa = PBXGroup;
 			children = (
@@ -1329,6 +1376,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		48DDE7F4208C5C61001B8AA9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -1414,6 +1468,7 @@
 				4813004A1D26BD4900768D79 /* PBXTargetDependency */,
 				48D3CCE81DE94433003D6C02 /* PBXTargetDependency */,
 				48D3CCFB1DE9446D003D6C02 /* PBXTargetDependency */,
+				48DDE7FD208C5C61001B8AA9 /* PBXTargetDependency */,
 			);
 			name = Parrot;
 			productName = Parrot;
@@ -1433,6 +1488,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				48DDE805208C5D16001B8AA9 /* PBXTargetDependency */,
 			);
 			name = Hangouts;
 			productName = Hangouts;
@@ -1491,6 +1547,24 @@
 			name = MochaUI;
 			productName = MochaUI;
 			productReference = 48D3CCF51DE9446D003D6C02 /* MochaUI.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		48DDE7F6208C5C61001B8AA9 /* HangoutsCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48DDE800208C5C61001B8AA9 /* Build configuration list for PBXNativeTarget "HangoutsCore" */;
+			buildPhases = (
+				48DDE7F2208C5C61001B8AA9 /* Sources */,
+				48DDE7F3208C5C61001B8AA9 /* Frameworks */,
+				48DDE7F4208C5C61001B8AA9 /* Headers */,
+				48DDE7F5208C5C61001B8AA9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HangoutsCore;
+			productName = HangoutsCore;
+			productReference = 48DDE7F7208C5C61001B8AA9 /* HangoutsCore.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		48DE52C71C1CC12900647C63 /* ParrotShare */ = {
@@ -1619,6 +1693,11 @@
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
+					48DDE7F6208C5C61001B8AA9 = {
+						CreatedOnToolsVersion = 9.3;
+						DevelopmentTeam = 2754ZHC8VE;
+						ProvisioningStyle = Automatic;
+					};
 					48DE52C71C1CC12900647C63 = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 2754ZHC8VE;
@@ -1676,6 +1755,7 @@
 				48D3CCE11DE94433003D6C02 /* Mocha */,
 				48D3CCF41DE9446D003D6C02 /* MochaUI */,
 				48834DEB1C1B372D009BC442 /* Hangouts */,
+				48DDE7F6208C5C61001B8AA9 /* HangoutsCore */,
 				486DBB2F1F947FB900ECA84B /* XPCTransport */,
 				481300431D26BD4900768D79 /* ParrotServiceExtension */,
 			);
@@ -1728,6 +1808,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		48D3CCF31DE9446D003D6C02 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48DDE7F5208C5C61001B8AA9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1877,17 +1964,13 @@
 				48834E3F1C1B4098009BC442 /* Event.swift in Sources */,
 				48834E421C1B4098009BC442 /* User.swift in Sources */,
 				488F652A1EF97CD50085325F /* PhotoAPI.swift in Sources */,
-				48E9C33A1D04DFF90074984D /* Protobuf.swift in Sources */,
-				48F7E80A1F1099B70059E5CD /* ServiceEndpoint.swift in Sources */,
 				48BCEE0A201DA7E20087E889 /* CryptoSHA1.swift in Sources */,
 				48834E3C1C1B4098009BC442 /* Channel.swift in Sources */,
 				487D6020200BD88A0009E5F1 /* DriveAPI.swift in Sources */,
 				48AFC0DA200ACB8C003E878D /* PeopleAPI.swift in Sources */,
 				48EA55C81D26CAAA00C3BC80 /* URLSession+Extensions.swift in Sources */,
-				48AFC0DB200B069A003E878D /* Hangouts.proto.swift in Sources */,
 				48F7E8081F108FE20059E5CD /* PBLiteEncoder.swift in Sources */,
 				4871ED781DE013A900FD8509 /* Authenticator.swift in Sources */,
-				48D7EE181F14587C005C7E16 /* ProtobufRuntime.swift in Sources */,
 				48834E3D1C1B4098009BC442 /* Client.swift in Sources */,
 				48EA55C71D26CAA700C3BC80 /* URLSession+Delegate.swift in Sources */,
 			);
@@ -1971,6 +2054,17 @@
 				48D3CD141DE945C1003D6C02 /* UserNotification+Extensions.swift in Sources */,
 				488EC0D11F267CF90022F6EB /* Animation.swift in Sources */,
 				4869A9A71EE0FC2C00764594 /* NSAppearance+Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48DDE7F2208C5C61001B8AA9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DDE806208C5D3C001B8AA9 /* Hangouts.proto.swift in Sources */,
+				48DDE807208C5D3C001B8AA9 /* Protobuf.swift in Sources */,
+				48DDE808208C5D3C001B8AA9 /* ProtobufRuntime.swift in Sources */,
+				48DDE809208C5D3C001B8AA9 /* ServiceEndpoint.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2093,6 +2187,16 @@
 			isa = PBXTargetDependency;
 			target = 48D3CCF41DE9446D003D6C02 /* MochaUI */;
 			targetProxy = 48D3CCFA1DE9446D003D6C02 /* PBXContainerItemProxy */;
+		};
+		48DDE7FD208C5C61001B8AA9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48DDE7F6208C5C61001B8AA9 /* HangoutsCore */;
+			targetProxy = 48DDE7FC208C5C61001B8AA9 /* PBXContainerItemProxy */;
+		};
+		48DDE805208C5D16001B8AA9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48DDE7F6208C5C61001B8AA9 /* HangoutsCore */;
+			targetProxy = 48DDE804208C5D16001B8AA9 /* PBXContainerItemProxy */;
 		};
 		48DE52D21C1CC12900647C63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2699,6 +2803,76 @@
 			};
 			name = Release;
 		};
+		48DDE801208C5C61001B8AA9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = HangoutsCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.HangoutsCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		48DDE802208C5C61001B8AA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 2754ZHC8VE;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = HangoutsCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.avaidyam.HangoutsCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		48DE52D41C1CC12900647C63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2867,6 +3041,15 @@
 			buildConfigurations = (
 				48D3CCFF1DE9446D003D6C02 /* Debug */,
 				48D3CD001DE9446D003D6C02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48DDE800208C5C61001B8AA9 /* Build configuration list for PBXNativeTarget "HangoutsCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48DDE801208C5C61001B8AA9 /* Debug */,
+				48DDE802208C5C61001B8AA9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

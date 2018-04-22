@@ -1,4 +1,7 @@
 import Foundation
+import HangoutsCore
+import ParrotServiceExtension
+import class Mocha.Logger
 
 /// Google Photos Resumable Upload
 public typealias GooglePhoto = PhotoAPI
