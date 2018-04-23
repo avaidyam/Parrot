@@ -284,8 +284,8 @@ public class IConversation: ParrotServiceExtension.Conversation {
             let loc = "https://maps.google.com/maps?q=\(lat),\(long)"
             let img = "https://maps.googleapis.com/maps/api/staticmap?center=\(lat),\(long)&markers=color:red%7C\(lat),\(long)&size=400x400"
             
-            let rep = EMEmbedClientItem_EMImageObjectV2_Holder(typeArray: [.thing, .place, .init(336), .init(338), .init(339)], id_p: img, imageObjectV2: EMImageObjectV2(URL: img))
-            let place = EMPlaceV2(URL: loc, name: "Current Location", address: EMEmbedClientItem_EMPostalAddressV2_Holder(postalAddressV2: EMPostalAddressV2(streetAddress: "Current Location")), geo: EMEmbedClientItem_EMGeoCoordinatesV2_Holder(geoCoordinatesV2: EMGeoCoordinatesV2(latitude: lat, longitude: long)), representativeImage: rep)
+            let rep = EMEmbedClientItem(typeArray: [.thing, .place, .init(336), .init(338), .init(339)], id_p: img, imageObjectV2: EMImageObjectV2(URL: img))
+            let place = EMPlaceV2(URL: loc, name: "Current Location", address: EMEmbedClientItem(postalAddressV2: EMPostalAddressV2(streetAddress: "Current Location")), geo: EMEmbedClientItem(geoCoordinatesV2: EMGeoCoordinatesV2(latitude: lat, longitude: long)), representativeImage: rep)
             
             let req = ClientSendChatMessageRequest(eventRequestHeader: self.eventHeader(.regularChatMessage), attachLocation: ClientLocationSpec(place: place))
             self.client.execute(req) {_,_ in}

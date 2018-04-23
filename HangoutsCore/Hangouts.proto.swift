@@ -1764,7 +1764,7 @@ public struct EMItemType: ProtoEnum {
     }
 }
 
-public struct EMClientEmbedOptions: ProtoMessage {
+public final class EMClientEmbedOptions: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case includeTypeArray = 1
     }
@@ -1774,9 +1774,16 @@ public struct EMClientEmbedOptions: ProtoMessage {
     public init(includeTypeArray: [EMItemType] = []) {
         self.includeTypeArray = includeTypeArray
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMClientEmbedOptions, rhs: EMClientEmbedOptions) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMPlaceV2: ProtoMessage {
+public final class EMPlaceV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case URL = 1
         case imageURL = 2
@@ -1815,20 +1822,20 @@ public struct EMPlaceV2: ProtoMessage {
     public var descriptionTruncated: String? = nil
     public var proxiedImage: EMThumbnail? = nil
     public var proxiedFaviconURL: String? = nil
-    public var authorArray: [/*EMEmbedClientItem*/String] = []
-    public var about: /*EMEmbedClientItem*/String? = nil
-    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var authorArray: [EMEmbedClientItem] = []
+    public var about: EMEmbedClientItem? = nil
+    public var relatedImageArray: [EMEmbedClientItem] = []
     public var sourceName: String? = nil
-    public var address: EMEmbedClientItem_EMPostalAddressV2_Holder? = nil
-    public var geo: EMEmbedClientItem_EMGeoCoordinatesV2_Holder? = nil
+    public var address: EMEmbedClientItem? = nil
+    public var geo: EMEmbedClientItem? = nil
     public var clusterId: String? = nil
     public var ownerObfuscatedId: String? = nil
     public var mapURL: String? = nil
     public var referenceId: String? = nil
     public var faviconURL: String? = nil
-    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
+    public var aggregateRating: EMEmbedClientItem? = nil
     public var id_p: String? = nil
-    public var representativeImage: EMEmbedClientItem_EMImageObjectV2_Holder? = nil
+    public var representativeImage: EMEmbedClientItem? = nil
     public var telephone: String? = nil
     public var faxNumber: String? = nil
     public var externalId: String? = nil
@@ -1837,7 +1844,7 @@ public struct EMPlaceV2: ProtoMessage {
     public var ampURL: String? = nil
     public var destinationURL: String? = nil
     
-    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, address: EMEmbedClientItem_EMPostalAddressV2_Holder? = nil, geo: EMEmbedClientItem_EMGeoCoordinatesV2_Holder? = nil, clusterId: String? = nil, ownerObfuscatedId: String? = nil, mapURL: String? = nil, referenceId: String? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, id_p: String? = nil, representativeImage: EMEmbedClientItem_EMImageObjectV2_Holder? = nil, telephone: String? = nil, faxNumber: String? = nil, externalId: String? = nil, isClaimedByOwner: Bool? = nil, placeId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [EMEmbedClientItem] = [], about: EMEmbedClientItem? = nil, relatedImageArray: [EMEmbedClientItem] = [], sourceName: String? = nil, address: EMEmbedClientItem? = nil, geo: EMEmbedClientItem? = nil, clusterId: String? = nil, ownerObfuscatedId: String? = nil, mapURL: String? = nil, referenceId: String? = nil, faviconURL: String? = nil, aggregateRating: EMEmbedClientItem? = nil, id_p: String? = nil, representativeImage: EMEmbedClientItem? = nil, telephone: String? = nil, faxNumber: String? = nil, externalId: String? = nil, isClaimedByOwner: Bool? = nil, placeId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
         self.URL = URL
         self.imageURL = imageURL
         self.name = name
@@ -1867,9 +1874,16 @@ public struct EMPlaceV2: ProtoMessage {
         self.ampURL = ampURL
         self.destinationURL = destinationURL
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMPlaceV2, rhs: EMPlaceV2) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMThumbnail: ProtoMessage {
+public final class EMThumbnail: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case imageURL = 1
         case boxWidthPx = 2
@@ -1900,9 +1914,16 @@ public struct EMThumbnail: ProtoMessage {
         self.uncroppedImageURL = uncroppedImageURL
         self.imageHeightPx = imageHeightPx
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMThumbnail, rhs: EMThumbnail) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMPostalAddressV2: ProtoMessage {
+public final class EMPostalAddressV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case URL = 1
         case imageURL = 2
@@ -1935,9 +1956,9 @@ public struct EMPostalAddressV2: ProtoMessage {
     public var descriptionTruncated: String? = nil
     public var proxiedImage: EMThumbnail? = nil
     public var proxiedFaviconURL: String? = nil
-    public var authorArray: [/*EMEmbedClientItem*/String] = []
-    public var about: /*EMEmbedClientItem*/String? = nil
-    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var authorArray: [EMEmbedClientItem] = []
+    public var about: EMEmbedClientItem? = nil
+    public var relatedImageArray: [EMEmbedClientItem] = []
     public var sourceName: String? = nil
     public var addressCountry: String? = nil
     public var addressLocality: String? = nil
@@ -1946,12 +1967,12 @@ public struct EMPostalAddressV2: ProtoMessage {
     public var postalCode: String? = nil
     public var streetAddress: String? = nil
     public var faviconURL: String? = nil
-    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var representativeImage: EMEmbedClientItem? = nil
     public var externalId: String? = nil
     public var ampURL: String? = nil
     public var destinationURL: String? = nil
     
-    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, addressCountry: String? = nil, addressLocality: String? = nil, addressRegion: String? = nil, postOfficeBoxNumber: String? = nil, postalCode: String? = nil, streetAddress: String? = nil, faviconURL: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [EMEmbedClientItem] = [], about: EMEmbedClientItem? = nil, relatedImageArray: [EMEmbedClientItem] = [], sourceName: String? = nil, addressCountry: String? = nil, addressLocality: String? = nil, addressRegion: String? = nil, postOfficeBoxNumber: String? = nil, postalCode: String? = nil, streetAddress: String? = nil, faviconURL: String? = nil, representativeImage: EMEmbedClientItem? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
         self.URL = URL
         self.imageURL = imageURL
         self.name = name
@@ -1975,9 +1996,16 @@ public struct EMPostalAddressV2: ProtoMessage {
         self.ampURL = ampURL
         self.destinationURL = destinationURL
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMPostalAddressV2, rhs: EMPostalAddressV2) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMGeoCoordinatesV2: ProtoMessage {
+public final class EMGeoCoordinatesV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case URL = 1
         case imageURL = 2
@@ -2006,19 +2034,19 @@ public struct EMGeoCoordinatesV2: ProtoMessage {
     public var descriptionTruncated: String? = nil
     public var proxiedImage: EMThumbnail? = nil
     public var proxiedFaviconURL: String? = nil
-    public var authorArray: [/*EMEmbedClientItem*/String] = []
-    public var about: /*EMEmbedClientItem*/String? = nil
-    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var authorArray: [EMEmbedClientItem] = []
+    public var about: EMEmbedClientItem? = nil
+    public var relatedImageArray: [EMEmbedClientItem] = []
     public var sourceName: String? = nil
     public var latitude: Double? = nil
     public var longitude: Double? = nil
     public var faviconURL: String? = nil
-    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var representativeImage: EMEmbedClientItem? = nil
     public var externalId: String? = nil
     public var ampURL: String? = nil
     public var destinationURL: String? = nil
     
-    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, latitude: Double? = nil, longitude: Double? = nil, faviconURL: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [EMEmbedClientItem] = [], about: EMEmbedClientItem? = nil, relatedImageArray: [EMEmbedClientItem] = [], sourceName: String? = nil, latitude: Double? = nil, longitude: Double? = nil, faviconURL: String? = nil, representativeImage: EMEmbedClientItem? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
         self.URL = URL
         self.imageURL = imageURL
         self.name = name
@@ -2038,9 +2066,16 @@ public struct EMGeoCoordinatesV2: ProtoMessage {
         self.ampURL = ampURL
         self.destinationURL = destinationURL
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMGeoCoordinatesV2, rhs: EMGeoCoordinatesV2) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMThingV2: ProtoMessage {
+public final class EMThingV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case URL = 1
         case imageURL = 2
@@ -2067,17 +2102,17 @@ public struct EMThingV2: ProtoMessage {
     public var descriptionTruncated: String? = nil
     public var proxiedImage: EMThumbnail? = nil
     public var proxiedFaviconURL: String? = nil
-    public var authorArray: [/*EMEmbedClientItem*/String] = []
-    public var about: /*EMEmbedClientItem*/String? = nil
-    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var authorArray: [EMEmbedClientItem] = []
+    public var about: EMEmbedClientItem? = nil
+    public var relatedImageArray: [EMEmbedClientItem] = []
     public var sourceName: String? = nil
     public var faviconURL: String? = nil
-    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var representativeImage: EMEmbedClientItem? = nil
     public var externalId: String? = nil
     public var ampURL: String? = nil
     public var destinationURL: String? = nil
     
-    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, faviconURL: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [EMEmbedClientItem] = [], about: EMEmbedClientItem? = nil, relatedImageArray: [EMEmbedClientItem] = [], sourceName: String? = nil, faviconURL: String? = nil, representativeImage: EMEmbedClientItem? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
         self.URL = URL
         self.imageURL = imageURL
         self.name = name
@@ -2095,9 +2130,16 @@ public struct EMThingV2: ProtoMessage {
         self.ampURL = ampURL
         self.destinationURL = destinationURL
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMThingV2, rhs: EMThingV2) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMPlusAudioV2: ProtoMessage {
+public final class EMPlusAudioV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case URL = 1
         case imageURL = 2
@@ -2158,17 +2200,17 @@ public struct EMPlusAudioV2: ProtoMessage {
     public var descriptionTruncated: String? = nil
     public var proxiedImage: EMThumbnail? = nil
     public var proxiedFaviconURL: String? = nil
-    public var authorArray: [/*EMEmbedClientItem*/String] = []
-    public var about: /*EMEmbedClientItem*/String? = nil
+    public var authorArray: [EMEmbedClientItem] = []
+    public var about: EMEmbedClientItem? = nil
     public var text: String? = nil
-    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var relatedImageArray: [EMEmbedClientItem] = []
     public var sourceName: String? = nil
     public var canonicalFountainStream: String? = nil
     public var unfilteredFountainStreamArray: [String] = []
     public var premodFountainStreamArray: [String] = []
     public var postmodFountainStreamArray: [String] = []
     public var inboxFountainStreamArray: [String] = []
-    public var contentLocation: /*EMEmbedClientItem*/String? = nil
+    public var contentLocation: EMEmbedClientItem? = nil
     public var width: String? = nil
     public var height: String? = nil
     public var widthPx: Int32? = nil
@@ -2177,18 +2219,18 @@ public struct EMPlusAudioV2: ProtoMessage {
     public var ownerObfuscatedId: String? = nil
     public var albumId: String? = nil
     public var photoId: String? = nil
-    public var associatedMediaArray: [/*EMEmbedClientItem*/String] = []
+    public var associatedMediaArray: [EMEmbedClientItem] = []
     public var isFamilyFriendly: Bool? = nil
     public var embedURL: String? = nil
     public var playerType: String? = nil
     public var duration: String? = nil
     public var faviconURL: String? = nil
-    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
-    public var offersArray: [/*EMEmbedClientItem*/String] = []
-    public var audio: /*EMEmbedClientItem*/String? = nil
+    public var aggregateRating: EMEmbedClientItem? = nil
+    public var offersArray: [EMEmbedClientItem] = []
+    public var audio: EMEmbedClientItem? = nil
     public var dateCreated: String? = nil
     public var dateModified: String? = nil
-    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var representativeImage: EMEmbedClientItem? = nil
     public var genre: String? = nil
     public var contentRating: String? = nil
     public var inLanguage: String? = nil
@@ -2202,7 +2244,7 @@ public struct EMPlusAudioV2: ProtoMessage {
     public var destinationURL: String? = nil
     public var fileFormat: String? = nil
     
-    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, text: String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: /*EMEmbedClientItem*/String? = nil, width: String? = nil, height: String? = nil, widthPx: Int32? = nil, heightPx: Int32? = nil, contentURL: String? = nil, ownerObfuscatedId: String? = nil, albumId: String? = nil, photoId: String? = nil, associatedMediaArray: [/*EMEmbedClientItem*/String] = [], isFamilyFriendly: Bool? = nil, embedURL: String? = nil, playerType: String? = nil, duration: String? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, offersArray: [/*EMEmbedClientItem*/String] = [], audio: /*EMEmbedClientItem*/String? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, clientEmbedURL: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, mediaKey: String? = nil, ampURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [EMEmbedClientItem] = [], about: EMEmbedClientItem? = nil, text: String? = nil, relatedImageArray: [EMEmbedClientItem] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: EMEmbedClientItem? = nil, width: String? = nil, height: String? = nil, widthPx: Int32? = nil, heightPx: Int32? = nil, contentURL: String? = nil, ownerObfuscatedId: String? = nil, albumId: String? = nil, photoId: String? = nil, associatedMediaArray: [EMEmbedClientItem] = [], isFamilyFriendly: Bool? = nil, embedURL: String? = nil, playerType: String? = nil, duration: String? = nil, faviconURL: String? = nil, aggregateRating: EMEmbedClientItem? = nil, offersArray: [EMEmbedClientItem] = [], audio: EMEmbedClientItem? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: EMEmbedClientItem? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, clientEmbedURL: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, mediaKey: String? = nil, ampURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
         self.URL = URL
         self.imageURL = imageURL
         self.name = name
@@ -2254,9 +2296,16 @@ public struct EMPlusAudioV2: ProtoMessage {
         self.destinationURL = destinationURL
         self.fileFormat = fileFormat
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMPlusAudioV2, rhs: EMPlusAudioV2) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMPersonV2: ProtoMessage {
+public final class EMPersonV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case URL = 1
         case imageURL = 2
@@ -2286,20 +2335,20 @@ public struct EMPersonV2: ProtoMessage {
     public var descriptionTruncated: String? = nil
     public var proxiedImage: EMThumbnail? = nil
     public var proxiedFaviconURL: String? = nil
-    public var authorArray: [/*EMEmbedClientItem*/String] = []
-    public var about: /*EMEmbedClientItem*/String? = nil
-    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var authorArray: [EMEmbedClientItem] = []
+    public var about: EMEmbedClientItem? = nil
+    public var relatedImageArray: [EMEmbedClientItem] = []
     public var sourceName: String? = nil
     public var ownerObfuscatedId: String? = nil
     public var gender: String? = nil
     public var email: String? = nil
     public var faviconURL: String? = nil
-    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var representativeImage: EMEmbedClientItem? = nil
     public var externalId: String? = nil
     public var ampURL: String? = nil
     public var destinationURL: String? = nil
     
-    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, ownerObfuscatedId: String? = nil, gender: String? = nil, email: String? = nil, faviconURL: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [EMEmbedClientItem] = [], about: EMEmbedClientItem? = nil, relatedImageArray: [EMEmbedClientItem] = [], sourceName: String? = nil, ownerObfuscatedId: String? = nil, gender: String? = nil, email: String? = nil, faviconURL: String? = nil, representativeImage: EMEmbedClientItem? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil) {
         self.URL = URL
         self.imageURL = imageURL
         self.name = name
@@ -2320,9 +2369,16 @@ public struct EMPersonV2: ProtoMessage {
         self.ampURL = ampURL
         self.destinationURL = destinationURL
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMPersonV2, rhs: EMPersonV2) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMImageObjectV2: ProtoMessage {
+public final class EMImageObjectV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case URL = 1
         case imageURL = 2
@@ -2378,34 +2434,34 @@ public struct EMImageObjectV2: ProtoMessage {
     public var descriptionTruncated: String? = nil
     public var proxiedImage: EMThumbnail? = nil
     public var proxiedFaviconURL: String? = nil
-    public var authorArray: [/*EMEmbedClientItem*/String] = []
-    public var about: /*EMEmbedClientItem*/String? = nil
+    public var authorArray: [EMEmbedClientItem] = []
+    public var about: EMEmbedClientItem? = nil
     public var text: String? = nil
-    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var relatedImageArray: [EMEmbedClientItem] = []
     public var sourceName: String? = nil
     public var canonicalFountainStream: String? = nil
     public var unfilteredFountainStreamArray: [String] = []
     public var premodFountainStreamArray: [String] = []
     public var postmodFountainStreamArray: [String] = []
     public var inboxFountainStreamArray: [String] = []
-    public var contentLocation: /*EMEmbedClientItem*/String? = nil
+    public var contentLocation: EMEmbedClientItem? = nil
     public var width: String? = nil
     public var height: String? = nil
     public var widthPx: Int32? = nil
     public var heightPx: Int32? = nil
     public var contentURL: String? = nil
-    public var associatedMediaArray: [/*EMEmbedClientItem*/String] = []
+    public var associatedMediaArray: [EMEmbedClientItem] = []
     public var isFamilyFriendly: Bool? = nil
     public var embedURL: String? = nil
     public var playerType: String? = nil
     public var duration: String? = nil
     public var faviconURL: String? = nil
-    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
-    public var offersArray: [/*EMEmbedClientItem*/String] = []
-    public var audio: /*EMEmbedClientItem*/String? = nil
+    public var aggregateRating: EMEmbedClientItem? = nil
+    public var offersArray: [EMEmbedClientItem] = []
+    public var audio: EMEmbedClientItem? = nil
     public var dateCreated: String? = nil
     public var dateModified: String? = nil
-    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var representativeImage: EMEmbedClientItem? = nil
     public var genre: String? = nil
     public var contentRating: String? = nil
     public var inLanguage: String? = nil
@@ -2417,7 +2473,7 @@ public struct EMImageObjectV2: ProtoMessage {
     public var destinationURL: String? = nil
     public var fileFormat: String? = nil
     
-    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, text: String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: /*EMEmbedClientItem*/String? = nil, width: String? = nil, height: String? = nil, widthPx: Int32? = nil, heightPx: Int32? = nil, contentURL: String? = nil, associatedMediaArray: [/*EMEmbedClientItem*/String] = [], isFamilyFriendly: Bool? = nil, embedURL: String? = nil, playerType: String? = nil, duration: String? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, offersArray: [/*EMEmbedClientItem*/String] = [], audio: /*EMEmbedClientItem*/String? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [EMEmbedClientItem] = [], about: EMEmbedClientItem? = nil, text: String? = nil, relatedImageArray: [EMEmbedClientItem] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: EMEmbedClientItem? = nil, width: String? = nil, height: String? = nil, widthPx: Int32? = nil, heightPx: Int32? = nil, contentURL: String? = nil, associatedMediaArray: [EMEmbedClientItem] = [], isFamilyFriendly: Bool? = nil, embedURL: String? = nil, playerType: String? = nil, duration: String? = nil, faviconURL: String? = nil, aggregateRating: EMEmbedClientItem? = nil, offersArray: [EMEmbedClientItem] = [], audio: EMEmbedClientItem? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: EMEmbedClientItem? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
         self.URL = URL
         self.imageURL = imageURL
         self.name = name
@@ -2464,9 +2520,16 @@ public struct EMImageObjectV2: ProtoMessage {
         self.destinationURL = destinationURL
         self.fileFormat = fileFormat
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMImageObjectV2, rhs: EMImageObjectV2) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMWebPageV2: ProtoMessage {
+public final class EMWebPageV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case URL = 1
         case imageURL = 2
@@ -2514,26 +2577,26 @@ public struct EMWebPageV2: ProtoMessage {
     public var descriptionTruncated: String? = nil
     public var proxiedImage: EMThumbnail? = nil
     public var proxiedFaviconURL: String? = nil
-    public var authorArray: [/*EMEmbedClientItem*/String] = []
-    public var about: /*EMEmbedClientItem*/String? = nil
+    public var authorArray: [EMEmbedClientItem] = []
+    public var about: EMEmbedClientItem? = nil
     public var text: String? = nil
-    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var relatedImageArray: [EMEmbedClientItem] = []
     public var sourceName: String? = nil
     public var canonicalFountainStream: String? = nil
     public var unfilteredFountainStreamArray: [String] = []
     public var premodFountainStreamArray: [String] = []
     public var postmodFountainStreamArray: [String] = []
     public var inboxFountainStreamArray: [String] = []
-    public var contentLocation: /*EMEmbedClientItem*/String? = nil
-    public var associatedMediaArray: [/*EMEmbedClientItem*/String] = []
+    public var contentLocation: EMEmbedClientItem? = nil
+    public var associatedMediaArray: [EMEmbedClientItem] = []
     public var isFamilyFriendly: Bool? = nil
     public var faviconURL: String? = nil
-    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
-    public var offersArray: [/*EMEmbedClientItem*/String] = []
-    public var audio: /*EMEmbedClientItem*/String? = nil
+    public var aggregateRating: EMEmbedClientItem? = nil
+    public var offersArray: [EMEmbedClientItem] = []
+    public var audio: EMEmbedClientItem? = nil
     public var dateCreated: String? = nil
     public var dateModified: String? = nil
-    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var representativeImage: EMEmbedClientItem? = nil
     public var genre: String? = nil
     public var contentRating: String? = nil
     public var inLanguage: String? = nil
@@ -2545,7 +2608,7 @@ public struct EMWebPageV2: ProtoMessage {
     public var destinationURL: String? = nil
     public var fileFormat: String? = nil
     
-    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, text: String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: /*EMEmbedClientItem*/String? = nil, associatedMediaArray: [/*EMEmbedClientItem*/String] = [], isFamilyFriendly: Bool? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, offersArray: [/*EMEmbedClientItem*/String] = [], audio: /*EMEmbedClientItem*/String? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [EMEmbedClientItem] = [], about: EMEmbedClientItem? = nil, text: String? = nil, relatedImageArray: [EMEmbedClientItem] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: EMEmbedClientItem? = nil, associatedMediaArray: [EMEmbedClientItem] = [], isFamilyFriendly: Bool? = nil, faviconURL: String? = nil, aggregateRating: EMEmbedClientItem? = nil, offersArray: [EMEmbedClientItem] = [], audio: EMEmbedClientItem? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: EMEmbedClientItem? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, ampURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
         self.URL = URL
         self.imageURL = imageURL
         self.name = name
@@ -2584,9 +2647,16 @@ public struct EMWebPageV2: ProtoMessage {
         self.destinationURL = destinationURL
         self.fileFormat = fileFormat
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMWebPageV2, rhs: EMWebPageV2) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMPlusPhotoV2: ProtoMessage {
+public final class EMPlusPhotoV2: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case URL = 1
         case imageURL = 2
@@ -2656,17 +2726,17 @@ public struct EMPlusPhotoV2: ProtoMessage {
     public var descriptionTruncated: String? = nil
     public var proxiedImage: EMThumbnail? = nil
     public var proxiedFaviconURL: String? = nil
-    public var authorArray: [/*EMEmbedClientItem*/String] = []
-    public var about: /*EMEmbedClientItem*/String? = nil
+    public var authorArray: [EMEmbedClientItem] = []
+    public var about: EMEmbedClientItem? = nil
     public var text: String? = nil
-    public var relatedImageArray: [/*EMEmbedClientItem*/String] = []
+    public var relatedImageArray: [EMEmbedClientItem] = []
     public var sourceName: String? = nil
     public var canonicalFountainStream: String? = nil
     public var unfilteredFountainStreamArray: [String] = []
     public var premodFountainStreamArray: [String] = []
     public var postmodFountainStreamArray: [String] = []
     public var inboxFountainStreamArray: [String] = []
-    public var contentLocation: /*EMEmbedClientItem*/String? = nil
+    public var contentLocation: EMEmbedClientItem? = nil
     public var width: String? = nil
     public var height: String? = nil
     public var widthPx: Int32? = nil
@@ -2676,7 +2746,7 @@ public struct EMPlusPhotoV2: ProtoMessage {
     public var albumId: String? = nil
     public var photoId: String? = nil
     public var onepickMediaId: String? = nil
-    public var associatedMediaArray: [/*EMEmbedClientItem*/String] = []
+    public var associatedMediaArray: [EMEmbedClientItem] = []
     public var relativeURL: String? = nil
     public var streamIdArray: [String] = []
     public var isFamilyFriendly: Bool? = nil
@@ -2684,12 +2754,12 @@ public struct EMPlusPhotoV2: ProtoMessage {
     public var playerType: String? = nil
     public var duration: String? = nil
     public var faviconURL: String? = nil
-    public var aggregateRating: /*EMEmbedClientItem*/String? = nil
-    public var offersArray: [/*EMEmbedClientItem*/String] = []
-    public var audio: /*EMEmbedClientItem*/String? = nil
+    public var aggregateRating: EMEmbedClientItem? = nil
+    public var offersArray: [EMEmbedClientItem] = []
+    public var audio: EMEmbedClientItem? = nil
     public var dateCreated: String? = nil
     public var dateModified: String? = nil
-    public var representativeImage: /*EMEmbedClientItem*/String? = nil
+    public var representativeImage: EMEmbedClientItem? = nil
     public var genre: String? = nil
     public var contentRating: String? = nil
     public var inLanguage: String? = nil
@@ -2709,7 +2779,7 @@ public struct EMPlusPhotoV2: ProtoMessage {
     public var destinationURL: String? = nil
     public var fileFormat: String? = nil
     
-    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [/*EMEmbedClientItem*/String] = [], about: /*EMEmbedClientItem*/String? = nil, text: String? = nil, relatedImageArray: [/*EMEmbedClientItem*/String] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: /*EMEmbedClientItem*/String? = nil, width: String? = nil, height: String? = nil, widthPx: Int32? = nil, heightPx: Int32? = nil, contentURL: String? = nil, ownerObfuscatedId: String? = nil, albumId: String? = nil, photoId: String? = nil, onepickMediaId: String? = nil, associatedMediaArray: [/*EMEmbedClientItem*/String] = [], relativeURL: String? = nil, streamIdArray: [String] = [], isFamilyFriendly: Bool? = nil, embedURL: String? = nil, playerType: String? = nil, duration: String? = nil, faviconURL: String? = nil, aggregateRating: /*EMEmbedClientItem*/String? = nil, offersArray: [/*EMEmbedClientItem*/String] = [], audio: /*EMEmbedClientItem*/String? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: /*EMEmbedClientItem*/String? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, imageQuality: String? = nil, maxHeight: String? = nil, maxWidth: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, mediaKey: String? = nil, ampURL: String? = nil, originalMediaPlayerURL: String? = nil, originalMediaContainerURL: String? = nil, originalLightboxPhotoId: String? = nil, originalContentURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
+    public init(URL: String? = nil, imageURL: String? = nil, name: String? = nil, description_p: String? = nil, descriptionTruncated: String? = nil, proxiedImage: EMThumbnail? = nil, proxiedFaviconURL: String? = nil, authorArray: [EMEmbedClientItem] = [], about: EMEmbedClientItem? = nil, text: String? = nil, relatedImageArray: [EMEmbedClientItem] = [], sourceName: String? = nil, canonicalFountainStream: String? = nil, unfilteredFountainStreamArray: [String] = [], premodFountainStreamArray: [String] = [], postmodFountainStreamArray: [String] = [], inboxFountainStreamArray: [String] = [], contentLocation: EMEmbedClientItem? = nil, width: String? = nil, height: String? = nil, widthPx: Int32? = nil, heightPx: Int32? = nil, contentURL: String? = nil, ownerObfuscatedId: String? = nil, albumId: String? = nil, photoId: String? = nil, onepickMediaId: String? = nil, associatedMediaArray: [EMEmbedClientItem] = [], relativeURL: String? = nil, streamIdArray: [String] = [], isFamilyFriendly: Bool? = nil, embedURL: String? = nil, playerType: String? = nil, duration: String? = nil, faviconURL: String? = nil, aggregateRating: EMEmbedClientItem? = nil, offersArray: [EMEmbedClientItem] = [], audio: EMEmbedClientItem? = nil, dateCreated: String? = nil, dateModified: String? = nil, representativeImage: EMEmbedClientItem? = nil, genre: String? = nil, contentRating: String? = nil, inLanguage: String? = nil, datePublished: String? = nil, imageQuality: String? = nil, maxHeight: String? = nil, maxWidth: String? = nil, contentProfileName: String? = nil, contentProfileId: String? = nil, externalId: String? = nil, mediaKey: String? = nil, ampURL: String? = nil, originalMediaPlayerURL: String? = nil, originalMediaContainerURL: String? = nil, originalLightboxPhotoId: String? = nil, originalContentURL: String? = nil, destinationURL: String? = nil, fileFormat: String? = nil) {
         self.URL = URL
         self.imageURL = imageURL
         self.name = name
@@ -2770,9 +2840,16 @@ public struct EMPlusPhotoV2: ProtoMessage {
         self.destinationURL = destinationURL
         self.fileFormat = fileFormat
     }
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    public static func ==(lhs: EMPlusPhotoV2, rhs: EMPlusPhotoV2) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
 }
 
-public struct EMEmbedClientItem: ProtoMessage {
+public final class EMEmbedClientItem: ProtoMessage {
     public enum CodingKeys: Int, CodingKey {
         case typeArray = 1
         case id_p = 2
@@ -2821,50 +2898,12 @@ public struct EMEmbedClientItem: ProtoMessage {
         self.geoCoordinatesV2 = geoCoordinatesV2
         self.imageObjectV2 = imageObjectV2
     }
-}
-
-/* Swift recursive types holder. */
-public struct EMEmbedClientItem_EMImageObjectV2_Holder: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case typeArray = 1
-        case id_p = 2
-        case imageObjectV2 = 40265033
+    
+    public var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
     }
-    
-    public var typeArray: [EMItemType] = []
-    public var id_p: String? = nil
-    public var imageObjectV2: EMImageObjectV2? = nil
-    
-    public init(typeArray: [EMItemType] = [], id_p: String? = nil, imageObjectV2: EMImageObjectV2? = nil) {
-        self.typeArray = typeArray
-        self.id_p = id_p
-        self.imageObjectV2 = imageObjectV2
-    }
-}
-
-/* Swift recursive types holder. */
-public struct EMEmbedClientItem_EMGeoCoordinatesV2_Holder: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case geoCoordinatesV2 = 36736749
-    }
-    
-    public var geoCoordinatesV2: EMGeoCoordinatesV2? = nil
-    
-    public init(geoCoordinatesV2: EMGeoCoordinatesV2? = nil) {
-        self.geoCoordinatesV2 = geoCoordinatesV2
-    }
-}
-
-/* Swift recursive types holder. */
-public struct EMEmbedClientItem_EMPostalAddressV2_Holder: ProtoMessage {
-    public enum CodingKeys: Int, CodingKey {
-        case postalAddressV2 = 36003298
-    }
-    
-    public var postalAddressV2: EMPostalAddressV2? = nil
-    
-    public init(postalAddressV2: EMPostalAddressV2? = nil) {
-        self.postalAddressV2 = postalAddressV2
+    public static func ==(lhs: EMEmbedClientItem, rhs: EMEmbedClientItem) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
     }
 }
 
