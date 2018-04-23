@@ -100,8 +100,8 @@ public class IChatMessageEvent: IEvent, Message {
     public var content: Content {
         let raws = self.event.chatMessage?.messageContent?.attachmentArray ?? []
         if let attachment = raws[safe: 0] {
-            if attachment.embedItem!.typeArray.contains(.plusPhotoV2) {
-                if let url = attachment.embedItem?.plusPhotoV2?.URL {
+            if attachment.embedItem!.typeArray.contains(.plusPhoto) {
+                if let url = attachment.embedItem?.plusPhoto?.URL {
                     return .image(URL(string: url)!)
                 }
             } else if attachment.embedItem!.typeArray.contains(.plusAudioV2) {
@@ -148,10 +148,9 @@ public class IChatMessageEvent: IEvent, Message {
     public var attachments: [String] {
 		let raws = self.event.chatMessage?.messageContent?.attachmentArray ?? [Attachment]()
 		var attachments = [String]()
-		
 		for attachment in raws {
-			if attachment.embedItem!.typeArray.contains(.plusPhotoV2) { // PLUS_PHOTO
-				if let data = attachment.embedItem?.plusPhotoV2?.URL {
+			if attachment.embedItem!.typeArray.contains(.plusPhoto) { // PLUS_PHOTO
+				if let data = attachment.embedItem?.plusPhoto?.URL {
                     attachments.append(data)
 				}
 			} else if attachment.embedItem!.typeArray.contains(.plusAudioV2) { // VOICE_PHOTO

@@ -398,7 +398,6 @@ public class IConversation: ParrotServiceExtension.Conversation {
                                          eventContinuationToken: ClientEventContinuationToken(eventTimestamp: ts.toUTC()),
                                          /*includePresence*/deprecated8: true)
         self.client.execute(req) { res, err in
-            print(res, err)
             guard let res = res else { cb?([]); return }
             let convEvents = res.conversationState!.eventArray.map { IEvent.wrapEvent(self.client, event: $0) }
             self.readStates = res.conversationState!.conversation!.readStateArray
