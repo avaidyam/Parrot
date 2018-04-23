@@ -289,15 +289,12 @@ public class UserList: Directory {
         
         if let note = update.selfPresenceNotification {
             let user = (self.me as! User)
-            /*
-            if let state = note.richPresenceState?.statusMessage {
-                user.lastSeen = state == .desktopActive ? Date() : Date(timeIntervalSince1970: 0)
-            }
-            if let mood = note.moodState?.moodSetting?.moodMessage?.moodContent {
-                user.mood = mood.toText()
-            }
-            */
-            user.reachability = .desktop
+            
+            let q = note.presence?.lastSeen?.lastSeenTimestampUsec
+            user.lastSeen = q.flatMap(Date.init(UTC:)) ?? Date()
+            user.mood = note.richPresenceState?.statusMessage?.statusMessageArray
+                                .map { $0.toText() }.reduce("", +) ?? ""
+            user.reachability = note.presence?.toReachability() ?? .desktop
             
             NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
         } else if let note = update.presenceNotification {
@@ -307,15 +304,11 @@ public class UserList: Directory {
                     let pres = presence.presence
                     else { continue }
                 
-                if let usec = pres.lastSeen?.lastSeenTimestampUsec {
-                    user.lastSeen = Date(UTC: usec)
-                }
-                //if ??? {
-                    user.reachability = pres.toReachability()
-                //}
-                /*if let mood = pres.status.first?.moodContent {
-                    user.mood = mood.toText()
-                }*/
+                let q = pres.lastSeen?.lastSeenTimestampUsec
+                user.lastSeen = q.flatMap(Date.init(UTC:)) ?? Date()
+                user.mood = pres.statusMessage?.statusMessageArray
+                                    .map { $0.toText() }.reduce("", +) ?? ""
+                user.reachability = pres.toReachability()
                 
                 NotificationCenter.default.post(name: Notification.Person.DidChangePresence, object: user, userInfo: nil)
             }
