@@ -14,8 +14,8 @@ public class ExtendedTextView: NSTextView {
 	
 	// Apparently this property has been private on macOS since 10.7.
 	@IBInspectable
-	public var placeholderString: String? = nil
-	public var placeholderAttributedString: NSAttributedString? = nil
+	@objc public var placeholderString: String? = nil
+	@objc public var placeholderAttributedString: NSAttributedString? = nil
     
     public var providesContentSize: Bool = true {
         didSet {

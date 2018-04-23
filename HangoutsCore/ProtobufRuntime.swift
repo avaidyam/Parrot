@@ -66,17 +66,6 @@ public protocol ServiceResponse: ProtoMessage {
     var responseHeader: ClientResponseHeader? { get set }
 }
 
-
-/// An error that may occur during Service RPC transmission.
-public enum ServiceError: Error {
-    
-    /// The server returned an error (status code and description).
-    case server(ClientResponseStatus, String)
-    
-    /// An unknown error occurred during RPC transmission.
-    case unknown
-}
-
 //
 // Hashable Utils
 //

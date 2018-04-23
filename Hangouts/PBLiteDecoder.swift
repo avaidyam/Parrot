@@ -7,6 +7,7 @@ import Foundation
 //
 
 ///
+/// Note: performs string numeric casting on FixedWidthInteger types.
 public class PBLiteDecoder {
     
     ///
@@ -80,6 +81,33 @@ public class PBLiteDecoder {
         // MARK: PBLiteDecoder -> KeyedContainer -> Decoding
         //
         
+        func matchesType<T: Decodable>(_: T.Type, forKey key: Key) -> Bool {
+            guard let outerValue = self.content[key.value()], !(outerValue is NSNull) else {
+                print("\(key) was null!")
+                return false
+            }
+            guard let _ = outerValue as? T else {
+                print("\(key) was of type \(type(of: outerValue)) instead of \(T.self)")
+                return false
+            }
+            return true
+        }
+        
+        func matchesNumericType<T: Decodable & FixedWidthInteger>(_: T.Type, forKey key: Key) -> Bool {
+            guard let outerValue = self.content[key.value()], !(outerValue is NSNull) else {
+                print("NUMERIC: \(key) was null!")
+                return false
+            }
+            guard let _ = outerValue as? T else {
+                if let innerValue = outerValue as? String, let _ = T(innerValue) {
+                    print("NUMERIC: \(key) was of type \(type(of: outerValue)) instead of \(T.self)")
+                    return false
+                }
+                return false
+            }
+            return true
+        }
+        
         func decodeNil(forKey key: Key) throws -> Bool {
             if let outerValue = self.content[key.value()], (outerValue is NSNull) {
                 return true
@@ -87,13 +115,28 @@ public class PBLiteDecoder {
             return false
         }
         
-        func decodeValue<T: Decodable>(forKey key: Key) throws -> T {
+        func decodeNumeric<T: Decodable & FixedWidthInteger>(forKey key: Key) throws -> T {
             guard let outerValue = self.content[key.value()], !(outerValue is NSNull) else {
-                let desc = "Expected type \(T.self) but container stored nil."
+                let desc = "Expected type \(T.self) for \(key) but container stored nil."
                 throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             guard let value = outerValue as? T else {
-                let desc = "Expected type \(T.self) but container stored value \(outerValue)."
+                if let value2 = outerValue as? String, let value3 = T(value2) {
+                    return value3
+                }
+                let desc = "Expected type \(T.self) for \(key) but container stored value \(String(reflecting: outerValue))."
+                throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
+            }
+            return value
+        }
+        
+        func decodeValue<T: Decodable>(forKey key: Key) throws -> T {
+            guard let outerValue = self.content[key.value()], !(outerValue is NSNull) else {
+                let desc = "Expected type \(T.self) for \(key) but container stored nil."
+                throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
+            }
+            guard let value = outerValue as? T else {
+                let desc = "Expected type \(T.self) for \(key) but container stored value \(String(reflecting: outerValue))."
                 throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             return value
@@ -104,7 +147,7 @@ public class PBLiteDecoder {
                 if "\(type)".starts(with: "Array<") {
                     return ([] as! T)
                 }
-                let desc = "Expected type \(T.self) but container stored nil."
+                let desc = "Expected type \(T.self) for \(key) but container stored nil."
                 throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             return try T(from: DecoderContainer(owner: self.owner, codingPath: self.codingPath + [key], content: outerValue))
@@ -120,8 +163,7 @@ public class PBLiteDecoder {
                 throw DecodingError.keyNotFound(key, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             guard let inside = outerValue as? [Any] else {
-                let desc = "Expected type \(Array<Any>.self) but container stored value \(outerValue)."
-                print("\n\n", #line, #function, outerValue, "\n\n")
+                let desc = "Expected type \(Array<Any>.self) for \(key) but container stored value \(String(reflecting: outerValue))."
                 throw DecodingError.typeMismatch(Array<Any>.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             let container = KeyedContainer<NestedKey>(owner: self.owner, codingPath: self.codingPath + [key], content: inside)
@@ -135,8 +177,7 @@ public class PBLiteDecoder {
                 throw DecodingError.keyNotFound(key, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             guard let inside = outerValue as? [Any] else {
-                let desc = "Expected type \(Array<Any>.self) but container stored value \(outerValue)."
-                print("\n\n", #line, #function, outerValue, "\n\n")
+                let desc = "Expected type \(Array<Any>.self) for \(key) but container stored value \(String(reflecting: outerValue))."
                 throw DecodingError.typeMismatch(Array<Any>.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             let container = UnkeyedContainer(owner: self.owner, codingPath: self.codingPath + [key], content: inside)
@@ -223,8 +264,50 @@ public class PBLiteDecoder {
         // MARK: PBLiteDecoder -> UnkeyedContainer -> Decoding
         //
         
+        func matchesType<T: Decodable>(_: T.Type) -> Bool {
+            guard let count = self.count, count > 0 else {
+                return false
+            }
+            let outerValue = self.content[self.content.count - count]
+            guard let _ = outerValue as? T else {
+                return false
+            }
+            return true
+        }
+        
+        func matchesNumericType<T: Decodable & FixedWidthInteger>(_: T.Type) -> Bool {
+            guard let count = self.count, count > 0 else {
+                return false
+            }
+            let outerValue = self.content[self.content.count - count]
+            guard let _ = outerValue as? T else {
+                if let innerValue = outerValue as? String, let _ = T(innerValue) {
+                    return false
+                }
+                return false
+            }
+            return true
+        }
+        
         func decodeNil() throws -> Bool {
             return (self.count ?? 0) == 0
+        }
+        
+        func decodeNumeric<T: Decodable & FixedWidthInteger>() throws -> T {
+            guard let count = self.count, count > 0 else {
+                let desc = "Expected type \(T.self) but container had nothing left."
+                throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
+            }
+            let outerValue = self.content[self.content.count - count]
+            guard let value = outerValue as? T else {
+                if let value2 = outerValue as? String, let value3 = T(value2) {
+                    return value3
+                }
+                let desc = "Expected type \(T.self) but container stored value \(String(reflecting: outerValue))."
+                throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
+            }
+            self.count = count - 1 // decrement
+            return value
         }
         
         func decodeValue<T: Decodable>() throws -> T {
@@ -234,8 +317,7 @@ public class PBLiteDecoder {
             }
             let outerValue = self.content[self.content.count - count]
             guard let value = outerValue as? T else {
-                let desc = "Expected type \(T.self) but container stored value \(outerValue)."
-                print("\n\n", #line, #function, outerValue, "\n\n")
+                let desc = "Expected type \(T.self) but container stored value \(String(reflecting: outerValue))."
                 throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             self.count = count - 1 // decrement
@@ -263,8 +345,7 @@ public class PBLiteDecoder {
             }
             let outerValue = self.content[self.content.count - count]
             guard let inside = outerValue as? [Any] else {
-                let desc = "Expected type \(Array<Any>.self) but container stored value \(outerValue)."
-                print("\n\n", #line, #function, outerValue, "\n\n")
+                let desc = "Expected type \(Array<Any>.self) but container stored value \(String(reflecting: outerValue))."
                 throw DecodingError.typeMismatch(Array<Any>.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             
@@ -281,8 +362,7 @@ public class PBLiteDecoder {
             }
             let outerValue = self.content[self.content.count - count]
             guard let inside = outerValue as? [Any] else {
-                let desc = "Expected type \(Array<Any>.self) but container stored value \(outerValue)."
-                print("\n\n", #line, #function, outerValue, "\n\n")
+                let desc = "Expected type \(Array<Any>.self) but container stored value \(String(reflecting: outerValue))."
                 throw DecodingError.typeMismatch(Array<Any>.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: desc))
             }
             
@@ -337,6 +417,19 @@ public class PBLiteDecoder {
         // MARK: PBLiteDecoder -> SingleValueContainer -> Decoding
         //
         
+        func matchesType<T: Decodable>(_: T.Type) -> Bool {
+            guard case Optional<Any>.some(let val) = self.content, !(val is NSNull) else {
+                return false
+            }
+            guard let _ = self.content as? T else {
+                //if let innerValue = outerValue as? String, let _ = T(innerValue) {
+                //    return false
+                //}
+                return false
+            }
+            return true
+        }
+        
         func decodeNil() -> Bool {
             if case Optional<Any>.none = self.content {
                 return true
@@ -346,14 +439,28 @@ public class PBLiteDecoder {
             return true // uh...?
         }
         
+        func decodeNumeric<T: Decodable & FixedWidthInteger>() throws -> T {
+            guard case Optional<Any>.some(let val) = self.content, !(val is NSNull) else {
+                let desc = "Expected type \(T.self) but container stored nil."
+                throw DecodingError.valueNotFound(T.self, DecodingError.Context(codingPath: [], debugDescription: desc))
+            }
+            guard let value = self.content as? T else {
+                if let value2 = self.content as? String, let value3 = T(value2) {
+                    return value3
+                }
+                let desc = "Expected type \(T.self) but container stored value \(String(reflecting: self.content))."
+                throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: [], debugDescription: desc))
+            }
+            return value
+        }
+        
         func decodeValue<T: Decodable>() throws -> T {
             guard case Optional<Any>.some(let val) = self.content, !(val is NSNull) else {
                 let desc = "Expected type \(T.self) but container stored nil."
                 throw DecodingError.valueNotFound(T.self, DecodingError.Context(codingPath: [], debugDescription: desc))
             }
             guard let value = self.content as? T else {
-                let desc = "Expected type \(T.self) but container stored value \(self.content)."
-                print("\n\n", #line, #function, self.content, "\n\n")
+                let desc = "Expected type \(T.self) but container stored value \(String(reflecting: self.content))."
                 throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: [], debugDescription: desc))
             }
             return value
@@ -366,8 +473,7 @@ public class PBLiteDecoder {
                 throw DecodingError.valueNotFound(T.self, DecodingError.Context(codingPath: [], debugDescription: desc))
             }
             guard let value = self.content as? [Any] else {
-                let desc = "Expected type \(T.self) but container stored value \(self.content)."
-                print("\n\n", #line, #function, self.content, "\n\n")
+                let desc = "Expected type \(T.self) but container stored value \(String(reflecting: self.content))."
                 throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: [], debugDescription: desc))
             }
             return try T(from: DecoderContainer(owner: self.owner, codingPath: [PBLiteKey(intValue: 0)!], content: value))
@@ -471,18 +577,29 @@ fileprivate extension CodingKey {
 ///
 fileprivate protocol DecodingChildContainer {}
 
+// TODO: Type matching first before decodeIfPresent:
+//CodingKeys(stringValue: "phoneData", intValue: 7) was of type __NSArrayM instead of ClientPhoneData
+//CodingKeys(stringValue: "configurationBitType", intValue: 1) was of type __NSCFNumber instead of ClientConfigurationBitType
+
 fileprivate protocol DecoderDecodingChildContainer: Decoder, DecodingChildContainer {}
 fileprivate protocol KeyedDecodingChildContainer: KeyedDecodingContainerProtocol, DecodingChildContainer {
+    func matchesType<T: Decodable>(_: T.Type, forKey key: Key) -> Bool
+    func matchesNumericType<T: Decodable & FixedWidthInteger>(_: T.Type, forKey key: Key) -> Bool
     //func decodeNil(forKey key: Self.Key) throws -> Bool
     func decodeValue<T: Decodable>(forKey: Key) throws -> T
+    func decodeNumeric<T: Decodable & FixedWidthInteger>(forKey: Key) throws -> T
 }
 fileprivate protocol UnkeyedDecodingChildContainer: UnkeyedDecodingContainer, DecodingChildContainer {
+    func matchesType<T: Decodable>(_: T.Type) -> Bool
+    func matchesNumericType<T: Decodable & FixedWidthInteger>(_: T.Type) -> Bool
     //mutating func decodeNil() throws -> Bool
     mutating func decodeValue<T: Decodable>() throws -> T
+    mutating func decodeNumeric<T: Decodable & FixedWidthInteger>() throws -> T
 }
 fileprivate protocol SingleValueDecodingChildContainer: SingleValueDecodingContainer, DecodingChildContainer {
     //func decodeNil() -> Bool
     func decodeValue<T: Decodable>() throws -> T
+    func decodeNumeric<T: Decodable & FixedWidthInteger>() throws -> T
 }
 
 fileprivate extension KeyedDecodingChildContainer {
@@ -490,34 +607,34 @@ fileprivate extension KeyedDecodingChildContainer {
         return try decodeValue(forKey: key)
     }
     func decode(_ type: Int.Type, forKey key: Key) throws -> Int {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: Int8.Type, forKey key: Key) throws -> Int8 {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: Int16.Type, forKey key: Key) throws -> Int16 {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: Int32.Type, forKey key: Key) throws -> Int32 {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: Int64.Type, forKey key: Key) throws -> Int64 {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: UInt.Type, forKey key: Key) throws -> UInt {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: UInt8.Type, forKey key: Key) throws -> UInt8 {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: UInt16.Type, forKey key: Key) throws -> UInt16 {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: UInt32.Type, forKey key: Key) throws -> UInt32 {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: UInt64.Type, forKey key: Key) throws -> UInt64 {
-        return try decodeValue(forKey: key)
+        return try decodeNumeric(forKey: key)
     }
     func decode(_ type: Float.Type, forKey key: Key) throws -> Float {
         return try decodeValue(forKey: key)
@@ -528,6 +645,86 @@ fileprivate extension KeyedDecodingChildContainer {
     func decode(_ type: String.Type, forKey key: Key) throws -> String {
         return try decodeValue(forKey: key)
     }
+    
+    //
+    //
+    //
+    /*
+    func decodeIfPresent(_ type: Bool.Type, forKey key: Key) throws -> Bool? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesType(type, forKey: key) else { return nil }
+        return try decodeValue(forKey: key)
+    }
+    func decodeIfPresent(_ type: Int.Type, forKey key: Key) throws -> Int? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: Int8.Type, forKey key: Key) throws -> Int8? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: Int16.Type, forKey key: Key) throws -> Int16? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: Int32.Type, forKey key: Key) throws -> Int32? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: Int64.Type, forKey key: Key) throws -> Int64? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: UInt.Type, forKey key: Key) throws -> UInt? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: UInt8.Type, forKey key: Key) throws -> UInt8? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: UInt16.Type, forKey key: Key) throws -> UInt16? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: UInt32.Type, forKey key: Key) throws -> UInt32? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: UInt64.Type, forKey key: Key) throws -> UInt64? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesNumericType(type, forKey: key) else { return nil }
+        return try decodeNumeric(forKey: key)
+    }
+    func decodeIfPresent(_ type: Float.Type, forKey key: Key) throws -> Float? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesType(type, forKey: key) else { return nil }
+        return try decodeValue(forKey: key)
+    }
+    func decodeIfPresent(_ type: Double.Type, forKey key: Key) throws -> Double? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesType(type, forKey: key) else { return nil }
+        return try decodeValue(forKey: key)
+    }
+    func decodeIfPresent(_ type: String.Type, forKey key: Key) throws -> String? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesType(type, forKey: key) else { return nil }
+        return try decodeValue(forKey: key)
+    }
+    func decodeIfPresent<T: Decodable>(_ type: T.Type, forKey key: Key) throws -> T? {
+        guard try self.contains(key) && !self.decodeNil(forKey: key) else { return nil }
+        guard self.matchesType(type, forKey: key) else { return nil }
+        return try decodeValue(forKey: key)
+    }*/
 }
 
 fileprivate extension UnkeyedDecodingChildContainer {
@@ -536,43 +733,43 @@ fileprivate extension UnkeyedDecodingChildContainer {
     }
     
     mutating func decode(_ type: Int.Type) throws -> Int {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: Int8.Type) throws -> Int8 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: Int16.Type) throws -> Int16 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: Int32.Type) throws -> Int32 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: Int64.Type) throws -> Int64 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: UInt.Type) throws -> UInt {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: UInt8.Type) throws -> UInt8 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: UInt16.Type) throws -> UInt16 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: UInt32.Type) throws -> UInt32 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: UInt64.Type) throws -> UInt64 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     mutating func decode(_ type: Float.Type) throws -> Float {
@@ -586,6 +783,86 @@ fileprivate extension UnkeyedDecodingChildContainer {
     mutating func decode(_ type: String.Type) throws -> String {
         return try decodeValue()
     }
+    
+    //
+    //
+    //
+    /*
+    mutating func decodeIfPresent(_ type: Bool.Type) throws -> Bool? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: Int.Type) throws -> Int? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: Int8.Type) throws -> Int8? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: Int16.Type) throws -> Int16? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: Int32.Type) throws -> Int32? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: Int64.Type) throws -> Int64? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: UInt.Type) throws -> UInt? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: UInt8.Type) throws -> UInt8? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: UInt16.Type) throws -> UInt16? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: UInt32.Type) throws -> UInt32? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: UInt64.Type) throws -> UInt64? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesNumericType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: Float.Type) throws -> Float? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: Double.Type) throws -> Double? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent(_ type: String.Type) throws -> String? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesType(type) else { return nil }
+        return try decodeValue()
+    }
+    mutating func decodeIfPresent<T: Decodable>(_ type: T.Type) throws -> T? {
+        guard try !self.isAtEnd && !self.decodeNil() else { return nil }
+        guard self.matchesType(type) else { return nil }
+        return try decodeValue()
+    }*/
 }
 
 fileprivate extension SingleValueDecodingChildContainer {
@@ -594,43 +871,43 @@ fileprivate extension SingleValueDecodingChildContainer {
     }
     
     func decode(_ type: Int.Type) throws -> Int {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: Int8.Type) throws -> Int8 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: Int16.Type) throws -> Int16 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: Int32.Type) throws -> Int32 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: Int64.Type) throws -> Int64 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: UInt.Type) throws -> UInt {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: UInt8.Type) throws -> UInt8 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: UInt16.Type) throws -> UInt16 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: UInt32.Type) throws -> UInt32 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: UInt64.Type) throws -> UInt64 {
-        return try decodeValue()
+        return try decodeNumeric()
     }
     
     func decode(_ type: Float.Type) throws -> Float {

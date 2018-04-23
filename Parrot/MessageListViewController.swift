@@ -523,7 +523,9 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
                         self.collectionView.insertItems(at: Set(t))
                     }, completionHandler: { b in
                         self.updateInterpolation.animate(duration: 0.5)
-                        self.collectionView.scrollToItems(at: [self.collectionView.indexPathForLastItem()],
+                        let idx = self.collectionView.indexPathForLastItem()
+                        guard !(idx.item == 0 && idx.section == 0) else { return }
+                        self.collectionView.scrollToItems(at: [idx],
                                                           scrollPosition: [.bottom])
                     })
                 }

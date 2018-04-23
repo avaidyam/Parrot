@@ -5657,11 +5657,11 @@ public struct ClientEvent_ClientUserEventState: ProtoMessage {
     }
     
     public var userId: ClientParticipantId? = nil
-    public var clientGeneratedId: UInt64? = nil
+    public var clientGeneratedId: /*UInt64*/String? = nil
     public var notificationLevel: ClientNotificationLevel? = nil
     public var suggestions: ClientSuggestions? = nil
     
-    public init(userId: ClientParticipantId? = nil, clientGeneratedId: UInt64? = nil, notificationLevel: ClientNotificationLevel? = nil, suggestions: ClientSuggestions? = nil) {
+    public init(userId: ClientParticipantId? = nil, clientGeneratedId: /*UInt64*/String? = nil, notificationLevel: ClientNotificationLevel? = nil, suggestions: ClientSuggestions? = nil) {
         self.userId = userId
         self.clientGeneratedId = clientGeneratedId
         self.notificationLevel = notificationLevel
@@ -7181,14 +7181,14 @@ public struct ClientResponseHeader: ProtoMessage {
     public var errorDescription: String? = nil
     public var debugURL: String? = nil
     public var requestTraceId: UInt64? = nil
-    public var currentServerTime: UInt64? = nil
+    public var currentServerTime: /*UInt64*/String? = nil
     public var backoffDurationMillis: UInt64? = nil
     public var clientGeneratedRequestId: String? = nil
     public var localizedUserVisibleErrorMessage: String? = nil
     public var buildLabel: String? = nil
     public var changelistNumber: Int32? = nil
     
-    public init(status: ClientResponseStatus? = nil, errorDescription: String? = nil, debugURL: String? = nil, requestTraceId: UInt64? = nil, currentServerTime: UInt64? = nil, backoffDurationMillis: UInt64? = nil, clientGeneratedRequestId: String? = nil, localizedUserVisibleErrorMessage: String? = nil, buildLabel: String? = nil, changelistNumber: Int32? = nil) {
+    public init(status: ClientResponseStatus? = nil, errorDescription: String? = nil, debugURL: String? = nil, requestTraceId: UInt64? = nil, currentServerTime: /*UInt64*/String? = nil, backoffDurationMillis: UInt64? = nil, clientGeneratedRequestId: String? = nil, localizedUserVisibleErrorMessage: String? = nil, buildLabel: String? = nil, changelistNumber: Int32? = nil) {
         self.status = status
         self.errorDescription = errorDescription
         self.debugURL = debugURL

@@ -6,6 +6,16 @@ import class Mocha.Logger
 private let log = Logger(subsystem: "Hangouts.Client")
 internal let hangoutsCenter = NotificationCenter()
 
+/// An error that may occur during Service RPC transmission.
+public enum ServiceError: Error {
+    
+    /// The server returned an error (status code and description).
+    case server(Any, String)
+    
+    /// An unknown error occurred during RPC transmission.
+    case unknown
+}
+
 public final class Client: Service {
 	
 	// NotificationCenter notification and userInfo keys.

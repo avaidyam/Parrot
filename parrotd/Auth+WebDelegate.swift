@@ -84,3 +84,13 @@ internal class WebDelegate: NSObject, WebPolicyDelegate, WebResourceLoadDelegate
         }
     }
 }
+
+public extension String {
+    public func substring(between start: String, and to: String) -> String? {
+        return (range(of: start)?.upperBound).flatMap { startIdx in
+            (range(of: to, range: startIdx..<endIndex)?.lowerBound).map { endIdx in
+                String(self[startIdx..<endIdx])
+            }
+        }
+    }
+}

@@ -120,7 +120,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
             }
         }
         set {
-            let req = ClientRenameConversationRequest(deprecated2: self.id.id, newName: newValue,
+            let req = ClientRenameConversationRequest(/*conversationId*/deprecated2: self.id.id, newName: newValue,
                                                 eventRequestHeader: self.eventHeader(.renameConversation))
             self.client.execute(req) {_,_ in}
         }
@@ -297,7 +297,7 @@ public class IConversation: ParrotServiceExtension.Conversation {
         switch (self.conversation.type!) {
         case .group:
             //participantId: self?
-            let req = ClientRemoveUserRequest(deprecated2: self.id.id, eventRequestHeader: self.eventHeader(.removeUser))
+            let req = ClientRemoveUserRequest(/*conversationId*/deprecated2: self.id.id, eventRequestHeader: self.eventHeader(.removeUser))
             self.client.execute(req) {_,_ in}
         case .stickyOneToOne:
             //deleteUpperBoundTimestamp: <#T##UInt64?#>?
@@ -396,8 +396,9 @@ public class IConversation: ParrotServiceExtension.Conversation {
                                          includeEvents: true,
                                          maxEventsPerConversation: Int32(maxEvents),
                                          eventContinuationToken: ClientEventContinuationToken(eventTimestamp: ts.toUTC()),
-                                         deprecated8: true)
-        self.client.execute(req) { res, _ in
+                                         /*includePresence*/deprecated8: true)
+        self.client.execute(req) { res, err in
+            print(res, err)
             guard let res = res else { cb?([]); return }
             let convEvents = res.conversationState!.eventArray.map { IEvent.wrapEvent(self.client, event: $0) }
             self.readStates = res.conversationState!.conversation!.readStateArray
@@ -510,7 +511,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
                                          includeConversationMetadata: true,
                                          includeEvents: true,
                                          maxEventsPerConversation: Int32(maxEvents),
-                                         deprecated8: true)
+                                         /*includePresence*/deprecated8: true)
         self.client.execute(req) { res, err in
             guard let res = res else { cb(nil, err); return }
             
