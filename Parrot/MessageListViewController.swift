@@ -64,7 +64,7 @@ public enum MessagePromise: Message {
 }
 */
 
-public class MessageListViewController: NSViewController, WindowPresentable, TextInputHost, DroppableViewDelegate,
+public class MessageListViewController: NSViewController, TextInputHost, DroppableViewDelegate,
 NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
     
     /// The openConversations keeps track of all open conversations and when the
@@ -265,9 +265,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     /// The background image and colors update Subscription.
     private var colorsSub: Subscription? = nil
     
-    /// The window occlusion/focus update Subscription.
-    private var occlusionSub: Subscription? = nil
-    
     public var settings: ConversationSettings? {
         guard let conv = self.conversation else { return nil }
         return ConversationSettings(serviceIdentifier: conv.serviceIdentifier,
@@ -277,7 +274,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     deinit {
         NotificationCenter.default.removeObserver(self)
         self.colorsSub = nil
-        self.occlusionSub = nil
     }
     
     //
@@ -285,7 +281,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     
     public override func loadView() {
-        self.view = NSVisualEffectView()
+        self.view = NSView()
         self.view.add(subviews: self.scrollView, self.indicator, self.moduleView, self.textInputCell.view, self.dropZone) {
             self.view.sizeAnchors >= CGSize(width: 96, height: 128)
             self.view.centerAnchors == self.indicator.centerAnchors
@@ -302,19 +298,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }
     
-    public func prepare(window: NSWindow) {
-        window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
-        window.appearance = InterfaceStyle.current.appearance()
-        if let vev = window.titlebar.view as? NSVisualEffectView {
-            vev.material = .appearanceBased
-            vev.state = .active
-            vev.blendingMode = .withinWindow
-        }
-        window.titleVisibility = .hidden
-        //window.titlebarAppearsTransparent = true
-        window.installToolbar(self)
-    }
-    
     public override func viewDidLoad() {
         self.indicator.startAnimation(nil)
         self.scrollView.alphaValue = 0.0
@@ -322,11 +305,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public override func viewWillAppear() {
-        if let _ = self.view.window {
-            syncAutosaveTitle()
-            PopWindowAnimator.show(self.view.window!)
-        }
-        
         // Monitor changes to the view background and colors.
         self.colorsSub = AutoSubscription(kind: .conversationAppearanceUpdated) { _ in
             if let img = self.settings?.backgroundImage {
@@ -340,17 +318,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         // Set up dark/light notifications.
         self.visualSubscriptions = [
             Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
-                self.view.window?.crossfade()
-                self.view.window?.appearance = InterfaceStyle.current.appearance()
-                
                 // Reset cell colors too - this fixes a visual glitch.
                 self.collectionView.visibleItems().forEach {
                     guard let cell = $0 as? MessageCell else { return }
                     cell.setColors()
                 }
-            },
-            Settings.observe(\.vibrancyStyle, options: [.initial, .new]) { _, change in
-                (self.view as? NSVisualEffectView)?.state = VibrancyStyle.current.state()
             },
         ]
     }
@@ -464,25 +436,12 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     // MARK: Misc. Methods
     //
-	
-    /// Re-synchronizes the conversation name and identifier with the window.
-    /// Center by default, but load a saved frame if available, and autosave.
-    private func syncAutosaveTitle() {
-        self.title = self.conversation?.name ?? ""
-        let id = self.conversation?.identifier ?? "Messages"
-        self.identifier = NSUserInterfaceItemIdentifier(rawValue: id)
-        
-        self.view.window?.center()
-        self.view.window?.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: id))
-        self.view.window?.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: id))
-    }
     
 	var conversation: ParrotServiceExtension.Conversation? {
         didSet {
             NotificationCenter.default.removeObserver(self)
             
             self.settingsController.conversation = self.conversation
-            self.syncAutosaveTitle()
             self.invalidateRestorableState()
             //self._setToolbar()
             
@@ -663,12 +622,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     // Monitor changes to the window's occlusion state and map it to conversation focus.
     public func windowDidChangeOcclusionState(_ notification: Notification) {
         self.focusComponents.1 = self.view.window?.occlusionState.contains(.visible) ?? false
-    }
-    
-    public func windowShouldClose(_ sender: NSWindow) -> Bool {
-        guard self.view.window != nil else { return true }
-        ZoomWindowAnimator.hide(self.view.window!)
-        return false
     }
     
     public func windowWillClose(_ notification: Notification) {

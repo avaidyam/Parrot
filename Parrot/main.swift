@@ -1,5 +1,9 @@
-import Cocoa // stub:
+import Cocoa
 autoreleasepool {
-    NSApplication.shared.delegate = ParrotAppController()
-    NSApplication.shared.run()
+    var delegate: NSApplicationDelegate? = ParrotAppController()
+    withExtendedLifetime(delegate) {
+        NSApplication.shared.delegate = delegate
+        NSApplication.shared.run()
+    }
+    delegate = nil
 }

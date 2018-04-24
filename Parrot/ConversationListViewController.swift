@@ -16,7 +16,7 @@ import ParrotServiceExtension
 let sendQ = DispatchQueue(label: "com.avaidyam.Parrot.sendQ", qos: .userInteractive)
 let linkQ = DispatchQueue(label: "com.avaidyam.Parrot.linkQ", qos: .userInitiated)
 
-public class ConversationListViewController: NSViewController, WindowPresentable,
+public class ConversationListViewController: NSViewController,
 NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
     
     private lazy var collectionView: NSCollectionView = {
@@ -99,7 +99,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     
     public override func loadView() {
-        self.view = NSVisualEffectView()
+        self.view = NSView()
         self.view.add(subviews: self.scrollView, self.indicator) {
             self.view.sizeAnchors >= CGSize(width: 128, height: 128)
             self.view.centerAnchors == self.indicator.centerAnchors
@@ -119,19 +119,6 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     deinit {
         NotificationCenter.default.removeObserver(self)
         self.childrenSub = nil
-    }
-    
-    public func prepare(window: NSWindow) {
-        window.styleMask = [window.styleMask, .unifiedTitleAndToolbar, .fullSizeContentView]
-        window.appearance = InterfaceStyle.current.appearance()
-        if let vev = window.titlebar.view as? NSVisualEffectView {
-            vev.material = .appearanceBased
-            vev.state = .active
-            vev.blendingMode = .withinWindow
-        }
-        window.titleVisibility = .hidden
-        window.installToolbar(self)
-        window.addTitlebarAccessoryViewController(LargeTypeTitleController(title: self.title))
     }
     
     public override func viewDidLoad() {
@@ -161,45 +148,11 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     public override func viewWillAppear() {
-        if self.view.window != nil {
-            syncAutosaveTitle()
-            PopWindowAnimator.show(self.view.window!)
-        }
-        
         //let frame = self.scrollView.layer!.frame
         //self.scrollView.layer!.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         //self.scrollView.layer!.position = CGPoint(x: frame.midX, y: frame.midY)
         self.scrollView.alphaValue = 0.0
         self.indicator.startAnimation()
-        
-        self.visualSubscriptions = [
-            Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, change in
-                self.view.window?.crossfade()
-                self.view.window?.appearance = InterfaceStyle.current.appearance()
-            },
-            Settings.observe(\.vibrancyStyle, options: [.initial, .new]) { _, change in
-                (self.view as? NSVisualEffectView)?.state = VibrancyStyle.current.state()
-            },
-        ]
-    }
-    private var visualSubscriptions: [NSKeyValueObservation] = []
-    
-    /// If we need to close, make sure we clean up after ourselves, instead of deinit.
-    public override func viewWillDisappear() {
-        self.visualSubscriptions = []
-    }
-    
-    /// Re-synchronizes the conversation name and identifier with the window.
-    /// Center by default, but load a saved frame if available, and autosave.
-    private func syncAutosaveTitle() {
-        self.view.window?.center()
-        self.view.window?.setFrameUsingName(NSWindow.FrameAutosaveName(rawValue: "Conversations"))
-        self.view.window?.setFrameAutosaveName(NSWindow.FrameAutosaveName(rawValue: "Conversations"))
-    }
-    public func windowShouldClose(_ sender: NSWindow) -> Bool {
-        guard self.view.window != nil else { return true }
-        PopWindowAnimator.hide(self.view.window!)
-        return false
     }
     
     public override func viewWillLayout() {

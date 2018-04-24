@@ -107,6 +107,13 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
             self.photoView.edgeAnchors <= self.badgeLabel.edgeAnchors
         }
         
+        self.photoView.addTrackingArea(NSTrackingArea(rect: self.photoView.bounds,
+                                                      options: [.activeAlways, .mouseEnteredAndExited, .inVisibleRect],
+                                                      owner: self, userInfo: ["item": "photo"]))
+        self.view.addTrackingArea(NSTrackingArea(rect: self.view.bounds,
+                                                 options: [.activeAlways, .mouseEnteredAndExited, .inVisibleRect],
+                                                 owner: self, userInfo: ["item": "cell"]))
+        
         // Set up dark/light notifications.
         self.visualSubscriptions = [
             Settings.observe(\.effectiveInterfaceStyle, options: [.initial, .new]) { _, _ in
@@ -219,15 +226,6 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
         //                    height: p.frame.width / 2).insetBy(dx: 4.0, dy: 4.0)
         //p.layer!.cornerRadius = p.frame.width / 2.0
         //b.cornerRadius = b.frame.width / 2.0
-        
-        self.view.trackingAreas.forEach {
-            self.view.removeTrackingArea($0)
-        }
-        
-        let trackingArea = NSTrackingArea(rect: self.photoView.frame,
-                                          options: [.activeAlways, .mouseEnteredAndExited],
-                                          owner: self, userInfo: nil)
-        self.view.addTrackingArea(trackingArea)
 	}
     
     public override func viewDidAppear() {
@@ -244,41 +242,86 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
     }
     
     public override func mouseEntered(with event: NSEvent) {
-        guard let conversation = self.representedObject as? Conversation else { return }
-        if conversation.participants.count > 2 { // group!
-            guard let vc = GroupIndicatorToolTipController.popover.contentViewController
-                as? GroupIndicatorToolTipController else { return }
+        guard let trackingArea = event.trackingArea else { return }
+        
+        if let item = trackingArea.userInfo?["item"] as? String, item == "cell" {
             
-            vc.images = conversation.participants.filter { !$0.me }.map { $0.image }
-            GroupIndicatorToolTipController.popover.show(relativeTo: self.photoView.bounds,
-                                                         of: self.photoView, preferredEdge: .minY)
-        } else {
-            guard   let vc = PersonIndicatorToolTipController.popover.contentViewController
-                             as? PersonIndicatorToolTipController,
+            let v = CATransaction.disableActions()
+            CATransaction.setDisableActions(false)
+            let layer = self.collectionView?.hoverLayer
+            layer?.frame = self.view.bounds.insetBy(dx: 10, dy: 10)
+            layer?.opacity = 0.5
+            CATransaction.setDisableActions(v)
+            
+        } else if let item = trackingArea.userInfo?["item"] as? String, item == "photo" {
+            guard let conversation = self.representedObject as? Conversation else { return }
+            if conversation.participants.count > 2 { // group!
+                guard let vc = GroupIndicatorToolTipController.popover.contentViewController
+                    as? GroupIndicatorToolTipController else { return }
+                
+                vc.images = conversation.participants.filter { !$0.me }.map { $0.image }
+                GroupIndicatorToolTipController.popover.show(relativeTo: self.photoView.bounds,
+                                                             of: self.photoView, preferredEdge: .minY)
+            } else {
+                guard   let vc = PersonIndicatorToolTipController.popover.contentViewController
+                    as? PersonIndicatorToolTipController,
                     let firstParticipant = (conversation.participants.filter { !$0.me }.first)
-            else { return }
-            
-            var prefix = ""
-            switch firstParticipant.reachability {
-            case .unavailable: break
-            case .phone: prefix = "📱  "
-            case .tablet: prefix = "📱  " //💻
-            case .desktop: prefix = "🖥  "
+                    else { return }
+                
+                var prefix = ""
+                switch firstParticipant.reachability {
+                case .unavailable: break
+                case .phone: prefix = "📱  "
+                case .tablet: prefix = "📱  " //💻
+                case .desktop: prefix = "🖥  "
+                }
+                
+                _ = vc.view // loadView()
+                vc.text?.stringValue = prefix + firstParticipant.fullName
+                PersonIndicatorToolTipController.popover.show(relativeTo: self.photoView.bounds,
+                                                              of: self.photoView, preferredEdge: .minY)
             }
-            
-            _ = vc.view // loadView()
-            vc.text?.stringValue = prefix + firstParticipant.fullName
-            PersonIndicatorToolTipController.popover.show(relativeTo: self.photoView.bounds,
-                                                          of: self.photoView, preferredEdge: .minY)
         }
     }
     
     public override func mouseExited(with event: NSEvent) {
-        guard let conversation = self.representedObject as? Conversation else { return }
-        if conversation.participants.count > 2 { // group!
-            GroupIndicatorToolTipController.popover.performClose(nil)
-        } else {
-            PersonIndicatorToolTipController.popover.performClose(nil)
+        guard let trackingArea = event.trackingArea else { return }
+        
+        if let item = trackingArea.userInfo?["item"] as? String, item == "cell" {
+            
+            let v = CATransaction.disableActions()
+            CATransaction.setDisableActions(false)
+            let layer = self.collectionView?.hoverLayer
+            layer?.frame = self.view.bounds.insetBy(dx: 10, dy: 10)
+            layer?.opacity = 0.0
+            CATransaction.setDisableActions(v)
+            
+        } else if let item = trackingArea.userInfo?["item"] as? String, item == "photo" {
+            guard let conversation = self.representedObject as? Conversation else { return }
+            if conversation.participants.count > 2 { // group!
+                GroupIndicatorToolTipController.popover.performClose(nil)
+            } else {
+                PersonIndicatorToolTipController.popover.performClose(nil)
+            }
         }
+    }
+}
+
+
+public extension NSCollectionView {
+    private static var hoverProp = AssociatedProperty<NSCollectionView, CALayer>(.strong)
+    @nonobjc fileprivate var hoverLayer: CALayer? {
+        get { return NSCollectionView.hoverProp[self, creating: _newHoverLayer()] }
+        set { NSCollectionView.hoverProp[self] = newValue }
+    }
+    
+    private func _newHoverLayer() -> CALayer {
+        let c = CALayer()
+        c.backgroundColor = .black
+        c.opacity = 0.0
+        c.cornerRadius = 5.0
+        c.zPosition = 200
+        self.layer?.addSublayer(c)
+        return c
     }
 }

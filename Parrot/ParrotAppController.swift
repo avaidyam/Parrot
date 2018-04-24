@@ -95,10 +95,7 @@ public class ParrotAppController: NSApplicationController {
     /// This won't be initialized unless `Settings.prefersShoeboxAppStyle` = true.
     private lazy var dualController: ParrotWindowController = {
         let sp = ParrotWindowController()
-        let item = NSSplitViewItem(sidebarWithViewController: self.conversationsController)
-        item.isSpringLoaded = true
-        item.collapseBehavior = .preferResizingSiblingsWithFixedSplitView
-        sp.addSplitViewItem(item)
+        sp.addViewController(self.conversationsController)
         return sp
     }()
     
@@ -106,10 +103,7 @@ public class ParrotAppController: NSApplicationController {
     /// This won't be initialized unless `Settings.prefersShoeboxAppStyle` = false.
     private lazy var singleController: ParrotWindowController = {
         let sp = ParrotWindowController()
-        let item = NSSplitViewItem(sidebarWithViewController: self.conversationsController)
-        item.isSpringLoaded = true
-        item.collapseBehavior = .preferResizingSiblingsWithFixedSplitView
-        sp.addSplitViewItem(item)
+        sp.addViewController(self.conversationsController)
         return sp
     }()
     
@@ -347,7 +341,7 @@ public extension ParrotAppController {
                 NSMenuItem(title: "Copy", action: "copy:", keyEquivalent: "c", modifierMask: [.command]),
                 NSMenuItem(title: "Paste", action: "paste:", keyEquivalent: "v", modifierMask: [.command]),
                 NSMenuItem(title: "Paste and Match Style", action: "pasteAsPlainText:", keyEquivalent: "V", modifierMask: [.command, .option]),
-                NSMenuItem(title: "Delete", action: "delete:"),
+                NSMenuItem(title: "Delete", action: "delete:", keyEquivalent: "\u{8}"/*backspace*/),
                 NSMenuItem(title: "Select All", action: "selectAll:", keyEquivalent: "a", modifierMask: [.command]),
                 NSMenuItem.separator(),
                 NSMenuItem(title: "Find", [
