@@ -9,7 +9,6 @@ import class Hangouts.Client // required for Client.init(configuration:)
 //severity: Logger.Severity(rawValue: Process.arguments["log_level"]) ?? .verbose
 internal let log = Logger(subsystem: "Parrot.Global")
 
-@NSApplicationMain
 public class ParrotAppController: NSApplicationController {
     
     /// An easy accessor for the current `ParrotAppController`.
@@ -62,7 +61,7 @@ public class ParrotAppController: NSApplicationController {
         menu.addItem(title: "Open Conversations") {
             log.info("Open Conversations")
             DispatchQueue.main.async {
-                self.mainController.presentAsWindow()
+                self.mainController.showWindow(nil)
             }
         }
         menu.addItem(withTitle: "Log Out...",
@@ -92,10 +91,21 @@ public class ParrotAppController: NSApplicationController {
         DirectoryListViewController()
     }()
     
-    /// Lazy-init for the dual conversations+directory NSViewController.
+    /// Lazy-init for the dual conversations+directory ParrotWindowController.
     /// This won't be initialized unless `Settings.prefersShoeboxAppStyle` = true.
-    private lazy var dualController: NSSplitViewController = {
-        let sp = SplitWindowController()
+    private lazy var dualController: ParrotWindowController = {
+        let sp = ParrotWindowController()
+        let item = NSSplitViewItem(sidebarWithViewController: self.conversationsController)
+        item.isSpringLoaded = true
+        item.collapseBehavior = .preferResizingSiblingsWithFixedSplitView
+        sp.addSplitViewItem(item)
+        return sp
+    }()
+    
+    /// Lazy-init for the single conversations+directory ParrotWindowController.
+    /// This won't be initialized unless `Settings.prefersShoeboxAppStyle` = false.
+    private lazy var singleController: ParrotWindowController = {
+        let sp = ParrotWindowController()
         let item = NSSplitViewItem(sidebarWithViewController: self.conversationsController)
         item.isSpringLoaded = true
         item.collapseBehavior = .preferResizingSiblingsWithFixedSplitView
@@ -109,11 +119,11 @@ public class ParrotAppController: NSApplicationController {
     }()
     
     /// Depending on `Settings.prefersShoeboxAppStyle`, we return the correct UI.
-    private var mainController: NSViewController {
+    private var mainController: NSWindowController {
         if self._prefersShoeboxAppStyle {
             return self.dualController
         } else {
-            return self.conversationsController
+            return self.singleController
         }
     }
 	
@@ -121,6 +131,7 @@ public class ParrotAppController: NSApplicationController {
 	public func applicationWillFinishLaunching(_ notification: Notification) {
         log.info("Initializing Parrot...")
         
+        ParrotAppController.configureDefaultAppMenus()
         ToolTipManager.modernize()
         Logger.globalChannels = [self.serverChannel]
         Analytics.sessionTrackingIdentifier = "UA-63931980-2"
@@ -156,7 +167,7 @@ public class ParrotAppController: NSApplicationController {
         
         // Show main window.
         DispatchQueue.main.async {
-            self.mainController.presentAsWindow()
+            self.mainController.showWindow(nil)
             let c = ServiceRegistry.services.first!.value
             
             // FIXME: If an old opened conversation isn't in the recents, it won't open!
@@ -213,7 +224,7 @@ public class ParrotAppController: NSApplicationController {
     
     /// If the Conversations window is closed, tapping the dock icon will reopen it.
     public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        self.mainController.presentAsWindow()
+        self.mainController.showWindow(nil)
 		return true
 	}
     
@@ -242,15 +253,18 @@ public class ParrotAppController: NSApplicationController {
 	func applicationDockMenu(_ sender: NSApplication) -> NSMenu? {
 		return self.dockMenu
 	}
+}
+
+public extension ParrotAppController {
     
-    /// Right clicking the status item causes the app to close; left click causes it to become visible.
-    @objc func showConversationWindow(_ sender: NSStatusBarButton?) {
-        if NSApp.currentEvent!.type == NSEvent.EventType.rightMouseUp {
-            NSApp.terminate(self)
-        } else {
-            self.mainController.presentAsWindow()
-            NSApp.activate(ignoringOtherApps: true)
-        }
+    
+    //
+    // Menu Actions
+    //
+    
+    
+    @objc func sendFeedback(_ sender: Any?) {
+        NSWorkspace.shared.open(URL(string: .feedbackURL)!)
     }
     
     @objc func showPreferences(_ sender: Any?) {
@@ -259,19 +273,204 @@ public class ParrotAppController: NSApplicationController {
     }
     
     @objc func showConversations(_ sender: Any?) {
-        self.mainController.presentAsWindow()
+        self.mainController.showWindow(nil)
     }
     
     @objc func showDirectory(_ sender: Any?) {
         self.directoryController.presentAsWindow()
     }
     
-	@objc func logoutSelected(_ sender: AnyObject) {
+	@objc func logoutSelected(_ sender: Any?) {
         try! server.sync(LogOutInvocation.self)
         NSApp.terminate(self)
 	}
-	
-	@objc func feedback(_ sender: AnyObject?) {
-        NSWorkspace.shared.open(URL(string: .feedbackURL)!)
+    
+    /// Right clicking the status item causes the app to close; left click causes it to become visible.
+    @objc func showConversationWindow(_ sender: NSStatusBarButton?) {
+        if NSApp.currentEvent!.type == NSEvent.EventType.rightMouseUp {
+            NSApp.terminate(self)
+        } else {
+            self.mainController.showWindow(nil)
+            NSApp.activate(ignoringOtherApps: true)
+        }
+    }
+    
+    
+    //
+    // Default Apple Menu
+    //
+    
+    
+    /// Configures a default menu as provided by Interface Builder.
+    public static func configureDefaultAppMenus() {
+        let appName: NSString = Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? NSString ?? "App"
+        let appMenu = NSMenuItem(title: "", [
+            NSMenuItem(title: "\(appName)", [
+                NSMenuItem(title: "About \(appName)", action: "orderFrontStandardAboutPanel:"),
+                NSMenuItem(title: "Send Feedback…", action: "sendFeedback:"),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Preferences…", action: "showPreferences:", keyEquivalent: ",", modifierMask: [.command]),
+                NSMenuItem(title: "Accounts…", isEnabled: false),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Add Account", isEnabled: false),
+                NSMenuItem(title: "Logout", action: "logoutSelected:"),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Services", []),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Hide \(appName)", action: "hide:", keyEquivalent: "h", modifierMask: [.command]),
+                NSMenuItem(title: "Hide Others", action: "hideOtherApplications:", keyEquivalent: "h", modifierMask: [.command, .option]),
+                NSMenuItem(title: "Show All", action: "unhideAllApplications:"),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Quit \(appName)", action: "terminate:", keyEquivalent: "q", modifierMask: [.command]),
+            ]),
+            NSMenuItem(title: "File", [
+                NSMenuItem(title: "New", action: "newDocument:", keyEquivalent: "n", modifierMask: [.command]),
+                NSMenuItem(title: "Open…", action: "openDocument:", keyEquivalent: "o", modifierMask: [.command]),
+                NSMenuItem(title: "Open Recent", [
+                    NSMenuItem(title: "Clear Menu", action: "clearRecentDocuments:", modifierMask: [.command]),
+                ]),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Close", action: "performClose:", keyEquivalent: "w", modifierMask: [.command]),
+                NSMenuItem(title: "Close All", target: NSApplication.shared, action: "closeAll:", keyEquivalent: "w", modifierMask: [.command, .option]),
+                NSMenuItem(title: "Save…", action: "saveDocument:", keyEquivalent: "s", modifierMask: [.command]),
+                NSMenuItem(title: "Save As…", action: "saveDocumentAs:", keyEquivalent: "S", modifierMask: [.command]),
+                NSMenuItem(title: "Revert to Saved", action: "revertDocumentToSaved:", keyEquivalent: "r", modifierMask: [.command]),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Page Setup…", action: "runPageLayout:", keyEquivalent: "P", modifierMask: [.command, .shift]),
+                NSMenuItem(title: "Print…", action: "print:", keyEquivalent: "p", modifierMask: [.command]),
+            ]),
+            NSMenuItem(title: "Edit", [
+                NSMenuItem(title: "Undo", action: "undo:", keyEquivalent: "z", modifierMask: [.command]),
+                NSMenuItem(title: "Redo", action: "redo:", keyEquivalent: "Z", modifierMask: [.command]),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Cut", action: "cut:", keyEquivalent: "x", modifierMask: [.command]),
+                NSMenuItem(title: "Copy", action: "copy:", keyEquivalent: "c", modifierMask: [.command]),
+                NSMenuItem(title: "Paste", action: "paste:", keyEquivalent: "v", modifierMask: [.command]),
+                NSMenuItem(title: "Paste and Match Style", action: "pasteAsPlainText:", keyEquivalent: "V", modifierMask: [.command, .option]),
+                NSMenuItem(title: "Delete", action: "delete:"),
+                NSMenuItem(title: "Select All", action: "selectAll:", keyEquivalent: "a", modifierMask: [.command]),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Find", [
+                    NSMenuItem(title: "Find…", action: "performFindPanelAction:", keyEquivalent: "f", modifierMask: [.command]),
+                    NSMenuItem(title: "Find and Replace…", action: "performFindPanelAction:", keyEquivalent: "f", modifierMask: [.command, .option]),
+                    NSMenuItem(title: "Find Next", action: "performFindPanelAction:", keyEquivalent: "g", modifierMask: [.command]),
+                    NSMenuItem(title: "Find Previous", action: "performFindPanelAction:", keyEquivalent: "G", modifierMask: [.command]),
+                    NSMenuItem(title: "Use Selection for Find", action: "performFindPanelAction:", keyEquivalent: "e", modifierMask: [.command]),
+                    NSMenuItem(title: "Jump to Selection", action: "centerSelectionInVisibleArea:", keyEquivalent: "j", modifierMask: [.command]),
+                ]),
+                NSMenuItem(title: "Spelling and Grammar", [
+                    NSMenuItem(title: "Show Spelling and Grammar", action: "showGuessPanel:", keyEquivalent: ":", modifierMask: [.command]),
+                    NSMenuItem(title: "Check Document Now", action: "checkSpelling:", keyEquivalent: ";", modifierMask: [.command]),
+                    NSMenuItem.separator(),
+                    NSMenuItem(title: "Check Spelling While Typing", action: "toggleContinuousSpellChecking:"),
+                    NSMenuItem(title: "Check Grammar With Spelling", action: "toggleGrammarChecking:"),
+                    NSMenuItem(title: "Correct Spelling Automatically", action: "toggleAutomaticSpellingCorrection:"),
+                ]),
+                NSMenuItem(title: "Substitutions", [
+                    NSMenuItem(title: "Show Substitutions", action: "orderFrontSubstitutionsPanel:"),
+                    NSMenuItem.separator(),
+                    NSMenuItem(title: "Smart Copy/Paste", action: "toggleSmartInsertDelete:"),
+                    NSMenuItem(title: "Smart Quotes", action: "toggleAutomaticQuoteSubstitution:"),
+                    NSMenuItem(title: "Smart Dashes", action: "toggleAutomaticDashSubstitution:"),
+                    NSMenuItem(title: "Smart Links", action: "toggleAutomaticLinkDetection:"),
+                    NSMenuItem(title: "Data Detectors", action: "toggleAutomaticDataDetection:"),
+                    NSMenuItem(title: "Text Replacement", action: "toggleAutomaticTextReplacement:"),
+                ]),
+                NSMenuItem(title: "Transformations", [
+                    NSMenuItem(title: "Make Upper Case", action: "uppercaseWord:"),
+                    NSMenuItem(title: "Make Lower Case", action: "lowercaseWord:"),
+                    NSMenuItem(title: "Capitalize", action: "capitalizeWord:"),
+                ]),
+                NSMenuItem(title: "Speech", [
+                    NSMenuItem(title: "Start Speaking", action: "startSpeaking:"),
+                    NSMenuItem(title: "Stop Speaking", action: "stopSpeaking:"),
+                ]),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Start Dictation…", target: NSApplication.shared, action: "startDictation:", modifierMask: [.command]),
+                NSMenuItem(title: "Emoji & Symbols", action: "orderFrontCharacterPalette:", keyEquivalent: " ", modifierMask: [.command, .control]),
+            ]),
+            NSMenuItem(title: "Format", [
+                NSMenuItem(title: "Font", [
+                    NSMenuItem(title: "Show Fonts", target: NSFontManager.shared, action: "orderFrontFontPanel:", keyEquivalent: "t", modifierMask: [.command]),
+                    NSMenuItem(title: "Bold", target: NSFontManager.shared, action: "addFontTrait:", keyEquivalent: "b", modifierMask: [.command]),
+                    NSMenuItem(title: "Italic", target: NSFontManager.shared, action: "addFontTrait:", keyEquivalent: "i", modifierMask: [.command]),
+                    NSMenuItem(title: "Underline", action: "underline:", keyEquivalent: "u", modifierMask: [.command]),
+                    NSMenuItem.separator(),
+                    NSMenuItem(title: "Bigger", target: NSFontManager.shared, action: "modifyFont:", keyEquivalent: "+", modifierMask: [.command]),
+                    NSMenuItem(title: "Smaller", target: NSFontManager.shared, action: "modifyFont:", keyEquivalent: "-", modifierMask: [.command]),
+                    NSMenuItem.separator(),
+                    NSMenuItem(title: "Kern", [
+                        NSMenuItem(title: "Use Default", action: "useStandardKerning:"),
+                        NSMenuItem(title: "Use None", action: "turnOffKerning:"),
+                        NSMenuItem(title: "Tighten", action: "tightenKerning:"),
+                        NSMenuItem(title: "Loosen", action: "loosenKerning:"),
+                    ]),
+                    NSMenuItem(title: "Ligatures", [
+                        NSMenuItem(title: "Use Default", action: "useStandardLigatures:"),
+                        NSMenuItem(title: "Use None", action: "turnOffLigatures:"),
+                        NSMenuItem(title: "Use All", action: "useAllLigatures:"),
+                    ]),
+                    NSMenuItem(title: "Baseline", [
+                        NSMenuItem(title: "Use Default", action: "unscript:"),
+                        NSMenuItem(title: "Superscript", action: "superscript:"),
+                        NSMenuItem(title: "Subscript", action: "subscript:"),
+                        NSMenuItem(title: "Raise", action: "raiseBaseline:"),
+                        NSMenuItem(title: "Lower", action: "lowerBaseline:"),
+                    ]),
+                    NSMenuItem.separator(),
+                    NSMenuItem(title: "Show Colors", action: "orderFrontColorPanel:", keyEquivalent: "C", modifierMask: [.command]),
+                    NSMenuItem.separator(),
+                    NSMenuItem(title: "Copy Style", action: "copyFont:", keyEquivalent: "c", modifierMask: [.command, .option]),
+                    NSMenuItem(title: "Paste Style", action: "pasteFont:", keyEquivalent: "v", modifierMask: [.command, .option]),
+                ]),
+                NSMenuItem(title: "Text", [
+                    NSMenuItem(title: "Align Left", action: "alignLeft:", keyEquivalent: "{", modifierMask: [.command]),
+                    NSMenuItem(title: "Center", action: "alignCenter:", keyEquivalent: "|", modifierMask: [.command]),
+                    NSMenuItem(title: "Justify", action: "alignJustified:"),
+                    NSMenuItem(title: "Align Right", action: "alignRight:", keyEquivalent: "}", modifierMask: [.command]),
+                    NSMenuItem.separator(),
+                    NSMenuItem(title: "Writing Direction", [
+                        NSMenuItem(title: "Paragraph"),
+                        NSMenuItem(title: "\tDefault", action: "makeBaseWritingDirectionNatural:"),
+                        NSMenuItem(title: "\tLeft to Right", action: "makeBaseWritingDirectionLeftToRight:"),
+                        NSMenuItem(title: "\tRight to Left", action: "makeBaseWritingDirectionRightToLeft:"),
+                        NSMenuItem.separator(),
+                        NSMenuItem(title: "Selection"),
+                        NSMenuItem(title: "\tDefault", action: "makeTextWritingDirectionNatural:"),
+                        NSMenuItem(title: "\tLeft to Right", action: "makeTextWritingDirectionLeftToRight:"),
+                        NSMenuItem(title: "\tRight to Left", action: "makeTextWritingDirectionRightToLeft:"),
+                    ]),
+                    NSMenuItem.separator(),
+                    NSMenuItem(title: "Show Ruler", action: "toggleRuler:"),
+                    NSMenuItem(title: "Copy Ruler", action: "copyRuler:", keyEquivalent: "c", modifierMask: [.command, .control]),
+                    NSMenuItem(title: "Paste Ruler", action: "pasteRuler:", keyEquivalent: "v", modifierMask: [.command, .control]),
+                ]),
+            ]),
+            NSMenuItem(title: "View", [
+                NSMenuItem(title: "Show Toolbar", action: "toggleToolbarShown:", keyEquivalent: "t", modifierMask: [.command, .option]),
+                NSMenuItem(title: "Customize Toolbar…", action: "runToolbarCustomizationPalette:"),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Show Sidebar", action: "toggleSourceList:", keyEquivalent: "s", modifierMask: [.command, .control]),
+                NSMenuItem(title: "Enter Full Screen", action: "toggleFullScreen:", keyEquivalent: "f", modifierMask: [.command, .control]),
+            ]),
+            NSMenuItem(title: "Window", [
+                NSMenuItem(title: "Minimize", action: "performMiniaturize:", keyEquivalent: "m", modifierMask: [.command]),
+                NSMenuItem(title: "Zoom", action: "performZoom:"),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Bring All to Front", action: "arrangeInFront:"),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Conversations", action: "showConversations:"),
+                NSMenuItem(title: "Directory", action: "showDirectory:"),
+                NSMenuItem.separator(),
+            ]),
+            NSMenuItem(title: "Help", [
+                NSMenuItem(title: "\(appName) Help", action: "showHelp:", keyEquivalent: "?", modifierMask: [.command]),
+            ]),
+        ])
+        
+        NSApp.mainMenu = appMenu.submenu!
+        NSApp.servicesMenu = appMenu.submenu!.items.first!.submenu!.item(withTitle: "Services")!.submenu!
+        NSApp.windowsMenu = appMenu.submenu!.item(withTitle: "Window")!.submenu!
+        NSApp.helpMenu = appMenu.submenu!.item(withTitle: "Help")!.submenu!
     }
 }

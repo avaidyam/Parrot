@@ -48,6 +48,24 @@ public extension NSMenu {
     }
 }
 
+public extension NSMenuItem {
+    
+    public convenience init(title: String, isEnabled: Bool = true, target: AnyObject? = nil, action: String? = nil, keyEquivalent: String = "", modifierMask: NSEvent.ModifierFlags = [], _ submenuItems: [NSMenuItem]? = nil) {
+        self.init(title: title, action: action != nil ? Selector(action!) : nil, keyEquivalent: keyEquivalent)
+        self.isEnabled = isEnabled
+        self.target = target
+        self.keyEquivalentModifierMask = modifierMask
+        
+        if let submenuItems = submenuItems {
+            let m = NSMenu(title: title)
+            for x in submenuItems {
+                m.addItem(x)
+            }
+            self.submenu = m
+        }
+    }
+}
+
 //
 //
 //

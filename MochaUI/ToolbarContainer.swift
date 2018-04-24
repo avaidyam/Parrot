@@ -165,6 +165,43 @@ extension NSViewController: ToolbarContainerProvider {
     private static var containerCreatedProp = AssociatedProperty<NSViewController, Bool>(.strong)
 }
 
+extension NSWindowController: ToolbarContainerProvider {
+    
+    /// The ToolbarContainer object associated with this view controller. If no ToolbarContainer is explicitly set, NSWindowController will send -makeTouchBar to itself to create the default ToolbarContainer for this view controller.
+    @objc open dynamic var toolbarContainer: ToolbarContainer? {
+        get {
+            if self._container == nil, !self._containerCreated {
+                self._container = self.makeToolbarContainer()
+            }
+            return self._container
+        }
+        set {
+            self._container = newValue
+            self._containerCreated = false
+        }
+    }
+    
+    /// Subclasses should over-ride this method to create and configure the default ToolbarContainer for this window controller.
+    @objc open dynamic func makeToolbarContainer() -> ToolbarContainer? {
+        return nil
+    }
+    
+    //
+    //
+    //
+    
+    fileprivate var _container: ToolbarContainer? {
+        get { return NSWindowController.containerProp[self] }
+        set { NSWindowController.containerProp[self] = newValue }
+    }
+    fileprivate var _containerCreated: Bool {
+        get { return NSWindowController.containerCreatedProp[self, default: false] }
+        set { NSWindowController.containerCreatedProp[self] = newValue }
+    }
+    private static var containerProp = AssociatedProperty<NSWindowController, ToolbarContainer>(.strong)
+    private static var containerCreatedProp = AssociatedProperty<NSWindowController, Bool>(.strong)
+}
+
 // TODO: NS*ViewControllers should be delegates that forward items OR implement toolbarContainer.get
 
 extension NSSplitViewController { // TODO: Make this a ToolbarContainerDelegate
