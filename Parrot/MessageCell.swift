@@ -214,17 +214,10 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
     // Given a string, a font size, and a base width, return the measured height of the cell.
     public static func measure(_ string: String, _ width: CGFloat) -> CGFloat {
         func lineSize(_ string: String, _ font: NSFont, _ width: CGFloat) -> CGFloat {
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = font.leading
-            let attr = NSAttributedString(string: string, attributes: [
-                .font: font, .paragraphStyle: paragraphStyle
-                ])
-            
-            let framesetter = CTFramesetterCreateWithAttributedString(attr)
-            let constraints = NSSize(width: width, height: 10_000)
-            let size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, attr.length),
-                                                                    nil, constraints, nil)
-            return size.height
+            self.text.preferredMaxLayoutWidth = width
+            self.text.stringValue = string
+            self.text.font = font
+            return self.text.fittingSize.height
         }
         
         let h = lineSize(string,
@@ -232,4 +225,10 @@ public class MessageCell: NSCollectionViewItem, NSTextViewDelegate {
                          width - (24.0 + 24.0 + 16.0)) + 8.0
         return ((h < 24.0) ? 24.0 : h) + 8.0 /* add padding to max(h, 24) */
     }
+    
+    private static var text: NSTextField = {
+        let v = NSTextField(wrappingLabelWithString: "")
+        v.font = NSFont.systemFont(ofSize: 12.0)
+        return v
+    }()
 }

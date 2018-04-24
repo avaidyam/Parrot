@@ -204,11 +204,15 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     
     public override func viewWillLayout() {
         super.viewWillLayout()
-        let ctx = NSCollectionViewFlowLayoutInvalidationContext()
-        ctx.invalidateFlowLayoutDelegateMetrics = true
-        ctx.invalidateFlowLayoutAttributes = true
-        self.collectionView.collectionViewLayout?.invalidateLayout(with: ctx)
+        if self.oldFrame == .zero || self.oldFrame.width != self.view.frame.width {
+            let ctx = NSCollectionViewFlowLayoutInvalidationContext()
+            ctx.invalidateFlowLayoutDelegateMetrics = true
+            ctx.invalidateFlowLayoutAttributes = true
+            self.collectionView.collectionViewLayout?.invalidateLayout(with: ctx)
+        }
+        self.oldFrame = self.view.frame
     }
+    private var oldFrame = NSRect.zero
     
     ///
     ///
