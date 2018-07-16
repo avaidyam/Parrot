@@ -124,7 +124,7 @@ public class PersonCell: NSCollectionViewItem {
         self.timeLabel.toolTip = person.lastSeen.fullString()
     }
     
-    @objc private func showContactCard(_ sender: Any? = nil) {
+    @objc dynamic private func showContactCard(_ sender: Any? = nil) {
         func show(_ c: CNContact) {
             let cv = CNContactViewController()
             cv.contact = c

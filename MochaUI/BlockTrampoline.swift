@@ -79,7 +79,7 @@ public extension NSMenuItem {
         self.action = action
     }
     
-    @objc fileprivate func performAction(_ sender: Any!) {
+    @objc dynamic fileprivate func performAction(_ sender: Any!) {
         self.action()
     }
     

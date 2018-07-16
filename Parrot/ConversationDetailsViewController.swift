@@ -193,7 +193,7 @@ public class ConversationDetailsViewController: NSViewController {
         self.view = stack
     }
     
-    @objc private func buttonAction(_ sender: Any?) {
+    @objc dynamic private func buttonAction(_ sender: Any?) {
         guard   let conversation = self.conversation,
                 let button = sender as? NSButton,
                 let tag = Tags(rawValue: button.tag)
@@ -216,7 +216,7 @@ public class ConversationDetailsViewController: NSViewController {
         }
     }
     
-    @objc private func toolbarAction(_ sender: Any?) {
+    @objc dynamic private func toolbarAction(_ sender: Any?) {
         if let well = sender as? NSColorWell, well.tag == 3 { // ours
             self.settings?.outgoingColor = well.objectValue as? NSColor
         } else if let well = sender as? NSColorWell, well.tag == 4 { // theirs

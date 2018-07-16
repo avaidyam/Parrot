@@ -132,7 +132,7 @@ public class PreviewController: NSObject, NSPopoverDelegate, NSGestureRecognizer
         self.content = content
     }
     
-    @objc private func gesture(_ sender: PressureGestureRecognizer) {
+    @objc dynamic private func gesture(_ sender: PressureGestureRecognizer) {
         switch sender.state {
         case .possible: break // ignore
         case .began:

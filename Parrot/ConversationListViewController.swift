@@ -246,7 +246,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     //
     
     // Re-sort the conversation list based on the latest sort timestamps and update the list.
-    @objc public func conversationDidReceiveEvent(_ notification: Notification) {
+    @objc dynamic public func conversationDidReceiveEvent(_ notification: Notification) {
         let oldVal = self.currentDataSource().map { $0.identifier }
         self.dataSource.resort()
         let updates = Changeset.edits(from: oldVal, to: self.currentDataSource().map { $0.identifier })
@@ -254,10 +254,10 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
     }
     
     /* TODO: Just update the row that is updated. */
-    @objc public func conversationDidUpdate(_ notification: Notification) {
+    @objc dynamic public func conversationDidUpdate(_ notification: Notification) {
         self.conversationDidUpdateList(notification)
     }
-    @objc public func conversationDidUpdateList(_ notification: Notification) {
+    @objc dynamic public func conversationDidUpdateList(_ notification: Notification) {
         /*
          let oldVal = self.dataSource.map { $0.identifier }
          let updates = Changeset.edits(from: oldVal, to: self.dataSource.map { $0.identifier })

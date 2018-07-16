@@ -193,7 +193,7 @@ public class Interpolate<T: Interpolatable>: AnyInterpolate {
     /**
      Next function used by animation(). Increments fractionComplete based on the duration.
      */
-    @objc fileprivate func next(_ fps: Double = 60.0) {
+    @objc dynamic fileprivate func next(_ fps: Double = 60.0) {
         
         let direction: CGFloat = (targetProgress > fractionComplete) ? 1.0 : -1.0
         let oldProgress = fractionComplete

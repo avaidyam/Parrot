@@ -30,7 +30,7 @@ public struct Animation {
         fileprivate init(_ handler: @escaping () -> ()) {
             self.handler = handler
         }
-        @objc public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        @objc dynamic public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
             self.handler()
         }
     }

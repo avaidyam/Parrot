@@ -75,7 +75,7 @@ public class PersonIndicatorViewController: NSViewController {
         }
     }
     
-    @objc public func buttonPressed(_ sender: NSButton!) {
+    @objc dynamic public func buttonPressed(_ sender: NSButton!) {
         PersonIndicatorToolTipController.popover.performClose(nil)
         
         let cv = CNContactViewController()

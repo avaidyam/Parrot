@@ -20,6 +20,12 @@ public extension Collection {
     }
 }
 
+extension RawRepresentable where RawValue: Hashable {
+    public var hashValue: Int {
+        return rawValue.hashValue
+    }
+}
+
 // All default Swift types:
 //  - Boolean
 //  - BinaryInteger
@@ -57,18 +63,5 @@ public extension Comparable {
 public extension Strideable where Self.Stride: SignedInteger {
     public func clamped(from range: /*Countable*/PartialRangeFrom<Self>) -> Self {
         return max(self, range.lowerBound)
-    }
-}
-
-public struct RawWrapper<Type, Original: Hashable>: RawRepresentable, Hashable, Equatable {
-    public let rawValue: Original
-    public init(rawValue: Original) {
-        self.rawValue = rawValue
-    }
-}
-
-extension RawRepresentable where RawValue: Hashable {
-    public var hashValue: Int {
-        return rawValue.hashValue
     }
 }

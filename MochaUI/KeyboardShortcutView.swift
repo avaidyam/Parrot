@@ -118,7 +118,7 @@ open class KeyboardShortcutView: NSControl, NSSecureCoding, NSAccessibilityButto
     
     
     /// Eh, why not. It's good practice.
-    open static var supportsSecureCoding: Bool {
+    public static var supportsSecureCoding: Bool {
         return true
     }
     
@@ -146,13 +146,13 @@ open class KeyboardShortcutView: NSControl, NSSecureCoding, NSAccessibilityButto
     /// text color of the currently-recording shortcut.
     ///
     /// Note: by using a dynamic color, it will always match the current NSAppearance.
-    @objc open var tintColor: NSColor = .keyboardFocusIndicatorColor {
+    @objc dynamic open var tintColor: NSColor = .keyboardFocusIndicatorColor {
         didSet { self.needsDisplay = true }
     }
     
     /// The string to display to the user when no shortcut is displayed by, or
     /// being recorded by the control.
-    @objc open var placeholderString: String? {
+    @objc dynamic open var placeholderString: String? {
         get { return self.textLabel.placeholderAttributedString?.string }
         set {
             let style = NSMutableParagraphStyle()
@@ -204,7 +204,7 @@ open class KeyboardShortcutView: NSControl, NSSecureCoding, NSAccessibilityButto
     }
     
     /// Returns `true` if the control is currently recording a new shortcut.
-    @objc open private(set) var isRecording = false {
+    @objc dynamic open private(set) var isRecording = false {
         willSet { self.willChangeValue(forKey: #function) }
         didSet { self.didChangeValue(forKey: #function) }
     }
@@ -245,7 +245,7 @@ open class KeyboardShortcutView: NSControl, NSSecureCoding, NSAccessibilityButto
     
     /// Determines whether the control is capable of modifying its shortcut or
     /// recording a new shortcut.
-    @objc open override var isEnabled: Bool {
+    @objc dynamic open override var isEnabled: Bool {
         didSet {
             if !self.isEnabled { self.endRecording() }
             self.needsDisplay = true
@@ -720,7 +720,7 @@ open class KeyboardShortcutView: NSControl, NSSecureCoding, NSAccessibilityButto
     
     /// The trailing record/stop button was pressed: start recording if we're
     /// not already doing so, and if we are, clear the shortcut and end recording.
-    @objc private func buttonAction(_ button: NSButton) {
+    @objc dynamic private func buttonAction(_ button: NSButton) {
         if !self.isRecording && self.shortcut == nil { // cleared state
             self.window?.makeFirstResponder(self)
             _ = self.beginRecording()
@@ -740,7 +740,7 @@ open class KeyboardShortcutView: NSControl, NSSecureCoding, NSAccessibilityButto
     
     /// A `suggestions` shortcut was selected: circumvent recording and directly set.
     /// Note that a suggestion may be selected without the control being recording.
-    @objc private func selectAction(_ item: NSMenuItem) {
+    @objc dynamic private func selectAction(_ item: NSMenuItem) {
         guard self.isEnabled else { return }
         self.endRecording()
         self.shortcut = self.suggestions[item.tag]
@@ -784,7 +784,7 @@ open class KeyboardShortcutView: NSControl, NSSecureCoding, NSAccessibilityButto
     /// responder and discard any recording shortcut.
     ///
     /// Note: Unbalanced global mode changes can dramatically impact system usability!
-    @objc private func windowKeyednessChanged(_ note: Notification) {
+    @objc dynamic private func windowKeyednessChanged(_ note: Notification) {
         guard let window = self.window, (note.object as? NSWindow) == window else { return }
         if window.isKeyWindow && window.firstResponder == self { // becomeKey
             guard self.savedOperatingMode == nil else { return }

@@ -40,7 +40,7 @@ public class Subscription {
     }
     
     /// The worker function bridged into Objective-C.
-    @objc private func _runHandler(_ note: Notification) {
+    @objc dynamic private func _runHandler(_ note: Notification) {
         (self.queue ?? .main).async {
             self.handler(note)
         }

@@ -262,28 +262,38 @@ public extension NSSound {
     }
 }
 
-/// Register for AppleEvents that follow our URL scheme as a compatibility
-/// layer for macOS 10.13 methods.
-///
-/// Note: this only applies to CFBundleURLTypes, and not CFBundleDocumentTypes
-/// on compatibility platforms. -application:openFiles: and -application:openFile:
-/// will still be invoked for documents.
-///
-/// A "typealias" for the traditional NSApplication delegation.
-open class NSApplicationController: NSObject, NSApplicationDelegate {
+/// A concrete controller type for the management of `NSApplication`.
+open class NSApplicationController: NSResponder, NSApplicationDelegate {
     public override init() {
         super.init()
-        if floor(NSAppKitVersion.current.rawValue) <= NSAppKitVersion.macOS10_12.rawValue {
-            let ae = NSAppleEventManager.shared()
-            ae.setEventHandler(self, andSelector: #selector(self.handleURL(event:withReply:)),
-                               forEventClass: UInt32(kInternetEventClass),
-                               andEventID: UInt32(kAEGetURL)
-            )
-        }
+        self._init()
     }
-    @objc private func handleURL(event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self._init()
+    }
+    
+    /// Perform one-time URL event registration if not on macOS 13+
+    ///
+    /// Note: this only applies to CFBundleURLTypes, and not CFBundleDocumentTypes
+    /// on compatibility platforms. -application:openFiles: and -application:openFile:
+    /// will still be invoked for documents.
+    private func _init() {
+        guard floor(NSAppKitVersion.current.rawValue) > NSAppKitVersion.macOS10_12.rawValue else { return }
+        let ae = NSAppleEventManager.shared()
+        ae.setEventHandler(self,
+                           andSelector: #selector(self.handleURL(event:withReply:)),
+                           forEventClass: UInt32(kInternetEventClass),
+                           andEventID: UInt32(kAEGetURL)
+        )
+    }
+    
+    /// Wrap the pre-macOS 13 handler and trampoline into the post-macOS 13 one.
+    @objc dynamic private func handleURL(event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
         guard   let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
-            let url = URL(string: urlString) else { return }
+                let url = URL(string: urlString)
+        else { return }
+        
         let sel = Selector(("application:" + "openURLs:")) // since DNE on < macOS 13
         if self.responds(to: sel) {
             self.perform(sel, with: NSApp, with: [url])

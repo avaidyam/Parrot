@@ -114,54 +114,54 @@ public enum InterfaceMode: Int {
 
 public extension UserDefaults {
     
-    @objc public var prefersShoeboxAppStyle: Bool {
+    @objc dynamic public var prefersShoeboxAppStyle: Bool {
         get { return self.get(default: false) }
         set { self.set(value: newValue) }
     }
     
     /// Always `.light` or `.dark` and dynamically updated based on `\.interfaceStyle`
     /// and `\.systemInterfaceStyle` -- use this to track UI changes.
-    @objc public var effectiveInterfaceStyle: Int {
+    @objc dynamic public var effectiveInterfaceStyle: Int {
         get { return self.get(default: 0) }
         set { self.set(value: newValue) }
     }
     
-    @objc public var interfaceStyle: Int {
+    @objc dynamic public var interfaceStyle: Int {
         get { return self.get(default: 0) }
         set { self.set(value: newValue) }
     }
     
-    @objc public var vibrancyStyle: Int {
+    @objc dynamic public var vibrancyStyle: Int {
         get { return self.get(default: 0) }
         set { self.set(value: newValue) }
     }
     
-    @objc public var autoEmoji: Bool {
+    @objc dynamic public var autoEmoji: Bool {
         get { return self.get(default: false) }
         set { self.set(value: newValue) }
     }
     
-    @objc public var messageTextSize: Double {
+    @objc dynamic public var messageTextSize: Double {
         get { return self.get(default: 0.0) }
         set { self.set(value: newValue) }
     }
     
-    @objc public var completions: [String: String] {
+    @objc dynamic public var completions: [String: String] {
         get { return self.get(default: [:]) }
         set { self.set(value: newValue) }
     }
     
-    @objc public var emoticons: [String: String] {
+    @objc dynamic public var emoticons: [String: String] {
         get { return self.get(default: [:]) }
         set { self.set(value: newValue) }
     }
     
-    @objc public var menubarIcon: Bool {
+    @objc dynamic public var menubarIcon: Bool {
         get { return self.get(default: false) }
         set { self.set(value: newValue) }
     }
     
-    @objc public var openConversations: [String] {
+    @objc dynamic public var openConversations: [String] {
         get { return self.get(default: []) }
         set { self.set(value: newValue) }
     }

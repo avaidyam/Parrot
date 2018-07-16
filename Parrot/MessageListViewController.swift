@@ -503,7 +503,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
 		}
     }
     
-    @objc public func conversationDidReceiveEvent(_ notification: Notification) {
+    @objc dynamic public func conversationDidReceiveEvent(_ notification: Notification) {
         guard let event = notification.userInfo?["event"] as? Event else { return }
         
         self.dataSource.insert(event)
@@ -523,7 +523,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }
     
-    @objc public func conversationDidChangeFocus(_ notification: Notification) {
+    @objc dynamic public func conversationDidChangeFocus(_ notification: Notification) {
         guard let mode = notification.userInfo?["status"] as? FocusMode else { return }
         guard let user = notification.userInfo?["user"] as? Person else { return }
         
@@ -553,7 +553,7 @@ NSSearchFieldDelegate, NSCollectionViewDataSource, NSCollectionViewDelegate, NSC
         }
     }
     
-    @objc public func conversationDidReceiveWatermark(_ notification: Notification) {
+    @objc dynamic public func conversationDidReceiveWatermark(_ notification: Notification) {
         /*guard let status = notification.userInfo?["status"] as? IWatermarkNotification else { return }
         if let person = self.conversation?.client.userList?.people[status.userID.gaiaID] {
             self.watermarkEvent(IFocus("", sender: person, timestamp: status.readTimestamp, mode: .here))

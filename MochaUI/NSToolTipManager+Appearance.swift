@@ -33,7 +33,7 @@ import Mocha
     
     /// Swizzle: make sure we return a dynamic system color to match the visual
     /// effect view.
-    @objc func swizzle_toolTipTextColor() -> NSColor! {
+    @objc dynamic func swizzle_toolTipTextColor() -> NSColor! {
         return NSColor.labelColor
     }
     

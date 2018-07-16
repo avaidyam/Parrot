@@ -135,7 +135,7 @@ public class ConversationCell: NSCollectionViewItem, DroppableViewDelegate {
 			let selfSender = conversation.participants.filter { $0.me }.first?.identifier
             
             // Get the first (last) participant to have sent a message in the conv:
-            let firstParticipant = conversation.eventStream.lazy.flatMap { ($0 as? Message)?.sender }.filter { !$0.me }.last
+            let firstParticipant = conversation.eventStream.lazy.compactMap { ($0 as? Message)?.sender }.filter { !$0.me }.last
                                     ?? (conversation.participants.filter { !$0.me }.first)
             
             self.photoView.image = firstParticipant?.image ?? NSImage(monogramOfSize: NSSize(width: 64.0, height: 64.0),

@@ -358,7 +358,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
                 forStringIn: textView.characterRect(forRange: range),
                 view: textView) { [weak textView] in
                     guard $0 != nil else { return }
-                    log.debug("user selected \($0)")
+                    log.debug("user selected \(String(describing: $0))")
                     //textView?.insertText($0, replacementRange: range)
                     textView?.showFindIndicator(for: userRange)
             }

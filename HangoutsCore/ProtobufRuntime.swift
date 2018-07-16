@@ -81,18 +81,6 @@ public func random64(_ upper_bound: UInt64) -> UInt64 {
     return rnd % upper_bound
 }
 
-extension Optional: Hashable where Wrapped: Hashable {
-    public var hashValue: Int {
-        return self?.hashValue ?? 0
-    }
-}
-
-extension Array: Hashable where Element: Hashable {
-    public var hashValue: Int {
-        return self.reduce(5381) { ($0 << 5) &+ $0 &+ $1.hashValue }
-    }
-}
-
 extension Dictionary where Key: Hashable, Value: Hashable {
     public var hashValue: Int {
         return self.reduce(5381) { ($0 << 5) &+ $0 &+ $1.key.hashValue &+ $1.value.hashValue }

@@ -89,7 +89,7 @@ public final class ShareViewController: SLComposeServiceViewController {
                 } else if let url = obj as? URL {
                     self.send(.image(url))
                 } else {
-                    self.extensionContext!.cancelRequest(withError: err)
+                    self.extensionContext!.cancelRequest(withError: err!)
                 }
             }
         }

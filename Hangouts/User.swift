@@ -159,6 +159,7 @@ public class UserList: Directory {
     public var blocked: [String: Person] {
         return [:]
     }
+    private var tokens: [Any] = []
     
     // Initialize the list of Users.
     public init(client: Client, users: [User] = []) {
@@ -172,12 +173,10 @@ public class UserList: Directory {
         self.users[me.id] = me
         self.me = me
         
-        hangoutsCenter.addObserver(self, selector: #selector(UserList._updatedState(_:)),
-                                   name: Client.didUpdateStateNotification, object: client)
-    }
-    
-    deinit {
-        hangoutsCenter.removeObserver(self)
+        let a = hangoutsCenter.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) { [weak self] in
+            self?._updatedState($0)
+        }
+        self.tokens = [a]
     }
     
     public subscript(_ identifier: String) -> Person {
@@ -277,7 +276,7 @@ public class UserList: Directory {
     }
     
     /// Note: all notification objects are expected to be deltas.
-    @objc internal func _updatedState(_ notification: Notification) {
+    @objc dynamic internal func _updatedState(_ notification: Notification) {
         guard   let userInfo = notification.userInfo,
             let update = userInfo[Client.didUpdateStateKey] as? ClientStateUpdate
             else { return }

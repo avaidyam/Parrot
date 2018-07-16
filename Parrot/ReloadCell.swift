@@ -50,7 +50,7 @@ public class ReloadCell: NSView {
         self.handler = {}
     }
     
-    @objc private func reloadPressed(_ sender: NSButton!) {
+    @objc dynamic private func reloadPressed(_ sender: NSButton!) {
         self.handler()
     }
 }

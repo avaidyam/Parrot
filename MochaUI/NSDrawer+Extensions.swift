@@ -60,7 +60,7 @@ public extension NSDrawer {
 fileprivate extension NSDrawer {
     
     /// This swizzle hook allows __setupModernDrawer to be invoked automatically.
-    @objc func swizzle__doSetParentWindow(_ arg1: AnyObject!) {
+    @objc dynamic func swizzle__doSetParentWindow(_ arg1: AnyObject!) {
         __setupModernDrawer()
         swizzle__doSetParentWindow(arg1)
     }

@@ -24,17 +24,7 @@ import MochaUI
 // support for all the "documents" in Parrot
 public final class ParrotWindowController: NSWindowController, NSWindowDelegate {
     
-    // FIXME: not required, really...
-    private class NSToolbarSplitViewController: NSSplitViewController {
-        public override func addChildViewController(_ childViewController: NSViewController) {
-            super.addChildViewController(childViewController)
-            
-            self.toolbarContainer = self.makeToolbarContainer() // FIXME
-            self.view.window?.toolbar?.container = self.toolbarContainer // FIXME
-        }
-    }
-    
-    private var container = NSToolbarSplitViewController()
+    private var container = NSSplitViewController()
     private var visualSubscriptions: [NSKeyValueObservation] = []
     
     private lazy var effectView: NSVisualEffectView = {
@@ -104,20 +94,26 @@ public final class ParrotWindowController: NSWindowController, NSWindowDelegate 
     //
     
     
-    open var viewControllers: [NSViewController] {
+    public var viewControllers: [NSViewController] {
         get { return self.container.splitViewItems.map { $0.viewController } }
         set { self.container.splitViewItems = newValue.map(self.wrap(_:)) }
     }
     
-    open func addViewController(_ viewController: NSViewController) {
+    public func addViewController(_ viewController: NSViewController) {
         self.container.addSplitViewItem(self.wrap(viewController))
+        
+        self.container.toolbarContainer = self.container.makeToolbarContainer() // FIXME
+        self.window?.toolbar?.container = self.container.toolbarContainer // FIXME
     }
     
-    open func insertViewController(_ viewController: NSViewController, at index: Int) {
+    public func insertViewController(_ viewController: NSViewController, at index: Int) {
         self.container.insertSplitViewItem(self.wrap(viewController), at: index)
+        
+        self.container.toolbarContainer = self.container.makeToolbarContainer() // FIXME
+        self.window?.toolbar?.container = self.container.toolbarContainer // FIXME
     }
     
-    open func removeViewController(_ viewController: NSViewController) {
+    public func removeViewController(_ viewController: NSViewController) {
         guard let splitViewItem = self.container.splitViewItem(for: viewController) else { return }
         self.container.removeSplitViewItem(splitViewItem)
     }

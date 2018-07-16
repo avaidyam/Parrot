@@ -445,15 +445,18 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
     fileprivate unowned let client: Client
     internal var convDict = [String: IConversation]() /* TODO: Should be fileprivate! */
     public var syncTimestamp: Date? = nil
+    private var tokens: [Any] = []
     
     public init(client: Client) {
         self.client = client
         self._sync()
-        hangoutsCenter.addObserver(self, selector: #selector(ConversationList.clientDidUpdateState(_:)),
-                                   name: Client.didUpdateStateNotification, object: client)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.personDidUpdate(_:)),
-                                               name: Notification.Person.DidUpdate, object: nil)
+        let a = hangoutsCenter.addObserver(forName: Client.didUpdateStateNotification, object: client, queue: nil) { [weak self] in
+            self?.clientDidUpdateState($0)
+        }
+        let b = NotificationCenter.default.addObserver(forName: Notification.Person.DidUpdate, object: nil, queue: nil) { [weak self] in
+            self?.personDidUpdate($0)
+        }
+        self.tokens = [a, b]
     }
     
     deinit {
@@ -569,7 +572,7 @@ public class ConversationList: ParrotServiceExtension.ConversationList {
 extension ConversationList {
     
     // If a person changed, any conversations with that person also have changed.
-    @objc func personDidUpdate(_ note: Notification) {
+    public func personDidUpdate(_ note: Notification) {
         guard let user = note.object as? User else { return }
         for conv in (self.convDict.values.filter { $0.users.contains(user) }) {
             NotificationCenter.default.post(name: Notification.Conversation.DidUpdate, object: conv)
@@ -577,7 +580,7 @@ extension ConversationList {
     }
     
     // Receive a ClientStateUpdate and fan out to Conversations
-    @objc public func clientDidUpdateState(_ note: Notification) {
+    public func clientDidUpdateState(_ note: Notification) {
         guard let update = (note.userInfo)?[Client.didUpdateStateKey] as? ClientStateUpdate else {
             log.error("Encountered an error! \(note)"); return
         }

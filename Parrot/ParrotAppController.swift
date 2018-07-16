@@ -257,30 +257,30 @@ public extension ParrotAppController {
     //
     
     
-    @objc func sendFeedback(_ sender: Any?) {
+    @objc dynamic func sendFeedback(_ sender: Any?) {
         NSWorkspace.shared.open(URL(string: .feedbackURL)!)
     }
     
-    @objc func showPreferences(_ sender: Any?) {
+    @objc dynamic func showPreferences(_ sender: Any?) {
         self.preferencesController.presentAsWindow()
         Analytics.view(screen: .preferences)
     }
     
-    @objc func showConversations(_ sender: Any?) {
+    @objc dynamic func showConversations(_ sender: Any?) {
         self.mainController.showWindow(nil)
     }
     
-    @objc func showDirectory(_ sender: Any?) {
+    @objc dynamic func showDirectory(_ sender: Any?) {
         self.directoryController.presentAsWindow()
     }
     
-	@objc func logoutSelected(_ sender: Any?) {
+	@objc dynamic func logoutSelected(_ sender: Any?) {
         try! server.sync(LogOutInvocation.self)
         NSApp.terminate(self)
 	}
     
     /// Right clicking the status item causes the app to close; left click causes it to become visible.
-    @objc func showConversationWindow(_ sender: NSStatusBarButton?) {
+    @objc dynamic func showConversationWindow(_ sender: NSStatusBarButton?) {
         if NSApp.currentEvent!.type == NSEvent.EventType.rightMouseUp {
             NSApp.terminate(self)
         } else {

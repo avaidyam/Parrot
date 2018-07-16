@@ -51,7 +51,7 @@ public class ViewAttachmentCell: NSTextAttachmentCell {
         self.view.frame = cellFrame
     }
     
-    @objc private func verifyAttached(_ note: Notification) {
+    @objc dynamic private func verifyAttached(_ note: Notification) {
         let str = (note.object as? NSTextView)?.attributedString()
         var attached = false
         
