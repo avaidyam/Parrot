@@ -1,4 +1,5 @@
 import AppKit
+<<<<<<< Updated upstream
 import Mocha
 
 /// Note: ideally, either present this controller as a window or wrap it within a
@@ -60,12 +61,55 @@ public class PreferencesViewController: NSTabViewController {
         let rect = NSRect(x: 0.0, y: 0.0, width: size.width, height: size.height)
         let contentFrame = window.frameRect(forContentRect: rect)
         
+=======
+
+public class PreferencesViewController: NSTabViewController {
+    private var _sizes = [String : NSSize]()
+    
+    public override func viewWillAppear() {
+        self.view.window?.center()
+    }
+    
+    public override func tabView(_ tabView: NSTabView, willSelect tabViewItem: NSTabViewItem?) {
+        super.tabView(tabView, willSelect: tabViewItem)
+        self._sizes[tabViewItem!.label] = tabViewItem!.view!.frame.size
+    }
+    
+    public override func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
+        super.tabView(tabView, didSelect: tabViewItem)
+        DispatchQueue.main.async {
+            if let window = self.view.window {
+                let size = (self._sizes[tabViewItem!.label])!
+                window.setFrame(self.normalizedFrame(for: window, from: size),
+                                display: false, animate: true)
+            }
+        }
+    }
+    
+    public override func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
+        let a = super.toolbarAllowedItemIdentifiers(toolbar)
+        return [NSToolbarFlexibleSpaceItemIdentifier] + a + [NSToolbarFlexibleSpaceItemIdentifier]
+    }
+    
+    public override func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
+        let a = super.toolbarDefaultItemIdentifiers(toolbar)
+        return [NSToolbarFlexibleSpaceItemIdentifier] + a + [NSToolbarFlexibleSpaceItemIdentifier]
+    }
+    
+    public override func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
+        return super.toolbarSelectableItemIdentifiers(toolbar).filter { $0 != NSToolbarFlexibleSpaceItemIdentifier }
+    }
+    
+    private func normalizedFrame(for window: NSWindow, from size: NSSize) -> NSRect {
+        let contentFrame = window.frameRect(forContentRect: NSMakeRect(0.0, 0.0, size.width, size.height))
+>>>>>>> Stashed changes
         var frame = window.frame
         frame.origin.y = frame.origin.y + (frame.size.height - contentFrame.size.height)
         frame.size.height = contentFrame.size.height
         frame.size.width = contentFrame.size.width
         return frame
     }
+<<<<<<< Updated upstream
     
     /// Use this to append preference panes.
     public func add<T: PreferencePaneViewController>(pane p: T) {
@@ -91,4 +135,6 @@ open class PreferencePaneViewController: NSViewController {
     
     ///
     open weak var initialFirstResponder: NSView? = nil
+=======
+>>>>>>> Stashed changes
 }

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import MochaUI
 import Contacts
 import ContactsUI
@@ -16,10 +17,52 @@ public class PersonIndicatorViewController: NSViewController {
         i.visibilityPriority = .high
         i.view = self.view
         i.label = self.person?.fullName ?? ""
+=======
+import Cocoa
+import Mocha
+import MochaUI
+import ParrotServiceExtension
+
+//away vs here == alphaValue of toolbar item
+//typing == hidden value of tooltipcontroller messageprogressview
+
+fileprivate class PersonIndicatorToolTipController: NSViewController {
+    fileprivate static var popover: NSPopover = {
+        let p = NSPopover()
+        p.behavior = .transient
+        p.contentViewController = PersonIndicatorToolTipController()
+        return p
+    }()
+    
+    public var text: NSTextField!
+    public override func loadView() {
+        self.view = NSView()
+        self.view.wantsLayer = true
+        self.text = NSTextField(labelWithString: "")
+        self.text.translatesAutoresizingMaskIntoConstraints = false
+        self.text.alignment = .center
+        self.view.addSubview(self.text)
+        
+        self.text.top == self.view.top + 4.0
+        self.text.bottom == self.view.bottom - 4.0
+        self.text.left == self.view.left + 4.0
+        self.text.right == self.view.right - 4.0
+    }
+}
+
+public class PersonIndicatorViewController: NSViewController {
+    
+    public lazy var toolbarItem: NSToolbarItem = {
+        let i = NSToolbarItem(itemIdentifier: self.identifier ?? "")
+        i.visibilityPriority = NSToolbarItemVisibilityPriorityHigh
+        i.view = self.view
+        //i.label = $0.fullName
+>>>>>>> Stashed changes
         return i
     }()
     
     public var person: Person? {
+<<<<<<< Updated upstream
         didSet {
             guard self.person != nil else { return }
             self.identifier = NSUserInterfaceItemIdentifier(rawValue: self.person!.identifier)
@@ -35,6 +78,17 @@ public class PersonIndicatorViewController: NSViewController {
             UI {
                 self.view.animator().alphaValue = self.isDimmed ? 0.6 : 1.0
             }
+=======
+        return self.representedObject as? Person
+    }
+    
+    public override var representedObject: Any? {
+        didSet {
+            guard let person = self.representedObject as? Person else { return }
+            self.identifier = person.identifier
+            //self.toolbarItem.itemIdentifier = person.identifier
+            (self.view as? NSButton)?.image = person.image
+>>>>>>> Stashed changes
         }
     }
     
@@ -59,6 +113,7 @@ public class PersonIndicatorViewController: NSViewController {
         self.view.addTrackingArea(trackingArea)
     }
     
+<<<<<<< Updated upstream
     // Cache the associated CNContact for the person.
     private func cacheContact() {
         let request = CNContactFetchRequest(keysToFetch: [CNContactViewController.descriptorForRequiredKeys()])
@@ -88,12 +143,18 @@ public class PersonIndicatorViewController: NSViewController {
         // The VC shows up offset so it's important to adjust it.
         cv.view.frame.origin.x -= 40.0
         cv.view.frame.size.width += 52.0
+=======
+    public func buttonPressed(_ sender: NSButton!) {
+        print("\n\n", "This is the part where I show you a fancy contact card!", "\n\n")
+        PersonIndicatorToolTipController.popover.performClose(nil)
+>>>>>>> Stashed changes
     }
     
     public override func mouseEntered(with event: NSEvent) {
         guard let vc = PersonIndicatorToolTipController.popover.contentViewController
             as? PersonIndicatorToolTipController else { return }
         
+<<<<<<< Updated upstream
         var prefix = ""
         switch self.person?.reachability ?? .unavailable {
         case .unavailable: break
@@ -110,4 +171,10 @@ public class PersonIndicatorViewController: NSViewController {
     public override func mouseExited(with event: NSEvent) {
         PersonIndicatorToolTipController.popover.performClose(nil)
     }
+=======
+        _ = vc.view // loadView()
+        vc.text?.stringValue = self.person?.fullName ?? ""
+        PersonIndicatorToolTipController.popover.show(relativeTo: view.bounds, of: view, preferredEdge: .maxY)
+    }
+>>>>>>> Stashed changes
 }

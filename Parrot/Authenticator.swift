@@ -1,7 +1,12 @@
 import Foundation
+<<<<<<< Updated upstream
 import HangoutsCore
 import ParrotServiceExtension
 import class Mocha.Logger
+=======
+import Mocha
+import ParrotServiceExtension
+>>>>>>> Stashed changes
 
 private let log = Logger(subsystem: "Hangouts.Authenticator")
 
@@ -90,8 +95,13 @@ public class Authenticator {
 			
             Authenticator.delegate?.authenticationMethod(URL(string: OAUTH2_LOGIN_URL)!) { oauth_code in
                 //  - first: authenticate(auth_code)
+<<<<<<< Updated upstream
                 authenticate(auth_code: oauth_code) { a, b in
                     saveTokens((a, b))
+=======
+                authenticate(auth_code: oauth_code) {
+                    saveTokens($0)
+>>>>>>> Stashed changes
                     handler(session.configuration)
                 }
             }

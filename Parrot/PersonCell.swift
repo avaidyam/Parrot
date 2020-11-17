@@ -1,15 +1,29 @@
+<<<<<<< Updated upstream
 import MochaUI
 import Contacts
 import ContactsUI
+=======
+import Foundation
+import AppKit
+import Mocha
+import MochaUI
+>>>>>>> Stashed changes
 import protocol ParrotServiceExtension.Person
 
 // A visual representation of a Conversation in a ListView.
 public class PersonCell: NSCollectionViewItem {
     
+<<<<<<< Updated upstream
     private lazy var photoButton: NSButton = {
         let b = NSButton(title: "", target: self, action: #selector(self.showContactCard(_:))).modernize(wantsLayer: true)
         b.isBordered = false
         return b
+=======
+    private lazy var photoLayer: CALayer = {
+        let l = CALayer()
+        l.masksToBounds = true
+        return l
+>>>>>>> Stashed changes
     }()
     
     private lazy var nameLabel: NSTextField = {
@@ -34,6 +48,7 @@ public class PersonCell: NSCollectionViewItem {
         return v
     }()
     
+<<<<<<< Updated upstream
     private var presenceSubscription: Subscription? = nil
     
     // Constraint setup here.
@@ -61,11 +76,39 @@ public class PersonCell: NSCollectionViewItem {
         }
         
         self.presenceSubscription = AutoSubscription(kind: Notification.Person.DidChangePresence, self.updateStatusText)
+=======
+    
+    // Constraint setup here.
+    public override func loadView() {
+        self.view = NSVibrantView()
+        self.view.translatesAutoresizingMaskIntoConstraints = false
+        //self.canDrawSubviewsIntoLayer = true
+        self.view.wantsLayer = true
+        self.view.add(subviews: [self.nameLabel, self.timeLabel, self.textLabel])
+        self.view.add(sublayer: self.photoLayer)
+        
+        self.photoLayer.layout.left == self.view.left + 4
+        self.photoLayer.layout.centerY == self.view.centerY
+        self.photoLayer.layout.width == 40
+        self.photoLayer.layout.height == 40
+        self.photoLayer.layout.right == self.nameLabel.left - 4
+        self.photoLayer.layout.right == self.textLabel.left - 4
+        self.nameLabel.top == self.view.top + 4
+        self.nameLabel.right == self.timeLabel.left - 4
+        self.nameLabel.bottom == self.textLabel.top - 4
+        self.nameLabel.centerY == self.timeLabel.centerY
+        self.timeLabel.top == self.view.top + 4
+        self.timeLabel.right == self.view.right - 4
+        self.timeLabel.bottom == self.textLabel.top - 4
+        self.textLabel.right == self.view.right - 4
+        self.textLabel.bottom == self.view.bottom - 4
+>>>>>>> Stashed changes
     }
     
     // Upon assignment of the represented object, configure the subview contents.
     public override var representedObject: Any? {
         didSet {
+<<<<<<< Updated upstream
             //self.presenceSubscription?.deactivate()
             guard let person = self.representedObject as? Person else { return }
             
@@ -77,10 +120,15 @@ public class PersonCell: NSCollectionViewItem {
             case .desktop: prefix = "🖥 "
             }
             
+=======
+            guard let person = self.representedObject as? Person else { return }
+            
+>>>>>>> Stashed changes
             self.nameLabel.stringValue = person.fullName
             self.nameLabel.toolTip = person.fullName
             self.textLabel.stringValue = person.mood
             self.textLabel.toolTip = person.mood
+<<<<<<< Updated upstream
             self.timeLabel.stringValue = prefix + person.lastSeen.relativeString()
             self.timeLabel.toolTip = person.lastSeen.fullString()
             self.photoButton.image = person.image
@@ -93,6 +141,17 @@ public class PersonCell: NSCollectionViewItem {
             self.view.layer?.backgroundColor = isSelected
                 ? .ns(.selectedMenuItemColor)
                 : .ns(.clear)
+=======
+            self.timeLabel.stringValue = person.lastSeen.relativeString()
+            self.timeLabel.toolTip = "\(person.lastSeen.fullString())"
+            self.photoLayer.contents = person.image
+        }
+    }
+    
+    public override var isSelected: Bool {
+        didSet {
+            
+>>>>>>> Stashed changes
         }
     }
     
@@ -104,6 +163,7 @@ public class PersonCell: NSCollectionViewItem {
     
     // Allows the photo view's circle crop to dynamically match size.
     public override func viewDidLayout() {
+<<<<<<< Updated upstream
         self.photoButton.layer!.cornerRadius = self.photoButton.frame.width / 2.0
     }
     
@@ -152,5 +212,9 @@ public class PersonCell: NSCollectionViewItem {
                 }
             } catch { }
         }
+=======
+        self.photoLayer.syncLayout()
+        self.photoLayer.cornerRadius = self.photoLayer.frame.width / 2.0
+>>>>>>> Stashed changes
     }
 }

@@ -45,6 +45,11 @@ public enum LinkPreviewType {
 	case link(LinkMeta)
 	/// Special: long text messages
 	case summary(String)
+<<<<<<< Updated upstream
+=======
+	/// Special: heartbeat bpm
+	case heartbeat(UInt)
+>>>>>>> Stashed changes
 }
 
 public struct LinkPreviewParser {
@@ -79,7 +84,11 @@ public struct LinkPreviewParser {
 	
 	private static func _extractTitle(from str: String) -> String {
 		let o = str.find(matching: TITLE_REGEX)
+<<<<<<< Updated upstream
 		let q = CFXMLCreateStringByUnescapingEntities(nil, o.first! as CFString, nil) as String
+=======
+		let q = CFXMLCreateStringByUnescapingEntities(nil, (o.first as CFString!), nil) as String
+>>>>>>> Stashed changes
 		return q.trimmingCharacters(in: .whitespacesAndNewlines)
 	}
 	
@@ -90,7 +99,11 @@ public struct LinkPreviewParser {
 			var vals = s.find(matching: CONT_REGEX)
 			keys = keys.flatMap { $0.components(separatedBy: " ") }
 			vals = vals.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+<<<<<<< Updated upstream
 			vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0 as CFString, nil) as String }
+=======
+			vals = vals.map { CFXMLCreateStringByUnescapingEntities(nil, $0 as CFString!, nil) as String }
+>>>>>>> Stashed changes
 			keys.forEach { tags[$0] = (vals.first ?? "") }
 		}
 		return tags
@@ -177,9 +190,15 @@ public struct LinkPreviewParser {
 		if _YTDomains.contains(url.host ?? "") {
 			var id = ""
 			if let loc = url.absoluteString.range(of: "youtu.be/") {
+<<<<<<< Updated upstream
                 id = String(url.absoluteString[loc.upperBound...])
 			} else if let loc = url.absoluteString.range(of: "youtube.com/watch?v=") {
 				id = String(url.absoluteString[loc.upperBound...])
+=======
+				id = (url.absoluteString.substring(from: loc.upperBound))
+			} else if let loc = url.absoluteString.range(of: "youtube.com/watch?v=") {
+				id = (url.absoluteString.substring(from: loc.upperBound))
+>>>>>>> Stashed changes
 			} else { throw LinkPreviewError.unhandleableUrl(url, id) }
 			
 			// domain-specialized case (not MIME type)

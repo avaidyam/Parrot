@@ -1,28 +1,42 @@
+<<<<<<< Updated upstream
 import MochaUI
 import AVKit
 import ParrotServiceExtension
+=======
+import AppKit
+import Mocha
+import ParrotServiceExtension
+import MochaUI
+>>>>>>> Stashed changes
 
 public protocol TextInputHost {
     var image: NSImage? { get }
     func resized(to: Double)
     func typing()
     func send(message: String)
+<<<<<<< Updated upstream
     func send(image: URL)
     func send(video: URL)
     func send(file: URL)
     func sendLocation()
     var settings: ConversationSettings? { get }
+=======
+>>>>>>> Stashed changes
 }
 
 public class MessageInputViewController: NSViewController, NSTextViewExtendedDelegate {
     
+<<<<<<< Updated upstream
     internal static let regex = try! NSRegularExpression(pattern: "(\\*|\\_|\\~|\\`)(.+?)\\1",
                                                          options: [.caseInsensitive])
     
+=======
+>>>>>>> Stashed changes
     public var host: TextInputHost? = nil
     
     private var insertToken = false
     
+<<<<<<< Updated upstream
     /// The background image and colors update Subscription.
     private var subscriptions: [String: Subscription] = [:]
     
@@ -126,6 +140,14 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
                                  in: self.photoView)
         }
         return b
+=======
+    private lazy var photoView: NSImageView = {
+        let v = NSImageView().modernize(wantsLayer: true)
+        v.allowsCutCopyPaste = false
+        v.isEditable = false
+        v.animates = true
+        return v
+>>>>>>> Stashed changes
     }()
     
     private lazy var textView: ExtendedTextView = {
@@ -137,8 +159,13 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         v.textColor = NSColor.labelColor
         v.textContainerInset = NSSize(width: 4, height: 4)
         
+<<<<<<< Updated upstream
         v.setContentHuggingPriority(NSLayoutConstraint.Priority(rawValue: 1), for: .vertical)
         v.setContentCompressionResistancePriority(NSLayoutConstraint.Priority(rawValue: 1), for: .horizontal)
+=======
+        v.setContentHuggingPriority(1, for: .vertical)
+        v.setContentCompressionResistancePriority(1, for: .horizontal)
+>>>>>>> Stashed changes
         
         v.placeholderString = "Send message..."
         v.shouldAlwaysPasteAsPlainText = true
@@ -154,6 +181,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     // Constraint setup here.
     public override func loadView() {
         self.view = NSView().modernize(wantsLayer: true)
+<<<<<<< Updated upstream
         self.view.add(subviews: self.photoView, self.textView) {
             self.photoView.leftAnchor == self.view.leftAnchor + 8.0
             self.photoView.bottomAnchor == self.view.bottomAnchor - 4.0
@@ -167,6 +195,36 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             self.textView.topAnchor == self.view.topAnchor + 4.0
             self.textView.heightAnchor >= self.photoView.heightAnchor
         }
+=======
+        self.view.add(subviews: [self.photoView, self.textView])
+        
+        // Install constraints.
+        self.photoView.left == self.view.left + 8.0
+        self.photoView.bottom == self.view.bottom - 4.0
+        self.photoView.height == 24.0
+        self.photoView.width == 24.0
+        self.photoView.bottom == self.textView.bottom
+        
+        self.textView.left == self.photoView.right + 8.0
+        self.textView.bottom == self.view.bottom - 4.0
+        self.textView.right == self.view.right - 8.0
+        self.textView.top == self.view.top + 4.0
+        self.textView.height >= self.photoView.height
+    }
+    
+    public override func viewWillAppear() {
+        super.viewWillAppear()
+        
+        // Mask the image into a circle and grab it.
+        if let layer = self.photoView.layer {
+            layer.masksToBounds = true
+            layer.cornerRadius = 24.0 / 2.0 // FIXME: dynamic mask
+        }
+        self.photoView.image = self.host?.image
+        
+        self.textView.translatesAutoresizingMaskIntoConstraints = false
+        self.textView.enclosingScrollView?.replaceInSuperview(with: self.textView)
+>>>>>>> Stashed changes
     }
     
     // Set up dark/light notifications.
@@ -174,6 +232,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         super.viewDidAppear()
         self.resizeModule()
         self.view.window?.makeFirstResponder(self.textView)
+<<<<<<< Updated upstream
         
         self.visualSubscriptions = [
             Settings.observe(\.interfaceStyle, options: [.initial, .new]) { _, change in
@@ -251,6 +310,53 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             NSAnimationContext.current.allowsImplicitAnimation = true
             NSAnimationContext.current.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
             
+=======
+        ParrotAppearance.registerInterfaceStyleListener(observer: self, invokeImmediately: true) { interface in
+            
+            // NSTextView doesn't automatically change its text color when the
+            // backing view's appearance changes, so we need to set it each time.
+            // In addition, make sure links aren't blue as usual.
+            let text = self.textView
+            text.appearance = NSAppearance.current() == .dark ? .light : .dark
+            text.layer?.masksToBounds = true
+            text.layer?.cornerRadius = 10.0
+            text.layer?.backgroundColor = NSColor.secondaryLabelColor.cgColor//NSColor.darkOverlay(forAppearance: self.view.window!.effectiveAppearance).cgColor
+            
+            text.textColor = NSColor.labelColor
+            text.font = NSFont.systemFont(ofSize: 12.0)
+            text.typingAttributes = [
+                NSForegroundColorAttributeName: text.textColor!,
+                NSFontAttributeName: text.font!
+            ]
+            text.linkTextAttributes = [
+                NSForegroundColorAttributeName: NSColor.labelColor,
+                NSCursorAttributeName: NSCursor.pointingHand(),
+                NSUnderlineStyleAttributeName: 1,
+            ]
+            text.selectedTextAttributes = [
+                NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
+                NSForegroundColorAttributeName: NSColor.labelColor,
+                NSUnderlineStyleAttributeName: 0,
+            ]
+            text.markedTextAttributes = [
+                NSBackgroundColorAttributeName: NSColor.lightOverlay(forAppearance: self.view.window!.effectiveAppearance),
+                NSForegroundColorAttributeName: NSColor.labelColor,
+                NSUnderlineStyleAttributeName: 0,
+            ]
+            /*text.placeholderTextAttributes = [
+             NSForegroundColorAttributeName: NSColor.tertiaryLabelColor(),
+             NSFontAttributeName: text.font!
+            ]*/
+        }
+    }
+    
+    public override func viewWillDisappear() {
+        ParrotAppearance.unregisterInterfaceStyleListener(observer: self)
+    }
+    
+    private func resizeModule() {
+        NSAnimationContext.animate(duration: 0.6) { // TODO: FIX THIS
+>>>>>>> Stashed changes
             self.textView.invalidateIntrinsicContentSize()
             self.textView.superview?.needsLayout = true
             self.textView.superview?.layoutSubtreeIfNeeded()
@@ -258,6 +364,7 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         }
     }
     
+<<<<<<< Updated upstream
     // Clear any text styles and re-compute them.
     private func updateTextStyles() {
         guard let storage = self.textView.textStorage else { return }
@@ -283,6 +390,8 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         }
     }
     
+=======
+>>>>>>> Stashed changes
     public func textDidChange(_ obj: Notification) {
         self.resizeModule()
         if self.textView.string == "" {
@@ -290,7 +399,10 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             return
         }
         self.host?.typing()
+<<<<<<< Updated upstream
         self.updateTextStyles()
+=======
+>>>>>>> Stashed changes
     }
     
     // If the user presses ENTER and doesn't hold SHIFT, send the message.
@@ -298,10 +410,16 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
     public func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
         switch commandSelector {
             
+<<<<<<< Updated upstream
         case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags.contains(.shift):
             let text = self.textView.string
             guard text.count > 0 else { return true }
             NSSpellChecker.shared.dismissCorrectionIndicator(for: textView)
+=======
+        case #selector(NSResponder.insertNewline(_:)) where !NSEvent.modifierFlags().contains(.shift):
+            guard let text = self.textView.string, text.characters.count > 0 else { return true }
+            NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
+>>>>>>> Stashed changes
             self.textView.string = ""
             self.resizeModule()
             self.host?.send(message: text)
@@ -332,8 +450,13 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
         let userRange = NSMakeRange(_r.location, tString.length - _r.location)
         let userStr = tString.substring(from: _r.location)
         
+<<<<<<< Updated upstream
         NSSpellChecker.shared.dismissCorrectionIndicator(for: textView)
         if let r = Settings.emoticons[userStr] {
+=======
+        NSSpellChecker.shared().dismissCorrectionIndicator(for: textView)
+        if let s = Settings[Preferences.Key.Completions] as? [String: Any], let r = s[userStr] as? String {
+>>>>>>> Stashed changes
             insertToken = true // prevent re-entrance
             
             // If the entered text was a completion character, place the matching
@@ -342,7 +465,11 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             textView.moveBackward(nil)
             
             // Display a text bubble showing visual replacement to the user.
+<<<<<<< Updated upstream
             let range = NSMakeRange(textView.attributedString().length - r.count, r.count)
+=======
+            let range = NSMakeRange(textView.attributedString().length - r.characters.count, r.characters.count)
+>>>>>>> Stashed changes
             textView.showFindIndicator(for: range)
         } else if let found = emoticonDescriptors[userStr] {
             insertToken = true // prevent re-entrance
@@ -351,14 +478,22 @@ public class MessageInputViewController: NSViewController, NSTextViewExtendedDel
             let attr = NSAttributedString(string: found, attributes: textView.typingAttributes)
             textView.insertText(attr, replacementRange: userRange)
             let range = NSMakeRange(_r.location, 1)
+<<<<<<< Updated upstream
             NSSpellChecker.shared.showCorrectionIndicator(
+=======
+            NSSpellChecker.shared().showCorrectionIndicator(
+>>>>>>> Stashed changes
                 of: .reversion,
                 primaryString: userStr,
                 alternativeStrings: [found],
                 forStringIn: textView.characterRect(forRange: range),
                 view: textView) { [weak textView] in
                     guard $0 != nil else { return }
+<<<<<<< Updated upstream
                     log.debug("user selected \(String(describing: $0))")
+=======
+                    log.debug("user selected \($0)")
+>>>>>>> Stashed changes
                     //textView?.insertText($0, replacementRange: range)
                     textView?.showFindIndicator(for: userRange)
             }

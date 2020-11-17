@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
+=======
+import Cocoa
+>>>>>>> Stashed changes
 import MochaUI
 
 /* TODO: When moving window, use NSAlignmentFeedbackFilter to snap to size and edges of screen. */
@@ -23,7 +27,11 @@ public struct PopWindowAnimator: WindowAnimator {
         window.alphaValue = 0.0
         window.makeKeyAndOrderFront(nil)
         
+<<<<<<< Updated upstream
         let group = AnyInterpolate.group(scale, alpha)
+=======
+        let group = Interpolate.group(scale, alpha)
+>>>>>>> Stashed changes
         group.animate(duration: 0.35)
     }
     
@@ -34,7 +42,11 @@ public struct PopWindowAnimator: WindowAnimator {
         let alpha = Interpolate(from: 1.0, to: 0.0, interpolator: EaseInOutInterpolator()) { [weak window] alpha in
             window?.alphaValue = CGFloat(alpha)
         }
+<<<<<<< Updated upstream
         let group = AnyInterpolate.group(scale, alpha)
+=======
+        let group = Interpolate.group(scale, alpha)
+>>>>>>> Stashed changes
         group.add(at: 1.0) {
             DispatchQueue.main.async { [weak window] in
                 window?.close()
@@ -67,7 +79,11 @@ public struct ZoomWindowAnimator: WindowAnimator {
         window.setFrame(rect, display: false)
         window.makeKeyAndOrderFront(nil)
         
+<<<<<<< Updated upstream
         let group = AnyInterpolate.group(scale, alpha, frame)
+=======
+        let group = Interpolate.group(scale, alpha, frame)
+>>>>>>> Stashed changes
         group.animate(duration: 0.25)
     }
     
@@ -86,9 +102,15 @@ public struct ZoomWindowAnimator: WindowAnimator {
             window?.setFrame(frame, display: false)
         }
         
+<<<<<<< Updated upstream
         let group = AnyInterpolate.group(scale, alpha, frame)
         group.add {
             DispatchQueue.main.asyncAfter(deadline: 200.milliseconds.later) { [weak window] in
+=======
+        let group = Interpolate.group(scale, alpha, frame)
+        group.add {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak window] in
+>>>>>>> Stashed changes
                 window?.setFrame(old_rect, display: false)
                 window?.alphaValue = 1.0
                 window?.scale()

@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import MochaUI
+=======
+import AppKit
+>>>>>>> Stashed changes
 import protocol ParrotServiceExtension.Person
 import protocol ParrotServiceExtension.Conversation
 
@@ -39,7 +43,11 @@ public func fetchData(_ id: String?, _ resource: String?, handler: ((Data?) -> V
 	
 	// Onlt wait on the semaphore if we don't have a handler.
 	if handler == nil {
+<<<<<<< Updated upstream
 		_ = semaphore.wait(timeout: 3.seconds.later)
+=======
+		_ = semaphore.wait(timeout: .now() + .seconds(3))
+>>>>>>> Stashed changes
 		return _cache[id]
 	} else {
 		return nil
@@ -58,6 +66,7 @@ public func fetchImage(user: Person, monogram: Bool = false) -> NSImage {
 	
 	var img: NSImage! = nil
 	if let d = fetchData(user.identifier, user.photoURL) {
+<<<<<<< Updated upstream
 		img = NSImage(data: d) ?? NSImage()
 	} else if let _ = user.fullName.rangeOfCharacter(from: .letters, options: []) {
         let bg = materialColors[abs(user.fullName.hashValue) % materialColors.count]
@@ -68,18 +77,28 @@ public func fetchImage(user: Person, monogram: Bool = false) -> NSImage {
 		img = NSImage(monogramOfSize: NSSize(width: 64.0, height: 64.0),
                       string: user.fullName, color: bg, fontName: .compactRoundedMedium,
                       overlay: NSImage(named: .user))
+=======
+		img = NSImage(data: d)!
+	} else if let _ = user.fullName.rangeOfCharacter(from: .letters, options: []) {
+		img = imageForString(forString: user.fullName)
+	} else {
+		img = defaultImageForString(forString: user.fullName)
+>>>>>>> Stashed changes
 	}
 	
 	_imgCache[user.identifier] = img
 	return img
 }
 
+<<<<<<< Updated upstream
 public extension Person {
     var image: NSImage {
         return fetchImage(user: self, monogram: true)
     }
 }
 
+=======
+>>>>>>> Stashed changes
 private var _linkCache = [String: LinkPreviewType]()
 public func _getLinkCached(_ key: String) throws -> LinkPreviewType {
 	if let val = _linkCache[key] {
@@ -93,6 +112,7 @@ public func _getLinkCached(_ key: String) throws -> LinkPreviewType {
 		} catch { throw error }
 	}
 }
+<<<<<<< Updated upstream
 
 fileprivate let materialIndex = [
     "Red": #colorLiteral(red: 0.9450980425, green: 0.1568627506, blue: 0.1294117719, alpha: 1), "Pink": #colorLiteral(red: 0.8941176534, green: 0, blue: 0.3098039329, alpha: 1), "Purple": #colorLiteral(red: 0.5411764979, green: 0, blue: 0.6392157078, alpha: 1), "Deep Purple": #colorLiteral(red: 0.3254902065, green: 0.1019607857, blue: 0.6705882549, alpha: 1), "Indigo": #colorLiteral(red: 0.1843137294, green: 0.2117647082, blue: 0.6627451181, alpha: 1), "Blue": #colorLiteral(red: 0.08235294372, green: 0.4941176474, blue: 0.9568627477, alpha: 1), "Light Blue": #colorLiteral(red: 0, green: 0.5843137503, blue: 0.9607843161, alpha: 1), "Cyan": #colorLiteral(red: 0, green: 0.6862745285, blue: 0.8000000119, alpha: 1), "Teal": #colorLiteral(red: 0.003921568859, green: 0.5254902244, blue: 0.4588235319, alpha: 1),
@@ -107,3 +127,5 @@ public let materialColorList: NSColorList = {
     }
     return l
 }()
+=======
+>>>>>>> Stashed changes

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import MochaUI
 import ParrotServiceExtension
 import Carbon // FIXME: dear lord why
@@ -38,10 +39,20 @@ public struct ConversationSettings {
 }
 
 public struct EventDescriptor {
+=======
+import Cocoa
+import Mocha
+import MochaUI
+
+private let SOUNDFILE = "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/sms_alert_bamboo.caf"
+
+public struct Event {
+>>>>>>> Stashed changes
     public let identifier: String
     public let contents: String?
     public let description: String?
     public let image: NSImage?
+<<<<<<< Updated upstream
     public let sound: NSSound?
     public let vibrate: Bool?
     public let script: URL?
@@ -49,12 +60,24 @@ public struct EventDescriptor {
 
 public protocol EventAction {
     static func perform(with: EventDescriptor)
+=======
+}
+
+public protocol EventAction {
+    static func perform(with: Event)
+>>>>>>> Stashed changes
 }
 
 // input: identifier, contents, description, image
 // properties: actions
+<<<<<<< Updated upstream
 public enum BannerAction: EventAction {
     public static func perform(with event: EventDescriptor) {
+=======
+public struct BannerAction: EventAction {
+    private init() {}
+    public static func perform(with event: Event) {
+>>>>>>> Stashed changes
         let notification = NSUserNotification()
         notification.identifier = event.identifier
         notification.title = event.contents ?? ""
@@ -67,8 +90,13 @@ public enum BannerAction: EventAction {
         //notification.responsePlaceholder = "Send a message..."
         notification.identityImage = event.image
         notification.identityStyle = .circle
+<<<<<<< Updated upstream
         //notification.soundName = event.sound?.absoluteString//"texttone:Bamboo" // this works!!
         //notification.set(option: .customSoundPath, value: event.sound?.absoluteString)
+=======
+        //notification.soundName = "texttone:Bamboo" // this works!!
+        //notification.set(option: .customSoundPath, value: SOUNDFILE)
+>>>>>>> Stashed changes
         //notification.set(option: .vibrateForceTouch, value: true)
         notification.set(option: .alwaysShow, value: true)
         
@@ -81,56 +109,98 @@ public enum BannerAction: EventAction {
 }
 
 // input: contents, image
+<<<<<<< Updated upstream
 public enum BezelAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         SystemBezel(image: event.image, text: event.contents)
             .show().hide(after: 5.seconds)
+=======
+public struct BezelAction: EventAction {
+    private init() {}
+    public static func perform(with event: Event) {
+        SystemBezel.create(text: event.contents, image: event.image).show(autohide: .seconds(2))
+>>>>>>> Stashed changes
     }
 }
 
 // input: none
 // properties: filename
+<<<<<<< Updated upstream
 public enum SoundAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         event.sound?.play()
+=======
+public struct SoundAction: EventAction {
+    private init() {}
+    public static func perform(with event: Event) {
+        NSSound(contentsOfFile: SOUNDFILE, byReference: true)?.play()
+>>>>>>> Stashed changes
     }
 }
 
 // input: none
+<<<<<<< Updated upstream
 public enum VibrateAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         guard let x = event.vibrate, x else { return }
+=======
+public struct VibrateAction: EventAction {
+    private init() {}
+    public static func perform(with event: Event) {
+>>>>>>> Stashed changes
         NSHapticFeedbackManager.vibrate(length: 1000, interval: 10)
     }
 }
 
 // input: none
+<<<<<<< Updated upstream
 public enum BounceDockAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         let id = NSApp.requestUserAttention(.criticalRequest)
         DispatchQueue.main.asyncAfter(deadline: 2.seconds.later) {
             NSApp.cancelUserAttentionRequest(id)
         }
+=======
+public struct BounceDockAction: EventAction {
+    private init() {}
+    public static func perform(with event: Event) {
+        NSApp.requestUserAttention(.criticalRequest)
+>>>>>>> Stashed changes
     }
 }
 
 // input: none
+<<<<<<< Updated upstream
 public enum FlashLEDAction: EventAction {
     public static func perform(with event: EventDescriptor) {
+=======
+public struct FlashLEDAction: EventAction {
+    private init() {}
+    public static func perform(with event: Event) {
+>>>>>>> Stashed changes
         KeyboardBrightnessAnimation().start()
     }
 }
 
 // input: contents, description
+<<<<<<< Updated upstream
 public enum SpeakAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         let text = (event.contents ?? "") + (event.description ?? "")
         NSApp.say(text)
+=======
+public struct SpeakAction: EventAction {
+    private init() {}
+    public static func perform(with event: Event) {
+        let text = (event.contents ?? "") + (event.description ?? "")
+        NSApp.perform(Selector(("speakString:")), with: text)
+>>>>>>> Stashed changes
     }
 }
 
 // input: none
 // properties: script path
+<<<<<<< Updated upstream
 public enum ScriptAction: EventAction {
     public static func perform(with event: EventDescriptor) {
         guard let s = event.script else { return }
@@ -279,3 +349,11 @@ public extension ParrotAppController {
 
 
 
+=======
+public struct ScriptAction: EventAction {
+    private init() {}
+    public static func perform(with event: Event) {
+        _ = try? NSUserAppleScriptTask(url: URL(fileURLWithPath: "")).execute(withAppleEvent: nil, completionHandler: nil)
+    }
+}
+>>>>>>> Stashed changes

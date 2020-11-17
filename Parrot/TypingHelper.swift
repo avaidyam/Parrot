@@ -1,7 +1,34 @@
+<<<<<<< Updated upstream
 import Cocoa
 import protocol ParrotServiceExtension.Person
 import enum ParrotServiceExtension.MessageError
 import enum Hangouts.ServiceError
+=======
+import Foundation
+import AddressBook
+import protocol ParrotServiceExtension.Person
+
+// FIXME: Temporary location...
+public func searchContacts(person user: Person) -> [ABPerson] {
+    var possible = [ABSearchElement]()
+    for location in user.locations {
+        possible.append(ABPerson.searchElement(
+            forProperty: kABEmailProperty, label: "", key: "", value: location,
+            comparison: ABSearchComparison(kABEqualCaseInsensitive.rawValue))!
+        )
+        possible.append(ABPerson.searchElement(
+            forProperty: kABPhoneProperty, label: "", key: "", value: location,
+            comparison: ABSearchComparison(kABEqualCaseInsensitive.rawValue))!
+        )
+    }
+    
+    let records = ABAddressBook.shared().records(
+        matching: ABSearchElement(forConjunction:
+            ABSearchConjunction(kABSearchOr.rawValue), children: possible)
+        )!.flatMap { $0 as? ABPerson }
+    return records
+}
+>>>>>>> Stashed changes
 
 public struct TypingHelper {
     public enum State {
@@ -25,7 +52,12 @@ public struct TypingHelper {
         }
         
         self.lastTypingTimestamp = now
+<<<<<<< Updated upstream
         DispatchQueue.main.asyncAfter(deadline: 1.seconds.later, execute: self.callback)
+=======
+        let dt = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: dt, execute: self.callback)
+>>>>>>> Stashed changes
     }
     
     private func callback() {
@@ -51,6 +83,7 @@ public extension NSObjectProtocol where Self: NSView {
         return self
     }
 }
+<<<<<<< Updated upstream
 
 extension MessageError: LocalizedError {
     public var errorDescription: String? {
@@ -87,3 +120,5 @@ extension ServiceError: LocalizedError {
         return "Sometimes communicating with a remote service fails for unknown reasons. Try that again and it might work."
     }
 }
+=======
+>>>>>>> Stashed changes
